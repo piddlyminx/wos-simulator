@@ -1,6 +1,5 @@
 import json
 import csv
-import pandas as pd
 
 skills_dict = {}
 
@@ -45,19 +44,24 @@ def convert_value(v):
     if v[-1:] == ' ': return v[:-1]
     return v
 
-def xlsx_to_csv(xlsx_path, csv_path):
-    """Convert xlsx file to csv format"""
-    df = pd.read_excel(xlsx_path, engine='openpyxl')
-    df.to_csv(csv_path, sep=';', index=False, encoding='utf-8')
-    print(f"Converted {xlsx_path} to {csv_path}")
-
 def make_hero_dicts(csv_file_path = 'skills/Fitz_hero_skills.csv', export_dicts_path = "assets/hero_skills/"):
 
     with open(csv_file_path, mode='r', newline='', encoding='utf-8') as file:
-        reader = csv.DictReader(file, delimiter=';')
+        # Auto-detect delimiter (handles comma or semicolon)
+        sample = file.read(2048)
+        file.seek(0)
+        # Prefer comma if both delimiters are plausible, fallback to semicolon
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters=";,")
+            delim = dialect.delimiter
+        except csv.Error:
+            delim = "," if "," in sample else ";"
+        reader = csv.DictReader(file, delimiter=delim)
         for row in reader:
             # print(row)
             # exit()
+            if 'skill_hero' not in row:
+                raise RuntimeError(f"CSV missing 'skill_hero' column; columns={list(row.keys())}")
             hero_name = convert_value(row['skill_hero']).lower().capitalize()
             if hero_name not in skills_dict:
                 skills_dict[hero_name] = []
@@ -120,12 +124,7 @@ def make_hero_dicts(csv_file_path = 'skills/Fitz_hero_skills.csv', export_dicts_
 
 if __name__ == '__main__':
     
-    xlsx_file_path = 'skills/Fitz_hero_skills.xlsx'
-    csv_file_path = 'skills/Fitz_hero_skills.csv'
+    csv_file_path = 'skills/Fitz_hero_skills - Hero_skills.csv'
     export_dicts_path = "assets/hero_skills/"
 
-    # Convert xlsx to csv first
-    xlsx_to_csv(xlsx_file_path, csv_file_path)
-
-    # Then process the csv to create JSON files
     make_hero_dicts(csv_file_path, export_dicts_path)
