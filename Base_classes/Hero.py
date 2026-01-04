@@ -122,9 +122,9 @@ class Hero:
         skill_levels = {}
         for s_num_str, s_level in hero_skill_levels.items():
             _num = s_num_str.split('_')[1]
-            if (not _num.isdigit()) or int(_num) > 3 or int(_num) < 1 or (not isinstance(s_level, int)) or s_level < 0 or s_level > 5:
-                print(f"⚠️  Error (for hero : {hero_name}): skill levels should specified in the format: 'skill_X_level' : Y ")
-                print(f"                               X: skill number, Y: skill level (both integers) ")
+            if (not _num.isdigit()) or int(_num) > 4 or int(_num) < 1 or (not isinstance(s_level, int)) or s_level < 0 or s_level > 5:
+                print(f"⚠️  Error (for hero : {hero_name}): skill levels should specified in the format: 'skill_X' or 'skill_X_level' : Y ")
+                print(f"                               X: skill number (1-4), Y: skill level (0-5 integers) ")
                 exit()
             _num = int(_num)
             if _num not in h_skill_nums:

@@ -42,6 +42,10 @@ class Fight:
         """
         if show_rounds_freq > 0: BattleRound.DEBUG_FREQ = show_rounds_freq
 
+        # Set roles for role-gated skills/widgets
+        self.attacker.role = "attack"
+        self.defender.role = "defense"
+
         self.attacker.calc(self.defender)
         self.defender.calc(self.attacker)
 

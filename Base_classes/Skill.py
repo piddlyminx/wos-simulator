@@ -66,6 +66,10 @@ class Skill:
         Returns:
             bool: True if all conditions pass and skill should activate, False otherwise.
         """
+        first_effect_special = self.skill_effects_data[0].get('special', {}) if self.skill_effects_data else {}
+        expected_role = first_effect_special.get('role')
+        if expected_role and getattr(fighter, "role", None) not in (None, expected_role):
+            return False
         # Already active, unless stackable in the same round
         if _round > 0 and self.skill_round_stackable == False:
             for benefit in fighter.rounds[_round - 1].round_benefits:
@@ -463,4 +467,3 @@ class Benefit:
         """
         return f"{self._effect._skill.skill_hero}:{self.id} - {self.benefit_type} - Op: {self.op} - Value: {self.value} - Extra: {self.extra_attack} ; duration: {self.duration} {self.duration_type} - ut: {[u.name for u in self.for_units] if self.for_units else None} - vs: {[u.name for u in self.vs_units] if self.vs_units else None}"
         
-

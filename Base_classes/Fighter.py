@@ -32,6 +32,7 @@ class Fighter:
         self.load_fighter = load_fighter_data
         self.name = name
         self._troops = {}
+        self.role = None
         self.stats = StatsBonus.from_list(JsonUtil.fighter_stats[self.name]) if self.load_fighter else StatsBonus()
         self._heroes = {}
         self._joiner_heroes = []
@@ -193,8 +194,9 @@ class Fighter:
             hero = hero_data['hero']
             levels = hero_data['levels']
             for skill in heroes_registry[hero]:
-                if f"skill_{skill['skill_num']}" in levels.keys():
-                    self.skills.append(Skill(skill,level = levels[f"skill_{skill['skill_num']}"]))
+                key = f"skill_{skill['skill_num']}"
+                if key in levels.keys():
+                    self.skills.append(Skill(skill, level=levels[key]))
 
     def _calc_troops_skills(self):
         """Process and initialize all troop-based skills.
@@ -220,7 +222,40 @@ class Fighter:
         """
         for skill in self.skills:
             for _effect in skill.skill_effects_data:
-                self.effects.append(Effect(skill,_effect))
+                eff_type = _effect.get('effect_type')
+                # Special handling for StatBonus-type widget effects:
+                # apply a percentage modifier directly to this fighter's StatsBonus,
+                # then do not add an Effect for runtime processing.
+                if eff_type == "StatBonus":
+                    special = _effect.get('special', {}) or {}
+                    stat = special.get('stat')
+                    role = special.get('role')
+                    # Role-gated widgets: only apply when fighter is in the right role (attack/defense)
+                    if role and getattr(self, "role", None) != role:
+                        continue
+                    if not stat:
+                        continue
+                    level_key = skill.skill_level
+                    values = _effect.get('effect_values', {}) or {}
+                    if level_key not in values:
+                        continue
+                    try:
+                        pct = float(values[level_key])
+                    except (TypeError, ValueError):
+                        continue
+                    # Apply as a percentage multiplier to the current stat for each unit type
+                    for ut in UnitType:
+                        type_stats = getattr(self.stats, ut.name)
+                        base = getattr(type_stats, stat.lower(), None)
+                        if base is None:
+                            continue
+                        delta = base * pct / 100.0
+                        if delta:
+                            self.stats.add_bonus(ut, stat, delta)
+                    continue
+
+                # All non-StatBonus effects go through the normal runtime Effect flow
+                self.effects.append(Effect(skill, _effect))
 
     def get_sum_army(self, round = 0):
         """Get total army size at a specific round.
