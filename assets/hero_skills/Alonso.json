@@ -3,11 +3,11 @@
         "skill_hero": "Alonso",
         "skill_num": 1,
         "skill_name": "Onslaught",
-        "skill_description": "Grants all troops' attack an X% chance of stunning the target for 1 turn",
+        "skill_description": "granting a 40% chance of increasing all troop's Lethality by X%",
         "skill_troop_type": "marksmen",
         "skill_permanent": false,
-        "skill_is_chance": false,
-        "skill_probability": 0,
+        "skill_is_chance": true,
+        "skill_probability": 40,
         "skill_round_stackable": true,
         "skill_type_relation": false,
         "skill_order": 1,
@@ -18,33 +18,33 @@
         },
         "skill_effects": [
             {
-                "affects_opponent": true,
-                "effect_type": "Stun",
-                "effect_op": 0,
+                "affects_opponent": false,
+                "effect_type": "DamageUp",
+                "effect_op": 101,
                 "extra_attack": false,
-                "effect_is_chance": true,
+                "effect_is_chance": false,
                 "effect_num": "Onslaught/1",
                 "trigger_types": {
-                    "trigger_for": "marksmen",
+                    "trigger_for": "once",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
                     "benefit_for": "all",
-                    "benefit_vs": "target"
+                    "benefit_vs": "all"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
                     "duration_value": 1,
-                    "effect_lag": 1
+                    "effect_lag": 0
                 },
-                "effect_probabilities": {
-                    "1": 4,
-                    "2": 8,
-                    "3": 12,
-                    "4": 16,
-                    "5": 20
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 10,
+                    "2": "20.0",
+                    "3": 30,
+                    "4": "40.0",
+                    "5": 50
                 },
-                "effect_values": {},
                 "special": {}
             }
         ]
@@ -75,12 +75,12 @@
                 "effect_is_chance": true,
                 "effect_num": "Iron strength/1",
                 "trigger_types": {
-                    "trigger_for": "marksmen",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "trigger",
-                    "benefit_vs": "all"
+                    "benefit_for": "all",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -96,9 +96,9 @@
                 },
                 "effect_values": {
                     "1": 10,
-                    "2": 20,
+                    "2": "20.0",
                     "3": 30,
-                    "4": 40,
+                    "4": "40.0",
                     "5": 50
                 },
                 "special": {}
@@ -152,9 +152,9 @@
                 },
                 "effect_values": {
                     "1": 10,
-                    "2": 20,
+                    "2": "20.0",
                     "3": 30,
-                    "4": 40,
+                    "4": "40.0",
                     "5": 50
                 },
                 "special": {}

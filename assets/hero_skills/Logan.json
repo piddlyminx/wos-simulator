@@ -3,53 +3,47 @@
         "skill_hero": "Logan",
         "skill_num": 1,
         "skill_name": "Lion strike",
-        "skill_description": "Granting all troops' attack a 20% chance of dealing X% extra damage per turn for 3 turns",
+        "skill_description": "Reducing all enemy Troops' Attack by X%",
         "skill_troop_type": "infantry",
-        "skill_permanent": false,
+        "skill_permanent": true,
         "skill_is_chance": false,
         "skill_probability": 0,
-        "skill_round_stackable": true,
+        "skill_round_stackable": false,
         "skill_type_relation": false,
         "skill_order": 1,
         "skill_type": "hero_skill",
         "skill_frequency": {
-            "frequency_type": "turn",
-            "frequency_value": 1
+            "frequency_type": null,
+            "frequency_value": 0
         },
         "skill_effects": [
             {
-                "affects_opponent": false,
-                "effect_type": "DamageUp",
-                "effect_op": 101,
-                "extra_attack": true,
-                "effect_is_chance": true,
+                "affects_opponent": true,
+                "effect_type": "OppDamageDown",
+                "effect_op": 202,
+                "extra_attack": false,
+                "effect_is_chance": false,
                 "effect_num": "Lion strike/1",
                 "trigger_types": {
-                    "trigger_for": "infantry",
+                    "trigger_for": "once",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "trigger",
-                    "benefit_vs": "target"
+                    "benefit_for": "all",
+                    "benefit_vs": "all"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
-                    "duration_value": 3,
-                    "effect_lag": 1
+                    "duration_value": -1,
+                    "effect_lag": 0
                 },
-                "effect_probabilities": {
-                    "1": 20,
-                    "2": 20,
-                    "3": 20,
-                    "4": 20,
-                    "5": 20
-                },
+                "effect_probabilities": {},
                 "effect_values": {
-                    "1": 8,
-                    "2": 16,
-                    "3": 24,
-                    "4": 32,
-                    "5": 40
+                    "1": 4,
+                    "2": "8.0",
+                    "3": 12,
+                    "4": "16.0",
+                    "5": 20
                 },
                 "special": {}
             }
@@ -96,9 +90,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 4,
-                    "2": 8,
+                    "2": "8.0",
                     "3": 12,
-                    "4": 16,
+                    "4": "16.0",
                     "5": 20
                 },
                 "special": {}
@@ -146,9 +140,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 5,
-                    "2": 10,
+                    "2": "10.0",
                     "3": 15,
-                    "4": 20,
+                    "4": "20.0",
                     "5": 25
                 },
                 "special": {}

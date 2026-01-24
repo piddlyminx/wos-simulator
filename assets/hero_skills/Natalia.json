@@ -3,11 +3,11 @@
         "skill_hero": "Natalia",
         "skill_num": 1,
         "skill_name": "Wildling roar",
-        "skill_description": "Granting all troops' attack a X% chance of stunning the target for 1 turn",
+        "skill_description": "granting a 40% chance of reducing all troops' Damage taken by X%",
         "skill_troop_type": "infantry",
         "skill_permanent": false,
-        "skill_is_chance": false,
-        "skill_probability": 0,
+        "skill_is_chance": true,
+        "skill_probability": 40,
         "skill_round_stackable": true,
         "skill_type_relation": false,
         "skill_order": 1,
@@ -18,33 +18,33 @@
         },
         "skill_effects": [
             {
-                "affects_opponent": true,
-                "effect_type": "Stun",
-                "effect_op": 0,
+                "affects_opponent": false,
+                "effect_type": "DefenseUp",
+                "effect_op": 111,
                 "extra_attack": false,
-                "effect_is_chance": true,
+                "effect_is_chance": false,
                 "effect_num": "Wildling roar/1",
                 "trigger_types": {
-                    "trigger_for": "infantry",
+                    "trigger_for": "once",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
                     "benefit_for": "all",
-                    "benefit_vs": "target"
+                    "benefit_vs": "all"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
                     "duration_value": 1,
-                    "effect_lag": 1
+                    "effect_lag": 0
                 },
-                "effect_probabilities": {
-                    "1": 4,
-                    "2": 8,
-                    "3": 12,
-                    "4": 16,
-                    "5": 20
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 10,
+                    "2": "20.0",
+                    "3": 30,
+                    "4": "40.0",
+                    "5": 50
                 },
-                "effect_values": {},
                 "special": {}
             }
         ]
@@ -90,9 +90,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 5,
-                    "2": 10,
+                    "2": "10.0",
                     "3": 15,
-                    "4": 20,
+                    "4": "20.0",
                     "5": 25
                 },
                 "special": {}
@@ -140,9 +140,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 5,
-                    "2": 10,
+                    "2": "10.0",
                     "3": 15,
-                    "4": 20,
+                    "4": "20.0",
                     "5": 25
                 },
                 "special": {}

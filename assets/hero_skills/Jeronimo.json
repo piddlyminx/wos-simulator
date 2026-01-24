@@ -40,9 +40,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 5,
-                    "2": 10,
+                    "2": "10.0",
                     "3": 15,
-                    "4": 20,
+                    "4": "20.0",
                     "5": 25
                 },
                 "special": {}
@@ -90,9 +90,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 5,
-                    "2": 10,
+                    "2": "10.0",
                     "3": 15,
-                    "4": 20,
+                    "4": "20.0",
                     "5": 25
                 },
                 "special": {}
@@ -103,7 +103,7 @@
         "skill_hero": "Jeronimo",
         "skill_num": 3,
         "skill_name": "E Xpert swordsmanship",
-        "skill_description": "Grants all troops' attack a X% chance of stunning the target for 1 turn",
+        "skill_description": "Increasing Damage Dealt by X% for all troops for 2 turns every 4 turns",
         "skill_troop_type": "infantry",
         "skill_permanent": false,
         "skill_is_chance": false,
@@ -114,37 +114,37 @@
         "skill_type": "hero_skill",
         "skill_frequency": {
             "frequency_type": "turn",
-            "frequency_value": 1
+            "frequency_value": 4
         },
         "skill_effects": [
             {
-                "affects_opponent": true,
-                "effect_type": "Stun",
-                "effect_op": 0,
+                "affects_opponent": false,
+                "effect_type": "DamageUp",
+                "effect_op": 101,
                 "extra_attack": false,
-                "effect_is_chance": true,
+                "effect_is_chance": false,
                 "effect_num": "E Xpert swordsmanship/1",
                 "trigger_types": {
-                    "trigger_for": "infantry",
+                    "trigger_for": "once",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
                     "benefit_for": "all",
-                    "benefit_vs": "target"
+                    "benefit_vs": "all"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
-                    "duration_value": 1,
-                    "effect_lag": 1
+                    "duration_value": 2,
+                    "effect_lag": 0
                 },
-                "effect_probabilities": {
-                    "1": 4,
-                    "2": 8,
-                    "3": 12,
-                    "4": 16,
-                    "5": 20
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 6,
+                    "2": "12.0",
+                    "3": 18,
+                    "4": "24.0",
+                    "5": 30
                 },
-                "effect_values": {},
                 "special": {}
             }
         ]

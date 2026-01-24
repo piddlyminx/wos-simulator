@@ -40,9 +40,9 @@
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 10,
-                    "2": 20,
+                    "2": "20.0",
                     "3": 30,
-                    "4": 40,
+                    "4": "40.0",
                     "5": 50
                 },
                 "special": {}
@@ -53,7 +53,7 @@
         "skill_hero": "Hector",
         "skill_num": 2,
         "skill_name": "Rampant",
-        "skill_description": "Increases infantry's damage dealt by X% and marksmen's damage dealt by X%. The effect decreases by 80% with each attack and is removed after the fifth.",
+        "skill_description": "Increases infantry's damage dealt by X% and marksmen's damage dealt by X%, it is effective for 10 attacks, with each attack's damage boost being 85% of the previous one.",
         "skill_troop_type": "infantry",
         "skill_permanent": false,
         "skill_is_chance": false,
@@ -65,7 +65,7 @@
         "skill_frequency": {
             "frequency_type": "turn",
             "frequency_value": 1,
-            "skill_last_round": 5
+            "skill_last_round": 10
         },
         "skill_effects": [
             {
@@ -85,15 +85,15 @@
                 },
                 "effect_duration": {
                     "duration_type": "attack",
-                    "duration_value": 5,
+                    "duration_value": 10,
                     "effect_lag": 0
                 },
                 "effect_probabilities": {},
                 "effect_values": {
                     "1": 100,
-                    "2": 125,
+                    "2": "125.0",
                     "3": 150,
-                    "4": 175,
+                    "4": "175.0",
                     "5": 200
                 },
                 "special": {
@@ -102,7 +102,7 @@
                         "data": {
                             "type": "pct_value_pct_decrease",
                             "step": "attack",
-                            "decrease_value": 20
+                            "decrease_value": 15
                         }
                     }
                 }
@@ -124,16 +124,16 @@
                 },
                 "effect_duration": {
                     "duration_type": "attack",
-                    "duration_value": 5,
+                    "duration_value": 10,
                     "effect_lag": 0
                 },
                 "effect_probabilities": {},
                 "effect_values": {
-                    "1": 10,
-                    "2": 20,
-                    "3": 30,
-                    "4": 40,
-                    "5": 50
+                    "1": 20,
+                    "2": "40.0",
+                    "3": 60,
+                    "4": "80.0",
+                    "5": 100
                 },
                 "special": {
                     "effect_evolution": {
@@ -141,7 +141,7 @@
                         "data": {
                             "type": "pct_value_pct_decrease",
                             "step": "attack",
-                            "decrease_value": 20
+                            "decrease_value": 15
                         }
                     }
                 }
@@ -195,9 +195,9 @@
                 },
                 "effect_values": {
                     "1": 120,
-                    "2": 140,
+                    "2": "140.0",
                     "3": 160,
-                    "4": 180,
+                    "4": "180.0",
                     "5": 200
                 },
                 "special": {

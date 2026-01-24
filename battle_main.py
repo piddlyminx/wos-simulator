@@ -20,24 +20,32 @@ JsonUtil.load_fighters_data(
 # ATTACKER DATA
 ###############################################
 
-attacker_name = "Nitro"
+attacker_name = "Kill"
 attacker = Fighter(attacker_name)
 
 # attacker.heroes = ["Sergey"]  #["Jessie", "Sergey", "Molly"]      # if this format is used, skill levels are fetched at 'fighter_heroes.json'; Level 5 if not found
 
 ### OR you can specify skill levels by using:
 # attacker.heroes = {
-#     "Jessie" : {
-#         "skill_1_level": 2,
-#         "skill_2_level": 2,
+#     "Mia" : {
+#         "skill_1_level": 5,
+#         "skill_2_level": 5,
+#         "skill_3_level": 5
 #     }
 # }
 
+# attacker.joiner_heroes = ['Seo-yoon','Jessie','Jessie','Jessie'] 
+
 attacker.troops = {
-    "infantry_t10_fc5" : 50000,
-    "lancer_t10_fc5" : 0,
-    "marksman_t10_fc5" : 0
-}
+    "infantry_t1"   : 2000,
+    "infantry_t8"   : 1,
+    "lancer_t6"      : 50,
+    "lancer_t1"    : 5000
+    }
+# attacker.troops = {
+#     "infantry_t2"   : 2000,
+#     "lancer_t2"      : 3000
+# }
 
 ### Add heroes stats. # If this is used, hero stats are added. All heroes stats should be specified in 'fighters_heroes.json'
 ### Use only if heroes stats are not included in fighters_data/fighter_stats.json
@@ -50,19 +58,22 @@ attacker.troops = {
 # DEFENDER DATA
 ###############################################
 
-defender = Fighter("Beast_30")
+defender = Fighter("Beast_15")
 
 # defender.heroes = ["Hector"] # ["Flint", "Patrick", "Seo-yoon"]     
 
 defender.troops = {
-    "infantry_t10"   : 6450,
-    "lancer_t10"     : 7525,
-    "lancer_t9"      : 30105,
-    "marksman_t10"   : 7525,
-    "marksman_t9"    : 30105
-	
+    "infantry_t5"   : 1120,
+    "lancer_t5"      : 1310,
+    "marksman_t5"    : 1310
 }
 
+
+# defender.troops = {
+#     "infantry_t6"   : 2595,
+#     "lancer_t6"      : 3025,
+#     "marksman_t6"    : 3025
+# }
 
 # defender.add_heroes_stats()           
 
@@ -73,11 +84,11 @@ defender.troops = {
 ### BATTLE & Print results
 ###############################################
 
-BattleRound.DEBUG = True
+BattleRound.DEBUG = False
 f = Fight(attacker, defender)
-f.battle(show_rounds_freq = 1)
+f.battle(show_rounds_freq = 5)
 
-f.format_report()
+# f.format_report()
 
 
 ###############################################

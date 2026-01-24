@@ -242,7 +242,6 @@
             }
         ]
     },
-
     {
         "skill_name": "Charge",
         "skill_decription": "Increase Attack Damage to Marksmen by 10%",
@@ -462,7 +461,6 @@
             }
         ]
     },
-
     {
         "skill_name": "Ranged Strike",
         "skill_decription": "Increase Attack Damage to Infantry by 10%",

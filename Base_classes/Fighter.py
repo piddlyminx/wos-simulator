@@ -6,14 +6,35 @@ from Base_classes.JsonUtil import JsonUtil
 import math, json
 
 class Fighter:
+    """Represents a fighter in the battle simulation.
+    
+    Manages fighter stats, troops, heroes, skills, and battle history.
+    Calculates attack/defense values and tracks cumulative battle statistics.
+    
+    Attributes:
+        name (str): Fighter name/identifier.
+        stats (StatsBonus): Fighter's stat bonuses.
+        troops (dict): Troop counts by troop name.
+        heroes (dict): Active heroes and their skill levels.
+        joiner_heroes (list): Joining heroes and their skill levels.
+        skills (list): All active skill objects.
+        effects (list): All active effect objects from skills.
+        rounds (dict): BattleRound objects indexed by round number.
+    """
     def __init__(self, name, load_fighter_data = True):
+        """Initialize a fighter.
+        
+        Args:
+            name: Fighter name/identifier.
+            load_fighter_data: Whether to load stats from fighter data file.
+        """
 
         self.load_fighter = load_fighter_data
         self.name = name
         self._troops = {}
         self.stats = StatsBonus.from_list(JsonUtil.fighter_stats[self.name]) if self.load_fighter else StatsBonus()
         self._heroes = {}
-        self._joiner_heroes = {}
+        self._joiner_heroes = []
         
         self.skills = []
         self.effects = []
@@ -30,6 +51,15 @@ class Fighter:
         self.cumul_received_attacks = {ut:0 for ut in UnitType}
 
     def add_heroes_stats(self):
+        """Add hero stat bonuses to fighter stats.
+        
+        Loads hero stats from fighters_heroes.json and applies them to
+        this fighter's stats. Use only if hero stats are not already
+        included in fighter_stats.json.
+        
+        Raises:
+            SystemExit: If fighter or hero not found in data file.
+        """
         heroes_stats = JsonUtil.fighter_heroes
         if self.name not in heroes_stats:
             print(f"\n⚠️  fighter '{self.name}' not found in '{JsonUtil.fighters_heroes_path}' ")
@@ -48,17 +78,36 @@ class Fighter:
                 exit()
 
     def calc(self, opponent):
+        """Calculate all fighter stats and prepare for battle.
+        
+        Args:
+            opponent: The opponent Fighter object.
+            
+        Calculates skills, attack/defense values by troop and type.
+        """
         self.calc_skills()
         for troop_name in self.troops:
             self.calc_by_troop(troop_name, opponent)
         self.calc_by_type()
     
     def calc_skills(self):
+        """Calculate and initialize all active skills and effects.
+        
+        Processes hero skills, troop skills, and creates effect objects.
+        """
         self._calc_hero_skills()
         self._calc_troops_skills()
         self._calc_effects()
 
     def calc_by_troop(self, troop_name, opponent):
+        """Calculate attack and defense values for a specific troop type.
+        
+        Args:
+            troop_name: Name of the troop type (e.g., 'infantry_t6').
+            opponent: Opponent fighter (currently unused but kept for compatibility).
+            
+        Applies stat bonuses and calculates effective attack/defense values.
+        """
         troop = JsonUtil.troop_stats[troop_name]
         base_attack = troop["stats"].get("Attack")
         base_lethality = troop["stats"].get("Lethality")
@@ -79,6 +128,17 @@ class Fighter:
         self.defense_by_troop[troop_name] = defense_ret
 
     def calc_by_type(self):
+        """Calculate weighted average attack/defense by unit type.
+        
+        Aggregates values from all troop tiers of each unit type
+        (infantry, lancers, marksmen) into single values per type.
+        """
+        # Initialize all unit types to 0
+        for ut in UnitType:
+            self.troops_by_type[ut] = 0
+            self.attack_by_type[ut] = 0
+            self.defense_by_type[ut] = 0
+        
         # To-Do: Verify that skills do indeed work like stamps
         for ut in UnitType:
             total_attack = 0.0
@@ -92,32 +152,36 @@ class Fighter:
                     total_defense += num * self.defense_by_troop[troop_name]
                     count += num
             
-            # SOS Model: To confirm
-            attack = 0.0
-            defense = 0.0
-            if total_attack > 0 and total_defense > 0:
-                attack = 1.0
-                defense = 1.0
-                for troop_name in self.troops:
-                    if ut == _to_unitx(troop_name):
-                        num = self.troops[troop_name]
-                        atk = self.attack_by_troop[troop_name]
-                        defn = self.defense_by_troop[troop_name]
-                        attack *= math.pow(atk, num * atk / total_attack)
-                        defense *= math.pow(defn, num * defn / total_defense)
+            # SOS Model: To confirm -> seems wrong from tests
+            # attack = 0.0
+            # defense = 0.0
+            # if total_attack > 0 and total_defense > 0:
+            #     attack = 1.0
+            #     defense = 1.0
+            #     for troop_name in self.troops:
+            #         if ut == _to_unitx(troop_name):
+            #             num = self.troops[troop_name]
+            #             atk = self.attack_by_troop[troop_name]
+            #             defn = self.defense_by_troop[troop_name]
+            #             attack *= math.pow(atk, num * atk / total_attack)
+            #             defense *= math.pow(defn, num * defn / total_defense)
 
-            self.attack_by_type[ut] = attack
-            self.defense_by_type[ut] = defense
-            self.troops_by_type[ut] = count
+            # self.attack_by_type[ut] = attack
+            # self.defense_by_type[ut] = defense
+            # self.troops_by_type[ut] = count
 
             
-            ######## OTHERWISE, Try
-            # self.attack_by_type[ut] = total_attack / count
-            # self.defense_by_type[ut] = total_defense / count
-            # self.troops_by_type[ut] = count
-            ################## Try later
+            # Arithmetic mean - still has error but below 1% in the tests I've done
+            if count > 0:
+                self.attack_by_type[ut] = total_attack / count
+                self.defense_by_type[ut] = total_defense / count
+                self.troops_by_type[ut] = count
             
     def _calc_hero_skills(self):
+        """Process and initialize all hero skills.
+        
+        Creates Skill objects for main heroes and joiner heroes.
+        """
         heroes_registry = JsonUtil.hero_registery
         # Fighter heroes
         for hero, levels in self.heroes.items():
@@ -125,12 +189,18 @@ class Fighter:
                 if f"skill_{skill['skill_num']}" in levels.keys():
                     self.skills.append(Skill(skill,level = levels[f"skill_{skill['skill_num']}"]))
         # Joiners heroes
-        for hero, levels in self.joiner_heroes.items():
+        for hero_data in self.joiner_heroes:
+            hero = hero_data['hero']
+            levels = hero_data['levels']
             for skill in heroes_registry[hero]:
-                if skill['skill_num'] in levels.keys():
-                    self.skills.append(Skill(skill,level = levels[skill['skill_num']]))
+                if f"skill_{skill['skill_num']}" in levels.keys():
+                    self.skills.append(Skill(skill,level = levels[f"skill_{skill['skill_num']}"]))
 
     def _calc_troops_skills(self):
+        """Process and initialize all troop-based skills.
+        
+        Determines skill levels based on troop tier and creates Skill objects.
+        """
         _troop_skills_data = JsonUtil.troop_skills
         for troop_skill in _troop_skills_data:
             level = 0
@@ -144,19 +214,40 @@ class Fighter:
                 self.skills.append(Skill(troop_skill, level))
 
     def _calc_effects(self):
+        """Create Effect objects from all skill effect data.
+        
+        Converts skill effects into Effect objects for battle processing.
+        """
         for skill in self.skills:
             for _effect in skill.skill_effects_data:
                 self.effects.append(Effect(skill,_effect))
 
     def get_sum_army(self, round = 0):
+        """Get total army size at a specific round.
+        
+        Args:
+            round: Round number (0 for initial army size).
+            
+        Returns:
+            int: Total number of troops.
+        """
         if round: return sum(math.ceil(v) for v in self.rounds[round].round_troops.values())
         return sum(self.troops_by_type.values())
     
     def get_skill_by_name(self, skill_name):
+        """Find a skill by name.
+        
+        Args:
+            skill_name: Name of the skill to find.
+            
+        Returns:
+            Skill: The matching skill object, or None if not found.
+        """
         for skill in self.skills:
             if skill.skill_name == skill_name: return skill
     
     def print_skills_list(self):
+        """Print all active skills with their levels."""
         for skill in self.skills:
             print(f"{skill.skill_hero or 'TROOP SKILL:'} - {skill.skill_name} : Level {skill.skill_level}")
 

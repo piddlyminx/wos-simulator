@@ -1,5 +1,6 @@
 import json
 import csv
+import pandas as pd
 
 skills_dict = {}
 
@@ -43,6 +44,12 @@ def convert_value(v):
         pass
     if v[-1:] == ' ': return v[:-1]
     return v
+
+def xlsx_to_csv(xlsx_path, csv_path):
+    """Convert xlsx file to csv format"""
+    df = pd.read_excel(xlsx_path, engine='openpyxl')
+    df.to_csv(csv_path, sep=';', index=False, encoding='utf-8')
+    print(f"Converted {xlsx_path} to {csv_path}")
 
 def make_hero_dicts(csv_file_path = 'skills/Fitz_hero_skills.csv', export_dicts_path = "assets/hero_skills/"):
 
@@ -113,7 +120,12 @@ def make_hero_dicts(csv_file_path = 'skills/Fitz_hero_skills.csv', export_dicts_
 
 if __name__ == '__main__':
     
+    xlsx_file_path = 'skills/Fitz_hero_skills.xlsx'
     csv_file_path = 'skills/Fitz_hero_skills.csv'
     export_dicts_path = "assets/hero_skills/"
 
+    # Convert xlsx to csv first
+    xlsx_to_csv(xlsx_file_path, csv_file_path)
+
+    # Then process the csv to create JSON files
     make_hero_dicts(csv_file_path, export_dicts_path)

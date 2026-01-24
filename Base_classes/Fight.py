@@ -9,6 +9,17 @@ import json
 import os
 
 class Fight:
+    """Represents a battle between two fighters and manages battle execution.
+    
+    Coordinates the battle loop, round calculations, result tracking, and reporting.
+    
+    Attributes:
+        attacker (Fighter): Attacking fighter.
+        defender (Fighter): Defending fighter.
+        max_round (int): Maximum number of rounds before battle ends.
+        num_rounds (int): Actual number of rounds the battle lasted.
+        dont_save (bool): If True, doesn't save battle report to file.
+    """
     def __init__(self, attacker: Fighter, defender: Fighter, max_round = 1500, dont_save= False):
         self.attacker = attacker
         self.defender = defender
@@ -19,6 +30,16 @@ class Fight:
 
 
     def battle(self, show_rounds_freq = -1):
+        """Execute the battle simulation.
+        
+        Runs the battle loop, calculating each round until one side is eliminated or max_round is reached.
+        
+        Args:
+            show_rounds_freq (int, optional): If > 0, prints battle state every N rounds. Defaults to -1 (no output).
+        
+        Returns:
+            tuple: (attacker_remaining, defender_remaining) - total troops remaining for each side.
+        """
         if show_rounds_freq > 0: BattleRound.DEBUG_FREQ = show_rounds_freq
 
         self.attacker.calc(self.defender)
@@ -95,6 +116,10 @@ class Fight:
         return sum_att, sum_def
     
     def print_skills_report(self):
+        """Print formatted skill usage report for both fighters.
+        
+        Displays which effects triggered during the battle with activation counts.
+        """
         # print(json.dumps(self.battle_report()["sim_skills_used"], indent= 4))
         print('\n---------- ATTACKER SKILLS')
         for effect in self.attacker.effects :
@@ -107,6 +132,11 @@ class Fight:
             print(effect.get_report())
 
     def battle_report(self):
+        """Generate comprehensive battle report dictionary.
+        
+        Returns:
+            dict: Report containing fighter configurations, results, and skill usage statistics.
+        """
         report = {
             'time': datetime.now().strftime('%Y-%m-%d - %H:%M'),
             'attacker': {
@@ -142,6 +172,10 @@ class Fight:
 
     
     def format_report(self):
+        """Print formatted battle report to console as a table.
+        
+        Displays fighters, stats, results, and skill usage in a readable grid format.
+        """
         report = self.battle_report()
         att_is_winner = report['sim_result']['attacker'] > 0 
         headers = [f"ATTACKER ({report['attacker']['name']})    "+ ('✅' if att_is_winner else '❌'), '✦✦✦✦', f"DEFENDER ({report['defender']['name']})     " + ('❌' if att_is_winner else '✅')]
@@ -154,8 +188,19 @@ class Fight:
         lines.append([report['sim_result']['attacker'], f"{report['sim_rounds']} rounds", report['sim_result']['defender']])
         lines.append(['\n'.join(report['sim_skills_used']['attacker']), 'SKILLS REPORT', '\n'.join(report['sim_skills_used']['defender'])])
         print(tabulate(lines, headers=headers, tablefmt="fancy_grid", colalign=("left", "center", "left")))
+                
+        # print('----------')
+        # print(report['sim_skills_used']['attacker'])
+        # print('----------')
+        # print(report['sim_skills_used']['defender'])
 
     def save_testcase(self, file, result):
+        """Save battle as a test case for validation.
+        
+        Args:
+            file (str): Filename in testcases/ directory to save to.
+            result (list): List of result dictionaries from game for comparison.
+        """
         TESTCASES_DIR = "testcases/"
 
         ans = input(f"\n⚠️  Confirm to save testcase in '{file}' with result [ Attacker: {result[0]['attacker']} / Defender: {result[0]['defender']} ] : ")

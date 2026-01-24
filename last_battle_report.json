@@ -1,81 +1,48 @@
 {
-    "time": "2025-07-22 - 06:39",
+    "time": "2026-01-22 - 16:58",
     "attacker": {
-        "name": "Nitro",
+        "name": "Kill",
         "heroes": {},
         "troops": {
-            "infantry_t10_fc5": 50000
+            "infantry_t1": 2000,
+            "infantry_t8": 1,
+            "lancer_t6": 50,
+            "lancer_t1": 5000
         },
         "stats": {
-            "inf": {
-                "attack": 602.82,
-                "defense": 607.82,
-                "lethality": 420.22,
-                "health": 403.0
-            },
-            "lanc": {
-                "attack": 557.32,
-                "defense": 554.32,
-                "lethality": 368.26,
-                "health": 360.39
-            },
-            "mark": {
-                "attack": 557.32,
-                "defense": 564.82,
-                "lethality": 388.3,
-                "health": 372.94
-            }
+            "inf": "Basic_stat_dict(attack=119.1, defense=123.6, lethality=47.1, health=54.3)",
+            "lanc": "Basic_stat_dict(attack=110.1, defense=116.1, lethality=31.4, health=34.5)",
+            "mark": "Basic_stat_dict(attack=111.1, defense=116.6, lethality=85.4, health=90.9)"
         },
-        "joiner_heroes": {}
+        "joiner_heroes": []
     },
     "defender": {
-        "name": "Beast_30",
+        "name": "Beast_15",
         "heroes": {},
         "troops": {
-            "infantry_t10": 6450,
-            "lancer_t10": 7525,
-            "lancer_t9": 30105,
-            "marksman_t10": 7525,
-            "marksman_t9": 30105
+            "infantry_t5": 1120,
+            "lancer_t5": 1310,
+            "marksman_t5": 1310
         },
         "stats": {
-            "inf": {
-                "attack": 455.0,
-                "defense": 455.0,
-                "lethality": 455.0,
-                "health": 455.0
-            },
-            "lanc": {
-                "attack": 455.0,
-                "defense": 455.0,
-                "lethality": 455.0,
-                "health": 455.0
-            },
-            "mark": {
-                "attack": 455.0,
-                "defense": 455.0,
-                "lethality": 455.0,
-                "health": 455.0
-            }
+            "inf": "Basic_stat_dict(attack=26.5, defense=26.5, lethality=26.5, health=26.5)",
+            "lanc": "Basic_stat_dict(attack=26.5, defense=26.5, lethality=26.5, health=26.5)",
+            "mark": "Basic_stat_dict(attack=26.5, defense=26.5, lethality=26.5, health=26.5)"
         },
-        "joiner_heroes": {}
+        "joiner_heroes": []
     },
     "sim_result": {
         "attacker": 0,
-        "defender": 41906
+        "defender": 2805
     },
-    "sim_rounds": 96,
+    "sim_rounds": 41,
     "sim_skills_used": {
         "attacker": [
-            "INFANTRY- Master Brawler/1 (Lvl 1)      :  1 (67)               (DamageUp)",
-            "INFANTRY- Bands of Steel/1 (Lvl 1)      :  1 (96)               (DefenseUp)",
-            "INFANTRY- Crystal Shield/1 (Lvl 2)      :  75 (75)              (OppDamageDown)"
+            "INFANTRY- Bands of Steel/1 (Lvl 1)      :  1 (23)               (DefenseUp)"
         ],
         "defender": [
-            "INFANTRY- Bands of Steel/1 (Lvl 1)      :  1 (0)                (DefenseUp)",
-            "LANCERS- Ambusher/1 (Lvl 1)             :  17 (17)              (attack_order)",
-            "MARKSMEN- Ranged Strike/1 (Lvl 1)       :  1 (96)               (DamageUp)",
-            "MARKSMEN- Volley/1 (Lvl 1)              :  8 (8) -Extra: 2786.7 (DamageUp)"
+            "INFANTRY- Master Brawler/1 (Lvl 1)      :  1 (18)               (DamageUp)",
+            "MARKSMEN- Ranged Strike/1 (Lvl 1)       :  1 (23)               (DamageUp)"
         ]
     }
 }
