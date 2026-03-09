@@ -14,12 +14,10 @@ class BattleRound():
         DEBUG (bool): Enable debug output for battle calculations.
         DEBUG_FREQ (int): Frequency of debug output (every N rounds).
         DEBUG_MAX_ROUND (int): Maximum round to output debug information.
-        FATIGUE_FACTOR (float): Fatigue reduction per round (0.0001).
     """
     DEBUG = False
     DEBUG_FREQ = 10
     DEBUG_MAX_ROUND = 10
-    FATIGUE_FACTOR = 0.01 / 100  # 0.0001 per round
     
     def __init__(self, fighter: Fighter, opponent: Fighter, round_idx, army_min) -> None:
         """Initialize a battle round.
@@ -207,7 +205,7 @@ class BattleRound():
         """Calculate casualties inflicted by this fighter this round.
         
         For each unit type, calculates base damage, applies skill bonuses and
-        debuffs, applies fatigue, and stores resulting casualties.
+        debuffs, and stores resulting casualties.
         """
         if BattleRound.DEBUG and self.round_idx % BattleRound.DEBUG_FREQ == 0 and self.round_idx < self.DEBUG_MAX_ROUND:
             print(f"\n🔹🔹🔹🔹🔹🔹🔹🔹  R{self.round_idx} : BONUS CALCS - {self.fighter.name}")
@@ -229,9 +227,6 @@ class BattleRound():
 
             # Calc kills with bonus dmg
             ut_kills = self.calc_bonus_dmg(unit_base_dmg, ut, target)
-
-            # Fatigue
-            ut_kills = ut_kills * (1 - self.FATIGUE_FACTOR * self.round_idx)
 
             ### ROUNDING: Try later. PROBABLY NOT USED !
             # ut_kills = math.ceil(ut_kills)
