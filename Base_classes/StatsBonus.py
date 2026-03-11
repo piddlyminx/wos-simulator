@@ -131,6 +131,24 @@ class StatsBonus():
         type_stats.__setattr__(stat.lower(), round(stat_value + value,2))
         self.__setattr__(type.name, type_stats)
 
+    def copy(self):
+        """Create a deep copy of this stats container."""
+        copied = StatsBonus()
+        for ut in UnitType:
+            current = self.__getattribute__(ut.name)
+            copied.__setattr__(
+                ut.name,
+                Basic_stat_dict()._from_dict(
+                    {
+                        "attack": current.attack,
+                        "defense": current.defense,
+                        "lethality": current.lethality,
+                        "health": current.health,
+                    }
+                ),
+            )
+        return copied
+
     def __str__(self) -> str:
         return json.dumps(self.to_json(), indent= 4)
     
