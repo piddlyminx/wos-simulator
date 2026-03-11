@@ -34,11 +34,13 @@ class Fighter:
         self._troops = {}
         self.role = None
         self.stats = StatsBonus.from_list(JsonUtil.fighter_stats[self.name]) if self.load_fighter else StatsBonus()
+        self.effective_stats = self.stats.copy()
         self._heroes = {}
         self._joiner_heroes = []
         
         self.skills = []
         self.effects = []
+        self.stat_bonus_effects = []
 
         self.attack_by_troop = {}
         self.defense_by_troop = {}
@@ -86,10 +88,27 @@ class Fighter:
             
         Calculates skills, attack/defense values by troop and type.
         """
+        self._reset_calculated_state()
         self.calc_skills()
+        self._apply_prebattle_stat_bonuses()
         for troop_name in self.troops:
             self.calc_by_troop(troop_name, opponent)
         self.calc_by_type()
+
+    def _reset_calculated_state(self):
+        """Reset transient derived state before recalculating a fighter."""
+        self.skills = []
+        self.effects = []
+        self.stat_bonus_effects = []
+        self.effective_stats = self.stats.copy()
+        self.attack_by_troop = {}
+        self.defense_by_troop = {}
+        self.troops_by_type = {}
+        self.attack_by_type = {}
+        self.defense_by_type = {}
+        self.rounds = {}
+        self.cumul_attacks = {ut: 0 for ut in UnitType}
+        self.cumul_received_attacks = {ut: 0 for ut in UnitType}
     
     def calc_skills(self):
         """Calculate and initialize all active skills and effects.
@@ -116,7 +135,7 @@ class Fighter:
         base_defense = troop["stats"].get("Defense")
         troop_type = _to_unitx(troop_name)
 
-        fighter_stats = self.stats.__getattribute__(troop_type.name)
+        fighter_stats = self.effective_stats.__getattribute__(troop_type.name)
         bonus_attack = fighter_stats.attack / 100
         bonus_lethality = fighter_stats.lethality / 100
         bonus_health = fighter_stats.health / 100
@@ -223,39 +242,50 @@ class Fighter:
         for skill in self.skills:
             for _effect in skill.skill_effects_data:
                 eff_type = _effect.get('effect_type')
-                # Special handling for StatBonus-type widget effects:
-                # apply a percentage modifier directly to this fighter's StatsBonus,
-                # then do not add an Effect for runtime processing.
                 if eff_type == "StatBonus":
-                    special = _effect.get('special', {}) or {}
-                    stat = special.get('stat')
-                    role = special.get('role')
-                    # Role-gated widgets: only apply when fighter is in the right role (attack/defense)
-                    if role and getattr(self, "role", None) != role:
-                        continue
-                    if not stat:
-                        continue
-                    level_key = skill.skill_level
-                    values = _effect.get('effect_values', {}) or {}
-                    if level_key not in values:
-                        continue
-                    try:
-                        pct = float(values[level_key])
-                    except (TypeError, ValueError):
-                        continue
-                    # Apply as a percentage multiplier to the current stat for each unit type
-                    for ut in UnitType:
-                        type_stats = getattr(self.stats, ut.name)
-                        base = getattr(type_stats, stat.lower(), None)
-                        if base is None:
-                            continue
-                        delta = base * pct / 100.0
-                        if delta:
-                            self.stats.add_bonus(ut, stat, delta)
+                    self.stat_bonus_effects.append((skill, _effect))
                     continue
 
-                # All non-StatBonus effects go through the normal runtime Effect flow
                 self.effects.append(Effect(skill, _effect))
+
+    def _apply_prebattle_stat_bonuses(self):
+        """Apply permanent stat bonus effects into effective stats before battle."""
+        for skill, effect_dict in self.stat_bonus_effects:
+            special = effect_dict.get('special', {}) or {}
+            stat = special.get('stat')
+            role = special.get('role')
+            if role and getattr(self, "role", None) != role:
+                continue
+            if not stat:
+                continue
+
+            values = effect_dict.get('effect_values', {}) or {}
+            if skill.skill_level not in values:
+                continue
+            try:
+                pct = float(values[skill.skill_level])
+            except (TypeError, ValueError):
+                continue
+
+            for ut in self._stat_bonus_target_units(skill, effect_dict):
+                type_stats = getattr(self.effective_stats, ut.name)
+                base = getattr(type_stats, stat.lower(), None)
+                if base is None:
+                    continue
+                delta = base * pct / 100.0
+                if delta:
+                    self.effective_stats.add_bonus(ut, stat, delta)
+
+    def _stat_bonus_target_units(self, skill, effect_dict):
+        """Resolve target unit types for a pre-battle stat bonus."""
+        benefit_for = effect_dict.get('benefit_types', {}).get('benefit_for', 'all')
+        if benefit_for == 'all':
+            return list(UnitType)
+        if benefit_for == 'trigger':
+            return [_to_unitx(skill.skill_troop_type)]
+        if benefit_for in [ut.name for ut in UnitType]:
+            return [_to_unitx(benefit_for)]
+        return list(UnitType)
 
     def get_sum_army(self, round = 0):
         """Get total army size at a specific round.

@@ -147,14 +147,14 @@ class Fight:
                 'name': self.attacker.name,
                 'heroes': self.attacker.heroes,
                 'troops': self.attacker.troops,
-                'stats': self.attacker.stats.to_json(),
+                'stats': self.attacker.effective_stats.to_json(),
                 'joiner_heroes': self.attacker.joiner_heroes,
             },
             'defender': {
                 'name': self.defender.name,
                 'heroes': self.defender.heroes,
                 'troops': self.defender.troops,
-                'stats': self.defender.stats.to_json(),
+                'stats': self.defender.effective_stats.to_json(),
                 'joiner_heroes': self.defender.joiner_heroes,
             },
             'sim_result':{
