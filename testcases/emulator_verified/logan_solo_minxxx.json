@@ -1,0 +1,82 @@
+[
+  {
+    "test_id": "logan_solo_minxxx",
+    "description": "Logan solo defender test. WIP attacking with no heroes, minxxx defending with Logan. Fresh capture 2026-03-18.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 60,
+        "marksman_t6": 60
+      },
+      "joiner_heroes": {},
+      "stats": {
+        "inf": {
+          "attack": 66.1,
+          "defense": 61.9,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 68.6,
+          "defense": 63.1,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 69.1,
+          "defense": 59.4,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      }
+    },
+    "defender": {
+      "name": "[pii]Piddlyminxxx",
+      "heroes": {
+        "Logan": {
+          "skill_1": 1,
+          "skill_2": 0,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "joiner_heroes": {},
+      "stats": {
+        "inf": {
+          "attack": 235.1,
+          "defense": 216.7,
+          "lethality": 102.0,
+          "health": 115.1
+        },
+        "lanc": {
+          "attack": 165.7,
+          "defense": 158.3,
+          "lethality": 110.2,
+          "health": 111.0
+        },
+        "mark": {
+          "attack": 182.7,
+          "defense": 174.3,
+          "lethality": 112.9,
+          "health": 113.9
+        }
+      }
+    },
+    "sim_result": {
+      "attacker": 0,
+      "defender": 0
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 1995
+      }
+    ]
+  }
+]

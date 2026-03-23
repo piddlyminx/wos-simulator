@@ -1,0 +1,82 @@
+[
+  {
+    "test_id": "lynn_solo",
+    "description": "Lynn solo defender test. WIP attacking no heroes 1500/1500/1500, minxxx defending with Lynn (3/3/3). Balanced around 0 outcome.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1382,
+        "lancer_t6": 741,
+        "marksman_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 66.1,
+          "defense": 61.9,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 68.6,
+          "defense": 63.1,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 69.1,
+          "defense": 59.4,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Lynn": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 201.7,
+          "defense": 188.3,
+          "lethality": 112.0,
+          "health": 125.1
+        },
+        "lanc": {
+          "attack": 175.7,
+          "defense": 173.3,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 335.9,
+          "defense": 332.5,
+          "lethality": 169.7,
+          "health": 152.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 0,
+      "defender": 76
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 289
+      }
+    ]
+  }
+]

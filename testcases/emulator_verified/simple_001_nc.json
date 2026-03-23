@@ -1,0 +1,72 @@
+[
+  {
+    "test_id": "simple_001",
+    "description": "No heroes. WIP 200 Elite Lancer (t8) vs minxxx 200 Supreme Lancer (t9).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "lancer_t8": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 66.1,
+          "defense": 61.4,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 68.6,
+          "defense": 62.6,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 69.1,
+          "defense": 58.9,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "lancer_t9": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 191.7,
+          "defense": 173.3,
+          "lethality": 102.0,
+          "health": 115.1
+        },
+        "lanc": {
+          "attack": 165.7,
+          "defense": 158.3,
+          "lethality": 110.2,
+          "health": 111.0
+        },
+        "mark": {
+          "attack": 182.7,
+          "defense": 174.3,
+          "lethality": 112.9,
+          "health": 113.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 0,
+      "defender": 186
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 186
+      }
+    ]
+  }
+]
