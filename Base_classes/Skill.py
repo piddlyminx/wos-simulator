@@ -94,6 +94,18 @@ class Skill:
             # chance
             if self.skill_is_chance :
                 if not self.proc(_round): return False # do not return self.proc(_round), more checks could be added later 
+        
+        # HP threshold condition: skill only activates when army HP is above/below a threshold
+        hp_threshold = self.skill_effects_data[0].get('special', {}).get('hp_threshold') if self.skill_effects_data else None
+        if hp_threshold:
+            total_initial = sum(fighter.troops_by_type.values())
+            total_current = sum(fighter.rounds[_round].round_troops.values()) if hasattr(fighter.rounds[_round], 'round_troops') else total_initial
+            hp_pct = (total_current / total_initial * 100) if total_initial > 0 else 100
+            if 'above' in hp_threshold and hp_pct <= hp_threshold['above']:
+                return False
+            if 'below' in hp_threshold and hp_pct >= hp_threshold['below']:
+                return False
+        
         return True
     
     def proc(self, _round):
