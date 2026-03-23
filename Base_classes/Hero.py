@@ -128,7 +128,8 @@ class Hero:
                 exit()
             _num = int(_num)
             if _num not in h_skill_nums:
-                print(f"⚠️  Warning: hero '{hero_name}' doesn't have a 'skill_{_num}' in sim config — skipping (may be a non-combat skill)")
+                if s_level > 0:
+                    print(f"⚠️  Warning: hero '{hero_name}' doesn't have a 'skill_{_num}' in sim config — skipping (may be a non-combat skill)")
                 continue
             if _joiner and _num != 1: continue
             if s_level > 0: skill_levels[f"skill_{_num}"] = s_level
