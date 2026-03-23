@@ -373,7 +373,7 @@
                     "skill_1": 5,
                     "skill_2": 5
                 },
-                "Lumak": {
+                "Lumak Bokan": {
                     "skill_1": 1
                 }
             },
@@ -464,7 +464,7 @@
                     "skill_1": 5,
                     "skill_2": 5
                 },
-                "Lumak": {
+                "Lumak Bokan": {
                     "skill_1": 1
                 }
             },
@@ -533,12 +533,12 @@
                 "Seo-yoon": {
                     "skill_1": 3
                 },
-                "Lumak": {
-                    "skill_1": 2
-                },
                 "Sergey": {
                     "skill_1": 2,
                     "skill_2": 2
+                },
+                "Lumak Bokan": {
+                    "skill_1": 2
                 }
             },
             "troops": {
@@ -571,15 +571,15 @@
         "defender": {
             "name": "viper",
             "heroes": {
-                "Ling": {
-                    "skill_1": 1
-                },
                 "Ahmose": {
                     "skill_1": 1
                 },
                 "Zinman": {
                     "skill_1": 1,
                     "skill_3": 1
+                },
+                "Ling Xue": {
+                    "skill_1": 1
                 }
             },
             "troops": {

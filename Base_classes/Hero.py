@@ -44,7 +44,7 @@ class Hero:
         if _joiners:
             skills_levels_list = []
             for hero_n in _heroes_dict:
-                hero = hero_n.lower().capitalize()
+                hero = ' '.join(w.capitalize() for w in hero_n.lower().split(' '))
                 if hero not in Hero.registry:
                     print(f"⚠️  Error:  Hero named '{hero}' not found !")
                     exit()
@@ -56,7 +56,7 @@ class Hero:
         skills_levels_dict = {}
         types = []
         for hero_n in _heroes_dict:
-            hero = hero_n.lower().capitalize()
+            hero = ' '.join(w.capitalize() for w in hero_n.lower().split(' '))
             if hero not in Hero.registry:
                 print(f"⚠️  Error:  Hero named '{hero}' not found !")
                 exit()
