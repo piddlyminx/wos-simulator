@@ -1,0 +1,82 @@
+[
+  {
+    "test_id": "greg_solo",
+    "description": "Greg solo defender test. WIP attacking no heroes 1500/1069/1500, minxxx defending with Greg (1/1). Greg has chance-based skills.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 1069,
+        "marksman_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 66.1,
+          "defense": 63.9,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 68.6,
+          "defense": 65.1,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 69.1,
+          "defense": 61.4,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Greg": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.7,
+          "defense": 196.3,
+          "lethality": 118.0,
+          "health": 131.1
+        },
+        "lanc": {
+          "attack": 188.7,
+          "defense": 181.3,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 284.6,
+          "defense": 276.2,
+          "lethality": 122.9,
+          "health": 123.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 2687,
+      "defender": 0
+    },
+    "game_report_result": [
+      {
+        "attacker": 2697,
+        "defender": 0
+      }
+    ]
+  }
+]
