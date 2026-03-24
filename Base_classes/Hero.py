@@ -44,7 +44,7 @@ class Hero:
         if _joiners:
             skills_levels_list = []
             for hero_n in _heroes_dict:
-                hero = hero_n.lower().capitalize()
+                hero = ' '.join(w.capitalize() for w in hero_n.lower().split(' '))
                 if hero not in Hero.registry:
                     print(f"⚠️  Error:  Hero named '{hero}' not found !")
                     exit()
@@ -56,7 +56,7 @@ class Hero:
         skills_levels_dict = {}
         types = []
         for hero_n in _heroes_dict:
-            hero = hero_n.lower().capitalize()
+            hero = ' '.join(w.capitalize() for w in hero_n.lower().split(' '))
             if hero not in Hero.registry:
                 print(f"⚠️  Error:  Hero named '{hero}' not found !")
                 exit()
@@ -122,14 +122,15 @@ class Hero:
         skill_levels = {}
         for s_num_str, s_level in hero_skill_levels.items():
             _num = s_num_str.split('_')[1]
-            if (not _num.isdigit()) or int(_num) > 3 or int(_num) < 1 or (not isinstance(s_level, int)) or s_level < 0 or s_level > 5:
-                print(f"⚠️  Error (for hero : {hero_name}): skill levels should specified in the format: 'skill_X_level' : Y ")
-                print(f"                               X: skill number, Y: skill level (both integers) ")
+            if (not _num.isdigit()) or int(_num) > 4 or int(_num) < 1 or (not isinstance(s_level, int)) or s_level < 0 or s_level > 5:
+                print(f"⚠️  Error (for hero : {hero_name}): skill levels should specified in the format: 'skill_X' or 'skill_X_level' : Y ")
+                print(f"                               X: skill number (1-4), Y: skill level (0-5 integers) ")
                 exit()
             _num = int(_num)
             if _num not in h_skill_nums:
-                print(f"⚠️  Error : hero '{hero_name}' doesn't have a 'skill_{_num}' !")
-                exit()
+                if s_level > 0:
+                    print(f"⚠️  Warning: hero '{hero_name}' doesn't have a 'skill_{_num}' in sim config — skipping (may be a non-combat skill)")
+                continue
             if _joiner and _num != 1: continue
             if s_level > 0: skill_levels[f"skill_{_num}"] = s_level
         return skill_levels

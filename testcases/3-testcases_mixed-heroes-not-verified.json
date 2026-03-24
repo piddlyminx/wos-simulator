@@ -373,7 +373,7 @@
                     "skill_1": 5,
                     "skill_2": 5
                 },
-                "Lumak": {
+                "Lumak Bokan": {
                     "skill_1": 1
                 }
             },
@@ -464,7 +464,7 @@
                     "skill_1": 5,
                     "skill_2": 5
                 },
-                "Lumak": {
+                "Lumak Bokan": {
                     "skill_1": 1
                 }
             },
@@ -533,12 +533,12 @@
                 "Seo-yoon": {
                     "skill_1": 3
                 },
-                "Lumak": {
-                    "skill_1": 2
-                },
                 "Sergey": {
                     "skill_1": 2,
                     "skill_2": 2
+                },
+                "Lumak Bokan": {
+                    "skill_1": 2
                 }
             },
             "troops": {
@@ -571,15 +571,15 @@
         "defender": {
             "name": "viper",
             "heroes": {
-                "Ling": {
-                    "skill_1": 1
-                },
                 "Ahmose": {
                     "skill_1": 1
                 },
                 "Zinman": {
                     "skill_1": 1,
                     "skill_3": 1
+                },
+                "Ling Xue": {
+                    "skill_1": 1
                 }
             },
             "troops": {
@@ -762,282 +762,5 @@
             "attacker": 0,
             "defender": 2295
         }
-    },
-    {
-        "test_id": "daut_viper_8",
-        "time": "2025-07-13 - 17:06",
-        "attacker": {
-            "name": "daut2x",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 1,
-                    "skill_3": 1
-                },
-                "Logan": {
-                    "skill_1": 2,
-                    "skill_2": 2
-                },
-                "Molly": {
-                    "skill_1": 2,
-                    "skill_2": 2
-                }
-            },
-            "troops": {
-                "infantry_t6": 5000,
-                "lancer_t6": 2000,
-                "marksman_t6": 4000
-            },
-            "stats": {
-                "inf": {
-                    "attack": 69.68,
-                    "defense": 69.18,
-                    "lethality": 1.8,
-                    "health": 1.8
-                },
-                "lanc": {
-                    "attack": 57.71,
-                    "defense": 57.21,
-                    "lethality": 1.8,
-                    "health": 1.8
-                },
-                "mark": {
-                    "attack": 86.72,
-                    "defense": 85.72,
-                    "lethality": 1.8,
-                    "health": 1.8
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "defender": {
-            "name": "viper2x",
-            "heroes": {
-                "Flint": {
-                    "skill_1": 4,
-                    "skill_2": 4,
-                    "skill_3": 4
-                },
-                "Reina": {
-                    "skill_1": 1
-                },
-                "Zinman": {
-                    "skill_1": 1,
-                    "skill_3": 1
-                }
-            },
-            "troops": {
-                "infantry_t6": 500,
-                "lancer_t6": 500,
-                "marksman_t6": 500
-            },
-            "stats": {
-                "inf": {
-                    "attack": 316.87,
-                    "defense": 316.37,
-                    "lethality": 107.2,
-                    "health": 114.2
-                },
-                "lanc": {
-                    "attack": 217.71,
-                    "defense": 209.71,
-                    "lethality": 110.3,
-                    "health": 100.2
-                },
-                "mark": {
-                    "attack": 242.4,
-                    "defense": 230.9,
-                    "lethality": 117.8,
-                    "health": 104.7
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "sim_result": {
-            "attacker": 0,
-            "defender": 883
-        },
-        "sim_skills_used": {
-            "attacker": {
-                "Alonso- Onslaught": "4",
-                "Alonso- Iron strength": "23",
-                "Alonso- Poison harpoon": "39 - Extra: 16.5",
-                "Logan- Lion strike": "17 - Extra: 37.9",
-                "Logan- Lion intimidation": "1",
-                "Molly- Calling of the storm": "11",
-                "Molly- Ice Dominion": "37 - Extra: 23.9",
-                "MARKSMEN- Ranged Strike": "1"
-            },
-            "defender": {
-                "Flint- Pyromaniac": "27",
-                "Flint- Burning resolve": "1",
-                "Flint- Immolation": "36",
-                "Reina- Assassin's instinct": "1",
-                "Zinman- Implacable": "2",
-                "Zinman- Positional Battler": "1",
-                "INFANTRY- Master Brawler": "1",
-                "LANCERS- Charge": "1",
-                "MARKSMEN- Ranged Strike": "1"
-            }
-        },
-        "game_report_result": {
-            "attacker": 0,
-            "defender": 1013
-        }
-    },
-    {
-        "test_id": "daut_viper_9",
-        "time": "2025-07-13 - 17:09",
-        "attacker": {
-            "name": "daut2x",
-            "heroes": {
-                "Mia": {
-                    "skill_1": 1,
-                    "skill_2": 0,
-                    "skill_3": 0
-                },
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 1,
-                    "skill_3": 1
-                },
-                "Logan": {
-                    "skill_1": 2,
-                    "skill_2": 2,
-                    "skill_3": 0
-                }
-            },
-            "troops": {
-                "infantry_t6": 500,
-                "lancer_t6": 2000,
-                "marksman_t6": 5000
-            },
-            "stats": {
-                "inf": {
-                    "attack": 69.68,
-                    "defense": 69.18,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "lanc": {
-                    "attack": 46.61,
-                    "defense": 46.05,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "mark": {
-                    "attack": 86.75,
-                    "defense": 85.75,
-                    "lethality": 1.75,
-                    "health": 1.75
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "defender": {
-            "name": "viper2x",
-            "heroes": {
-                "Flint": {
-                    "skill_1": 4,
-                    "skill_2": 4,
-                    "skill_3": 4
-                },
-                "Reina": {
-                    "skill_1": 1,
-                    "skill_2": 2,
-                    "skill_3": 0
-                },
-                "Zinman": {
-                    "skill_1": 1,
-                    "skill_3": 1
-                }
-            },
-            "troops": {
-                "infantry_t6": 13,
-                "lancer_t6": 500,
-                "marksman_t6": 500
-            },
-            "stats": {
-                "inf": {
-                    "attack": 313.87,
-                    "defense": 317.37,
-                    "lethality": 107.2,
-                    "health": 114.2
-                },
-                "lanc": {
-                    "attack": 243.31,
-                    "defense": 239.31,
-                    "lethality": 110.3,
-                    "health": 100.2
-                },
-                "mark": {
-                    "attack": 238.3,
-                    "defense": 231.8,
-                    "lethality": 117.8,
-                    "health": 104.7
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "sim_result": {
-            "attacker": 0,
-            "defender": 307
-        },
-        "sim_skills_used": {
-            "attacker": {
-                "Mia- Bad luck streak": "10",
-                "Alonso- Onslaught": "2",
-                "Alonso- Iron strength": "9",
-                "Alonso- Poison harpoon": "16 - Extra: 19.9",
-                "Logan- Lion strike": "6 - Extra: 42.6",
-                "Logan- Lion intimidation": "1",
-                "INFANTRY- Master Brawler": "1",
-                "MARKSMEN- Ranged Strike": "1"
-            },
-            "defender": {
-                "Flint- Pyromaniac": "11",
-                "Flint- Burning resolve": "1",
-                "Flint- Immolation": "22",
-                "Reina- Assassin's instinct": "1",
-                "Zinman- Implacable": "2",
-                "Zinman- Positional Battler": "1",
-                "LANCERS- Charge": "1",
-                "MARKSMEN- Ranged Strike": "1"
-            }
-        },
-        "game_report_result": [
-            {
-                "attacker": 0,
-                "defender": 289
-            },
-            {
-                "attacker": 0,
-                "defender": 448
-            },
-            {
-                "attacker": 0,
-                "defender": 412
-            },
-            {
-                "attacker": 0,
-                "defender": 453
-            },
-            {
-                "attacker": 0,
-                "defender": 310
-            },
-            {
-                "attacker": 0,
-                "defender": 372
-            },
-            {
-                "attacker": 0,
-                "defender": 476
-            },
-            {
-                "attacker": 0,
-                "defender": 305
-            }
-        ]
     }
 ]

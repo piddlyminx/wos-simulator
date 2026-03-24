@@ -42,6 +42,10 @@ class Fight:
         """
         if show_rounds_freq > 0: BattleRound.DEBUG_FREQ = show_rounds_freq
 
+        # Set roles for role-gated skills/widgets
+        self.attacker.role = "attack"
+        self.defender.role = "defense"
+
         self.attacker.calc(self.defender)
         self.defender.calc(self.attacker)
 
@@ -143,14 +147,14 @@ class Fight:
                 'name': self.attacker.name,
                 'heroes': self.attacker.heroes,
                 'troops': self.attacker.troops,
-                'stats': self.attacker.stats.to_json(),
+                'stats': self.attacker.effective_stats.to_json(),
                 'joiner_heroes': self.attacker.joiner_heroes,
             },
             'defender': {
                 'name': self.defender.name,
                 'heroes': self.defender.heroes,
                 'troops': self.defender.troops,
-                'stats': self.defender.stats.to_json(),
+                'stats': self.defender.effective_stats.to_json(),
                 'joiner_heroes': self.defender.joiner_heroes,
             },
             'sim_result':{

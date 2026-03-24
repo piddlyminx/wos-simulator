@@ -1,0 +1,86 @@
+[
+  {
+    "test_id": "philly_bahiti_combo",
+    "description": "2-hero combo: Philly+Bahiti on minxxx defender. WIP attacking no heroes. Tests multi-hero defensive interaction with RNG (Bahiti 50% chance, Philly 40% chance + 25% extra).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 400,
+        "lancer_t6": 400,
+        "marksman_t6": 400
+      },
+      "stats": {
+        "inf": {
+          "attack": 66.1,
+          "defense": 63.9,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 68.6,
+          "defense": 65.1,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 69.1,
+          "defense": 61.4,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Philly": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 1
+        },
+        "Bahiti": {
+          "skill_1": 2,
+          "skill_2": 2
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.7,
+          "defense": 196.3,
+          "lethality": 118.0,
+          "health": 131.1
+        },
+        "lanc": {
+          "attack": 270.5,
+          "defense": 263.1,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 294.7,
+          "defense": 286.3,
+          "lethality": 127.7,
+          "health": 128.2
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 0,
+      "defender": 559
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 556
+      }
+    ]
+  }
+]
