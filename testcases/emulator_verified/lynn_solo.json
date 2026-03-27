@@ -78,5 +78,101 @@
         "defender": 289
       }
     ]
+  },
+  {
+    "test_id": "lynn_solo",
+    "description": "Lynn solo defender test. WIP attacking no heroes 1500/1500/1500, minxxx defending with Lynn (3/3/3). Balanced around 0 outcome.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 1500,
+        "marksman_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 68.3,
+          "defense": 66.1,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 70.8,
+          "defense": 67.3,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 71.3,
+          "defense": 63.6,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Lynn": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.7,
+          "defense": 197.3,
+          "lethality": 118.0,
+          "health": 131.1
+        },
+        "lanc": {
+          "attack": 188.7,
+          "defense": 182.3,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 381.3,
+          "defense": 373.9,
+          "lethality": 169.7,
+          "health": 155.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 0,
+      "defender": 325
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 167
+      },
+      {
+        "attacker": 0,
+        "defender": 200
+      },
+      {
+        "attacker": 0,
+        "defender": 191
+      },
+      {
+        "attacker": 0,
+        "defender": 199
+      },
+      {
+        "attacker": 0,
+        "defender": 149
+      }
+    ]
   }
 ]
