@@ -29,7 +29,7 @@
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {
@@ -75,12 +75,12 @@
                 "effect_is_chance": true,
                 "effect_num": "Iron strength/1",
                 "trigger_types": {
-                    "trigger_for": "all",
+                    "trigger_for": "marksmen",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "target"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "all"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
