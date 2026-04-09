@@ -235,6 +235,35 @@ class BattleRound():
             if ut_kills > 0:
                 self.round_kills[ut] = { target : ut_kills }
 
+        # Post-processing: extra_vs_all — fan extra-attack damage out to all surviving enemy types
+        processed_benefits = set()
+        for benefit in self.round_benefits:
+            benefit: Benefit
+            if not benefit.extra_attack: continue
+            if not benefit._effect.special.get('extra_vs_all'): continue
+            if not benefit.used: continue
+            if id(benefit) in processed_benefits: continue
+            processed_benefits.add(id(benefit))
+
+            ben_value = float(benefit.correct_value(self.round_idx))
+            extra_vs_all_val = benefit._effect.special.get('extra_vs_all')
+            extra_vs_all_scale = float(extra_vs_all_val) if isinstance(extra_vs_all_val, (int, float)) and extra_vs_all_val is not True else 1.0
+            for ut in benefit.for_units:
+                army = self.calc_round_army(ut)
+                if army == 0: continue
+                primary_target = self.targets.get(ut)
+                for extra_vs in UnitType:
+                    if extra_vs == primary_target: continue  # already counted in normal calc
+                    if self.opponent.rounds[self.round_idx].round_troops[extra_vs] <= 0: continue
+                    unit_base_dmg_extra = army * self.fighter.attack_by_type[ut] / self.opponent.defense_by_type[extra_vs] / 100
+                    extra_kills = unit_base_dmg_extra * ben_value / 100 * extra_vs_all_scale
+                    if extra_kills > 0:
+                        if ut in self.round_kills:
+                            self.round_kills[ut][extra_vs] = self.round_kills[ut].get(extra_vs, 0) + extra_kills
+                        else:
+                            self.round_kills[ut] = {extra_vs: extra_kills}
+                        benefit._effect.extra_kills += extra_kills
+
     def calc_bonus_dmg(self, unit_base_dmg, ut: UnitType, vs: UnitType):
         """Calculate final damage with all skill bonuses and debuffs applied.
         
@@ -279,7 +308,7 @@ class BattleRound():
                 effect_dict[ben_op] += ben_value
                 self.fighter.cumul_attacks[ut] += 1
                 self.opponent.cumul_received_attacks[vs] += 1
-                benefit._effect.extra_kills += unit_base_dmg * benefit.correct_value(self.round_idx) /100
+                benefit._effect.extra_kills += unit_base_dmg * ben_value / 100
 
             elif benefit.only_normal:
                 effect_dict = only_normal_attacker[ben_type]
