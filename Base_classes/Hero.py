@@ -1,5 +1,12 @@
 from Base_classes.JsonUtil import JsonUtil
 
+def _resolve_hero_name(name: str) -> str:
+    """Normalize and resolve a hero name, applying aliases if needed."""
+    normalized = ' '.join(w.capitalize() for w in name.lower().split(' '))
+    if normalized in JsonUtil.hero_registery:
+        return normalized
+    return JsonUtil.hero_alias_to_canonical.get(normalized, normalized)
+
 class Hero:
     """Represents a hero and manages hero skill level configuration.
     
@@ -44,7 +51,7 @@ class Hero:
         if _joiners:
             skills_levels_list = []
             for hero_n in _heroes_dict:
-                hero = ' '.join(w.capitalize() for w in hero_n.lower().split(' '))
+                hero = _resolve_hero_name(hero_n)
                 if hero not in Hero.registry:
                     print(f"⚠️  Error:  Hero named '{hero}' not found !")
                     exit()
@@ -56,7 +63,7 @@ class Hero:
         skills_levels_dict = {}
         types = []
         for hero_n in _heroes_dict:
-            hero = ' '.join(w.capitalize() for w in hero_n.lower().split(' '))
+            hero = _resolve_hero_name(hero_n)
             if hero not in Hero.registry:
                 print(f"⚠️  Error:  Hero named '{hero}' not found !")
                 exit()

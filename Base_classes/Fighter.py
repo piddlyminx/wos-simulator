@@ -67,10 +67,17 @@ class Fighter:
         if self.name not in heroes_stats:
             print(f"\n⚠️  fighter '{self.name}' not found in '{JsonUtil.fighters_heroes_path}' ")
             exit()
+
+        def _canonical_hero_name(name):
+            normalized = ' '.join(word.capitalize() for word in name.lower().split(' '))
+            if normalized in JsonUtil.hero_registery:
+                return normalized
+            return JsonUtil.hero_alias_to_canonical.get(normalized, normalized)
+
         for hero in self.heroes:
             _found = False
             for hero_n in heroes_stats[self.name]:
-                if hero in hero_n.lower().capitalize() :
+                if hero == _canonical_hero_name(hero_n):
                     _found = True
                     h_type = _to_unitx(JsonUtil.hero_registery[hero][0]['skill_troop_type'])
                     h_stats = heroes_stats[self.name][hero_n]['stats']
@@ -94,6 +101,26 @@ class Fighter:
         for troop_name in self.troops:
             self.calc_by_troop(troop_name, opponent)
         self.calc_by_type()
+
+    def reset_for_new_battle(self):
+        """Reset per-battle state so Skills and Effects don't bleed across battles.
+
+        Call this at the start of each battle when Fighter objects are reused.
+        Clears the random-roll cache on every Skill and zeroes the trigger/usage
+        counters on every Effect, so each battle begins with clean state.
+
+        Note: Fighter.calc() recreates Skill and Effect objects entirely, so this
+        method is only strictly necessary when calc() is not called between battles.
+        It is called defensively in Fight.battle() to guard against future changes.
+        """
+        for skill in self.skills:
+            skill.reset_for_new_battle()
+        for effect in self.effects:
+            effect.trigger_count = 0
+            effect.activations_count = 0
+            effect.uses_count = 0
+            effect.extra_kills = 0
+            effect.last_round = None
 
     def _reset_calculated_state(self):
         """Reset transient derived state before recalculating a fighter."""

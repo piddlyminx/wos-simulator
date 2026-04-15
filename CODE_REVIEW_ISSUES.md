@@ -38,30 +38,8 @@
 
 ## ❌ REMAINING ISSUES
 
-### 4. ❌ Random State Not Reset Between Battles (Skill.py:66-70)
-**Issue:** `self.procs` dictionary persists across battles if Skill objects are reused
-```python
-# Add a reset method to Skill class:
-def reset_for_new_battle(self):
-    self.procs = {}
-
-# Add to Fighter class:
-def reset_for_new_battle(self):
-    for skill in self.skills:
-        skill.reset_for_new_battle()
-    for effect in self.effects:
-        effect.trigger_count = 0
-        effect.activations_count = 0
-        effect.uses_count = 0
-        effect.extra_kills = 0
-        effect.last_round = None
-
-# Call in Fight.battle():
-def battle(self, show_rounds_freq = -1):
-    self.attacker.reset_for_new_battle()
-    self.defender.reset_for_new_battle()
-    # ... rest of code
-```
+### 4. ✅ Random State Not Reset Between Battles (Skill.py:66-70)
+**Status:** FIXED - Added `reset_for_new_battle()` to Skill, Fighter, and called from Fight.battle()
 **Impact:** For statistical analysis with multiple battles, `procs` accumulates and can cause incorrect reuse of random rolls
 **Severity:** MEDIUM (only matters when running multiple battles)
 
@@ -94,12 +72,8 @@ for benefit in self.fighter.rounds[self.round_idx - 1].round_benefits:
 ## 📊 SUMMARY
 
 **Total Issues:** 14
-- **Fixed:** 10 ✅
-- **Remaining:** 4 ❌
+- **Fixed:** 11 ✅
+- **Remaining:** 3 ❌
 
 **Remaining by Priority:**
-- **MEDIUM:** 1 (Issue #4 - Random State Reset for multiple battles)
 - **LOW:** 3 (Issues #8, #12, #13)
-
-**Quick Wins (Easy to fix):**
-- Issue #4 - Add reset methods (requires careful implementation for statistical analysis)

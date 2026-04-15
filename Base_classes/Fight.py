@@ -42,6 +42,12 @@ class Fight:
         """
         if show_rounds_freq > 0: BattleRound.DEBUG_FREQ = show_rounds_freq
 
+        # Reset per-battle state before (re)calculating so that Skill.procs and
+        # Effect counters don't carry over if Fighter objects are reused across
+        # multiple battle() calls without an intervening calc().
+        self.attacker.reset_for_new_battle()
+        self.defender.reset_for_new_battle()
+
         # Set roles for role-gated skills/widgets
         self.attacker.role = "attack"
         self.defender.role = "defense"

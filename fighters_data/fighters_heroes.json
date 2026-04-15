@@ -1,4 +1,320 @@
 {
+    "max": {
+        "Jessie": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5
+            }
+        },
+        "Jasser": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5
+            }
+        },
+        "Sergey": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5
+            }
+        },
+        "Molly": {
+            "stats": {
+                "attack": 200.16,
+                "defense": 200.16,
+                "lethality": 50.0,
+                "health": 50.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Jeronimo": {
+            "stats": {
+                "attack": 260.2,
+                "defense": 260.2,
+                "lethality": 62.5,
+                "health": 62.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Bahiti": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5
+            }
+        },
+        "Seo-yoon": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5
+            }
+        },
+        "Lumak": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5
+            }
+        },
+        "Ling": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5
+            }
+        },
+        "Patrick": {
+            "stats": {
+                "attack": 140.11,
+                "defense": 140.11
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5
+            }
+        },
+        "Flint": {
+            "stats": {
+                "attack": 240.19,
+                "defense": 240.19,
+                "lethality": 60.0,
+                "health": 60.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Philly": {
+            "stats": {
+                "attack": 240.19,
+                "defense": 240.19,
+                "lethality": 60.0,
+                "health": 60.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Alonso": {
+            "stats": {
+                "attack": 240.19,
+                "defense": 240.19,
+                "lethality": 60.0,
+                "health": 60.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Logan": {
+            "stats": {
+                "attack": 290.23,
+                "defense": 290.23,
+                "lethality": 70.0,
+                "health": 70.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Mia": {
+            "stats": {
+                "attack": 290.23,
+                "defense": 290.23,
+                "lethality": 70.0,
+                "health": 70.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Greg": {
+            "stats": {
+                "attack": 290.23,
+                "defense": 290.23,
+                "lethality": 70.0,
+                "health": 70.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Ahmose": {
+            "stats": {
+                "attack": 370.29,
+                "defense": 370.29,
+                "lethality": 92.5,
+                "health": 92.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Lynn": {
+            "stats": {
+                "attack": 370.29,
+                "defense": 370.29,
+                "lethality": 92.5,
+                "health": 92.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Reina": {
+            "stats": {
+                "attack": 370.29,
+                "defense": 370.29,
+                "lethality": 92.5,
+                "health": 92.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Hector": {
+            "stats": {
+                "attack": 444.35,
+                "defense": 444.35,
+                "lethality": 111.0,
+                "health": 111.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Norah": {
+            "stats": {
+                "attack": 444.35,
+                "defense": 444.35,
+                "lethality": 111.0,
+                "health": 111.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Gwen": {
+            "stats": {
+                "attack": 444.35,
+                "defense": 444.35,
+                "lethality": 111.0,
+                "health": 111.0
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Wayne": {
+            "stats": {
+                "attack": 540.43,
+                "defense": 540.43,
+                "lethality": 133.5,
+                "health": 133.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Renee": {
+            "stats": {
+                "attack": 540.43,
+                "defense": 540.43,
+                "lethality": 133.5,
+                "health": 133.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+         "Wu Ming": {
+            "stats": {
+                "attack": 540.43,
+                "defense": 540.43,
+                "lethality": 133.5,
+                "health": 133.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        }
+    },
     "daut": {
         "Jessie": {
             "stats": {
