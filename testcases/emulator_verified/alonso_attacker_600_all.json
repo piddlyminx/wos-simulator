@@ -1,0 +1,240 @@
+[
+  {
+    "test_id": "alonso_attacker_600_all",
+    "description": "WIP (Alonso attacker) 600/600/600 t6 inf/lancer/marksman vs minxxx no heroes 200/200/200. Tests Alonso skills when attacking with balanced mixed troops.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 600,
+        "lancer_t6": 600,
+        "marksman_t6": 600
+      },
+      "stats": {
+        "inf": {
+          "attack": 74.9,
+          "defense": 77.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 79.9,
+          "defense": 74.7,
+          "lethality": 38.1,
+          "health": 31.3
+        },
+        "mark": {
+          "attack": 141.8,
+          "defense": 128.3,
+          "lethality": 37.6,
+          "health": 31.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 202.2,
+          "lethality": 118.6,
+          "health": 131.7
+        },
+        "lanc": {
+          "attack": 188.9,
+          "defense": 187.2,
+          "lethality": 120.8,
+          "health": 121.6
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 203.2,
+          "lethality": 123.5,
+          "health": 124.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 269
+      },
+      {
+        "attacker": 0,
+        "defender": 245
+      },
+      {
+        "attacker": 0,
+        "defender": 243
+      },
+      {
+        "attacker": 0,
+        "defender": 246
+      },
+      {
+        "attacker": 0,
+        "defender": 270
+      },
+      {
+        "attacker": 0,
+        "defender": 245
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:37:43": {
+        "result": -257.77,
+        "power_delta": -0.0097,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:10": {
+        "result": -257.34,
+        "power_delta": -0.0097,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:31": {
+        "result": -257.76,
+        "power_delta": -0.0103,
+        "replicates": 100
+      },
+      "2026-04-14 12:02:44": {
+        "result": -259.07,
+        "power_delta": -0.0103,
+        "replicates": 100
+      },
+      "2026-04-14 16:41:42": {
+        "result": -260.93,
+        "power_delta": -0.0109,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:31": {
+        "result": -259.33,
+        "power_delta": -0.0105,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:18": {
+        "result": -259.33,
+        "power_delta": -0.0102,
+        "replicates": 100
+      },
+      "2026-04-14 17:33:44": {
+        "result": -259.48,
+        "power_delta": -0.0108,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:01": {
+        "result": -260.31,
+        "power_delta": -0.0109,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:30": {
+        "result": -259.39,
+        "power_delta": -0.0103,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:28": {
+        "result": -259.99,
+        "power_delta": -0.0106,
+        "replicates": 100
+      },
+      "2026-04-14 21:49:49": {
+        "result": -258.47,
+        "power_delta": -0.01,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:24": {
+        "result": -257.91,
+        "power_delta": -0.0098,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:24": {
+        "result": -258.92,
+        "power_delta": -0.0101,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:29": {
+        "result": -259.16,
+        "power_delta": -0.0104,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:04": {
+        "result": -258.32,
+        "power_delta": -0.0099,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:19": {
+        "result": -260.23,
+        "power_delta": -0.0105,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:00": {
+        "result": -259.09,
+        "power_delta": -0.0101,
+        "replicates": 100
+      },
+      "2026-04-14 22:11:42": {
+        "result": -258.81,
+        "power_delta": -0.01,
+        "replicates": 100
+      },
+      "2026-04-15 00:23:32": {
+        "result": -260.66,
+        "power_delta": -0.0106,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:05": {
+        "result": -196.45,
+        "power_delta": 0.0385,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:16": {
+        "result": -201.06,
+        "power_delta": 0.0357,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:07": {
+        "result": -191.86,
+        "power_delta": 0.0408,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:24": {
+        "result": -258.78,
+        "power_delta": -0.0105,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:05": {
+        "result": -203.52,
+        "power_delta": 0.034,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:05": {
+        "result": -256.53,
+        "power_delta": -0.0094,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:06": {
+        "result": -258.6,
+        "power_delta": -0.0097,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:04": {
+        "result": -257.95,
+        "power_delta": -0.01,
+        "replicates": 100
+      }
+    }
+  }
+]

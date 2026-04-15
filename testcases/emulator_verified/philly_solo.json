@@ -68,10 +68,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 2253,
-      "defender": 0
-    },
     "game_report_result": [
       {
         "attacker": 2254,
@@ -81,6 +77,138 @@
         "attacker": 2252,
         "defender": 0
       }
-    ]
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:24": {
+        "result": 2252.77,
+        "power_delta": -0.0153,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:15": {
+        "result": 2233.99,
+        "power_delta": -0.0123,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:28": {
+        "result": 2254.33,
+        "power_delta": 0.0143,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:20": {
+        "result": 2243.25,
+        "power_delta": -0.0141,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:09": {
+        "result": 2244.75,
+        "power_delta": -0.0143,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:57": {
+        "result": 2245.47,
+        "power_delta": -0.0146,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:33": {
+        "result": 2236.71,
+        "power_delta": -0.0145,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:42": {
+        "result": 2224.88,
+        "power_delta": -0.0156,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:12": {
+        "result": 2251.82,
+        "power_delta": -0.0163,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:07": {
+        "result": 2255.4,
+        "power_delta": 0.0164,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:31": {
+        "result": 2251.55,
+        "power_delta": -0.0166,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:08": {
+        "result": 2251.45,
+        "power_delta": -0.0158,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:09": {
+        "result": 2241.33,
+        "power_delta": -0.0157,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:12": {
+        "result": 2256.27,
+        "power_delta": 0.0183,
+        "replicates": 100
+      },
+      "2026-04-14 21:59:07": {
+        "result": 2255.29,
+        "power_delta": 0.0157,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:41": {
+        "result": 2243.28,
+        "power_delta": -0.0164,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:26": {
+        "result": 2251.31,
+        "power_delta": -0.0147,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:13": {
+        "result": 2540.77,
+        "power_delta": 0.0774,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:48": {
+        "result": 2233.82,
+        "power_delta": -0.0149,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:59": {
+        "result": 2249.14,
+        "power_delta": -0.0152,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:51": {
+        "result": 2236.0,
+        "power_delta": -0.0147,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:08": {
+        "result": 2555.82,
+        "power_delta": 0.082,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:48": {
+        "result": 2264.92,
+        "power_delta": 0.0142,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:48": {
+        "result": 2262.04,
+        "power_delta": 0.0128,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:49": {
+        "result": 2265.25,
+        "power_delta": 0.0144,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:47": {
+        "result": 2262.89,
+        "power_delta": 0.0156,
+        "replicates": 100
+      }
+    }
   }
 ]

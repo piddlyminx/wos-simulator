@@ -1,0 +1,212 @@
+[
+  {
+    "test_id": "norah_s2_splash_C",
+    "description": "WOS-27 S2 fan-out control: WIP infantry-only vs minxxx 200 lancers, no heroes. Measures infantry casualties from lancers alone at this army size. Compare to Scenario D (with Norah) to isolate S1+S2 effect on infantry. Then compare delta(C\u2192D) vs delta(B\u2192A) to detect marksmen fan-out.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 0,
+        "lancer_t6": 200,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 202.2,
+          "lethality": 118.6,
+          "health": 131.7
+        },
+        "lanc": {
+          "attack": 188.9,
+          "defense": 187.2,
+          "lethality": 120.8,
+          "health": 121.6
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 203.2,
+          "lethality": 123.5,
+          "health": 124.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1153,
+        "defender": 0
+      },
+      {
+        "attacker": 1153,
+        "defender": 0
+      },
+      {
+        "attacker": 1153,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:20": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:10": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:24": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:15": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:06": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:53": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:28": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:38": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:08": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:04": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:27": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:04": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:05": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:08": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:59:03": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:37": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:21": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:10": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:44": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:55": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:46": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:03": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:44": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:44": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:45": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:42": {
+        "result": 1153.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      }
+    }
+  }
+]

@@ -1,0 +1,281 @@
+[
+  {
+    "test_id": "wayne_s1_solo",
+    "description": "WOS-38: Wayne S1 isolation test. WIP infantry-only 500 t6 attacking with Wayne (S1=2, S3=2), minxxx infantry-only 100 t6 defending no heroes. S2 cannot trigger (no marksmen). Tests Thunder Strike: extra attack every 4 turns at 40% damage (S1=2), plus Fleet: 10% crit rate (S3=2) for all troops. WIP expected to win with ~50% casualties. Note: S3 Fleet variance explains game result variance (247-256).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2
+        }
+      },
+      "troops": {
+        "infantry_t6": 500,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 255.1,
+          "defense": 241.6,
+          "lethality": 78.3,
+          "health": 56.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.9,
+          "defense": 202.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 183.9,
+          "defense": 187.2,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 200.9,
+          "defense": 203.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 251,
+        "defender": 0
+      },
+      {
+        "attacker": 255,
+        "defender": 0
+      },
+      {
+        "attacker": 247,
+        "defender": 0
+      },
+      {
+        "attacker": 256,
+        "defender": 0
+      },
+      {
+        "attacker": 250,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 09:17:22": {
+        "result": 256.8,
+        "power_delta": 0.0115,
+        "replicates": 100
+      },
+      "2026-04-14 09:18:39": {
+        "result": 269.21,
+        "power_delta": 0.0393,
+        "replicates": 100
+      },
+      "2026-04-14 09:20:40": {
+        "result": 242.17,
+        "power_delta": -0.0201,
+        "replicates": 100
+      },
+      "2026-04-14 09:20:48": {
+        "result": 241.95,
+        "power_delta": -0.0208,
+        "replicates": 100
+      },
+      "2026-04-14 09:21:47": {
+        "result": 257.09,
+        "power_delta": 0.0124,
+        "replicates": 100
+      },
+      "2026-04-14 09:24:47": {
+        "result": 257.12,
+        "power_delta": 0.0123,
+        "replicates": 100
+      },
+      "2026-04-14 09:25:32": {
+        "result": 256.8,
+        "power_delta": 0.015,
+        "replicates": 100
+      },
+      "2026-04-14 09:26:11": {
+        "result": 256.31,
+        "power_delta": 0.008,
+        "replicates": 100
+      },
+      "2026-04-14 09:27:20": {
+        "result": 242.28,
+        "power_delta": -0.0141,
+        "replicates": 100
+      },
+      "2026-04-14 09:27:50": {
+        "result": 257.26,
+        "power_delta": 0.0094,
+        "replicates": 100
+      },
+      "2026-04-14 10:38:31": {
+        "result": 256.92,
+        "power_delta": 0.0089,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:21": {
+        "result": 257.03,
+        "power_delta": 0.0092,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:35": {
+        "result": 256.95,
+        "power_delta": 0.0093,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:26": {
+        "result": 256.22,
+        "power_delta": 0.0081,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:15": {
+        "result": 256.44,
+        "power_delta": 0.0088,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:03": {
+        "result": 256.9,
+        "power_delta": 0.0089,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:41": {
+        "result": 256.93,
+        "power_delta": 0.0091,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:48": {
+        "result": 256.27,
+        "power_delta": 0.008,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:18": {
+        "result": 256.54,
+        "power_delta": 0.0086,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:14": {
+        "result": 256.63,
+        "power_delta": 0.0086,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:39": {
+        "result": 256.5,
+        "power_delta": 0.0082,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:16": {
+        "result": 256.22,
+        "power_delta": 0.0081,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:19": {
+        "result": 256.84,
+        "power_delta": 0.0091,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:20": {
+        "result": 256.07,
+        "power_delta": 0.0077,
+        "replicates": 100
+      },
+      "2026-04-14 21:59:18": {
+        "result": 256.07,
+        "power_delta": 0.0078,
+        "replicates": 100
+      },
+      "2026-04-14 22:00:24": {
+        "result": 256.46,
+        "power_delta": 0.0084,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:48": {
+        "result": 256.32,
+        "power_delta": 0.0084,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:34": {
+        "result": 257.34,
+        "power_delta": 0.0096,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:22": {
+        "result": 257.19,
+        "power_delta": 0.0095,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:57": {
+        "result": 256.3,
+        "power_delta": 0.0079,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:06": {
+        "result": 256.68,
+        "power_delta": 0.0085,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:59": {
+        "result": 256.71,
+        "power_delta": 0.0087,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:15": {
+        "result": 257.08,
+        "power_delta": 0.0095,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:56": {
+        "result": 257.25,
+        "power_delta": 0.0096,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:56": {
+        "result": 256.97,
+        "power_delta": 0.009,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:57": {
+        "result": 256.43,
+        "power_delta": 0.0086,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:54": {
+        "result": 256.53,
+        "power_delta": 0.0082,
+        "replicates": 100
+      }
+    }
+  }
+]

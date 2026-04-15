@@ -1,0 +1,222 @@
+[
+  {
+    "test_id": "norah_s2_inf_only_A",
+    "description": "WOS-27: Norah S2 isolation test \u2014 Scenario A (Norah active). WIP infantry-only 1500 t6 attacks minxxx 50/50/50 t6 with Norah S2 level 1. Purpose: determine if Norah S2 extra_vs_all hits the primary target (lancer vs infantry = primary hit). Compare survivors to Scenario B (no heroes). Config chosen for ~61% winner casualties and ~23-troop A-B delta.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Norah": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 50,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.9,
+          "defense": 202.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 275.5,
+          "defense": 278.8,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 200.9,
+          "defense": 203.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 111,
+        "defender": 0
+      },
+      {
+        "attacker": 94,
+        "defender": 0
+      },
+      {
+        "attacker": 95,
+        "defender": 0
+      },
+      {
+        "attacker": 94,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:17": {
+        "result": 93.65,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:06": {
+        "result": 93.7,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:20": {
+        "result": 94.19,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:12": {
+        "result": 93.47,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:02": {
+        "result": 94.61,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:50": {
+        "result": 94.07,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:24": {
+        "result": 93.77,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:35": {
+        "result": 92.81,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:05": {
+        "result": 92.78,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:01": {
+        "result": 92.45,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:24": {
+        "result": 92.28,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:00": {
+        "result": 94.35,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:02": {
+        "result": 93.04,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:05": {
+        "result": 92.08,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:59": {
+        "result": 93.62,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:34": {
+        "result": 92.39,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:17": {
+        "result": 93.55,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:06": {
+        "result": 94.15,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:41": {
+        "result": 93.18,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:52": {
+        "result": 93.66,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:43": {
+        "result": 93.17,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:00": {
+        "result": 94.36,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:41": {
+        "result": 93.65,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:41": {
+        "result": 94.03,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:42": {
+        "result": 92.37,
+        "power_delta": -0.0001,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:39": {
+        "result": 92.66,
+        "power_delta": -0.0001,
+        "replicates": 100
+      }
+    }
+  }
+]

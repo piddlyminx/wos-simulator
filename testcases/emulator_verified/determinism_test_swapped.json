@@ -1,0 +1,204 @@
+[
+  {
+    "test_id": "determinism_test_swapped",
+    "description": "Determinism test SWAPPED: minxxx attacks WIP. No heroes. minxxx 300 infantry_t6 vs WIP 1700 infantry_t6. Same armies as normal but roles swapped.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 202.2,
+          "lethality": 118.6,
+          "health": 131.7
+        },
+        "lanc": {
+          "attack": 188.9,
+          "defense": 187.2,
+          "lethality": 120.8,
+          "health": 121.6
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 203.2,
+          "lethality": 123.5,
+          "health": 124.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1700,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 852
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:37:56": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:45": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:02:58": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:41:54": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:43": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:31": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:00": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:14": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:44": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:41": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:02": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:38": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:39": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:43": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:34": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:13": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:11:57": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:23:45": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:18": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:29": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:21": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:38": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:19": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:19": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:19": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:17": {
+        "result": -852.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      }
+    }
+  }
+]

@@ -1,0 +1,217 @@
+[
+  {
+    "test_id": "seo_yoon_solo",
+    "description": "WOS-32: Seo-yoon solo defender test. minxxx attacking no heroes 60/50/60 t6, WIP defending with Seo-yoon. Tests S1 (Rallying Beat: permanent all troops attack +X%). WIP uses S1=1, S2=3 (S2 may not be in simulator \u2014 watch for divergence). Sim predicts WIP wins with ~54% casualties.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 60,
+        "lancer_t6": 50,
+        "marksman_t6": 60
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.9,
+          "defense": 202.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 183.9,
+          "defense": 187.2,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 200.9,
+          "defense": 203.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Seo-yoon": {
+          "skill_1": 1,
+          "skill_2": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 240,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 140.8,
+          "defense": 127.3,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 620
+      },
+      {
+        "attacker": 0,
+        "defender": 620
+      },
+      {
+        "attacker": 0,
+        "defender": 620
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:26": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:16": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:30": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:21": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:11": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:59": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:35": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:44": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:13": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:10": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:33": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:09": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:11": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:14": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:59:09": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:42": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:28": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:15": {
+        "result": -617.0,
+        "power_delta": 0.0069,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:49": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:00": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:52": {
+        "result": -619.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:09": {
+        "result": -617.0,
+        "power_delta": 0.0069,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:50": {
+        "result": -617.0,
+        "power_delta": 0.0069,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:50": {
+        "result": -617.0,
+        "power_delta": 0.0069,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:51": {
+        "result": -617.0,
+        "power_delta": 0.0069,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:48": {
+        "result": -617.0,
+        "power_delta": 0.0069,
+        "replicates": 100
+      }
+    }
+  }
+]

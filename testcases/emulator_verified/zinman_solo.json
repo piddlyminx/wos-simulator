@@ -1,0 +1,210 @@
+[
+  {
+    "test_id": "zinman_solo",
+    "description": "Zinman solo defender test. WIP attacking no heroes, minxxx defending with Zinman (1/0/0). Only S1 Implacable is active (permanent defense buff). All deterministic \u2014 single run sufficient. Low skill levels so effect signal will be moderate.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 1069,
+        "marksman_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Zinman": {
+          "skill_1": 1,
+          "skill_2": 0,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 202.2,
+          "lethality": 118.6,
+          "health": 131.7
+        },
+        "lanc": {
+          "attack": 188.9,
+          "defense": 187.2,
+          "lethality": 120.8,
+          "health": 121.6
+        },
+        "mark": {
+          "attack": 231.2,
+          "defense": 228.5,
+          "lethality": 123.5,
+          "health": 124.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 3177,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:33": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:24": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:37": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:27": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:17": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:05": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:43": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:50": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:19": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:16": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:41": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:18": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:21": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:22": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:59:20": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:50": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:36": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:24": {
+        "result": 3206.0,
+        "power_delta": 0.0171,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:59": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:08": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:01": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:17": {
+        "result": 3206.0,
+        "power_delta": 0.0171,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:58": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:58": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:59": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:56": {
+        "result": 3176.0,
+        "power_delta": -0.0,
+        "replicates": 100
+      }
+    }
+  }
+]

@@ -68,15 +68,143 @@
         }
       }
     },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 0
-    },
     "game_report_result": [
       {
         "attacker": 0,
         "defender": 1995
       }
-    ]
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:05": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:54": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:07": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:02": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:52": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:39": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:11": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:23": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:52": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:50": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:11": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:47": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:48": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:52": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:46": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:23": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:06": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:23:55": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:29": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:40": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:31": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:48": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:28": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:28": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:29": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:27": {
+        "result": -1995.0,
+        "power_delta": 0.0,
+        "replicates": 100
+      }
+    }
   }
 ]

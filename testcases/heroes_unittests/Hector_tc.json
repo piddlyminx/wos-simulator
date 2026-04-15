@@ -1,97 +1,220 @@
 [
-    {
-        "test_id": "daut_viper_1",
-        "time": "2025-07-21 - 01:06",
-        "attacker": {
-            "name": "daut",
-            "heroes": {},
-            "troops": {
-                "infantry_t6": 5000,
-                "lancer_t6": 2000,
-                "marksman_t6": 5000
-            },
-            "stats": {
-                "inf": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "lanc": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "mark": {
-                    "attack": 10.43,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                }
-            },
-            "joiner_heroes": {}
+  {
+    "test_id": "daut_viper_1",
+    "time": "2025-07-21 - 01:06",
+    "attacker": {
+      "name": "daut",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 5000,
+        "lancer_t6": 2000,
+        "marksman_t6": 5000
+      },
+      "stats": {
+        "inf": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
         },
-        "defender": {
-            "name": "viper",
-            "heroes": {
-                "Hector": {
-                    "skill_1": 4,
-                    "skill_2": 3,
-                    "skill_3": 3
-                }
-            },
-            "troops": {
-                "infantry_t6": 250,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-            },
-            "stats": {
-                "inf": {
-                    "attack": 438.15,
-                    "defense": 441.65,
-                    "lethality": 127.57,
-                    "health": 232.61
-                },
-                "lanc": {
-                    "attack": 167.0,
-                    "defense": 163.0,
-                    "lethality": 110.31,
-                    "health": 100.21
-                },
-                "mark": {
-                    "attack": 174.75,
-                    "defense": 168.25,
-                    "lethality": 117.75,
-                    "health": 104.74
-                }
-            },
-            "joiner_heroes": {}
+        "lanc": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
         },
-        "sim_result": {
-            "attacker": 0,
-            "defender": 444
+        "mark": {
+          "attack": 10.43,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "viper",
+      "heroes": {
+        "Hector": {
+          "skill_1": 4,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 250,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 438.15,
+          "defense": 441.65,
+          "lethality": 127.57,
+          "health": 232.61
         },
-        "sim_rounds": 104,
-        "sim_skills_used": {
-            "attacker": [
-                "MARKSMEN- Ranged Strike/1      :    1 (104)    (DamageUp)"
-            ],
-            "defender": [
-                "Hector- Survival instincts/1   :    41 (99)    (DefenseUp)",
-                "Hector- Rampant/1              :    1 (5)      (DamageUp)",
-                "Hector- Rampant/2              :    1 (5)      (DamageUp)",
-                "Hector- Blitz/1                :    92 (92) - Extra: 1765.5 (DamageUp)",
-                "INFANTRY- Master Brawler/1     :    1 (12)     (DamageUp)",
-                "LANCERS- Charge/1              :    1 (21)     (DamageUp)",
-                "MARKSMEN- Ranged Strike/1      :    1 (71)     (DamageUp)"
-            ]
+        "lanc": {
+          "attack": 167.0,
+          "defense": 163.0,
+          "lethality": 110.31,
+          "health": 100.21
         },
-        "game_report_result": [
-            {
-                "attacker": 0,
-                "defender": 441
-            }
-        ]
+        "mark": {
+          "attack": 174.75,
+          "defense": 168.25,
+          "lethality": 117.75,
+          "health": 104.74
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_rounds": 104,
+    "sim_skills_used": {
+      "attacker": [
+        "MARKSMEN- Ranged Strike/1      :    1 (104)    (DamageUp)"
+      ],
+      "defender": [
+        "Hector- Survival instincts/1   :    41 (99)    (DefenseUp)",
+        "Hector- Rampant/1              :    1 (5)      (DamageUp)",
+        "Hector- Rampant/2              :    1 (5)      (DamageUp)",
+        "Hector- Blitz/1                :    92 (92) - Extra: 1765.5 (DamageUp)",
+        "INFANTRY- Master Brawler/1     :    1 (12)     (DamageUp)",
+        "LANCERS- Charge/1              :    1 (21)     (DamageUp)",
+        "MARKSMEN- Ranged Strike/1      :    1 (71)     (DamageUp)"
+      ]
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 441
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:43": {
+        "result": -444.3,
+        "power_delta": -0.0106,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:34": {
+        "result": -443.38,
+        "power_delta": -0.0105,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:48": {
+        "result": -444.17,
+        "power_delta": -0.0107,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:36": {
+        "result": -444.8,
+        "power_delta": -0.0119,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:27": {
+        "result": -444.1,
+        "power_delta": -0.0108,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:14": {
+        "result": -443.56,
+        "power_delta": -0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:54": {
+        "result": -444.43,
+        "power_delta": -0.0118,
+        "replicates": 100
+      },
+      "2026-04-14 17:47:01": {
+        "result": -443.3,
+        "power_delta": -0.0108,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:29": {
+        "result": -442.74,
+        "power_delta": -0.01,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:25": {
+        "result": -443.75,
+        "power_delta": -0.0113,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:53": {
+        "result": -444.11,
+        "power_delta": -0.0109,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:29": {
+        "result": -444.91,
+        "power_delta": -0.0124,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:35": {
+        "result": -444.25,
+        "power_delta": -0.0112,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:31": {
+        "result": -444.04,
+        "power_delta": -0.0104,
+        "replicates": 100
+      },
+      "2026-04-14 22:03:01": {
+        "result": -444.3,
+        "power_delta": -0.0117,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:46": {
+        "result": -445.34,
+        "power_delta": -0.0126,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:33": {
+        "result": -420.36,
+        "power_delta": 0.0456,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:09": {
+        "result": -444.02,
+        "power_delta": -0.0124,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:20": {
+        "result": -443.49,
+        "power_delta": -0.0096,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:11": {
+        "result": -443.85,
+        "power_delta": -0.0104,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:27": {
+        "result": -420.17,
+        "power_delta": 0.046,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:09": {
+        "result": -444.92,
+        "power_delta": -0.0132,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:08": {
+        "result": -444.22,
+        "power_delta": -0.0127,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:10": {
+        "result": -444.82,
+        "power_delta": -0.0126,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:07": {
+        "result": -444.14,
+        "power_delta": -0.0118,
+        "replicates": 100
+      }
     }
+  }
 ]

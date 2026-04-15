@@ -1,429 +1,921 @@
 [
-    {
-        "test_id": "daut_viper_1",
-        "time": "2025-07-18 - 12:55",
-        "attacker": {
-            "name": "daut",
-            "heroes": {},
-            "troops": {
-                "infantry_t6": 1000,
-                "lancer_t6": 500,
-                "marksman_t6": 500
-            },
-            "stats": {
-                "inf": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "lanc": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "mark": {
-                    "attack": 10.43,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                }
-            },
-            "joiner_heroes": {}
+  {
+    "test_id": "daut_viper_1",
+    "time": "2025-07-18 - 12:55",
+    "attacker": {
+      "name": "daut",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
         },
-        "defender": {
-            "name": "viper",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 2
-                }
-            },
-            "troops": {
-                "infantry_t6": 100,
-                "lancer_t6": 50,
-                "marksman_t6": 50
-            },
-            "stats": {
-                "inf": {
-                    "attack": 184.5,
-                    "defense": 188.0,
-                    "lethality": 107.24,
-                    "health": 114.18
-                },
-                "lanc": {
-                    "attack": 167.0,
-                    "defense": 163.0,
-                    "lethality": 110.31,
-                    "health": 100.21
-                },
-                "mark": {
-                    "attack": 224.22,
-                    "defense": 217.72,
-                    "lethality": 117.75,
-                    "health": 104.74
-                }
-            },
-            "joiner_heroes": {}
+        "lanc": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
         },
-        "sim_result": {
-            "attacker": 0,
-            "defender": 26
-        },
-        "sim_skills_used": {
-            "attacker": {
-                "MARKSMEN- Ranged Strike/1": "1 (64) "
-            },
-            "defender": {
-                "Alonso- Onslaught/1": "3 (3) ",
-                "Alonso- Iron strength/1": "13 (4) ",
-                "INFANTRY- Master Brawler/1": "1 (2) ",
-                "LANCERS- Charge/1": "1 (2) ",
-                "MARKSMEN- Ranged Strike/1": "1 (62) "
-            }
-        },
-        "game_report_result": [
-            {
-                "attacker": 0,
-                "defender": 23
-            },
-            {
-                "attacker": 0,
-                "defender": 22
-            },
-            {
-                "attacker": 0,
-                "defender": 19
-            },
-            {
-                "attacker": 0,
-                "defender": 16
-            },
-            {
-                "attacker": 0,
-                "defender": 25
-            },
-            {
-                "attacker": 0,
-                "defender": 16
-            },
-            {
-                "attacker": 0,
-                "defender": 21
-            },
-            {
-                "attacker": 0,
-                "defender": 21
-            },
-            {
-                "attacker": 0,
-                "defender": 16
-            }
-        ]
+        "mark": {
+          "attack": 10.43,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        }
+      },
+      "joiner_heroes": {}
     },
-    {
-        "test_id": "daut_viper_2",
-        "time": "2025-07-18 - 14:59",
-        "attacker": {
-            "name": "daut",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 1,
-                    "skill_3": 1
-                }
-            },
-            "troops": {
-                "infantry_t6": 1200,
-                "lancer_t6": 500,
-                "marksman_t6": 500
-            },
-            "stats": {
-                "inf": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "lanc": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "mark": {
-                    "attack": 86.75,
-                    "defense": 85.76,
-                    "lethality": 1.75,
-                    "health": 1.75
-                }
-            },
-            "joiner_heroes": {}
+    "defender": {
+      "name": "viper",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 2
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 184.5,
+          "defense": 188.0,
+          "lethality": 107.24,
+          "health": 114.18
         },
-        "defender": {
-            "name": "viper",
-            "heroes": {},
-            "troops": {
-                "infantry_t6": 100,
-                "lancer_t6": 50,
-                "marksman_t6": 50
-            },
-            "stats": {
-                "inf": {
-                    "attack": 184.5,
-                    "defense": 188.0,
-                    "lethality": 107.24,
-                    "health": 114.18
-                },
-                "lanc": {
-                    "attack": 167.0,
-                    "defense": 163.0,
-                    "lethality": 110.31,
-                    "health": 100.21
-                },
-                "mark": {
-                    "attack": 174.75,
-                    "defense": 168.25,
-                    "lethality": 117.75,
-                    "health": 104.74
-                }
-            },
-            "joiner_heroes": {}
+        "lanc": {
+          "attack": 167.0,
+          "defense": 163.0,
+          "lethality": 110.31,
+          "health": 100.21
         },
-        "sim_result": {
-            "attacker": 1477,
-            "defender": 0
-        },
-        "sim_skills_used": {
-            "attacker": {
-                "Alonso- Onslaught/1": "13 (12) ",
-                "Alonso- Iron strength/1": "7 (0) ",
-                "Alonso- Poison harpoon/1": "72 (72)  - Extra: 9.1",
-                "INFANTRY- Master Brawler/1": "1 (7) ",
-                "LANCERS- Charge/1": "1 (6) ",
-                "MARKSMEN- Ranged Strike/1": "1 (43) "
-            },
-            "defender": {
-                "MARKSMEN- Ranged Strike/1": "1 (54) "
-            }
-        },
-        "game_report_result": [
-            {
-                "attacker": 1483,
-                "defender": 0
-            },
-            {
-                "attacker": 1470,
-                "defender": 0
-            },
-            {
-                "attacker": 1483,
-                "defender": 0
-            },
-            {
-                "attacker": 1473,
-                "defender": 0
-            }
-        ]
+        "mark": {
+          "attack": 224.22,
+          "defense": 217.72,
+          "lethality": 117.75,
+          "health": 104.74
+        }
+      },
+      "joiner_heroes": {}
     },
-    {
-        "test_id": "daut_viper_3",
-        "time": "2025-07-18 - 15:11",
-        "attacker": {
-            "name": "daut",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 1,
-                    "skill_3": 1
-                }
-            },
-            "troops": {
-                "infantry_t6": 1200,
-                "lancer_t6": 500,
-                "marksman_t6": 500
-            },
-            "stats": {
-                "inf": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "lanc": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "mark": {
-                    "attack": 86.75,
-                    "defense": 85.76,
-                    "lethality": 1.75,
-                    "health": 1.75
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "defender": {
-            "name": "viper",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 2
-                }
-            },
-            "troops": {
-                "infantry_t6": 100,
-                "lancer_t6": 50,
-                "marksman_t6": 50
-            },
-            "stats": {
-                "inf": {
-                    "attack": 184.5,
-                    "defense": 188.0,
-                    "lethality": 107.24,
-                    "health": 114.18
-                },
-                "lanc": {
-                    "attack": 167.0,
-                    "defense": 163.0,
-                    "lethality": 110.31,
-                    "health": 100.21
-                },
-                "mark": {
-                    "attack": 224.22,
-                    "defense": 217.72,
-                    "lethality": 117.75,
-                    "health": 104.74
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "sim_result": {
-            "attacker": 1384,
-            "defender": 0
-        },
-        "sim_skills_used": {
-            "attacker": {
-                "Alonso- Onslaught/1": "8 (8) ",
-                "Alonso- Iron strength/1": "12 (0) ",
-                "Alonso- Poison harpoon/1": "81 (81)  - Extra: 9.4",
-                "INFANTRY- Master Brawler/1": "1 (7) ",
-                "LANCERS- Charge/1": "1 (7) ",
-                "MARKSMEN- Ranged Strike/1": "1 (43) "
-            },
-            "defender": {
-                "Alonso- Onslaught/1": "7 (6) ",
-                "Alonso- Iron strength/1": "10 (0) ",
-                "MARKSMEN- Ranged Strike/1": "1 (56) "
-            }
-        },
-        "game_report_result": [
-            {
-                "attacker": 1387,
-                "defender": 0
-            },
-            {
-                "attacker": 1371,
-                "defender": 0
-            },
-            {
-                "attacker": 1392,
-                "defender": 0
-            }
-        ]
+    "sim_skills_used": {
+      "attacker": {
+        "MARKSMEN- Ranged Strike/1": "1 (64) "
+      },
+      "defender": {
+        "Alonso- Onslaught/1": "3 (3) ",
+        "Alonso- Iron strength/1": "13 (4) ",
+        "INFANTRY- Master Brawler/1": "1 (2) ",
+        "LANCERS- Charge/1": "1 (2) ",
+        "MARKSMEN- Ranged Strike/1": "1 (62) "
+      }
     },
-    {
-        "test_id": "daut_viper_4",
-        "time": "2025-07-20 - 20:19",
-        "attacker": {
-            "name": "daut",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 1,
-                    "skill_3": 1
-                }
-            },
-            "troops": {
-                "infantry_t6": 2677,
-                "lancer_t6": 1611
-            },
-            "stats": {
-                "inf": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "lanc": {
-                    "attack": 9.94,
-                    "defense": 9.44,
-                    "lethality": 1.75,
-                    "health": 1.75
-                },
-                "mark": {
-                    "attack": 86.75,
-                    "defense": 85.76,
-                    "lethality": 1.75,
-                    "health": 1.75
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "defender": {
-            "name": "viper",
-            "heroes": {
-                "Alonso": {
-                    "skill_1": 1,
-                    "skill_2": 2
-                }
-            },
-            "troops": {
-                "infantry_t6": 1125,
-                "lancer_t6": 236
-            },
-            "stats": {
-                "inf": {
-                    "attack": 184.5,
-                    "defense": 188.0,
-                    "lethality": 107.24,
-                    "health": 114.18
-                },
-                "lanc": {
-                    "attack": 167.0,
-                    "defense": 163.0,
-                    "lethality": 110.31,
-                    "health": 100.21
-                },
-                "mark": {
-                    "attack": 224.22,
-                    "defense": 217.72,
-                    "lethality": 117.75,
-                    "health": 104.74
-                }
-            },
-            "joiner_heroes": {}
-        },
-        "sim_result": {
-            "attacker": 0,
-            "defender": 1140
-        },
-        "sim_skills_used": {
-            "attacker": {
-                "Alonso- Poison harpoon/1": "61 (61) - Extra: 11.3"
-            },
-            "defender": {
-                "INFANTRY- Master Brawler/1": "1 (11)"
-            }
-        },
-        "game_report_result": [
-            {
-                "attacker": 0,
-                "defender": 1141
-            }
-        ]
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 23
+      },
+      {
+        "attacker": 0,
+        "defender": 22
+      },
+      {
+        "attacker": 0,
+        "defender": 19
+      },
+      {
+        "attacker": 0,
+        "defender": 16
+      },
+      {
+        "attacker": 0,
+        "defender": 25
+      },
+      {
+        "attacker": 0,
+        "defender": 16
+      },
+      {
+        "attacker": 0,
+        "defender": 21
+      },
+      {
+        "attacker": 0,
+        "defender": 21
+      },
+      {
+        "attacker": 0,
+        "defender": 16
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:34": {
+        "result": -51.04,
+        "power_delta": -0.0161,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:25": {
+        "result": -51.04,
+        "power_delta": -0.0161,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:38": {
+        "result": -51.92,
+        "power_delta": -0.017,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:29": {
+        "result": -51.68,
+        "power_delta": -0.0168,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:18": {
+        "result": -52.12,
+        "power_delta": -0.0173,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:06": {
+        "result": -51.58,
+        "power_delta": -0.0167,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:45": {
+        "result": -51.61,
+        "power_delta": -0.0168,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:52": {
+        "result": -52.28,
+        "power_delta": -0.0174,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:21": {
+        "result": -51.25,
+        "power_delta": -0.0163,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:18": {
+        "result": -51.75,
+        "power_delta": -0.0168,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:42": {
+        "result": -52.23,
+        "power_delta": -0.0173,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:19": {
+        "result": -51.97,
+        "power_delta": -0.0171,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:23": {
+        "result": -50.67,
+        "power_delta": -0.0158,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:23": {
+        "result": -52.96,
+        "power_delta": -0.0181,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:51": {
+        "result": -51.52,
+        "power_delta": -0.0166,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:38": {
+        "result": -51.45,
+        "power_delta": -0.0166,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:25": {
+        "result": -52.47,
+        "power_delta": -0.0177,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:01": {
+        "result": -97.52,
+        "power_delta": -0.1161,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:12": {
+        "result": -97.94,
+        "power_delta": -0.1175,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:02": {
+        "result": -97.32,
+        "power_delta": -0.1155,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:18": {
+        "result": -51.79,
+        "power_delta": -0.017,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:00": {
+        "result": -97.61,
+        "power_delta": -0.1166,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:00": {
+        "result": -50.82,
+        "power_delta": -0.0158,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:01": {
+        "result": -50.82,
+        "power_delta": -0.0159,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:58": {
+        "result": -51.95,
+        "power_delta": -0.0172,
+        "replicates": 100
+      }
     }
+  },
+  {
+    "test_id": "daut_viper_2",
+    "time": "2025-07-18 - 14:59",
+    "attacker": {
+      "name": "daut",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 1200,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        },
+        "lanc": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        },
+        "mark": {
+          "attack": 86.75,
+          "defense": 85.76,
+          "lethality": 1.75,
+          "health": 1.75
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "viper",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 184.5,
+          "defense": 188.0,
+          "lethality": 107.24,
+          "health": 114.18
+        },
+        "lanc": {
+          "attack": 167.0,
+          "defense": 163.0,
+          "lethality": 110.31,
+          "health": 100.21
+        },
+        "mark": {
+          "attack": 174.75,
+          "defense": 168.25,
+          "lethality": 117.75,
+          "health": 104.74
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_skills_used": {
+      "attacker": {
+        "Alonso- Onslaught/1": "13 (12) ",
+        "Alonso- Iron strength/1": "7 (0) ",
+        "Alonso- Poison harpoon/1": "72 (72)  - Extra: 9.1",
+        "INFANTRY- Master Brawler/1": "1 (7) ",
+        "LANCERS- Charge/1": "1 (6) ",
+        "MARKSMEN- Ranged Strike/1": "1 (43) "
+      },
+      "defender": {
+        "MARKSMEN- Ranged Strike/1": "1 (54) "
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 1483,
+        "defender": 0
+      },
+      {
+        "attacker": 1470,
+        "defender": 0
+      },
+      {
+        "attacker": 1483,
+        "defender": 0
+      },
+      {
+        "attacker": 1473,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:35": {
+        "result": 1493.25,
+        "power_delta": 0.011,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:26": {
+        "result": 1495.08,
+        "power_delta": 0.0123,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:40": {
+        "result": 1495.34,
+        "power_delta": 0.0125,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:30": {
+        "result": 1494.79,
+        "power_delta": 0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:20": {
+        "result": 1496.02,
+        "power_delta": 0.0129,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:07": {
+        "result": 1495.97,
+        "power_delta": 0.0129,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:46": {
+        "result": 1494.88,
+        "power_delta": 0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:53": {
+        "result": 1496.5,
+        "power_delta": 0.0133,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:22": {
+        "result": 1495.44,
+        "power_delta": 0.0125,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:19": {
+        "result": 1494.87,
+        "power_delta": 0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:45": {
+        "result": 1495.25,
+        "power_delta": 0.0124,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:20": {
+        "result": 1494.19,
+        "power_delta": 0.0117,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:24": {
+        "result": 1494.44,
+        "power_delta": 0.0118,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:24": {
+        "result": 1494.87,
+        "power_delta": 0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:54": {
+        "result": 1493.51,
+        "power_delta": 0.0112,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:39": {
+        "result": 1494.24,
+        "power_delta": 0.0117,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:26": {
+        "result": 1494.82,
+        "power_delta": 0.0121,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:02": {
+        "result": 1535.9,
+        "power_delta": 0.0419,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:13": {
+        "result": 1535.72,
+        "power_delta": 0.0418,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:03": {
+        "result": 1535.59,
+        "power_delta": 0.0417,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:20": {
+        "result": 1495.26,
+        "power_delta": 0.0124,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:01": {
+        "result": 1534.44,
+        "power_delta": 0.0408,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:01": {
+        "result": 1493.84,
+        "power_delta": 0.0114,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:02": {
+        "result": 1495.42,
+        "power_delta": 0.0125,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:59": {
+        "result": 1494.53,
+        "power_delta": 0.0119,
+        "replicates": 100
+      }
+    }
+  },
+  {
+    "test_id": "daut_viper_3",
+    "time": "2025-07-18 - 15:11",
+    "attacker": {
+      "name": "daut",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 1200,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        },
+        "lanc": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        },
+        "mark": {
+          "attack": 86.75,
+          "defense": 85.76,
+          "lethality": 1.75,
+          "health": 1.75
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "viper",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 2
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 184.5,
+          "defense": 188.0,
+          "lethality": 107.24,
+          "health": 114.18
+        },
+        "lanc": {
+          "attack": 167.0,
+          "defense": 163.0,
+          "lethality": 110.31,
+          "health": 100.21
+        },
+        "mark": {
+          "attack": 224.22,
+          "defense": 217.72,
+          "lethality": 117.75,
+          "health": 104.74
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_skills_used": {
+      "attacker": {
+        "Alonso- Onslaught/1": "8 (8) ",
+        "Alonso- Iron strength/1": "12 (0) ",
+        "Alonso- Poison harpoon/1": "81 (81)  - Extra: 9.4",
+        "INFANTRY- Master Brawler/1": "1 (7) ",
+        "LANCERS- Charge/1": "1 (7) ",
+        "MARKSMEN- Ranged Strike/1": "1 (43) "
+      },
+      "defender": {
+        "Alonso- Onslaught/1": "7 (6) ",
+        "Alonso- Iron strength/1": "10 (0) ",
+        "MARKSMEN- Ranged Strike/1": "1 (56) "
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 1387,
+        "defender": 0
+      },
+      {
+        "attacker": 1371,
+        "defender": 0
+      },
+      {
+        "attacker": 1392,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:37": {
+        "result": 1374.69,
+        "power_delta": -0.0062,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:27": {
+        "result": 1373.78,
+        "power_delta": -0.0066,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:41": {
+        "result": 1373.33,
+        "power_delta": -0.0065,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:31": {
+        "result": 1373.05,
+        "power_delta": -0.0066,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:22": {
+        "result": 1374.35,
+        "power_delta": -0.0066,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:08": {
+        "result": 1373.8,
+        "power_delta": -0.0068,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:47": {
+        "result": 1374.86,
+        "power_delta": -0.0058,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:54": {
+        "result": 1372.52,
+        "power_delta": -0.0068,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:23": {
+        "result": 1372.08,
+        "power_delta": -0.0069,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:20": {
+        "result": 1371.97,
+        "power_delta": -0.0075,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:46": {
+        "result": 1374.26,
+        "power_delta": -0.0058,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:23": {
+        "result": 1372.51,
+        "power_delta": -0.0069,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:26": {
+        "result": 1371.83,
+        "power_delta": -0.0075,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:25": {
+        "result": 1371.74,
+        "power_delta": -0.0069,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:55": {
+        "result": 1373.22,
+        "power_delta": -0.0067,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:40": {
+        "result": 1370.97,
+        "power_delta": -0.0078,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:27": {
+        "result": 1371.11,
+        "power_delta": -0.0075,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:03": {
+        "result": 1330.83,
+        "power_delta": -0.0288,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:14": {
+        "result": 1330.95,
+        "power_delta": -0.0286,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:05": {
+        "result": 1329.22,
+        "power_delta": -0.0296,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:21": {
+        "result": 1371.99,
+        "power_delta": -0.0072,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:02": {
+        "result": 1329.79,
+        "power_delta": -0.0293,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:02": {
+        "result": 1373.83,
+        "power_delta": -0.0067,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:03": {
+        "result": 1374.1,
+        "power_delta": -0.0065,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:00": {
+        "result": 1372.07,
+        "power_delta": -0.0073,
+        "replicates": 100
+      }
+    }
+  },
+  {
+    "test_id": "daut_viper_4",
+    "time": "2025-07-20 - 20:19",
+    "attacker": {
+      "name": "daut",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 2677,
+        "lancer_t6": 1611
+      },
+      "stats": {
+        "inf": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        },
+        "lanc": {
+          "attack": 9.94,
+          "defense": 9.44,
+          "lethality": 1.75,
+          "health": 1.75
+        },
+        "mark": {
+          "attack": 86.75,
+          "defense": 85.76,
+          "lethality": 1.75,
+          "health": 1.75
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "viper",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 2
+        }
+      },
+      "troops": {
+        "infantry_t6": 1125,
+        "lancer_t6": 236
+      },
+      "stats": {
+        "inf": {
+          "attack": 184.5,
+          "defense": 188.0,
+          "lethality": 107.24,
+          "health": 114.18
+        },
+        "lanc": {
+          "attack": 167.0,
+          "defense": 163.0,
+          "lethality": 110.31,
+          "health": 100.21
+        },
+        "mark": {
+          "attack": 224.22,
+          "defense": 217.72,
+          "lethality": 117.75,
+          "health": 104.74
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_skills_used": {
+      "attacker": {
+        "Alonso- Poison harpoon/1": "61 (61) - Extra: 11.3"
+      },
+      "defender": {
+        "INFANTRY- Master Brawler/1": "1 (11)"
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 1141
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:38": {
+        "result": -1142.55,
+        "power_delta": -0.0051,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:29": {
+        "result": -1142.73,
+        "power_delta": -0.006,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:42": {
+        "result": -1142.45,
+        "power_delta": -0.0048,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:32": {
+        "result": -1142.53,
+        "power_delta": -0.0048,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:23": {
+        "result": -1142.38,
+        "power_delta": -0.0049,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:09": {
+        "result": -1142.76,
+        "power_delta": -0.0056,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:48": {
+        "result": -1142.97,
+        "power_delta": -0.006,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:55": {
+        "result": -1142.39,
+        "power_delta": -0.0044,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:24": {
+        "result": -1143.0,
+        "power_delta": -0.0053,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:21": {
+        "result": -1142.67,
+        "power_delta": -0.0048,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:47": {
+        "result": -1142.81,
+        "power_delta": -0.0054,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:24": {
+        "result": -1142.7,
+        "power_delta": -0.005,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:27": {
+        "result": -1142.4,
+        "power_delta": -0.0055,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:26": {
+        "result": -1143.32,
+        "power_delta": -0.0058,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:56": {
+        "result": -1142.96,
+        "power_delta": -0.0057,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:41": {
+        "result": -1142.9,
+        "power_delta": -0.0059,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:28": {
+        "result": -1142.78,
+        "power_delta": -0.0052,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:04": {
+        "result": -1152.54,
+        "power_delta": -0.0282,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:15": {
+        "result": -1151.64,
+        "power_delta": -0.026,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:06": {
+        "result": -1152.5,
+        "power_delta": -0.0281,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:22": {
+        "result": -1142.96,
+        "power_delta": -0.0058,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:03": {
+        "result": -1152.09,
+        "power_delta": -0.0274,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:03": {
+        "result": -1142.62,
+        "power_delta": -0.0053,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:04": {
+        "result": -1142.94,
+        "power_delta": -0.0064,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:01": {
+        "result": -1142.7,
+        "power_delta": -0.0048,
+        "replicates": 100
+      }
+    }
+  }
 ]

@@ -67,10 +67,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 208
-    },
     "sim_skills_used": {
       "attacker": {
         "MARKSMEN- Ranged Strike/1": "1 (68)"
@@ -86,6 +82,133 @@
     "game_report_result": {
       "attacker": 0,
       "defender": 181
+    },
+    "past_simulator_results": {
+      "2026-04-14 10:38:52": {
+        "result": -173.72,
+        "power_delta": 0.0112,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:43": {
+        "result": -173.49,
+        "power_delta": 0.0115,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:57": {
+        "result": -173.86,
+        "power_delta": 0.0111,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:44": {
+        "result": -173.38,
+        "power_delta": 0.0113,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:35": {
+        "result": -173.35,
+        "power_delta": 0.0117,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:22": {
+        "result": -173.85,
+        "power_delta": 0.011,
+        "replicates": 100
+      },
+      "2026-04-14 17:35:05": {
+        "result": -174.24,
+        "power_delta": 0.0105,
+        "replicates": 100
+      },
+      "2026-04-14 17:47:09": {
+        "result": -217.27,
+        "power_delta": -0.0691,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:38": {
+        "result": -172.99,
+        "power_delta": 0.0116,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:34": {
+        "result": -174.07,
+        "power_delta": 0.0107,
+        "replicates": 100
+      },
+      "2026-04-14 21:51:02": {
+        "result": -174.64,
+        "power_delta": 0.0098,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:39": {
+        "result": -174.57,
+        "power_delta": 0.0096,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:48": {
+        "result": -173.3,
+        "power_delta": 0.0114,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:41": {
+        "result": -173.85,
+        "power_delta": 0.0114,
+        "replicates": 100
+      },
+      "2026-04-14 22:03:09": {
+        "result": -173.94,
+        "power_delta": 0.0113,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:56": {
+        "result": -174.86,
+        "power_delta": 0.0098,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:41": {
+        "result": -174.82,
+        "power_delta": 0.0094,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:18": {
+        "result": -217.61,
+        "power_delta": -0.0697,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:29": {
+        "result": -217.21,
+        "power_delta": -0.0688,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:20": {
+        "result": -174.35,
+        "power_delta": 0.0105,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:36": {
+        "result": -150.96,
+        "power_delta": 0.0389,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:18": {
+        "result": -151.28,
+        "power_delta": 0.0386,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:18": {
+        "result": -152.39,
+        "power_delta": 0.0374,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:19": {
+        "result": -151.73,
+        "power_delta": 0.0381,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:16": {
+        "result": -152.4,
+        "power_delta": 0.0374,
+        "replicates": 100
+      }
     }
   },
   {
@@ -156,10 +279,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 790,
-      "defender": 0
-    },
     "sim_skills_used": {
       "attacker": {
         "INFANTRY- Master Brawler/1": "1 (5)",
@@ -201,7 +320,134 @@
         "attacker": 1591,
         "defender": 0
       }
-    ]
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:53": {
+        "result": 1579.72,
+        "power_delta": -0.0065,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:45": {
+        "result": 1580.32,
+        "power_delta": -0.0073,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:59": {
+        "result": 1579.3,
+        "power_delta": -0.0064,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:45": {
+        "result": 1581.89,
+        "power_delta": -0.0069,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:37": {
+        "result": 1591.73,
+        "power_delta": -0.0064,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:24": {
+        "result": 1576.75,
+        "power_delta": -0.0068,
+        "replicates": 100
+      },
+      "2026-04-14 17:35:07": {
+        "result": 1577.91,
+        "power_delta": -0.007,
+        "replicates": 100
+      },
+      "2026-04-14 17:47:11": {
+        "result": 7.21,
+        "power_delta": -0.0736,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:40": {
+        "result": 1583.63,
+        "power_delta": -0.0064,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:35": {
+        "result": 1577.15,
+        "power_delta": -0.0068,
+        "replicates": 100
+      },
+      "2026-04-14 21:51:03": {
+        "result": 1575.52,
+        "power_delta": -0.007,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:40": {
+        "result": 1583.15,
+        "power_delta": -0.0066,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:50": {
+        "result": 1577.25,
+        "power_delta": -0.0073,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:42": {
+        "result": 1582.35,
+        "power_delta": -0.0065,
+        "replicates": 100
+      },
+      "2026-04-14 22:03:10": {
+        "result": 1574.28,
+        "power_delta": -0.0077,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:57": {
+        "result": 1582.5,
+        "power_delta": -0.0067,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:43": {
+        "result": 1583.96,
+        "power_delta": -0.0064,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:19": {
+        "result": -7.17,
+        "power_delta": -0.0773,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:30": {
+        "result": 18.48,
+        "power_delta": -0.0759,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:22": {
+        "result": 1580.31,
+        "power_delta": -0.0065,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:38": {
+        "result": 1773.06,
+        "power_delta": 0.0203,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:19": {
+        "result": 1769.2,
+        "power_delta": 0.0197,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:19": {
+        "result": 1769.8,
+        "power_delta": 0.0198,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:20": {
+        "result": 1773.07,
+        "power_delta": 0.0203,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:17": {
+        "result": 1776.0,
+        "power_delta": 0.0208,
+        "replicates": 100
+      }
+    }
   },
   {
     "test_id": "daut_viper_3",
@@ -270,10 +516,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 1084,
-      "defender": 0
-    },
     "sim_skills_used": {
       "attacker": {
         "Mia- Bad luck streak/1": "99 (99)",
@@ -310,7 +552,134 @@
         "attacker": 1127,
         "defender": 0
       }
-    ]
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:55": {
+        "result": 1121.7,
+        "power_delta": -0.0015,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:46": {
+        "result": 1121.91,
+        "power_delta": -0.0016,
+        "replicates": 100
+      },
+      "2026-04-14 12:04:00": {
+        "result": 1121.79,
+        "power_delta": -0.0016,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:46": {
+        "result": 1121.32,
+        "power_delta": -0.0019,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:38": {
+        "result": 1121.48,
+        "power_delta": -0.0014,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:25": {
+        "result": 1121.88,
+        "power_delta": -0.0015,
+        "replicates": 100
+      },
+      "2026-04-14 17:35:08": {
+        "result": 1121.86,
+        "power_delta": -0.0018,
+        "replicates": 100
+      },
+      "2026-04-14 17:47:12": {
+        "result": 1122.51,
+        "power_delta": -0.002,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:41": {
+        "result": 1121.96,
+        "power_delta": -0.0014,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:36": {
+        "result": 1121.9,
+        "power_delta": -0.0017,
+        "replicates": 100
+      },
+      "2026-04-14 21:51:04": {
+        "result": 1122.54,
+        "power_delta": -0.0018,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:41": {
+        "result": 1122.21,
+        "power_delta": -0.0017,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:51": {
+        "result": 1122.47,
+        "power_delta": -0.0017,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:43": {
+        "result": 1122.03,
+        "power_delta": -0.0014,
+        "replicates": 100
+      },
+      "2026-04-14 22:03:11": {
+        "result": 1121.8,
+        "power_delta": -0.0016,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:58": {
+        "result": 1122.95,
+        "power_delta": -0.0018,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:44": {
+        "result": 1122.51,
+        "power_delta": -0.0015,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:21": {
+        "result": 1121.88,
+        "power_delta": -0.0015,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:31": {
+        "result": 1122.25,
+        "power_delta": -0.0015,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:23": {
+        "result": 1122.19,
+        "power_delta": -0.0016,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:39": {
+        "result": 1083.0,
+        "power_delta": -0.0194,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:20": {
+        "result": 1083.78,
+        "power_delta": -0.019,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:20": {
+        "result": 1083.08,
+        "power_delta": -0.0193,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:22": {
+        "result": 1083.22,
+        "power_delta": -0.0193,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:18": {
+        "result": 1083.05,
+        "power_delta": -0.0193,
+        "replicates": 100
+      }
+    }
   },
   {
     "test_id": "daut_viper_4",
@@ -379,10 +748,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 672,
-      "defender": 0
-    },
     "sim_skills_used": {
       "attacker": {
         "Mia- Bad luck streak/1": "58 (162)",
@@ -397,6 +762,133 @@
     "game_report_result": {
       "attacker": 671,
       "defender": 0
+    },
+    "past_simulator_results": {
+      "2026-04-14 10:38:56": {
+        "result": 667.79,
+        "power_delta": -0.0007,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:47": {
+        "result": 669.15,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-14 12:04:01": {
+        "result": 669.18,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:48": {
+        "result": 669.03,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:39": {
+        "result": 668.9,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:26": {
+        "result": 667.74,
+        "power_delta": -0.0007,
+        "replicates": 100
+      },
+      "2026-04-14 17:35:09": {
+        "result": 669.4,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 17:47:13": {
+        "result": 668.82,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:42": {
+        "result": 670.3,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:37": {
+        "result": 669.43,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-14 21:51:05": {
+        "result": 668.76,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:42": {
+        "result": 668.56,
+        "power_delta": -0.0007,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:52": {
+        "result": 668.89,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:44": {
+        "result": 668.75,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-14 22:03:12": {
+        "result": 669.25,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:59": {
+        "result": 669.1,
+        "power_delta": -0.0006,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:45": {
+        "result": 669.33,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:22": {
+        "result": 670.39,
+        "power_delta": -0.0004,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:32": {
+        "result": 669.46,
+        "power_delta": -0.0004,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:24": {
+        "result": 669.26,
+        "power_delta": -0.0005,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:40": {
+        "result": 567.19,
+        "power_delta": -0.0148,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:22": {
+        "result": 567.88,
+        "power_delta": -0.0148,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:21": {
+        "result": 563.49,
+        "power_delta": -0.0153,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:23": {
+        "result": 562.94,
+        "power_delta": -0.0154,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:19": {
+        "result": 568.0,
+        "power_delta": -0.0148,
+        "replicates": 100
+      }
     }
   },
   {
@@ -471,10 +963,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 120
-    },
     "sim_skills_used": {
       "attacker": {
         "Mia- Bad luck streak/1": "48 (126)",
@@ -505,6 +993,133 @@
         "attacker": 0,
         "defender": 124
       }
-    ]
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:57": {
+        "result": -123.73,
+        "power_delta": -0.0106,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:48": {
+        "result": -124.5,
+        "power_delta": -0.0118,
+        "replicates": 100
+      },
+      "2026-04-14 12:04:02": {
+        "result": -124.02,
+        "power_delta": -0.0104,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:49": {
+        "result": -124.27,
+        "power_delta": -0.0107,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:40": {
+        "result": -124.42,
+        "power_delta": -0.0122,
+        "replicates": 100
+      },
+      "2026-04-14 16:46:27": {
+        "result": -124.21,
+        "power_delta": -0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 17:35:11": {
+        "result": -123.45,
+        "power_delta": -0.0098,
+        "replicates": 100
+      },
+      "2026-04-14 17:47:14": {
+        "result": -153.06,
+        "power_delta": -0.1179,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:43": {
+        "result": -123.9,
+        "power_delta": -0.0107,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:38": {
+        "result": -124.91,
+        "power_delta": -0.0126,
+        "replicates": 100
+      },
+      "2026-04-14 21:51:06": {
+        "result": -123.38,
+        "power_delta": -0.0086,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:43": {
+        "result": -124.39,
+        "power_delta": -0.0121,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:53": {
+        "result": -124.41,
+        "power_delta": -0.0128,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:45": {
+        "result": -123.75,
+        "power_delta": -0.0099,
+        "replicates": 100
+      },
+      "2026-04-14 22:03:13": {
+        "result": -123.63,
+        "power_delta": -0.0102,
+        "replicates": 100
+      },
+      "2026-04-14 22:13:00": {
+        "result": -123.74,
+        "power_delta": -0.0103,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:46": {
+        "result": -124.14,
+        "power_delta": -0.0107,
+        "replicates": 100
+      },
+      "2026-04-15 00:33:25": {
+        "result": -153.26,
+        "power_delta": -0.1189,
+        "replicates": 100
+      },
+      "2026-04-15 02:13:33": {
+        "result": -153.5,
+        "power_delta": -0.1201,
+        "replicates": 100
+      },
+      "2026-04-15 02:23:25": {
+        "result": -124.05,
+        "power_delta": -0.0111,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:41": {
+        "result": -124.36,
+        "power_delta": -0.01,
+        "replicates": 100
+      },
+      "2026-04-15 03:50:23": {
+        "result": -124.13,
+        "power_delta": -0.0101,
+        "replicates": 100
+      },
+      "2026-04-15 03:53:23": {
+        "result": -124.69,
+        "power_delta": -0.0103,
+        "replicates": 100
+      },
+      "2026-04-15 03:55:24": {
+        "result": -123.69,
+        "power_delta": -0.0095,
+        "replicates": 100
+      },
+      "2026-04-15 03:57:21": {
+        "result": -123.77,
+        "power_delta": -0.0091,
+        "replicates": 100
+      }
+    }
   }
 ]

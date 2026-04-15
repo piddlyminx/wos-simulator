@@ -1,0 +1,226 @@
+[
+  {
+    "test_id": "renee_solo_nc",
+    "description": "Renee solo defender test. WIP attacking no heroes ~450/360/450 t6, minxxx defending with Renee (4/4/4). Tests S1 (Nightmare Trace: lancer DamageUp every 2 turns), S2 (Dreamcatcher: lancer DamageUp every 2 turns), S3 (Dreamslice: OppDefenseDown all every 2 turns). All skills deterministic, no RNG.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 450,
+        "lancer_t6": 360,
+        "marksman_t6": 450
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.9,
+          "defense": 202.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 492.4,
+          "defense": 495.7,
+          "lethality": 172.1,
+          "health": 162.3
+        },
+        "mark": {
+          "attack": 200.9,
+          "defense": 203.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 554
+      },
+      {
+        "attacker": 0,
+        "defender": 554
+      },
+      {
+        "attacker": 0,
+        "defender": 554
+      },
+      {
+        "attacker": 0,
+        "defender": 554
+      },
+      {
+        "attacker": 0,
+        "defender": 554
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:25": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 12:01:15": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 12:03:29": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 16:42:21": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 16:44:10": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 16:45:58": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 17:34:34": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 17:46:43": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 17:50:12": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 17:52:09": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 21:50:32": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 21:53:09": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 21:55:10": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 21:57:13": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 21:59:08": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 22:02:41": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-14 22:12:27": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 00:24:14": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 00:32:49": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 02:13:00": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 02:22:51": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 03:43:08": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 03:49:49": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 03:52:49": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 03:54:50": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      },
+      "2026-04-15 03:56:47": {
+        "result": -563.0,
+        "power_delta": -0.112,
+        "replicates": 1
+      }
+    }
+  }
+]

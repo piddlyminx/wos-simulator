@@ -36,9 +36,9 @@
       "name": "[ARK]Piddlyminxxx",
       "heroes": {
         "Logan": {
-          "skill_1": 5,
-          "skill_2": 5,
-          "skill_3": 5
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
         },
         "Reina": {
           "skill_1": 2,
@@ -73,15 +73,143 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 560
-    },
     "game_report_result": [
       {
         "attacker": 0,
         "defender": 553
       }
-    ]
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:25": {
+        "result": -559.96,
+        "power_delta": -0.083,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:15": {
+        "result": -559.96,
+        "power_delta": -0.083,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:29": {
+        "result": -560.49,
+        "power_delta": -0.09,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:21": {
+        "result": -560.11,
+        "power_delta": -0.085,
+        "replicates": 100
+      },
+      "2026-04-14 16:44:10": {
+        "result": -560.0,
+        "power_delta": -0.0835,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:58": {
+        "result": -560.07,
+        "power_delta": -0.0843,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:34": {
+        "result": -549.51,
+        "power_delta": 0.0385,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:43": {
+        "result": -549.51,
+        "power_delta": 0.0355,
+        "replicates": 100
+      },
+      "2026-04-14 17:50:12": {
+        "result": -549.48,
+        "power_delta": 0.036,
+        "replicates": 100
+      },
+      "2026-04-14 17:52:09": {
+        "result": -549.74,
+        "power_delta": 0.0341,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:32": {
+        "result": -549.57,
+        "power_delta": 0.0347,
+        "replicates": 100
+      },
+      "2026-04-14 21:53:09": {
+        "result": -549.5,
+        "power_delta": 0.0372,
+        "replicates": 100
+      },
+      "2026-04-14 21:55:10": {
+        "result": -550.0,
+        "power_delta": 0.0315,
+        "replicates": 100
+      },
+      "2026-04-14 21:57:13": {
+        "result": -549.38,
+        "power_delta": 0.0391,
+        "replicates": 100
+      },
+      "2026-04-14 21:59:08": {
+        "result": -549.77,
+        "power_delta": 0.035,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:41": {
+        "result": -549.73,
+        "power_delta": 0.0354,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:27": {
+        "result": -549.5,
+        "power_delta": 0.0373,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:14": {
+        "result": -525.76,
+        "power_delta": 0.2366,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:48": {
+        "result": -549.7,
+        "power_delta": 0.0351,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:59": {
+        "result": -549.07,
+        "power_delta": 0.0409,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:51": {
+        "result": -549.73,
+        "power_delta": 0.0352,
+        "replicates": 100
+      },
+      "2026-04-15 03:43:08": {
+        "result": -525.63,
+        "power_delta": 0.2375,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:49": {
+        "result": -547.74,
+        "power_delta": 0.0543,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:49": {
+        "result": -547.07,
+        "power_delta": 0.0613,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:50": {
+        "result": -547.68,
+        "power_delta": 0.0554,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:47": {
+        "result": -547.32,
+        "power_delta": 0.0584,
+        "replicates": 100
+      }
+    }
   }
 ]

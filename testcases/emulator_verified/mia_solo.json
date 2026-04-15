@@ -1,0 +1,1042 @@
+[
+  {
+    "test_id": "mia_solo",
+    "description": "Mia solo defender test. WIP attacking no heroes 1500/1069/1500 t6, minxxx defending with Mia (1/1/1). Tests S1 (Bad luck streak: 50% chance +10% dmg taken), S2 (Lucky charm: 50% chance +10% atk), S3 (Ritual deciphering: 40% chance -10% dmg taken).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 800,
+        "marksman_t6": 1000
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 67.4,
+          "lethality": 30.1,
+          "health": 33.1
+        },
+        "lanc": {
+          "attack": 76.3,
+          "defense": 68.7,
+          "lethality": 33.1,
+          "health": 27.8
+        },
+        "mark": {
+          "attack": 76.8,
+          "defense": 64.9,
+          "lethality": 32.6,
+          "health": 28.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Mia": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 197.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 281.1,
+          "defense": 274.4,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 198.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 260
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:09": {
+        "result": -270.43,
+        "power_delta": -0.0109,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:58": {
+        "result": -272.5,
+        "power_delta": -0.0132,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:12": {
+        "result": -272.29,
+        "power_delta": -0.0129,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:06": {
+        "result": -271.88,
+        "power_delta": -0.0128,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:55": {
+        "result": -272.02,
+        "power_delta": -0.0124,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:43": {
+        "result": -270.08,
+        "power_delta": -0.0105,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:15": {
+        "result": -271.31,
+        "power_delta": -0.0126,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:28": {
+        "result": -338.27,
+        "power_delta": -0.1011,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:56": {
+        "result": -269.0,
+        "power_delta": -0.0099,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:54": {
+        "result": -272.23,
+        "power_delta": -0.0132,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:17": {
+        "result": -271.42,
+        "power_delta": -0.0125,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:53": {
+        "result": -272.0,
+        "power_delta": -0.0126,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:52": {
+        "result": -269.63,
+        "power_delta": -0.0101,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:56": {
+        "result": -271.11,
+        "power_delta": -0.012,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:50": {
+        "result": -270.93,
+        "power_delta": -0.0117,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:27": {
+        "result": -268.69,
+        "power_delta": -0.0093,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:10": {
+        "result": -272.64,
+        "power_delta": -0.0133,
+        "replicates": 100
+      },
+      "2026-04-15 00:23:59": {
+        "result": -250.29,
+        "power_delta": 0.0093,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:33": {
+        "result": -334.96,
+        "power_delta": -0.096,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:44": {
+        "result": -337.8,
+        "power_delta": -0.1003,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:35": {
+        "result": -273.04,
+        "power_delta": -0.0136,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:52": {
+        "result": -220.52,
+        "power_delta": 0.0315,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:33": {
+        "result": -247.8,
+        "power_delta": 0.0129,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:33": {
+        "result": -244.41,
+        "power_delta": 0.0147,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:34": {
+        "result": -245.1,
+        "power_delta": 0.0145,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:31": {
+        "result": -246.81,
+        "power_delta": 0.0124,
+        "replicates": 100
+      }
+    }
+  },
+  {
+    "test_id": "mia_solo",
+    "description": "Mia solo defender test. WIP attacking no heroes 1500/1069/1500 t6, minxxx defending with Mia (1/1/1). Tests S1 (Bad luck streak: 50% chance +10% dmg taken), S2 (Lucky charm: 50% chance +10% atk), S3 (Ritual deciphering: 40% chance -10% dmg taken).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 700,
+        "lancer_t6": 560,
+        "marksman_t6": 700
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 67.4,
+          "lethality": 30.1,
+          "health": 33.1
+        },
+        "lanc": {
+          "attack": 76.3,
+          "defense": 68.7,
+          "lethality": 33.1,
+          "health": 27.8
+        },
+        "mark": {
+          "attack": 76.8,
+          "defense": 64.9,
+          "lethality": 32.6,
+          "health": 28.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Mia": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 197.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 281.1,
+          "defense": 274.4,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 198.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1293,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:10": {
+        "result": 1297.22,
+        "power_delta": 0.006,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:59": {
+        "result": 1295.58,
+        "power_delta": 0.0047,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:13": {
+        "result": 1299.35,
+        "power_delta": 0.0071,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:06": {
+        "result": 1297.52,
+        "power_delta": 0.006,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:56": {
+        "result": 1295.9,
+        "power_delta": 0.0063,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:43": {
+        "result": 1296.95,
+        "power_delta": 0.0061,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:16": {
+        "result": 1295.63,
+        "power_delta": 0.0053,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:29": {
+        "result": 1058.9,
+        "power_delta": -0.1353,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:57": {
+        "result": 1295.53,
+        "power_delta": 0.005,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:54": {
+        "result": 1296.47,
+        "power_delta": 0.006,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:17": {
+        "result": 1297.19,
+        "power_delta": 0.0066,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:54": {
+        "result": 1296.99,
+        "power_delta": 0.0061,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:53": {
+        "result": 1295.32,
+        "power_delta": 0.0062,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:57": {
+        "result": 1298.31,
+        "power_delta": 0.0062,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:51": {
+        "result": 1296.9,
+        "power_delta": 0.0065,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:28": {
+        "result": 1297.47,
+        "power_delta": 0.0057,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:11": {
+        "result": 1294.8,
+        "power_delta": 0.0052,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:00": {
+        "result": 1322.47,
+        "power_delta": 0.0221,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:34": {
+        "result": 1065.02,
+        "power_delta": -0.1322,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:45": {
+        "result": 1067.01,
+        "power_delta": -0.1313,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:36": {
+        "result": 1298.25,
+        "power_delta": 0.0064,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:53": {
+        "result": 1340.18,
+        "power_delta": 0.0359,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:34": {
+        "result": 1315.98,
+        "power_delta": 0.0172,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:34": {
+        "result": 1316.42,
+        "power_delta": 0.0175,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:35": {
+        "result": 1318.96,
+        "power_delta": 0.0194,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:32": {
+        "result": 1315.23,
+        "power_delta": 0.0166,
+        "replicates": 100
+      }
+    }
+  },
+  {
+    "test_id": "mia_solo",
+    "description": "Mia solo defender test. WIP attacking no heroes 1500/1069/1500 t6, minxxx defending with Mia (1/1/1). Tests S1 (Bad luck streak: 50% chance +10% dmg taken), S2 (Lucky charm: 50% chance +10% atk), S3 (Ritual deciphering: 40% chance -10% dmg taken).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 450,
+        "lancer_t6": 360,
+        "marksman_t6": 450
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 67.4,
+          "lethality": 30.1,
+          "health": 33.1
+        },
+        "lanc": {
+          "attack": 76.3,
+          "defense": 68.7,
+          "lethality": 33.1,
+          "health": 27.8
+        },
+        "mark": {
+          "attack": 76.8,
+          "defense": 64.9,
+          "lethality": 32.6,
+          "health": 28.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Mia": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 197.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 281.1,
+          "defense": 274.4,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 198.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 180
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:11": {
+        "result": -184.93,
+        "power_delta": -0.0207,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:00": {
+        "result": -185.14,
+        "power_delta": -0.0224,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:14": {
+        "result": -185.36,
+        "power_delta": -0.0222,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:07": {
+        "result": -184.47,
+        "power_delta": -0.0191,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:57": {
+        "result": -185.17,
+        "power_delta": -0.0216,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:44": {
+        "result": -185.92,
+        "power_delta": -0.0241,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:17": {
+        "result": -184.8,
+        "power_delta": -0.0202,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:30": {
+        "result": -203.77,
+        "power_delta": -0.1052,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:58": {
+        "result": -185.03,
+        "power_delta": -0.022,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:55": {
+        "result": -185.02,
+        "power_delta": -0.0212,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:18": {
+        "result": -185.11,
+        "power_delta": -0.0208,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:54": {
+        "result": -185.15,
+        "power_delta": -0.0207,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:54": {
+        "result": -185.27,
+        "power_delta": -0.0224,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:58": {
+        "result": -185.83,
+        "power_delta": -0.0239,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:52": {
+        "result": -185.09,
+        "power_delta": -0.0226,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:28": {
+        "result": -185.02,
+        "power_delta": -0.0205,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:12": {
+        "result": -185.97,
+        "power_delta": -0.0244,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:01": {
+        "result": -177.05,
+        "power_delta": 0.0165,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:35": {
+        "result": -203.69,
+        "power_delta": -0.1048,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:46": {
+        "result": -204.12,
+        "power_delta": -0.1071,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:37": {
+        "result": -184.89,
+        "power_delta": -0.0206,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:54": {
+        "result": -165.68,
+        "power_delta": 0.0492,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:35": {
+        "result": -176.63,
+        "power_delta": 0.0142,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:35": {
+        "result": -176.15,
+        "power_delta": 0.0141,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:36": {
+        "result": -176.56,
+        "power_delta": 0.0143,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:33": {
+        "result": -176.6,
+        "power_delta": 0.0139,
+        "replicates": 100
+      }
+    }
+  },
+  {
+    "test_id": "mia_solo",
+    "description": "Mia solo defender test. WIP attacking no heroes 1500/1069/1500 t6, minxxx defending with Mia (1/1/1). Tests S1 (Bad luck streak: 50% chance +10% dmg taken), S2 (Lucky charm: 50% chance +10% atk), S3 (Ritual deciphering: 40% chance -10% dmg taken).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 450,
+        "lancer_t6": 360,
+        "marksman_t6": 450
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 67.4,
+          "lethality": 30.1,
+          "health": 33.1
+        },
+        "lanc": {
+          "attack": 76.3,
+          "defense": 68.7,
+          "lethality": 33.1,
+          "health": 27.8
+        },
+        "mark": {
+          "attack": 76.8,
+          "defense": 64.9,
+          "lethality": 32.6,
+          "health": 28.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Mia": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 60,
+        "lancer_t6": 60,
+        "marksman_t6": 60
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 197.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 281.1,
+          "defense": 274.4,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 198.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 879,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:12": {
+        "result": 878.83,
+        "power_delta": -0.0039,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:01": {
+        "result": 878.62,
+        "power_delta": -0.0052,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:15": {
+        "result": 880.33,
+        "power_delta": 0.0049,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:08": {
+        "result": 879.18,
+        "power_delta": 0.004,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:58": {
+        "result": 879.72,
+        "power_delta": 0.0051,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:45": {
+        "result": 879.45,
+        "power_delta": 0.0045,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:18": {
+        "result": 878.44,
+        "power_delta": -0.0035,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:30": {
+        "result": 744.22,
+        "power_delta": -0.1436,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:59": {
+        "result": 879.14,
+        "power_delta": 0.004,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:56": {
+        "result": 879.05,
+        "power_delta": 0.0041,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:19": {
+        "result": 880.08,
+        "power_delta": 0.0046,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:55": {
+        "result": 879.77,
+        "power_delta": 0.0055,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:55": {
+        "result": 879.53,
+        "power_delta": 0.0047,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:59": {
+        "result": 879.02,
+        "power_delta": 0.0048,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:53": {
+        "result": 880.19,
+        "power_delta": 0.0045,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:29": {
+        "result": 879.1,
+        "power_delta": 0.0043,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:12": {
+        "result": 878.65,
+        "power_delta": -0.0041,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:02": {
+        "result": 891.12,
+        "power_delta": 0.0162,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:36": {
+        "result": 751.88,
+        "power_delta": -0.137,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:47": {
+        "result": 748.6,
+        "power_delta": -0.1399,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:38": {
+        "result": 879.47,
+        "power_delta": 0.0044,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:55": {
+        "result": 902.15,
+        "power_delta": 0.0315,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:35": {
+        "result": 891.29,
+        "power_delta": 0.0165,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:36": {
+        "result": 891.2,
+        "power_delta": 0.0164,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:36": {
+        "result": 890.81,
+        "power_delta": 0.0158,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:34": {
+        "result": 890.48,
+        "power_delta": 0.0154,
+        "replicates": 100
+      }
+    }
+  },
+  {
+    "test_id": "mia_solo",
+    "description": "Mia solo defender test. WIP attacking no heroes 1500/1069/1500 t6, minxxx defending with Mia (1/1/1). Tests S1 (Bad luck streak: 50% chance +10% dmg taken), S2 (Lucky charm: 50% chance +10% atk), S3 (Ritual deciphering: 40% chance -10% dmg taken).",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 450,
+        "lancer_t6": 360,
+        "marksman_t6": 450
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 67.4,
+          "lethality": 30.1,
+          "health": 33.1
+        },
+        "lanc": {
+          "attack": 76.3,
+          "defense": 68.7,
+          "lethality": 33.1,
+          "health": 27.8
+        },
+        "mark": {
+          "attack": 76.8,
+          "defense": 64.9,
+          "lethality": 32.6,
+          "health": 28.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Mia": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 50,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 197.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 281.1,
+          "defense": 274.4,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 198.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 967,
+        "defender": 0
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:12": {
+        "result": 971.42,
+        "power_delta": 0.0094,
+        "replicates": 100
+      },
+      "2026-04-14 12:01:02": {
+        "result": 969.9,
+        "power_delta": 0.0069,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:15": {
+        "result": 971.58,
+        "power_delta": 0.0102,
+        "replicates": 100
+      },
+      "2026-04-14 16:42:08": {
+        "result": 971.26,
+        "power_delta": 0.0093,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:58": {
+        "result": 970.0,
+        "power_delta": 0.0073,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:46": {
+        "result": 972.84,
+        "power_delta": 0.0112,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:19": {
+        "result": 970.2,
+        "power_delta": 0.0075,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:31": {
+        "result": 876.98,
+        "power_delta": -0.1356,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:59": {
+        "result": 970.95,
+        "power_delta": 0.0091,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:57": {
+        "result": 971.29,
+        "power_delta": 0.01,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:20": {
+        "result": 971.38,
+        "power_delta": 0.0089,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:56": {
+        "result": 970.72,
+        "power_delta": 0.0087,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:55": {
+        "result": 971.62,
+        "power_delta": 0.0091,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:59": {
+        "result": 971.13,
+        "power_delta": 0.009,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:54": {
+        "result": 971.33,
+        "power_delta": 0.0087,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:30": {
+        "result": 971.19,
+        "power_delta": 0.0085,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:13": {
+        "result": 971.52,
+        "power_delta": 0.0086,
+        "replicates": 100
+      },
+      "2026-04-15 00:24:02": {
+        "result": 978.02,
+        "power_delta": 0.0199,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:36": {
+        "result": 880.61,
+        "power_delta": -0.1308,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:47": {
+        "result": 876.54,
+        "power_delta": -0.1362,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:39": {
+        "result": 971.56,
+        "power_delta": 0.0096,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:55": {
+        "result": 986.6,
+        "power_delta": 0.0359,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:36": {
+        "result": 980.86,
+        "power_delta": 0.0252,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:36": {
+        "result": 980.37,
+        "power_delta": 0.0243,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:37": {
+        "result": 980.53,
+        "power_delta": 0.0245,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:35": {
+        "result": 980.42,
+        "power_delta": 0.0243,
+        "replicates": 100
+      }
+    }
+  }
+]

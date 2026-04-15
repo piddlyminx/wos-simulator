@@ -1,0 +1,226 @@
+[
+  {
+    "test_id": "hector_solo",
+    "description": "Hector solo defender test. WIP attacking no heroes, minxxx defending with Hector (3/4/3). S1 Survival Instincts is 40% chance \u2014 run 5+ games. S2 Rampant and S3 Blitz are deterministic.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 1069,
+        "marksman_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Hector": {
+          "skill_1": 3,
+          "skill_2": 4,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 482.9,
+          "defense": 470.2,
+          "lethality": 147.7,
+          "health": 168.8
+        },
+        "lanc": {
+          "attack": 188.9,
+          "defense": 187.2,
+          "lethality": 120.8,
+          "health": 121.6
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 203.2,
+          "lethality": 123.5,
+          "health": 124.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 402
+      },
+      {
+        "attacker": 0,
+        "defender": 409
+      },
+      {
+        "attacker": 0,
+        "defender": 373
+      },
+      {
+        "attacker": 0,
+        "defender": 403
+      },
+      {
+        "attacker": 0,
+        "defender": 385
+      }
+    ],
+    "past_simulator_results": {
+      "2026-04-14 10:38:00": {
+        "result": -395.77,
+        "power_delta": -0.0299,
+        "replicates": 100
+      },
+      "2026-04-14 12:00:49": {
+        "result": -393.13,
+        "power_delta": 0.0336,
+        "replicates": 100
+      },
+      "2026-04-14 12:03:02": {
+        "result": -394.95,
+        "power_delta": -0.0329,
+        "replicates": 100
+      },
+      "2026-04-14 16:41:58": {
+        "result": -395.06,
+        "power_delta": -0.0331,
+        "replicates": 100
+      },
+      "2026-04-14 16:43:46": {
+        "result": -394.28,
+        "power_delta": 0.0318,
+        "replicates": 100
+      },
+      "2026-04-14 16:45:34": {
+        "result": -393.76,
+        "power_delta": 0.0297,
+        "replicates": 100
+      },
+      "2026-04-14 17:34:05": {
+        "result": -394.04,
+        "power_delta": 0.0349,
+        "replicates": 100
+      },
+      "2026-04-14 17:46:18": {
+        "result": -389.5,
+        "power_delta": 0.0402,
+        "replicates": 100
+      },
+      "2026-04-14 17:49:48": {
+        "result": -394.75,
+        "power_delta": -0.0332,
+        "replicates": 100
+      },
+      "2026-04-14 17:51:45": {
+        "result": -396.7,
+        "power_delta": -0.0287,
+        "replicates": 100
+      },
+      "2026-04-14 21:50:07": {
+        "result": -396.07,
+        "power_delta": -0.0324,
+        "replicates": 100
+      },
+      "2026-04-14 21:52:42": {
+        "result": -397.22,
+        "power_delta": -0.03,
+        "replicates": 100
+      },
+      "2026-04-14 21:54:43": {
+        "result": -396.67,
+        "power_delta": -0.0301,
+        "replicates": 100
+      },
+      "2026-04-14 21:56:48": {
+        "result": -392.38,
+        "power_delta": 0.0334,
+        "replicates": 100
+      },
+      "2026-04-14 21:58:40": {
+        "result": -396.41,
+        "power_delta": -0.0333,
+        "replicates": 100
+      },
+      "2026-04-14 22:02:17": {
+        "result": -390.81,
+        "power_delta": 0.0377,
+        "replicates": 100
+      },
+      "2026-04-14 22:12:01": {
+        "result": -395.23,
+        "power_delta": -0.0313,
+        "replicates": 100
+      },
+      "2026-04-15 00:23:51": {
+        "result": -282.89,
+        "power_delta": 0.1794,
+        "replicates": 100
+      },
+      "2026-04-15 00:32:24": {
+        "result": -392.87,
+        "power_delta": 0.0371,
+        "replicates": 100
+      },
+      "2026-04-15 02:12:33": {
+        "result": -396.84,
+        "power_delta": -0.0296,
+        "replicates": 100
+      },
+      "2026-04-15 02:22:26": {
+        "result": -395.47,
+        "power_delta": -0.0302,
+        "replicates": 100
+      },
+      "2026-04-15 03:42:43": {
+        "result": -283.19,
+        "power_delta": 0.1791,
+        "replicates": 100
+      },
+      "2026-04-15 03:49:23": {
+        "result": -396.84,
+        "power_delta": -0.0316,
+        "replicates": 100
+      },
+      "2026-04-15 03:52:24": {
+        "result": -393.8,
+        "power_delta": 0.0344,
+        "replicates": 100
+      },
+      "2026-04-15 03:54:24": {
+        "result": -393.94,
+        "power_delta": 0.038,
+        "replicates": 100
+      },
+      "2026-04-15 03:56:22": {
+        "result": -395.48,
+        "power_delta": -0.0317,
+        "replicates": 100
+      }
+    }
+  }
+]
