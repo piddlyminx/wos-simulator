@@ -1,6 +1,9 @@
 [
     {
-        "skill_hero": "Lumak Bokan",
+        "skill_hero": "Lumak",
+        "aliases": [
+            "Lumak Bokan"
+        ],
         "skill_num": 1,
         "skill_name": "Tactical Deception",
         "skill_description": "All enemy troops' damage dealt is reduced by X%",
@@ -25,11 +28,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Tactical Deception/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {
@@ -48,5 +51,27 @@
                 "special": {}
             }
         ]
+    },
+    {
+        "skill_hero": "Lumak",
+        "aliases": [
+            "Lumak Bokan"
+        ],
+        "skill_num": 2,
+        "skill_name": "Non-combat placeholder",
+        "skill_description": "Placeholder skill to satisfy simulator config for non-combat hero data",
+        "skill_troop_type": "lancer",
+        "skill_permanent": false,
+        "skill_is_chance": true,
+        "skill_probability": 0,
+        "skill_round_stackable": false,
+        "skill_type_relation": false,
+        "skill_order": 999,
+        "skill_type": "hero_skill",
+        "skill_frequency": {
+            "frequency_type": null,
+            "frequency_value": 0
+        },
+        "skill_effects": []
     }
 ]

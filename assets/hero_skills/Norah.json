@@ -60,7 +60,7 @@
                 },
                 "benefit_types": {
                     "benefit_for": "friendly",
-                    "benefit_vs": "all"
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -131,9 +131,7 @@
                     "4": "80.0",
                     "5": 100
                 },
-                "special": {
-                    "extra_vs_all": true
-                }
+                "special": {}
             }
         ]
     },
@@ -168,7 +166,7 @@
                 },
                 "benefit_types": {
                     "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turns",
@@ -243,11 +241,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Widget: Steadfast Guard/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {

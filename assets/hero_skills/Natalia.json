@@ -25,11 +25,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Wildling roar/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {
@@ -75,12 +75,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Queen of the wild/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -125,12 +125,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Call of the wild/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",

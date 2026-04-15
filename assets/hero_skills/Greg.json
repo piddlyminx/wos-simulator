@@ -25,12 +25,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Sword of justice/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turns",
@@ -80,7 +80,7 @@
                 },
                 "benefit_types": {
                     "benefit_for": "all",
-                    "benefit_vs": "target"
+                    "benefit_vs": "all"
                 },
                 "effect_duration": {
                     "duration_type": "turns",
@@ -131,11 +131,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Law and order/2",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {
@@ -181,11 +181,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Widget: Vital Surge/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {

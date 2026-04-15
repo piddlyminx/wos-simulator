@@ -25,12 +25,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Onslaught/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
                     "benefit_for": "trigger",
-                    "benefit_vs": "all"
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -75,12 +75,12 @@
                 "effect_is_chance": true,
                 "effect_num": "Iron strength/1",
                 "trigger_types": {
-                    "trigger_for": "marksmen",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "trigger",
-                    "benefit_vs": "all"
+                    "benefit_for": "all",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -96,9 +96,9 @@
                 },
                 "effect_values": {
                     "1": 10,
-                    "2": "20.0",
+                    "2": 20,
                     "3": 30,
-                    "4": "40.0",
+                    "4": 40,
                     "5": 50
                 },
                 "special": {}
@@ -152,9 +152,9 @@
                 },
                 "effect_values": {
                     "1": 10,
-                    "2": "20.0",
+                    "2": 20,
                     "3": 30,
-                    "4": "40.0",
+                    "4": 40,
                     "5": 50
                 },
                 "special": {}
@@ -187,11 +187,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Widget: Razor Volley/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {

@@ -25,12 +25,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Battle manifesto/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -75,12 +75,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Swordmentor/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -125,12 +125,12 @@
                 "effect_is_chance": false,
                 "effect_num": "E Xpert swordsmanship/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
-                    "benefit_vs": "all"
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -175,11 +175,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Widget: Battle Stance/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "all",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "all",
+                    "benefit_for": "trigger",
                     "benefit_vs": "all"
                 },
                 "effect_duration": {
