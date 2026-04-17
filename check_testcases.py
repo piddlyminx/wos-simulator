@@ -61,12 +61,17 @@ def compute_testcase_stats(sim_outcomes, game_outcomes, attacker_init, defender_
     sim_outcomes:  list of raw (sim_att - sim_def) values, one per replicate.
     game_outcomes: list of raw (game_att - game_def) values, one per game observation.
 
-    Three statistical regimes:
-      - Both sides σ=0:              deterministic → linear bias_pct vs threshold
-      - N_game = 1 (single obs):     single-obs z = (mu_sim - game_obs) / sigma_sim
-                                     (asks: is this single game observation plausible under the sim distribution?)
-      - N_game ≥ 2:                  Welch t = bias_raw / SEM
-                                     (asks: are the two sample means statistically different?)
+    Four statistical regimes:
+      - deterministic:   sim is non-stochastic (flagged via is_stochastic_fight). Flag purely on bias_pct.
+      - zero_var:        sim has chance flags but σ_sim observed as 0. Fall back to bias_pct-only rule.
+      - empirical p (N_game == 1): primary stat is a two-sided empirical p-value comparing the
+                         single game observation against the sim outcome distribution.
+                         A z value is also computed for display continuity.
+      - analytic t  (N_game >= 2): Welch-style predictive SEM
+                         sem = σ_sim * sqrt(1/n_sim + 1/n_game);
+                         t = bias_raw / sem; p via normal approximation.
+
+    Stable bias_pct denominator: max(attacker_init, defender_init), fallback sum then 1.
     """
     n_sim = len(sim_outcomes)
     n_game = len(game_outcomes)
@@ -77,30 +82,39 @@ def compute_testcase_stats(sim_outcomes, game_outcomes, attacker_init, defender_
 
     bias_raw = mu_sim - mu_game
 
-    # Denominator uses the game's winner so it stays stable across replicates.
-    if mu_game >= 0:
-        winner_init = attacker_init
-    else:
-        winner_init = defender_init
-    if not winner_init:
-        winner_init = (attacker_init or 0) + (defender_init or 0) or 1
-    bias_pct = round(bias_raw / winner_init * 100, 2)
+    # Stable denominator: doesn't flip on tie / replicate noise.
+    denom = max(attacker_init or 0, defender_init or 0)
+    if not denom:
+        denom = (attacker_init or 0) + (defender_init or 0) or 1
+    bias_pct = round(bias_raw / denom * 100, 2)
 
-    # Choose the denominator based on how much game-side information we have.
-    if n_game >= 2 and (sigma_sim > 0 or sigma_game > 0):
-        # Welch's t-statistic: comparing two sample means with variance on both sides.
-        sem = math.sqrt(sigma_sim ** 2 / max(n_sim, 1) + sigma_game ** 2 / n_game)
+    p = None
+    if n_game >= 2 and sigma_sim > 0:
+        # Predictive SEM: σ_sim * sqrt(1/n_sim + 1/n_game) -- treats n_sim replicates
+        # as noisy estimate of mean AND adds per-observation variance for the n_game side.
+        sem = sigma_sim * math.sqrt(1.0 / max(n_sim, 1) + 1.0 / n_game)
         stat = bias_raw / sem
         stat_type = 't'
+        # Normal-approximation two-sided p from t.
+        p = 2.0 * (1.0 - statistics.NormalDist().cdf(abs(stat)))
     elif n_game == 1 and sigma_sim > 0:
-        # Single-observation z-score: where does the one game obs sit in the sim distribution?
-        # Denominator is σ_sim (not SEM), since there is no estimate of game-side variance
-        # and we are scoring a single draw, not a sample mean.
+        # Empirical two-sided p: rank single game obs in sim distribution.
+        obs = game_outcomes[0]
+        p_left = (1 + sum(1 for s in sim_outcomes if s <= obs)) / (n_sim + 1)
+        p_right = (1 + sum(1 for s in sim_outcomes if s >= obs)) / (n_sim + 1)
+        p = min(1.0, 2.0 * min(p_left, p_right))
+        # z kept for display continuity only.
+        _z = bias_raw / sigma_sim
         sem = sigma_sim
-        stat = bias_raw / sem
-        stat_type = 'z'
+        stat = p
+        stat_type = 'p'
+    elif n_game >= 1 and sigma_sim == 0 and n_sim > 0:
+        # Sim is effectively deterministic even though chance flags exist.
+        sem = 0.0
+        stat = None
+        stat_type = 'zero_var'
     else:
-        # Both sides have σ=0 (e.g. nc testcase with single or repeated-identical game reports).
+        # True deterministic path (no variance either side).
         sem = 0.0
         stat = None
         stat_type = 'deterministic'
@@ -115,17 +129,37 @@ def compute_testcase_stats(sim_outcomes, game_outcomes, attacker_init, defender_
         'bias_raw': round(bias_raw, 2),
         'bias_pct': bias_pct,
         'sem': round(sem, 2),
-        'stat': None if stat is None else round(stat, 2),
+        'stat': None if stat is None else round(stat, 4),
         'stat_type': stat_type,
+        'p': None if p is None else round(p, 6),
     }
 
 
 def format_stat(stats):
-    """Pretty-print the z/t cell for a per-file row."""
-    if stats['stat_type'] == 'deterministic':
-        return 'n/a'
-    prefix = stats['stat_type']  # 'z' or 't'
+    """Pretty-print the z/t/p cell for a per-file row."""
+    if stats['stat_type'] in ('deterministic', 'zero_var'):
+        return 'det' if stats['stat_type'] == 'deterministic' else 'zvar'
+    if stats['stat_type'] == 'p':
+        return f"p={stats['stat']:.4f}"
+    prefix = stats['stat_type']  # 't'
     return f"{prefix}={stats['stat']:+.2f}"
+
+
+def is_stochastic_fight(attacker, defender):
+    """Runtime determinism classifier based on hydrated skills/effects.
+
+    Returns True if any skill or any raw effect dict on either side carries a
+    chance flag. Must be called after fight_from_testcase / Fight.battle has
+    run once (so Fighter.calc() has hydrated .skills / .skill_effects_data).
+    """
+    for fighter in (attacker, defender):
+        for skill in getattr(fighter, 'skills', []) or []:
+            if getattr(skill, 'skill_is_chance', False):
+                return True
+            for eff in getattr(skill, 'skill_effects_data', []) or []:
+                if eff.get('effect_is_chance'):
+                    return True
+    return False
 
 
 def format_skip_reason(exc):
@@ -195,7 +229,7 @@ def get_testcases(file_list, TESTCASES_PATH='testcases', resolve_patterns=True):
     return testcases_files
 
 
-def fight_from_testcase(testcase, ignore_one_diff=False, show_rounds_freq=-1):
+def fight_from_testcase(testcase, ignore_one_diff=False, show_rounds_freq=-1, return_fighters=False):
     """Run one simulator replicate for a testcase and return the per-row display tuple.
 
     The row layout produced here (indices):
@@ -261,7 +295,9 @@ def fight_from_testcase(testcase, ignore_one_diff=False, show_rounds_freq=-1):
     result.append(game_outcome)
     result.append(sim_outcome)
     result.append(signed_diff_ratio)
-
+    f.format_report()
+    if return_fighters:
+        return result, attacker, defender
     return result
 
 
@@ -272,13 +308,15 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                      z_threshold=DEFAULT_Z_THRESHOLD, min_bias_pct=DEFAULT_MIN_BIAS_PCT):
     if combine_repeats:
         max_repeat_print = 0
-    print(f"\n ✦✦ Divergence flag: |z| or |t| > {z_threshold} AND |bias| > {min_bias_pct} %   (deterministic fallback: linear diff > {max_diff_ratio_deterministic * 100} %)")
+    print(f"\n ✦✦ Divergence flag: |t| > {z_threshold} or empirical p < {2*(1-statistics.NormalDist().cdf(z_threshold)):.4f}, AND |bias| > {min_bias_pct} %   (deterministic/zero-var fallback: linear bias > {max_diff_ratio_deterministic * 100} %)")
     testcases_files = get_testcases(testcases_files, TESTCASES_PATH=TESTCASES_PATH, resolve_patterns=resolve_patterns)
     overall_prints = []
     overall_diff_ratios = []
     overall_signed_biases = []
-    overall_z_stats = []     # per-testcase (testcase_id, stat, stat_type, passes)
+    overall_z_stats = []     # per-testcase stats dicts
     skipped_testcases = []
+    # Empirical-p alpha matched to |z|>threshold for two-sided normal.
+    p_alpha = 2.0 * (1.0 - statistics.NormalDist().cdf(z_threshold))
 
     for file, testcases in testcases_files.items():
         file_prints = []
@@ -287,10 +325,8 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
         file_testcase_stats = []  # list of stats dicts (one per testcase)
         file_skipped = []
         file_updated = False
-        file_is_deterministic = is_deterministic_file(file)
-        print(f"\n⏩⏩⏩ File '{file}' {'[deterministic]' if file_is_deterministic else ''}")
+        print(f"\n⏩⏩⏩ File '{file}'")
         for testcase in testcases:
-            num_tests = max(repeat, 1) if not file_is_deterministic else 1
             tc_results = []
             testcase_id = testcase.get('test_id', '<missing test_id>')
 
@@ -298,7 +334,52 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             defender_init = sum(testcase['defender']['troops'].values())
             game_outcomes_raw = extract_game_outcomes(testcase)
 
-            for i in range(num_tests):
+            # --- First replicate: also hydrate fighters so we can classify stochastic vs deterministic
+            tc_is_deterministic = False
+            try:
+                result, _att_f, _def_f = fight_from_testcase(
+                    testcase,
+                    ignore_one_diff=ignore_one_diff,
+                    show_rounds_freq=show_rounds_freq,
+                    return_fighters=True,
+                )
+                tc_is_deterministic = not is_stochastic_fight(_att_f, _def_f)
+            except (SystemExit, Exception) as exc:
+                if not skip_invalid:
+                    raise
+                reason = format_skip_reason(exc)
+                file_skipped.append((testcase_id, reason))
+                skipped_testcases.append((file, testcase_id, reason))
+                print(f"⚠️  Skipping invalid testcase '{testcase_id}': {reason}")
+                continue
+
+            num_tests = 1 if tc_is_deterministic else max(repeat, 1)
+
+            def _post_replicate(i, result):
+                per_replicate_passes = result[14] <= (max_diff_ratio_deterministic * 100) if tc_is_deterministic \
+                    else result[14] <= (max_diff_ratio * 100)
+                result.append("✅" if per_replicate_passes else "❌")
+                result[14] = (result[14] or '-')
+
+                file_diff_ratios.append(result[14] if isinstance(result[14], (int, float)) else 0)
+                file_signed_biases.append(result[17])
+                overall_diff_ratios.append(result[14] if isinstance(result[14], (int, float)) else 0)
+                overall_signed_biases.append(result[17])
+
+                tc_results.append(result)
+                if i > 0 and i >= max_repeat_print:
+                    return
+                if num_tests > 1:
+                    if combine_repeats:
+                        result[0] += '_avg'
+                    else:
+                        result[0] += f'_{i}'
+                if not combine_repeats or i == 0:
+                    file_prints.append(result)
+
+            _post_replicate(0, result)
+
+            for i in range(1, num_tests):
                 try:
                     result = fight_from_testcase(
                         testcase,
@@ -314,28 +395,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                     print(f"⚠️  Skipping invalid testcase '{testcase_id}': {reason}")
                     tc_results = []
                     break
-
-                # Per-replicate pass uses linear diff% — conservative single-run check.
-                per_replicate_passes = result[14] <= (max_diff_ratio_deterministic * 100) if file_is_deterministic \
-                    else result[14] <= (max_diff_ratio * 100)
-                result.append("✅" if per_replicate_passes else "❌")
-                result[14] = (result[14] or '-')
-
-                file_diff_ratios.append(result[14] if isinstance(result[14], (int, float)) else 0)
-                file_signed_biases.append(result[17])
-                overall_diff_ratios.append(result[14] if isinstance(result[14], (int, float)) else 0)
-                overall_signed_biases.append(result[17])
-
-                tc_results.append(result)
-                if i > 0 and i >= max_repeat_print:
-                    continue
-                if num_tests > 1:
-                    if combine_repeats:
-                        result[0] += '_avg'
-                    else:
-                        result[0] += f'_{i}'
-                if not combine_repeats or i == 0:
-                    file_prints.append(result)
+                _post_replicate(i, result)
 
             if not tc_results:
                 continue
@@ -343,11 +403,23 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             # Per-testcase aggregate: compute divergence statistic
             sim_outcomes_raw = [r[16] for r in tc_results if isinstance(r[16], (int, float))]
             stats = compute_testcase_stats(sim_outcomes_raw, game_outcomes_raw, attacker_init, defender_init)
-            if stats['stat_type'] == 'deterministic':
+            # Override to 'deterministic' if runtime-classifier says so, regardless of what compute said
+            # (compute returns 'deterministic' only when sigma_sim==0 AND n_game<2; the classifier
+            # is the authoritative signal for "no chance anywhere".)
+            if tc_is_deterministic:
+                stats['stat_type'] = 'deterministic'
+                stats['stat'] = None
+                stats['p'] = None
+            # Flag rule:
+            #  - deterministic / zero_var:  purely on |bias_pct|
+            #  - t:                          |t| > threshold AND |bias| > min_bias_pct
+            #  - p:                          p < p_alpha AND |bias| > min_bias_pct
+            st = stats['stat_type']
+            if st in ('deterministic', 'zero_var'):
                 stats['passes'] = abs(stats['bias_pct']) <= (max_diff_ratio_deterministic * 100)
-            else:
-                # Flag only if BOTH the statistic is significant AND the bias is practically relevant.
-                # Sub-half-percent biases are below the useful-action threshold regardless of |z/t|.
+            elif st == 'p':
+                stats['passes'] = (stats['stat'] >= p_alpha) or (abs(stats['bias_pct']) <= min_bias_pct)
+            else:  # 't'
                 stats['passes'] = (abs(stats['stat']) <= z_threshold) or (abs(stats['bias_pct']) <= min_bias_pct)
             stats['testcase_id'] = testcase_id
             stats['file'] = file
@@ -364,6 +436,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                 'bias_pct': stats['bias_pct'],
                 'stat_type': stats['stat_type'],
                 'stat': stats['stat'],
+                'p': stats['p'],
                 'replicates': stats['n_sim'],
             }
             if len(past) > 3:
@@ -431,10 +504,11 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             file_average = statistics.fmean([s['bias_pct'] for s in file_testcase_stats if s['bias_pct'] is not None])
             file_mean_abs_diff = statistics.fmean([r for r in file_diff_ratios if isinstance(r, (int, float))]) if file_diff_ratios else 0.0
 
-            stat_values = [s['stat'] for s in file_testcase_stats if s['stat'] is not None]
-            if stat_values:
-                mean_stat = statistics.fmean(stat_values)
-                max_abs_stat = max(abs(s) for s in stat_values)
+            # Only 't' stats are z-scale; 'p' stats are p-values and shouldn't mix into mean-stat.
+            t_values = [s['stat'] for s in file_testcase_stats if s['stat_type'] == 't' and s['stat'] is not None]
+            if t_values:
+                mean_stat = statistics.fmean(t_values)
+                max_abs_stat = max(abs(s) for s in t_values)
             else:
                 mean_stat = None
                 max_abs_stat = None
@@ -444,9 +518,9 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
 
             print(f"✦✦ Mean |diff|: {file_mean_abs_diff:.2f} %   Mean signed bias: {file_average:+.2f} %")
             if mean_stat is not None:
-                print(f"✦✦ Mean {('t' if all(s['stat_type']=='t' for s in file_testcase_stats if s['stat'] is not None) else 'z')}: {mean_stat:+.2f}   Max |z/t|: {max_abs_stat:.2f}   Flagged: {len(flagged)}/{len(file_testcase_stats)}   ", "✅" if file_passes else "❌")
+                print(f"✦✦ Mean t: {mean_stat:+.2f}   Max |t|: {max_abs_stat:.2f}   Flagged: {len(flagged)}/{len(file_testcase_stats)}   ", "✅" if file_passes else "❌")
             else:
-                print(f"✦✦ All {len(file_testcase_stats)} testcase(s) deterministic   Flagged: {len(flagged)}/{len(file_testcase_stats)}   ", "✅" if file_passes else "❌")
+                print(f"✦✦ All {len(file_testcase_stats)} testcase(s) non-t   Flagged: {len(flagged)}/{len(file_testcase_stats)}   ", "✅" if file_passes else "❌")
         else:
             file_average = None
             file_mean_abs_diff = None
@@ -487,27 +561,58 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
     print(tabulate(overall_prints, headers=recap_headers, tablefmt="fancy_grid", colalign=("left", "center", "center", "center", "center", "center")))
 
     if overall_z_stats:
-        stat_values = [s['stat'] for s in overall_z_stats if s['stat'] is not None]
+        # Only t-type stats go into mean/Stouffer; p-values are a separate scale.
+        t_values = [s['stat'] for s in overall_z_stats if s['stat_type'] == 't' and s['stat'] is not None]
         bias_values = [s['bias_pct'] for s in overall_z_stats]
         glob_mean_abs_diff = statistics.fmean(overall_diff_ratios) if overall_diff_ratios else 0.0
         glob_signed_bias = statistics.fmean(bias_values)
         flagged = [s for s in overall_z_stats if not s['passes']]
         det_cases = [s for s in overall_z_stats if s['stat_type'] == 'deterministic']
+        zvar_cases = [s for s in overall_z_stats if s['stat_type'] == 'zero_var']
+        p_cases = [s for s in overall_z_stats if s['stat_type'] == 'p']
+
+        # Benjamini-Hochberg q-values across all stochastic testcases that have a p-value.
+        bh_inputs = [s for s in overall_z_stats if s.get('p') is not None]
+        bh_alpha = 0.05
+        q_by_id = {}
+        bh_flagged_count = 0
+        if bh_inputs:
+            m = len(bh_inputs)
+            ranked = sorted(bh_inputs, key=lambda s: s['p'])
+            raw_q = []
+            for i, s in enumerate(ranked, start=1):
+                raw_q.append(s['p'] * m / i)
+            # Monotone adjustment (step-up): q_i = min(q_i, q_{i+1}, ..., q_m)
+            running_min = 1.0
+            adj_q = [0.0] * m
+            for i in range(m - 1, -1, -1):
+                running_min = min(running_min, raw_q[i])
+                adj_q[i] = min(1.0, running_min)
+            for s, q in zip(ranked, adj_q):
+                q_by_id[id(s)] = q
+                if q <= bh_alpha:
+                    bh_flagged_count += 1
 
         print(f"🔹  Overall Mean |diff|: {glob_mean_abs_diff:.2f} %")
         print(f"🔹  Overall Mean signed bias: {glob_signed_bias:+.2f} %")
-        if stat_values:
-            stouffer_z = sum(stat_values) / math.sqrt(len(stat_values))  # combined z-score assuming independence
-            print(f"🔹  Overall Mean z/t: {statistics.fmean(stat_values):+.2f}   Max |z/t|: {max(abs(s) for s in stat_values):.2f}")
-            print(f"🔹  Stouffer combined z across {len(stat_values)} stochastic testcases: {stouffer_z:+.2f}")
-        print(f"🔹  Flagged testcases (|z/t| > {z_threshold} AND |bias| > {min_bias_pct} %, or deterministic miss): {len(flagged)}/{len(overall_z_stats)}   (deterministic: {len(det_cases)})")
+        if t_values:
+            stouffer_z = sum(t_values) / math.sqrt(len(t_values))  # combined z-score assuming independence
+            print(f"🔹  Overall Mean t: {statistics.fmean(t_values):+.2f}   Max |t|: {max(abs(s) for s in t_values):.2f}")
+            print(f"🔹  Stouffer combined z across {len(t_values)} t-testcases: {stouffer_z:+.2f}")
+        print(f"🔹  Flagged testcases (primary rule): {len(flagged)}/{len(overall_z_stats)}   (deterministic: {len(det_cases)}, zero_var: {len(zvar_cases)}, p-branch: {len(p_cases)})")
+        if bh_inputs:
+            print(f"🔹  BH-flagged: {bh_flagged_count}/{len(bh_inputs)} (q<=alpha={bh_alpha})")
         if flagged:
             print("🔹  Flagged list:")
             for s in flagged:
-                if s['stat_type'] == 'deterministic':
-                    print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  (deterministic)")
+                q = q_by_id.get(id(s))
+                q_str = f"  q={q:.4f}" if q is not None else ""
+                if s['stat_type'] in ('deterministic', 'zero_var'):
+                    print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  ({s['stat_type']}){q_str}")
+                elif s['stat_type'] == 'p':
+                    print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  p={s['stat']:.4f}{q_str}  (μ_sim={s['mu_sim']} ±{s['sigma_sim']}, μ_game={s['mu_game']}, N_sim={s['n_sim']}, N_game={s['n_game']})")
                 else:
-                    print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  {s['stat_type']}={s['stat']:+.2f}  (μ_sim={s['mu_sim']} ±{s['sigma_sim']}, μ_game={s['mu_game']}, N_sim={s['n_sim']}, N_game={s['n_game']})")
+                    print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  {s['stat_type']}={s['stat']:+.2f}{q_str}  (μ_sim={s['mu_sim']} ±{s['sigma_sim']}, μ_game={s['mu_game']}, N_sim={s['n_sim']}, N_game={s['n_game']})")
     else:
         print("🔹  Overall: n/a (all testcases skipped)")
 
