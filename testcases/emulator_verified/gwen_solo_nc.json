@@ -1,7 +1,7 @@
 [
   {
-    "test_id": "gwen_solo_nc",
-    "description": "Gwen solo defender test. WIP attacking no heroes 1500/1069/1500 t6, minxxx defending with Gwen (1/1/0). Tests S1 (Eagle vision: OppDefenseDown 5% permanent) and S2 (Air dominance: every 5 attacks, 20% DamageUp for 1 attack + OppDefenseDown 5% on target for 1 attack). All skills deterministic (no chance).",
+    "test_id": "gwen_solo",
+    "description": "Gwen solo defender test. WIP attacking with no heroes, minxxx defending with Gwen. Gwen has per-attack triggers (S2: every 5 attacks, S3: every 4 attacks for marksmen). S2 and S3 have effect_op=101.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
@@ -35,7 +35,7 @@
     "defender": {
       "name": "[ARK]Piddilyminxxx",
       "heroes": {
-        "Norah": {
+        "Gwen": {
           "skill_1": 1,
           "skill_2": 1,
           "skill_3": 0
@@ -49,19 +49,19 @@
       "stats": {
         "inf": {
           "attack": 215.0,
-          "defense": 189.3,
+          "defense": 202.3,
           "lethality": 118.7,
           "health": 131.8
         },
         "lanc": {
-          "attack": 280.5,
-          "defense": 265.8,
+          "attack": 189.0,
+          "defense": 187.3,
           "lethality": 120.9,
           "health": 121.7
         },
         "mark": {
-          "attack": 206.0,
-          "defense": 190.3,
+          "attack": 297.5,
+          "defense": 294.8,
           "lethality": 123.6,
           "health": 124.6
         }
@@ -69,136 +69,30 @@
       "joiner_heroes": {}
     },
     "sim_result": {
-      "attacker": 3104,
+      "attacker": 2990,
       "defender": 0
     },
     "game_report_result": [
       {
-        "attacker": 3026,
+        "attacker": 3006,
+        "defender": 0
+      },
+      {
+        "attacker": 3006,
+        "defender": 0
+      },
+      {
+        "attacker": 3006,
+        "defender": 0
+      },
+      {
+        "attacker": 3006,
+        "defender": 0
+      },
+      {
+        "attacker": 3006,
         "defender": 0
       }
-    ],
-    "past_simulator_results": {
-      "2026-04-14 15:44:22": {
-        "result": 3105.0,
-        "power_delta": 0.0405,
-        "replicates": 1
-      },
-      "2026-04-14 16:41:56": {
-        "result": 3105.0,
-        "power_delta": 0.0405,
-        "replicates": 1
-      },
-      "2026-04-14 16:43:45": {
-        "result": 3112.0,
-        "power_delta": 0.0442,
-        "replicates": 1
-      },
-      "2026-04-14 16:45:33": {
-        "result": 3110.0,
-        "power_delta": 0.0432,
-        "replicates": 1
-      },
-      "2026-04-14 17:34:03": {
-        "result": 3103.0,
-        "power_delta": 0.0394,
-        "replicates": 1
-      },
-      "2026-04-14 17:46:17": {
-        "result": 3028.0,
-        "power_delta": 0.001,
-        "replicates": 1
-      },
-      "2026-04-14 17:49:47": {
-        "result": 3106.0,
-        "power_delta": 0.041,
-        "replicates": 1
-      },
-      "2026-04-14 17:51:44": {
-        "result": 3105.0,
-        "power_delta": 0.0405,
-        "replicates": 1
-      },
-      "2026-04-14 21:50:05": {
-        "result": 3071.0,
-        "power_delta": 0.0226,
-        "replicates": 1
-      },
-      "2026-04-14 21:52:40": {
-        "result": 3016.0,
-        "power_delta": -0.0049,
-        "replicates": 1
-      },
-      "2026-04-14 21:54:42": {
-        "result": 2961.0,
-        "power_delta": -0.0308,
-        "replicates": 1
-      },
-      "2026-04-14 21:56:46": {
-        "result": 2982.0,
-        "power_delta": -0.0211,
-        "replicates": 1
-      },
-      "2026-04-14 21:58:37": {
-        "result": 3034.0,
-        "power_delta": 0.0039,
-        "replicates": 1
-      },
-      "2026-04-14 22:02:16": {
-        "result": 3088.0,
-        "power_delta": 0.0315,
-        "replicates": 1
-      },
-      "2026-04-14 22:12:00": {
-        "result": 3022.0,
-        "power_delta": -0.002,
-        "replicates": 1
-      },
-      "2026-04-15 00:23:48": {
-        "result": 3009.0,
-        "power_delta": -0.0083,
-        "replicates": 1
-      },
-      "2026-04-15 00:32:23": {
-        "result": 2920.0,
-        "power_delta": -0.0492,
-        "replicates": 1
-      },
-      "2026-04-15 02:12:32": {
-        "result": 3058.0,
-        "power_delta": 0.016,
-        "replicates": 1
-      },
-      "2026-04-15 02:22:25": {
-        "result": 3108.0,
-        "power_delta": 0.0421,
-        "replicates": 1
-      },
-      "2026-04-15 03:42:41": {
-        "result": 3038.0,
-        "power_delta": 0.0059,
-        "replicates": 1
-      },
-      "2026-04-15 03:49:22": {
-        "result": 2960.0,
-        "power_delta": -0.0313,
-        "replicates": 1
-      },
-      "2026-04-15 03:52:22": {
-        "result": 2987.0,
-        "power_delta": -0.0188,
-        "replicates": 1
-      },
-      "2026-04-15 03:54:23": {
-        "result": 2958.0,
-        "power_delta": -0.0322,
-        "replicates": 1
-      },
-      "2026-04-15 03:56:20": {
-        "result": 3023.0,
-        "power_delta": -0.0015,
-        "replicates": 1
-      }
-    }
+    ]
   }
 ]

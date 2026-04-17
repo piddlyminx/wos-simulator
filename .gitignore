@@ -5,3 +5,4 @@ __pycache__
 .history
 battle_specs_manual
 tmp
+test_results/runs/

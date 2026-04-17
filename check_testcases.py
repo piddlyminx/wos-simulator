@@ -11,10 +11,39 @@ import json
 import glob
 import os
 import statistics
+import subprocess
 
 BattleRound.DEBUG = False
 DEFAULT_Z_THRESHOLD = 2.0
 DEFAULT_MIN_BIAS_PCT = 0.5  # practical-significance floor: sub-half-percent biases never flag
+TEST_RESULTS_DIR = 'test_results'
+BASELINE_PATH = os.path.join(TEST_RESULTS_DIR, 'baseline.json')
+RUNS_DIR = os.path.join(TEST_RESULTS_DIR, 'runs')
+
+
+def snapshot_key(file_path, idx):
+    """Composite key for per-testcase snapshots. test_id alone is not unique (some files repeat)."""
+    return f"{file_path}#{idx}"
+
+
+def _git_info():
+    try:
+        sha = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], stderr=subprocess.DEVNULL).decode().strip()
+        dirty = bool(subprocess.check_output(['git', 'status', '--porcelain'], stderr=subprocess.DEVNULL).decode().strip())
+        return sha, dirty
+    except Exception:
+        return None, None
+
+
+def _load_baseline():
+    if not os.path.exists(BASELINE_PATH):
+        return None
+    try:
+        with open(BASELINE_PATH, 'r') as fh:
+            return json.load(fh)
+    except Exception as exc:
+        print(f"⚠️  Could not read {BASELINE_PATH}: {exc}")
+        return None
 
 
 def measure_distance(sim_result, game_result, winner_init_count, ignore_one_diff):
@@ -295,7 +324,7 @@ def fight_from_testcase(testcase, ignore_one_diff=False, show_rounds_freq=-1, re
     result.append(game_outcome)
     result.append(sim_outcome)
     result.append(signed_diff_ratio)
-    f.format_report()
+
     if return_fighters:
         return result, attacker, defender
     return result
@@ -305,9 +334,12 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                      max_diff_ratio_deterministic=0.01, repeat=0, combine_repeats=False,
                      max_repeat_print=5, ignore_one_diff=False, show_rounds_freq=-1,
                      skip_invalid=False, show_raw_outcomes=False, resolve_patterns=True,
-                     z_threshold=DEFAULT_Z_THRESHOLD, min_bias_pct=DEFAULT_MIN_BIAS_PCT):
+                     z_threshold=DEFAULT_Z_THRESHOLD, min_bias_pct=DEFAULT_MIN_BIAS_PCT,
+                     update_baseline=False, write_run_snapshot=True, cli_args=None):
     if combine_repeats:
         max_repeat_print = 0
+    started_at = datetime.datetime.now(datetime.timezone.utc)
+    bh_alpha = 0.05
     print(f"\n ✦✦ Divergence flag: |t| > {z_threshold} or empirical p < {2*(1-statistics.NormalDist().cdf(z_threshold)):.4f}, AND |bias| > {min_bias_pct} %   (deterministic/zero-var fallback: linear bias > {max_diff_ratio_deterministic * 100} %)")
     testcases_files = get_testcases(testcases_files, TESTCASES_PATH=TESTCASES_PATH, resolve_patterns=resolve_patterns)
     overall_prints = []
@@ -324,9 +356,8 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
         file_signed_biases = []
         file_testcase_stats = []  # list of stats dicts (one per testcase)
         file_skipped = []
-        file_updated = False
         print(f"\n⏩⏩⏩ File '{file}'")
-        for testcase in testcases:
+        for idx, testcase in enumerate(testcases):
             tc_results = []
             testcase_id = testcase.get('test_id', '<missing test_id>')
 
@@ -423,27 +454,9 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                 stats['passes'] = (abs(stats['stat']) <= z_threshold) or (abs(stats['bias_pct']) <= min_bias_pct)
             stats['testcase_id'] = testcase_id
             stats['file'] = file
+            stats['idx'] = idx
             file_testcase_stats.append(stats)
             overall_z_stats.append(stats)
-
-            # Persist a compact per-run snapshot on the testcase for history tracking
-            ts = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            testcase.setdefault('past_simulator_results', {})
-            past = testcase['past_simulator_results']
-            past[ts] = {
-                'result': stats['mu_sim'],
-                'sigma_sim': stats['sigma_sim'],
-                'bias_pct': stats['bias_pct'],
-                'stat_type': stats['stat_type'],
-                'stat': stats['stat'],
-                'p': stats['p'],
-                'replicates': stats['n_sim'],
-            }
-            if len(past) > 3:
-                oldest = sorted(past.keys())[:-3]
-                for k in oldest:
-                    del past[k]
-            file_updated = True
 
             if combine_repeats:
                 file_prints[-1][10] = round(statistics.fmean([(x[10] if isinstance(x[10], int) else 0) for x in tc_results]), 1) or '-'
@@ -534,10 +547,6 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             print(f"⚠️  Skipped invalid testcases in file: {len(file_skipped)}")
         file_name = file.split('\\')[-1].split('/')[-1].replace('.json', '').replace('testcases', '').replace('tc', '').replace('_', ' ')
         if file_name in ['', ' ']:
-            if file_updated:
-                with open(file, 'w') as fw:
-                    fw.write(json.dumps(testcases, indent=2))
-                file_updated = False
             continue
 
         if not file_testcase_stats:
@@ -551,10 +560,6 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                 f"{max_abs_stat:.2f}" if max_abs_stat is not None else 'det',
                 '✅' if file_passes else '❌',
             ])
-        if file_updated:
-            with open(file, 'w') as fw:
-                fw.write(json.dumps(testcases, indent=2))
-            file_updated = False
 
     print("\n🔹🔹🔹  RECAP 🔹🔹🔹")
     recap_headers = ['file', 'Mean |diff| %', 'Mean signed bias %', 'Mean z/t', 'Max |z/t|', '✦✦']
@@ -573,15 +578,13 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
 
         # Benjamini-Hochberg q-values across all stochastic testcases that have a p-value.
         bh_inputs = [s for s in overall_z_stats if s.get('p') is not None]
-        bh_alpha = 0.05
-        q_by_id = {}
         bh_flagged_count = 0
+        for s in overall_z_stats:
+            s.setdefault('q', None)
         if bh_inputs:
             m = len(bh_inputs)
             ranked = sorted(bh_inputs, key=lambda s: s['p'])
-            raw_q = []
-            for i, s in enumerate(ranked, start=1):
-                raw_q.append(s['p'] * m / i)
+            raw_q = [s['p'] * m / i for i, s in enumerate(ranked, start=1)]
             # Monotone adjustment (step-up): q_i = min(q_i, q_{i+1}, ..., q_m)
             running_min = 1.0
             adj_q = [0.0] * m
@@ -589,7 +592,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                 running_min = min(running_min, raw_q[i])
                 adj_q[i] = min(1.0, running_min)
             for s, q in zip(ranked, adj_q):
-                q_by_id[id(s)] = q
+                s['q'] = round(q, 6)
                 if q <= bh_alpha:
                     bh_flagged_count += 1
 
@@ -605,7 +608,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
         if flagged:
             print("🔹  Flagged list:")
             for s in flagged:
-                q = q_by_id.get(id(s))
+                q = s.get('q')
                 q_str = f"  q={q:.4f}" if q is not None else ""
                 if s['stat_type'] in ('deterministic', 'zero_var'):
                     print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  ({s['stat_type']}){q_str}")
@@ -620,6 +623,121 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
         print(f"\n⚠️⚠️⚠️  Skipped invalid testcases: {len(skipped_testcases)}")
         for file, testcase_id, reason in skipped_testcases:
             print(f"⚠️  {file} :: {testcase_id} :: {reason}")
+
+    # --- Per-run snapshot + baseline handling ---
+    if not write_run_snapshot and not update_baseline:
+        return
+
+    finished_at = datetime.datetime.now(datetime.timezone.utc)
+    git_sha, git_dirty = _git_info()
+    baseline = _load_baseline()
+    baseline_git_sha = baseline.get('git_sha') if baseline else None
+
+    snapshot_testcases = {}
+    for s in overall_z_stats:
+        key = snapshot_key(s['file'], s['idx'])
+        snapshot_testcases[key] = {
+            'file': s['file'],
+            'testcase_id': s['testcase_id'],
+            'idx': s['idx'],
+            'n_sim': s['n_sim'],
+            'mu_sim': s['mu_sim'],
+            'sigma_sim': s['sigma_sim'],
+            'n_game': s['n_game'],
+            'mu_game': s['mu_game'],
+            'sigma_game': s['sigma_game'],
+            'bias_raw': s['bias_raw'],
+            'bias_pct': s['bias_pct'],
+            'sem': s['sem'],
+            'stat_type': s['stat_type'],
+            'stat': s['stat'],
+            'p': s['p'],
+            'q': s.get('q'),
+            'passes': s['passes'],
+        }
+
+    run_doc = {
+        'started_at': started_at.isoformat().replace('+00:00', 'Z'),
+        'finished_at': finished_at.isoformat().replace('+00:00', 'Z'),
+        'git_sha': git_sha,
+        'dirty': git_dirty,
+        'baseline_git_sha': baseline_git_sha,
+        'cli_args': cli_args or {},
+        'thresholds': {
+            'z_threshold': z_threshold,
+            'min_bias_pct': min_bias_pct,
+            'bh_alpha': bh_alpha,
+            'max_diff_ratio': max_diff_ratio,
+            'max_diff_ratio_deterministic': max_diff_ratio_deterministic,
+        },
+        'skipped': [{'file': f, 'testcase_id': t, 'reason': r} for f, t, r in skipped_testcases],
+        'testcases': snapshot_testcases,
+    }
+
+    os.makedirs(RUNS_DIR, exist_ok=True)
+    ts_tag = finished_at.strftime('%Y-%m-%dT%H-%M-%SZ')
+    run_path = os.path.join(RUNS_DIR, f'{ts_tag}.json')
+    with open(run_path, 'w') as fh:
+        json.dump(run_doc, fh, indent=2)
+    print(f"\n🔹  Wrote run snapshot: {run_path}")
+
+    if update_baseline:
+        baseline_doc = {k: v for k, v in run_doc.items() if k not in ('started_at', 'finished_at', 'cli_args', 'baseline_git_sha')}
+        baseline_doc['recorded_at'] = run_doc['finished_at']
+        tmp_path = BASELINE_PATH + '.tmp'
+        with open(tmp_path, 'w') as fh:
+            json.dump(baseline_doc, fh, indent=2)
+        os.replace(tmp_path, BASELINE_PATH)
+        print(f"🔹  Updated baseline: {BASELINE_PATH}  (n={len(snapshot_testcases)} testcases, git={git_sha})")
+    elif baseline:
+        _print_baseline_delta(baseline, run_doc)
+
+
+def _print_baseline_delta(baseline, run_doc):
+    """Compact delta summary vs baseline: counts of drifts, regime changes, and passes flips."""
+    base_tcs = baseline.get('testcases', {})
+    run_tcs = run_doc.get('testcases', {})
+    drifted_bias = 0
+    drifted_stat = 0
+    regime_changes = 0
+    passes_flips = 0
+    missing_in_run = 0
+    new_in_run = 0
+    top_bias_moves = []  # (|Δbias|, key, base_bias, run_bias)
+    for key, base in base_tcs.items():
+        run = run_tcs.get(key)
+        if run is None:
+            missing_in_run += 1
+            continue
+        if base.get('stat_type') != run.get('stat_type'):
+            regime_changes += 1
+        if base.get('passes') != run.get('passes'):
+            passes_flips += 1
+        b_bias = base.get('bias_pct')
+        r_bias = run.get('bias_pct')
+        if b_bias is not None and r_bias is not None:
+            delta = r_bias - b_bias
+            if abs(delta) > 0.5:
+                drifted_bias += 1
+            top_bias_moves.append((abs(delta), key, b_bias, r_bias))
+        if base.get('stat_type') == run.get('stat_type') == 't':
+            b_t = base.get('stat')
+            r_t = run.get('stat')
+            if b_t is not None and r_t is not None and abs(r_t - b_t) > 1.0:
+                drifted_stat += 1
+    for key in run_tcs:
+        if key not in base_tcs:
+            new_in_run += 1
+
+    print(f"\n🔸  vs baseline (git={baseline.get('git_sha')}):  "
+          f"Δbias>0.5%: {drifted_bias}  |Δt|>1.0: {drifted_stat}  "
+          f"regime flips: {regime_changes}  passes flips: {passes_flips}  "
+          f"missing in run: {missing_in_run}  new in run: {new_in_run}")
+    top_bias_moves.sort(reverse=True)
+    for abs_delta, key, b_bias, r_bias in top_bias_moves[:5]:
+        if abs_delta <= 0.5:
+            break
+        print(f"    • {key}  bias {b_bias:+.2f}% → {r_bias:+.2f}%  (Δ{r_bias - b_bias:+.2f})")
 
 
 if __name__ == '__main__':
@@ -688,6 +806,18 @@ if __name__ == '__main__':
         action="store_false",
         help="Disable the one-unit difference tolerance.",
     )
+    parser.add_argument(
+        "--update-baseline",
+        action="store_true",
+        help=f"After the run, promote the per-run snapshot to {BASELINE_PATH} (committed baseline).",
+    )
+    parser.add_argument(
+        "--no-run-snapshot",
+        dest="write_run_snapshot",
+        action="store_false",
+        default=True,
+        help=f"Skip writing {RUNS_DIR}/<ts>.json for this run.",
+    )
     args = parser.parse_args()
 
     if args.debug_battle:
@@ -719,6 +849,9 @@ if __name__ == '__main__':
         resolve_patterns=False,
         z_threshold=args.z_threshold,
         min_bias_pct=args.min_bias_pct,
+        update_baseline=args.update_baseline,
+        write_run_snapshot=args.write_run_snapshot,
+        cli_args=vars(args),
     )
 
 
