@@ -1,0 +1,164 @@
+[
+  {
+    "test_id": "attdef_jasser_patrick_wip_attacks",
+    "description": "Attacker/defender test. WIP attacks with Jasser+Patrick (deterministic buffs), minxxx defends with no heroes. WIP: T6 500/500/500, minxxx: T6 135/135/135.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Patrick": {
+          "skill_1": 1,
+          "skill_2": 1
+        },
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 500,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 68.3,
+          "defense": 66.1,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 128.2,
+          "defense": 124.7,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 128.7,
+          "defense": 121.0,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 135,
+        "lancer_t6": 135,
+        "marksman_t6": 135
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.7,
+          "defense": 189.3,
+          "lethality": 118.0,
+          "health": 131.1
+        },
+        "lanc": {
+          "attack": 183.7,
+          "defense": 174.3,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 200.7,
+          "defense": 190.3,
+          "lethality": 122.9,
+          "health": 123.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 807,
+        "defender": 0
+      }
+    ]
+  },
+  {
+    "test_id": "attdef_jasser_patrick_wip_attacks",
+    "description": "Attacker/defender test. WIP attacks with Jasser+Patrick (deterministic buffs), minxxx defends with no heroes. WIP: T6 500/500/500, minxxx: T6 135/135/135.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Patrick": {
+          "skill_1": 1,
+          "skill_2": 1
+        },
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 500,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 68.3,
+          "defense": 66.1,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 128.2,
+          "defense": 124.7,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 128.7,
+          "defense": 121.0,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 135,
+        "lancer_t6": 135,
+        "marksman_t6": 135
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.7,
+          "defense": 189.3,
+          "lethality": 118.0,
+          "health": 131.1
+        },
+        "lanc": {
+          "attack": 183.7,
+          "defense": 174.3,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 200.7,
+          "defense": 190.3,
+          "lethality": 122.9,
+          "health": 123.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 807,
+        "defender": 0
+      },
+      {
+        "attacker": 807,
+        "defender": 0
+      }
+    ]
+  }
+]

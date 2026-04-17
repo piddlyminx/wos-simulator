@@ -1,0 +1,88 @@
+[
+  {
+    "test_id": "determinism_test_normal",
+    "description": "Determinism test: WIP attacks minxxx. No heroes. WIP 1700 infantry_t6 vs minxxx 300 infantry_t6. Expect ~47% attacker casualties.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Hector": {
+          "skill_1": 2,
+          "skill_2": 3,
+          "skill_3": 2
+        },
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2
+        }
+      },
+      "troops": {
+        "infantry_t6": 1700,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 215.0,
+          "defense": 217.6,
+          "lethality": 50.6,
+          "health": 66.6
+        },
+        "lanc": {
+          "attack": 335.1,
+          "defense": 327.4,
+          "lethality": 69.8,
+          "health": 53.2
+        },
+        "mark": {
+          "attack": 255.1,
+          "defense": 241.6,
+          "lethality": 78.3,
+          "health": 56.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 214.9,
+          "defense": 202.2,
+          "lethality": 118.6,
+          "health": 131.7
+        },
+        "lanc": {
+          "attack": 188.9,
+          "defense": 187.2,
+          "lethality": 120.8,
+          "health": 121.6
+        },
+        "mark": {
+          "attack": 205.9,
+          "defense": 203.2,
+          "lethality": 123.5,
+          "health": 124.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1597,
+        "defender": 0
+      }
+    ]
+  }
+]

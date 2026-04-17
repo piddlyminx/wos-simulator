@@ -1,0 +1,77 @@
+[
+  {
+    "test_id": "troop_check",
+    "description": "",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 66.1,
+          "defense": 63.9,
+          "lethality": 23.3,
+          "health": 26.4
+        },
+        "lanc": {
+          "attack": 68.6,
+          "defense": 65.1,
+          "lethality": 26.3,
+          "health": 21.1
+        },
+        "mark": {
+          "attack": 69.1,
+          "defense": 61.4,
+          "lethality": 25.8,
+          "health": 21.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sergey": {
+          "skill_1": 4,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 303.7,
+          "defense": 285.3,
+          "lethality": 118.0,
+          "health": 131.1
+        },
+        "lanc": {
+          "attack": 188.7,
+          "defense": 181.3,
+          "lethality": 120.2,
+          "health": 121.0
+        },
+        "mark": {
+          "attack": 205.7,
+          "defense": 197.3,
+          "lethality": 122.9,
+          "health": 123.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 279
+      }
+    ]
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "test_id": "jessie_solo",
+    "description": "WOS-31: Jessie solo defender test. WIP infantry-only 1500 t6 attacking no heroes, minxxx 45/45/45 t6 defending with Jessie (S1=4, S2=1). Tests S1 Stand of Arms (+20% damage dealt) and S2 Bulwarks (+4% defense). Both deterministic. minxxx expected to win with ~64% casualties.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 0,
+        "marksman_t6": 0
+      },
+      "stats": {
+        "inf": {
+          "attack": 73.8,
+          "defense": 76.4,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 78.8,
+          "defense": 71.2,
+          "lethality": 38.1,
+          "health": 28.8
+        },
+        "mark": {
+          "attack": 83.3,
+          "defense": 69.9,
+          "lethality": 37.6,
+          "health": 29.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {
+        "Jessie": {
+          "skill_1": 4,
+          "skill_2": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 45,
+        "lancer_t6": 45,
+        "marksman_t6": 45
+      },
+      "stats": {
+        "inf": {
+          "attack": 209.9,
+          "defense": 202.2,
+          "lethality": 118.1,
+          "health": 131.2
+        },
+        "lanc": {
+          "attack": 272.9,
+          "defense": 276.2,
+          "lethality": 120.3,
+          "health": 121.1
+        },
+        "mark": {
+          "attack": 200.9,
+          "defense": 203.2,
+          "lethality": 123.0,
+          "health": 124.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 79,
+        "defender": 0
+      },
+      {
+        "attacker": 79,
+        "defender": 0
+      },
+      {
+        "attacker": 79,
+        "defender": 0
+      }
+    ]
+  }
+]
