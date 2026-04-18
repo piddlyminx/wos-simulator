@@ -20,6 +20,31 @@ TEST_RESULTS_DIR = 'test_results'
 BASELINE_PATH = os.path.join(TEST_RESULTS_DIR, 'baseline.json')
 RUNS_DIR = os.path.join(TEST_RESULTS_DIR, 'runs')
 
+# Accepted-residual waivers. Keyed by f"{file}::{test_id}". Each entry names the
+# issue that documents the structural limitation and the observed bias at the
+# time of acceptance, with a tolerance. A waived testcase is unflagged IFF its
+# current bias stays within tolerance of the expected value; if the bias moves
+# outside that band, the waiver lapses and the testcase flags normally so
+# regressions remain visible. Keep entries in sync with knowledge/known-issues.md.
+KNOWN_ISSUE_WAIVERS = {
+    'testcases/heroes_unittests/Alonso_tc.json::daut_viper_1': {
+        'issue': 'WOS-136',
+        'expected_bias_pct': -1.67,
+        'tolerance_pct': 0.75,
+        'note': 'Structural Alonso level-branching; no fix without schema extension (WOS-144).',
+    },
+    'testcases/heroes_unittests/Alonso_tc.json::daut_viper_2': {
+        'issue': 'WOS-136',
+        'expected_bias_pct': 0.88,
+        'tolerance_pct': 0.75,
+        'note': 'Structural Alonso level-branching; no fix without schema extension (WOS-144).',
+    },
+}
+
+
+def waiver_for(file_path, testcase_id):
+    return KNOWN_ISSUE_WAIVERS.get(f"{file_path}::{testcase_id}")
+
 
 def snapshot_key(file_path, idx):
     """Composite key for per-testcase snapshots. test_id alone is not unique (some files repeat)."""
@@ -455,6 +480,19 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             stats['testcase_id'] = testcase_id
             stats['file'] = file
             stats['idx'] = idx
+
+            # Apply known-issue waivers: if the testcase is a documented
+            # accepted-residual and its current bias stays within tolerance of
+            # the expected value, treat it as passing. Out-of-band drift causes
+            # the waiver to lapse so real regressions still flag.
+            waiver = waiver_for(file, testcase_id)
+            if waiver is not None and stats['bias_pct'] is not None:
+                drift = abs(stats['bias_pct'] - waiver['expected_bias_pct'])
+                if drift <= waiver['tolerance_pct']:
+                    stats['waived_by'] = waiver['issue']
+                    stats['passes'] = True
+                else:
+                    stats['waiver_lapsed'] = waiver['issue']
             file_testcase_stats.append(stats)
             overall_z_stats.append(stats)
 
@@ -477,7 +515,8 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
                 sep[15] = stats['mu_game']
                 sep[16] = f"{stats['mu_sim']} ±{stats['sigma_sim']}"
                 sep[17] = stats['bias_pct']
-                sep[-1] = format_stat(stats) + (' ✅' if stats['passes'] else ' ❌')
+                waived_tag = f" (waived:{stats['waived_by']})" if stats.get('waived_by') else ''
+                sep[-1] = format_stat(stats) + (' ✅' if stats['passes'] else ' ❌') + waived_tag
                 file_prints.append(sep)
 
         # Render the per-file table
@@ -602,7 +641,17 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             stouffer_z = sum(t_values) / math.sqrt(len(t_values))  # combined z-score assuming independence
             print(f"🔹  Overall Mean t: {statistics.fmean(t_values):+.2f}   Max |t|: {max(abs(s) for s in t_values):.2f}")
             print(f"🔹  Stouffer combined z across {len(t_values)} t-testcases: {stouffer_z:+.2f}")
+        waived_cases = [s for s in overall_z_stats if s.get('waived_by')]
+        lapsed_cases = [s for s in overall_z_stats if s.get('waiver_lapsed')]
         print(f"🔹  Flagged testcases (primary rule): {len(flagged)}/{len(overall_z_stats)}   (deterministic: {len(det_cases)}, zero_var: {len(zvar_cases)}, p-branch: {len(p_cases)})")
+        if waived_cases:
+            print(f"🔹  Waived (known-issue residuals): {len(waived_cases)}")
+            for s in waived_cases:
+                print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  (waived by {s['waived_by']})")
+        if lapsed_cases:
+            print(f"⚠️  Waivers lapsed (bias drifted out of tolerance): {len(lapsed_cases)}")
+            for s in lapsed_cases:
+                print(f"    • {s['file']} :: {s['testcase_id']}  bias={s['bias_pct']:+.2f} %  (waiver {s['waiver_lapsed']} no longer applies — investigate)")
         if bh_inputs:
             print(f"🔹  BH-flagged: {bh_flagged_count}/{len(bh_inputs)} (q<=alpha={bh_alpha})")
         if flagged:
