@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+:root {
+  --sidebar-bg: #1e1e2e;
+  --sidebar-text: #cdd6f4;
+  --sidebar-hover: #313244;
+  --sidebar-active: #89b4fa;
+  --main-bg: #181825;
+  --main-text: #cdd6f4;
+  --border-color: #313244;
+}
+
+body {
+  background-color: var(--main-bg);
+  color: var(--main-text);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+}
+
+.nav-link {
+  color: var(--sidebar-text);
+}
+
+.nav-link:hover {
+  background-color: var(--sidebar-hover);
+}
