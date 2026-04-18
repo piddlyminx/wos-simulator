@@ -333,9 +333,9 @@ class RoundEffect:
         self.attempted_in_round = True
         # Already activated in round for unit, unless stackable in the same round
         if self.activated_in_round and (self._effect.trig_for_unit == 'once'): return False
-        # attack frequency: gate on > 0 to prevent firing at cumul=0 (before any attacks)
+        # attack frequency: fires on the Nth attack (matches turn-frequency semantics where skill fires on turn N, 2N, ...)
         if (not self._effect.is_permanent) and ('attack' in self._effect.frequency['frequency_type']):
-            if fighter.cumul_attacks[ut] == 0 or fighter.cumul_attacks[ut] % self._effect.frequency['frequency_value'] != 0 : return False
+            if (fighter.cumul_attacks[ut] + 1) % self._effect.frequency['frequency_value'] != 0 : return False
         # check if could be triggered by unit
         if self._effect.trig_for_unit == "friendly":
             if _to_unitx(self._effect.troop_type) == ut : return False
