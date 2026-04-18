@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "WOS Simulator Dashboard",
   description: "Battle simulator accuracy dashboard for Whiteout Survival",
@@ -41,6 +43,12 @@ export default function RootLayout({
             className="nav-link block px-3 py-2 rounded text-sm transition-colors"
           >
             Coverage
+          </Link>
+          <Link
+            href="/heroes"
+            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
+          >
+            Heroes
           </Link>
         </nav>
 

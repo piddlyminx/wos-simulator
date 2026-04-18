@@ -1,5 +1,7 @@
-import { getRuns } from "@/lib/db";
+import Link from "next/link";
+import { getRuns, getRunTrend } from "@/lib/db";
 import type { Run } from "@/types/dashboard";
+import RunsTrendChart from "@/components/RunsTrendChart";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +30,7 @@ function PassBadge({ passes }: { passes: boolean }) {
 
 export default function RunsPage() {
   const runs: Run[] = getRuns(50);
+  const trendData = getRunTrend(50);
 
   return (
     <div>
@@ -37,6 +40,8 @@ export default function RunsPage() {
       >
         Simulator Runs
       </h2>
+
+      <RunsTrendChart data={trendData} />
 
       {runs.length === 0 ? (
         <div
@@ -80,7 +85,13 @@ export default function RunsPage() {
                     style={{ borderBottom: "1px solid var(--border-color)" }}
                   >
                     <td className="py-2 pr-4 font-mono text-xs">
-                      {formatDate(run.started_at)}
+                      <Link
+                        href={"/runs/" + run.id}
+                        style={{ color: "var(--sidebar-active)" }}
+                        className="hover:underline"
+                      >
+                        {formatDate(run.started_at)}
+                      </Link>
                     </td>
                     <td className="py-2 pr-4 font-mono text-xs opacity-70">
                       {run.git_sha?.slice(0, 8) ?? "—"}
