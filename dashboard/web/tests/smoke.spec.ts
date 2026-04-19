@@ -36,6 +36,41 @@ async function assertNoConsoleErrors(page: Page) {
 }
 
 test.describe('Dashboard smoke tests', () => {
+  test('/ — home page renders all five cards with drill-down links', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/');
+    expect(response?.status()).toBe(200);
+
+    const cardIds = [
+      'card-latest-run',
+      'card-regressions',
+      'card-coverage',
+      'card-testcase-changes',
+      'card-recent-commits',
+    ];
+    for (const id of cardIds) {
+      await expect(page.locator(`[data-testid="${id}"]`)).toBeVisible();
+      const cardLinks = await page
+        .locator(`[data-testid="${id}"] a[href]`)
+        .count();
+      expect(cardLinks).toBeGreaterThan(0);
+    }
+
+    // Five-way headline labels (WOS-186 Skipped included)
+    const latest = page.locator('[data-testid="card-latest-run"]');
+    for (const label of ['Improved', 'Regressed', 'Added', 'Retired', 'Skipped']) {
+      await expect(latest).toContainText(label);
+    }
+
+    // Sidebar nav link exists
+    await expect(page.locator('nav a[href="/"]')).toBeVisible();
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/runs — lists at least one run', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });

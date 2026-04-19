@@ -33,6 +33,12 @@ export default function RootLayout({
           </div>
 
           <Link
+            href="/"
+            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
+          >
+            Dashboard
+          </Link>
+          <Link
             href="/runs"
             className="nav-link block px-3 py-2 rounded text-sm transition-colors"
           >
