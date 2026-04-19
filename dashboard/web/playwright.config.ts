@@ -1,6 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = process.env.PORT ?? '3000';
+// Use a non-standard port so the smoke harness never collides with other
+// local Next.js / Node apps (e.g. Hermes Workspace on :3000).
+const PORT = process.env.PORT ?? '3947';
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
 
 export default defineConfig({
@@ -23,7 +25,9 @@ export default defineConfig({
   webServer: {
     command: `npm run start -- -p ${PORT}`,
     url: BASE_URL,
-    reuseExistingServer: !process.env.CI,
+    // Never reuse: a stale process on this port is more likely to be a
+    // different app than a clean dashboard build.
+    reuseExistingServer: false,
     timeout: 60_000,
   },
 });
