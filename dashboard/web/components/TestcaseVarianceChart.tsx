@@ -146,13 +146,35 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     });
   }
 
-  // Unique runs, chronologically ordered. Each run maps to an equal-spaced
-  // ordinal index — that is the x-axis value.
-  const runIndex = new Map<string, string>(); // run_id -> started_at
-  for (const row of rows) runIndex.set(row.run_id, row.started_at);
-  const runs = Array.from(runIndex.entries())
-    .map(([run_id, started_at]) => ({ run_id, started_at }))
+  // Count how many testcases each run produced a bias_pct for. "Substantial"
+  // runs are the ones worth comparing across — smoke/iterate runs that only
+  // touched one or two testcases add nothing to a cross-run trend chart but
+  // pollute the x-axis with stretches where no series has data (the board's
+  // "1/4 of the middle is just dashed lines" complaint). We drop runs whose
+  // testcase count is below 10% of the largest run in the window, so the
+  // threshold scales with whatever dataset is plugged in.
+  const rowsByRun = new Map<string, { started_at: string; n: number }>();
+  for (const row of rows) {
+    const entry = rowsByRun.get(row.run_id);
+    if (entry) {
+      if (row.bias_pct !== null) entry.n += 1;
+    } else {
+      rowsByRun.set(row.run_id, {
+        started_at: row.started_at,
+        n: row.bias_pct !== null ? 1 : 0,
+      });
+    }
+  }
+  const maxPerRun = Math.max(
+    0,
+    ...Array.from(rowsByRun.values()).map((v) => v.n),
+  );
+  const runThreshold = Math.max(5, Math.floor(maxPerRun * 0.1));
+  const runs = Array.from(rowsByRun.entries())
+    .filter(([, v]) => v.n >= runThreshold)
+    .map(([run_id, v]) => ({ run_id, started_at: v.started_at }))
     .sort((a, b) => a.started_at.localeCompare(b.started_at));
+  if (runs.length === 0) return null;
   const runIdxById = new Map<string, number>();
   runs.forEach((r, i) => runIdxById.set(r.run_id, i));
 
@@ -166,13 +188,16 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     fileBasenameToIds.get(base)!.add(entry.testcase_id);
   }
 
-  // Sort testcases by variance descending
-  const sorted = Array.from(map.values()).sort((a, b) => {
-    return (
-      computeVariance(b.points.map((p) => p.bias_pct)) -
-      computeVariance(a.points.map((p) => p.bias_pct))
-    );
-  });
+  // Rank testcases by variance across the *filtered* runs only, so a testcase
+  // that happens to spike in a filtered-out smoke run cannot float to the top
+  // and then render as mostly-empty.
+  const variancePoints = (entry: TrendEntry): (number | null)[] =>
+    entry.points
+      .filter((p) => runIdxById.has(p.run_id))
+      .map((p) => p.bias_pct);
+  const sorted = Array.from(map.values())
+    .filter((e) => variancePoints(e).some((v) => v !== null))
+    .sort((a, b) => computeVariance(variancePoints(b)) - computeVariance(variancePoints(a)));
 
   const selected = sorted.slice(0, topN);
 
