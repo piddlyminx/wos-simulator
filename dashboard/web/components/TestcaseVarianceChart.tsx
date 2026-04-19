@@ -129,6 +129,10 @@ function computeBridges(
 
 export default function TestcaseVarianceChart({ rows }: Props) {
   const [topN, setTopN] = useState(10);
+  // Opt-in filter: substantial (non-smoke) runs only. Off by default so a
+  // diagnostic session — where lots of small configuration-iteration runs
+  // legitimately probe a high-variance testcase — remains fully visible.
+  const [hideSmokeRuns, setHideSmokeRuns] = useState(false);
 
   if (rows.length === 0) return null;
 
@@ -146,13 +150,17 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     });
   }
 
-  // Count how many testcases each run produced a bias_pct for. "Substantial"
-  // runs are the ones worth comparing across — smoke/iterate runs that only
-  // touched one or two testcases add nothing to a cross-run trend chart but
-  // pollute the x-axis with stretches where no series has data (the board's
-  // "1/4 of the middle is just dashed lines" complaint). We drop runs whose
-  // testcase count is below 10% of the largest run in the window, so the
-  // threshold scales with whatever dataset is plugged in.
+  // Count how many testcases each run produced a bias_pct for. Two separate
+  // filters apply to the x-axis, in order:
+  //   1. `hideSmokeRuns` (opt-in): drop runs whose testcase count is below
+  //      10% of the largest run in the window. Threshold scales with whatever
+  //      dataset is plugged in (floor 5 for small DBs).
+  //   2. Always: drop runs where none of the currently-selected top-N
+  //      testcases have data. This is what prevents the "middle-of-chart is
+  //      all dashed" artefact — a run that nobody visible hits adds a tick
+  //      the series cannot bridge around honestly.
+  // Filter 1 only changes with the checkbox; filter 2 tracks the topN slider
+  // so sliding can add/remove ticks as different testcases enter the view.
   const rowsByRun = new Map<string, { started_at: string; n: number }>();
   for (const row of rows) {
     const entry = rowsByRun.get(row.run_id);
@@ -170,13 +178,11 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     ...Array.from(rowsByRun.values()).map((v) => v.n),
   );
   const runThreshold = Math.max(5, Math.floor(maxPerRun * 0.1));
-  const runs = Array.from(rowsByRun.entries())
-    .filter(([, v]) => v.n >= runThreshold)
-    .map(([run_id, v]) => ({ run_id, started_at: v.started_at }))
-    .sort((a, b) => a.started_at.localeCompare(b.started_at));
-  if (runs.length === 0) return null;
-  const runIdxById = new Map<string, number>();
-  runs.forEach((r, i) => runIdxById.set(r.run_id, i));
+  const candidateRunIds = new Set(
+    Array.from(rowsByRun.entries())
+      .filter(([, v]) => !hideSmokeRuns || v.n >= runThreshold)
+      .map(([id]) => id),
+  );
 
   // Determine which file basenames have multiple testcase_ids
   const fileBasenameToIds = new Map<string, Set<string>>();
@@ -188,18 +194,38 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     fileBasenameToIds.get(base)!.add(entry.testcase_id);
   }
 
-  // Rank testcases by variance across the *filtered* runs only, so a testcase
-  // that happens to spike in a filtered-out smoke run cannot float to the top
-  // and then render as mostly-empty.
+  // Rank testcases by variance across the candidate run set (either all runs,
+  // or substantial-only when the user toggled the checkbox). Selection must
+  // be stable as the user drags the topN slider — sliding should not
+  // reshuffle which testcases sit above which.
   const variancePoints = (entry: TrendEntry): (number | null)[] =>
     entry.points
-      .filter((p) => runIdxById.has(p.run_id))
+      .filter((p) => candidateRunIds.has(p.run_id))
       .map((p) => p.bias_pct);
   const sorted = Array.from(map.values())
     .filter((e) => variancePoints(e).some((v) => v !== null))
     .sort((a, b) => computeVariance(variancePoints(b)) - computeVariance(variancePoints(a)));
 
   const selected = sorted.slice(0, topN);
+
+  // Second-stage run filter: keep only candidate runs where at least one
+  // selected testcase has data. Without this the chart regresses to long
+  // dashed-only stretches whenever the visible testcases happen to miss a
+  // batch of runs.
+  const selectedKeys = new Set(
+    selected.flatMap((e) =>
+      e.points
+        .filter((p) => p.bias_pct !== null && candidateRunIds.has(p.run_id))
+        .map((p) => p.run_id),
+    ),
+  );
+  const runs = Array.from(rowsByRun.entries())
+    .filter(([id]) => candidateRunIds.has(id) && selectedKeys.has(id))
+    .map(([run_id, v]) => ({ run_id, started_at: v.started_at }))
+    .sort((a, b) => a.started_at.localeCompare(b.started_at));
+  if (runs.length === 0) return null;
+  const runIdxById = new Map<string, number>();
+  runs.forEach((r, i) => runIdxById.set(r.run_id, i));
 
   // Build short keys for chart series
   const seriesKeys = selected.map((entry) => {
@@ -249,7 +275,7 @@ export default function TestcaseVarianceChart({ rows }: Props) {
       >
         Per-testcase Bias % over Time
       </p>
-      <div className="mb-3 flex items-center gap-3">
+      <div className="mb-3 flex flex-wrap items-center gap-3">
         <label
           className="text-xs opacity-60"
           style={{ color: "var(--main-text)" }}
@@ -265,6 +291,19 @@ export default function TestcaseVarianceChart({ rows }: Props) {
           onChange={(e) => setTopN(Number(e.target.value))}
           className="w-32 accent-[var(--sidebar-active)]"
         />
+        <label
+          className="text-xs opacity-60 flex items-center gap-1 cursor-pointer"
+          style={{ color: "var(--main-text)" }}
+          data-testid="hide-smoke-runs-toggle"
+        >
+          <input
+            type="checkbox"
+            checked={hideSmokeRuns}
+            onChange={(e) => setHideSmokeRuns(e.target.checked)}
+            className="accent-[var(--sidebar-active)]"
+          />
+          Hide smoke / iterate-only runs
+        </label>
       </div>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>

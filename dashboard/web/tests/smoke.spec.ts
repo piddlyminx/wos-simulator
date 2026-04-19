@@ -119,6 +119,37 @@ test.describe('Dashboard smoke tests', () => {
     expect(errors).toHaveLength(0);
   });
 
+  test('/runs — smoke-run toggle is off by default and prunes x-axis ticks when enabled', async ({ page }) => {
+    // WOS-189 follow-up: board asked for smoke-run filtering to be opt-in,
+    // with default behaviour showing every run that any visible top-N series
+    // has data in. The toggle should be unchecked on first render and
+    // reduce the number of x-axis ticks when turned on (fixture data has a
+    // substantial number of 1-3-testcase smoke runs in the last 50).
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/runs');
+    expect(response?.status()).toBe(200);
+    await page.waitForSelector('.recharts-line-curve', { timeout: 10_000 });
+
+    const toggle = page.locator('[data-testid="hide-smoke-runs-toggle"] input[type="checkbox"]');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).not.toBeChecked();
+
+    const ticksBefore = await page.locator('.recharts-xAxis .recharts-cartesian-axis-tick').count();
+    expect(ticksBefore).toBeGreaterThan(0);
+
+    await toggle.check();
+    await expect(toggle).toBeChecked();
+    // Give Recharts a tick to re-render.
+    await page.waitForTimeout(250);
+    const ticksAfter = await page.locator('.recharts-xAxis .recharts-cartesian-axis-tick').count();
+    expect(ticksAfter).toBeLessThan(ticksBefore);
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/coverage — renders without crash', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
