@@ -98,3 +98,15 @@ export interface TestcaseTrendRow {
   started_at: string;
   bias_pct: number | null;
 }
+
+export interface TestcaseDeltaRow {
+  file: string;
+  testcase_id: string;
+  idx: number;
+  bias_a: number | null;
+  bias_b: number | null;
+  delta: number | null;
+  passes_a: number | null;
+  passes_b: number | null;
+  status: "improved" | "regressed" | "unchanged" | "added" | "retired";
+}

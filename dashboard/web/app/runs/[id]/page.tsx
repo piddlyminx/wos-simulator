@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { parsePatch, applyPatch, createTwoFilesPatch, formatPatch } from "diff";
+import { computeIncrementalDiff } from "@/lib/diff";
 import {
   getRun,
   getRunTestcases,
@@ -8,64 +8,9 @@ import {
   getRunPatch,
 } from "@/lib/db";
 import TestcaseTable from "@/components/TestcaseTable";
+import DiffViewer from "@/components/DiffViewer";
 
 export const dynamic = "force-dynamic";
-
-function normalizeName(s: string | undefined): string {
-  return (s ?? "").replace(/^[ab]\//, "");
-}
-
-function reconstructBefore(parsed: ReturnType<typeof parsePatch>[0]): string {
-  const lines: string[] = [];
-  for (const hunk of parsed.hunks ?? []) {
-    for (const line of hunk.lines) {
-      if (line[0] === " " || line[0] === "-") lines.push(line.slice(1));
-    }
-  }
-  return lines.join("\n");
-}
-
-function computeIncrementalDiff(prevPatch: string, currPatch: string): string {
-  const parsedPrev = parsePatch(prevPatch);
-  const parsedCurr = parsePatch(currPatch);
-
-  const mapPrev = new Map(
-    parsedPrev.map((p) => [normalizeName(p.newFileName || p.oldFileName), p])
-  );
-  const mapCurr = new Map(
-    parsedCurr.map((p) => [normalizeName(p.newFileName || p.oldFileName), p])
-  );
-
-  const parts: string[] = [];
-
-  // Files in both: compute incremental diff
-  for (const [name, filePrev] of mapPrev) {
-    const fileCurr = mapCurr.get(name);
-    if (!fileCurr) continue; // no longer modified; skip
-    mapCurr.delete(name);
-
-    const before = reconstructBefore(filePrev);
-    const stateA = applyPatch(before, filePrev);
-    const stateB = applyPatch(before, fileCurr);
-
-    if (stateA === false || stateB === false) {
-      parts.push(formatPatch([fileCurr])); // fallback
-      continue;
-    }
-    if (stateA !== stateB) {
-      parts.push(
-        createTwoFilesPatch(name, name, stateA, stateB, "prev run", "this run")
-      );
-    }
-  }
-
-  // Files only in current run (newly changed): show them as-is
-  for (const [, fileCurr] of mapCurr) {
-    parts.push(formatPatch([fileCurr]));
-  }
-
-  return parts.join("\n");
-}
 
 function formatDate(iso: string | null | undefined): string {
   if (!iso) return "—";
@@ -94,19 +39,6 @@ function StatCard({ label, value }: { label: string; value: string }) {
       >
         {value}
       </span>
-    </div>
-  );
-}
-
-function DiffLine({ line }: { line: string }) {
-  let color = "inherit";
-  if (line.startsWith("+")) color = "#a6e3a1";
-  else if (line.startsWith("-")) color = "#f38ba8";
-  else if (line.startsWith("@@")) color = "#89dceb";
-
-  return (
-    <div style={{ color }} className="font-mono text-xs leading-relaxed">
-      {line}
     </div>
   );
 }
@@ -313,11 +245,7 @@ export default async function RunDetailPage({ params }: PageProps) {
               {diffWarning}
             </div>
           )}
-          <pre className="text-xs leading-relaxed overflow-x-auto whitespace-pre">
-            {displayPatch.split("\n").map((line, i) => (
-              <DiffLine key={i} line={line} />
-            ))}
-          </pre>
+          <DiffViewer patch={displayPatch} />
         </div>
       )}
 

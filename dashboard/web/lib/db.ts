@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageSnapshot, Hero, HeroSkill, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseTrendRow } from "@/types/dashboard";
+import type { CoverageSnapshot, Hero, HeroSkill, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseDeltaRow, TestcaseTrendRow } from "@/types/dashboard";
 
 /**
  * Absolute path to the SQLite database file.
@@ -542,6 +542,71 @@ export function getRunsWithDelta(limit = 50): RunWithDelta[] {
     return results;
   } catch (err) {
     console.error("[wos-dashboard] getRunsWithDelta failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return per-testcase delta rows for comparing runIdA (older) vs runIdB (newer).
+ */
+export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaRow[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    const raw = database
+      .prepare(
+        `SELECT
+          COALESCE(a.file, b.file) as file,
+          COALESCE(a.testcase_id, b.testcase_id) as testcase_id,
+          COALESCE(CAST(a.idx AS INTEGER), CAST(b.idx AS INTEGER)) as idx,
+          a.bias_pct as bias_a,
+          b.bias_pct as bias_b,
+          a.passes as passes_a,
+          b.passes as passes_b
+        FROM run_testcases a
+        LEFT JOIN run_testcases b
+          ON a.file = b.file AND a.testcase_id = b.testcase_id AND a.idx = b.idx
+          AND b.run_id = ?
+        WHERE a.run_id = ?
+
+        UNION
+
+        SELECT
+          b.file, b.testcase_id, CAST(b.idx AS INTEGER),
+          a.bias_pct, b.bias_pct, a.passes, b.passes
+        FROM run_testcases b
+        LEFT JOIN run_testcases a
+          ON a.file = b.file AND a.testcase_id = b.testcase_id AND a.idx = b.idx
+          AND a.run_id = ?
+        WHERE b.run_id = ? AND a.file IS NULL
+
+        ORDER BY file, testcase_id, idx`
+      )
+      .all(runIdB, runIdA, runIdA, runIdB) as {
+        file: string;
+        testcase_id: string;
+        idx: number;
+        bias_a: number | null;
+        bias_b: number | null;
+        passes_a: number | null;
+        passes_b: number | null;
+      }[];
+
+    return raw.map((r) => {
+      let status: TestcaseDeltaRow["status"];
+      if (r.passes_a == null) status = "added";
+      else if (r.passes_b == null) status = "retired";
+      else if (r.passes_a === 0 && r.passes_b === 1) status = "improved";
+      else if (r.passes_a === 1 && r.passes_b === 0) status = "regressed";
+      else status = "unchanged";
+
+      const delta =
+        r.bias_a != null && r.bias_b != null ? r.bias_b - r.bias_a : null;
+
+      return { ...r, delta, status };
+    });
+  } catch (err) {
+    console.error("[wos-dashboard] getRunDeltaTable failed:", err);
     return [];
   }
 }
