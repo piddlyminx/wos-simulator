@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
+import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseFileHistoryRow, TestcaseFileIndexRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
 
 /**
  * Absolute path to the SQLite database file.
@@ -1008,6 +1008,120 @@ export function getRecentFileChanges(days = 7): {
     (b.last_seen_at ?? "").localeCompare(a.last_seen_at ?? "")
   );
   return { added, retired };
+}
+
+/**
+ * Return run-by-run history for every testcase row in a single testcase file.
+ * Rows are ordered (testcase_id, idx, started_at ASC) so the page can group
+ * by (testcase_id, idx) and draw per-testcase sparklines.
+ */
+export function getTestcaseFileHistory(file: string): TestcaseFileHistoryRow[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    return database
+      .prepare(
+        `SELECT r.id as run_id, r.started_at,
+                rt.testcase_id, rt.idx,
+                rt.n_sim, rt.n_game, rt.mu_sim, rt.mu_game,
+                rt.bias_pct, rt.t, rt.q, rt.passes, rt.stat_type, rt.waived_bool
+         FROM run_testcases rt
+         JOIN runs r ON rt.run_id = r.id
+         WHERE rt.file = ?
+         ORDER BY rt.testcase_id, rt.idx, r.started_at ASC`
+      )
+      .all(file) as TestcaseFileHistoryRow[];
+  } catch (err) {
+    console.error("[wos-dashboard] getTestcaseFileHistory failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return a single TestcaseChangelogRow for `file` or undefined if the file was
+ * never observed in any run's `run_testcase_files`. Reuses getTestcaseChangelog
+ * for consistency; the result set is small enough that the extra work is cheap.
+ */
+export function getTestcaseFileMeta(file: string): TestcaseChangelogRow | undefined {
+  return getTestcaseChangelog().find((r) => r.file_path === file);
+}
+
+/**
+ * Return one row per testcase file across all runs, enriched with summary
+ * stats from the latest run. Used by the /testcases index page.
+ */
+export function getTestcaseFileIndex(): TestcaseFileIndexRow[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    const latestRunId = getLatestRunId();
+    const changelog = getTestcaseChangelog();
+
+    // Aggregate stats from the latest run's run_testcases, keyed by file.
+    type LatestStats = {
+      testcase_count: number;
+      pass_count: number;
+      bias_sum: number;
+      bias_count: number;
+      any_waived: number;
+      any_bh_sig: number;
+    };
+    const byFile = new Map<string, LatestStats>();
+    if (latestRunId) {
+      const rows = database
+        .prepare(
+          `SELECT file, bias_pct, passes, q, waived_bool
+           FROM run_testcases WHERE run_id = ?`
+        )
+        .all(latestRunId) as {
+          file: string;
+          bias_pct: number | null;
+          passes: number | null;
+          q: number | null;
+          waived_bool: number | null;
+        }[];
+      for (const r of rows) {
+        const s = byFile.get(r.file) ?? {
+          testcase_count: 0,
+          pass_count: 0,
+          bias_sum: 0,
+          bias_count: 0,
+          any_waived: 0,
+          any_bh_sig: 0,
+        };
+        s.testcase_count += 1;
+        if (r.passes === 1) s.pass_count += 1;
+        if (r.bias_pct != null) {
+          s.bias_sum += Math.abs(r.bias_pct);
+          s.bias_count += 1;
+        }
+        if (r.waived_bool === 1) s.any_waived = 1;
+        if ((r.q ?? 1) <= 0.05 && r.passes === 0) s.any_bh_sig = 1;
+        byFile.set(r.file, s);
+      }
+    }
+
+    return changelog.map((c) => {
+      const s = byFile.get(c.file_path);
+      const latestBias =
+        s && s.bias_count > 0 ? s.bias_sum / s.bias_count : null;
+      return {
+        file_path: c.file_path,
+        first_seen_at: c.first_seen_at ?? null,
+        last_seen_at: c.last_seen_at ?? null,
+        run_count: c.run_count,
+        retired: c.retired,
+        latest_testcase_count: s?.testcase_count ?? 0,
+        latest_pass_count: s?.pass_count ?? 0,
+        latest_bias_pct: latestBias,
+        latest_any_waived: s?.any_waived ?? 0,
+        latest_any_bh_sig: s?.any_bh_sig ?? 0,
+      };
+    });
+  } catch (err) {
+    console.error("[wos-dashboard] getTestcaseFileIndex failed:", err);
+    return [];
+  }
 }
 
 /**

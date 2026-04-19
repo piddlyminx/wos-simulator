@@ -14,6 +14,7 @@ import {
 } from "@/lib/db";
 import TestcaseTable from "@/components/TestcaseTable";
 import DiffViewer from "@/components/DiffViewer";
+import { testcaseDetailHref } from "@/lib/testcase-file";
 
 export const dynamic = "force-dynamic";
 
@@ -207,7 +208,14 @@ export default async function RunDetailPage({ params }: PageProps) {
               <ul className="mt-1 font-mono text-xs opacity-70">
                 {addedKeys.slice(0, 20).map((k, i) => (
                   <li key={i}>
-                    {k.file} :: {k.testcase_id} :: {k.idx}
+                    <Link
+                      href={`${testcaseDetailHref(k.file)}?tc=${k.idx}`}
+                      className="underline hover:opacity-80"
+                      style={{ color: "var(--sidebar-active)" }}
+                    >
+                      {k.file}
+                    </Link>{" "}
+                    :: {k.testcase_id} :: {k.idx}
                   </li>
                 ))}
                 {addedKeys.length > 20 && (
@@ -229,7 +237,14 @@ export default async function RunDetailPage({ params }: PageProps) {
               <ul className="mt-1 font-mono text-xs opacity-70">
                 {removedKeys.slice(0, 20).map((k, i) => (
                   <li key={i}>
-                    {k.file} :: {k.testcase_id} :: {k.idx}
+                    <Link
+                      href={`${testcaseDetailHref(k.file)}?tc=${k.idx}`}
+                      className="underline hover:opacity-80"
+                      style={{ color: "var(--sidebar-active)" }}
+                    >
+                      {k.file}
+                    </Link>{" "}
+                    :: {k.testcase_id} :: {k.idx}
                   </li>
                 ))}
                 {removedKeys.length > 20 && (

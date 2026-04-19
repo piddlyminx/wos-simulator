@@ -11,6 +11,7 @@ import {
 } from "@/lib/db";
 import HeroTrendChart from "@/components/HeroTrendChart";
 import HeroCoverageTimelineChart from "@/components/HeroCoverageTimelineChart";
+import { testcaseDetailHref } from "@/lib/testcase-file";
 
 export const dynamic = "force-dynamic";
 
@@ -353,7 +354,13 @@ export default async function HeroDetailPage({ params }: PageProps) {
                         className="py-1.5 pr-3 max-w-40 truncate"
                         title={tc.file}
                       >
-                        {tc.file}
+                        <Link
+                          href={`${testcaseDetailHref(tc.file)}?tc=${tc.idx}`}
+                          className="underline hover:opacity-80"
+                          style={{ color: "var(--sidebar-active)" }}
+                        >
+                          {tc.file}
+                        </Link>
                       </td>
                       <td className="py-1.5 pr-3">{tc.testcase_id}</td>
                       <td className="py-1.5 pr-3">{tc.idx}</td>

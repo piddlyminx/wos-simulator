@@ -13,6 +13,7 @@ import {
   getTopRegressions,
 } from "@/lib/db";
 import CoverageTrendChart from "@/components/CoverageTrendChart";
+import { testcaseDetailHref } from "@/lib/testcase-file";
 
 export const dynamic = "force-dynamic";
 
@@ -270,7 +271,14 @@ export default function HomePage() {
                           pass→fail
                         </span>
                       )}
-                      {shortFile(r.file)} · {r.testcase_id}[{r.idx}]
+                      <Link
+                        href={`${testcaseDetailHref(r.file)}?tc=${r.idx}`}
+                        className="underline hover:opacity-80"
+                        style={{ color: "var(--sidebar-active)" }}
+                      >
+                        {shortFile(r.file)}
+                      </Link>{" "}
+                      · {r.testcase_id}[{r.idx}]
                     </span>
                     <span className="opacity-70 tabular-nums whitespace-nowrap">
                       {r.bias_old != null ? formatPct(r.bias_old, 1) : "—"}{" "}
@@ -350,7 +358,13 @@ export default function HomePage() {
                   {recentChanges.added.slice(0, 5).map((r) => (
                     <li key={r.file_path} className="truncate" title={r.file_path}>
                       <span style={{ color: "#a6e3a1" }}>+</span>{" "}
-                      {shortFile(r.file_path)}
+                      <Link
+                        href={testcaseDetailHref(r.file_path)}
+                        className="underline hover:opacity-80"
+                        style={{ color: "var(--sidebar-active)" }}
+                      >
+                        {shortFile(r.file_path)}
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -367,7 +381,13 @@ export default function HomePage() {
                   {recentChanges.retired.slice(0, 5).map((r) => (
                     <li key={r.file_path} className="truncate" title={r.file_path}>
                       <span style={{ color: "#f38ba8" }}>−</span>{" "}
-                      {shortFile(r.file_path)}
+                      <Link
+                        href={testcaseDetailHref(r.file_path)}
+                        className="underline hover:opacity-80"
+                        style={{ color: "var(--sidebar-active)" }}
+                      >
+                        {shortFile(r.file_path)}
+                      </Link>
                     </li>
                   ))}
                 </ul>

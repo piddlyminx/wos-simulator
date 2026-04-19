@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { TestcaseChangelogRow } from "@/types/dashboard";
+import { testcaseDetailHref } from "@/lib/testcase-href";
 
 type SortKey =
   | "file_path"
@@ -189,7 +190,13 @@ export default function TestcaseChangelogTable({ rows }: Props) {
                 }}
               >
                 <td className="py-1.5 pr-3 max-w-[28rem] truncate" title={r.file_path}>
-                  {r.file_path}
+                  <Link
+                    href={testcaseDetailHref(r.file_path)}
+                    className="underline hover:opacity-80"
+                    style={{ color: "var(--sidebar-active)" }}
+                  >
+                    {r.file_path}
+                  </Link>
                 </td>
                 <td className="py-1.5 pr-3">
                   <Link

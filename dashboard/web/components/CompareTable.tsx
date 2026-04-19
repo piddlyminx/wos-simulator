@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import type { TestcaseDeltaRow } from "@/types/dashboard";
+import { testcaseDetailHref } from "@/lib/testcase-href";
 
 type FilterMode = "all" | "changed" | "flips" | "added-retired" | "skipped";
 
@@ -120,7 +122,13 @@ export default function CompareTable({ rows }: Props) {
                     className="py-1.5 pr-3 max-w-36 truncate"
                     title={row.file}
                   >
-                    {row.file}
+                    <Link
+                      href={`${testcaseDetailHref(row.file)}?tc=${row.idx}`}
+                      className="underline hover:opacity-80"
+                      style={{ color: "var(--sidebar-active)" }}
+                    >
+                      {row.file}
+                    </Link>
                   </td>
                   <td className="py-1.5 pr-3">{row.testcase_id}</td>
                   <td className="py-1.5 pr-3">{row.idx}</td>

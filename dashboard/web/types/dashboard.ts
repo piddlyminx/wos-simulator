@@ -168,3 +168,42 @@ export interface TopRegressionRow {
   window_start_run_id: string;
   window_end_run_id: string;
 }
+
+/**
+ * Per-run, per-testcase-row history for a single testcase file.
+ * Result of joining `run_testcases` with `runs`.
+ */
+export interface TestcaseFileHistoryRow {
+  run_id: string;
+  started_at: string | null;
+  testcase_id: string;
+  idx: number;
+  n_sim: number;
+  n_game: number;
+  mu_sim: number | null;
+  mu_game: number | null;
+  bias_pct: number | null;
+  t: number | null;
+  q: number | null;
+  passes: number;
+  stat_type: string;
+  waived_bool: number;
+}
+
+/**
+ * Per-file aggregate shown on the /testcases index page.
+ * Derived from `run_testcase_files` + the latest run's `run_testcases`.
+ */
+export interface TestcaseFileIndexRow {
+  file_path: string;
+  first_seen_at: string | null;
+  last_seen_at: string | null;
+  run_count: number;
+  retired: number; // 0 | 1
+  /** Number of testcase rows the file emitted in the latest run (0 if retired/skipped). */
+  latest_testcase_count: number;
+  latest_pass_count: number;
+  latest_bias_pct: number | null; // mean |bias_pct| across testcases in latest run
+  latest_any_waived: number; // 0 | 1
+  latest_any_bh_sig: number; // 0 | 1 (q <= 0.05 AND passes = 0)
+}

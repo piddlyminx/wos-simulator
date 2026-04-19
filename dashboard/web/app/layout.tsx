@@ -57,6 +57,12 @@ export default function RootLayout({
             Heroes
           </Link>
           <Link
+            href="/testcases"
+            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
+          >
+            Testcases
+          </Link>
+          <Link
             href="/testcases/changelog"
             className="nav-link block px-3 py-2 rounded text-sm transition-colors"
           >
