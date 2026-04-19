@@ -2,6 +2,12 @@
 
 A read-only local dev dashboard for the Whiteout Survival battle simulator.
 
+## Quality Gate
+
+Always run `npm run smoke` against the committed `test_results/dashboard.sqlite` before marking dashboard work done.
+
+This builds the app, starts the production server, and runs Playwright smoke tests across all routes.
+
 ## Installation
 
 ```bash
