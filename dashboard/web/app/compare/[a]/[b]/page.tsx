@@ -234,6 +234,13 @@ export default async function ComparePage({ params }: PageProps) {
           value={String(deltaCounts.retired)}
           color="#6c7086"
         />
+        {deltaCounts.skipped > 0 && (
+          <StatCard
+            label="Skipped"
+            value={String(deltaCounts.skipped)}
+            color="#f9e2af"
+          />
+        )}
       </div>
 
       {/* Section 2: Testcase delta table */}

@@ -57,6 +57,12 @@ function ChangesSummary({ run }: { run: RunWithDelta }) {
       <span>+{run.count_added}</span>
       {" "}
       <span>−{run.count_retired}</span>
+      {run.count_skipped > 0 && (
+        <>
+          {" "}
+          <span style={{ color: "#f9e2af" }}>~{run.count_skipped}</span>
+        </>
+      )}
     </span>
   );
 }

@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseTrendRow } from "@/types/dashboard";
+import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
 
 /**
  * Absolute path to the SQLite database file.
@@ -459,45 +459,60 @@ export function getRunDeltaCounts(
   currRunId: string,
   prevRunId: string
 ): RunDeltaCounts {
+  const zero: RunDeltaCounts = { improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
   const database = getDb();
-  if (!database) return { improved: 0, regressed: 0, added: 0, retired: 0 };
+  if (!database) return zero;
   try {
+    // added/retired now operate on run_testcase_files set difference (on-disk presence),
+    // NOT on executed testcase keys. skipped = files present but excluded by a filter
+    // in the current run (included = 0). improved/regressed still count per-testcase-key.
     const row = database
       .prepare(
-        `WITH curr AS (
-          SELECT file || '|' || testcase_id || '|' || CAST(idx AS TEXT) AS key, passes
-          FROM run_testcases WHERE run_id = ?
-        ),
-        prev AS (
-          SELECT file || '|' || testcase_id || '|' || CAST(idx AS TEXT) AS key, passes
-          FROM run_testcases WHERE run_id = ?
-        ),
-        both AS (
-          SELECT c.key, c.passes as curr_passes, p.passes as prev_passes
-          FROM curr c JOIN prev p ON c.key = p.key
-        )
-        SELECT
-          SUM(CASE WHEN prev_passes = 0 AND curr_passes = 1 THEN 1 ELSE 0 END) as improved,
-          SUM(CASE WHEN prev_passes = 1 AND curr_passes = 0 THEN 1 ELSE 0 END) as regressed,
-          (SELECT COUNT(*) FROM curr c2 WHERE c2.key NOT IN (SELECT key FROM prev)) as added,
-          (SELECT COUNT(*) FROM prev p2 WHERE p2.key NOT IN (SELECT key FROM curr)) as retired
-        FROM both`
+        `WITH curr_exec AS (
+           SELECT file || '|' || testcase_id || '|' || CAST(idx AS TEXT) AS key, passes
+           FROM run_testcases WHERE run_id = ?
+         ),
+         prev_exec AS (
+           SELECT file || '|' || testcase_id || '|' || CAST(idx AS TEXT) AS key, passes
+           FROM run_testcases WHERE run_id = ?
+         ),
+         both AS (
+           SELECT c.key, c.passes AS curr_passes, p.passes AS prev_passes
+           FROM curr_exec c JOIN prev_exec p ON c.key = p.key
+         ),
+         curr_files AS (
+           SELECT file_path, included FROM run_testcase_files WHERE run_id = ?
+         ),
+         prev_files AS (
+           SELECT file_path FROM run_testcase_files WHERE run_id = ?
+         )
+         SELECT
+           SUM(CASE WHEN prev_passes = 0 AND curr_passes = 1 THEN 1 ELSE 0 END) AS improved,
+           SUM(CASE WHEN prev_passes = 1 AND curr_passes = 0 THEN 1 ELSE 0 END) AS regressed,
+           (SELECT COUNT(*) FROM curr_files cf
+             WHERE cf.file_path NOT IN (SELECT file_path FROM prev_files)) AS added,
+           (SELECT COUNT(*) FROM prev_files pf
+             WHERE pf.file_path NOT IN (SELECT file_path FROM curr_files)) AS retired,
+           (SELECT COUNT(*) FROM curr_files cf2 WHERE cf2.included = 0) AS skipped
+         FROM both`
       )
-      .get(currRunId, prevRunId) as {
+      .get(currRunId, prevRunId, currRunId, prevRunId) as {
       improved: number | null;
       regressed: number | null;
       added: number | null;
       retired: number | null;
+      skipped: number | null;
     };
     return {
       improved: row?.improved ?? 0,
       regressed: row?.regressed ?? 0,
       added: row?.added ?? 0,
       retired: row?.retired ?? 0,
+      skipped: row?.skipped ?? 0,
     };
   } catch (err) {
     console.error("[wos-dashboard] getRunDeltaCounts failed:", err);
-    return { improved: 0, regressed: 0, added: 0, retired: 0 };
+    return zero;
   }
 }
 
@@ -527,7 +542,7 @@ export function getRunsWithDelta(limit = 50): RunWithDelta[] {
       const deltaCounts =
         prev != null
           ? getRunDeltaCounts(curr.id, prev.id)
-          : { improved: 0, regressed: 0, added: 0, retired: 0 };
+          : { improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
 
       results.push({
         ...curr,
@@ -537,6 +552,7 @@ export function getRunsWithDelta(limit = 50): RunWithDelta[] {
         count_regressed: deltaCounts.regressed,
         count_added: deltaCounts.added,
         count_retired: deltaCounts.retired,
+        count_skipped: deltaCounts.skipped,
       });
     }
     return results;
@@ -553,36 +569,52 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
   const database = getDb();
   if (!database) return [];
   try {
+    // Join run_testcase_files on both sides so we can distinguish:
+    //   - file absent from curr run's file set       → retired (removed from disk)
+    //   - file present in curr but included = 0      → skipped (filter-excluded)
+    //   - file only in curr                          → added
+    //   - both sides executed                        → improved / regressed / unchanged
     const raw = database
       .prepare(
-        `SELECT
-          COALESCE(a.file, b.file) as file,
-          COALESCE(a.testcase_id, b.testcase_id) as testcase_id,
-          COALESCE(CAST(a.idx AS INTEGER), CAST(b.idx AS INTEGER)) as idx,
-          a.bias_pct as bias_a,
-          b.bias_pct as bias_b,
-          a.passes as passes_a,
-          b.passes as passes_b
-        FROM run_testcases a
-        LEFT JOIN run_testcases b
-          ON a.file = b.file AND a.testcase_id = b.testcase_id AND a.idx = b.idx
-          AND b.run_id = ?
-        WHERE a.run_id = ?
-
-        UNION
-
-        SELECT
-          b.file, b.testcase_id, CAST(b.idx AS INTEGER),
-          a.bias_pct, b.bias_pct, a.passes, b.passes
-        FROM run_testcases b
-        LEFT JOIN run_testcases a
-          ON a.file = b.file AND a.testcase_id = b.testcase_id AND a.idx = b.idx
-          AND a.run_id = ?
-        WHERE b.run_id = ? AND a.file IS NULL
-
-        ORDER BY file, testcase_id, idx`
+        `WITH curr_files AS (
+           SELECT file_path, included FROM run_testcase_files WHERE run_id = :B
+         ),
+         prev_files AS (
+           SELECT file_path, included FROM run_testcase_files WHERE run_id = :A
+         ),
+         prev_rows AS (
+           SELECT file, testcase_id, idx, bias_pct, passes FROM run_testcases WHERE run_id = :A
+         ),
+         curr_rows AS (
+           SELECT file, testcase_id, idx, bias_pct, passes FROM run_testcases WHERE run_id = :B
+         ),
+         all_exec AS (
+           SELECT file, testcase_id, idx FROM prev_rows
+           UNION
+           SELECT file, testcase_id, idx FROM curr_rows
+         )
+         SELECT
+           ae.file AS file,
+           ae.testcase_id AS testcase_id,
+           CAST(ae.idx AS INTEGER) AS idx,
+           p.bias_pct AS bias_a,
+           c.bias_pct AS bias_b,
+           p.passes AS passes_a,
+           c.passes AS passes_b,
+           cf.included AS curr_included,
+           pf.included AS prev_included,
+           CASE WHEN cf.file_path IS NOT NULL THEN 1 ELSE 0 END AS in_curr_files,
+           CASE WHEN pf.file_path IS NOT NULL THEN 1 ELSE 0 END AS in_prev_files
+         FROM all_exec ae
+         LEFT JOIN prev_rows p
+           ON ae.file = p.file AND ae.testcase_id = p.testcase_id AND ae.idx = p.idx
+         LEFT JOIN curr_rows c
+           ON ae.file = c.file AND ae.testcase_id = c.testcase_id AND ae.idx = c.idx
+         LEFT JOIN curr_files cf ON ae.file = cf.file_path
+         LEFT JOIN prev_files pf ON ae.file = pf.file_path
+         ORDER BY ae.file, ae.testcase_id, ae.idx`
       )
-      .all(runIdB, runIdA, runIdA, runIdB) as {
+      .all({ A: runIdA, B: runIdB }) as {
         file: string;
         testcase_id: string;
         idx: number;
@@ -590,20 +622,55 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
         bias_b: number | null;
         passes_a: number | null;
         passes_b: number | null;
+        curr_included: number | null;
+        prev_included: number | null;
+        in_curr_files: number;
+        in_prev_files: number;
       }[];
 
     return raw.map((r) => {
+      const inCurrFiles = r.in_curr_files === 1;
+      const inPrevFiles = r.in_prev_files === 1;
+
       let status: TestcaseDeltaRow["status"];
-      if (r.passes_a == null) status = "added";
-      else if (r.passes_b == null) status = "retired";
-      else if (r.passes_a === 0 && r.passes_b === 1) status = "improved";
-      else if (r.passes_a === 1 && r.passes_b === 0) status = "regressed";
-      else status = "unchanged";
+      if (!inCurrFiles) {
+        // File vanished from the current run's file set entirely — truly retired.
+        status = "retired";
+      } else if (r.curr_included === 0) {
+        // File still on disk but filter excluded it in the current run.
+        status = "skipped";
+      } else if (!inPrevFiles) {
+        // File only in curr — brand new on disk.
+        status = "added";
+      } else if (r.passes_a == null && r.passes_b != null) {
+        // File existed in prev but this testcase key didn't execute there.
+        status = "added";
+      } else if (r.passes_b == null && r.passes_a != null) {
+        // File still executed in curr but this particular testcase key didn't
+        // emit a row — legitimate "retired testcase inside a still-active file".
+        status = "retired";
+      } else if (r.passes_a === 0 && r.passes_b === 1) {
+        status = "improved";
+      } else if (r.passes_a === 1 && r.passes_b === 0) {
+        status = "regressed";
+      } else {
+        status = "unchanged";
+      }
 
       const delta =
         r.bias_a != null && r.bias_b != null ? r.bias_b - r.bias_a : null;
 
-      return { ...r, delta, status };
+      return {
+        file: r.file,
+        testcase_id: r.testcase_id,
+        idx: r.idx,
+        bias_a: r.bias_a,
+        bias_b: r.bias_b,
+        passes_a: r.passes_a,
+        passes_b: r.passes_b,
+        delta,
+        status,
+      };
     });
   } catch (err) {
     console.error("[wos-dashboard] getRunDeltaTable failed:", err);
@@ -822,7 +889,135 @@ export function getHeroCoverageDeltas(
 }
 
 /**
+ * Return testcases that regressed across the last `windowRuns` runs.
+ *
+ * Regression rules (in priority order):
+ *   1. pass→fail transition between the oldest run in the window and the latest
+ *   2. absolute bias_pct worsened by more than 0.5 percentage points
+ *
+ * Returns up to `limit` rows ordered with pass→fail first, then by magnitude
+ * of |bias_new| - |bias_old| descending. Each row also carries the pair of
+ * run ids that bracket the window so callers can link to a compare view.
+ */
+export function getTopRegressions(
+  windowRuns = 3,
+  limit = 5
+): TopRegressionRow[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    const runs = database
+      .prepare(
+        `SELECT id FROM runs WHERE started_at IS NOT NULL
+         ORDER BY started_at DESC LIMIT ?`
+      )
+      .all(windowRuns) as { id: string }[];
+    if (runs.length < 2) return [];
+    const latestId = runs[0].id;
+    const oldestId = runs[runs.length - 1].id;
+
+    const rows = database
+      .prepare(
+        `WITH old_tc AS (
+           SELECT file, testcase_id, idx, bias_pct, passes
+           FROM run_testcases WHERE run_id = :old
+         ),
+         new_tc AS (
+           SELECT file, testcase_id, idx, bias_pct, passes
+           FROM run_testcases WHERE run_id = :new
+         )
+         SELECT
+           n.file AS file,
+           n.testcase_id AS testcase_id,
+           CAST(n.idx AS INTEGER) AS idx,
+           o.bias_pct AS bias_old,
+           n.bias_pct AS bias_new,
+           o.passes AS passes_old,
+           n.passes AS passes_new,
+           (ABS(COALESCE(n.bias_pct, 0)) - ABS(COALESCE(o.bias_pct, 0))) AS abs_delta
+         FROM new_tc n
+         JOIN old_tc o
+           ON n.file = o.file
+          AND n.testcase_id = o.testcase_id
+          AND n.idx = o.idx
+         WHERE (o.passes = 1 AND n.passes = 0)
+            OR (ABS(COALESCE(n.bias_pct, 0)) > ABS(COALESCE(o.bias_pct, 0)) + 0.5)
+         ORDER BY
+           CASE WHEN o.passes = 1 AND n.passes = 0 THEN 0 ELSE 1 END,
+           abs_delta DESC
+         LIMIT :lim`
+      )
+      .all({ old: oldestId, new: latestId, lim: limit }) as {
+        file: string;
+        testcase_id: string;
+        idx: number;
+        bias_old: number | null;
+        bias_new: number | null;
+        passes_old: number | null;
+        passes_new: number | null;
+        abs_delta: number | null;
+      }[];
+
+    return rows.map((r) => ({
+      file: r.file,
+      testcase_id: r.testcase_id,
+      idx: r.idx,
+      bias_old: r.bias_old,
+      bias_new: r.bias_new,
+      passes_old: r.passes_old,
+      passes_new: r.passes_new,
+      delta:
+        r.bias_old != null && r.bias_new != null
+          ? r.bias_new - r.bias_old
+          : null,
+      window_start_run_id: oldestId,
+      window_end_run_id: latestId,
+    }));
+  } catch (err) {
+    console.error("[wos-dashboard] getTopRegressions failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return testcase file changelog entries partitioned into added/retired
+ * within the trailing `days` window. Derived from getTestcaseChangelog().
+ */
+export function getRecentFileChanges(days = 7): {
+  added: TestcaseChangelogRow[];
+  retired: TestcaseChangelogRow[];
+} {
+  const rows = getTestcaseChangelog();
+  const threshold = Date.now() - days * 24 * 60 * 60 * 1000;
+  const added: TestcaseChangelogRow[] = [];
+  const retired: TestcaseChangelogRow[] = [];
+  for (const r of rows) {
+    const firstSeen = r.first_seen_at ? Date.parse(r.first_seen_at) : NaN;
+    const lastSeen = r.last_seen_at ? Date.parse(r.last_seen_at) : NaN;
+    if (Number.isFinite(firstSeen) && firstSeen >= threshold) {
+      added.push(r);
+    }
+    if (r.retired === 1 && Number.isFinite(lastSeen) && lastSeen >= threshold) {
+      retired.push(r);
+    }
+  }
+  added.sort((a, b) =>
+    (b.first_seen_at ?? "").localeCompare(a.first_seen_at ?? "")
+  );
+  retired.sort((a, b) =>
+    (b.last_seen_at ?? "").localeCompare(a.last_seen_at ?? "")
+  );
+  return { added, retired };
+}
+
+/**
  * Return per-file-path lifecycle rows aggregated across every run.
+ *
+ * Since WOS-186 `run_testcase_files` rows include BOTH executed files
+ * (included = 1) and filter-skipped files (included = 0). "Present in
+ * run_testcase_files" therefore means "present on disk for that run",
+ * so the retired flag below correctly means "absent from disk in latest run",
+ * not "filtered out of the latest run".
  *
  * For each distinct `run_testcase_files.file_path` the query derives:
  *   - first_seen_run_id / first_seen_at: earliest run that included the file

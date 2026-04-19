@@ -44,6 +44,7 @@ export interface RunTestcaseFile {
   run_id: string;
   file_path: string;
   sha256: string;
+  included: number; // 0 | 1 — 1 = executed in this run, 0 = present but filter-excluded
 }
 
 export interface Blob {
@@ -79,6 +80,7 @@ export interface RunDeltaCounts {
   regressed: number;
   added: number;
   retired: number;
+  skipped: number;
 }
 
 export interface RunWithDelta extends Run {
@@ -88,6 +90,7 @@ export interface RunWithDelta extends Run {
   count_regressed: number;
   count_added: number;
   count_retired: number;
+  count_skipped: number;
 }
 
 export interface TestcaseTrendRow {
@@ -108,7 +111,7 @@ export interface TestcaseDeltaRow {
   delta: number | null;
   passes_a: number | null;
   passes_b: number | null;
-  status: "improved" | "regressed" | "unchanged" | "added" | "retired";
+  status: "improved" | "regressed" | "unchanged" | "added" | "retired" | "skipped";
 }
 
 export interface CoverageTrendPoint {
@@ -151,4 +154,17 @@ export interface TestcaseChangelogRow {
   last_modified_run_id: string;
   last_modified_at: string;
   retired: number; // 0 | 1
+}
+
+export interface TopRegressionRow {
+  file: string;
+  testcase_id: string;
+  idx: number;
+  bias_old: number | null;
+  bias_new: number | null;
+  passes_old: number | null;
+  passes_new: number | null;
+  delta: number | null;
+  window_start_run_id: string;
+  window_end_run_id: string;
 }

@@ -273,13 +273,24 @@ def record_run(
                     ),
                 )
 
-            for file_path in sorted(distinct_files):
+            executed_files = set(distinct_files)
+            available_files = run_doc.get("available_testcase_files")
+            if available_files is None:
+                # Older runs (or tests replaying pre-WOS-186 snapshots) won't have
+                # this key. Fall back to executed-only to preserve prior behavior.
+                available_files = list(executed_files)
+
+            all_files = sorted(set(available_files) | executed_files)
+            for file_path in all_files:
                 sha = _sha256_file(root / file_path)
                 if sha is None:
+                    # File vanished between run and ingest. Skip either way —
+                    # we can't record a hash we don't have.
                     continue
+                included = 1 if file_path in executed_files else 0
                 conn.execute(
-                    "INSERT INTO run_testcase_files(run_id, file_path, sha256) VALUES (?, ?, ?)",
-                    (run_id, file_path, sha),
+                    "INSERT INTO run_testcase_files(run_id, file_path, sha256, included) VALUES (?, ?, ?, ?)",
+                    (run_id, file_path, sha, included),
                 )
 
         if _snapshot_coverage is not None:

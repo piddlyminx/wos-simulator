@@ -240,6 +240,23 @@ def resolve_testcase_files(matching_patterns, TESTCASES_PATH='testcases'):
     return sorted(dict.fromkeys(resolved))
 
 
+def list_available_testcase_files(TESTCASES_PATH='testcases'):
+    """Return sorted list of every *.json testcase on disk, excluding *.disabled.json
+    and anything under a .disabled directory segment. This is the 'available universe'
+    at run time — distinct from the filtered subset actually executed."""
+    all_files = glob.glob(os.path.join(TESTCASES_PATH, '**', '*.json'), recursive=True)
+    filtered = []
+    for f in all_files:
+        # exclude *.disabled.json and any path segment ending in .disabled
+        parts = f.replace('\\', '/').split('/')
+        if any(p.endswith('.disabled') for p in parts):
+            continue
+        if f.endswith('.disabled.json'):
+            continue
+        filtered.append(f)
+    return sorted(filtered)
+
+
 def resolve_testcase_name_matches(name_patterns, TESTCASES_PATH='testcases'):
     if not name_patterns:
         return []
@@ -367,6 +384,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
     bh_alpha = 0.05
     print(f"\n ✦✦ Divergence flag: |t| > {z_threshold} or empirical p < {2*(1-statistics.NormalDist().cdf(z_threshold)):.4f}, AND |bias| > {min_bias_pct} %   (deterministic/zero-var fallback: linear bias > {max_diff_ratio_deterministic * 100} %)")
     testcases_files = get_testcases(testcases_files, TESTCASES_PATH=TESTCASES_PATH, resolve_patterns=resolve_patterns)
+    available_files = list_available_testcase_files(TESTCASES_PATH=TESTCASES_PATH)
     overall_prints = []
     overall_diff_ratios = []
     overall_signed_biases = []
@@ -720,6 +738,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             'max_diff_ratio_deterministic': max_diff_ratio_deterministic,
         },
         'skipped': [{'file': f, 'testcase_id': t, 'reason': r} for f, t, r in skipped_testcases],
+        'available_testcase_files': available_files,
         'testcases': snapshot_testcases,
     }
 

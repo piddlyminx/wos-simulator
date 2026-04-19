@@ -3,17 +3,18 @@
 import { useState, useMemo } from "react";
 import type { TestcaseDeltaRow } from "@/types/dashboard";
 
-type FilterMode = "all" | "changed" | "flips" | "added-retired";
+type FilterMode = "all" | "changed" | "flips" | "added-retired" | "skipped";
 
 const STATUS_BADGE: Record<
   TestcaseDeltaRow["status"],
   { label: string; bg: string; color: string }
 > = {
-  improved:  { label: "improved",  bg: "rgba(166,227,161,0.2)", color: "#a6e3a1" },
-  regressed: { label: "regressed", bg: "rgba(243,139,168,0.2)", color: "#f38ba8" },
-  added:     { label: "added",     bg: "rgba(137,220,235,0.2)", color: "#89dceb" },
-  retired:   { label: "retired",   bg: "rgba(108,112,134,0.2)", color: "#6c7086" },
-  unchanged: { label: "unchanged", bg: "transparent",           color: "#585b70" },
+  improved:  { label: "improved",  bg: "rgba(166,227,161,0.2)",  color: "#a6e3a1" },
+  regressed: { label: "regressed", bg: "rgba(243,139,168,0.2)",  color: "#f38ba8" },
+  added:     { label: "added",     bg: "rgba(137,220,235,0.2)",  color: "#89dceb" },
+  retired:   { label: "retired",   bg: "rgba(108,112,134,0.2)",  color: "#6c7086" },
+  skipped:   { label: "skipped",   bg: "rgba(249,226,175,0.15)", color: "#f9e2af" },
+  unchanged: { label: "unchanged", bg: "transparent",            color: "#585b70" },
 };
 
 const ROW_BG: Record<TestcaseDeltaRow["status"], string> = {
@@ -21,6 +22,7 @@ const ROW_BG: Record<TestcaseDeltaRow["status"], string> = {
   added:     "rgba(137,220,235,0.05)",
   regressed: "rgba(243,139,168,0.05)",
   retired:   "rgba(243,139,168,0.05)",
+  skipped:   "rgba(249,226,175,0.03)",
   unchanged: "transparent",
 };
 
@@ -36,6 +38,7 @@ export default function CompareTable({ rows }: Props) {
     if (filter === "changed") r = r.filter((x) => x.status !== "unchanged");
     else if (filter === "flips") r = r.filter((x) => x.status === "improved" || x.status === "regressed");
     else if (filter === "added-retired") r = r.filter((x) => x.status === "added" || x.status === "retired");
+    else if (filter === "skipped") r = r.filter((x) => x.status === "skipped");
 
     return [...r].sort((a, b) => {
       const da = a.delta != null ? Math.abs(a.delta) : -Infinity;
@@ -49,6 +52,7 @@ export default function CompareTable({ rows }: Props) {
     { mode: "changed", label: "Changed only" },
     { mode: "flips", label: "Status flips" },
     { mode: "added-retired", label: "Added/Retired" },
+    { mode: "skipped", label: "Skipped only" },
   ];
 
   return (
