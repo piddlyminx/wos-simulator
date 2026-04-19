@@ -88,6 +88,37 @@ test.describe('Dashboard smoke tests', () => {
     expect(errors).toHaveLength(0);
   });
 
+  test('/runs — testcase variance chart bridges missing middle-run data with a dashed line', async ({ page }) => {
+    // WOS-189: run-index x-axis + dotted-bridge for interior coverage gaps.
+    // Real fixture data includes >100 testcases missing from at least one
+    // run in the last 50, so top-variance selection will reliably include
+    // at least one gappy series when the chart renders.
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/runs');
+    expect(response?.status()).toBe(200);
+
+    // Chart SVG should render. Recharts emits <path class="recharts-line-curve">
+    // for each Line — one per solid series plus one per dashed bridge.
+    await page.waitForSelector('.recharts-line-curve', { timeout: 10_000 });
+
+    // At least one solid line (actual data) present.
+    const solidPaths = await page
+      .locator('path.recharts-line-curve:not([stroke-dasharray])')
+      .count();
+    expect(solidPaths).toBeGreaterThan(0);
+
+    // At least one dashed bridge path present (interpolated gap).
+    const dashedPaths = await page
+      .locator('path.recharts-line-curve[stroke-dasharray]')
+      .count();
+    expect(dashedPaths).toBeGreaterThan(0);
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/coverage — renders without crash', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });

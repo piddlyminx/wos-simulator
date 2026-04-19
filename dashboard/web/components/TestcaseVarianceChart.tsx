@@ -60,6 +60,42 @@ function makeShortLabel(
   return label;
 }
 
+// Build `bridge` companion array that linearly interpolates over *interior*
+// null gaps in `actual`. Leading/trailing nulls stay null so the line does
+// not reach out past real data on either end.
+function interpolateBridge(actual: (number | null)[]): (number | null)[] {
+  const n = actual.length;
+  const bridge: (number | null)[] = new Array(n).fill(null);
+  let i = 0;
+  while (i < n) {
+    if (actual[i] !== null) {
+      i++;
+      continue;
+    }
+    // Found start of a null run at i; find [i..j-1] is null, j points past end.
+    let j = i;
+    while (j < n && actual[j] === null) j++;
+    const leftIdx = i - 1;
+    const rightIdx = j;
+    if (leftIdx >= 0 && rightIdx < n) {
+      const leftVal = actual[leftIdx] as number;
+      const rightVal = actual[rightIdx] as number;
+      const span = rightIdx - leftIdx;
+      for (let k = i; k < j; k++) {
+        const t = (k - leftIdx) / span;
+        bridge[k] = leftVal + (rightVal - leftVal) * t;
+      }
+      // Duplicate the endpoints so the dashed segment visually connects to
+      // the solid line's anchor points (Recharts does not draw a segment
+      // from a non-null neighbour into a connectNulls series).
+      bridge[leftIdx] = leftVal;
+      bridge[rightIdx] = rightVal;
+    }
+    i = j;
+  }
+  return bridge;
+}
+
 export default function TestcaseVarianceChart({ rows }: Props) {
   const [topN, setTopN] = useState(10);
 
@@ -79,10 +115,15 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     });
   }
 
-  // Sorted unique run timestamps for X axis
-  const allTimestamps = Array.from(
-    new Set(rows.map((r) => r.started_at))
-  ).sort();
+  // Unique runs, chronologically ordered. Each run maps to an equal-spaced
+  // ordinal index — that is the x-axis value.
+  const runIndex = new Map<string, string>(); // run_id -> started_at
+  for (const row of rows) runIndex.set(row.run_id, row.started_at);
+  const runs = Array.from(runIndex.entries())
+    .map(([run_id, started_at]) => ({ run_id, started_at }))
+    .sort((a, b) => a.started_at.localeCompare(b.started_at));
+  const runIdxById = new Map<string, number>();
+  runs.forEach((r, i) => runIdxById.set(r.run_id, i));
 
   // Determine which file basenames have multiple testcase_ids
   const fileBasenameToIds = new Map<string, Set<string>>();
@@ -113,23 +154,29 @@ export default function TestcaseVarianceChart({ rows }: Props) {
     return makeShortLabel(entry.file, entry.testcase_id, entry.idx, hasMultiIds);
   });
 
-  // Build lookup: shortKey -> run_id -> bias_pct
-  const seriesData: Map<string, Map<string, number | null>> = new Map();
-  for (let i = 0; i < selected.length; i++) {
-    const lookup = new Map<string, number | null>();
-    for (const pt of selected[i].points) {
-      lookup.set(pt.started_at, pt.bias_pct);
+  // Per-series value arrays aligned to the run index, plus a bridge array
+  // that linearly interpolates interior gaps only.
+  const seriesActual: (number | null)[][] = [];
+  const seriesBridge: (number | null)[][] = [];
+  for (let s = 0; s < selected.length; s++) {
+    const actual: (number | null)[] = new Array(runs.length).fill(null);
+    for (const pt of selected[s].points) {
+      const ri = runIdxById.get(pt.run_id);
+      if (ri !== undefined) actual[ri] = pt.bias_pct;
     }
-    seriesData.set(seriesKeys[i], lookup);
+    seriesActual.push(actual);
+    seriesBridge.push(interpolateBridge(actual));
   }
 
-  // Build chart data: one entry per run timestamp
-  const chartData = allTimestamps.map((ts) => {
+  // Each entry = one run, equally spaced.
+  const chartData = runs.map((run, i) => {
     const entry: Record<string, string | number | null> = {
-      label: shortDate(ts),
+      idx: i,
+      label: shortDate(run.started_at),
     };
-    for (const key of seriesKeys) {
-      entry[key] = seriesData.get(key)?.get(ts) ?? null;
+    for (let s = 0; s < seriesKeys.length; s++) {
+      entry[`${seriesKeys[s]}_actual`] = seriesActual[s][i];
+      entry[`${seriesKeys[s]}_bridge`] = seriesBridge[s][i];
     }
     return entry;
   });
@@ -162,7 +209,11 @@ export default function TestcaseVarianceChart({ rows }: Props) {
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
           <XAxis
-            dataKey="label"
+            dataKey="idx"
+            type="number"
+            domain={[0, Math.max(0, chartData.length - 1)]}
+            ticks={chartData.map((_, i) => i)}
+            tickFormatter={(i: number) => String(chartData[i]?.label ?? "")}
             tick={{ fontSize: 10, fill: "var(--sidebar-text)", opacity: 0.5 }}
             axisLine={false}
             tickLine={false}
@@ -182,6 +233,7 @@ export default function TestcaseVarianceChart({ rows }: Props) {
               fontSize: 11,
               color: "var(--main-text)",
             }}
+            labelFormatter={(i: number) => String(chartData[i]?.label ?? "")}
             formatter={(value: unknown, name: string) => [
               typeof value === "number" ? `${value.toFixed(1)}%` : "—",
               name,
@@ -190,19 +242,37 @@ export default function TestcaseVarianceChart({ rows }: Props) {
           <Legend
             wrapperStyle={{ fontSize: 10, opacity: 0.6, color: "var(--sidebar-text)" }}
           />
-          {seriesKeys.map((key, i) => (
-            <Line
-              key={key}
-              type="monotone"
-              dataKey={key}
-              stroke={COLOURS[i % COLOURS.length]}
-              strokeWidth={1.5}
-              opacity={0.8}
-              dot={false}
-              isAnimationActive={false}
-              connectNulls={false}
-            />
-          ))}
+          {seriesKeys.flatMap((key, i) => {
+            const colour = COLOURS[i % COLOURS.length];
+            return [
+              <Line
+                key={`${key}__bridge`}
+                type="linear"
+                dataKey={`${key}_bridge`}
+                stroke={colour}
+                strokeWidth={1}
+                strokeDasharray="4 3"
+                opacity={0.8}
+                dot={false}
+                isAnimationActive={false}
+                connectNulls={true}
+                legendType="none"
+                tooltipType="none"
+              />,
+              <Line
+                key={`${key}__actual`}
+                type="monotone"
+                name={key}
+                dataKey={`${key}_actual`}
+                stroke={colour}
+                strokeWidth={1.5}
+                opacity={0.8}
+                dot={false}
+                isAnimationActive={false}
+                connectNulls={false}
+              />,
+            ];
+          })}
         </LineChart>
       </ResponsiveContainer>
     </div>
