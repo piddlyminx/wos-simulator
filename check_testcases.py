@@ -736,6 +736,15 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
         json.dump(run_doc, fh, indent=2)
     print(f"\n🔹  Wrote run snapshot: {run_path}")
 
+    try:
+        from dashboard.ingest import record_run
+        from dashboard.state_capture import capture_dirty_state
+        repo_root = os.path.dirname(os.path.abspath(__file__))
+        dirty_state = capture_dirty_state(repo_root) if git_dirty else None
+        record_run(run_doc, repo_root, dirty_state=dirty_state)
+    except Exception as _ingest_err:
+        print(f"⚠️  Dashboard ingest failed (non-fatal): {_ingest_err}")
+
     if update_baseline:
         baseline_doc = {k: v for k, v in run_doc.items() if k not in ('started_at', 'finished_at', 'cli_args', 'baseline_git_sha')}
         baseline_doc['recorded_at'] = run_doc['finished_at']
