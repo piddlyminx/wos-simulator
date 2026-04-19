@@ -140,3 +140,15 @@ export interface HeroSkillHistoryRow {
   first_seen_at: string | null;       // started_at of first run where covered_bool=1
   last_changed_at: string | null;     // started_at of run where covered_bool last changed
 }
+
+export interface TestcaseChangelogRow {
+  file_path: string;
+  run_count: number;
+  first_seen_run_id: string;
+  first_seen_at: string;
+  last_seen_run_id: string;
+  last_seen_at: string;
+  last_modified_run_id: string;
+  last_modified_at: string;
+  retired: number; // 0 | 1
+}

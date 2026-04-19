@@ -50,6 +50,12 @@ export default function RootLayout({
           >
             Heroes
           </Link>
+          <Link
+            href="/testcases/changelog"
+            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
+          >
+            Changelog
+          </Link>
         </nav>
 
         <main className="flex-1 overflow-auto p-6">{children}</main>

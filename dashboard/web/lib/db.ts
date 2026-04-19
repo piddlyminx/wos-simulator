@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseDeltaRow, TestcaseTrendRow } from "@/types/dashboard";
+import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseTrendRow } from "@/types/dashboard";
 
 /**
  * Absolute path to the SQLite database file.
@@ -817,6 +817,97 @@ export function getHeroCoverageDeltas(
       .all(currRunId, prevRunId) as HeroCoverageDelta[];
   } catch (err) {
     console.error("[wos-dashboard] getHeroCoverageDeltas failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return per-file-path lifecycle rows aggregated across every run.
+ *
+ * For each distinct `run_testcase_files.file_path` the query derives:
+ *   - first_seen_run_id / first_seen_at: earliest run that included the file
+ *   - last_seen_run_id  / last_seen_at:  most recent run that included the file
+ *   - last_modified_run_id / last_modified_at: most recent run where the sha256
+ *     differed from the previous seen sha256 (first appearance also counts)
+ *   - run_count: distinct runs the file appeared in
+ *   - retired: 1 iff last_seen_run_id is not the globally most-recent run
+ *
+ * Runs without `started_at` are excluded so ordering is deterministic.
+ */
+export function getTestcaseChangelog(): TestcaseChangelogRow[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    return database
+      .prepare(
+        `WITH latest_run AS (
+           SELECT id FROM runs WHERE started_at IS NOT NULL
+           ORDER BY started_at DESC LIMIT 1
+         ),
+         file_runs AS (
+           SELECT rtf.file_path, rtf.sha256, rtf.run_id, r.started_at
+           FROM run_testcase_files rtf
+           JOIN runs r ON rtf.run_id = r.id
+           WHERE r.started_at IS NOT NULL
+         ),
+         ranked AS (
+           SELECT file_path, sha256, run_id, started_at,
+             LAG(sha256) OVER (PARTITION BY file_path ORDER BY started_at) AS prev_sha
+           FROM file_runs
+         ),
+         modified AS (
+           SELECT file_path, MAX(started_at) AS last_modified_at
+           FROM ranked
+           WHERE prev_sha IS NULL OR prev_sha != sha256
+           GROUP BY file_path
+         ),
+         modified_run AS (
+           SELECT ranked.file_path,
+                  ranked.run_id AS last_modified_run_id,
+                  ranked.started_at AS last_modified_at
+           FROM ranked
+           JOIN modified m ON ranked.file_path = m.file_path
+                          AND ranked.started_at = m.last_modified_at
+         ),
+         agg AS (
+           SELECT file_path,
+             COUNT(DISTINCT run_id) AS run_count,
+             MIN(started_at) AS first_seen_at,
+             MAX(started_at) AS last_seen_at
+           FROM file_runs GROUP BY file_path
+         ),
+         first_run AS (
+           SELECT fr.file_path, fr.run_id AS first_seen_run_id
+           FROM file_runs fr
+           JOIN agg a ON fr.file_path = a.file_path
+                     AND fr.started_at = a.first_seen_at
+         ),
+         last_run AS (
+           SELECT fr.file_path, fr.run_id AS last_seen_run_id
+           FROM file_runs fr
+           JOIN agg a ON fr.file_path = a.file_path
+                     AND fr.started_at = a.last_seen_at
+         )
+         SELECT
+           a.file_path,
+           a.run_count,
+           f.first_seen_run_id,
+           a.first_seen_at,
+           l.last_seen_run_id,
+           a.last_seen_at,
+           m.last_modified_run_id,
+           m.last_modified_at,
+           CASE WHEN l.last_seen_run_id != (SELECT id FROM latest_run)
+                THEN 1 ELSE 0 END AS retired
+         FROM agg a
+         JOIN first_run f ON a.file_path = f.file_path
+         JOIN last_run l ON a.file_path = l.file_path
+         JOIN modified_run m ON a.file_path = m.file_path
+         ORDER BY a.file_path`
+      )
+      .all() as TestcaseChangelogRow[];
+  } catch (err) {
+    console.error("[wos-dashboard] getTestcaseChangelog failed:", err);
     return [];
   }
 }

@@ -145,6 +145,45 @@ test.describe('Dashboard smoke tests', () => {
     expect(errors).toHaveLength(0);
   });
 
+  test('/testcases/changelog — renders cross-run table', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/testcases/changelog');
+    expect(response?.status()).toBe(200);
+
+    await expect(page.locator('body')).toContainText('Testcase Changelog');
+
+    // Table must have at least one row from real data.
+    await page.waitForSelector('[data-testid="changelog-table"] tbody tr', {
+      timeout: 10_000,
+    });
+    const rows = await page.locator('[data-testid="changelog-table"] tbody tr').count();
+    expect(rows).toBeGreaterThan(0);
+
+    // Retired filter narrows the set deterministically.
+    const totalBefore = rows;
+    await page.locator('[data-testid="changelog-filter-retired"]').check();
+    await page.waitForFunction(
+      (n) =>
+        document.querySelectorAll('[data-testid="changelog-table"] tbody tr')
+          .length !== n,
+      totalBefore,
+      { timeout: 5_000 },
+    );
+    const retiredRows = await page
+      .locator('[data-testid="changelog-table"] tbody tr')
+      .count();
+    expect(retiredRows).toBeLessThanOrEqual(totalBefore);
+
+    // Nav link from layout sidebar is present.
+    const navLink = page.locator('nav a[href="/testcases/changelog"]');
+    await expect(navLink).toBeVisible();
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/runs/[id]/compare/prev — redirects to compare page', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
