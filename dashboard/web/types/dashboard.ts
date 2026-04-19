@@ -110,3 +110,16 @@ export interface TestcaseDeltaRow {
   passes_b: number | null;
   status: "improved" | "regressed" | "unchanged" | "added" | "retired";
 }
+
+export interface CoverageTrendPoint {
+  run_id: string;
+  started_at: string;
+  heroes_covered: number;
+  pairs_covered: number;
+}
+
+export interface HeroCoverageDelta {
+  hero: string;
+  delta_skills: number;
+  delta_testcases: number;
+}

@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageSnapshot, Hero, HeroSkill, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseDeltaRow, TestcaseTrendRow } from "@/types/dashboard";
+import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroSkill, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseDeltaRow, TestcaseTrendRow } from "@/types/dashboard";
 
 /**
  * Absolute path to the SQLite database file.
@@ -667,6 +667,77 @@ export function getRunTrendWithBH(
     return rows.reverse();
   } catch (err) {
     console.error("[wos-dashboard] getRunTrendWithBH failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return per-run coverage trend: heroes covered + hero-skill pairs covered.
+ * Fetches DESC then reverses so the chart reads oldest→newest left to right.
+ */
+export function getCoverageTrend(limit = 50): CoverageTrendPoint[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    const rows = database
+      .prepare(
+        `SELECT r.id as run_id, r.started_at,
+           COUNT(DISTINCT CASE WHEN cs.covered_bool = 1 THEN cs.hero END) as heroes_covered,
+           SUM(CASE WHEN cs.covered_bool = 1 THEN 1 ELSE 0 END) as pairs_covered
+         FROM runs r
+         JOIN coverage_snapshots cs ON cs.run_id = r.id
+         WHERE r.id IN (SELECT id FROM runs ORDER BY started_at DESC LIMIT ?)
+         GROUP BY r.id, r.started_at
+         ORDER BY r.started_at DESC`
+      )
+      .all(limit) as CoverageTrendPoint[];
+    return rows.reverse();
+  } catch (err) {
+    console.error("[wos-dashboard] getCoverageTrend failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return per-hero coverage delta between two runs.
+ * Only heroes where covered_skills or testcase totals changed are returned.
+ */
+export function getHeroCoverageDeltas(
+  currRunId: string,
+  prevRunId: string
+): HeroCoverageDelta[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    return database
+      .prepare(
+        `WITH curr AS (
+           SELECT hero,
+             SUM(covered_bool) as covered_skills,
+             SUM(testcase_count) as total_tc
+           FROM coverage_snapshots WHERE run_id = ?
+           GROUP BY hero
+         ),
+         prev AS (
+           SELECT hero,
+             SUM(covered_bool) as covered_skills,
+             SUM(testcase_count) as total_tc
+           FROM coverage_snapshots WHERE run_id = ?
+           GROUP BY hero
+         )
+         SELECT
+           COALESCE(c.hero, p.hero) as hero,
+           COALESCE(c.covered_skills, 0) - COALESCE(p.covered_skills, 0) as delta_skills,
+           COALESCE(c.total_tc, 0) - COALESCE(p.total_tc, 0) as delta_testcases
+         FROM curr c
+         FULL OUTER JOIN prev p ON c.hero = p.hero
+         WHERE COALESCE(c.covered_skills, 0) != COALESCE(p.covered_skills, 0)
+            OR COALESCE(c.total_tc, 0) != COALESCE(p.total_tc, 0)
+         ORDER BY hero`
+      )
+      .all(currRunId, prevRunId) as HeroCoverageDelta[];
+  } catch (err) {
+    console.error("[wos-dashboard] getHeroCoverageDeltas failed:", err);
     return [];
   }
 }

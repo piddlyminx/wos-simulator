@@ -6,8 +6,11 @@ import {
   getPreviousRun,
   getRunTestcaseKeys,
   getMissingTables,
+  getCoverageTrend,
+  getHeroCoverageDeltas,
 } from "@/lib/db";
 import type { CoverageSnapshot } from "@/types/dashboard";
+import CoverageTrendChart from "@/components/CoverageTrendChart";
 
 export const dynamic = "force-dynamic";
 
@@ -76,6 +79,14 @@ export default function CoveragePage() {
 
   const skillIds = getDistinctSkillIds(latestRunId);
   const matrixRows = getCoverageMatrix(latestRunId);
+  const coverageTrend = getCoverageTrend(50);
+  const previousRun = getPreviousRun(latestRunId);
+  const heroCoverageDeltas = previousRun
+    ? getHeroCoverageDeltas(latestRunId, previousRun.id)
+    : [];
+  const heroDeltaMap = new Map(
+    heroCoverageDeltas.map((d) => [d.hero, d])
+  );
 
   // Build lookup: hero -> skill_id -> CoverageSnapshot
   const lookup = new Map<string, Map<string, CoverageSnapshot>>();
@@ -101,7 +112,6 @@ export default function CoveragePage() {
 
   // Gap warning: compare testcase count per hero vs previous run
   let showGapWarning = false;
-  const previousRun = getPreviousRun(latestRunId);
   if (previousRun) {
     const currentKeys = getRunTestcaseKeys(latestRunId);
     const previousKeys = getRunTestcaseKeys(previousRun.id);
@@ -180,6 +190,8 @@ export default function CoveragePage() {
           Warning: testcase set changed since previous run
         </div>
       )}
+
+      <CoverageTrendChart data={coverageTrend} />
 
       {matrixRows.length === 0 ? (
         <div
@@ -269,6 +281,7 @@ export default function CoveragePage() {
               <tbody>
                 {heroesWithData.map((hero) => {
                   const heroMap = lookup.get(hero.name)!;
+                  const delta = heroDeltaMap.get(hero.name);
                   return (
                     <tr
                       key={hero.name}
@@ -278,7 +291,38 @@ export default function CoveragePage() {
                         className="py-1 pr-3 sticky left-0 font-mono text-xs"
                         style={{ backgroundColor: "var(--main-bg)" }}
                       >
-                        {hero.name}
+                        <span className="flex items-center gap-1">
+                          {hero.name}
+                          {delta && (
+                            <span
+                              className="text-xs font-mono px-1 rounded"
+                              style={{
+                                fontSize: 9,
+                                backgroundColor:
+                                  delta.delta_skills > 0
+                                    ? "rgba(166,227,161,0.2)"
+                                    : delta.delta_skills < 0
+                                    ? "rgba(243,139,168,0.2)"
+                                    : "rgba(249,226,175,0.2)",
+                                color:
+                                  delta.delta_skills > 0
+                                    ? "#a6e3a1"
+                                    : delta.delta_skills < 0
+                                    ? "#f38ba8"
+                                    : "#f9e2af",
+                                border: "1px solid currentColor",
+                                lineHeight: "1.4",
+                              }}
+                              title={`Δ vs prev run: ${delta.delta_skills > 0 ? "+" : ""}${delta.delta_skills} skill${Math.abs(delta.delta_skills) !== 1 ? "s" : ""}, ${delta.delta_testcases > 0 ? "+" : ""}${delta.delta_testcases} tc`}
+                            >
+                              {delta.delta_skills > 0 ? "+" : ""}
+                              {delta.delta_skills}s
+                              {delta.delta_testcases !== 0
+                                ? ` ${delta.delta_testcases > 0 ? "+" : ""}${delta.delta_testcases}tc`
+                                : ""}
+                            </span>
+                          )}
+                        </span>
                       </td>
                       <td
                         className="py-1 pr-3 text-xs opacity-50"
