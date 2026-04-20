@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from "react";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
+import UploadReportModal, {
+  UploadReportSubmission,
+} from "@/components/UploadReportModal";
 import {
   TROOP_TIERS,
   TroopCategory,
@@ -168,6 +171,56 @@ function statLabel(cat: TroopCategory, stat: string): string {
   return `${prefix} ${stat[0].toUpperCase()}${stat.slice(1)}`;
 }
 
+/**
+ * Merge OCR output + manually-picked heroes into an existing side.
+ * Fields the OCR didn't parse (null/undefined) leave the existing value untouched.
+ * Hero selection resets the skills to the spec defaults (same logic used in the
+ * main form when picking a hero).
+ */
+function mergeSideFromOcr(
+  prev: SideState,
+  ocrSide: {
+    troops: Record<TroopCategory, number | null>;
+    stats: Record<TroopCategory, Record<string, number | null>>;
+  },
+  heroes: Record<TroopCategory, string | null>,
+): SideState {
+  const nextTroops = { ...prev.troops };
+  const nextStats: SideState["stats"] = {
+    infantry: { ...prev.stats.infantry },
+    lancer: { ...prev.stats.lancer },
+    marksman: { ...prev.stats.marksman },
+  };
+  for (const cat of CATEGORIES) {
+    const troop = ocrSide.troops?.[cat];
+    if (typeof troop === "number" && !isNaN(troop)) {
+      nextTroops[cat] = troop;
+    }
+    const statRow = ocrSide.stats?.[cat] ?? {};
+    for (const stat of STAT_NAMES) {
+      const v = statRow[stat];
+      if (typeof v === "number" && !isNaN(v)) {
+        nextStats[cat][stat] = v;
+      }
+    }
+  }
+  const nextHeroes: SideState["heroes"] = {
+    infantry: prev.heroes.infantry,
+    lancer: prev.heroes.lancer,
+    marksman: prev.heroes.marksman,
+  };
+  for (const cat of CATEGORIES) {
+    const chosen = heroes[cat];
+    const currentSlot = prev.heroes[cat];
+    if (chosen === currentSlot.name) continue;
+    nextHeroes[cat] = {
+      name: chosen,
+      skills: deriveSkillsForHero(currentSlot.name, currentSlot.skills, chosen),
+    };
+  }
+  return { ...prev, troops: nextTroops, heroes: nextHeroes, stats: nextStats };
+}
+
 export default function SimulatePage() {
   const [attacker, setAttacker] = useState<SideState>(() => defaultSide());
   const [defender, setDefender] = useState<SideState>(() => defaultSide());
@@ -175,9 +228,18 @@ export default function SimulatePage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ApiResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
 
   const setSide = (side: Side) =>
     side === "attacker" ? setAttacker : setDefender;
+
+  function applyUpload(submission: UploadReportSubmission) {
+    const { ocr, heroes } = submission;
+    setAttacker((prev) => mergeSideFromOcr(prev, ocr.attacker, heroes.attacker));
+    setDefender((prev) => mergeSideFromOcr(prev, ocr.defender, heroes.defender));
+    setUploadWarnings(ocr.warnings ?? []);
+  }
 
   async function runSimulation() {
     setLoading(true);
@@ -219,12 +281,44 @@ export default function SimulatePage() {
 
   return (
     <div>
-      <h2
-        className="text-lg font-bold mb-6"
-        style={{ color: "var(--sidebar-active)" }}
-      >
-        Simulate Battle
-      </h2>
+      <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
+        <h2
+          className="text-lg font-bold"
+          style={{ color: "var(--sidebar-active)" }}
+        >
+          Simulate Battle
+        </h2>
+        <button
+          type="button"
+          onClick={() => setUploadOpen(true)}
+          className="text-xs px-3 py-2 rounded font-bold"
+          style={{
+            border: "1px solid var(--border-color)",
+            backgroundColor: "var(--sidebar-bg)",
+            color: "var(--sidebar-active)",
+          }}
+        >
+          Upload report
+        </button>
+      </div>
+
+      {uploadWarnings.length > 0 && (
+        <div
+          className="rounded px-3 py-2 mb-4 text-xs font-mono"
+          style={{
+            border: "1px solid var(--border-color)",
+            backgroundColor: "var(--sidebar-bg)",
+            color: "#f9e2af",
+          }}
+        >
+          OCR warnings (unparsed fields kept their previous values):
+          <ul className="list-disc list-inside mt-1">
+            {uploadWarnings.map((w, i) => (
+              <li key={i}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <SidePanel
@@ -283,6 +377,12 @@ export default function SimulatePage() {
           </span>
         )}
       </div>
+
+      <UploadReportModal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        onApply={applyUpload}
+      />
 
       {result && (
         <div
