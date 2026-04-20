@@ -69,12 +69,192 @@
       "joiner_heroes": {}
     },
     "sim_result": {
-      "attacker": 1763,
+      "attacker": 1764,
       "defender": 0
     },
     "game_report_result": [
       {
         "attacker": 1770,
+        "defender": 0
+      },
+      {
+        "attacker": 1766,
+        "defender": 0
+      },
+      {
+        "attacker": 1770,
+        "defender": 0
+      },
+      {
+        "attacker": 1766,
+        "defender": 0
+      }
+    ]
+  },
+  {
+    "test_id": "alonso_wip_attacker",
+    "description": "Alonso attacker, no defending hero (replaces Alonso_tc daut_viper_2). WIP attacks with Alonso (1000 inf / 500 lanc / 500 mark t6), minxxx defends with no heroes. Chance-based skills \u2014 collect 8 game results. NOTE: Alonso must be available on WIP \u2014 capture fresh skills before running. Reference: WOS-191.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 0.0,
+          "defense": 0.0,
+          "lethality": 0.0,
+          "health": 0.0
+        },
+        "lanc": {
+          "attack": 0.0,
+          "defense": 0.0,
+          "lethality": 0.0,
+          "health": 0.0
+        },
+        "mark": {
+          "attack": 0.0,
+          "defense": 0.0,
+          "lethality": 0.0,
+          "health": 0.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 0.0,
+          "defense": 0.0,
+          "lethality": 0.0,
+          "health": 0.0
+        },
+        "lanc": {
+          "attack": 0.0,
+          "defense": 0.0,
+          "lethality": 0.0,
+          "health": 0.0
+        },
+        "mark": {
+          "attack": 0.0,
+          "defense": 0.0,
+          "lethality": 0.0,
+          "health": 0.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 1769,
+      "defender": 0
+    },
+    "game_report_result": [
+      {
+        "attacker": 1765,
+        "defender": 0
+      }
+    ]
+  },
+  {
+    "test_id": "alonso_wip_attacker",
+    "description": "Alonso attacker, no defending hero (replaces Alonso_tc daut_viper_2). WIP attacks with Alonso (1000 inf / 500 lanc / 500 mark t6), minxxx defends with no heroes. Chance-based skills \u2014 collect 8 game results. NOTE: Alonso must be available on WIP \u2014 capture fresh skills before running. Reference: WOS-191.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 500,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 79.3,
+          "defense": 82.0,
+          "lethality": 31.1,
+          "health": 38.1
+        },
+        "lanc": {
+          "attack": 84.3,
+          "defense": 79.2,
+          "lethality": 38.1,
+          "health": 31.3
+        },
+        "mark": {
+          "attack": 146.2,
+          "defense": 132.8,
+          "lethality": 37.6,
+          "health": 31.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 221.0,
+          "defense": 205.8,
+          "lethality": 119.2,
+          "health": 132.5
+        },
+        "lanc": {
+          "attack": 195.0,
+          "defense": 190.8,
+          "lethality": 121.3,
+          "health": 122.5
+        },
+        "mark": {
+          "attack": 212.0,
+          "defense": 206.8,
+          "lethality": 124.2,
+          "health": 125.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 1768,
+      "defender": 0
+    },
+    "game_report_result": [
+      {
+        "attacker": 1778,
+        "defender": 0
+      },
+      {
+        "attacker": 1770,
+        "defender": 0
+      },
+      {
+        "attacker": 1766,
         "defender": 0
       }
     ]

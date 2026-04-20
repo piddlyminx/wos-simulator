@@ -69,12 +69,40 @@
       "joiner_heroes": {}
     },
     "sim_result": {
-      "attacker": 1452,
+      "attacker": 1467,
       "defender": 0
     },
     "game_report_result": [
       {
         "attacker": 1454,
+        "defender": 0
+      },
+      {
+        "attacker": 1435,
+        "defender": 0
+      },
+      {
+        "attacker": 1486,
+        "defender": 0
+      },
+      {
+        "attacker": 1429,
+        "defender": 0
+      },
+      {
+        "attacker": 1453,
+        "defender": 0
+      },
+      {
+        "attacker": 1472,
+        "defender": 0
+      },
+      {
+        "attacker": 1419,
+        "defender": 0
+      },
+      {
+        "attacker": 1455,
         "defender": 0
       }
     ]

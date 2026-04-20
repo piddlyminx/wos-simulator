@@ -76,12 +76,40 @@
     },
     "sim_result": {
       "attacker": 0,
-      "defender": 746
+      "defender": 726
     },
     "game_report_result": [
       {
         "attacker": 0,
         "defender": 752
+      },
+      {
+        "attacker": 0,
+        "defender": 744
+      },
+      {
+        "attacker": 0,
+        "defender": 737
+      },
+      {
+        "attacker": 0,
+        "defender": 741
+      },
+      {
+        "attacker": 0,
+        "defender": 753
+      },
+      {
+        "attacker": 0,
+        "defender": 764
+      },
+      {
+        "attacker": 0,
+        "defender": 745
+      },
+      {
+        "attacker": 0,
+        "defender": 756
       }
     ]
   }
