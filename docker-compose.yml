@@ -2,10 +2,13 @@
 #
 # Services:
 #   - app:         Next.js dashboard (better-sqlite3, read-only DB mount).
-#   - cloudflared: Cloudflare Tunnel sidecar publishing the app at
-#                  ${TUNNEL_HOSTNAME} (default: wos-sim.ratme.org).
+#   - cloudflared: Cloudflare Tunnel sidecar, authenticated via a
+#                  remotely-managed Tunnel token. Hostname + service routing
+#                  are configured once in the Cloudflare Zero Trust dashboard
+#                  when the tunnel is created. No host-side cloudflared files
+#                  are read or edited.
 #
-# See docker-compose.env.example for required variables and setup steps.
+# See docker-compose.env.example for setup steps.
 
 services:
   app:
@@ -32,19 +35,11 @@ services:
     restart: unless-stopped
     depends_on:
       - app
-    # ~/.cloudflared on the host holds the tunnel credentials JSON created by
-    # `cloudflared tunnel create <name>`. Mounted read-only — no secrets copied
-    # into the image or the compose file.
-    volumes:
-      - ${CLOUDFLARED_DIR:-~/.cloudflared}:/etc/cloudflared:ro
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env (see docker-compose.env.example)}
     command:
       - tunnel
       - --no-autoupdate
       - --loglevel
       - info
-      - --credentials-file
-      - /etc/cloudflared/${TUNNEL_ID}.json
-      - --url
-      - http://app:3000
       - run
-      - ${TUNNEL_ID}
