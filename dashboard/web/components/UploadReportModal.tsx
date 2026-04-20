@@ -74,6 +74,9 @@ export default function UploadReportModal({
   const [rallyMode, setRallyMode] = useState(initialRallyMode);
   const [attackerSkill4, setAttackerSkill4] = useState<Skill4LevelMap>(emptySkill4);
   const [defenderSkill4, setDefenderSkill4] = useState<Skill4LevelMap>(emptySkill4);
+  // Reports always show "me" on the left. When the user is the defender, they
+  // toggle this so the OCR left column is treated as defender, not attacker.
+  const [sidesSwapped, setSidesSwapped] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Sync rally toggle with the caller whenever the modal opens.
@@ -91,6 +94,7 @@ export default function UploadReportModal({
     setDefenderHeroes(emptyHeroes());
     setAttackerSkill4(emptySkill4());
     setDefenderSkill4(emptySkill4());
+    setSidesSwapped(false);
   }, []);
 
   const handleClose = useCallback(() => {
@@ -183,8 +187,16 @@ export default function UploadReportModal({
         setLoading(false);
         return;
       }
+      const parsed = data as OcrResult;
+      const ocr: OcrResult = sidesSwapped
+        ? {
+            ...parsed,
+            attacker: parsed.defender,
+            defender: parsed.attacker,
+          }
+        : parsed;
       onApply({
-        ocr: data as OcrResult,
+        ocr,
         heroes: {
           attacker: { ...attackerHeroes },
           defender: { ...defenderHeroes },
@@ -331,25 +343,51 @@ export default function UploadReportModal({
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <HeroPickerPanel
-              title="Attacker heroes"
-              which="attacker"
-              heroes={attackerHeroes}
-              onChange={setAttackerHeroes}
-              skill4={attackerSkill4}
-              onSkill4Change={setAttackerSkill4}
-              rallyMode={rallyMode}
-            />
-            <HeroPickerPanel
-              title="Defender heroes"
-              which="defender"
-              heroes={defenderHeroes}
-              onChange={setDefenderHeroes}
-              skill4={defenderSkill4}
-              onSkill4Change={setDefenderSkill4}
-              rallyMode={rallyMode}
-            />
+          <div className="flex flex-col md:flex-row items-stretch gap-2">
+            <div className="flex-1" style={{ order: sidesSwapped ? 3 : 1 }}>
+              <HeroPickerPanel
+                title="Attacker heroes"
+                which="attacker"
+                heroes={attackerHeroes}
+                onChange={setAttackerHeroes}
+                skill4={attackerSkill4}
+                onSkill4Change={setAttackerSkill4}
+                rallyMode={rallyMode}
+              />
+            </div>
+            <div
+              className="flex md:flex-col items-center justify-center"
+              style={{ order: 2 }}
+            >
+              <button
+                type="button"
+                onClick={() => setSidesSwapped((v) => !v)}
+                className="text-xs px-2 py-1 rounded font-bold"
+                style={{
+                  border: `1px solid ${sidesSwapped ? "var(--sidebar-active)" : "var(--border-color)"}`,
+                  backgroundColor: sidesSwapped
+                    ? "rgba(137, 180, 250, 0.15)"
+                    : "var(--main-bg)",
+                  color: sidesSwapped ? "var(--sidebar-active)" : "var(--main-text)",
+                }}
+                title="Swap attacker and defender. Use this when you were the defender in the report — battle reports always show 'me' on the left."
+                aria-label="Swap attacker and defender"
+                aria-pressed={sidesSwapped}
+              >
+                ⇆ Swap
+              </button>
+            </div>
+            <div className="flex-1" style={{ order: sidesSwapped ? 1 : 3 }}>
+              <HeroPickerPanel
+                title="Defender heroes"
+                which="defender"
+                heroes={defenderHeroes}
+                onChange={setDefenderHeroes}
+                skill4={defenderSkill4}
+                onSkill4Change={setDefenderSkill4}
+                rallyMode={rallyMode}
+              />
+            </div>
           </div>
 
           {error && (
