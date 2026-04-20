@@ -68,6 +68,12 @@ export default function RootLayout({
           >
             Changelog
           </Link>
+          <Link
+            href="/simulate"
+            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
+          >
+            Simulate
+          </Link>
         </nav>
 
         <main className="flex-1 overflow-auto p-6">{children}</main>
