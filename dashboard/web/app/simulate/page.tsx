@@ -6,10 +6,14 @@ import UploadReportModal, {
   UploadReportSubmission,
 } from "@/components/UploadReportModal";
 import {
+  HEROES,
+  Skill4Stat,
   TROOP_TIERS,
   TroopCategory,
   heroesForCategory,
   skillSlotEnabled,
+  skill4ActiveForSide,
+  skill4PercentAt,
   getHero,
 } from "@/lib/heroes-catalogue";
 
@@ -21,16 +25,22 @@ const STAT_NAMES: ("attack" | "defense" | "lethality" | "health")[] = [
   "lethality",
   "health",
 ];
+const JOINER_COUNT = 4;
 
 interface HeroSlotState {
   name: string | null;
   skills: [number, number, number, number];
 }
 
+interface JoinerSlotState {
+  name: string | null;
+}
+
 interface SideState {
   troops: Record<TroopCategory, number>;
   tiers: Record<TroopCategory, string>;
   heroes: Record<TroopCategory, HeroSlotState>;
+  joiners: JoinerSlotState[]; // always length JOINER_COUNT
   // stats: 3 unit categories x 4 stats, stored as percentage numbers
   stats: Record<TroopCategory, Record<string, number>>;
 }
@@ -66,6 +76,7 @@ function defaultSide(): SideState {
       lancer: { name: null, skills: [0, 0, 0, 0] },
       marksman: { name: null, skills: [0, 0, 0, 0] },
     },
+    joiners: Array.from({ length: JOINER_COUNT }, () => ({ name: null })),
     stats: {
       infantry: { attack: 100, defense: 100, lethality: 100, health: 100 },
       lancer: { attack: 100, defense: 100, lethality: 100, health: 100 },
@@ -78,6 +89,7 @@ function toApiPayload(
   attacker: SideState,
   defender: SideState,
   replicates: number,
+  rallyMode: boolean,
 ) {
   const mkSide = (s: SideState) => ({
     troops: s.troops,
@@ -91,6 +103,9 @@ function toApiPayload(
       lancer: { name: s.heroes.lancer.name, skills: s.heroes.lancer.skills },
       marksman: { name: s.heroes.marksman.name, skills: s.heroes.marksman.skills },
     },
+    joiners: rallyMode
+      ? s.joiners.filter((j) => j.name).map((j) => ({ name: j.name, skill_1: 5 }))
+      : [],
     stats: {
       inf: [
         s.stats.infantry.attack,
@@ -116,6 +131,7 @@ function toApiPayload(
     attacker: mkSide(attacker),
     defender: mkSide(defender),
     replicates,
+    rally_mode: rallyMode,
   };
 }
 
@@ -141,12 +157,13 @@ function deriveSkillsForHero(
   prevName: string | null,
   prevSkills: [number, number, number, number],
   newName: string | null,
+  rallyMode: boolean,
 ): [number, number, number, number] {
   const newHero = getHero(newName);
   const out: [number, number, number, number] = [0, 0, 0, 0];
   for (let slot = 1; slot <= 4; slot++) {
     const idx = (slot - 1) as 0 | 1 | 2 | 3;
-    const enabledNow = skillSlotEnabled(newHero, slot as 1 | 2 | 3 | 4);
+    const enabledNow = skillSlotEnabled(newHero, slot as 1 | 2 | 3 | 4, rallyMode);
     if (!enabledNow) {
       out[idx] = 0;
       continue;
@@ -155,6 +172,7 @@ function deriveSkillsForHero(
     const prevEnabled = skillSlotEnabled(
       getHero(prevName),
       slot as 1 | 2 | 3 | 4,
+      rallyMode,
     );
     // Keep user-set custom value (anything other than 5) when slot stays enabled.
     if (prevEnabled && prev !== 5 && prev !== 0) {
@@ -172,10 +190,40 @@ function statLabel(cat: TroopCategory, stat: string): string {
 }
 
 /**
+ * Sum of skill_4 bonus percents applied to a given stat on a side, from
+ * the three main heroes (one per troop type). Skill_4 affects all troop
+ * types, so the sum is the same across categories.
+ */
+function sideSkill4BonusPercent(
+  side: SideState,
+  which: Side,
+  stat: Skill4Stat,
+  rallyMode: boolean,
+): number {
+  if (!rallyMode) return 0;
+  let total = 0;
+  for (const cat of CATEGORIES) {
+    const slot = side.heroes[cat];
+    const hero = getHero(slot.name);
+    if (!hero?.skill4) continue;
+    if (hero.skill4.stat !== stat) continue;
+    if (!skill4ActiveForSide(hero, which)) continue;
+    const level = slot.skills[3];
+    total += skill4PercentAt(level);
+  }
+  return total;
+}
+
+/**
  * Merge OCR output + manually-picked heroes into an existing side.
  * Fields the OCR didn't parse (null/undefined) leave the existing value untouched.
  * Hero selection resets the skills to the spec defaults (same logic used in the
  * main form when picking a hero).
+ *
+ * When rally mode is on and skill4Levels is provided, the OCR stat values are
+ * scaled down by the total skill_4 bonus for that stat+side (since the screenshot
+ * already includes the skill_4 boost). The scaled value feeds the main form,
+ * so the simulator doesn't double-count the bonus when it reapplies skill_4.
  */
 function mergeSideFromOcr(
   prev: SideState,
@@ -184,6 +232,9 @@ function mergeSideFromOcr(
     stats: Record<TroopCategory, Record<string, number | null>>;
   },
   heroes: Record<TroopCategory, string | null>,
+  rallyMode: boolean,
+  which: Side,
+  skill4Levels: Record<TroopCategory, number>,
 ): SideState {
   const nextTroops = { ...prev.troops };
   const nextStats: SideState["stats"] = {
@@ -191,6 +242,29 @@ function mergeSideFromOcr(
     lancer: { ...prev.stats.lancer },
     marksman: { ...prev.stats.marksman },
   };
+
+  // Build per-stat skill_4 scaling factor from the ABOUT-TO-BE-APPLIED hero
+  // choices (what the user picked in the modal) and their skill_4 levels.
+  const scaleByStat: Record<string, number> = {
+    attack: 0,
+    defense: 0,
+    lethality: 0,
+    health: 0,
+  };
+  if (rallyMode) {
+    for (const cat of CATEGORIES) {
+      const heroName = heroes[cat];
+      const hero = getHero(heroName);
+      if (!hero?.skill4) continue;
+      if (!skill4ActiveForSide(hero, which)) continue;
+      const level = skill4Levels[cat] ?? 0;
+      const pct = skill4PercentAt(level);
+      if (pct > 0) {
+        scaleByStat[hero.skill4.stat] += pct;
+      }
+    }
+  }
+
   for (const cat of CATEGORIES) {
     const troop = ocrSide.troops?.[cat];
     if (typeof troop === "number" && !isNaN(troop)) {
@@ -200,10 +274,15 @@ function mergeSideFromOcr(
     for (const stat of STAT_NAMES) {
       const v = statRow[stat];
       if (typeof v === "number" && !isNaN(v)) {
-        nextStats[cat][stat] = v;
+        const bonus = scaleByStat[stat] ?? 0;
+        // Image value = base * (1 + bonus/100) → base = image / (1 + bonus/100).
+        // Round to one decimal to match input precision.
+        const scaled = bonus > 0 ? v / (1 + bonus / 100) : v;
+        nextStats[cat][stat] = Math.round(scaled * 10) / 10;
       }
     }
   }
+
   const nextHeroes: SideState["heroes"] = {
     infantry: prev.heroes.infantry,
     lancer: prev.heroes.lancer,
@@ -212,11 +291,19 @@ function mergeSideFromOcr(
   for (const cat of CATEGORIES) {
     const chosen = heroes[cat];
     const currentSlot = prev.heroes[cat];
-    if (chosen === currentSlot.name) continue;
-    nextHeroes[cat] = {
-      name: chosen,
-      skills: deriveSkillsForHero(currentSlot.name, currentSlot.skills, chosen),
-    };
+    const chosenHero = getHero(chosen);
+    const newSkills = deriveSkillsForHero(
+      currentSlot.name,
+      currentSlot.skills,
+      chosen,
+      rallyMode,
+    );
+    // If rally mode and user picked a skill_4 level, honor it.
+    if (rallyMode && chosenHero?.skill4 && skillSlotEnabled(chosenHero, 4, true)) {
+      const lvl = skill4Levels[cat] ?? 0;
+      if (lvl > 0) newSkills[3] = lvl;
+    }
+    nextHeroes[cat] = { name: chosen, skills: newSkills };
   }
   return { ...prev, troops: nextTroops, heroes: nextHeroes, stats: nextStats };
 }
@@ -230,14 +317,36 @@ export default function SimulatePage() {
   const [error, setError] = useState<string | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
+  const [rallyMode, setRallyMode] = useState(false);
 
   const setSide = (side: Side) =>
     side === "attacker" ? setAttacker : setDefender;
 
   function applyUpload(submission: UploadReportSubmission) {
-    const { ocr, heroes } = submission;
-    setAttacker((prev) => mergeSideFromOcr(prev, ocr.attacker, heroes.attacker));
-    setDefender((prev) => mergeSideFromOcr(prev, ocr.defender, heroes.defender));
+    const { ocr, heroes, rallyMode: modalRally, skill4Levels } = submission;
+    // Align main-page rally toggle with the modal's choice so the user sees a
+    // consistent state (main form already handles rally layout on its own).
+    if (modalRally !== rallyMode) setRallyMode(modalRally);
+    setAttacker((prev) =>
+      mergeSideFromOcr(
+        prev,
+        ocr.attacker,
+        heroes.attacker,
+        modalRally,
+        "attacker",
+        skill4Levels.attacker,
+      ),
+    );
+    setDefender((prev) =>
+      mergeSideFromOcr(
+        prev,
+        ocr.defender,
+        heroes.defender,
+        modalRally,
+        "defender",
+        skill4Levels.defender,
+      ),
+    );
     setUploadWarnings(ocr.warnings ?? []);
   }
 
@@ -246,7 +355,7 @@ export default function SimulatePage() {
     setError(null);
     setResult(null);
     try {
-      const payload = toApiPayload(attacker, defender, replicates);
+      const payload = toApiPayload(attacker, defender, replicates, rallyMode);
       const res = await fetch("/api/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -288,18 +397,39 @@ export default function SimulatePage() {
         >
           Simulate Battle
         </h2>
-        <button
-          type="button"
-          onClick={() => setUploadOpen(true)}
-          className="text-xs px-3 py-2 rounded font-bold"
-          style={{
-            border: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-            color: "var(--sidebar-active)",
-          }}
-        >
-          Upload report
-        </button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <label
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded cursor-pointer font-bold"
+            style={{
+              border: `1px solid ${rallyMode ? "var(--sidebar-active)" : "var(--border-color)"}`,
+              backgroundColor: rallyMode
+                ? "rgba(137, 180, 250, 0.15)"
+                : "var(--sidebar-bg)",
+              color: rallyMode ? "var(--sidebar-active)" : "var(--main-text)",
+            }}
+            title="Enable Rally mode: each army gets up to 4 joiner heroes and main heroes' skill 4 is active."
+          >
+            <input
+              type="checkbox"
+              checked={rallyMode}
+              onChange={(e) => setRallyMode(e.target.checked)}
+              aria-label="Rally mode"
+            />
+            Rally mode
+          </label>
+          <button
+            type="button"
+            onClick={() => setUploadOpen(true)}
+            className="text-xs px-3 py-2 rounded font-bold"
+            style={{
+              border: "1px solid var(--border-color)",
+              backgroundColor: "var(--sidebar-bg)",
+              color: "var(--sidebar-active)",
+            }}
+          >
+            Upload report
+          </button>
+        </div>
       </div>
 
       {uploadWarnings.length > 0 && (
@@ -323,13 +453,17 @@ export default function SimulatePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <SidePanel
           title="Attacker"
+          which="attacker"
           state={attacker}
           setState={setSide("attacker") as (updater: (prev: SideState) => SideState) => void}
+          rallyMode={rallyMode}
         />
         <SidePanel
           title="Defender"
+          which="defender"
           state={defender}
           setState={setSide("defender") as (updater: (prev: SideState) => SideState) => void}
+          rallyMode={rallyMode}
         />
       </div>
 
@@ -382,6 +516,7 @@ export default function SimulatePage() {
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
         onApply={applyUpload}
+        initialRallyMode={rallyMode}
       />
 
       {result && (
@@ -436,12 +571,16 @@ export default function SimulatePage() {
 
 function SidePanel({
   title,
+  which,
   state,
   setState,
+  rallyMode,
 }: {
   title: string;
+  which: Side;
   state: SideState;
   setState: (updater: (prev: SideState) => SideState) => void;
+  rallyMode: boolean;
 }) {
   return (
     <div
@@ -463,11 +602,54 @@ function SidePanel({
           <TroopColumn
             key={cat}
             cat={cat}
+            which={which}
             state={state}
             setState={setState}
+            rallyMode={rallyMode}
           />
         ))}
       </div>
+
+      {rallyMode && (
+        <div className="mb-5">
+          <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+            Joiner Heroes (skill 1 @ lvl 5)
+          </h4>
+          <div className="grid grid-cols-2 gap-2">
+            {state.joiners.map((slot, i) => (
+              <label key={i} className="flex items-center gap-2 text-xs">
+                <span className="opacity-60 w-10">#{i + 1}</span>
+                <select
+                  value={slot.name ?? ""}
+                  onChange={(e) => {
+                    const next = e.target.value || null;
+                    setState((prev) => {
+                      const joiners = prev.joiners.map((j, idx) =>
+                        idx === i ? { name: next } : j,
+                      );
+                      return { ...prev, joiners };
+                    });
+                  }}
+                  className="rounded px-2 py-1 font-mono text-xs flex-1"
+                  style={{
+                    backgroundColor: "var(--main-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                  aria-label={`${which} joiner ${i + 1}`}
+                >
+                  <option value="">— None —</option>
+                  {HEROES.map((h) => (
+                    <option key={h.name} value={h.name}>
+                      {h.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
         Stat Bonuses (%)
@@ -478,33 +660,47 @@ function SidePanel({
             <span className="text-xs opacity-60">
               {cat === "marksman" ? "Marksman" : cat[0].toUpperCase() + cat.slice(1)}
             </span>
-            {STAT_NAMES.map((stat) => (
-              <label key={stat} className="flex items-center justify-between gap-1 text-xs">
-                <span className="opacity-60">{stat[0].toUpperCase() + stat.slice(1)}</span>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={state.stats[cat][stat]}
-                  onChange={(e) => {
-                    const v = parseFloat(e.target.value);
-                    setState((prev) => ({
-                      ...prev,
-                      stats: {
-                        ...prev.stats,
-                        [cat]: { ...prev.stats[cat], [stat]: isNaN(v) ? 0 : v },
-                      },
-                    }));
-                  }}
-                  className="w-20 rounded px-1.5 py-0.5 font-mono text-xs text-right"
-                  style={{
-                    backgroundColor: "var(--main-bg)",
-                    border: "1px solid var(--border-color)",
-                    color: "var(--main-text)",
-                  }}
-                  aria-label={statLabel(cat, stat)}
-                />
-              </label>
-            ))}
+            {STAT_NAMES.map((stat) => {
+              const bonus = sideSkill4BonusPercent(state, which, stat as Skill4Stat, rallyMode);
+              return (
+                <label key={stat} className="flex items-center justify-between gap-1 text-xs">
+                  <span className="opacity-60">{stat[0].toUpperCase() + stat.slice(1)}</span>
+                  <div className="flex items-center gap-1">
+                    {bonus > 0 && (
+                      <span
+                        className="text-[10px] font-mono"
+                        style={{ color: "#a6e3a1" }}
+                        title={`Skill 4 will add +${bonus.toFixed(1)}% to this stat before battle.`}
+                      >
+                        +{bonus.toFixed(1)}%
+                      </span>
+                    )}
+                    <input
+                      type="number"
+                      step="0.1"
+                      value={state.stats[cat][stat]}
+                      onChange={(e) => {
+                        const v = parseFloat(e.target.value);
+                        setState((prev) => ({
+                          ...prev,
+                          stats: {
+                            ...prev.stats,
+                            [cat]: { ...prev.stats[cat], [stat]: isNaN(v) ? 0 : v },
+                          },
+                        }));
+                      }}
+                      className="w-20 rounded px-1.5 py-0.5 font-mono text-xs text-right"
+                      style={{
+                        backgroundColor: "var(--main-bg)",
+                        border: "1px solid var(--border-color)",
+                        color: "var(--main-text)",
+                      }}
+                      aria-label={statLabel(cat, stat)}
+                    />
+                  </div>
+                </label>
+              );
+            })}
           </div>
         ))}
       </div>
@@ -514,16 +710,24 @@ function SidePanel({
 
 function TroopColumn({
   cat,
+  which,
   state,
   setState,
+  rallyMode,
 }: {
   cat: TroopCategory;
+  which: Side;
   state: SideState;
   setState: (updater: (prev: SideState) => SideState) => void;
+  rallyMode: boolean;
 }) {
   const heroSlot = state.heroes[cat];
   const hero = getHero(heroSlot.name);
   const heroOptions = heroesForCategory(cat);
+  const skill4 = hero?.skill4;
+  const skill4Level = heroSlot.skills[3];
+  const skill4Active = rallyMode && skill4 && skill4ActiveForSide(hero, which);
+  const skill4Pct = skill4Active ? skill4PercentAt(skill4Level) : 0;
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -581,6 +785,7 @@ function TroopColumn({
               prev.heroes[cat].name,
               prev.heroes[cat].skills,
               newName,
+              rallyMode,
             );
             return {
               ...prev,
@@ -612,48 +817,68 @@ function TroopColumn({
           Skills
         </span>
         {[1, 2, 3, 4].map((slot) => {
-          const enabled = skillSlotEnabled(hero, slot as 1 | 2 | 3 | 4);
+          const enabled = skillSlotEnabled(hero, slot as 1 | 2 | 3 | 4, rallyMode);
           return (
-            <label key={slot} className="flex items-center justify-between gap-1 text-[11px]">
-              <span className="opacity-60">Skill {slot}</span>
-              <select
-                value={heroSlot.skills[slot - 1]}
-                disabled={!enabled}
-                onChange={(e) => {
-                  const v = parseInt(e.target.value, 10);
-                  setState((prev) => {
-                    const skills = [...prev.heroes[cat].skills] as [
-                      number,
-                      number,
-                      number,
-                      number,
-                    ];
-                    skills[slot - 1] = isNaN(v) ? 0 : v;
-                    return {
-                      ...prev,
-                      heroes: {
-                        ...prev.heroes,
-                        [cat]: { ...prev.heroes[cat], skills },
-                      },
-                    };
-                  });
-                }}
-                className="rounded px-1.5 py-0.5 font-mono text-[11px] w-14"
-                style={{
-                  backgroundColor: "var(--main-bg)",
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                  opacity: enabled ? 1 : 0.4,
-                }}
-                aria-label={`${cat} skill ${slot}`}
-              >
-                {[0, 1, 2, 3, 4, 5].map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div key={slot} className="flex flex-col">
+              <label className="flex items-center justify-between gap-1 text-[11px]">
+                <span className="opacity-60">Skill {slot}</span>
+                <select
+                  value={heroSlot.skills[slot - 1]}
+                  disabled={!enabled}
+                  onChange={(e) => {
+                    const v = parseInt(e.target.value, 10);
+                    setState((prev) => {
+                      const skills = [...prev.heroes[cat].skills] as [
+                        number,
+                        number,
+                        number,
+                        number,
+                      ];
+                      skills[slot - 1] = isNaN(v) ? 0 : v;
+                      return {
+                        ...prev,
+                        heroes: {
+                          ...prev.heroes,
+                          [cat]: { ...prev.heroes[cat], skills },
+                        },
+                      };
+                    });
+                  }}
+                  className="rounded px-1.5 py-0.5 font-mono text-[11px] w-14"
+                  style={{
+                    backgroundColor: "var(--main-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                    opacity: enabled ? 1 : 0.4,
+                  }}
+                  aria-label={`${cat} skill ${slot}`}
+                >
+                  {[0, 1, 2, 3, 4, 5].map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {slot === 4 && rallyMode && skill4 && (
+                <span
+                  className="text-[10px] font-mono text-right mt-0.5"
+                  style={{
+                    color: skill4Active ? "#a6e3a1" : "#6c7086",
+                    opacity: skill4Active ? 1 : 0.6,
+                  }}
+                  title={
+                    skill4Active
+                      ? `Active: skill 4 grants +${skill4Pct.toFixed(1)}% ${skill4.stat} to all troops.`
+                      : `Inactive on this side: this hero's skill 4 only works on ${skill4.role}.`
+                  }
+                >
+                  {skill4Active
+                    ? `+${skill4Pct.toFixed(1)}% ${skill4.stat}`
+                    : `(${skill4.role}-only)`}
+                </span>
+              )}
+            </div>
           );
         })}
       </div>
@@ -710,4 +935,3 @@ function SkillUseTable({
     </div>
   );
 }
-

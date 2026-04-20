@@ -67,8 +67,26 @@ from Base_classes.BattleRound import BattleRound
 from Base_classes.JsonUtil import JsonUtil
 
 
-def _build_fighter(role_name: str, cfg: Dict[str, Any]) -> Fighter:
+def _canonical_hero_name(name: str) -> str:
+    """Resolve a dashboard hero name (space-less) to the registry key.
+
+    The dashboard catalogue keys by asset filename (e.g. "WuMing") while
+    JsonUtil keys by the canonical "skill_hero" field (e.g. "Wu Ming").
+    """
+    if name in JsonUtil.hero_registery:
+        return name
+    stripped = name.replace(" ", "")
+    for canonical in JsonUtil.hero_registery:
+        if canonical.replace(" ", "") == stripped:
+            return canonical
+    return name
+
+
+def _build_fighter(role_name: str, cfg: Dict[str, Any], rally_mode: bool) -> Fighter:
     fighter = Fighter(role_name, load_fighter_data=False)
+    # Marker consumed by the patched _apply_prebattle_stat_bonuses to allow
+    # skill_4 effects with special.role == "rally" to apply on the attacker.
+    fighter.rally_mode = rally_mode
 
     stats_cfg = cfg.get("stats", {}) or {}
     stats_list = {
@@ -96,18 +114,8 @@ def _build_fighter(role_name: str, cfg: Dict[str, Any]) -> Fighter:
         skills = slot.get("skills") or [0, 0, 0, 0]
         if not name:
             continue
-        registry = JsonUtil.hero_registery.get(name)
-        if not registry:
-            # Dashboard catalogue uses space-less hero names derived from the
-            # asset filename (e.g. "WuMing"), but JsonUtil keys by the canonical
-            # "skill_hero" field (e.g. "Wu Ming"). Fall back to a space-stripped
-            # match so both shapes resolve.
-            stripped = name.replace(" ", "")
-            for canonical, data in JsonUtil.hero_registery.items():
-                if canonical.replace(" ", "") == stripped:
-                    registry = data
-                    name = canonical
-                    break
+        canonical = _canonical_hero_name(name)
+        registry = JsonUtil.hero_registery.get(canonical)
         if not registry:
             continue
         levels: Dict[str, int] = {}
@@ -117,13 +125,30 @@ def _build_fighter(role_name: str, cfg: Dict[str, Any]) -> Fighter:
                 continue
             if num < 1 or num > 4:
                 continue
+            # Skill 4 is a widget-gated rally skill; ignore it outside rally mode.
+            if num == 4 and not rally_mode:
+                continue
             level = int(skills[num - 1]) if num - 1 < len(skills) else 0
             if level > 0:
                 levels[f"skill_{num}"] = level
         if levels:
-            heroes_dict[name] = levels
+            heroes_dict[canonical] = levels
     fighter.heroes = heroes_dict
-    fighter.joiner_heroes = []
+
+    # Joiners: list of {"name": str, "skill_1": int}. Feed Fighter.joiner_heroes
+    # a list of canonical names so duplicates are preserved and level defaults
+    # to skill_1 @ 5 per the rally spec. Sim enforces a hard cap of 4 joiners.
+    joiner_names: list = []
+    if rally_mode:
+        for j in cfg.get("joiners") or []:
+            jname = (j or {}).get("name")
+            if not jname:
+                continue
+            canonical = _canonical_hero_name(jname)
+            if canonical in JsonUtil.hero_registery:
+                joiner_names.append(canonical)
+    fighter.joiner_heroes = joiner_names[:4]
+
     return fighter
 
 
@@ -167,6 +192,8 @@ def main() -> int:
     if replicates > 1000:
         replicates = 1000
 
+    rally_mode = bool(config.get("rally_mode", False))
+
     # JsonUtil resolves troop/skill asset paths relative to cwd. Swap into the
     # repo root before loading so callers can run us from anywhere.
     os.chdir(_REPO_ROOT)
@@ -180,6 +207,28 @@ def main() -> int:
     BattleRound.DEBUG = False
     BattleRound.dont_save = True
 
+    # Patch Fighter._apply_prebattle_stat_bonuses to honor role == "rally" when
+    # the fighter is the rally attacker (fighter.rally_mode=True, role="attack").
+    # The core sim has no rally concept yet; keep this confined to the dashboard.
+    _orig_apply = Fighter._apply_prebattle_stat_bonuses
+
+    def _patched_apply(self) -> None:  # type: ignore[override]
+        rally = getattr(self, "rally_mode", False)
+        role_self = getattr(self, "role", None)
+        if rally and role_self == "attack":
+            for idx, (skill, effect_dict) in enumerate(self.stat_bonus_effects):
+                special = effect_dict.get("special", {}) or {}
+                if special.get("role") == "rally":
+                    # Shallow-copy so we don't mutate the shared hero registry.
+                    patched_special = dict(special)
+                    patched_special["role"] = "attack"
+                    patched = dict(effect_dict)
+                    patched["special"] = patched_special
+                    self.stat_bonus_effects[idx] = (skill, patched)
+        return _orig_apply(self)
+
+    Fighter._apply_prebattle_stat_bonuses = _patched_apply
+
     outcomes = []
     total_att_activations = 0.0
     total_def_activations = 0.0
@@ -190,8 +239,8 @@ def main() -> int:
     attacker_wins = 0
 
     for _ in range(replicates):
-        attacker = _build_fighter("attacker", config.get("attacker", {}) or {})
-        defender = _build_fighter("defender", config.get("defender", {}) or {})
+        attacker = _build_fighter("attacker", config.get("attacker", {}) or {}, rally_mode)
+        defender = _build_fighter("defender", config.get("defender", {}) or {}, rally_mode)
 
         fight = Fight(attacker, defender, max_round=1500, dont_save=True)
         att_rem, def_rem = fight.battle()

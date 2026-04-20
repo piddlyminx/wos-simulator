@@ -4,11 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   TroopCategory,
   heroesForCategory,
+  getHero,
+  skill4ActiveForSide,
+  skill4PercentAt,
 } from "@/lib/heroes-catalogue";
 
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
 
 export type HeroSelection = Record<TroopCategory, string | null>;
+export type Skill4LevelMap = Record<TroopCategory, number>;
 
 export interface OcrSideData {
   troops: Record<TroopCategory, number | null>;
@@ -28,12 +32,18 @@ export interface UploadReportSubmission {
     attacker: HeroSelection;
     defender: HeroSelection;
   };
+  rallyMode: boolean;
+  skill4Levels: {
+    attacker: Skill4LevelMap;
+    defender: Skill4LevelMap;
+  };
 }
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onApply: (submission: UploadReportSubmission) => void;
+  initialRallyMode?: boolean;
 }
 
 const emptyHeroes = (): HeroSelection => ({
@@ -42,7 +52,18 @@ const emptyHeroes = (): HeroSelection => ({
   marksman: null,
 });
 
-export default function UploadReportModal({ open, onClose, onApply }: Props) {
+const emptySkill4 = (): Skill4LevelMap => ({
+  infantry: 0,
+  lancer: 0,
+  marksman: 0,
+});
+
+export default function UploadReportModal({
+  open,
+  onClose,
+  onApply,
+  initialRallyMode = false,
+}: Props) {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -50,7 +71,15 @@ export default function UploadReportModal({ open, onClose, onApply }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [attackerHeroes, setAttackerHeroes] = useState<HeroSelection>(emptyHeroes);
   const [defenderHeroes, setDefenderHeroes] = useState<HeroSelection>(emptyHeroes);
+  const [rallyMode, setRallyMode] = useState(initialRallyMode);
+  const [attackerSkill4, setAttackerSkill4] = useState<Skill4LevelMap>(emptySkill4);
+  const [defenderSkill4, setDefenderSkill4] = useState<Skill4LevelMap>(emptySkill4);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync rally toggle with the caller whenever the modal opens.
+  useEffect(() => {
+    if (open) setRallyMode(initialRallyMode);
+  }, [open, initialRallyMode]);
 
   const reset = useCallback(() => {
     setImageDataUrl(null);
@@ -60,6 +89,8 @@ export default function UploadReportModal({ open, onClose, onApply }: Props) {
     setError(null);
     setAttackerHeroes(emptyHeroes());
     setDefenderHeroes(emptyHeroes());
+    setAttackerSkill4(emptySkill4());
+    setDefenderSkill4(emptySkill4());
   }, []);
 
   const handleClose = useCallback(() => {
@@ -158,6 +189,11 @@ export default function UploadReportModal({ open, onClose, onApply }: Props) {
           attacker: { ...attackerHeroes },
           defender: { ...defenderHeroes },
         },
+        rallyMode,
+        skill4Levels: {
+          attacker: { ...attackerSkill4 },
+          defender: { ...defenderSkill4 },
+        },
       });
       reset();
       onClose();
@@ -196,18 +232,39 @@ export default function UploadReportModal({ open, onClose, onApply }: Props) {
           >
             Upload Battle Report
           </h3>
-          <button
-            type="button"
-            onClick={handleClose}
-            className="text-xs px-2 py-1 rounded"
-            style={{
-              border: "1px solid var(--border-color)",
-              color: "var(--main-text)",
-            }}
-            aria-label="Close"
-          >
-            Close
-          </button>
+          <div className="flex items-center gap-2">
+            <label
+              className="flex items-center gap-2 text-xs px-2 py-1 rounded cursor-pointer font-bold"
+              style={{
+                border: `1px solid ${rallyMode ? "var(--sidebar-active)" : "var(--border-color)"}`,
+                backgroundColor: rallyMode
+                  ? "rgba(137, 180, 250, 0.15)"
+                  : "var(--main-bg)",
+                color: rallyMode ? "var(--sidebar-active)" : "var(--main-text)",
+              }}
+              title="Rally mode: skill 4 is applied, so OCR stats are scaled down before filling the main form."
+            >
+              <input
+                type="checkbox"
+                checked={rallyMode}
+                onChange={(e) => setRallyMode(e.target.checked)}
+                aria-label="Rally mode"
+              />
+              Rally mode
+            </label>
+            <button
+              type="button"
+              onClick={handleClose}
+              className="text-xs px-2 py-1 rounded"
+              style={{
+                border: "1px solid var(--border-color)",
+                color: "var(--main-text)",
+              }}
+              aria-label="Close"
+            >
+              Close
+            </button>
+          </div>
         </div>
 
         <div className="p-4 flex flex-col gap-4">
@@ -277,13 +334,21 @@ export default function UploadReportModal({ open, onClose, onApply }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <HeroPickerPanel
               title="Attacker heroes"
+              which="attacker"
               heroes={attackerHeroes}
               onChange={setAttackerHeroes}
+              skill4={attackerSkill4}
+              onSkill4Change={setAttackerSkill4}
+              rallyMode={rallyMode}
             />
             <HeroPickerPanel
               title="Defender heroes"
+              which="defender"
               heroes={defenderHeroes}
               onChange={setDefenderHeroes}
+              skill4={defenderSkill4}
+              onSkill4Change={setDefenderSkill4}
+              rallyMode={rallyMode}
             />
           </div>
 
@@ -338,12 +403,20 @@ export default function UploadReportModal({ open, onClose, onApply }: Props) {
 
 function HeroPickerPanel({
   title,
+  which,
   heroes,
   onChange,
+  skill4,
+  onSkill4Change,
+  rallyMode,
 }: {
   title: string;
+  which: "attacker" | "defender";
   heroes: HeroSelection;
   onChange: (next: HeroSelection) => void;
+  skill4: Skill4LevelMap;
+  onSkill4Change: (next: Skill4LevelMap) => void;
+  rallyMode: boolean;
 }) {
   return (
     <div
@@ -361,30 +434,77 @@ function HeroPickerPanel({
           const options = heroesForCategory(cat);
           const label =
             cat === "marksman" ? "Marksman" : cat[0].toUpperCase() + cat.slice(1);
+          const hero = getHero(heroes[cat]);
+          const showSkill4 = rallyMode && hero?.skill4;
+          const active = showSkill4 && skill4ActiveForSide(hero, which);
+          const pct = active ? skill4PercentAt(skill4[cat]) : 0;
           return (
-            <label key={cat} className="flex items-center justify-between gap-2 text-xs">
-              <span className="opacity-70">{label}</span>
-              <select
-                value={heroes[cat] ?? ""}
-                onChange={(e) => {
-                  onChange({ ...heroes, [cat]: e.target.value || null });
-                }}
-                className="rounded px-2 py-1 font-mono text-xs flex-1"
-                style={{
-                  backgroundColor: "var(--sidebar-bg)",
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                }}
-                aria-label={`${title} ${cat}`}
-              >
-                <option value="">— None —</option>
-                {options.map((h) => (
-                  <option key={h.name} value={h.name}>
-                    {h.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div key={cat} className="flex flex-col gap-1">
+              <label className="flex items-center justify-between gap-2 text-xs">
+                <span className="opacity-70 w-16">{label}</span>
+                <select
+                  value={heroes[cat] ?? ""}
+                  onChange={(e) => {
+                    onChange({ ...heroes, [cat]: e.target.value || null });
+                  }}
+                  className="rounded px-2 py-1 font-mono text-xs flex-1"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                  aria-label={`${title} ${cat}`}
+                >
+                  <option value="">— None —</option>
+                  {options.map((h) => (
+                    <option key={h.name} value={h.name}>
+                      {h.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {showSkill4 && (
+                <label className="flex items-center justify-between gap-2 text-[11px] pl-16">
+                  <span className="opacity-60">Skill 4 lvl</span>
+                  <select
+                    value={skill4[cat]}
+                    onChange={(e) => {
+                      const v = parseInt(e.target.value, 10);
+                      onSkill4Change({ ...skill4, [cat]: isNaN(v) ? 0 : v });
+                    }}
+                    className="rounded px-1.5 py-0.5 font-mono text-[11px] w-14"
+                    style={{
+                      backgroundColor: "var(--sidebar-bg)",
+                      border: "1px solid var(--border-color)",
+                      color: "var(--main-text)",
+                    }}
+                    aria-label={`${title} ${cat} skill 4 level`}
+                  >
+                    {[0, 1, 2, 3, 4, 5].map((l) => (
+                      <option key={l} value={l}>
+                        {l}
+                      </option>
+                    ))}
+                  </select>
+                  <span
+                    className="font-mono flex-1 text-right"
+                    style={{
+                      color: active ? "#a6e3a1" : "#6c7086",
+                      opacity: active ? 1 : 0.6,
+                    }}
+                    title={
+                      active
+                        ? `Skill 4 adds +${pct.toFixed(1)}% ${hero!.skill4!.stat}. OCR value will be scaled down by this amount.`
+                        : `Inactive on ${which} side (this skill only works on ${hero!.skill4!.role}).`
+                    }
+                  >
+                    {active
+                      ? `+${pct.toFixed(1)}% ${hero!.skill4!.stat}`
+                      : `(${hero!.skill4!.role}-only)`}
+                  </span>
+                </label>
+              )}
+            </div>
           );
         })}
       </div>
