@@ -23,3 +23,14 @@ body {
 .nav-link:hover {
   background-color: var(--sidebar-hover);
 }
+
+/* Prevent iOS from auto-zooming when focusing inputs < 16px.
+   Applies only to touch/coarse-pointer devices so the desktop
+   layout keeps its tight monospace density. */
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}

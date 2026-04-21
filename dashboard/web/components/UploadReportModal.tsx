@@ -219,7 +219,7 @@ export default function UploadReportModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-stretch sm:items-center justify-center p-0 sm:p-4"
       style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
       onClick={handleClose}
       role="dialog"
@@ -227,7 +227,7 @@ export default function UploadReportModal({
       aria-label="Upload battle report"
     >
       <div
-        className="rounded w-full max-w-3xl max-h-full overflow-y-auto"
+        className="w-full max-w-3xl max-h-screen sm:max-h-full overflow-y-auto sm:rounded"
         style={{
           border: "1px solid var(--border-color)",
           backgroundColor: "var(--sidebar-bg)",
@@ -235,8 +235,11 @@ export default function UploadReportModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center justify-between px-4 py-3"
-          style={{ borderBottom: "1px solid var(--border-color)" }}
+          className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-3 sticky top-0 z-10"
+          style={{
+            borderBottom: "1px solid var(--border-color)",
+            backgroundColor: "var(--sidebar-bg)",
+          }}
         >
           <h3
             className="text-sm uppercase tracking-wider font-bold"
@@ -244,9 +247,9 @@ export default function UploadReportModal({
           >
             Upload Battle Report
           </h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <label
-              className="flex items-center gap-2 text-xs px-2 py-1 rounded cursor-pointer font-bold"
+              className="flex items-center gap-2 text-xs px-2 py-2 rounded cursor-pointer font-bold min-h-[36px]"
               style={{
                 border: `1px solid ${rallyMode ? "var(--sidebar-active)" : "var(--border-color)"}`,
                 backgroundColor: rallyMode
@@ -267,7 +270,7 @@ export default function UploadReportModal({
             <button
               type="button"
               onClick={handleClose}
-              className="text-xs px-2 py-1 rounded"
+              className="text-xs px-3 py-2 rounded min-h-[36px]"
               style={{
                 border: "1px solid var(--border-color)",
                 color: "var(--main-text)",
@@ -279,7 +282,7 @@ export default function UploadReportModal({
           </div>
         </div>
 
-        <div className="p-4 flex flex-col gap-4">
+        <div className="p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -344,7 +347,7 @@ export default function UploadReportModal({
           )}
 
           <div className="flex flex-col md:flex-row items-stretch gap-2">
-            <div className="flex-1" style={{ order: sidesSwapped ? 3 : 1 }}>
+            <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 3 : 1 }}>
               <HeroPickerPanel
                 title="Attacker heroes"
                 which="attacker"
@@ -362,7 +365,7 @@ export default function UploadReportModal({
               <button
                 type="button"
                 onClick={() => setSidesSwapped((v) => !v)}
-                className="text-xs px-2 py-1 rounded font-bold"
+                className="text-xs px-3 py-2 rounded font-bold min-h-[36px]"
                 style={{
                   border: `1px solid ${sidesSwapped ? "var(--sidebar-active)" : "var(--border-color)"}`,
                   backgroundColor: sidesSwapped
@@ -377,7 +380,7 @@ export default function UploadReportModal({
                 ⇆ Swap
               </button>
             </div>
-            <div className="flex-1" style={{ order: sidesSwapped ? 1 : 3 }}>
+            <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 1 : 3 }}>
               <HeroPickerPanel
                 title="Defender heroes"
                 which="defender"
@@ -405,13 +408,16 @@ export default function UploadReportModal({
         </div>
 
         <div
-          className="flex justify-end gap-2 px-4 py-3"
-          style={{ borderTop: "1px solid var(--border-color)" }}
+          className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 px-3 sm:px-4 py-3 sticky bottom-0 z-10"
+          style={{
+            borderTop: "1px solid var(--border-color)",
+            backgroundColor: "var(--sidebar-bg)",
+          }}
         >
           <button
             type="button"
             onClick={handleClose}
-            className="text-xs px-3 py-2 rounded"
+            className="text-xs px-3 py-2 rounded min-h-[44px]"
             style={{
               border: "1px solid var(--border-color)",
               color: "var(--main-text)",
@@ -423,7 +429,7 @@ export default function UploadReportModal({
             type="button"
             onClick={submit}
             disabled={loading || !imageBase64}
-            className="text-xs px-3 py-2 rounded font-bold"
+            className="text-xs px-3 py-2 rounded font-bold min-h-[44px]"
             style={{
               backgroundColor: "var(--sidebar-active)",
               color: "#1e1e2e",

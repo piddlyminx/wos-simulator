@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import SiteNav from "@/components/SiteNav";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   description: "Battle simulator accuracy dashboard for Whiteout Survival",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -16,67 +22,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen">
-        <nav
-          className="w-52 flex-shrink-0 flex flex-col py-6 px-4 gap-2"
-          style={{
-            backgroundColor: "var(--sidebar-bg)",
-            color: "var(--sidebar-text)",
-            borderRight: "1px solid var(--border-color)",
-          }}
-        >
-          <div className="mb-6">
-            <h1 className="text-sm font-bold uppercase tracking-widest opacity-60">
-              WOS Sim
-            </h1>
-            <p className="text-xs opacity-40 mt-1">Accuracy Dashboard</p>
-          </div>
-
-          <Link
-            href="/"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/runs"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Runs
-          </Link>
-          <Link
-            href="/coverage"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Coverage
-          </Link>
-          <Link
-            href="/heroes"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Heroes
-          </Link>
-          <Link
-            href="/testcases"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Testcases
-          </Link>
-          <Link
-            href="/testcases/changelog"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Changelog
-          </Link>
-          <Link
-            href="/simulate"
-            className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-          >
-            Simulate
-          </Link>
-        </nav>
-
-        <main className="flex-1 overflow-auto p-6">{children}</main>
+      <body className="flex min-h-screen flex-col md:flex-row">
+        <SiteNav />
+        <main className="flex-1 min-w-0 overflow-auto px-3 sm:px-6 pb-6 pt-[72px] md:pt-6">
+          {children}
+        </main>
       </body>
     </html>
   );

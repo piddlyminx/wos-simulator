@@ -390,7 +390,7 @@ export default function SimulatePage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-3">
         <h2
           className="text-lg font-bold"
           style={{ color: "var(--sidebar-active)" }}
@@ -399,7 +399,7 @@ export default function SimulatePage() {
         </h2>
         <div className="flex items-center gap-2 flex-wrap">
           <label
-            className="flex items-center gap-2 text-xs px-3 py-2 rounded cursor-pointer font-bold"
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded cursor-pointer font-bold min-h-[40px]"
             style={{
               border: `1px solid ${rallyMode ? "var(--sidebar-active)" : "var(--border-color)"}`,
               backgroundColor: rallyMode
@@ -420,7 +420,7 @@ export default function SimulatePage() {
           <button
             type="button"
             onClick={() => setUploadOpen(true)}
-            className="text-xs px-3 py-2 rounded font-bold"
+            className="text-xs px-3 py-2 rounded font-bold min-h-[40px]"
             style={{
               border: "1px solid var(--border-color)",
               backgroundColor: "var(--sidebar-bg)",
@@ -450,7 +450,7 @@ export default function SimulatePage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
         <SidePanel
           title="Attacker"
           which="attacker"
@@ -468,7 +468,7 @@ export default function SimulatePage() {
       </div>
 
       <div
-        className="rounded p-4 mb-6 flex flex-wrap items-end gap-4"
+        className="rounded p-3 sm:p-4 mb-4 sm:mb-6 flex flex-wrap items-end gap-3 sm:gap-4"
         style={{
           border: "1px solid var(--border-color)",
           backgroundColor: "var(--sidebar-bg)",
@@ -484,7 +484,7 @@ export default function SimulatePage() {
             max={5000}
             value={replicates}
             onChange={(e) => setReplicates(Math.max(1, Math.min(5000, parseInt(e.target.value || "1", 10))))}
-            className="w-28 rounded px-2 py-1 font-mono text-sm"
+            className="w-28 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
             style={{
               backgroundColor: "var(--main-bg)",
               border: "1px solid var(--border-color)",
@@ -495,7 +495,7 @@ export default function SimulatePage() {
         <button
           onClick={runSimulation}
           disabled={loading}
-          className="px-4 py-2 rounded font-bold text-sm"
+          className="flex-1 sm:flex-none px-4 py-2 rounded font-bold text-sm min-h-[44px]"
           style={{
             backgroundColor: "var(--sidebar-active)",
             color: "#1e1e2e",
@@ -506,7 +506,7 @@ export default function SimulatePage() {
           {loading ? "Simulating…" : "Simulate"}
         </button>
         {error && (
-          <span className="text-xs" style={{ color: "#f38ba8" }}>
+          <span className="text-xs basis-full" style={{ color: "#f38ba8" }}>
             {error}
           </span>
         )}
@@ -521,7 +521,7 @@ export default function SimulatePage() {
 
       {result && (
         <div
-          className="rounded p-4 mb-6"
+          className="rounded p-3 sm:p-4 mb-6"
           style={{
             border: "1px solid var(--border-color)",
             backgroundColor: "var(--sidebar-bg)",
@@ -530,17 +530,17 @@ export default function SimulatePage() {
           <h3 className="text-sm uppercase tracking-wider opacity-60 mb-3 font-bold">
             Results ({result.replicates} replicates)
           </h3>
-          <div className="flex flex-wrap gap-3 mb-4">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3 mb-4">
             {summaryCards?.map((c) => (
               <div
                 key={c.label}
-                className="rounded px-3 py-2 flex flex-col gap-0.5 min-w-40"
+                className="rounded px-3 py-2 flex flex-col gap-0.5 sm:min-w-40"
                 style={{
                   border: "1px solid var(--border-color)",
                   backgroundColor: "var(--main-bg)",
                 }}
               >
-                <span className="text-xs uppercase tracking-wider opacity-50">
+                <span className="text-[10px] sm:text-xs uppercase tracking-wider opacity-50">
                   {c.label}
                 </span>
                 <span
@@ -584,20 +584,20 @@ function SidePanel({
 }) {
   return (
     <div
-      className="rounded p-4"
+      className="rounded p-3 sm:p-4 min-w-0"
       style={{
         border: "1px solid var(--border-color)",
         backgroundColor: "var(--sidebar-bg)",
       }}
     >
       <h3
-        className="text-sm uppercase tracking-wider mb-4 font-bold"
+        className="text-sm uppercase tracking-wider mb-3 sm:mb-4 font-bold"
         style={{ color: "var(--sidebar-active)" }}
       >
         {title}
       </h3>
 
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-5">
         {CATEGORIES.map((cat) => (
           <TroopColumn
             key={cat}
@@ -611,14 +611,14 @@ function SidePanel({
       </div>
 
       {rallyMode && (
-        <div className="mb-5">
+        <div className="mb-4 sm:mb-5">
           <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
             Joiner Heroes (skill 1 @ lvl 5)
           </h4>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {state.joiners.map((slot, i) => (
               <label key={i} className="flex items-center gap-2 text-xs">
-                <span className="opacity-60 w-10">#{i + 1}</span>
+                <span className="opacity-60 w-10 flex-shrink-0">#{i + 1}</span>
                 <select
                   value={slot.name ?? ""}
                   onChange={(e) => {
@@ -630,7 +630,7 @@ function SidePanel({
                       return { ...prev, joiners };
                     });
                   }}
-                  className="rounded px-2 py-1 font-mono text-xs flex-1"
+                  className="rounded px-2 py-2 font-mono text-xs flex-1 min-w-0 min-h-[36px]"
                   style={{
                     backgroundColor: "var(--main-bg)",
                     border: "1px solid var(--border-color)",
@@ -654,50 +654,56 @@ function SidePanel({
       <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
         Stat Bonuses (%)
       </h4>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {CATEGORIES.map((cat) => (
-          <div key={cat} className="flex flex-col gap-1">
-            <span className="text-xs opacity-60">
+          <div key={cat} className="flex flex-col gap-1 min-w-0">
+            <span className="text-xs opacity-60 truncate">
               {cat === "marksman" ? "Marksman" : cat[0].toUpperCase() + cat.slice(1)}
             </span>
             {STAT_NAMES.map((stat) => {
               const bonus = sideSkill4BonusPercent(state, which, stat as Skill4Stat, rallyMode);
               return (
-                <label key={stat} className="flex items-center justify-between gap-1 text-xs">
-                  <span className="opacity-60">{stat[0].toUpperCase() + stat.slice(1)}</span>
-                  <div className="flex items-center gap-1">
+                <label
+                  key={stat}
+                  className="flex flex-col gap-0.5 text-[11px] sm:text-xs"
+                >
+                  <div className="flex items-center justify-between gap-1">
+                    <span className="opacity-60 truncate">
+                      {stat[0].toUpperCase() + stat.slice(1)}
+                    </span>
                     {bonus > 0 && (
                       <span
-                        className="text-[10px] font-mono"
+                        className="text-[10px] font-mono flex-shrink-0"
                         style={{ color: "#a6e3a1" }}
                         title={`Skill 4 will add +${bonus.toFixed(1)}% to this stat before battle.`}
                       >
                         +{bonus.toFixed(1)}%
                       </span>
                     )}
-                    <input
-                      type="number"
-                      step="0.1"
-                      value={state.stats[cat][stat]}
-                      onChange={(e) => {
-                        const v = parseFloat(e.target.value);
-                        setState((prev) => ({
-                          ...prev,
-                          stats: {
-                            ...prev.stats,
-                            [cat]: { ...prev.stats[cat], [stat]: isNaN(v) ? 0 : v },
-                          },
-                        }));
-                      }}
-                      className="w-20 rounded px-1.5 py-0.5 font-mono text-xs text-right"
-                      style={{
-                        backgroundColor: "var(--main-bg)",
-                        border: "1px solid var(--border-color)",
-                        color: "var(--main-text)",
-                      }}
-                      aria-label={statLabel(cat, stat)}
-                    />
                   </div>
+                  <input
+                    type="number"
+                    step="0.1"
+                    inputMode="decimal"
+                    value={state.stats[cat][stat]}
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value);
+                      setState((prev) => ({
+                        ...prev,
+                        stats: {
+                          ...prev.stats,
+                          [cat]: { ...prev.stats[cat], [stat]: isNaN(v) ? 0 : v },
+                        },
+                      }));
+                    }}
+                    className="w-full min-w-0 rounded px-1.5 py-1 font-mono text-xs text-right min-h-[32px]"
+                    style={{
+                      backgroundColor: "var(--main-bg)",
+                      border: "1px solid var(--border-color)",
+                      color: "var(--main-text)",
+                    }}
+                    aria-label={statLabel(cat, stat)}
+                  />
                 </label>
               );
             })}
@@ -730,13 +736,14 @@ function TroopColumn({
   const skill4Pct = skill4Active ? skill4PercentAt(skill4Level) : 0;
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <span className="text-xs uppercase tracking-wider opacity-70 font-mono">
+    <div className="flex flex-col gap-1.5 min-w-0">
+      <span className="text-xs uppercase tracking-wider opacity-70 font-mono truncate">
         {cat === "marksman" ? "Marksman" : cat[0].toUpperCase() + cat.slice(1)}
       </span>
       <input
         type="number"
         min={0}
+        inputMode="numeric"
         value={state.troops[cat]}
         onChange={(e) => {
           const v = parseInt(e.target.value || "0", 10);
@@ -745,7 +752,7 @@ function TroopColumn({
             troops: { ...prev.troops, [cat]: isNaN(v) ? 0 : Math.max(0, v) },
           }));
         }}
-        className="rounded px-2 py-1 font-mono text-sm"
+        className="w-full min-w-0 rounded px-2 py-2 font-mono text-sm min-h-[36px]"
         style={{
           backgroundColor: "var(--main-bg)",
           border: "1px solid var(--border-color)",
@@ -762,7 +769,7 @@ function TroopColumn({
             tiers: { ...prev.tiers, [cat]: v },
           }));
         }}
-        className="rounded px-2 py-1 font-mono text-xs"
+        className="w-full min-w-0 rounded px-2 py-2 font-mono text-xs min-h-[36px]"
         style={{
           backgroundColor: "var(--main-bg)",
           border: "1px solid var(--border-color)",
@@ -796,7 +803,7 @@ function TroopColumn({
             };
           });
         }}
-        className="rounded px-2 py-1 font-mono text-xs"
+        className="w-full min-w-0 rounded px-2 py-2 font-mono text-xs min-h-[36px]"
         style={{
           backgroundColor: "var(--main-bg)",
           border: "1px solid var(--border-color)",
@@ -821,7 +828,7 @@ function TroopColumn({
           return (
             <div key={slot} className="flex flex-col">
               <label className="flex items-center justify-between gap-1 text-[11px]">
-                <span className="opacity-60">Skill {slot}</span>
+                <span className="opacity-60 truncate">Skill {slot}</span>
                 <select
                   value={heroSlot.skills[slot - 1]}
                   disabled={!enabled}
@@ -844,7 +851,7 @@ function TroopColumn({
                       };
                     });
                   }}
-                  className="rounded px-1.5 py-0.5 font-mono text-[11px] w-14"
+                  className="rounded px-1.5 py-1 font-mono text-[11px] w-12 sm:w-14 flex-shrink-0 min-h-[32px]"
                   style={{
                     backgroundColor: "var(--main-bg)",
                     border: "1px solid var(--border-color)",
@@ -862,7 +869,7 @@ function TroopColumn({
               </label>
               {slot === 4 && rallyMode && skill4 && (
                 <span
-                  className="text-[10px] font-mono text-right mt-0.5"
+                  className="text-[10px] font-mono text-right mt-0.5 truncate"
                   style={{
                     color: skill4Active ? "#a6e3a1" : "#6c7086",
                     opacity: skill4Active ? 1 : 0.6,
