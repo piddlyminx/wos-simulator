@@ -725,43 +725,59 @@ function SidePanel({
                   key={stat}
                   className="flex flex-col gap-0.5 text-[11px] sm:text-xs"
                 >
-                  <div className="flex items-center justify-between gap-1">
-                    <span className="opacity-60 truncate">
-                      {stat[0].toUpperCase() + stat.slice(1)}
-                    </span>
-                    {bonus > 0 && (
-                      <span
-                        className="text-[10px] font-mono flex-shrink-0"
-                        style={{ color: "#a6e3a1" }}
-                        title={`Skill 4 will add +${bonus.toFixed(1)}% to this stat before battle.`}
-                      >
-                        +{bonus.toFixed(1)}%
+                  <div className="flex flex-row items-center gap-1.5 sm:flex-col sm:items-stretch sm:gap-0.5">
+                    <div className="flex items-center justify-between gap-1 sm:w-full flex-shrink-0">
+                      <span className="opacity-60 truncate">
+                        <span className="sm:hidden font-bold">
+                          {stat[0].toUpperCase()}
+                        </span>
+                        <span className="hidden sm:inline">
+                          {stat[0].toUpperCase() + stat.slice(1)}
+                        </span>
                       </span>
-                    )}
+                      {bonus > 0 && (
+                        <span
+                          className="hidden sm:inline text-[10px] font-mono flex-shrink-0"
+                          style={{ color: "#a6e3a1" }}
+                          title={`Skill 4 will add +${bonus.toFixed(1)}% to this stat before battle.`}
+                        >
+                          +{bonus.toFixed(1)}%
+                        </span>
+                      )}
+                    </div>
+                    <input
+                      type="number"
+                      step="0.1"
+                      inputMode="decimal"
+                      value={state.stats[cat][stat]}
+                      onChange={(e) => {
+                        const v = parseFloat(e.target.value);
+                        setState((prev) => ({
+                          ...prev,
+                          stats: {
+                            ...prev.stats,
+                            [cat]: { ...prev.stats[cat], [stat]: isNaN(v) ? 0 : v },
+                          },
+                        }));
+                      }}
+                      className="flex-1 sm:w-full min-w-0 rounded px-1.5 py-1 font-mono text-xs text-right min-h-[32px]"
+                      style={{
+                        backgroundColor: "var(--main-bg)",
+                        border: "1px solid var(--border-color)",
+                        color: "var(--main-text)",
+                      }}
+                      aria-label={statLabel(cat, stat)}
+                    />
                   </div>
-                  <input
-                    type="number"
-                    step="0.1"
-                    inputMode="decimal"
-                    value={state.stats[cat][stat]}
-                    onChange={(e) => {
-                      const v = parseFloat(e.target.value);
-                      setState((prev) => ({
-                        ...prev,
-                        stats: {
-                          ...prev.stats,
-                          [cat]: { ...prev.stats[cat], [stat]: isNaN(v) ? 0 : v },
-                        },
-                      }));
-                    }}
-                    className="w-full min-w-0 rounded px-1.5 py-1 font-mono text-xs text-right min-h-[32px]"
-                    style={{
-                      backgroundColor: "var(--main-bg)",
-                      border: "1px solid var(--border-color)",
-                      color: "var(--main-text)",
-                    }}
-                    aria-label={statLabel(cat, stat)}
-                  />
+                  {bonus > 0 && (
+                    <span
+                      className="sm:hidden text-[10px] font-mono text-right"
+                      style={{ color: "#a6e3a1" }}
+                      title={`Skill 4 will add +${bonus.toFixed(1)}% to this stat before battle.`}
+                    >
+                      +{bonus.toFixed(1)}%
+                    </span>
+                  )}
                 </label>
               );
             })}
