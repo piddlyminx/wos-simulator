@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
 import UploadReportModal, {
   UploadReportSubmission,
@@ -16,6 +16,7 @@ import {
   skill4PercentAt,
   getHero,
 } from "@/lib/heroes-catalogue";
+import { HeroBaseStats, heroBaseStats } from "@/lib/hero-base-stats";
 
 type Side = "attacker" | "defender";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
@@ -308,6 +309,24 @@ function mergeSideFromOcr(
   return { ...prev, troops: nextTroops, heroes: nextHeroes, stats: nextStats };
 }
 
+interface StatSyncToast {
+  id: number;
+  which: Side;
+  cat: TroopCategory;
+  oldHeroName: string | null;
+  newHeroName: string | null;
+  prevStats: Record<string, number>;
+  deltas: HeroBaseStats;
+  showDisablePrompt: boolean;
+}
+
+const STAT_NAMES_ORDERED: (keyof HeroBaseStats)[] = [
+  "attack",
+  "defense",
+  "lethality",
+  "health",
+];
+
 export default function SimulatePage() {
   const [attacker, setAttacker] = useState<SideState>(() => defaultSide());
   const [defender, setDefender] = useState<SideState>(() => defaultSide());
@@ -318,9 +337,65 @@ export default function SimulatePage() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
   const [rallyMode, setRallyMode] = useState(false);
+  const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(false);
+  const [statSyncToast, setStatSyncToast] = useState<StatSyncToast | null>(null);
+  const toastIdRef = useRef(0);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // When true, the defender panel is rendered on the left. Shared with the
   // upload modal so both views always display sides in the same order.
   const [sidesSwapped, setSidesSwapped] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
+
+  function dismissToast() {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = null;
+    }
+    setStatSyncToast(null);
+  }
+
+  function showToast(toast: Omit<StatSyncToast, "id" | "showDisablePrompt">) {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastIdRef.current += 1;
+    const id = toastIdRef.current;
+    setStatSyncToast({ ...toast, id, showDisablePrompt: false });
+    toastTimerRef.current = setTimeout(() => {
+      setStatSyncToast((t) => (t && t.id === id ? null : t));
+      toastTimerRef.current = null;
+    }, 8000);
+  }
+
+  function handleStatSync(info: {
+    which: Side;
+    cat: TroopCategory;
+    oldHeroName: string | null;
+    newHeroName: string | null;
+    prevStats: Record<string, number>;
+    deltas: HeroBaseStats;
+  }) {
+    showToast(info);
+  }
+
+  function undoLastStatSync() {
+    const t = statSyncToast;
+    if (!t) return;
+    const setter = t.which === "attacker" ? setAttacker : setDefender;
+    setter((prev) => ({
+      ...prev,
+      stats: {
+        ...prev.stats,
+        [t.cat]: { ...t.prevStats },
+      },
+    }));
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = null;
+    setStatSyncToast({ ...t, showDisablePrompt: true });
+  }
 
   // Fix "I entered them wrong way round": swap the attacker and defender state
   // AND flip the visual order, so the user's typed-in values stay visually in
@@ -331,6 +406,7 @@ export default function SimulatePage() {
     setAttacker(prevDefender);
     setDefender(prevAttacker);
     setSidesSwapped((v) => !v);
+    dismissToast();
   }
 
   const setSide = (side: Side) =>
@@ -442,6 +518,30 @@ export default function SimulatePage() {
             />
             Rally mode
           </label>
+          <label
+            className="flex items-center gap-2 text-xs px-3 py-2 rounded cursor-pointer font-bold min-h-[40px]"
+            style={{
+              border: `1px solid ${syncStatsOnHeroChange ? "var(--sidebar-active)" : "var(--border-color)"}`,
+              backgroundColor: syncStatsOnHeroChange
+                ? "rgba(137, 180, 250, 0.15)"
+                : "var(--sidebar-bg)",
+              color: syncStatsOnHeroChange
+                ? "var(--sidebar-active)"
+                : "var(--main-text)",
+            }}
+            title="When you change a hero, apply the A/D/L/H difference between the old and new hero to that army's matching troop-type stats."
+          >
+            <input
+              type="checkbox"
+              checked={syncStatsOnHeroChange}
+              onChange={(e) => {
+                setSyncStatsOnHeroChange(e.target.checked);
+                if (!e.target.checked) dismissToast();
+              }}
+              aria-label="Update stats on hero change"
+            />
+            Update stats on hero change
+          </label>
           <button
             type="button"
             onClick={() => setUploadOpen(true)}
@@ -456,6 +556,19 @@ export default function SimulatePage() {
           </button>
         </div>
       </div>
+
+      {statSyncToast && (
+        <StatSyncToastBanner
+          toast={statSyncToast}
+          onUndo={undoLastStatSync}
+          onDismiss={dismissToast}
+          onDisable={() => {
+            setSyncStatsOnHeroChange(false);
+            dismissToast();
+          }}
+          onKeepEnabled={dismissToast}
+        />
+      )}
 
       {uploadWarnings.length > 0 && (
         <div
@@ -486,6 +599,8 @@ export default function SimulatePage() {
             state={attacker}
             setState={setSide("attacker") as (updater: (prev: SideState) => SideState) => void}
             rallyMode={rallyMode}
+            syncStatsOnHeroChange={syncStatsOnHeroChange}
+            onStatSync={handleStatSync}
           />
         </div>
         <div
@@ -520,6 +635,8 @@ export default function SimulatePage() {
             state={defender}
             setState={setSide("defender") as (updater: (prev: SideState) => SideState) => void}
             rallyMode={rallyMode}
+            syncStatsOnHeroChange={syncStatsOnHeroChange}
+            onStatSync={handleStatSync}
           />
         </div>
       </div>
@@ -627,18 +744,31 @@ export default function SimulatePage() {
   );
 }
 
+type StatSyncHandler = (info: {
+  which: Side;
+  cat: TroopCategory;
+  oldHeroName: string | null;
+  newHeroName: string | null;
+  prevStats: Record<string, number>;
+  deltas: HeroBaseStats;
+}) => void;
+
 function SidePanel({
   title,
   which,
   state,
   setState,
   rallyMode,
+  syncStatsOnHeroChange,
+  onStatSync,
 }: {
   title: string;
   which: Side;
   state: SideState;
   setState: (updater: (prev: SideState) => SideState) => void;
   rallyMode: boolean;
+  syncStatsOnHeroChange: boolean;
+  onStatSync: StatSyncHandler;
 }) {
   return (
     <div
@@ -664,6 +794,8 @@ function SidePanel({
             state={state}
             setState={setState}
             rallyMode={rallyMode}
+            syncStatsOnHeroChange={syncStatsOnHeroChange}
+            onStatSync={onStatSync}
           />
         ))}
       </div>
@@ -794,12 +926,16 @@ function TroopColumn({
   state,
   setState,
   rallyMode,
+  syncStatsOnHeroChange,
+  onStatSync,
 }: {
   cat: TroopCategory;
   which: Side;
   state: SideState;
   setState: (updater: (prev: SideState) => SideState) => void;
   rallyMode: boolean;
+  syncStatsOnHeroChange: boolean;
+  onStatSync: StatSyncHandler;
 }) {
   const heroSlot = state.heroes[cat];
   const hero = getHero(heroSlot.name);
@@ -861,6 +997,31 @@ function TroopColumn({
         value={heroSlot.name ?? ""}
         onChange={(e) => {
           const newName = e.target.value || null;
+          const prevHeroName = state.heroes[cat].name;
+
+          // Pre-compute the stat delta + snapshot outside setState so TS
+          // flow analysis can see it, and so we can emit the toast payload
+          // after the state update without a closure-narrowing workaround.
+          let statSnapshot: Record<string, number> | null = null;
+          let deltas: HeroBaseStats | null = null;
+          if (syncStatsOnHeroChange && prevHeroName !== newName) {
+            const oldBase = heroBaseStats(prevHeroName);
+            const newBase = heroBaseStats(newName);
+            const computed: HeroBaseStats = {
+              attack: newBase.attack - oldBase.attack,
+              defense: newBase.defense - oldBase.defense,
+              lethality: newBase.lethality - oldBase.lethality,
+              health: newBase.health - oldBase.health,
+            };
+            const anyDelta = STAT_NAMES_ORDERED.some(
+              (k) => Math.abs(computed[k]) > 1e-9,
+            );
+            if (anyDelta) {
+              statSnapshot = { ...state.stats[cat] };
+              deltas = computed;
+            }
+          }
+
           setState((prev) => {
             const newSkills = deriveSkillsForHero(
               prev.heroes[cat].name,
@@ -868,14 +1029,38 @@ function TroopColumn({
               newName,
               rallyMode,
             );
+            let nextStats = prev.stats;
+            if (deltas) {
+              const prevCatStats = prev.stats[cat];
+              const nextCatStats: Record<string, number> = { ...prevCatStats };
+              for (const k of STAT_NAMES_ORDERED) {
+                const curr = prevCatStats[k] ?? 0;
+                // Round to 2 decimals to match source JSON precision and
+                // avoid long floating-point trails in the input field.
+                nextCatStats[k] = Math.round((curr + deltas[k]) * 100) / 100;
+              }
+              nextStats = { ...prev.stats, [cat]: nextCatStats };
+            }
             return {
               ...prev,
               heroes: {
                 ...prev.heroes,
                 [cat]: { name: newName, skills: newSkills },
               },
+              stats: nextStats,
             };
           });
+
+          if (statSnapshot && deltas) {
+            onStatSync({
+              which,
+              cat,
+              oldHeroName: prevHeroName,
+              newHeroName: newName,
+              prevStats: statSnapshot,
+              deltas,
+            });
+          }
         }}
         className="w-full min-w-0 rounded px-2 py-2 font-mono text-xs min-h-[36px]"
         style={{
@@ -963,6 +1148,131 @@ function TroopColumn({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+function formatHeroName(name: string | null): string {
+  if (!name) return "(none)";
+  if (name === "WuMing") return "Wu Ming";
+  return name;
+}
+
+function formatDelta(v: number): string {
+  if (Math.abs(v) < 1e-9) return "0";
+  const rounded = Math.round(v * 100) / 100;
+  const sign = rounded > 0 ? "+" : "";
+  return `${sign}${rounded}`;
+}
+
+function StatSyncToastBanner({
+  toast,
+  onUndo,
+  onDismiss,
+  onDisable,
+  onKeepEnabled,
+}: {
+  toast: StatSyncToast;
+  onUndo: () => void;
+  onDismiss: () => void;
+  onDisable: () => void;
+  onKeepEnabled: () => void;
+}) {
+  const catLabel =
+    toast.cat === "marksman"
+      ? "Marksman"
+      : toast.cat[0].toUpperCase() + toast.cat.slice(1);
+  const sideLabel = toast.which === "attacker" ? "Attacker" : "Defender";
+  const deltaBits = STAT_NAMES_ORDERED.map((k) => {
+    const v = toast.deltas[k];
+    if (Math.abs(v) < 1e-9) return null;
+    const short = k[0].toUpperCase();
+    return `${formatDelta(v)} ${short}`;
+  }).filter(Boolean);
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="rounded px-3 py-2 mb-4 text-xs flex flex-wrap items-center gap-x-3 gap-y-2"
+      style={{
+        border: "1px solid var(--sidebar-active)",
+        backgroundColor: "rgba(137, 180, 250, 0.12)",
+        color: "var(--main-text)",
+      }}
+    >
+      {toast.showDisablePrompt ? (
+        <>
+          <span className="font-bold">Stats reverted.</span>
+          <span className="opacity-80">
+            Disable &ldquo;Update stats on hero change&rdquo; so this
+            doesn&rsquo;t happen again?
+          </span>
+          <span className="ml-auto flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onDisable}
+              className="px-2 py-1 rounded font-bold"
+              style={{
+                border: "1px solid var(--sidebar-active)",
+                color: "var(--sidebar-active)",
+                backgroundColor: "transparent",
+              }}
+            >
+              Disable sync
+            </button>
+            <button
+              type="button"
+              onClick={onKeepEnabled}
+              className="px-2 py-1 rounded"
+              style={{
+                border: "1px solid var(--border-color)",
+                color: "var(--main-text)",
+                backgroundColor: "transparent",
+              }}
+            >
+              Keep enabled
+            </button>
+          </span>
+        </>
+      ) : (
+        <>
+          <span className="font-bold">
+            {sideLabel} {catLabel} stats updated
+          </span>
+          <span className="opacity-80 font-mono">
+            {formatHeroName(toast.oldHeroName)} →{" "}
+            {formatHeroName(toast.newHeroName)} ({deltaBits.join(", ") || "no change"})
+          </span>
+          <span className="ml-auto flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onUndo}
+              className="px-2 py-1 rounded font-bold"
+              style={{
+                border: "1px solid var(--sidebar-active)",
+                color: "var(--sidebar-active)",
+                backgroundColor: "transparent",
+              }}
+            >
+              Undo stat change
+            </button>
+            <button
+              type="button"
+              onClick={onDismiss}
+              className="px-2 py-1 rounded opacity-70"
+              style={{
+                border: "1px solid var(--border-color)",
+                color: "var(--main-text)",
+                backgroundColor: "transparent",
+              }}
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </span>
+        </>
+      )}
     </div>
   );
 }
