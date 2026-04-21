@@ -1,0 +1,235 @@
+[
+    {
+        "skill_hero": "Bradley",
+        "skill_num": 1,
+        "skill_name": "Veteran's Might",
+        "skill_description": "Bradley's years of combat experience enables him to destroy enemies efficiently, increasing Attack by X% for all troops.",
+        "skill_troop_type": "marksmen",
+        "skill_permanent": true,
+        "skill_is_chance": false,
+        "skill_probability": 0,
+        "skill_round_stackable": false,
+        "skill_type_relation": false,
+        "skill_order": 1,
+        "skill_type": "hero_skill",
+        "skill_frequency": {
+            "frequency_type": null,
+            "frequency_value": 0
+        },
+        "skill_effects": [
+            {
+                "affects_opponent": false,
+                "effect_type": "DamageUp",
+                "effect_op": 102,
+                "extra_attack": false,
+                "effect_is_chance": false,
+                "effect_num": "Veteran's Might/1",
+                "trigger_types": {
+                    "trigger_for": "all",
+                    "trigger_vs": "all"
+                },
+                "benefit_types": {
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
+                },
+                "effect_duration": {
+                    "duration_type": "turn",
+                    "duration_value": -1,
+                    "effect_lag": 0
+                },
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 5,
+                    "2": 10,
+                    "3": 15,
+                    "4": 20,
+                    "5": 25
+                },
+                "special": {}
+            }
+        ]
+    },
+    {
+        "skill_hero": "Bradley",
+        "skill_num": 2,
+        "skill_name": "Power Shot",
+        "skill_description": "Bradley uses his expertise in suppressive artillery against the enemy vanguard, increasing Damage Dealt to Lancers by X% and to Infantry by Y% for all troops.",
+        "skill_troop_type": "marksmen",
+        "skill_permanent": true,
+        "skill_is_chance": false,
+        "skill_probability": 0,
+        "skill_round_stackable": false,
+        "skill_type_relation": false,
+        "skill_order": 1,
+        "skill_type": "hero_skill",
+        "skill_frequency": {
+            "frequency_type": null,
+            "frequency_value": 0
+        },
+        "skill_effects": [
+            {
+                "affects_opponent": false,
+                "effect_type": "DamageUp",
+                "effect_op": 101,
+                "extra_attack": false,
+                "effect_is_chance": false,
+                "effect_num": "Power Shot/1",
+                "trigger_types": {
+                    "trigger_for": "all",
+                    "trigger_vs": "all"
+                },
+                "benefit_types": {
+                    "benefit_for": "trigger",
+                    "benefit_vs": "lancer"
+                },
+                "effect_duration": {
+                    "duration_type": "turn",
+                    "duration_value": -1,
+                    "effect_lag": 0
+                },
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 6,
+                    "2": 12,
+                    "3": 18,
+                    "4": 24,
+                    "5": 30
+                },
+                "special": {}
+            },
+            {
+                "affects_opponent": false,
+                "effect_type": "DamageUp",
+                "effect_op": 101,
+                "extra_attack": false,
+                "effect_is_chance": false,
+                "effect_num": "Power Shot/2",
+                "trigger_types": {
+                    "trigger_for": "all",
+                    "trigger_vs": "all"
+                },
+                "benefit_types": {
+                    "benefit_for": "trigger",
+                    "benefit_vs": "infantry"
+                },
+                "effect_duration": {
+                    "duration_type": "turn",
+                    "duration_value": -1,
+                    "effect_lag": 0
+                },
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 5,
+                    "2": 10,
+                    "3": 15,
+                    "4": 20,
+                    "5": 25
+                },
+                "special": {}
+            }
+        ]
+    },
+    {
+        "skill_hero": "Bradley",
+        "skill_num": 3,
+        "skill_name": "Tactical Assistance",
+        "skill_description": "Bradley will press every advantage against a beleaguered enemy, increasing Damage Dealt by X% for all troops for 2 turns every 4 turns.",
+        "skill_troop_type": "marksmen",
+        "skill_permanent": false,
+        "skill_is_chance": false,
+        "skill_probability": 0,
+        "skill_round_stackable": false,
+        "skill_type_relation": false,
+        "skill_order": 1,
+        "skill_type": "hero_skill",
+        "skill_frequency": {
+            "frequency_type": "turn",
+            "frequency_value": 4
+        },
+        "skill_effects": [
+            {
+                "affects_opponent": false,
+                "effect_type": "DamageUp",
+                "effect_op": 101,
+                "extra_attack": false,
+                "effect_is_chance": false,
+                "effect_num": "Tactical Assistance/1",
+                "trigger_types": {
+                    "trigger_for": "all",
+                    "trigger_vs": "all"
+                },
+                "benefit_types": {
+                    "benefit_for": "trigger",
+                    "benefit_vs": "target"
+                },
+                "effect_duration": {
+                    "duration_type": "turn",
+                    "duration_value": 2,
+                    "effect_lag": 0
+                },
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 6,
+                    "2": 12,
+                    "3": 18,
+                    "4": 24,
+                    "5": 30
+                },
+                "special": {}
+            }
+        ]
+    },
+    {
+        "skill_hero": "Bradley",
+        "skill_num": 4,
+        "skill_name": "Widget: Siege Insight",
+        "skill_description": "Widget bonus: Increase Attack by X% for all troops when defending",
+        "skill_troop_type": "marksmen",
+        "skill_permanent": true,
+        "skill_is_chance": false,
+        "skill_probability": 0,
+        "skill_round_stackable": false,
+        "skill_type_relation": false,
+        "skill_order": 1,
+        "skill_type": "hero_skill",
+        "skill_frequency": {
+            "frequency_type": null,
+            "frequency_value": 0
+        },
+        "skill_effects": [
+            {
+                "affects_opponent": false,
+                "effect_type": "StatBonus",
+                "effect_op": 402,
+                "extra_attack": false,
+                "effect_is_chance": false,
+                "effect_num": "Widget: Siege Insight/1",
+                "trigger_types": {
+                    "trigger_for": "all",
+                    "trigger_vs": "all"
+                },
+                "benefit_types": {
+                    "benefit_for": "trigger",
+                    "benefit_vs": "any"
+                },
+                "effect_duration": {
+                    "duration_type": "turn",
+                    "duration_value": -1,
+                    "effect_lag": 0
+                },
+                "effect_probabilities": {},
+                "effect_values": {
+                    "1": 5,
+                    "2": 7.5,
+                    "3": 10,
+                    "4": 12.5,
+                    "5": 15
+                },
+                "special": {
+                    "role": "defense",
+                    "stat": "attack"
+                }
+            }
+        ]
+    }
+]
