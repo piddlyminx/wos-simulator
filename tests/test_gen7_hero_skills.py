@@ -37,6 +37,25 @@ def make_fighter(name: str, heroes: dict | None = None) -> Fighter:
 
 
 class Gen7HeroSkillsTests(unittest.TestCase):
+    def test_max_fighter_data_includes_gen7_heroes(self) -> None:
+        JsonUtil.load_fighters_data(
+            "fighters_data/fighters_stats.json",
+            "fighters_data/fighters_heroes.json",
+        )
+        max_heroes = JsonUtil.fighter_heroes["max"]
+        expected_stats = {
+            "attack": 650.52,
+            "defense": 650.52,
+            "lethality": 160.5,
+            "health": 160.5,
+        }
+        expected_levels = {"skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5}
+
+        for hero_name in ("Bradley", "Edith", "Gordon"):
+            self.assertIn(hero_name, max_heroes)
+            self.assertEqual(max_heroes[hero_name]["stats"], expected_stats)
+            self.assertEqual(max_heroes[hero_name]["skill_levels"], expected_levels)
+
     def test_bradley_and_edith_are_registered_with_expected_shape(self) -> None:
         for hero_name in ("Bradley", "Edith"):
             self.assertIn(hero_name, JsonUtil.hero_registery)

@@ -313,6 +313,48 @@
                 "skill_3": 5,
                 "skill_4": 5
             }
+        },
+        "Edith": {
+            "stats": {
+                "attack": 650.52,
+                "defense": 650.52,
+                "lethality": 160.5,
+                "health": 160.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Gordon": {
+            "stats": {
+                "attack": 650.52,
+                "defense": 650.52,
+                "lethality": 160.5,
+                "health": 160.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
+        },
+        "Bradley": {
+            "stats": {
+                "attack": 650.52,
+                "defense": 650.52,
+                "lethality": 160.5,
+                "health": 160.5
+            },
+            "skill_levels": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5,
+                "skill_4": 5
+            }
         }
     },
     "daut": {
