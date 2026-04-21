@@ -857,8 +857,8 @@ function SidePanel({
                   key={stat}
                   className="flex flex-col gap-0.5 text-[11px] sm:text-xs"
                 >
-                  <div className="flex flex-row items-center gap-1.5 sm:flex-col sm:items-stretch sm:gap-0.5">
-                    <div className="flex items-center justify-between gap-1 sm:w-full flex-shrink-0">
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <div className="flex min-w-0 flex-1 items-center justify-between gap-1.5">
                       <span className="opacity-60 truncate">
                         <span className="sm:hidden font-bold">
                           {stat[0].toUpperCase()}
@@ -892,7 +892,7 @@ function SidePanel({
                           },
                         }));
                       }}
-                      className="flex-1 sm:w-full min-w-0 rounded px-1.5 py-1 font-mono text-xs text-right min-h-[32px]"
+                      className="min-w-0 flex-1 rounded px-1.5 py-1 font-mono text-xs text-right min-h-[32px] sm:w-20 sm:flex-none"
                       style={{
                         backgroundColor: "var(--main-bg)",
                         border: "1px solid var(--border-color)",

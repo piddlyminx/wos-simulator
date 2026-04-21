@@ -91,6 +91,23 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     // Mobile hamburger is rendered (md:hidden) but must not be visible on desktop.
     await expect(page.getByRole("button", { name: /Open menu/i })).not.toBeVisible();
 
+    // Stat labels stay inline with their inputs on desktop, so the inputs
+    // don't expand to full column width for small numeric values.
+    const infantryAttackField = page
+      .locator("label")
+      .filter({ has: page.getByLabel("Infantry Attack") })
+      .first();
+    const statLayout = await infantryAttackField.evaluate((el) => {
+      const row = el.firstElementChild as HTMLElement | null;
+      const input = el.querySelector("input") as HTMLInputElement | null;
+      return {
+        flexDirection: row ? getComputedStyle(row).flexDirection : null,
+        inputWidth: input?.getBoundingClientRect().width ?? 0,
+      };
+    });
+    expect(statLayout.flexDirection).toBe("row");
+    expect(statLayout.inputWidth).toBeLessThan(120);
+
     expect(errors).toHaveLength(0);
   });
 });
