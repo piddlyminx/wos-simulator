@@ -162,6 +162,11 @@ test.describe('Dashboard smoke tests', () => {
     const hasCells = await page.locator('table tbody td').count() > 0;
     const hasMisconfigWarning = await page.locator('text=DB misconfiguration').count() > 0;
     expect(hasCells || hasMisconfigWarning).toBe(true);
+    if (hasCells) {
+      for (const hero of ['Bradley', 'Edith', 'Gordon', 'Ling']) {
+        await expect(page.locator('body')).toContainText(hero);
+      }
+    }
 
     expect(errors).toHaveLength(0);
   });
@@ -177,6 +182,47 @@ test.describe('Dashboard smoke tests', () => {
     const hasRows = await page.locator('tbody tr').count() > 0;
     const hasMisconfigWarning = await page.locator('text=DB misconfiguration').count() > 0;
     expect(hasRows || hasMisconfigWarning).toBe(true);
+    if (hasRows) {
+      await expect(page.locator('body')).toContainText('Gen 7');
+      for (const hero of ['Bradley', 'Edith', 'Gordon', 'Ling']) {
+        await expect(page.locator('body')).toContainText(hero);
+      }
+    }
+
+    expect(errors).toHaveLength(0);
+  });
+
+  test('/simulate — gen 7 heroes are selectable', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/simulate');
+    expect(response?.status()).toBe(200);
+
+    await expect(page.locator('h2')).toContainText('Simulate Battle');
+
+    const infantryOptions = await page
+      .locator('select[aria-label="infantry hero"]')
+      .first()
+      .locator('option')
+      .allTextContents();
+    expect(infantryOptions).toContain('Edith');
+
+    const lancerOptions = await page
+      .locator('select[aria-label="lancer hero"]')
+      .first()
+      .locator('option')
+      .allTextContents();
+    expect(lancerOptions).toContain('Gordon');
+    expect(lancerOptions).toContain('Ling');
+
+    const marksmanOptions = await page
+      .locator('select[aria-label="marksman hero"]')
+      .first()
+      .locator('option')
+      .allTextContents();
+    expect(marksmanOptions).toContain('Bradley');
 
     expect(errors).toHaveLength(0);
   });

@@ -136,9 +136,9 @@ export function getHeroes(): Hero[] {
     return database
       .prepare(
         `SELECT * FROM heroes ORDER BY CASE generation
-          WHEN 'Gen 6' THEN 1 WHEN 'Gen 5' THEN 2 WHEN 'Gen 4' THEN 3
-          WHEN 'Gen 3' THEN 4 WHEN 'Gen 2' THEN 5 WHEN 'Gen 1' THEN 6
-          WHEN 'SR' THEN 7 ELSE 8 END, name`
+          WHEN 'Gen 7' THEN 1 WHEN 'Gen 6' THEN 2 WHEN 'Gen 5' THEN 3
+          WHEN 'Gen 4' THEN 4 WHEN 'Gen 3' THEN 5 WHEN 'Gen 2' THEN 6
+          WHEN 'Gen 1' THEN 7 WHEN 'SR' THEN 8 ELSE 9 END, name`
       )
       .all() as Hero[];
   } catch (err) {
@@ -174,9 +174,9 @@ export function getCoverageSnapshots(runId: string): CoverageRow[] {
          LEFT JOIN heroes h ON cs.hero = h.name
          WHERE cs.run_id = ?
          ORDER BY CASE h.generation
-           WHEN 'Gen 6' THEN 1 WHEN 'Gen 5' THEN 2 WHEN 'Gen 4' THEN 3
-           WHEN 'Gen 3' THEN 4 WHEN 'Gen 2' THEN 5 WHEN 'Gen 1' THEN 6
-           WHEN 'SR' THEN 7 ELSE 8 END, cs.hero, cs.skill_id`
+           WHEN 'Gen 7' THEN 1 WHEN 'Gen 6' THEN 2 WHEN 'Gen 5' THEN 3
+           WHEN 'Gen 4' THEN 4 WHEN 'Gen 3' THEN 5 WHEN 'Gen 2' THEN 6
+           WHEN 'Gen 1' THEN 7 WHEN 'SR' THEN 8 ELSE 9 END, cs.hero, cs.skill_id`
       )
       .all(resolvedId) as CoverageRow[];
   } catch (err) {

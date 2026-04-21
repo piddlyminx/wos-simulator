@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Optional
 
 GEN_MAP = {
+    # Gen 7
+    "Edith": "Gen 7", "Gordon": "Gen 7", "Bradley": "Gen 7", "Ling": "Gen 7",
     # Gen 6
     "WuMing": "Gen 6", "Renee": "Gen 6", "Wayne": "Gen 6",
     # Gen 5

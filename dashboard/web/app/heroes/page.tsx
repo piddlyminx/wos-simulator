@@ -4,7 +4,7 @@ import type { Hero } from "@/types/dashboard";
 
 export const dynamic = "force-dynamic";
 
-const GEN_ORDER = ["Gen 6", "Gen 5", "Gen 4", "Gen 3", "Gen 2", "Gen 1", "SR"];
+const GEN_ORDER = ["Gen 7", "Gen 6", "Gen 5", "Gen 4", "Gen 3", "Gen 2", "Gen 1", "SR"];
 
 export default function HeroesPage() {
   const missingTables = getMissingTables();

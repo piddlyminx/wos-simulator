@@ -67,6 +67,11 @@ export const HERO_BASE_STATS: Record<string, HeroBaseStats> = {
   // Source JSON uses "Wu Ming" (with space); catalogue uses "WuMing".
   WuMing: { attack: 540.43, defense: 540.43, lethality: 133.5, health: 133.5 },
 
+  // Edith / Gordon / Bradley
+  Edith: { attack: 650.52, defense: 650.52, lethality: 160.5, health: 160.5 },
+  Gordon: { attack: 650.52, defense: 650.52, lethality: 160.5, health: 160.5 },
+  Bradley: { attack: 650.52, defense: 650.52, lethality: 160.5, health: 160.5 },
+
   // Heroes absent from fighters_heroes.json → max: treat as zero base stats.
   Natalia: { attack: 0, defense: 0, lethality: 0, health: 0 },
   Zinman: { attack: 0, defense: 0, lethality: 0, health: 0 },

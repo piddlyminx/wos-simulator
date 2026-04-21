@@ -7,6 +7,9 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "WOS Simulator Dashboard",
   description: "Battle simulator accuracy dashboard for Whiteout Survival",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export const viewport = {

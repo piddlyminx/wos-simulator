@@ -156,10 +156,13 @@ export default function HomePage() {
   const recentChanges = getRecentFileChanges(7);
   const recentCommits = getRecentCommits(7);
 
-  // Tier-1 hero coverage status (Gen 5 + Gen 6)
+  // Newest combat generations surfaced on the dashboard landing page.
   const heroes = getHeroes();
-  const tierOne = heroes.filter(
-    (h) => h.generation === "Gen 5" || h.generation === "Gen 6"
+  const featuredHeroes = heroes.filter(
+    (h) =>
+      h.generation === "Gen 5" ||
+      h.generation === "Gen 6" ||
+      h.generation === "Gen 7"
   );
   const matrix = getCoverageMatrix(latestRunId);
   const perHero = new Map<string, { covered: number; total: number }>();
@@ -280,15 +283,15 @@ export default function HomePage() {
           )}
         </Card>
 
-        {/* Card 3 — Coverage Trend + Tier-1 heroes */}
+        {/* Card 3 — Coverage Trend + newest hero generations */}
         <Card
           testid="card-coverage"
-          title="Coverage Trend + Tier-1 Heroes"
+          title="Coverage Trend + Gen 5-7 Heroes"
           href="/coverage"
         >
           {coverageTrend.length > 0 && <CoverageTrendChart data={coverageTrend} />}
           <div className="flex flex-wrap gap-2 mt-1">
-            {tierOne.map((h) => {
+            {featuredHeroes.map((h) => {
               const c = perHero.get(h.name);
               const covered = c && c.total > 0 && c.covered === c.total;
               const partial = c && c.covered > 0 && c.covered < c.total;
