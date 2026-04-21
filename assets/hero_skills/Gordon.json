@@ -89,7 +89,7 @@
         "skill_is_chance": false,
         "skill_probability": 0,
         "skill_round_stackable": false,
-        "skill_type_relation": false,
+        "skill_type_relation": true,
         "skill_order": 1,
         "skill_type": "hero_skill",
         "skill_frequency": {
@@ -105,7 +105,7 @@
                 "effect_is_chance": false,
                 "effect_num": "Chemical Terror/1",
                 "trigger_types": {
-                    "trigger_for": "once",
+                    "trigger_for": "lancer",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
@@ -243,7 +243,7 @@
         "skill_hero": "Gordon",
         "skill_num": 4,
         "skill_name": "Widget: Bio Assault",
-        "skill_description": "Widget bonus: Increase Lethality by X% for all troops when rallying",
+        "skill_description": "Widget bonus: Increase Lethality by X% for all troops when defending",
         "skill_troop_type": "lancer",
         "skill_permanent": true,
         "skill_is_chance": false,
@@ -286,7 +286,7 @@
                     "5": 15
                 },
                 "special": {
-                    "role": "rally",
+                    "role": "defense",
                     "stat": "lethality"
                 }
             }

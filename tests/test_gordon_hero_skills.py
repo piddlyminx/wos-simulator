@@ -25,12 +25,19 @@ class GordonHeroSkillsTests(unittest.TestCase):
         self.assertEqual(venom["skill_effects"][1]["effect_type"], "OppDamageDown")
         self.assertEqual(venom["skill_effects"][1]["benefit_types"]["benefit_vs"], "target")
 
+        chemical_terror = skills[1]
+        self.assertTrue(chemical_terror["skill_type_relation"])
+        self.assertEqual(chemical_terror["skill_effects"][0]["trigger_types"]["trigger_for"], "lancer")
+
         toxic_release = skills[2]
         self.assertEqual(toxic_release["skill_frequency"], {"frequency_type": "turn", "frequency_value": 4})
         self.assertEqual(
-            [effect["benefit_types"]["benefit_vs"] for effect in toxic_release["skill_effects"]],
-            ["infantry", "marksman"],
+            [effect["effect_type"] for effect in toxic_release["skill_effects"]],
+            ["OppDefenseDown", "OppDamageDown"],
         )
+
+        widget = skills[3]
+        self.assertEqual(widget["skill_effects"][0]["special"]["role"], "defense")
 
     def test_explicit_skill_levels_are_accepted(self) -> None:
         levels = Hero.get_heroes_skill_levels(
