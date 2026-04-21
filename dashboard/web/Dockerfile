@@ -1,7 +1,14 @@
 # syntax=docker/dockerfile:1.7
+#
+# Dev-mode image for the WOS simulator dashboard.
+#
+# docker-compose bind-mounts dashboard/web/ over /app so on-disk edits are
+# picked up by `next dev --turbopack` with no image rebuild. The image itself
+# only exists to pre-install node_modules (including the native better-sqlite3
+# build) and provide the dev command — everything under /app is expected to be
+# replaced by the host bind mount at runtime.
 
-# ---------- deps: install + compile native modules ----------
-FROM node:20-bookworm-slim AS deps
+FROM node:20-bookworm-slim
 WORKDIR /app
 
 # better-sqlite3 is a native module; node-gyp needs python + a C++ toolchain.
@@ -12,31 +19,8 @@ RUN apt-get update \
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
-# ---------- builder: compile Next.js ----------
-FROM node:20-bookworm-slim AS builder
-WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-RUN npm run build
-
-# ---------- runner: minimal production image ----------
-FROM node:20-bookworm-slim AS runner
-WORKDIR /app
-ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PORT=3000 \
-    HOSTNAME=0.0.0.0
-
-RUN groupadd --system --gid 1001 nextjs \
- && useradd  --system --uid 1001 --gid nextjs nextjs
-
-COPY --from=builder --chown=nextjs:nextjs /app/.next         ./.next
-COPY --from=builder --chown=nextjs:nextjs /app/node_modules  ./node_modules
-COPY --from=builder --chown=nextjs:nextjs /app/package.json  ./package.json
-COPY --from=builder --chown=nextjs:nextjs /app/next.config.ts ./next.config.ts
-
-USER nextjs
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev", "--", "--hostname", "0.0.0.0", "--port", "3000"]

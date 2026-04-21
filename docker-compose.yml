@@ -1,12 +1,15 @@
 # docker compose for the WOS simulator dashboard.
 #
 # Services:
-#   - app:         Next.js dashboard (better-sqlite3, read-only DB mount).
+#   - app:         Next.js dev server (Turbopack) with live reload. The host's
+#                  dashboard/web/ directory is bind-mounted into the container
+#                  so source edits are picked up without any image rebuild.
+#                  /app/node_modules and /app/.next are named-volume overlays
+#                  so the container-built native modules (better-sqlite3) and
+#                  Turbopack cache don't fight the host filesystem.
 #   - cloudflared: Cloudflare Tunnel sidecar, authenticated via a
 #                  remotely-managed Tunnel token. Hostname + service routing
-#                  are configured once in the Cloudflare Zero Trust dashboard
-#                  when the tunnel is created. No host-side cloudflared files
-#                  are read or edited.
+#                  are configured once in the Cloudflare Zero Trust dashboard.
 #
 # See docker-compose.env.example for setup steps.
 
@@ -15,14 +18,24 @@ services:
     build:
       context: ./dashboard/web
       dockerfile: Dockerfile
-    image: wos-simulator-dashboard:latest
+    image: wos-simulator-dashboard:dev
     restart: unless-stopped
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
       DB_PATH: /data/test_results/dashboard.sqlite
+      # Polling watchers — needed on WSL2/SMB/NFS-backed mounts, harmless on
+      # native Linux. Override to false in .env if inotify works natively.
+      WATCHPACK_POLLING: ${WATCHPACK_POLLING:-true}
+      CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING:-true}
     volumes:
-      # Mount the full test_results dir so better-sqlite3 can open the
-      # main DB file together with its -shm / -wal siblings.
+      # Live bind mount of the source tree. Edits on disk → Turbopack hot
+      # reload in the container.
+      - ./dashboard/web:/app
+      # Named-volume overlays: keep container-built node_modules and the
+      # Turbopack/Next cache out of the host tree.
+      - wos_node_modules:/app/node_modules
+      - wos_next_cache:/app/.next
+      # Read-only DB mount (incl. -shm / -wal siblings).
       - ./test_results:/data/test_results:ro
     expose:
       - "3000"
@@ -43,3 +56,7 @@ services:
       - --loglevel
       - info
       - run
+
+volumes:
+  wos_node_modules:
+  wos_next_cache:
