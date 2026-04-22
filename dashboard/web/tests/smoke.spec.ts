@@ -335,16 +335,18 @@ test.describe('Dashboard smoke tests', () => {
         body: JSON.stringify({
           total_troops: 3000,
           grid_step: 100,
-          compositions_tested: 496,
-          projected_battles: 9920,
+          compositions_tested: 240,
+          projected_battles: 4800,
           replicates_per_ratio: 20,
+          infantry_min_pct: 25,
+          infantry_max_pct: 75,
           best: {
-            infantry_count: 700,
+            infantry_count: 800,
             lancer_count: 900,
-            marksman_count: 1400,
-            infantry_pct: 23.3,
+            marksman_count: 1300,
+            infantry_pct: 26.7,
             lancer_pct: 30.0,
-            marksman_pct: 46.7,
+            marksman_pct: 43.3,
             win_rate: 0.9,
             win_rate_pct: 90.0,
             avg_margin: 415.2,
@@ -355,12 +357,12 @@ test.describe('Dashboard smoke tests', () => {
           },
           top_results: [
             {
-              infantry_count: 700,
+              infantry_count: 800,
               lancer_count: 900,
-              marksman_count: 1400,
-              infantry_pct: 23.3,
+              marksman_count: 1300,
+              infantry_pct: 26.7,
               lancer_pct: 30.0,
-              marksman_pct: 46.7,
+              marksman_pct: 43.3,
               win_rate: 0.9,
               win_rate_pct: 90.0,
               avg_margin: 415.2,
@@ -370,12 +372,12 @@ test.describe('Dashboard smoke tests', () => {
               is_best: true,
             },
             {
-              infantry_count: 800,
+              infantry_count: 900,
               lancer_count: 900,
-              marksman_count: 1300,
-              infantry_pct: 26.7,
+              marksman_count: 1200,
+              infantry_pct: 30.0,
               lancer_pct: 30.0,
-              marksman_pct: 43.3,
+              marksman_pct: 40.0,
               win_rate: 0.85,
               win_rate_pct: 85.0,
               avg_margin: 370.0,
@@ -387,12 +389,12 @@ test.describe('Dashboard smoke tests', () => {
           ],
           points: [
             {
-              infantry_count: 700,
+              infantry_count: 800,
               lancer_count: 900,
-              marksman_count: 1400,
-              infantry_pct: 23.3,
+              marksman_count: 1300,
+              infantry_pct: 26.7,
               lancer_pct: 30.0,
-              marksman_pct: 46.7,
+              marksman_pct: 43.3,
               win_rate: 0.9,
               win_rate_pct: 90.0,
               avg_margin: 415.2,
@@ -401,17 +403,45 @@ test.describe('Dashboard smoke tests', () => {
               is_best: true,
             },
             {
-              infantry_count: 800,
+              infantry_count: 900,
               lancer_count: 900,
-              marksman_count: 1300,
-              infantry_pct: 26.7,
+              marksman_count: 1200,
+              infantry_pct: 30.0,
               lancer_pct: 30.0,
-              marksman_pct: 43.3,
+              marksman_pct: 40.0,
               win_rate: 0.85,
               win_rate_pct: 85.0,
               avg_margin: 370.0,
               avg_attacker_left: 580.4,
               avg_defender_left: 12.3,
+              is_best: false,
+            },
+            {
+              infantry_count: 1000,
+              lancer_count: 1000,
+              marksman_count: 1000,
+              infantry_pct: 33.3,
+              lancer_pct: 33.3,
+              marksman_pct: 33.3,
+              win_rate: 0.72,
+              win_rate_pct: 72.0,
+              avg_margin: 211.7,
+              avg_attacker_left: 345.8,
+              avg_defender_left: 88.2,
+              is_best: false,
+            },
+            {
+              infantry_count: 1100,
+              lancer_count: 900,
+              marksman_count: 1000,
+              infantry_pct: 36.7,
+              lancer_pct: 30.0,
+              marksman_pct: 33.3,
+              win_rate: 0.78,
+              win_rate_pct: 78.0,
+              avg_margin: 260.1,
+              avg_attacker_left: 401.6,
+              avg_defender_left: 54.3,
               is_best: false,
             },
           ],
@@ -425,12 +455,13 @@ test.describe('Dashboard smoke tests', () => {
     await page.getByRole('button', { name: /Optimise ratio/i }).click();
     await expect(page.locator('body')).toContainText('Ratio Optimisation');
     await expect(page.locator('body')).toContainText('Top 10 ratios');
-    await expect(page.locator('body')).toContainText('23.3 / 30.0 / 46.7%');
+    await expect(page.locator('body')).toContainText('26.7 / 30.0 / 43.3%');
+    await expect(page.locator('body')).toContainText('25%–75%');
 
     await page.getByRole('button', { name: /Use best ratio/i }).click();
-    await expect(page.locator('input[aria-label="infantry troop count"]').first()).toHaveValue('700');
+    await expect(page.locator('input[aria-label="infantry troop count"]').first()).toHaveValue('800');
     await expect(page.locator('input[aria-label="lancer troop count"]').first()).toHaveValue('900');
-    await expect(page.locator('input[aria-label="marksman troop count"]').first()).toHaveValue('1400');
+    await expect(page.locator('input[aria-label="marksman troop count"]').first()).toHaveValue('1300');
 
     expect(errors).toHaveLength(0);
   });

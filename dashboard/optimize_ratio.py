@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import math
 import os
 import statistics
 import sys
@@ -12,11 +13,13 @@ from typing import Any, Dict, Iterable, Tuple
 
 from simulate_common import fight_once, prepare_simulation_environment
 
-MAX_COMPOSITIONS = 800
-MAX_SIMULATIONS = 20000
+MAX_COMPOSITIONS = 8000
+MAX_SIMULATIONS = 200000
 DEFAULT_REPLICATES = 20
 DEFAULT_TOP_RESULTS = 10
-DEFAULT_MAX_WORKERS = max(1, min(6, (os.cpu_count() or 2) - 1))
+DEFAULT_INFANTRY_MIN_PCT = 25.0
+DEFAULT_INFANTRY_MAX_PCT = 75.0
+DEFAULT_MAX_WORKERS = max(1, min(10, (os.cpu_count() or 2) - 1))
 
 _WORKER_ATTACKER_CFG: Dict[str, Any] | None = None
 _WORKER_DEFENDER_CFG: Dict[str, Any] | None = None
@@ -30,17 +33,44 @@ def _recommended_step(total: int) -> int:
     return max(1, int(round(total / 30)))
 
 
-def _composition_grid(total: int, step: int) -> Iterable[Tuple[int, int, int]]:
-    for infantry in range(0, total + 1, step):
+def _resolve_infantry_bounds(
+    total: int,
+    step: int,
+    min_pct: float,
+    max_pct: float,
+) -> Tuple[int, int]:
+    min_count = math.ceil((total * min_pct) / 100)
+    max_count = math.floor((total * max_pct) / 100)
+    start = math.ceil(min_count / step) * step
+    end = math.floor(max_count / step) * step
+    return start, end
+
+
+def _composition_grid(
+    total: int,
+    step: int,
+    infantry_min_pct: float,
+    infantry_max_pct: float,
+) -> Iterable[Tuple[int, int, int]]:
+    start, end = _resolve_infantry_bounds(total, step, infantry_min_pct, infantry_max_pct)
+    for infantry in range(start, end + 1, step):
         remaining = total - infantry
         for lancer in range(0, remaining + 1, step):
             marksman = total - infantry - lancer
             yield infantry, lancer, marksman
 
 
-def _composition_count(total: int, step: int) -> int:
+def _composition_count(
+    total: int,
+    step: int,
+    infantry_min_pct: float,
+    infantry_max_pct: float,
+) -> int:
+    start, end = _resolve_infantry_bounds(total, step, infantry_min_pct, infantry_max_pct)
+    if start > end:
+        return 0
     count = 0
-    for infantry in range(0, total + 1, step):
+    for infantry in range(start, end + 1, step):
         remaining = total - infantry
         count += remaining // step + 1
     return count
@@ -61,7 +91,15 @@ def _normalise_replicates(raw_value: Any) -> int:
         replicates = int(raw_value or DEFAULT_REPLICATES)
     except (TypeError, ValueError):
         replicates = DEFAULT_REPLICATES
-    return max(1, min(200, replicates))
+    return max(1, min(500, replicates))
+
+
+def _normalise_pct(raw_value: Any, default_value: float) -> float:
+    try:
+        value = float(raw_value if raw_value is not None else default_value)
+    except (TypeError, ValueError):
+        value = default_value
+    return max(0.0, min(100.0, value))
 
 
 def _worker_init(
@@ -146,10 +184,32 @@ def main() -> int:
 
     step = _normalise_step(total, config.get("grid_step"))
     replicates = _normalise_replicates(config.get("search_replicates"))
+    infantry_min_pct = _normalise_pct(
+        config.get("infantry_min_pct"),
+        DEFAULT_INFANTRY_MIN_PCT,
+    )
+    infantry_max_pct = _normalise_pct(
+        config.get("infantry_max_pct"),
+        DEFAULT_INFANTRY_MAX_PCT,
+    )
+    if infantry_min_pct > infantry_max_pct:
+        print("Infantry max % must be greater than or equal to infantry min %.", file=sys.stderr)
+        return 2
     top_n = max(1, min(25, int(config.get("top_n", DEFAULT_TOP_RESULTS) or DEFAULT_TOP_RESULTS)))
     max_workers = max(1, min(DEFAULT_MAX_WORKERS, int(config.get("jobs", DEFAULT_MAX_WORKERS) or DEFAULT_MAX_WORKERS)))
 
-    composition_count = _composition_count(total, step)
+    composition_count = _composition_count(
+        total,
+        step,
+        infantry_min_pct,
+        infantry_max_pct,
+    )
+    if composition_count == 0:
+        print(
+            "No compositions fit inside the requested infantry range at this grid step.",
+            file=sys.stderr,
+        )
+        return 2
     projected_battles = composition_count * replicates
     if composition_count > MAX_COMPOSITIONS:
         print(
@@ -167,7 +227,14 @@ def main() -> int:
         return 2
 
     prepare_simulation_environment()
-    compositions = list(_composition_grid(total, step))
+    compositions = list(
+        _composition_grid(
+            total,
+            step,
+            infantry_min_pct,
+            infantry_max_pct,
+        )
+    )
 
     if max_workers <= 1 or len(compositions) <= 1:
         _worker_init(attacker_cfg, defender_cfg, rally_mode, replicates)
@@ -221,6 +288,8 @@ def main() -> int:
             "compositions_tested": composition_count,
             "projected_battles": projected_battles,
             "replicates_per_ratio": replicates,
+            "infantry_min_pct": infantry_min_pct,
+            "infantry_max_pct": infantry_max_pct,
             "best": best,
             "top_results": top_results,
             "points": points,

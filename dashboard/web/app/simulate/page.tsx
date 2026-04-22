@@ -19,6 +19,8 @@ import {
 } from "@/lib/heroes-catalogue";
 import { HeroBaseStats, heroBaseStats } from "@/lib/hero-base-stats";
 import {
+  DEFAULT_INFANTRY_MAX_PCT,
+  DEFAULT_INFANTRY_MIN_PCT,
   DEFAULT_OPTIMIZE_REPLICATES,
   DEFAULT_TOP_RESULTS,
   estimateCompositionCount,
@@ -28,6 +30,7 @@ import {
   MAX_OPTIMIZE_COMPOSITIONS,
   OptimizeRatioResult,
   recommendedOptimizeStep,
+  resolveInfantryBounds,
   totalTroopsForCounts,
 } from "@/lib/optimize-ratio";
 
@@ -369,6 +372,12 @@ export default function SimulatePage() {
     DEFAULT_OPTIMIZE_REPLICATES,
   );
   const [optimizeStepInput, setOptimizeStepInput] = useState("");
+  const [optimizeInfantryMinPct, setOptimizeInfantryMinPct] = useState(
+    DEFAULT_INFANTRY_MIN_PCT,
+  );
+  const [optimizeInfantryMaxPct, setOptimizeInfantryMaxPct] = useState(
+    DEFAULT_INFANTRY_MAX_PCT,
+  );
   const toastIdRef = useRef(0);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // When true, the defender panel is rendered on the left. Shared with the
@@ -514,6 +523,8 @@ export default function SimulatePage() {
         ...toApiPayload(attacker, defender, replicates, rallyMode),
         grid_step: resolvedOptimizeStep,
         search_replicates: optimizeReplicates,
+        infantry_min_pct: resolvedInfantryBounds.minPct,
+        infantry_max_pct: resolvedInfantryBounds.maxPct,
         top_n: DEFAULT_TOP_RESULTS,
       };
       const res = await fetch("/api/simulate/optimize-ratio", {
@@ -576,9 +587,20 @@ export default function SimulatePage() {
     return parsed;
   }, [attackerTotalTroops, optimizeStepInput]);
 
+  const resolvedInfantryBounds = useMemo(
+    () => resolveInfantryBounds(optimizeInfantryMinPct, optimizeInfantryMaxPct),
+    [optimizeInfantryMaxPct, optimizeInfantryMinPct],
+  );
+
   const estimatedOptimizeCompositions = useMemo(
-    () => estimateCompositionCount(attackerTotalTroops, resolvedOptimizeStep),
-    [attackerTotalTroops, resolvedOptimizeStep],
+    () =>
+      estimateCompositionCount(
+        attackerTotalTroops,
+        resolvedOptimizeStep,
+        resolvedInfantryBounds.minPct,
+        resolvedInfantryBounds.maxPct,
+      ),
+    [attackerTotalTroops, resolvedInfantryBounds, resolvedOptimizeStep],
   );
 
   const estimatedOptimizeBattles = useMemo(
@@ -589,6 +611,7 @@ export default function SimulatePage() {
   const optimizeBudgetTooLarge =
     estimatedOptimizeCompositions > MAX_OPTIMIZE_COMPOSITIONS ||
     estimatedOptimizeBattles > MAX_OPTIMIZE_BATTLES;
+  const optimizeInputsValid = resolvedInfantryBounds.isValid;
 
   return (
     <div>
@@ -749,151 +772,240 @@ export default function SimulatePage() {
           backgroundColor: "var(--sidebar-bg)",
         }}
       >
-        <div className="flex flex-wrap items-end gap-3 sm:gap-4">
-          <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wider opacity-60">
-              Replicates
-            </span>
-            <input
-              type="number"
-              min={1}
-              max={5000}
-              value={replicates}
-              onChange={(e) =>
-                setReplicates(
-                  Math.max(1, Math.min(5000, parseInt(e.target.value || "1", 10))),
-                )
-              }
-              className="w-28 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
-              style={{
-                backgroundColor: "var(--main-bg)",
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
-            />
-          </label>
-          <button
-            onClick={runSimulation}
-            disabled={loading}
-            className="flex-1 sm:flex-none px-4 py-2 rounded font-bold text-sm min-h-[44px]"
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
+          <div
+            className="rounded p-3"
             style={{
-              backgroundColor: "var(--sidebar-active)",
-              color: "#1e1e2e",
-              opacity: loading ? 0.5 : 1,
-              cursor: loading ? "wait" : "pointer",
+              border: "1px solid var(--border-color)",
+              backgroundColor: "var(--main-bg)",
             }}
           >
-            {loading ? "Simulating…" : "Simulate"}
-          </button>
-          {error && (
-            <span className="text-xs basis-full" style={{ color: "#f38ba8" }}>
-              {error}
-            </span>
-          )}
-        </div>
+            <h3 className="mb-3 text-xs uppercase tracking-wider opacity-60 font-bold">
+              Run battle
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+              <label className="flex flex-col gap-1">
+                <span className="text-xs uppercase tracking-wider opacity-60">
+                  Replicates
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  max={5000}
+                  value={replicates}
+                  onChange={(e) =>
+                    setReplicates(
+                      Math.max(
+                        1,
+                        Math.min(5000, parseInt(e.target.value || "1", 10)),
+                      ),
+                    )
+                  }
+                  className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                />
+              </label>
+              <button
+                onClick={runSimulation}
+                disabled={loading}
+                className="px-4 py-2 rounded font-bold text-sm min-h-[42px]"
+                style={{
+                  backgroundColor: "var(--sidebar-active)",
+                  color: "#1e1e2e",
+                  opacity: loading ? 0.5 : 1,
+                  cursor: loading ? "wait" : "pointer",
+                }}
+              >
+                {loading ? "Simulating…" : "Simulate"}
+              </button>
+              {error && (
+                <span className="text-xs sm:col-span-2" style={{ color: "#f38ba8" }}>
+                  {error}
+                </span>
+              )}
+            </div>
+          </div>
 
-        <div
-          className="h-px w-full"
-          style={{ backgroundColor: "var(--border-color)", opacity: 0.8 }}
-        />
-
-        <div className="flex flex-wrap items-end gap-3 sm:gap-4">
-          <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wider opacity-60">
-              Ratio reps
-            </span>
-            <input
-              type="number"
-              min={1}
-              max={200}
-              value={optimizeReplicates}
-              onChange={(e) =>
-                setOptimizeReplicates(
-                  Math.max(1, Math.min(200, parseInt(e.target.value || "1", 10))),
-                )
-              }
-              className="w-28 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
-              style={{
-                backgroundColor: "var(--main-bg)",
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wider opacity-60">
-              Grid step
-            </span>
-            <input
-              type="number"
-              min={1}
-              inputMode="numeric"
-              value={optimizeStepInput}
-              onChange={(e) => setOptimizeStepInput(e.target.value)}
-              placeholder={String(recommendedOptimizeStep(attackerTotalTroops))}
-              className="w-32 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
-              style={{
-                backgroundColor: "var(--main-bg)",
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
-            />
-            <span className="text-[10px] font-mono opacity-50">
-              {optimizeStepInput.trim()
-                ? `Using ${resolvedOptimizeStep.toLocaleString()} troops`
-                : `Auto = ${resolvedOptimizeStep.toLocaleString()} troops`}
-            </span>
-          </label>
-          <button
-            type="button"
-            onClick={runOptimizeRatio}
-            disabled={optimizeLoading || optimizeBudgetTooLarge || attackerTotalTroops <= 0}
-            className="flex-1 sm:flex-none px-4 py-2 rounded font-bold text-sm min-h-[44px]"
+          <div
+            className="rounded p-3"
             style={{
-              backgroundColor: optimizeBudgetTooLarge
-                ? "var(--main-bg)"
-                : "#a6e3a1",
-              border: `1px solid ${optimizeBudgetTooLarge ? "var(--border-color)" : "#a6e3a1"}`,
-              color: optimizeBudgetTooLarge ? "var(--sidebar-text)" : "#11111b",
-              opacity: optimizeLoading ? 0.65 : 1,
-              cursor:
-                optimizeLoading || optimizeBudgetTooLarge || attackerTotalTroops <= 0
-                  ? "not-allowed"
-                  : "pointer",
-            }}
-            title={
-              optimizeBudgetTooLarge
-                ? "Increase the grid step or lower ratio reps before running the search."
-                : "Search attacker troop compositions while keeping total troops, heroes, tiers, and stats fixed."
-            }
-          >
-            {optimizeLoading ? "Optimising…" : "Optimise ratio"}
-          </button>
-
-          <p className="basis-full text-xs opacity-60">
-            Keeps attacker total troops ({attackerTotalTroops.toLocaleString()}),
-            tiers, heroes, stats, and the full defender setup fixed; only the
-            attacker troop mix changes.
-          </p>
-          <p
-            className="basis-full text-xs font-mono"
-            style={{
-              color: optimizeBudgetTooLarge ? "#f9e2af" : "var(--sidebar-text)",
-              opacity: 0.8,
+              border: "1px solid var(--border-color)",
+              backgroundColor: "var(--main-bg)",
             }}
           >
-            {estimatedOptimizeCompositions.toLocaleString()} compositions ×{" "}
-            {optimizeReplicates.toLocaleString()} reps ={" "}
-            {estimatedOptimizeBattles.toLocaleString()} projected battles
-            {optimizeBudgetTooLarge
-              ? " — increase the grid step or lower ratio reps."
-              : ""}
-          </p>
-          {optimizeError && (
-            <span className="text-xs basis-full" style={{ color: "#f38ba8" }}>
-              {optimizeError}
-            </span>
-          )}
+            <h3 className="mb-3 text-xs uppercase tracking-wider opacity-60 font-bold">
+              Optimise attacker ratio
+            </h3>
+            <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-5 2xl:items-end">
+              <label className="flex flex-col gap-1">
+                <span className="text-xs uppercase tracking-wider opacity-60">
+                  Ratio reps
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  max={500}
+                  value={optimizeReplicates}
+                  onChange={(e) =>
+                    setOptimizeReplicates(
+                      Math.max(1, Math.min(500, parseInt(e.target.value || "1", 10))),
+                    )
+                  }
+                  className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                />
+              </label>
+              <label className="flex flex-col gap-1">
+                <span className="text-xs uppercase tracking-wider opacity-60">
+                  Grid step
+                </span>
+                <input
+                  type="number"
+                  min={1}
+                  inputMode="numeric"
+                  value={optimizeStepInput}
+                  onChange={(e) => setOptimizeStepInput(e.target.value)}
+                  placeholder={String(recommendedOptimizeStep(attackerTotalTroops))}
+                  className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                />
+                <span className="text-[10px] font-mono opacity-50">
+                  {optimizeStepInput.trim()
+                    ? `Using ${resolvedOptimizeStep.toLocaleString()} troops`
+                    : `Auto = ${resolvedOptimizeStep.toLocaleString()} troops`}
+                </span>
+              </label>
+              <label className="flex flex-col gap-1">
+                <span className="text-xs uppercase tracking-wider opacity-60">
+                  Inf min %
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={optimizeInfantryMinPct}
+                  onChange={(e) =>
+                    setOptimizeInfantryMinPct(parseFloat(e.target.value || "0"))
+                  }
+                  className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                />
+              </label>
+              <label className="flex flex-col gap-1">
+                <span className="text-xs uppercase tracking-wider opacity-60">
+                  Inf max %
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={optimizeInfantryMaxPct}
+                  onChange={(e) =>
+                    setOptimizeInfantryMaxPct(parseFloat(e.target.value || "0"))
+                  }
+                  className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                />
+              </label>
+              <button
+                type="button"
+                onClick={runOptimizeRatio}
+                disabled={
+                  optimizeLoading ||
+                  optimizeBudgetTooLarge ||
+                  attackerTotalTroops <= 0 ||
+                  !optimizeInputsValid
+                }
+                className="w-full px-4 py-2 rounded font-bold text-sm min-h-[42px] 2xl:self-end"
+                style={{
+                  backgroundColor:
+                    optimizeBudgetTooLarge || !optimizeInputsValid
+                      ? "var(--sidebar-bg)"
+                      : "#a6e3a1",
+                  border: `1px solid ${
+                    optimizeBudgetTooLarge || !optimizeInputsValid
+                      ? "var(--border-color)"
+                      : "#a6e3a1"
+                  }`,
+                  color:
+                    optimizeBudgetTooLarge || !optimizeInputsValid
+                      ? "var(--sidebar-text)"
+                      : "#11111b",
+                  opacity: optimizeLoading ? 0.65 : 1,
+                  cursor:
+                    optimizeLoading ||
+                    optimizeBudgetTooLarge ||
+                    attackerTotalTroops <= 0 ||
+                    !optimizeInputsValid
+                      ? "not-allowed"
+                      : "pointer",
+                }}
+                title={
+                  !optimizeInputsValid
+                    ? "Infantry max % must be greater than or equal to infantry min %."
+                    : optimizeBudgetTooLarge
+                      ? "Increase the grid step or lower ratio reps before running the search."
+                      : "Search attacker troop compositions while keeping total troops, heroes, tiers, and stats fixed."
+                }
+              >
+                {optimizeLoading ? "Optimising…" : "Optimise ratio"}
+              </button>
+
+              <p className="text-xs opacity-60 md:col-span-2 2xl:col-span-5">
+                Keeps attacker total troops ({attackerTotalTroops.toLocaleString()}),
+                tiers, heroes, stats, and the full defender setup fixed; only the
+                attacker troop mix changes.
+              </p>
+              <p className="text-xs opacity-60 md:col-span-2 2xl:col-span-5">
+                Infantry search band: {resolvedInfantryBounds.minPct}% to{" "}
+                {resolvedInfantryBounds.maxPct}%.
+              </p>
+              <p
+                className="text-xs font-mono md:col-span-2 2xl:col-span-5"
+                style={{
+                  color:
+                    optimizeBudgetTooLarge || !optimizeInputsValid
+                      ? "#f9e2af"
+                      : "var(--sidebar-text)",
+                  opacity: 0.8,
+                }}
+              >
+                {estimatedOptimizeCompositions.toLocaleString()} compositions ×{" "}
+                {optimizeReplicates.toLocaleString()} reps ={" "}
+                {estimatedOptimizeBattles.toLocaleString()} projected battles
+                {!optimizeInputsValid
+                  ? " — fix the infantry bounds."
+                  : optimizeBudgetTooLarge
+                    ? " — increase the grid step or lower ratio reps."
+                    : ""}
+              </p>
+              {optimizeError && (
+                <span className="text-xs md:col-span-2 2xl:col-span-5" style={{ color: "#f38ba8" }}>
+                  {optimizeError}
+                </span>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -969,7 +1081,8 @@ export default function SimulatePage() {
                 Tested {optimizeResult.compositions_tested.toLocaleString()}{" "}
                 compositions at a {optimizeResult.grid_step.toLocaleString()} troop
                 step, with {optimizeResult.replicates_per_ratio.toLocaleString()}{" "}
-                replicates per composition.
+                replicates per composition. Infantry was constrained to{" "}
+                {optimizeResult.infantry_min_pct}%–{optimizeResult.infantry_max_pct}%.
               </p>
             </div>
             <button
@@ -986,7 +1099,7 @@ export default function SimulatePage() {
             </button>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 gap-2 xl:grid-cols-4">
+          <div className="mb-4 grid grid-cols-2 gap-2 xl:grid-cols-5">
             <ResultCard
               label="Best win rate"
               value={`${optimizeResult.best.win_rate_pct.toFixed(1)}%`}
@@ -1003,9 +1116,13 @@ export default function SimulatePage() {
               label="Avg margin"
               value={compactNumber(optimizeResult.best.avg_margin)}
             />
+            <ResultCard
+              label="Infantry band"
+              value={`${optimizeResult.infantry_min_pct}%–${optimizeResult.infantry_max_pct}%`}
+            />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
             <div
               className="rounded p-3"
               style={{
@@ -1014,7 +1131,7 @@ export default function SimulatePage() {
               }}
             >
               <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
-                Composition map
+                3D win-rate surface
               </h4>
               <OptimizeRatioScatterChart points={optimizeResult.points} />
             </div>
@@ -1030,7 +1147,7 @@ export default function SimulatePage() {
                 Top 10 ratios
               </h4>
               <div className="overflow-x-auto">
-                <table className="w-full text-xs font-mono">
+                <table className="min-w-[44rem] w-full text-xs font-mono">
                   <thead>
                     <tr
                       className="text-left uppercase tracking-wider opacity-50"
@@ -1055,16 +1172,16 @@ export default function SimulatePage() {
                             : "transparent",
                         }}
                       >
-                        <td className="py-1 pr-2 font-bold">{row.rank}</td>
-                        <td className="py-1 pr-2">{formatComposition(row)}</td>
-                        <td className="py-1 pr-2">{formatCounts(row)}</td>
-                        <td className="py-1 pr-2 text-right">
+                        <td className="py-1 pr-2 font-bold whitespace-nowrap">{row.rank}</td>
+                        <td className="py-1 pr-2 whitespace-nowrap">{formatComposition(row)}</td>
+                        <td className="py-1 pr-2 whitespace-nowrap">{formatCounts(row)}</td>
+                        <td className="py-1 pr-2 text-right whitespace-nowrap">
                           {row.win_rate_pct.toFixed(1)}%
                         </td>
-                        <td className="py-1 pr-2 text-right">
+                        <td className="py-1 pr-2 text-right whitespace-nowrap">
                           {compactNumber(row.avg_margin)}
                         </td>
-                        <td className="py-1 text-right">
+                        <td className="py-1 text-right whitespace-nowrap">
                           {compactNumber(row.avg_attacker_left)}
                         </td>
                       </tr>
@@ -1143,7 +1260,7 @@ function SidePanel({
         {title}
       </h3>
 
-      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-4 sm:mb-5">
         {CATEGORIES.map((cat) => (
           <TroopColumn
             key={cat}
@@ -1202,7 +1319,7 @@ function SidePanel({
       <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
         Stat Bonuses (%)
       </h4>
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {CATEGORIES.map((cat) => (
           <div key={cat} className="flex flex-col gap-1 min-w-0">
             <span className="text-xs opacity-60 truncate">
@@ -1242,7 +1359,7 @@ function SidePanel({
                           },
                         }));
                       }}
-                      className="min-w-0 flex-1 rounded px-1.5 py-1 font-mono text-xs text-right min-h-[32px] sm:w-20 sm:flex-none"
+                      className="min-w-0 flex-1 rounded px-1.5 py-1 font-mono text-xs text-right tabular-nums min-h-[32px] sm:w-20 sm:flex-none"
                       style={{
                         backgroundColor: "var(--main-bg)",
                         border: "1px solid var(--border-color)",
@@ -1314,7 +1431,7 @@ function TroopColumn({
             troops: { ...prev.troops, [cat]: isNaN(v) ? 0 : Math.max(0, v) },
           }));
         }}
-        className="w-full min-w-0 rounded px-2 py-2 font-mono text-sm min-h-[36px]"
+        className="w-full min-w-0 rounded px-2 py-2 font-mono text-sm text-right tabular-nums min-h-[36px]"
         style={{
           backgroundColor: "var(--main-bg)",
           border: "1px solid var(--border-color)",

@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 180;
 
 const REPO_ROOT = path.resolve(process.cwd(), "../..");
 const CLI_PATH = path.join(REPO_ROOT, "dashboard", "optimize_ratio.py");
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
     const kill = setTimeout(() => {
       child.kill("SIGKILL");
-    }, 55_000);
+    }, 175_000);
 
     child.stdout.on("data", (chunk) => {
       stdout += chunk.toString();
