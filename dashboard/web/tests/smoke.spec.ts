@@ -88,6 +88,27 @@ test.describe('Dashboard smoke tests', () => {
     expect(errors).toHaveLength(0);
   });
 
+  test('/runs — check-now controls are visible and the filter expands', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/runs');
+    expect(response?.status()).toBe(200);
+
+    await expect(page.locator('[data-testid="check-now-controls"]')).toBeVisible();
+    await expect(page.locator('[data-testid="check-now-button"]')).toBeVisible();
+    await expect(page.locator('[data-testid="check-now-filter-input"]')).toHaveCount(0);
+
+    await page.locator('[data-testid="check-now-filter-toggle"]').click();
+    const input = page.locator('[data-testid="check-now-filter-input"]');
+    await expect(input).toBeVisible();
+    await input.fill('alonso solo');
+    await expect(input).toHaveValue('alonso solo');
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/runs — testcase variance chart bridges missing middle-run data with a dashed line', async ({ page }) => {
     // WOS-189: run-index x-axis + dotted-bridge for interior coverage gaps.
     // Real fixture data includes >100 testcases missing from at least one

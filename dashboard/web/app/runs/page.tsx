@@ -2,6 +2,7 @@ import { getRunsWithDelta, getRunTrendWithBH, getTestcaseBiasTrend } from "@/lib
 import RunsHeadlineChart from "@/components/RunsHeadlineChart";
 import RunsAccordionTable from "@/components/RunsAccordionTable";
 import TestcaseDriftChart from "@/components/TestcaseDriftChart";
+import CheckNowControls from "@/components/CheckNowControls";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,8 @@ export default function RunsPage() {
         Simulator Runs
       </h2>
 
+      <CheckNowControls />
+
       <RunsHeadlineChart data={trendData} />
 
       <TestcaseDriftChart rows={trendRows} />
@@ -28,8 +31,8 @@ export default function RunsPage() {
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No runs found. Run{" "}
-          <code className="font-mono">check_testcases.py</code> to populate it.
+          No runs found. Use the button above, or run{" "}
+          <code className="font-mono">check_testcases.py</code>, to populate it.
         </div>
       ) : (
         <RunsAccordionTable runs={runs} defaultOpen={true} />
