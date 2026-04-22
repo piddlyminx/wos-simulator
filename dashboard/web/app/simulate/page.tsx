@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import OptimizeRatioScatterChart from "@/components/OptimizeRatioScatterChart";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
 import UploadReportModal, {
   UploadReportSubmission,
@@ -17,6 +18,18 @@ import {
   getHero,
 } from "@/lib/heroes-catalogue";
 import { HeroBaseStats, heroBaseStats } from "@/lib/hero-base-stats";
+import {
+  DEFAULT_OPTIMIZE_REPLICATES,
+  DEFAULT_TOP_RESULTS,
+  estimateCompositionCount,
+  formatComposition,
+  formatCounts,
+  MAX_OPTIMIZE_BATTLES,
+  MAX_OPTIMIZE_COMPOSITIONS,
+  OptimizeRatioResult,
+  recommendedOptimizeStep,
+  totalTroopsForCounts,
+} from "@/lib/optimize-ratio";
 
 type Side = "attacker" | "defender";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
@@ -349,6 +362,13 @@ export default function SimulatePage() {
   const [rallyMode, setRallyMode] = useState(false);
   const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(false);
   const [statSyncToast, setStatSyncToast] = useState<StatSyncToast | null>(null);
+  const [optimizeLoading, setOptimizeLoading] = useState(false);
+  const [optimizeError, setOptimizeError] = useState<string | null>(null);
+  const [optimizeResult, setOptimizeResult] = useState<OptimizeRatioResult | null>(null);
+  const [optimizeReplicates, setOptimizeReplicates] = useState<number>(
+    DEFAULT_OPTIMIZE_REPLICATES,
+  );
+  const [optimizeStepInput, setOptimizeStepInput] = useState("");
   const toastIdRef = useRef(0);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // When true, the defender panel is rendered on the left. Shared with the
@@ -485,6 +505,50 @@ export default function SimulatePage() {
     }
   }
 
+  async function runOptimizeRatio() {
+    setOptimizeLoading(true);
+    setOptimizeError(null);
+    setOptimizeResult(null);
+    try {
+      const payload = {
+        ...toApiPayload(attacker, defender, replicates, rallyMode),
+        grid_step: resolvedOptimizeStep,
+        search_replicates: optimizeReplicates,
+        top_n: DEFAULT_TOP_RESULTS,
+      };
+      const res = await fetch("/api/simulate/optimize-ratio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setOptimizeError(
+          data.stderr || data.error || `Request failed with ${res.status}`,
+        );
+      } else {
+        setOptimizeResult(data as OptimizeRatioResult);
+      }
+    } catch (err) {
+      setOptimizeError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setOptimizeLoading(false);
+    }
+  }
+
+  function applyBestOptimizeRatio() {
+    if (!optimizeResult) return;
+    setAttacker((prev) => ({
+      ...prev,
+      troops: {
+        ...prev.troops,
+        infantry: optimizeResult.best.infantry_count,
+        lancer: optimizeResult.best.lancer_count,
+        marksman: optimizeResult.best.marksman_count,
+      },
+    }));
+  }
+
   const summaryCards = useMemo(() => {
     if (!result) return null;
     const s = result.summary;
@@ -498,6 +562,33 @@ export default function SimulatePage() {
       { label: "Avg skill kills / battle", value: s.avg_skill_kills.toFixed(1) },
     ];
   }, [result]);
+
+  const attackerTotalTroops = useMemo(
+    () => totalTroopsForCounts(attacker.troops),
+    [attacker.troops],
+  );
+
+  const resolvedOptimizeStep = useMemo(() => {
+    const parsed = parseInt(optimizeStepInput, 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      return recommendedOptimizeStep(attackerTotalTroops);
+    }
+    return parsed;
+  }, [attackerTotalTroops, optimizeStepInput]);
+
+  const estimatedOptimizeCompositions = useMemo(
+    () => estimateCompositionCount(attackerTotalTroops, resolvedOptimizeStep),
+    [attackerTotalTroops, resolvedOptimizeStep],
+  );
+
+  const estimatedOptimizeBattles = useMemo(
+    () => estimatedOptimizeCompositions * optimizeReplicates,
+    [estimatedOptimizeCompositions, optimizeReplicates],
+  );
+
+  const optimizeBudgetTooLarge =
+    estimatedOptimizeCompositions > MAX_OPTIMIZE_COMPOSITIONS ||
+    estimatedOptimizeBattles > MAX_OPTIMIZE_BATTLES;
 
   return (
     <div>
@@ -652,48 +743,158 @@ export default function SimulatePage() {
       </div>
 
       <div
-        className="rounded p-3 sm:p-4 mb-4 sm:mb-6 flex flex-wrap items-end gap-3 sm:gap-4"
+        className="rounded p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col gap-4"
         style={{
           border: "1px solid var(--border-color)",
           backgroundColor: "var(--sidebar-bg)",
         }}
       >
-        <label className="flex flex-col gap-1">
-          <span className="text-xs uppercase tracking-wider opacity-60">
-            Replicates
-          </span>
-          <input
-            type="number"
-            min={1}
-            max={5000}
-            value={replicates}
-            onChange={(e) => setReplicates(Math.max(1, Math.min(5000, parseInt(e.target.value || "1", 10))))}
-            className="w-28 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
+        <div className="flex flex-wrap items-end gap-3 sm:gap-4">
+          <label className="flex flex-col gap-1">
+            <span className="text-xs uppercase tracking-wider opacity-60">
+              Replicates
+            </span>
+            <input
+              type="number"
+              min={1}
+              max={5000}
+              value={replicates}
+              onChange={(e) =>
+                setReplicates(
+                  Math.max(1, Math.min(5000, parseInt(e.target.value || "1", 10))),
+                )
+              }
+              className="w-28 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
+              style={{
+                backgroundColor: "var(--main-bg)",
+                border: "1px solid var(--border-color)",
+                color: "var(--main-text)",
+              }}
+            />
+          </label>
+          <button
+            onClick={runSimulation}
+            disabled={loading}
+            className="flex-1 sm:flex-none px-4 py-2 rounded font-bold text-sm min-h-[44px]"
             style={{
-              backgroundColor: "var(--main-bg)",
-              border: "1px solid var(--border-color)",
-              color: "var(--main-text)",
+              backgroundColor: "var(--sidebar-active)",
+              color: "#1e1e2e",
+              opacity: loading ? 0.5 : 1,
+              cursor: loading ? "wait" : "pointer",
             }}
-          />
-        </label>
-        <button
-          onClick={runSimulation}
-          disabled={loading}
-          className="flex-1 sm:flex-none px-4 py-2 rounded font-bold text-sm min-h-[44px]"
-          style={{
-            backgroundColor: "var(--sidebar-active)",
-            color: "#1e1e2e",
-            opacity: loading ? 0.5 : 1,
-            cursor: loading ? "wait" : "pointer",
-          }}
-        >
-          {loading ? "Simulating…" : "Simulate"}
-        </button>
-        {error && (
-          <span className="text-xs basis-full" style={{ color: "#f38ba8" }}>
-            {error}
-          </span>
-        )}
+          >
+            {loading ? "Simulating…" : "Simulate"}
+          </button>
+          {error && (
+            <span className="text-xs basis-full" style={{ color: "#f38ba8" }}>
+              {error}
+            </span>
+          )}
+        </div>
+
+        <div
+          className="h-px w-full"
+          style={{ backgroundColor: "var(--border-color)", opacity: 0.8 }}
+        />
+
+        <div className="flex flex-wrap items-end gap-3 sm:gap-4">
+          <label className="flex flex-col gap-1">
+            <span className="text-xs uppercase tracking-wider opacity-60">
+              Ratio reps
+            </span>
+            <input
+              type="number"
+              min={1}
+              max={200}
+              value={optimizeReplicates}
+              onChange={(e) =>
+                setOptimizeReplicates(
+                  Math.max(1, Math.min(200, parseInt(e.target.value || "1", 10))),
+                )
+              }
+              className="w-28 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
+              style={{
+                backgroundColor: "var(--main-bg)",
+                border: "1px solid var(--border-color)",
+                color: "var(--main-text)",
+              }}
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs uppercase tracking-wider opacity-60">
+              Grid step
+            </span>
+            <input
+              type="number"
+              min={1}
+              inputMode="numeric"
+              value={optimizeStepInput}
+              onChange={(e) => setOptimizeStepInput(e.target.value)}
+              placeholder={String(recommendedOptimizeStep(attackerTotalTroops))}
+              className="w-32 rounded px-2 py-2 font-mono text-sm min-h-[40px]"
+              style={{
+                backgroundColor: "var(--main-bg)",
+                border: "1px solid var(--border-color)",
+                color: "var(--main-text)",
+              }}
+            />
+            <span className="text-[10px] font-mono opacity-50">
+              {optimizeStepInput.trim()
+                ? `Using ${resolvedOptimizeStep.toLocaleString()} troops`
+                : `Auto = ${resolvedOptimizeStep.toLocaleString()} troops`}
+            </span>
+          </label>
+          <button
+            type="button"
+            onClick={runOptimizeRatio}
+            disabled={optimizeLoading || optimizeBudgetTooLarge || attackerTotalTroops <= 0}
+            className="flex-1 sm:flex-none px-4 py-2 rounded font-bold text-sm min-h-[44px]"
+            style={{
+              backgroundColor: optimizeBudgetTooLarge
+                ? "var(--main-bg)"
+                : "#a6e3a1",
+              border: `1px solid ${optimizeBudgetTooLarge ? "var(--border-color)" : "#a6e3a1"}`,
+              color: optimizeBudgetTooLarge ? "var(--sidebar-text)" : "#11111b",
+              opacity: optimizeLoading ? 0.65 : 1,
+              cursor:
+                optimizeLoading || optimizeBudgetTooLarge || attackerTotalTroops <= 0
+                  ? "not-allowed"
+                  : "pointer",
+            }}
+            title={
+              optimizeBudgetTooLarge
+                ? "Increase the grid step or lower ratio reps before running the search."
+                : "Search attacker troop compositions while keeping total troops, heroes, tiers, and stats fixed."
+            }
+          >
+            {optimizeLoading ? "Optimising…" : "Optimise ratio"}
+          </button>
+
+          <p className="basis-full text-xs opacity-60">
+            Keeps attacker total troops ({attackerTotalTroops.toLocaleString()}),
+            tiers, heroes, stats, and the full defender setup fixed; only the
+            attacker troop mix changes.
+          </p>
+          <p
+            className="basis-full text-xs font-mono"
+            style={{
+              color: optimizeBudgetTooLarge ? "#f9e2af" : "var(--sidebar-text)",
+              opacity: 0.8,
+            }}
+          >
+            {estimatedOptimizeCompositions.toLocaleString()} compositions ×{" "}
+            {optimizeReplicates.toLocaleString()} reps ={" "}
+            {estimatedOptimizeBattles.toLocaleString()} projected battles
+            {optimizeBudgetTooLarge
+              ? " — increase the grid step or lower ratio reps."
+              : ""}
+          </p>
+          {optimizeError && (
+            <span className="text-xs basis-full" style={{ color: "#f38ba8" }}>
+              {optimizeError}
+            </span>
+          )}
+        </div>
       </div>
 
       <UploadReportModal
@@ -750,6 +951,153 @@ export default function SimulatePage() {
           </div>
         </div>
       )}
+
+      {optimizeResult && (
+        <div
+          className="rounded p-3 sm:p-4 mb-6"
+          style={{
+            border: "1px solid var(--border-color)",
+            backgroundColor: "var(--sidebar-bg)",
+          }}
+        >
+          <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <h3 className="text-sm uppercase tracking-wider opacity-60 font-bold">
+                Ratio Optimisation
+              </h3>
+              <p className="mt-1 text-xs opacity-60">
+                Tested {optimizeResult.compositions_tested.toLocaleString()}{" "}
+                compositions at a {optimizeResult.grid_step.toLocaleString()} troop
+                step, with {optimizeResult.replicates_per_ratio.toLocaleString()}{" "}
+                replicates per composition.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={applyBestOptimizeRatio}
+              className="rounded px-3 py-2 text-xs font-bold"
+              style={{
+                border: "1px solid var(--sidebar-active)",
+                color: "var(--sidebar-active)",
+                backgroundColor: "transparent",
+              }}
+            >
+              Use best ratio
+            </button>
+          </div>
+
+          <div className="mb-4 grid grid-cols-2 gap-2 xl:grid-cols-4">
+            <ResultCard
+              label="Best win rate"
+              value={`${optimizeResult.best.win_rate_pct.toFixed(1)}%`}
+            />
+            <ResultCard
+              label="Best mix"
+              value={formatComposition(optimizeResult.best)}
+            />
+            <ResultCard
+              label="Best counts"
+              value={formatCounts(optimizeResult.best)}
+            />
+            <ResultCard
+              label="Avg margin"
+              value={compactNumber(optimizeResult.best.avg_margin)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+            <div
+              className="rounded p-3"
+              style={{
+                border: "1px solid var(--border-color)",
+                backgroundColor: "var(--main-bg)",
+              }}
+            >
+              <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+                Composition map
+              </h4>
+              <OptimizeRatioScatterChart points={optimizeResult.points} />
+            </div>
+
+            <div
+              className="rounded p-3"
+              style={{
+                border: "1px solid var(--border-color)",
+                backgroundColor: "var(--main-bg)",
+              }}
+            >
+              <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+                Top 10 ratios
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs font-mono">
+                  <thead>
+                    <tr
+                      className="text-left uppercase tracking-wider opacity-50"
+                      style={{ borderBottom: "1px solid var(--border-color)" }}
+                    >
+                      <th className="pb-1 pr-2">#</th>
+                      <th className="pb-1 pr-2">Mix %</th>
+                      <th className="pb-1 pr-2">Counts</th>
+                      <th className="pb-1 pr-2 text-right">Win</th>
+                      <th className="pb-1 pr-2 text-right">Margin</th>
+                      <th className="pb-1 text-right">Atk left</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {optimizeResult.top_results.map((row) => (
+                      <tr
+                        key={`${row.rank}-${row.infantry_count}-${row.lancer_count}-${row.marksman_count}`}
+                        style={{
+                          borderTop: "1px solid rgba(255,255,255,0.04)",
+                          backgroundColor: row.is_best
+                            ? "rgba(166, 227, 161, 0.08)"
+                            : "transparent",
+                        }}
+                      >
+                        <td className="py-1 pr-2 font-bold">{row.rank}</td>
+                        <td className="py-1 pr-2">{formatComposition(row)}</td>
+                        <td className="py-1 pr-2">{formatCounts(row)}</td>
+                        <td className="py-1 pr-2 text-right">
+                          {row.win_rate_pct.toFixed(1)}%
+                        </td>
+                        <td className="py-1 pr-2 text-right">
+                          {compactNumber(row.avg_margin)}
+                        </td>
+                        <td className="py-1 text-right">
+                          {compactNumber(row.avg_attacker_left)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ResultCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div
+      className="rounded px-3 py-2 flex flex-col gap-0.5"
+      style={{
+        border: "1px solid var(--border-color)",
+        backgroundColor: "var(--main-bg)",
+      }}
+    >
+      <span className="text-[10px] sm:text-xs uppercase tracking-wider opacity-50">
+        {label}
+      </span>
+      <span
+        className="font-mono text-sm font-bold"
+        style={{ color: "var(--sidebar-active)" }}
+      >
+        {value}
+      </span>
     </div>
   );
 }

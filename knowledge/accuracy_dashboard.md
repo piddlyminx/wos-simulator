@@ -16,6 +16,7 @@
 | `/coverage` | Hero × skill coverage matrix |
 | `/heroes` | Hero list grouped by generation |
 | `/heroes/[name]` | Hero detail: skills + testcase results + error history sparkline |
+| `/simulate` | Live battle simulator with OCR import, rally mode, and attacker ratio optimisation |
 
 ## Charts on /runs
 
@@ -55,3 +56,15 @@ Every change must pass:
 - `npm run build` (clean)
 - `npm run lint` (clean)
 - `PLAYWRIGHT_BASE_URL=http://localhost:<port> npx playwright test` — 5 smoke tests all pass
+
+## `/simulate` ratio optimisation (WOS-220)
+
+- The page can search attacker troop mixes while keeping the attacker total troop count, tiers, heroes, stats, and the full defender setup fixed.
+- Backend entrypoint: `dashboard/optimize_ratio.py`, called by `dashboard/web/app/api/simulate/optimize-ratio/route.ts`.
+- Frontend controls live on `/simulate`: `Ratio reps`, `Grid step`, and the `Optimise ratio` button.
+- Result UI shows:
+  - a summary of the best composition
+  - a Recharts composition scatter map (`infantry %` x-axis, `lancer %` y-axis, win rate encoded by bubble size/colour)
+  - a top-10 table
+  - a `Use best ratio` button that writes the best composition back into the attacker troop inputs
+- Safety guardrails cap the search budget so the UI tells the user to raise the grid step or lower replicates before the request becomes too expensive.

@@ -323,6 +323,118 @@ test.describe('Dashboard smoke tests', () => {
     expect(errors).toHaveLength(0);
   });
 
+  test('/simulate — optimise ratio renders results and applies the best mix', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    await page.route('**/api/simulate/optimize-ratio', async route => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          total_troops: 3000,
+          grid_step: 100,
+          compositions_tested: 496,
+          projected_battles: 9920,
+          replicates_per_ratio: 20,
+          best: {
+            infantry_count: 700,
+            lancer_count: 900,
+            marksman_count: 1400,
+            infantry_pct: 23.3,
+            lancer_pct: 30.0,
+            marksman_pct: 46.7,
+            win_rate: 0.9,
+            win_rate_pct: 90.0,
+            avg_margin: 415.2,
+            avg_attacker_left: 622.1,
+            avg_defender_left: 0,
+            rank: 1,
+            is_best: true,
+          },
+          top_results: [
+            {
+              infantry_count: 700,
+              lancer_count: 900,
+              marksman_count: 1400,
+              infantry_pct: 23.3,
+              lancer_pct: 30.0,
+              marksman_pct: 46.7,
+              win_rate: 0.9,
+              win_rate_pct: 90.0,
+              avg_margin: 415.2,
+              avg_attacker_left: 622.1,
+              avg_defender_left: 0,
+              rank: 1,
+              is_best: true,
+            },
+            {
+              infantry_count: 800,
+              lancer_count: 900,
+              marksman_count: 1300,
+              infantry_pct: 26.7,
+              lancer_pct: 30.0,
+              marksman_pct: 43.3,
+              win_rate: 0.85,
+              win_rate_pct: 85.0,
+              avg_margin: 370.0,
+              avg_attacker_left: 580.4,
+              avg_defender_left: 12.3,
+              rank: 2,
+              is_best: false,
+            },
+          ],
+          points: [
+            {
+              infantry_count: 700,
+              lancer_count: 900,
+              marksman_count: 1400,
+              infantry_pct: 23.3,
+              lancer_pct: 30.0,
+              marksman_pct: 46.7,
+              win_rate: 0.9,
+              win_rate_pct: 90.0,
+              avg_margin: 415.2,
+              avg_attacker_left: 622.1,
+              avg_defender_left: 0,
+              is_best: true,
+            },
+            {
+              infantry_count: 800,
+              lancer_count: 900,
+              marksman_count: 1300,
+              infantry_pct: 26.7,
+              lancer_pct: 30.0,
+              marksman_pct: 43.3,
+              win_rate: 0.85,
+              win_rate_pct: 85.0,
+              avg_margin: 370.0,
+              avg_attacker_left: 580.4,
+              avg_defender_left: 12.3,
+              is_best: false,
+            },
+          ],
+        }),
+      });
+    });
+
+    const response = await page.goto('/simulate');
+    expect(response?.status()).toBe(200);
+
+    await page.getByRole('button', { name: /Optimise ratio/i }).click();
+    await expect(page.locator('body')).toContainText('Ratio Optimisation');
+    await expect(page.locator('body')).toContainText('Top 10 ratios');
+    await expect(page.locator('body')).toContainText('23.3 / 30.0 / 46.7%');
+
+    await page.getByRole('button', { name: /Use best ratio/i }).click();
+    await expect(page.locator('input[aria-label="infantry troop count"]').first()).toHaveValue('700');
+    await expect(page.locator('input[aria-label="lancer troop count"]').first()).toHaveValue('900');
+    await expect(page.locator('input[aria-label="marksman troop count"]').first()).toHaveValue('1400');
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/simulate upload — selected skill 4 level carries back to main form', async ({ page }) => {
     const errors: string[] = [];
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
