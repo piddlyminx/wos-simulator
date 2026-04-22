@@ -168,6 +168,33 @@ test.describe('Dashboard smoke tests', () => {
     expect(errors).toHaveLength(0);
   });
 
+  test('/runs — hovered testcase is emphasized inside the hover tooltip', async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
+    page.on('pageerror', err => errors.push(err.message));
+
+    const response = await page.goto('/runs');
+    expect(response?.status()).toBe(200);
+
+    await page.waitForSelector('[data-testid="testcase-drift-legend"] button', { timeout: 10_000 });
+    const firstLegendItem = page.locator('[data-testid="testcase-drift-legend"] button').first();
+    await firstLegendItem.click();
+
+    const chart = page.locator('[data-testid="testcase-drift-chart"]');
+    const box = await chart.boundingBox();
+    expect(box).not.toBeNull();
+    await page.mouse.move(box!.x + box!.width * 0.25, box!.y + box!.height * 0.55);
+
+    const tooltip = page.locator('[data-testid="testcase-drift-tooltip"]');
+    await expect(tooltip).toBeVisible();
+    const activeRow = page.locator('[data-testid="testcase-drift-tooltip-row-active"]');
+    await expect(activeRow).toBeVisible();
+    await expect(page.locator('[data-testid="testcase-drift-focus"]')).toContainText('Focused series:');
+    await expect(page.locator('[data-testid="testcase-drift-tooltip-row-active"]')).toHaveCount(1);
+
+    expect(errors).toHaveLength(0);
+  });
+
   test('/runs — smoke-run toggle is off by default and prunes x-axis ticks when enabled', async ({ page }) => {
     // WOS-189 follow-up: board asked for smoke-run filtering to be opt-in,
     // with default behaviour showing every run that any visible top-N series

@@ -53,6 +53,27 @@ interface SeriesMeta {
   drift: number;
   colour: string;
   rank: number;
+  displayName: string;
+}
+
+interface ActiveDotProps {
+  cx?: number;
+  cy?: number;
+}
+
+interface TooltipEntry {
+  color?: string;
+  dataKey?: string | number;
+  name?: string;
+  payload?: { label?: string };
+  value?: number | string | null;
+}
+
+interface DriftTooltipProps {
+  active?: boolean;
+  label?: number | string;
+  payload?: TooltipEntry[];
+  activeSeriesName: string | null;
 }
 
 function shortDate(iso: string): string {
@@ -144,6 +165,75 @@ function computeBridges(
     i = j;
   }
   return { even, odd };
+}
+
+function DriftTooltip({
+  active,
+  label,
+  payload,
+  activeSeriesName,
+}: DriftTooltipProps) {
+  if (!active) return null;
+  const rows = (payload ?? []).filter(
+    (entry) =>
+      typeof entry.value === "number" &&
+      entry.name &&
+      !entry.name.startsWith("series_") &&
+      typeof entry.dataKey === "string" &&
+      entry.dataKey.endsWith("_actual"),
+  );
+  if (rows.length === 0) return null;
+  const displayLabel =
+    rows[0]?.payload?.label ?? (label == null ? "" : String(label));
+
+  return (
+    <div
+      data-testid="testcase-drift-tooltip"
+      style={{
+        backgroundColor: "var(--sidebar-bg)",
+        border: "1px solid var(--border-color)",
+        borderRadius: 4,
+        fontSize: 11,
+        color: "var(--main-text)",
+        padding: "8px 10px",
+        minWidth: 200,
+      }}
+    >
+      <div className="mb-2 font-mono opacity-70">{displayLabel}</div>
+      <div className="flex flex-col gap-1">
+        {rows.map((entry) => {
+          const isActive = activeSeriesName === entry.name;
+          return (
+            <div
+              key={entry.name}
+              data-testid={
+                isActive
+                  ? "testcase-drift-tooltip-row-active"
+                  : "testcase-drift-tooltip-row"
+              }
+              className="flex items-start gap-2 rounded px-1 py-0.5"
+              style={{
+                backgroundColor: isActive
+                  ? "rgba(255, 255, 255, 0.06)"
+                  : "transparent",
+                fontWeight: isActive ? 700 : 400,
+                opacity: isActive ? 1 : 0.82,
+              }}
+            >
+              <span
+                className="mt-[3px] h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: entry.color ?? "var(--main-text)" }}
+              />
+              <span className="min-w-0 flex-1 break-words">{entry.name}</span>
+              <span className="font-mono">
+                {(entry.value as number).toFixed(1)}%
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export default function TestcaseDriftChart({ rows }: Props) {
@@ -267,6 +357,7 @@ export default function TestcaseDriftChart({ rows }: Props) {
       drift: selectedDrift[i],
       colour: COLOURS[i % COLOURS.length],
       rank: i + 1,
+      displayName: `#${i + 1} ${makeShortLabel(entry.file, entry.testcase_id, entry.idx, hasMultiIds)} (drift ${selectedDrift[i].toFixed(2)})`,
     };
   });
 
@@ -275,6 +366,7 @@ export default function TestcaseDriftChart({ rows }: Props) {
     (activeSeriesId
       ? seriesMeta.find((series) => series.id === activeSeriesId)
       : null) ?? null;
+  const activeSeriesName = activeSeries?.displayName ?? null;
 
   // Per-series value arrays aligned to the run index, plus two alternating
   // bridge arrays that smoothly interpolate interior gaps only.
@@ -352,8 +444,9 @@ export default function TestcaseDriftChart({ rows }: Props) {
           ? `${pinnedSeriesId === activeSeries.id ? "Pinned" : "Focused"} series: #${activeSeries.rank} ${activeSeries.label} (drift ${activeSeries.drift.toFixed(2)}). ${pinnedSeriesId === activeSeries.id ? "Click again to clear." : "Click its legend row to pin it."}`
           : "Hover a legend row or chart line to isolate a testcase. Click a legend row to pin it."}
       </p>
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
+      <div data-testid="testcase-drift-chart">
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
           <XAxis
             dataKey="idx"
             type="number"
@@ -372,18 +465,15 @@ export default function TestcaseDriftChart({ rows }: Props) {
             tickFormatter={(value: number) => `${value.toFixed(1)}%`}
           />
           <Tooltip
-            contentStyle={{
-              backgroundColor: "var(--sidebar-bg)",
-              border: "1px solid var(--border-color)",
-              borderRadius: 4,
-              fontSize: 11,
-              color: "var(--main-text)",
+            content={
+              <DriftTooltip activeSeriesName={activeSeriesName} />
+            }
+            cursor={{
+              stroke: "var(--border-color)",
+              strokeDasharray: "3 3",
+              strokeOpacity: 0.45,
             }}
             labelFormatter={(i: number) => String(chartData[i]?.label ?? "")}
-            formatter={(value: unknown, name: string) => [
-              typeof value === "number" ? `${value.toFixed(1)}%` : "—",
-              name,
-            ]}
           />
           {seriesMeta.flatMap((series) => {
             const isActive = activeSeriesId === series.id;
@@ -395,6 +485,18 @@ export default function TestcaseDriftChart({ rows }: Props) {
                 setPinnedSeriesId((current) =>
                   current === series.id ? null : series.id,
                 ),
+            };
+            const hoverTargetProps = {
+              stroke: series.colour,
+              strokeWidth: 12,
+              strokeOpacity: 0.001,
+              dot: false,
+              activeDot: false,
+              isAnimationActive: false,
+              connectNulls: false,
+              legendType: "none" as const,
+              tooltipType: "none" as const,
+              ...sharedHandlers,
             };
             return [
               <Line
@@ -412,6 +514,12 @@ export default function TestcaseDriftChart({ rows }: Props) {
                 {...sharedHandlers}
               />,
               <Line
+                key={`${series.dataKeyBase}__bridge_e_hover`}
+                type="linear"
+                dataKey={`${series.dataKeyBase}_bridge_e`}
+                {...hoverTargetProps}
+              />,
+              <Line
                 key={`${series.dataKeyBase}__bridge_o`}
                 type="linear"
                 dataKey={`${series.dataKeyBase}_bridge_o`}
@@ -426,9 +534,15 @@ export default function TestcaseDriftChart({ rows }: Props) {
                 {...sharedHandlers}
               />,
               <Line
+                key={`${series.dataKeyBase}__bridge_o_hover`}
+                type="linear"
+                dataKey={`${series.dataKeyBase}_bridge_o`}
+                {...hoverTargetProps}
+              />,
+              <Line
                 key={`${series.dataKeyBase}__actual`}
                 type="monotone"
-                name={`#${series.rank} ${series.label} (drift ${series.drift.toFixed(2)})`}
+                name={series.displayName}
                 dataKey={`${series.dataKeyBase}_actual`}
                 stroke={series.colour}
                 strokeWidth={isActive ? 3 : 1.5}
@@ -436,13 +550,33 @@ export default function TestcaseDriftChart({ rows }: Props) {
                 dot={false}
                 isAnimationActive={false}
                 connectNulls={false}
-                activeDot={{ r: isActive ? 5 : 4 }}
+                activeDot={(dotProps: unknown) => {
+                  const { cx, cy } = dotProps as ActiveDotProps;
+                  return cx == null || cy == null ? <g /> : (
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={isActive ? 5 : 4}
+                      fill={series.colour}
+                      stroke="var(--sidebar-bg)"
+                      strokeWidth={isActive ? 2.5 : 1.5}
+                      pointerEvents="none"
+                    />
+                  );
+                }}
                 {...sharedHandlers}
+              />,
+              <Line
+                key={`${series.dataKeyBase}__actual_hover`}
+                type="monotone"
+                dataKey={`${series.dataKeyBase}_actual`}
+                {...hoverTargetProps}
               />,
             ];
           })}
-        </LineChart>
-      </ResponsiveContainer>
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
       <div
         className="mt-3 flex flex-wrap gap-2"
         data-testid="testcase-drift-legend"
