@@ -28,6 +28,7 @@ from dashboard.ocr_report import (  # noqa: E402
     _match_stat_label,
     _parse_stat_row_from_text,
     _parse_stats,
+    _parse_troop_row,
     parse_report,
     predict_missing_row_bands,
 )
@@ -35,6 +36,7 @@ from dashboard.ocr_report import (  # noqa: E402
 
 FIXTURES = Path(__file__).parent / "fixtures"
 STAT_BONUSES_PNG = FIXTURES / "stat_bonuses.png"
+DASHBOARD_REPORTS = Path(__file__).resolve().parents[1] / "dashboard" / "test_reports"
 
 TESSERACT_AVAILABLE = shutil.which("tesseract") is not None
 
@@ -139,6 +141,81 @@ class ParseStatsPositionsTests(unittest.TestCase):
         self.assertTrue(any("duplicate" in w for w in warnings))
 
 
+class ParseTroopRowTests(unittest.TestCase):
+    @staticmethod
+    def _word(text: str, left: int, right: int) -> dict[str, int | str]:
+        return {"text": text, "left": left, "right": right, "top": 0, "bottom": 10}
+
+    def test_partial_team_maps_left_to_right_per_side(self) -> None:
+        line = {
+            "text": "143,939 104,233 38,432 19,262 127,047",
+            "top": 10,
+            "bottom": 20,
+            "words": [
+                self._word("143,939", 20, 90),
+                self._word("104,233", 100, 180),
+                self._word("38,432", 420, 490),
+                self._word("19,262", 500, 570),
+                self._word("127,047", 580, 670),
+            ],
+        }
+        counts, warnings, status = _parse_troop_row(line, mid_x=350.0)  # type: ignore[arg-type]
+        self.assertEqual(counts["attacker"], [143_939, 104_233])
+        self.assertEqual(counts["defender"], [38_432, 19_262, 127_047])
+        self.assertEqual(status, "partial")
+        self.assertIn(
+            "attacker side has 2 troop counts, mapped left->right as [infantry, lancer]; verify mapping.",
+            warnings,
+        )
+
+    def test_percentage_row_is_left_blank_with_warning(self) -> None:
+        line = {
+            "text": "46.00% 16.00% 38.00% 33.33% 33.33% 33.33%",
+            "top": 10,
+            "bottom": 20,
+            "words": [
+                self._word("46.00%", 20, 80),
+                self._word("16.00%", 100, 160),
+            ],
+        }
+        counts, warnings, status = _parse_troop_row(line, mid_x=350.0)  # type: ignore[arg-type]
+        self.assertEqual(counts, {"attacker": [], "defender": []})
+        self.assertEqual(status, "percentage")
+        self.assertEqual(
+            warnings,
+            [
+                "troop row shows percentages rather than absolute counts; troop counts were left blank. Populate them manually or retry with a report that shows absolute troop numbers."
+            ],
+        )
+
+    def test_split_words_can_merge_into_one_count(self) -> None:
+        line = {
+            "text": "91,728 14 112 70,560 60 666 60,666 60.666",
+            "top": 10,
+            "bottom": 20,
+            "words": [
+                self._word("91,728", 20, 90),
+                self._word("14", 100, 120),
+                self._word("112", 124, 160),
+                self._word("70,560", 180, 250),
+                self._word("60", 420, 440),
+                self._word("666", 444, 480),
+                self._word("60,666", 500, 570),
+                self._word("60.666", 590, 660),
+            ],
+        }
+        counts, warnings, status = _parse_troop_row(line, mid_x=350.0)  # type: ignore[arg-type]
+        self.assertEqual(
+            counts,
+            {
+                "attacker": [91_728, 14_112, 70_560],
+                "defender": [60_666, 60_666, 60_666],
+            },
+        )
+        self.assertEqual(status, "ok")
+        self.assertEqual(warnings, [])
+
+
 @unittest.skipUnless(
     TESSERACT_AVAILABLE and STAT_BONUSES_PNG.exists(),
     "tesseract binary or fixture image unavailable",
@@ -149,8 +226,10 @@ class ParseReportIntegrationTests(unittest.TestCase):
 
     def test_clean_image_parses_all_rows(self) -> None:
         result = parse_report(self.image_bytes)
-        self.assertEqual(result["warnings"], [])
         self.assertFalse(result["ocr_retried"])
+        self.assertFalse(
+            any("missing stat rows" in warning for warning in result["warnings"])
+        )
         for cat in ("infantry", "lancer", "marksman"):
             for stat in ("attack", "defense", "lethality", "health"):
                 self.assertIsNotNone(
@@ -186,13 +265,126 @@ class ParseReportIntegrationTests(unittest.TestCase):
             result["ocr_retried"],
             "retry path should have been triggered by faded row",
         )
-        self.assertEqual(
-            result["warnings"], [], f"expected silent recovery, got: {result['warnings']}"
+        self.assertFalse(
+            any("missing stat rows" in warning for warning in result["warnings"]),
+            f"expected silent stat recovery, got: {result['warnings']}",
         )
         self.assertIsNotNone(
             result["attacker"]["stats"]["infantry"]["lethality"],
             "infantry lethality should have been recovered by the retry",
         )
+
+    @unittest.skipUnless(
+        DASHBOARD_REPORTS.exists(),
+        "dashboard/test_reports unavailable",
+    )
+    def test_troop_row_recovery_uses_header_anchored_band(self) -> None:
+        result = parse_report(
+            (DASHBOARD_REPORTS / "Screenshot 2026-03-20 005937.png").read_bytes()
+        )
+        self.assertEqual(
+            result["attacker"]["troops"],
+            {"infantry": 91_728, "lancer": 14_112, "marksman": 70_560},
+        )
+        self.assertEqual(
+            result["defender"]["troops"],
+            {"infantry": 60_666, "lancer": 60_666, "marksman": 60_666},
+        )
+        self.assertEqual(result["warnings"], [])
+
+    @unittest.skipUnless(
+        DASHBOARD_REPORTS.exists(),
+        "dashboard/test_reports unavailable",
+    )
+    def test_partial_troop_rows_warn_but_keep_stat_parse(self) -> None:
+        result = parse_report(
+            (DASHBOARD_REPORTS / "Screenshot 2026-04-20 050746.png").read_bytes()
+        )
+        self.assertEqual(
+            result["attacker"]["troops"],
+            {"infantry": 143_939, "lancer": 104_233, "marksman": None},
+        )
+        self.assertEqual(
+            result["defender"]["troops"],
+            {"infantry": 38_432, "lancer": 19_262, "marksman": 127_047},
+        )
+        self.assertIn(
+            "attacker side has 2 troop counts, mapped left->right as [infantry, lancer]; verify mapping.",
+            result["warnings"],
+        )
+        self.assertNotIn(
+            "could not parse troop counts from the row above 'Stat Bonuses'; populate them manually or retry with a clearer crop",
+            result["warnings"],
+        )
+
+
+@unittest.skipUnless(
+    TESSERACT_AVAILABLE and DASHBOARD_REPORTS.exists(),
+    "tesseract binary or dashboard/test_reports unavailable",
+)
+class DashboardReportCorpusTests(unittest.TestCase):
+    def test_dashboard_report_corpus_parses_cleanly(self) -> None:
+        report_paths = sorted(
+            p for p in DASHBOARD_REPORTS.iterdir()
+            if p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
+        )
+        self.assertGreater(len(report_paths), 0, "no dashboard report images found")
+
+        failures: list[str] = []
+        for report_path in report_paths:
+            try:
+                result = parse_report(report_path.read_bytes())
+            except Exception as exc:  # noqa: BLE001
+                failures.append(f"{report_path.name}: exception: {exc}")
+                continue
+
+            missing_stats: list[str] = []
+            missing_troops: list[str] = []
+            for side in ("attacker", "defender"):
+                troops = result[side]["troops"]
+                for cat, val in troops.items():
+                    if val is None:
+                        missing_troops.append(f"{side}.troops.{cat}")
+                for cat, stats in result[side]["stats"].items():
+                    for stat, val in stats.items():
+                        if val is None:
+                            missing_stats.append(f"{side}.stats.{cat}.{stat}")
+
+            warnings = result["warnings"]
+            generic_troop_failures = [
+                warning
+                for warning in warnings
+                if warning.startswith("could not parse troop counts")
+            ]
+            unexpected_warnings = [
+                warning
+                for warning in warnings
+                if not (
+                    warning.startswith("attacker side has ")
+                    or warning.startswith("defender side has ")
+                    or warning.startswith(
+                        "troop row shows percentages rather than absolute counts"
+                    )
+                )
+            ]
+
+            if missing_stats or generic_troop_failures or unexpected_warnings:
+                missing_text = ", ".join(missing_stats + missing_troops) if (missing_stats or missing_troops) else "none"
+                failures.append(
+                    f"{report_path.name}: warnings={warnings!r}; missing={missing_text}"
+                )
+                continue
+
+            if missing_troops and not any("verify mapping" in warning for warning in warnings):
+                failures.append(
+                    f"{report_path.name}: missing troop counts without mapping warning: {', '.join(missing_troops)}"
+                )
+
+        if failures:
+            self.fail(
+                f"{len(failures)}/{len(report_paths)} dashboard screenshots did not parse cleanly:\n"
+                + "\n".join(failures)
+            )
 
 
 if __name__ == "__main__":

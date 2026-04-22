@@ -64,7 +64,8 @@ STAT_ROW_ORDER: list[tuple[str, str]] = [
 
 StatKey = tuple[str, str]
 StatPair = tuple[float, float]
-Line = dict[str, Any]  # {"text": str, "top": int, "bottom": int}
+Word = dict[str, Any]  # {"text": str, "left": int, "right": int, ...}
+Line = dict[str, Any]  # {"text": str, "top": int, "bottom": int, "words": [Word]}
 
 
 # ---------------------------------------------------------------------------
@@ -95,14 +96,31 @@ def _ocr_lines(img: Image.Image, config: str = "--psm 6") -> tuple[list[Line], s
         )
         top = int(data["top"][i])
         bot = top + int(data["height"][i])
-        entry = bucket.setdefault(key, {"text": [], "top": top, "bottom": bot})
-        entry["text"].append(txt)
+        left = int(data["left"][i])
+        right = left + int(data["width"][i])
+        entry = bucket.setdefault(key, {"words": [], "top": top, "bottom": bot})
+        entry["words"].append(
+            {
+                "text": txt,
+                "left": left,
+                "right": right,
+                "top": top,
+                "bottom": bot,
+            }
+        )
         entry["top"] = min(entry["top"], top)
         entry["bottom"] = max(entry["bottom"], bot)
-    lines: list[Line] = [
-        {"text": " ".join(e["text"]), "top": e["top"], "bottom": e["bottom"]}
-        for e in bucket.values()
-    ]
+    lines: list[Line] = []
+    for entry in bucket.values():
+        words = sorted(entry["words"], key=lambda word: word["left"])
+        lines.append(
+            {
+                "text": " ".join(word["text"] for word in words),
+                "top": entry["top"],
+                "bottom": entry["bottom"],
+                "words": words,
+            }
+        )
     lines.sort(key=lambda e: (e["top"] + e["bottom"]) / 2)
     full_text = "\n".join(l["text"] for l in lines)
     return lines, full_text
@@ -229,6 +247,210 @@ def _parse_troop_line(lines: list[str]) -> tuple[list[int], str | None]:
     return [], None
 
 
+def _normalize_letters(text: str) -> str:
+    return re.sub(r"[^A-Za-z]", "", text).lower()
+
+
+def _is_stat_bonuses_header(text: str) -> bool:
+    return "statbonuses" in _normalize_letters(text)
+
+
+def _clean_count_token(text: str) -> str:
+    return re.sub(r"^[^\d]+|[^\d]+$", "", text.strip())
+
+
+_COUNT_TOKEN_RE = re.compile(r"\d{1,3}(?:[.,\s]\d{3})+|(?<!\d)\d{3,7}(?!\d)")
+
+
+def _parse_count_token(text: str) -> int | None:
+    cleaned = _clean_count_token(text)
+    if not cleaned or "%" in cleaned:
+        return None
+    if re.fullmatch(r"\d{1,3}(?:[.,\s]\d{3})+|\d{3,7}", cleaned) is None:
+        return None
+    digits = re.sub(r"\D", "", cleaned)
+    if len(digits) < 3:
+        return None
+    return int(digits)
+
+
+def _extract_count_candidates(line: Line) -> list[tuple[float, int]]:
+    words = sorted(line.get("words") or [], key=lambda word: word["left"])
+    if not words:
+        return []
+
+    out: list[tuple[float, int]] = []
+    i = 0
+    while i < len(words):
+        matched = False
+        max_span = min(3, len(words) - i)
+        for span in range(max_span, 1, -1):
+            chunk = words[i : i + span]
+            if not all(
+                re.fullmatch(r"\d{1,3}", _clean_count_token(word["text"]) or "")
+                for word in chunk
+            ):
+                continue
+            gaps = [
+                chunk[idx + 1]["left"] - chunk[idx]["right"]
+                for idx in range(len(chunk) - 1)
+            ]
+            min_width = min(word["right"] - word["left"] for word in chunk)
+            if gaps and max(gaps) > max(8, int(min_width * 0.35)):
+                continue
+            merged_text = " ".join(word["text"] for word in chunk)
+            value = _parse_count_token(merged_text)
+            if value is None:
+                continue
+            out.append(((chunk[0]["left"] + chunk[-1]["right"]) / 2.0, value))
+            i += span
+            matched = True
+            break
+        if matched:
+            continue
+
+        word = words[i]
+        text = word["text"]
+        direct = _parse_count_token(text)
+        if direct is not None:
+            out.append(((word["left"] + word["right"]) / 2.0, direct))
+            i += 1
+            continue
+
+        matches = list(_COUNT_TOKEN_RE.finditer(text))
+        if matches:
+            span_width = max(word["right"] - word["left"], 1)
+            for idx, match in enumerate(matches):
+                value = _parse_count_token(match.group(0))
+                if value is None:
+                    continue
+                frac = (idx + 0.5) / len(matches)
+                cx = word["left"] + span_width * frac
+                out.append((cx, value))
+        i += 1
+
+    return out
+
+
+def _format_mapped_categories(counts: list[int]) -> str:
+    return ", ".join(CATEGORIES[: len(counts)])
+
+
+def _parse_troop_row(
+    line: Line,
+    mid_x: float,
+) -> tuple[dict[str, list[int]], list[str], str]:
+    counts_by_side = {"attacker": [], "defender": []}
+    warnings: list[str] = []
+    text = line.get("text", "")
+
+    if "%" in text:
+        warnings.append(
+            "troop row shows percentages rather than absolute counts; troop counts "
+            "were left blank. Populate them manually or retry with a report that "
+            "shows absolute troop numbers."
+        )
+        return counts_by_side, warnings, "percentage"
+
+    for cx, value in sorted(_extract_count_candidates(line), key=lambda item: item[0]):
+        side = "attacker" if cx < mid_x else "defender"
+        counts_by_side[side].append(value)
+
+    total_counts = sum(len(values) for values in counts_by_side.values())
+    if total_counts == 0:
+        return counts_by_side, warnings, "no_counts"
+
+    for side in ("attacker", "defender"):
+        side_counts = counts_by_side[side]
+        if len(side_counts) > len(CATEGORIES):
+            warnings.append(
+                f"{side} side has {len(side_counts)} troop counts in the OCR row; "
+                f"keeping the leftmost {len(CATEGORIES)} values."
+            )
+            counts_by_side[side] = side_counts[: len(CATEGORIES)]
+            side_counts = counts_by_side[side]
+        if 0 < len(side_counts) < len(CATEGORIES):
+            warnings.append(
+                f"{side} side has {len(side_counts)} troop counts, mapped "
+                f"left->right as [{_format_mapped_categories(side_counts)}]; "
+                "verify mapping."
+            )
+
+    total_counts = sum(len(values) for values in counts_by_side.values())
+    status = "ok" if total_counts == len(CATEGORIES) * 2 else "partial"
+    return counts_by_side, warnings, status
+
+
+def _extract_troop_counts(
+    lines: list[Line],
+    mid_x: float,
+) -> tuple[dict[str, list[int]], list[str], str, int | None]:
+    header_idx = next(
+        (idx for idx, line in enumerate(lines) if _is_stat_bonuses_header(line["text"])),
+        None,
+    )
+    if header_idx is None:
+        first_stat_idx = next(
+            (
+                idx
+                for idx, line in enumerate(lines)
+                if _parse_stat_row_from_text(line["text"]) is not None
+            ),
+            None,
+        )
+        if first_stat_idx is None:
+            return {"attacker": [], "defender": []}, [], "missing_header", None
+        if first_stat_idx == 0:
+            return (
+                {"attacker": [], "defender": []},
+                [],
+                "missing_row",
+                lines[first_stat_idx]["top"],
+            )
+        counts, warnings, status = _parse_troop_row(lines[first_stat_idx - 1], mid_x)
+        return counts, warnings, status, lines[first_stat_idx]["top"]
+    if header_idx == 0:
+        return {"attacker": [], "defender": []}, [], "missing_row", lines[header_idx]["top"]
+    counts, warnings, status = _parse_troop_row(lines[header_idx - 1], mid_x)
+    return counts, warnings, status, lines[header_idx]["top"]
+
+
+def _better_troop_candidate(
+    current: tuple[dict[str, list[int]], list[str], str, int | None],
+    candidate: tuple[dict[str, list[int]], list[str], str, int | None],
+) -> tuple[dict[str, list[int]], list[str], str, int | None]:
+    def rank(
+        item: tuple[dict[str, list[int]], list[str], str, int | None]
+    ) -> tuple[int, int, int, int]:
+        counts, warnings, status, _header_top = item
+        total = sum(len(values) for values in counts.values())
+        total_value = sum(sum(values) for values in counts.values())
+        status_rank = {
+            "ok": 4,
+            "partial": 3,
+            "percentage": 2,
+            "no_counts": 1,
+            "missing_row": 0,
+            "missing_header": -1,
+        }.get(status, -2)
+        return (total, status_rank, -len(warnings), total_value)
+
+    return candidate if rank(candidate) > rank(current) else current
+
+
+def _troop_band_retry_variants(
+    img: Image.Image, header_top: int
+) -> Iterable[tuple[str, Image.Image, str]]:
+    band_bottom = min(img.height, max(header_top + 80, 80))
+    band = img.crop((0, 0, img.width, band_bottom))
+    yield ("troop_band", band, "--psm 6")
+    yield ("troop_band_upscale2x", _upscale(band), "--psm 6")
+    yield ("troop_band_autocontrast", _autocontrast(band), "--psm 6")
+    yield ("troop_band_upscale2x_autocontrast", _autocontrast(_upscale(band)), "--psm 6")
+    yield ("troop_band_binarize", _binarize(band), "--psm 6")
+    yield ("troop_band_upscale2x_binarize", _binarize(_upscale(band), threshold=170), "--psm 6")
+
+
 # ---------------------------------------------------------------------------
 # Targeted row recovery
 # ---------------------------------------------------------------------------
@@ -330,16 +552,15 @@ def _targeted_row_recovery(
 
 
 def _shape_side(
-    counts: list[int],
+    counts_by_side: dict[str, list[int]],
     stats: dict[StatKey, StatPair],
     side: str,
 ) -> dict[str, Any]:
     side_idx = 0 if side == "attacker" else 1
-    troop_base = 0 if side == "attacker" else 3
+    counts = counts_by_side[side]
     troops: dict[str, int | None] = {}
     for i, cat in enumerate(CATEGORIES):
-        idx = troop_base + i
-        troops[cat] = counts[idx] if idx < len(counts) else None
+        troops[cat] = counts[i] if i < len(counts) else None
     stat_out: dict[str, dict[str, float | None]] = {
         cat: {stat: None for stat in STAT_NAMES} for cat in CATEGORIES
     }
@@ -356,23 +577,22 @@ def parse_report(image_bytes: bytes) -> dict[str, Any]:
     # Primary pass.
     primary_lines, primary_text = _ocr_lines(img, "--psm 6")
     stats, center_y, parse_warnings = _parse_stats(primary_lines)
-
-    flat_lines = [l["text"] for l in primary_lines]
-    counts, _troop_line = _parse_troop_line(flat_lines)
+    troop_counts, troop_warnings, troop_status, troop_header_top = _extract_troop_counts(
+        primary_lines,
+        img.width / 2.0,
+    )
 
     retried_full = False
+    retried_troops = False
 
     def _needs_retry() -> bool:
-        return (
-            any(k not in stats for k in STAT_ROW_ORDER)
-            or len(counts) < 6
-        )
+        return any(k not in stats for k in STAT_ROW_ORDER)
 
     # Full-image preprocessing retries.
-    if _needs_retry():
+    if _needs_retry() or sum(len(values) for values in troop_counts.values()) < 6:
         for _name, variant_img, cfg in _full_image_retry_variants(img):
             retried_full = True
-            if not _needs_retry():
+            if not _needs_retry() and sum(len(values) for values in troop_counts.values()) >= 6:
                 break
             try:
                 v_lines, _v_text = _ocr_lines(variant_img, cfg)
@@ -382,10 +602,40 @@ def parse_report(image_bytes: bytes) -> dict[str, Any]:
             for k, pair in v_stats.items():
                 if k not in stats:
                     stats[k] = pair
-            if len(counts) < 6:
-                v_counts, _ = _parse_troop_line([l["text"] for l in v_lines])
-                if len(v_counts) >= 6:
-                    counts = v_counts
+            if sum(len(values) for values in troop_counts.values()) < 6:
+                candidate = _extract_troop_counts(v_lines, variant_img.width / 2.0)
+                troop_counts, troop_warnings, troop_status, troop_header_top = (
+                    _better_troop_candidate(
+                        (troop_counts, troop_warnings, troop_status, troop_header_top),
+                        candidate,
+                    )
+                )
+
+    # Targeted crop retries for troop counts still missing.
+    if sum(len(values) for values in troop_counts.values()) < 6 and troop_status != "percentage":
+        header_top = troop_header_top or next(
+            (
+                line["top"]
+                for line in primary_lines
+                if _is_stat_bonuses_header(line["text"])
+            ),
+            None,
+        )
+        if header_top is not None:
+            for _name, variant_img, cfg in _troop_band_retry_variants(img, header_top):
+                retried_troops = True
+                try:
+                    v_lines, _v_text = _ocr_lines(variant_img, cfg)
+                except Exception:  # noqa: BLE001
+                    continue
+                troop_counts, troop_warnings, troop_status, troop_header_top = (
+                    _better_troop_candidate(
+                        (troop_counts, troop_warnings, troop_status, troop_header_top),
+                        _extract_troop_counts(v_lines, variant_img.width / 2.0),
+                    )
+                )
+                if sum(len(values) for values in troop_counts.values()) >= 6:
+                    break
 
     # Targeted band-crop retry for stat rows still missing.
     missing = [k for k in STAT_ROW_ORDER if k not in stats]
@@ -396,22 +646,24 @@ def parse_report(image_bytes: bytes) -> dict[str, Any]:
 
     # Final warnings.
     warnings: list[str] = list(parse_warnings)
+    warnings.extend(troop_warnings)
     missing = [k for k in STAT_ROW_ORDER if k not in stats]
     if missing:
         warnings.append(
             "missing stat rows: " + ", ".join(f"{c} {s}" for c, s in missing)
         )
-    if len(counts) < 6:
+    if troop_status in {"missing_header", "missing_row", "no_counts"}:
         warnings.append(
-            f"could not parse 6 troop counts (found {len(counts)}); check the image crop"
+            "could not parse troop counts from the row above 'Stat Bonuses'; "
+            "populate them manually or retry with a clearer crop"
         )
 
     return {
-        "attacker": _shape_side(counts, stats, "attacker"),
-        "defender": _shape_side(counts, stats, "defender"),
+        "attacker": _shape_side(troop_counts, stats, "attacker"),
+        "defender": _shape_side(troop_counts, stats, "defender"),
         "raw_text": primary_text,
         "warnings": warnings,
-        "ocr_retried": retried_full,
+        "ocr_retried": retried_full or retried_troops,
     }
 
 
