@@ -6,6 +6,7 @@ __pycache__
 battle_specs_manual
 tmp
 test_results/runs/
+util
 
 # SQLite WAL/SHM sidecars — only the main .sqlite file is versioned
 test_results/*.sqlite-shm
