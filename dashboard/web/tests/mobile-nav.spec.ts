@@ -193,8 +193,8 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(preview).toContainText("[115]");
     await expect(preview).toContainText("+15.0%");
 
-    // Stat cells stay compact on desktop and keep the skill-4 preview stacked
-    // under the input instead of stretching the row horizontally.
+    // Stat cells stay compact on desktop, keep the skill-4 preview stacked
+    // under the input, and remain wide enough to show 5-digit values.
     const infantryLethalityField = page
       .locator("label")
       .filter({ has: page.getByLabel("Infantry Lethality") })
@@ -205,9 +205,22 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       const preview = el.querySelector(
         '[data-testid="stat-preview-attacker-infantry-lethality"]',
       ) as HTMLElement | null;
+      const textFitter = document.createElement("canvas");
+      const context = textFitter.getContext("2d");
+      const style = input ? getComputedStyle(input) : null;
+      if (context && style) {
+        context.font = `${style.fontStyle} ${style.fontVariant} ${style.fontWeight} ${style.fontSize} / ${style.lineHeight} ${style.fontFamily}`;
+      }
+      const padding =
+        style && input
+          ? parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+          : 0;
       return {
         headerText: header?.textContent?.trim() ?? null,
         inputWidth: input?.getBoundingClientRect().width ?? 0,
+        appearance: style?.appearance ?? null,
+        fiveDigitTextWidth: context?.measureText("12345").width ?? 0,
+        padding,
         previewTop:
           preview && input
             ? preview.getBoundingClientRect().top -
@@ -216,6 +229,10 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       };
     });
     expect(statLayout.headerText).toBe("Leth");
+    expect(statLayout.appearance).toBe("textfield");
+    expect(statLayout.inputWidth).toBeGreaterThan(
+      statLayout.fiveDigitTextWidth + statLayout.padding,
+    );
     expect(statLayout.inputWidth).toBeLessThan(90);
     expect(statLayout.previewTop).not.toBeNull();
     expect((statLayout.previewTop ?? -1) + 0.5).toBeGreaterThanOrEqual(0);

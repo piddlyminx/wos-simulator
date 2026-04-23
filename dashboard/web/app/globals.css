@@ -34,3 +34,14 @@ body {
     font-size: 16px;
   }
 }
+
+.simulate-stat-input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.simulate-stat-input::-webkit-outer-spin-button,
+.simulate-stat-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

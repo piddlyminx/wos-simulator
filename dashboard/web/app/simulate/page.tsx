@@ -1742,7 +1742,7 @@ function SidePanel({
             <span className="mb-2 block text-[11px] uppercase tracking-wider opacity-60">
               {troopCategoryLabel(cat)}
             </span>
-            <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+            <div className="grid grid-cols-2 gap-x-2 gap-y-2">
               {STAT_NAMES.map((stat) => {
                 const bonus = sideSkill4BonusPercent(
                   state,
@@ -1782,7 +1782,7 @@ function SidePanel({
                           },
                         }));
                       }}
-                      className="w-full min-w-0 rounded px-1 py-1.5 font-mono text-[11px] text-center tabular-nums min-h-[34px]"
+                      className="simulate-stat-input w-full min-w-0 rounded px-1 py-1.5 font-mono text-[11px] text-center tabular-nums min-h-[34px]"
                       style={{
                         backgroundColor: "var(--sidebar-bg)",
                         border: "1px solid var(--border-color)",
