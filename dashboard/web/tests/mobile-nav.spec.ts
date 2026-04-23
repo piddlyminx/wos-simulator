@@ -217,8 +217,8 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
           : 0;
       return {
         headerText: header?.textContent?.trim() ?? null,
+        inputType: input?.type ?? null,
         inputWidth: input?.getBoundingClientRect().width ?? 0,
-        appearance: style?.appearance ?? null,
         fiveDigitTextWidth: context?.measureText("12345").width ?? 0,
         padding,
         previewTop:
@@ -229,7 +229,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       };
     });
     expect(statLayout.headerText).toBe("Leth");
-    expect(statLayout.appearance).toBe("textfield");
+    expect(statLayout.inputType).toBe("text");
     expect(statLayout.inputWidth).toBeGreaterThan(
       statLayout.fiveDigitTextWidth + statLayout.padding,
     );

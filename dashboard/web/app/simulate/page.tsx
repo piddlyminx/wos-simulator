@@ -1739,10 +1739,10 @@ function SidePanel({
               backgroundColor: "var(--main-bg)",
             }}
           >
-            <span className="mb-2 block text-[11px] uppercase tracking-wider opacity-60">
+            <span className="mb-1.5 block text-[11px] uppercase tracking-wider opacity-60">
               {troopCategoryLabel(cat)}
             </span>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-2">
+            <div className="grid grid-cols-2 gap-x-1.5 gap-y-1.5">
               {STAT_NAMES.map((stat) => {
                 const bonus = sideSkill4BonusPercent(
                   state,
@@ -1756,7 +1756,7 @@ function SidePanel({
                 return (
                   <label
                     key={stat}
-                    className="flex min-w-0 flex-col gap-1 text-[10px]"
+                    className="flex min-w-0 flex-col gap-0.5 text-[10px]"
                   >
                     <span
                       className="truncate text-center font-mono uppercase opacity-60"
@@ -1790,13 +1790,13 @@ function SidePanel({
                       }}
                       aria-label={statLabel(cat, stat)}
                     />
-                    <span
-                      className="flex min-h-[1.8rem] flex-col items-center justify-start text-center font-mono text-[9px] leading-tight sm:text-[10px]"
-                      style={{
-                        color: previewValue ? "#a6e3a1" : "var(--sidebar-text)",
-                      }}
-                    >
-                      {previewValue ? (
+                    {previewValue ? (
+                      <span
+                        className="flex flex-col items-center justify-start text-center font-mono text-[9px] leading-tight sm:text-[10px]"
+                        style={{
+                          color: "#a6e3a1",
+                        }}
+                      >
                         <span
                           title={`Skill 4 will add +${bonus.toFixed(1)}% to this stat before battle, for an effective stat of ${previewValue}.`}
                           data-testid={`stat-preview-${which}-${cat}-${stat}`}
@@ -1804,10 +1804,8 @@ function SidePanel({
                           <span>[{previewValue}]</span>
                           <span>+{bonus.toFixed(1)}%</span>
                         </span>
-                      ) : (
-                        <span aria-hidden="true">&nbsp;</span>
-                      )}
-                    </span>
+                      </span>
+                    ) : null}
                   </label>
                 );
               })}
