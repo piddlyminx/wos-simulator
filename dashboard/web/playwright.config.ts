@@ -22,12 +22,17 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: `npm run start -- -p ${PORT}`,
-    url: BASE_URL,
-    // Never reuse: a stale process on this port is more likely to be a
-    // different app than a clean dashboard build.
-    reuseExistingServer: false,
-    timeout: 60_000,
-  },
+  // Skip managed webServer when PLAYWRIGHT_BASE_URL is set (dev server already running).
+  ...(process.env.PLAYWRIGHT_BASE_URL
+    ? {}
+    : {
+        webServer: {
+          command: `npm run start -- -p ${PORT}`,
+          url: BASE_URL,
+          // Never reuse: a stale process on this port is more likely to be a
+          // different app than a clean dashboard build.
+          reuseExistingServer: false,
+          timeout: 60_000,
+        },
+      }),
 });

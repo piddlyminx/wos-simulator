@@ -1,5 +1,6 @@
 node_modules/
 .next/
+.next_old/
 .env*.local
 test-results/
 playwright-report/
