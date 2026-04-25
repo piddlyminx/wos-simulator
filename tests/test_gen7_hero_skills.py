@@ -98,7 +98,7 @@ class Gen7HeroSkillsTests(unittest.TestCase):
             ),
             dont_save=True,
         )
-        self.assertEqual(bradley_fight.battle(), (0, 1058))
+        self.assertEqual(bradley_fight.battle(), (0, 1085))
 
         edith_fight = Fight(
             make_fighter("att"),

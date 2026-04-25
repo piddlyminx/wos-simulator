@@ -37,8 +37,8 @@ services:
       - wos_node_modules:/app/node_modules
       - wos_next_cache:/app/.next
       - wos_simulate_runs:/data/simulations
-      # Read-only DB mount (incl. -shm / -wal siblings).
-      - ./test_results:/data/test_results:ro
+      # Read-write DB mount (required for -shm / -wal siblings).
+      - ./test_results:/data/test_results:rw
       # The dashboard's "Import report" route spawns dashboard/ocr_report.py
       # inside the container (REPO_ROOT = cwd/../.. = /). Mount the host
       # dashboard/ tree read-only at /dashboard so the route can reach it.

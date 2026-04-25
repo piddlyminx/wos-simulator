@@ -25,12 +25,12 @@
                 "effect_is_chance": false,
                 "effect_num": "Song of lion/1",
                 "trigger_types": {
-                    "trigger_for": "all",
+                    "trigger_for": "once",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "trigger",
-                    "benefit_vs": "target"
+                    "benefit_for": "all",
+                    "benefit_vs": "any"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
@@ -75,11 +75,11 @@
                 "effect_is_chance": false,
                 "effect_num": "Melancholic ballad/1",
                 "trigger_types": {
-                    "trigger_for": "all",
+                    "trigger_for": "once",
                     "trigger_vs": "all"
                 },
                 "benefit_types": {
-                    "benefit_for": "trigger",
+                    "benefit_for": "all",
                     "benefit_vs": "any"
                 },
                 "effect_duration": {
@@ -130,7 +130,7 @@
                 },
                 "benefit_types": {
                     "benefit_for": "marksmen",
-                    "benefit_vs": "target"
+                    "benefit_vs": "any"
                 },
                 "effect_duration": {
                     "duration_type": "turn",
