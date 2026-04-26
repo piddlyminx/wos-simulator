@@ -1,0 +1,115 @@
+[
+  {
+    "test_id": "wayne_reina_combo",
+    "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) combo. WIP attacking minxxx. Exercises multi-hero extra-attack stacking for WOS-227 formula audit. Active skills: Wayne S1=2 Thunder Strike (extra, op=1010, every 4 turns), Wayne S2=2 Roundabout Hit (extra, op=1011 vs lancers / op=1012 vs marksmen, every 2 attacks), Wayne S3=3 Fleet (15% crit chance, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10% DamageUp, permanent), Reina S2=1 Swift Jive (4% dodge normal attacks). NOTE: Reina S3=0 \u2014 Shadow Blade (extra_attack=true, op=101) is INACTIVE. This combo therefore tests the normal_only + extra layer additive formula (Reina S1 + Wayne S1) but cannot discriminate multiplicative-vs-additive within the extra layer alone (requires Reina S3 unlocked). Run at least 8 battles due to Wayne S3 chance + Reina S2 dodge variance.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Reina": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 600,
+        "lancer_t6": 600,
+        "marksman_t6": 600
+      },
+      "stats": {
+        "inf": {
+          "attack": 116.0,
+          "defense": 121.3,
+          "lethality": 100.5,
+          "health": 97.4
+        },
+        "lanc": {
+          "attack": 196.8,
+          "defense": 194.8,
+          "lethality": 108.1,
+          "health": 90.2
+        },
+        "mark": {
+          "attack": 296.7,
+          "defense": 286.5,
+          "lethality": 143.7,
+          "health": 116.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddilyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 240.0,
+          "defense": 224.1,
+          "lethality": 157.9,
+          "health": 160.6
+        },
+        "lanc": {
+          "attack": 226.8,
+          "defense": 217.8,
+          "lethality": 161.2,
+          "health": 146.6
+        },
+        "mark": {
+          "attack": 236.3,
+          "defense": 225.3,
+          "lethality": 175.1,
+          "health": 156.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 1577,
+      "defender": 0
+    },
+    "game_report_result": [
+      {
+        "attacker": 1613,
+        "defender": 0
+      },
+      {
+        "attacker": 1531,
+        "defender": 0
+      },
+      {
+        "attacker": 1542,
+        "defender": 0
+      },
+      {
+        "attacker": 1549,
+        "defender": 0
+      },
+      {
+        "attacker": 1568,
+        "defender": 0
+      },
+      {
+        "attacker": 1545,
+        "defender": 0
+      },
+      {
+        "attacker": 1543,
+        "defender": 0
+      },
+      {
+        "attacker": 1584,
+        "defender": 0
+      }
+    ]
+  }
+]
