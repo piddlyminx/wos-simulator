@@ -291,7 +291,7 @@ def get_testcases(file_list, TESTCASES_PATH='testcases', resolve_patterns=True):
 
     testcases_files = {}
     for file in file_list:
-        with open(file, 'r+') as f:
+        with open(file, 'r') as f:
             _f = f.read()
             if _f:
                 testcases_files[file] = json.loads(_f)

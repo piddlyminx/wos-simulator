@@ -54,6 +54,16 @@ services:
       # access). The simulator does not actually write here, so the host
       # files stay unchanged in practice.
       - ./fighters_data:/fighters_data
+      # The "Check now" button spawns check_testcases.py via dashboard/check_now.py.
+      # In the container, REPO_ROOT resolves to / (cwd==/app, ../.. == /), so
+      # check_testcases.py and its dependencies must be accessible at those paths.
+      - ./check_testcases.py:/check_testcases.py:ro
+      - ./testcases:/testcases:ro
+      # Also mount test_results at / so check_testcases.py can write run JSON
+      # and ingest.py can find dashboard.sqlite (both use relative path
+      # test_results/ from REPO_ROOT=/). The /data/test_results mount remains
+      # for the Next.js server's DB_PATH env var.
+      - ./test_results:/test_results:rw
     expose:
       - "3000"
     # Optional local access without going through the tunnel.
