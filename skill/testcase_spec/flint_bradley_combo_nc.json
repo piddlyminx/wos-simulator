@@ -1,0 +1,27 @@
+{
+  "test_id": "flint_bradley_combo_nc",
+  "description": "Flint (Infantry) + Bradley (Marksman) combo — both heroes fully deterministic (no chance skills), single run sufficient. Tests Infantry+Marksman DamageUp stacking with Flint's periodic freq skill and Bradley's permanent buffs. minxxx defends with Flint (S1=2/S2=2/S3=1) + Bradley (S1=3/S2=3/S3=2).",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Flint": {},
+      "Bradley": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "test_id": "wayne_reina_wuming_combo",
+  "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) + Wu Ming (Infantry) full-class combo. WIP attacking minxxx. Extends wayne_reina_combo with Wu Ming adding base-layer DamageUp (S2=2 Crescent Uplift, op=101, all troops) and defensive normal+extra layer DefenseUp (S1=2 Shadow's Evasion, op=111, infantry-only). Active skills: Wayne S1=2 Thunder Strike (extra, op=1010), Wayne S2=2 Roundabout Hit (extra, op=1011/op=1012), Wayne S3=3 Fleet (15% crit, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10%), Reina S2=1 Swift Jive (4% dodge), Wu Ming S1=2 Shadow's Evasion (DefenseUp benefit_on=normal+extra for infantry), Wu Ming S2=2 Crescent Uplift (+8% DamageUp base, all troops). NOTE: Reina S3=0 (Shadow Blade inactive), Wu Ming S3=0 (Elemental Resonance inactive). Wu Ming S1 exercises the defensive side of the normal/extra layer split on infantry. Run at least 8 battles due to Wayne S3 + Reina S2 variance.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wayne": {},
+      "Reina": {},
+      "Wu Ming": {}
+    },
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

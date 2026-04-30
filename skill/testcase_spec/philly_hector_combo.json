@@ -1,0 +1,27 @@
+{
+  "test_id": "philly_hector_combo",
+  "description": "Philly (Lancer) + Hector (Infantry) combo — both Tier 1 heroes, both have chance skills, run 5-10 game replicates. Tests Lancer+Infantry skill stacking for a high-impact T1 pairing not yet validated. minxxx defends with Philly (S1=2/S2=2/S3=1) + Hector (S1=3/S2=4/S3=4). First validation of Philly+Hector interaction.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Philly": {},
+      "Hector": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

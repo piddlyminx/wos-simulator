@@ -1,0 +1,28 @@
+{
+  "test_id": "logan_reina_bahiti_combo_nc",
+  "description": "Logan+Reina+Bahiti 3-hero combo — Inf+Lanc+Mark classes, all NC, single run definitive. WIP attacks (no hero, t8 inf+lanc), minxxx defends with all three heroes.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800,
+      "lancer_t6": 800,
+      "marksman_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Logan": {},
+      "Reina": {},
+      "Bahiti": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "test_id": "wayne_reina_combo",
+  "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) combo. WIP attacking minxxx. Exercises multi-hero extra-attack stacking for WOS-227 formula audit. Active skills: Wayne S1=2 Thunder Strike (extra, op=1010, every 4 turns), Wayne S2=2 Roundabout Hit (extra, op=1011 vs lancers / op=1012 vs marksmen, every 2 attacks), Wayne S3=3 Fleet (15% crit chance, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10% DamageUp, permanent), Reina S2=1 Swift Jive (4% dodge normal attacks). NOTE: Reina S3=0 — Shadow Blade (extra_attack=true, op=101) is INACTIVE. This combo therefore tests the normal_only + extra layer additive formula (Reina S1 + Wayne S1) but cannot discriminate multiplicative-vs-additive within the extra layer alone (requires Reina S3 unlocked). Run at least 8 battles due to Wayne S3 chance + Reina S2 dodge variance.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wayne": {},
+      "Reina": {}
+    },
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

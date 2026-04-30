@@ -1,0 +1,18 @@
+{
+  "mumu_manager": "/mnt/c/Program Files/Netease/MuMuPlayer/nx_main/MuMuManager.exe",
+  "package": "com.gof.global",
+  "activity": "com.unity3d.player.MyMainPlayerActivity",
+  "timeouts": {
+    "emulator_boot_sec": 120,
+    "android_ready_sec": 60,
+    "app_launch_sec": 45,
+    "adb_connect_sec": 10
+  },
+  "instances": {
+    "MyInstance": {
+      "disabled": false,
+      "heal_alliance": "TAG",
+      "battle_alliance": "TAG"
+    }
+  }
+}

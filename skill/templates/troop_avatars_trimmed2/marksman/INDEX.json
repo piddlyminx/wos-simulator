@@ -1,0 +1,21 @@
+{
+  "type": "marksman",
+  "source": "derived from templates/troop_avatars (cropped top 10px, bottom 30px)",
+  "files": [
+    "1d045abe-d2ab-4ebd-8ccc-dde3fb1de2d6.png",
+    "31aba371-6510-405f-a998-c8f509767a76.png",
+    "3dd380b9-20cc-48c0-aa58-d17e91214077.png",
+    "71182f90-e3b3-4dad-a3a3-a1b7e93b7054.png",
+    "7d67bb6e-1122-4fec-9cde-751c158ac09b.png",
+    "b3bba6c4-8e9e-4783-a8ed-7eecb8110ae6.png",
+    "ca480182-db2f-4257-8acd-ea943b7262ed.png",
+    "cc2bc09e-ddae-4ddc-a6d2-1e9c1853d7f6.png",
+    "e803b125-c4ea-4e4c-9e8a-81a48d7f6626.png",
+    "fdfd97f3-173d-4ec8-9791-e3754417964f.png",
+    "2fbad4eb-606d-4750-b116-525b44c50e4a.png"
+  ],
+  "crop": {
+    "top": 10,
+    "bottom": 30
+  }
+}

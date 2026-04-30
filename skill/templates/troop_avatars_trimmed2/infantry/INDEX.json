@@ -1,0 +1,22 @@
+{
+  "type": "infantry",
+  "source": "derived from templates/troop_avatars (cropped top 10px, bottom 30px)",
+  "files": [
+    "0cda9437-241d-413e-a31d-ecebec08f433.png",
+    "1c943de4-c0f5-4986-b8a4-a5b91cda1ca7.png",
+    "3fe3762d-6826-4907-bfdd-0a8b3b44024b.png",
+    "5af7916b-679b-4074-80c9-bd2874739585.png",
+    "6906ae80-bf76-4eba-8942-84d3cf9d3b65.png",
+    "941743c5-166c-4ca1-8106-70ce32456f2e.png",
+    "b6fab9d5-1f28-4e93-bf56-e6629f5c5d19.png",
+    "dd4328b4-3b9d-49bb-a3bc-e2e2d129a608.png",
+    "e22ac3e5-425e-4d60-b3de-b7d3a2dcbb2f.png",
+    "f9bbe1b8-19f8-422b-b65b-580535f5da0b.png",
+    "fd32806c-b616-4d04-afcd-d1766c61917a.png",
+    "8361c50a-2dbe-4724-98df-fbba3041801d.png"
+  ],
+  "crop": {
+    "top": 10,
+    "bottom": 30
+  }
+}

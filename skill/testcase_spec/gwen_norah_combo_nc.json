@@ -1,0 +1,27 @@
+{
+  "test_id": "gwen_norah_combo_nc",
+  "description": "Gwen (Marksman class) + Norah (Infantry class) combo defender — no chance skills, deterministic. Tests frequency-based skill stacking: Gwen fires extra marksmen attacks every 4-5 attacks, Norah fires lancer splash. WIP attacks clean; minxxx defends.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "lancer_t6": 1069,
+      "marksman_t6": 1500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Gwen": {},
+      "Norah": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

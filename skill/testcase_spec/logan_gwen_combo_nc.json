@@ -1,0 +1,27 @@
+{
+  "test_id": "logan_gwen_combo_nc",
+  "description": "Logan (Infantry) + Gwen (Marksman) combo — both heroes fully deterministic (no chance skills), single run sufficient. Tests Infantry+Marksman DamageUp stacking for two of the highest-tier NC heroes. minxxx defends with Logan (S1=3/S2=3/S3=3) + Gwen (S1=1/S2=1/S3=0). First validation of Logan+Gwen interaction.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Logan": {},
+      "Gwen": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

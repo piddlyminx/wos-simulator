@@ -1,0 +1,27 @@
+{
+  "test_id": "sergey_reina_combo_nc",
+  "description": "Sergey+Reina 2-hero combo — Inf+Lanc class heroes, both NC (no chance skills), single run definitive. Sergey S1/S2 infantry buffs; Reina S1/S2 lancer buffs. WIP attacks (no hero, t6 600/600/600), minxxx defends with Sergey+Reina.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Sergey": {},
+      "Reina": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

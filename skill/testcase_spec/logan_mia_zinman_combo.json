@@ -1,0 +1,28 @@
+{
+  "test_id": "logan_mia_zinman_combo",
+  "description": "Logan (Infantry) + Mia (Lancer) + Zinman (Marksman) full 3-hero combo — all three are minxxx-only heroes. Logan buffs infantry defense (deterministic); Mia buffs lancer attack with 50% chance S2 splash; Zinman buffs marksman attack (deterministic). Tests all-class coverage with minxxx-exclusive lineup. RNG due to Mia S2 — run 5 battles.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Logan": {},
+      "Mia": {},
+      "Zinman": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}

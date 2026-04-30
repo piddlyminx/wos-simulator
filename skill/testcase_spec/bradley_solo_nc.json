@@ -1,0 +1,26 @@
+{
+  "test_id": "bradley_solo_nc",
+  "description": "Bradley solo defender — all skills deterministic (trigger_for=once, no chance), single run sufficient. Bradley is Marksman class with high skill levels on minxxx (S1=3/S2=3/S3=2). Validates DamageUp stacking (op=101/102) and Widget StatBonus (op=402). First emulator validation of Bradley's simulator implementation.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "lancer_t6": 1069,
+      "marksman_t6": 1500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Bradley": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

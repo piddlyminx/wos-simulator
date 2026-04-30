@@ -1,0 +1,27 @@
+{
+  "test_id": "greg_molly_combo",
+  "description": "Greg+Molly 2-hero combo — Inf+Lanc class heroes. Greg S1 has 20% chance; Molly has lancer-focused splash and attack-frequency skills. RNG test, run 5 battles. WIP attacks (no hero, t6 troops), minxxx defends with Greg+Molly.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Greg": {},
+      "Molly": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}

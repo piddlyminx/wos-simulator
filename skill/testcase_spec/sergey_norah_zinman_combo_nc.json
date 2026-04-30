@@ -1,0 +1,28 @@
+{
+  "test_id": "sergey_norah_zinman_combo_nc",
+  "description": "Sergey+Norah+Zinman 3-hero combo — Inf+Lanc+Mark class heroes, all NC (no chance skills), single run definitive. Tests 3-class buff stacking with deterministic skills. WIP attacks (no hero, t6 800/800/800), minxxx defends with all three heroes.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800,
+      "lancer_t6": 800,
+      "marksman_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Sergey": {},
+      "Norah": {},
+      "Zinman": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

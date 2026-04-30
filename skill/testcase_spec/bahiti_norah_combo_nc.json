@@ -1,0 +1,27 @@
+{
+  "test_id": "bahiti_norah_combo_nc",
+  "description": "Bahiti (Marksman) + Norah (Lancer) combo — both heroes fully deterministic, single run sufficient. Tests Marksman+Lancer pairing and Norah's splash interaction with Bahiti's buffs.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Bahiti": {},
+      "Norah": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "test_id": "alonso_minxxx_defender",
+  "description": "Alonso solo defender (replaces Alonso_tc daut_viper_1). WIP attacks with no heroes (1000 inf / 500 lanc / 500 mark t6), minxxx defends with Alonso. Chance-based skills — collect 8 game results. Reference: WOS-191.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1000,
+      "lancer_t6": 500,
+      "marksman_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Alonso": {}
+    },
+    "troops": {
+      "infantry_t6": 100,
+      "lancer_t6": 50,
+      "marksman_t6": 50
+    }
+  }
+}

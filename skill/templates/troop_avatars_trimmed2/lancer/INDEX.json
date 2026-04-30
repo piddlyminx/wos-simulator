@@ -1,0 +1,21 @@
+{
+  "type": "lancer",
+  "source": "derived from templates/troop_avatars (cropped top 10px, bottom 30px)",
+  "files": [
+    "1ff1b938-46a8-42d6-aadb-0b50837ae37c.png",
+    "26214698-1d1d-41b0-a414-f6833dfebdc0.png",
+    "36c4c362-44b0-4c6e-8078-6e009c4cdaeb.png",
+    "4be6a1e9-c8ea-4713-951b-95a5eb39c20b.png",
+    "6050c055-03b4-4ef4-a82f-cbfe6a1cc1ef.png",
+    "88d3361c-6d0a-4051-88e4-77b33087c2c1.png",
+    "8ac19afe-0f14-4d24-a67f-4d816da6e52c.png",
+    "b09b1b0c-6800-4e11-8092-f0fde6e9e1ab.png",
+    "b975b78b-a36a-4fd0-b44a-fcb224b392cf.png",
+    "bea6dab4-4f1f-40af-8792-3f96f632b137.png",
+    "e6462ef4-df27-49bb-b9c3-b78c792b9855.png"
+  ],
+  "crop": {
+    "top": 10,
+    "bottom": 30
+  }
+}

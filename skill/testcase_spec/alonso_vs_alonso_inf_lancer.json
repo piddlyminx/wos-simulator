@@ -1,0 +1,26 @@
+{
+  "test_id": "alonso_vs_alonso_inf_lancer",
+  "description": "Alonso on both sides, infantry+lancer only (replaces Alonso_tc daut_viper_4). WIP attacks with Alonso (2677 inf / 1611 lanc / 0 mark t6), minxxx defends with Alonso (1125 inf / 236 lanc / 0 mark). Chance-based skills — collect 8 game results. NOTE: Alonso must be available on WIP — capture fresh skills before running. Reference: WOS-191.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Alonso": {}
+    },
+    "troops": {
+      "infantry_t6": 2677,
+      "lancer_t6": 1611
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Alonso": {}
+    },
+    "troops": {
+      "infantry_t6": 1125,
+      "lancer_t6": 236
+    }
+  }
+}

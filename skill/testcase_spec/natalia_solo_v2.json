@@ -1,0 +1,24 @@
+{
+  "test_id": "natalia_solo_v2",
+  "description": "Natalia solo defender — additional replicates (target N=5) for RNG confidence on S1 chance skill. WIP attacks with no heroes; minxxx defends with Natalia. All t6 troops. Run 5 battles and capture all results.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": { "Natalia": {} },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

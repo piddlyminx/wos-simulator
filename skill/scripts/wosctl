@@ -1,0 +1,1011 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "numpy==2.4.2",
+#   "onnxruntime==1.23.2",
+#   "opencv-python-headless==4.13.0.92",
+#   "pillow==12.1.0",
+#   "pytesseract==0.3.13",
+#   "rapidocr==3.8.1",
+# ]
+# ///
+"""
+wosctl — Unified CLI for automating Whiteout Survival on MuMuPlayer via ADB from WSL2.
+
+Usage:
+  wosctl [--instance <name>] <command> [args...]
+
+Commands:
+  status              Show emulator + WOS state (read-only, no state changes)
+  ensure-ready        Cold start: emulator → ADB → WOS in foreground
+  goto city           Navigate to city
+  goto world          Navigate to world map
+  goto pets           Navigate to the Pets screen
+  goto beast_cage          Navigate to the Beast Cage screen
+  goto pet <name>          Navigate to a specific pet's details page
+  goto pet_refine <name>   Navigate to the Refine tab of a specific pet
+  run-testcase <file> Run a battle spec end-to-end: emulators → report → testcase JSON
+  memories <map>      Clear visible memories labels using a CSV or JSON map
+  report              Read and parse a battle report from an inbox tab
+  reports             Capture and parse multiple consecutive battle reports
+  capture-hero-skills  Capture and save all hero skill levels
+  ensure-alliance <tag> Ensure the player is in the specified alliance
+  recall-camp          Recall all encamped troops from the world map
+  heal                 Heal all wounded troops using the configured heal alliance
+  shell <cmd...>      Run an adb shell command and print output
+
+Global options:
+  --instance <name>  Instance name as shown in MuMuManager. Required except for status and run-testcase.
+"""
+from __future__ import annotations
+
+# ── venv auto-activation ───────────────────────────────────────────────────────
+# Re-exec under the venv interpreter when called directly so imports work
+# without manual activation.
+import sys
+import os
+import shutil
+from pathlib import Path
+
+_ENTRY_DIR = Path(__file__).resolve().parent
+if _ENTRY_DIR.name == "scripts" and (_ENTRY_DIR.parent / "templates").is_dir():
+    _SKILL_DIR = _ENTRY_DIR.parent
+else:
+    _SKILL_DIR = _ENTRY_DIR
+
+_SELF_PATH = Path(__file__).resolve()
+_VENV_DIR = _SKILL_DIR / ".venv"
+_VENV_PYTHON = _VENV_DIR / "bin" / "python3"
+_UV_BOOTSTRAPPED = "WOSCTL_UV_BOOTSTRAPPED"
+
+if os.environ.get(_UV_BOOTSTRAPPED) != "1":
+    uv_exe = shutil.which("uv")
+    if uv_exe:
+        env = os.environ.copy()
+        env[_UV_BOOTSTRAPPED] = "1"
+        os.execvpe(
+            uv_exe,
+            [uv_exe, "run", "--script", str(_SELF_PATH)] + sys.argv[1:],
+            env,
+        )
+
+if _VENV_PYTHON.exists() and sys.prefix != str(_VENV_DIR):
+    os.execv(str(_VENV_PYTHON), [str(_VENV_PYTHON)] + sys.argv)
+
+# ── stdlib imports ─────────────────────────────────────────────────────────────
+import argparse
+import json
+import logging
+
+# ── onboarding: runs BEFORE any emulator imports ─────────────────────────────
+_CONFIG_PATH = _SKILL_DIR / "config.json"
+_CONFIG_EXAMPLE_PATH = _CONFIG_PATH.with_name("config.json.example")
+
+
+def _onboarding_discover_instances(mumu_manager: str) -> list[str]:
+    """Run MuMuManager to discover emulator instance names.
+
+    This is a standalone implementation that does not depend on emulator.py,
+    since config.json does not exist yet when onboarding runs.
+    """
+    import glob as _glob
+    import subprocess as _subprocess
+
+    env = os.environ.copy()
+    # Find WSL_INTEROP socket so the Windows exe can be invoked from WSL
+    interop = env.get("WSL_INTEROP")
+    if not interop or not os.path.exists(interop):
+        sockets = sorted(_glob.glob("/run/WSL/*_interop"), reverse=True)
+        if sockets:
+            interop = sockets[0]
+    if interop:
+        env["WSL_INTEROP"] = interop
+
+    try:
+        result = _subprocess.run(
+            [mumu_manager, "info", "--vmindex", "all"],
+            capture_output=True,
+            text=True,
+            env=env,
+            cwd="/mnt/c/Windows/System32",
+            timeout=15,
+        )
+        raw = (result.stdout + result.stderr).strip()
+    except Exception as exc:
+        print(f"\n  Could not run MuMuManager: {exc}")
+        return []
+
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        print(f"\n  Could not parse MuMuManager output.")
+        return []
+
+    # data is a dict keyed by string index, each value has a "name" field
+    names: list[str] = []
+    if isinstance(data, dict):
+        for _key, info in sorted(data.items()):
+            name = str(info.get("name", "")).strip()
+            if name:
+                names.append(name)
+    return names
+
+
+def _run_onboarding() -> None:
+    """Interactive first-time setup. Writes config.json when it does not exist.
+
+    Only runs when stdin is a TTY so non-interactive invocations fall through
+    to the existing silent-defaults behavior in emulator.py.
+    """
+    if _CONFIG_PATH.exists():
+        return
+    if not sys.stdin.isatty():
+        return
+
+    # Read defaults from the example config (single source of truth)
+    try:
+        _example = json.loads(_CONFIG_EXAMPLE_PATH.read_text())
+    except (json.JSONDecodeError, OSError, FileNotFoundError):
+        _example = {}
+    default_mumu = _example.get(
+        "mumu_manager",
+        "/mnt/c/Program Files/Netease/MuMuPlayer/nx_main/MuMuManager.exe",
+    )
+
+    print()
+    print("=" * 68)
+    print("  Welcome to wosctl -- first-time setup")
+    print("=" * 68)
+    print()
+    print("  No config.json was found. This wizard will create one for you.")
+    print()
+
+    # -- mumu_manager path --
+    print(f"  MuMuManager path [{default_mumu}]:")
+    raw_mumu = input("  > ").strip()
+    mumu_manager = raw_mumu if raw_mumu else default_mumu
+
+    # -- discover instances --
+    print()
+    print("  Discovering emulator instances via MuMuManager ...")
+    instance_names = _onboarding_discover_instances(mumu_manager)
+
+    instances: dict[str, dict[str, str]] = {}
+    if instance_names:
+        print(f"  Found {len(instance_names)} instance(s): {', '.join(instance_names)}")
+        print()
+        print("  For each instance, enter alliance TAGs for healing and battling.")
+        print("  Press Enter to skip an instance entirely.")
+        print()
+        for name in instance_names:
+            heal_tag = input(f"  Healing alliance TAG for '{name}': ").strip().upper()
+            if not heal_tag:
+                continue
+            battle_tag = input(f"  Battle alliance TAG for '{name}' [{heal_tag}]: ").strip().upper()
+            if not battle_tag:
+                battle_tag = heal_tag
+            instances[name] = {
+                "heal_alliance": heal_tag,
+                "battle_alliance": battle_tag,
+            }
+    else:
+        print("  No instances discovered. You can add them to config.json later.")
+
+    # -- build config from example defaults --
+    config: dict = dict(_example)
+    config.pop("instances", None)
+    config.pop("simulator_dir", None)
+    config["mumu_manager"] = mumu_manager
+    if instances:
+        config["instances"] = instances
+
+    _CONFIG_PATH.write_text(json.dumps(config, indent=2) + "\n")
+
+    print()
+    print(f"  Config written to {_CONFIG_PATH}")
+    print()
+    print("  To get started, point your AI coding agent at this skill directory.")
+    print("  The simulator repository root is the parent directory of this skill.")
+    print()
+    print("=" * 68)
+    print()
+
+
+_run_onboarding()
+
+# ── ensure scripts/ is importable ─────────────────────────────────────────────
+if str(_ENTRY_DIR) not in sys.path:
+    sys.path.insert(0, str(_ENTRY_DIR))
+if str(_SKILL_DIR) not in sys.path:
+    sys.path.insert(0, str(_SKILL_DIR))
+
+from logging_setup import configure_daily_file_logging
+from emulator import (
+    WosError,
+    WosEmulator,
+    adb_ping,
+    is_instance_disabled,
+    list_instances,
+    wos_is_foreground,
+    resolve_instance,
+)
+from navigation import (
+    get_screen_state,
+    goto_city,
+    goto_world_map,
+    goto_coord,
+    goto_pets,
+    goto_beast_cage,
+    goto_pet,
+    goto_pet_refine,
+    WosReconnectError,
+    WosNavigationError,
+)
+from dispatch import recall_camp, WosDispatchError, TROOP_DISPLAY_NAMES
+from heal import heal_troops, WosHealError
+from alliance import ensure_in_alliance, get_current_alliance_tag, WosAllianceError
+
+# ─── Logging setup ─────────────────────────────────────────────────────────────
+configure_daily_file_logging(_SKILL_DIR)
+logger = logging.getLogger("wosctl")
+
+STATUS_ADB_TIMEOUT_SEC = 2.0
+STATUS_ADB_SERVER_RESTART_TIMEOUT_SEC = 5.0
+STATUS_ADB_POST_RESTART_SETTLE_SEC = 1.5
+STATUS_ADB_POST_RESTART_TIMEOUT_SEC = 5.0
+
+
+# ─── Helpers ───────────────────────────────────────────────────────────────────
+class JsonArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        raise SystemExit(_fail(message, exit_code=2, error_type="usage_error"))
+
+
+def _emit(data: dict) -> None:
+    print(json.dumps(data, indent=2))
+
+
+def _fail(message: str, exit_code: int = 1, error_type: str = "error", **extra: object) -> int:
+    payload = {"ok": False, "error": message, "error_type": error_type}
+    payload.update(extra)
+    _emit(payload)
+    return exit_code
+
+
+def _success(**payload: object) -> int:
+    _emit({"ok": True, **payload})
+    return 0
+
+
+def _positive_int(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError("must be an integer")
+    if parsed < 1:
+        raise argparse.ArgumentTypeError("must be >= 1")
+    return parsed
+
+
+def _resolve_emulator(instance_name: str) -> WosEmulator:
+    """Resolve instance name → running WosEmulator (mumu lookup + ADB + foreground)."""
+    return resolve_instance(instance_name)
+
+
+def _available_instance_names() -> list[str]:
+    """Return control-eligible MuMu instance names, excluding unnamed/disabled slots."""
+    return [
+        str(info.get("name")).strip()
+        for info in list_instances()
+        if str(info.get("name", "")).strip()
+        and not is_instance_disabled(str(info.get("name")).strip())
+    ]
+
+
+def _named_instance_names() -> list[str]:
+    """Return all named MuMu instances, including disabled ones."""
+    return [
+        str(info.get("name")).strip()
+        for info in list_instances()
+        if str(info.get("name", "")).strip()
+    ]
+
+
+def _require_instance_name(instance_name: str | None) -> str:
+    """Return the chosen instance name or raise a user-facing error."""
+    if instance_name:
+        return instance_name
+
+    try:
+        names = _available_instance_names()
+    except WosError as exc:
+        raise WosError(
+            f"--instance <name> is required. MuMuManager lookup failed while listing instances: {exc}"
+        ) from exc
+
+    if names:
+        choices = ", ".join(names)
+        raise WosError(
+            f"--instance <name> is required for this command. Available instances: {choices}"
+        )
+
+    try:
+        all_names = _named_instance_names()
+    except WosError as exc:
+        raise WosError(
+            f"--instance <name> is required. MuMuManager lookup failed while listing instances: {exc}"
+        ) from exc
+
+    if all_names:
+        raise WosError(
+            "--instance <name> is required for this command, but all named instances are disabled in config.json"
+        )
+
+    raise WosError(
+        "--instance <name> is required for this command, and MuMuManager reported no named instances"
+    )
+
+
+# ─── Command implementations ───────────────────────────────────────────────────
+def _probe_status(info: dict) -> dict:
+    idx = int(info["vmindex"])
+    instance_name = info.get("name") or f"Instance {idx}"
+    adb_port = int(info["adb_port"])
+    serial = f"127.0.0.1:{adb_port}"
+    emulator_running = (
+        bool(info.get("is_process_started"))
+        and bool(info.get("is_android_started"))
+    )
+
+    adb_connected = False
+    adb_restarted = False
+    wos_fg = False
+    screen_state = "unknown"
+    probe_errors: list[str] = []
+
+    if emulator_running:
+        try:
+            adb_connected, adb_restarted, adb_error = adb_ping(
+                serial,
+                timeout_sec=STATUS_ADB_TIMEOUT_SEC,
+                restart_timeout_sec=STATUS_ADB_SERVER_RESTART_TIMEOUT_SEC,
+                restart_settle_sec=STATUS_ADB_POST_RESTART_SETTLE_SEC,
+            )
+            if adb_error:
+                probe_errors.append(f"adb probe failed: {adb_error}")
+        except Exception as exc:
+            probe_errors.append(f"adb probe failed: {exc}")
+
+        if adb_connected:
+            status_timeout_sec = (
+                STATUS_ADB_POST_RESTART_TIMEOUT_SEC
+                if adb_restarted
+                else STATUS_ADB_TIMEOUT_SEC
+            )
+            # Build a lightweight emulator view for status probes (no foreground setup)
+            from emulator import WosEmulator as _WE
+            _emu = _WE(instance_name=instance_name, instance_idx=idx, serial=serial)
+            try:
+                wos_fg = _emu.is_foreground(timeout_sec=status_timeout_sec)
+            except Exception as exc:
+                probe_errors.append(f"foreground probe failed: {exc}")
+
+            try:
+                screen_state = get_screen_state(_emu, timeout_sec=status_timeout_sec)
+            except Exception as exc:
+                probe_errors.append(f"screen probe failed: {exc}")
+
+    return {
+        "instance_name": instance_name,
+        "instance_idx": idx,
+        "serial": serial,
+        "adb_port": adb_port,
+        "control_disabled": is_instance_disabled(instance_name),
+        "emulator_running": emulator_running,
+        "adb_connected": adb_connected,
+        "adb_restarted": adb_restarted,
+        "wos_foreground": wos_fg,
+        "screen_state": screen_state,
+        "probe_errors": probe_errors,
+    }
+
+
+def cmd_status(instance_name: str | None) -> int:
+    """Read-only status report for one instance or all MuMu-reported instances.
+
+    Does NOT change any emulator or app state.
+    """
+    try:
+        instances = list_instances()
+    except WosError as exc:
+        return _fail(str(exc))
+    if not instances:
+        return _fail("MuMuManager reported no instances")
+
+    if instance_name:
+        matched = [
+            info for info in instances
+            if str(info.get("name", "")).lower() == instance_name.lower()
+        ]
+        if not matched:
+            return _fail(
+                f"Instance '{instance_name}' not found",
+                error_type="not_found",
+                instance_name=instance_name,
+            )
+        statuses = [_probe_status(matched[0])]
+    else:
+        statuses = [_probe_status(info) for info in instances]
+
+    if instance_name:
+        _emit(statuses[0])
+    else:
+        _emit({"instances": statuses})
+    return 0
+
+
+def cmd_ensure_ready(instance_name: str) -> int:
+    try:
+        emulator = _resolve_emulator(instance_name)
+        return _success(
+            command="ensure-ready",
+            instance_name=emulator.instance_name,
+            instance_idx=emulator.instance_idx,
+            serial=emulator.serial,
+            ready=True,
+        )
+    except WosError as exc:
+        return _fail(
+            f"ensure-ready failed: {exc}",
+            command="ensure-ready",
+            instance_name=instance_name,
+        )
+
+
+def cmd_goto(instance_name: str, destination: str, pet_name: str = "", coord_y: str = "") -> int:
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="goto", instance_name=instance_name, destination=destination)
+
+    try:
+        if destination == "city":
+            goto_city(emulator)
+        elif destination == "world":
+            goto_world_map(emulator)
+        elif destination == "coord":
+            try:
+                cx = int(pet_name)
+                cy = int(coord_y)
+            except (ValueError, TypeError):
+                return _fail(
+                    "goto coord requires X and Y integers, e.g.: goto coord 775 580",
+                    exit_code=2, error_type="usage_error",
+                    command="goto", instance_name=instance_name, destination=destination,
+                )
+            goto_coord(emulator, cx, cy)
+        elif destination == "pets":
+            goto_pets(emulator)
+        elif destination == "beast_cage":
+            goto_beast_cage(emulator)
+        elif destination == "pet_refine":
+            if not pet_name:
+                return _fail(
+                    "goto pet_refine requires a pet name, e.g.: goto pet_refine 'Cave Lion'",
+                    exit_code=2,
+                    error_type="usage_error",
+                    command="goto",
+                    instance_name=instance_name,
+                    destination=destination,
+                )
+            try:
+                goto_pet_refine(emulator, pet_name)
+            except ValueError as exc:
+                return _fail(
+                    str(exc),
+                    exit_code=2,
+                    error_type="usage_error",
+                    command="goto",
+                    instance_name=instance_name,
+                    destination=destination,
+                    pet_name=pet_name,
+                )
+        elif destination == "pet":
+            if not pet_name:
+                return _fail(
+                    "goto pet requires a pet name, e.g.: goto pet 'Frost Gorilla'",
+                    exit_code=2,
+                    error_type="usage_error",
+                    command="goto",
+                    instance_name=instance_name,
+                    destination=destination,
+                )
+            try:
+                goto_pet(emulator, pet_name)
+            except ValueError as exc:
+                return _fail(
+                    str(exc),
+                    exit_code=2,
+                    error_type="usage_error",
+                    command="goto",
+                    instance_name=instance_name,
+                    destination=destination,
+                    pet_name=pet_name,
+                )
+        else:
+            return _fail(
+                f"Unknown destination '{destination}'. Use 'city', 'world', 'pets', 'beast_cage', or 'pet <name>'.",
+                exit_code=2,
+                error_type="usage_error",
+                command="goto",
+                instance_name=instance_name,
+                destination=destination,
+            )
+        return _success(
+            command="goto",
+            instance_name=instance_name,
+            serial=emulator.serial,
+            destination=destination,
+            pet_name=pet_name or None,
+        )
+    except WosReconnectError as exc:
+        return _fail(
+            f"Reconnect required: {exc}",
+            command="goto",
+            instance_name=instance_name,
+            destination=destination,
+            pet_name=pet_name or None,
+            error_type="reconnect_required",
+        )
+    except WosNavigationError as exc:
+        return _fail(
+            f"Navigation failed: {exc}",
+            command="goto",
+            instance_name=instance_name,
+            destination=destination,
+            pet_name=pet_name or None,
+            error_type="navigation_error",
+        )
+
+
+def cmd_screencap(instance_name: str, out_path: str) -> int:
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="screencap", instance_name=instance_name, path=out_path)
+
+    try:
+        emulator.screencap(out_path)
+        return _success(
+            command="screencap",
+            instance_name=instance_name,
+            serial=emulator.serial,
+            path=out_path,
+        )
+    except Exception as exc:
+        return _fail(
+            f"screencap failed: {exc}",
+            command="screencap",
+            instance_name=instance_name,
+            path=out_path,
+        )
+
+
+def cmd_report(instance_name: str, tab: str, index: int, debug: bool = False) -> int:
+    try:
+        from report_reader import normalize_mail_tab, read_battle_report
+
+        normalized_tab = normalize_mail_tab(tab)
+    except ValueError as exc:
+        return _fail(str(exc), exit_code=2, error_type="usage_error", command="report", tab=tab, index=index)
+
+    if not 1 <= index <= 5:
+        return _fail(
+            "report index must be between 1 and 5",
+            exit_code=2,
+            error_type="usage_error",
+            command="report",
+            tab=tab,
+            index=index,
+        )
+
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="report", instance_name=instance_name, tab=tab, index=index)
+
+    try:
+        data = read_battle_report(emulator, tab=normalized_tab, index=index, debug=debug)
+        _emit(data)
+        return 0
+    except ValueError as exc:
+        return _fail(
+            str(exc),
+            exit_code=2,
+            error_type="usage_error",
+            command="report",
+            instance_name=instance_name,
+            tab=tab,
+            index=index,
+        )
+    except Exception as exc:
+        return _fail(
+            f"report failed: {exc}",
+            command="report",
+            instance_name=instance_name,
+            tab=tab,
+            index=index,
+        )
+
+
+def cmd_reports(
+    instance_name: str,
+    tab: str,
+    count: int,
+    debug: bool = False,
+    full_json: bool = False,
+) -> int:
+    try:
+        from report_reader import normalize_mail_tab, capture_multiple_reports
+
+        normalized_tab = normalize_mail_tab(tab)
+    except ValueError as exc:
+        return _fail(
+            str(exc),
+            exit_code=2,
+            error_type="usage_error",
+            command="reports",
+            tab=tab,
+            count=count,
+        )
+
+    if count < 1:
+        return _fail(
+            "report count must be at least 1",
+            exit_code=2,
+            error_type="usage_error",
+            command="reports",
+            tab=tab,
+            count=count,
+        )
+
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(
+            str(exc),
+            command="reports",
+            instance_name=instance_name,
+            tab=tab,
+            count=count,
+        )
+
+    try:
+        files = capture_multiple_reports(emulator, tab=normalized_tab, count=count, debug=debug)
+        output_dir = str(Path(files[0]).parent) if files else ""
+        payload: dict[str, object] = {
+            "ok": True,
+            "command": "reports",
+            "instance_name": instance_name,
+            "tab": normalized_tab,
+            "count": len(files),
+            "output_dir": output_dir,
+            "files": files,
+        }
+        if debug:
+            payload["debug_dirs"] = [
+                json.loads(Path(path).read_text()).get("debug_dir")
+                for path in files
+            ]
+        if full_json:
+            payload["reports"] = [json.loads(Path(path).read_text()) for path in files]
+        _emit(payload)
+        return 0
+    except ValueError as exc:
+        return _fail(
+            str(exc),
+            exit_code=2,
+            error_type="usage_error",
+            command="reports",
+            instance_name=instance_name,
+            tab=tab,
+            count=count,
+        )
+    except Exception as exc:
+        return _fail(
+            f"reports failed: {exc}",
+            command="reports",
+            instance_name=instance_name,
+            tab=tab,
+            count=count,
+        )
+
+
+def cmd_memories(instance_name: str, map_path: str) -> int:
+    try:
+        from memories import run_memories
+    except Exception as exc:
+        return _fail(
+            f"memories setup failed: {exc}",
+            command="memories",
+            instance_name=instance_name,
+            map=map_path,
+        )
+
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="memories", instance_name=instance_name, map=map_path)
+
+    try:
+        data = run_memories(emulator.serial, map_path)
+        _emit(data)
+        return 0
+    except Exception as exc:
+        return _fail(
+            f"memories failed: {exc}",
+            command="memories",
+            instance_name=instance_name,
+            map=map_path,
+        )
+
+
+def cmd_capture_hero_skills(instance_name: str) -> int:
+    from capture_hero_skills import capture_hero_skills, save_hero_skills
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="capture-hero-skills", instance_name=instance_name)
+    try:
+        hero_data = capture_hero_skills(emulator, instance_name)
+        save_hero_skills(instance_name, hero_data)
+        return _success(command="capture-hero-skills", instance_name=instance_name, heroes_captured=len(hero_data), heroes=hero_data)
+    except Exception as exc:
+        return _fail(f"capture-hero-skills failed: {exc}", command="capture-hero-skills", instance_name=instance_name)
+
+
+def cmd_recall_camp(instance_name: str) -> int:
+    """Recall all encamped troops from the world map."""
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="recall-camp", instance_name=instance_name)
+
+    try:
+        recall_camp(emulator)
+        return _success(command="recall-camp", instance_name=instance_name)
+    except WosDispatchError as exc:
+        return _fail(str(exc), command="recall-camp", instance_name=instance_name)
+    except Exception as exc:
+        return _fail(f"recall-camp failed: {exc}", command="recall-camp", instance_name=instance_name)
+
+
+def cmd_ensure_alliance(instance_name: str, tag: str) -> int:
+    """Ensure the player is in the specified alliance."""
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="ensure-alliance", instance_name=instance_name)
+
+    try:
+        original_tag = ensure_in_alliance(emulator, tag)
+        current = tag.upper()
+        if original_tag:
+            return _success(command="ensure-alliance", instance_name=instance_name,
+                            switched=True, from_alliance=original_tag, to_alliance=current)
+        else:
+            return _success(command="ensure-alliance", instance_name=instance_name,
+                            switched=False, already_in=current)
+    except WosAllianceError as exc:
+        return _fail(str(exc), command="ensure-alliance", instance_name=instance_name)
+    except Exception as exc:
+        return _fail(f"ensure-alliance failed: {exc}", command="ensure-alliance", instance_name=instance_name)
+
+
+def cmd_heal(instance_name: str, home_alliance: str = "") -> int:
+    """Heal all wounded troops using the configured heal alliance."""
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="heal", instance_name=instance_name)
+
+    try:
+        result = heal_troops(emulator, home_tag=home_alliance)
+        return _success(command="heal", instance_name=instance_name, **result)
+    except WosHealError as exc:
+        return _fail(str(exc), command="heal", instance_name=instance_name)
+    except Exception as exc:
+        return _fail(f"heal failed: {exc}", command="heal", instance_name=instance_name)
+
+
+def cmd_shell(instance_name: str, shell_cmd: str) -> int:
+    try:
+        emulator = _resolve_emulator(instance_name)
+    except WosError as exc:
+        return _fail(str(exc), command="shell", instance_name=instance_name, shell_cmd=shell_cmd)
+
+    output = emulator.shell(shell_cmd)
+    _emit(
+        {
+            "command": "shell",
+            "instance_name": instance_name,
+            "serial": emulator.serial,
+            "shell_cmd": shell_cmd,
+            "stdout": output,
+        }
+    )
+    return 0
+
+
+def cmd_run_testcase(spec: str, dry_run: bool = False, repeat: int = 1, debug: bool = False) -> int:
+    try:
+        from run_testcase import run_testcase
+    except Exception as exc:
+        return _fail(f"run-testcase import failed: {exc}", command="run-testcase")
+
+    results: list[dict] = []
+    for run_number in range(1, repeat + 1):
+        try:
+            result = run_testcase(spec, dry_run=dry_run, debug=debug)
+        except Exception as exc:
+            return _fail(
+                str(exc),
+                command="run-testcase",
+                spec=spec,
+                repeat=repeat,
+                completed=len(results),
+                results=results,
+            )
+
+        if repeat == 1:
+            _emit(result)
+            return 0
+
+        result["run_number"] = run_number
+        results.append(result)
+
+    _emit({
+        "ok": True,
+        "command": "run-testcase",
+        "spec": spec,
+        "repeat": repeat,
+        "completed": len(results),
+        "results": results,
+    })
+    return 0
+
+
+# ─── Argument parsing ──────────────────────────────────────────────────────────
+def build_parser() -> argparse.ArgumentParser:
+    parser = JsonArgumentParser(
+        prog="wosctl",
+        description="Whiteout Survival automation CLI (MuMuPlayer / ADB / WSL2)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--instance", "-i",
+        default=None,
+        metavar="<name>",
+        help="Instance name as shown in MuMuManager (required except for status and run-testcase)",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug behavior (for report: persist captures under ./tmp/<temp_name>/)",
+    )
+    sub = parser.add_subparsers(dest="command", metavar="<command>")
+    sub.required = True
+
+    sub.add_parser("status", help="Show emulator + WOS state (read-only)")
+    sub.add_parser("ensure-ready", help="Cold start: emulator → ADB → WOS in foreground")
+
+    goto_p = sub.add_parser("goto", help="Navigate to city, world map, pets, beast cage, or a specific pet")
+    goto_p.add_argument("destination", choices=["city", "world", "coord", "pets", "beast_cage", "pet", "pet_refine"], help="city | world | coord X Y | pets | beast_cage | pet <name> | pet_refine <name>")
+    goto_p.add_argument("pet_name", nargs="?", default="", help="Pet name (for 'goto pet') or X coord (for 'goto coord')")
+    goto_p.add_argument("coord_y", nargs="?", default="", help="Y coord (for 'goto coord')")
+
+    report_p = sub.add_parser("report", help="Read and parse a battle report from an inbox tab")
+    report_p.add_argument("--tab", required=True, help="Inbox tab to read from: war, reports, or starred")
+    report_p.add_argument("--index", type=int, default=1, help="1-based report index within the visible list (default: 1)")
+    report_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
+    reports_p = sub.add_parser("reports", help="Capture and parse multiple consecutive battle reports")
+    reports_p.add_argument("--tab", required=True, help="Inbox tab to read from: war, reports, or starred")
+    reports_p.add_argument("--count", type=int, required=True, help="Number of consecutive reports to capture starting at visible entry 1")
+    reports_p.add_argument("--full-json", action="store_true",
+                           help="Inline the parsed report JSON objects in the CLI response as 'reports'")
+    reports_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
+    memories_p = sub.add_parser("memories", help="Clear visible memories labels using a CSV or JSON map")
+    memories_p.add_argument("map", help="CSV or JSON file mapping label text to screen coordinates")
+
+    cap_p = sub.add_parser("screencap", help="Save screenshot to a file")
+    cap_p.add_argument("path", help="Output file path")
+
+    tc_p = sub.add_parser("run-testcase", help="Run a battle spec end-to-end")
+    tc_p.add_argument("spec", help="Path to battle spec JSON")
+    tc_p.add_argument("--dry-run", action="store_true", help="Skip emulator steps")
+    tc_p.add_argument("--repeat", type=_positive_int, default=1, metavar="N",
+                      help="Run the same spec N times, appending one game observation per successful run")
+    tc_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
+    shell_p = sub.add_parser("shell", help="Run an ADB shell command")
+    shell_p.add_argument("cmd", nargs=argparse.REMAINDER, help="Shell command")
+
+    sub.add_parser("capture-hero-skills", help="Capture hero skill levels and save to data/player_hero_skills.json")
+
+    ea_p = sub.add_parser("ensure-alliance", help="Ensure the player is in the specified alliance")
+    ea_p.add_argument("tag", help="Alliance tag, e.g. [ABC] -> ABC")
+
+    sub.add_parser("recall-camp", help="Recall all encamped troops from the world map")
+
+    heal_p = sub.add_parser("heal", help="Heal all wounded troops using the configured heal alliance")
+    heal_p.add_argument("--home-alliance", default="", metavar="TAG",
+                        help="Alliance to return to after healing, even if already in the heal alliance at start")
+
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.command == "status":
+        return cmd_status(args.instance)
+
+    if args.command == "run-testcase":
+        return cmd_run_testcase(args.spec, dry_run=args.dry_run, repeat=args.repeat, debug=args.debug)
+
+    try:
+        instance_name = _require_instance_name(args.instance)
+    except WosError as exc:
+        return _fail(str(exc), exit_code=2, error_type="usage_error", command=args.command)
+
+    if args.command == "ensure-ready":
+        return cmd_ensure_ready(instance_name)
+
+    if args.command == "goto":
+        return cmd_goto(instance_name, args.destination, getattr(args, "pet_name", ""), getattr(args, "coord_y", ""))
+
+    if args.command == "report":
+        return cmd_report(instance_name, args.tab, args.index, debug=args.debug)
+
+    if args.command == "reports":
+        return cmd_reports(
+            instance_name,
+            args.tab,
+            args.count,
+            debug=args.debug,
+            full_json=getattr(args, "full_json", False),
+        )
+
+    if args.command == "memories":
+        return cmd_memories(instance_name, args.map)
+
+    if args.command == "screencap":
+        return cmd_screencap(instance_name, args.path)
+
+    if args.command == "capture-hero-skills":
+        return cmd_capture_hero_skills(instance_name)
+
+    if args.command == "ensure-alliance":
+        return cmd_ensure_alliance(instance_name, args.tag)
+
+    if args.command == "recall-camp":
+        return cmd_recall_camp(instance_name)
+
+    if args.command == "heal":
+        return cmd_heal(instance_name, home_alliance=getattr(args, "home_alliance", ""))
+
+    if args.command == "shell":
+        shell_cmd = " ".join(args.cmd)
+        if not shell_cmd:
+            return _fail("shell: no command provided", exit_code=2, error_type="usage_error", command="shell")
+        return cmd_shell(instance_name, shell_cmd)
+
+    return _fail(f"Unknown command: {args.command}", exit_code=2, error_type="usage_error")
+
+
+if __name__ == "__main__":
+    sys.exit(main())

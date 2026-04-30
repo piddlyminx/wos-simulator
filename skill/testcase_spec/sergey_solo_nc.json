@@ -1,0 +1,26 @@
+{
+  "test_id": "sergey_solo_nc",
+  "description": "Sergey solo defender — all skills deterministic (no chance), single run sufficient. Validates Sergey's infantry-focused mechanics in isolation.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "lancer_t6": 1069,
+      "marksman_t6": 1500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Sergey": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

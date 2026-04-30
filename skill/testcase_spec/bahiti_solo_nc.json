@@ -1,0 +1,26 @@
+{
+  "test_id": "bahiti_solo_nc",
+  "description": "Bahiti solo defender — all skills deterministic (no chance), single run sufficient. Validates Bahiti's stat-buff mechanics in isolation.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "lancer_t6": 1069,
+      "marksman_t6": 1500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Bahiti": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

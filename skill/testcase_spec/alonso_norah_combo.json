@@ -1,0 +1,27 @@
+{
+  "test_id": "alonso_norah_combo",
+  "description": "Alonso+Norah 2-hero combo — Mark+Lanc class heroes. Alonso has chance-based skills; Norah S2 splash. RNG test, run 5 battles. WIP attacks (no hero, t6 troops), minxxx defends with Alonso+Norah.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Alonso": {},
+      "Norah": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}

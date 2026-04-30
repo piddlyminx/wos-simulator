@@ -1,0 +1,27 @@
+{
+  "test_id": "greg_mia_combo",
+  "description": "Greg (Infantry class) + Mia (Lancer class) combo defender — both have chance-based skills (Greg S1 20%, Mia S2 50%/S3 40%). Run 5+ battles for statistical confidence. Tests chance-skill stacking across classes. WIP attacks clean; minxxx defends.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "lancer_t6": 1069,
+      "marksman_t6": 1500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Greg": {},
+      "Mia": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

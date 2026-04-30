@@ -1,0 +1,34 @@
+{
+  "test_id": "norah_s2_inf_only_A_v2",
+  "description": "Supplement to norah_s2_inf_only_A (N_game=4, t=-3.00, confirmed real divergence). Same setup: WIP 1500 infantry-only attacks minxxx 50/50/50 + Norah S2=1. Target N=8 additional game runs to reduce SEM and confirm or refute the -0.61% bias (sim underpredicts attacker survivors by ~9 troops). If captured stats match norah_s2_inf_only_A (inf 209.9/202.2/118.1/131.2 etc.), pool results with the original testcase. If stats differ, commit as an independent testcase and note the stat change.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "lancer_t6": 0,
+      "marksman_t6": 0
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Norah": {
+        "skill_1": 1,
+        "skill_2": 1,
+        "skill_3": 0
+      }
+    },
+    "troops": {
+      "infantry_t6": 50,
+      "lancer_t6": 50,
+      "marksman_t6": 50
+    }
+  }
+}

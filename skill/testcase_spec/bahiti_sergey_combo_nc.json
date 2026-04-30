@@ -1,0 +1,27 @@
+{
+  "test_id": "bahiti_sergey_combo_nc",
+  "description": "Bahiti (Marksman) + Sergey (Infantry) combo — both heroes fully deterministic, single run sufficient. Tests Marksman+Infantry pairing with complementary buff stacking.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Bahiti": {},
+      "Sergey": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

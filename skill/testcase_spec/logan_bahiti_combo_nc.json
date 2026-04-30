@@ -1,0 +1,27 @@
+{
+  "test_id": "logan_bahiti_combo_nc",
+  "description": "Logan+Bahiti 2-hero combo — infantry/marksman class heroes, no chance skills, single run definitive. WIP attacks (no hero, t8 inf+lanc), minxxx defends with Logan+Bahiti.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Logan": {},
+      "Bahiti": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

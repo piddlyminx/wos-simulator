@@ -1,0 +1,27 @@
+{
+  "test_id": "hector_alonso_combo",
+  "description": "Hector (Infantry) + Alonso (Marksman) 2-hero combo. Hector has chance-based infantry defense skills; Alonso has marksman extra-attack chance skills. Both are high-RNG heroes — run 5 battles. Tests that two independently chance-driven heroes apply their buffs correctly without interaction artifacts.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Hector": {},
+      "Alonso": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}

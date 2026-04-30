@@ -1,0 +1,28 @@
+{
+  "test_id": "sergey_renee_lynn_combo_nc",
+  "description": "Sergey (Infantry) + Renee (Lancer) + Lynn (Marksman) — first 3-hero NC combo covering all three troop classes. All heroes fully deterministic (no chance skills), single run sufficient. minxxx defends with Sergey (S1=4/S2=4) + Renee (S1=4/S2=4/S3=4) + Lynn (S1=3/S2=3/S3=3). Tests cross-class DamageUp stacking at high skill levels. All three solos previously verified.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Sergey": {},
+      "Renee": {},
+      "Lynn": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

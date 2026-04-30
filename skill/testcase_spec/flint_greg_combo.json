@@ -1,0 +1,27 @@
+{
+  "test_id": "flint_greg_combo",
+  "description": "Flint (Infantry) + Greg (Marksman) 2-hero combo. Flint buffs infantry defense/attack (all deterministic); Greg buffs marksmen attack with 20% chance S1 extra attack. Tests that infantry and marksman buffs apply independently. RNG due to Greg S1 — run 5 battles.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Flint": {},
+      "Greg": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}

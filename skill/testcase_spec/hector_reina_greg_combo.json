@@ -1,0 +1,28 @@
+{
+  "test_id": "hector_reina_greg_combo",
+  "description": "Hector (Infantry) + Reina (Lancer) + Greg (Marksman) full 3-hero Tier-1 combo. Hector has chance infantry skills; Reina is deterministic lancer buffs; Greg has 20% chance S1. All three hero classes covered. Tests full-lineup buff stacking across all troop types. RNG due to Hector and Greg — run 5 battles.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Hector": {},
+      "Reina": {},
+      "Greg": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}

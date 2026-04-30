@@ -1,0 +1,13 @@
+.venv/
+logs/
+tmp/**
+!tmp/.gitkeep
+config.json
+data/player_hero_skills.json
+captures/
+testcases/**
+!testcases/.gitkeep
+training/
+models/en_PP-OCRv4_rec_infer/
+models/paddleocr-onnx/
+models/rapidocr_config.yaml

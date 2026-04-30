@@ -1,0 +1,27 @@
+{
+  "test_id": "logan_lynn_combo",
+  "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). minxxx attacks with Logan+Lynn (600 troops), WIP defends (no hero, 1800 troops). 3:1 troop disadvantage for hero side. Placed as attackers so widget defense bonuses (S4) do not fire, making the fight competitive. Run 5 battles.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {
+      "Logan": {},
+      "Lynn": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  }
+}

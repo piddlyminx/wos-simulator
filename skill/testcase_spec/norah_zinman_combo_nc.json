@@ -1,0 +1,27 @@
+{
+  "test_id": "norah_zinman_combo_nc",
+  "description": "Norah+Zinman 2-hero combo — Lanc+Mark class heroes, both NC (no chance skills), single run definitive. Norah S2 splash on lancer attacks; Zinman has attack-frequency DamageUp. WIP attacks (no hero, t6 600/600/600), minxxx defends with Norah+Zinman.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Norah": {},
+      "Zinman": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

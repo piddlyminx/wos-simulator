@@ -1,0 +1,27 @@
+{
+  "test_id": "mia_hector_combo",
+  "description": "Mia+Hector 2-hero combo — Lanc+Inf class heroes. Mia S2 (50% chance) and S3 (40% chance) buff lancers; Hector S1 (40% chance) buffs infantry. Both have chance skills → run 5 battles. WIP attacks (no hero, t6 troops), minxxx defends with Mia+Hector. Tests lancer+infantry buff interaction across Lancer+Infantry hero classes.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 400,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Mia": {},
+      "Hector": {}
+    },
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 150,
+      "marksman_t6": 150
+    }
+  }
+}
