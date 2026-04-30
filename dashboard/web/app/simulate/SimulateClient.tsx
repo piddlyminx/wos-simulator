@@ -68,6 +68,10 @@ const STAT_SHORT_LABELS: Record<StatName, string> = {
   health: "HP",
 };
 const JOINER_COUNT = 4;
+const SIDE_LABELS: Record<Side, string> = {
+  attacker: "Attacker",
+  defender: "Defender",
+};
 
 interface HeroSlotState {
   name: string | null;
@@ -684,9 +688,12 @@ export default function SimulateClient({
   const [loadingSavedRun, setLoadingSavedRun] = useState(false);
   const [statPresets, setStatPresets] = useState<PlayerStatPreset[]>([]);
   const [loadingPresets, setLoadingPresets] = useState(false);
-  const [selectedPresetId, setSelectedPresetId] = useState("");
-  const [presetName, setPresetName] = useState("");
-  const [presetSide, setPresetSide] = useState<Side>("attacker");
+  const [loadedPresetIds, setLoadedPresetIds] = useState<Record<Side, string | null>>({
+    attacker: null,
+    defender: null,
+  });
+  const [presetModalSide, setPresetModalSide] = useState<Side | null>(null);
+  const [presetDraftName, setPresetDraftName] = useState("");
   const [presetStatus, setPresetStatus] = useState<PresetStatus>(null);
   const toastIdRef = useRef(0);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -717,13 +724,7 @@ export default function SimulateClient({
           throw new Error(data.error || `Preset request failed with ${res.status}`);
         }
         if (cancelled) return;
-        const presets = data.presets ?? [];
-        setStatPresets(presets);
-        setSelectedPresetId((current) => {
-          if (current || !presets[0]) return current;
-          setPresetName(presets[0].name);
-          return presets[0].id;
-        });
+        setStatPresets(data.presets ?? []);
       } catch (err) {
         if (!cancelled) {
           setPresetStatus({
@@ -944,31 +945,50 @@ export default function SimulateClient({
   const setSide = (side: Side) =>
     side === "attacker" ? setAttacker : setDefender;
 
-  const selectedPreset = statPresets.find((p) => p.id === selectedPresetId);
+  const activePresetId = presetModalSide
+    ? loadedPresetIds[presetModalSide] ?? ""
+    : "";
+  const loadedPresetNames: Record<Side, string | null> = {
+    attacker:
+      statPresets.find((p) => p.id === loadedPresetIds.attacker)?.name ?? null,
+    defender:
+      statPresets.find((p) => p.id === loadedPresetIds.defender)?.name ?? null,
+  };
 
-  function upsertPreset(preset: PlayerStatPreset) {
+  function upsertPreset(preset: PlayerStatPreset, side: Side) {
     setStatPresets((prev) => {
       const filtered = prev.filter((p) => p.id !== preset.id);
       return [preset, ...filtered].sort((a, b) =>
         b.updated_at.localeCompare(a.updated_at),
       );
     });
-    setSelectedPresetId(preset.id);
-    setPresetName(preset.name);
+    setLoadedPresetIds((prev) => ({ ...prev, [side]: preset.id }));
+    setPresetDraftName(preset.name);
   }
 
-  async function saveStatPreset(updateExisting: boolean) {
+  function openStatPresetModal(side: Side) {
+    const loadedPreset = statPresets.find((p) => p.id === loadedPresetIds[side]);
+    setPresetModalSide(side);
+    setPresetDraftName(loadedPreset?.name ?? `${SIDE_LABELS[side]} profile`);
     setPresetStatus(null);
-    const source = presetSide === "attacker" ? attacker : defender;
+  }
+
+  function closeStatPresetModal() {
+    setPresetModalSide(null);
+    setPresetStatus(null);
+  }
+
+  async function createStatPresetFromSide() {
+    if (!presetModalSide) return;
+    setPresetStatus(null);
+    const source = presetModalSide === "attacker" ? attacker : defender;
     const body: {
-      id?: string;
       name: string;
       stats: StatPresetValues;
     } = {
-      name: presetName.trim(),
+      name: presetDraftName.trim(),
       stats: heroAdjustedStats(source, "subtract"),
     };
-    if (updateExisting && selectedPresetId) body.id = selectedPresetId;
     try {
       const res = await fetch("/api/simulate/stat-presets", {
         method: "POST",
@@ -982,10 +1002,10 @@ export default function SimulateClient({
       if (!res.ok || !data.preset) {
         throw new Error(data.error || `Preset save failed with ${res.status}`);
       }
-      upsertPreset(data.preset);
+      upsertPreset(data.preset, presetModalSide);
       setPresetStatus({
         kind: "ok",
-        message: updateExisting ? "Preset updated." : "Preset saved.",
+        message: `Created ${data.preset.name} from ${SIDE_LABELS[presetModalSide].toLowerCase()} stats.`,
       });
     } catch (err) {
       setPresetStatus({
@@ -995,17 +1015,29 @@ export default function SimulateClient({
     }
   }
 
-  function loadStatPreset() {
-    if (!selectedPreset) {
-      setPresetStatus({ kind: "error", message: "Choose a preset to load." });
+  function chooseStatPreset(id: string) {
+    if (!presetModalSide) return;
+    if (!id) {
+      setLoadedPresetIds((prev) => ({ ...prev, [presetModalSide]: null }));
+      setPresetDraftName(`${SIDE_LABELS[presetModalSide]} profile`);
+      setPresetStatus({
+        kind: "ok",
+        message: `${SIDE_LABELS[presetModalSide]} has no loaded profile.`,
+      });
       return;
     }
-    const setter = presetSide === "attacker" ? setAttacker : setDefender;
+    const selectedPreset = statPresets.find((p) => p.id === id);
+    if (!selectedPreset) {
+      setPresetStatus({ kind: "error", message: "Choose a profile to load." });
+      return;
+    }
+    const setter = presetModalSide === "attacker" ? setAttacker : setDefender;
     setter((prev) => sideWithPresetStats(prev, selectedPreset));
-    setPresetName(selectedPreset.name);
+    setLoadedPresetIds((prev) => ({ ...prev, [presetModalSide]: selectedPreset.id }));
+    setPresetDraftName(selectedPreset.name);
     setPresetStatus({
       kind: "ok",
-      message: `Loaded ${selectedPreset.name} into ${presetSide}.`,
+      message: `Loaded ${selectedPreset.name} into ${presetModalSide}.`,
     });
   }
 
@@ -1397,149 +1429,6 @@ export default function SimulateClient({
         </div>
       )}
 
-      <div
-        className="mb-4 rounded p-3 sm:mb-6"
-        style={{
-          border: "1px solid var(--border-color)",
-          backgroundColor: "var(--sidebar-bg)",
-        }}
-        data-testid="stat-presets-panel"
-      >
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
-          <div className="min-w-0 flex-1">
-            <h3 className="text-xs uppercase tracking-wider opacity-60 font-bold">
-              Player stat presets
-            </h3>
-            <p className="mt-1 text-xs opacity-60">
-              Presets store base player stats only. Selected main hero stats
-              are removed on save and reapplied on load.
-            </p>
-          </div>
-          <label className="flex min-w-0 flex-col gap-1 lg:w-52">
-            <span className="text-[10px] uppercase tracking-wider opacity-50">
-              Preset
-            </span>
-            <select
-              value={selectedPresetId}
-              onChange={(e) => {
-                const id = e.target.value;
-                setSelectedPresetId(id);
-                const preset = statPresets.find((p) => p.id === id);
-                setPresetName(preset?.name ?? "");
-              }}
-              className="rounded px-2 py-2 font-mono text-xs min-h-[40px]"
-              style={{
-                backgroundColor: "var(--main-bg)",
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
-              aria-label="Stat preset"
-            >
-              <option value="">
-                {loadingPresets ? "Loading…" : "— New preset —"}
-              </option>
-              {statPresets.map((preset) => (
-                <option key={preset.id} value={preset.id}>
-                  {preset.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="flex min-w-0 flex-col gap-1 lg:w-44">
-            <span className="text-[10px] uppercase tracking-wider opacity-50">
-              Name
-            </span>
-            <input
-              type="text"
-              value={presetName}
-              onChange={(e) => setPresetName(e.target.value)}
-              placeholder="Preset name"
-              className="rounded px-2 py-2 text-sm min-h-[40px]"
-              style={{
-                backgroundColor: "var(--main-bg)",
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
-              aria-label="Stat preset name"
-            />
-          </label>
-          <label className="flex min-w-0 flex-col gap-1 lg:w-32">
-            <span className="text-[10px] uppercase tracking-wider opacity-50">
-              Side
-            </span>
-            <select
-              value={presetSide}
-              onChange={(e) => setPresetSide(e.target.value as Side)}
-              className="rounded px-2 py-2 font-mono text-xs min-h-[40px]"
-              style={{
-                backgroundColor: "var(--main-bg)",
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
-              aria-label="Stat preset side"
-            >
-              <option value="attacker">Attacker</option>
-              <option value="defender">Defender</option>
-            </select>
-          </label>
-          <div className="grid grid-cols-3 gap-2 lg:w-auto">
-            <button
-              type="button"
-              onClick={loadStatPreset}
-              disabled={!selectedPreset}
-              className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
-              style={{
-                border: "1px solid var(--border-color)",
-                backgroundColor: "var(--main-bg)",
-                color: selectedPreset
-                  ? "var(--sidebar-active)"
-                  : "var(--sidebar-text)",
-                opacity: selectedPreset ? 1 : 0.55,
-              }}
-            >
-              Load
-            </button>
-            <button
-              type="button"
-              onClick={() => saveStatPreset(false)}
-              className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
-              style={{
-                border: "1px solid var(--sidebar-active)",
-                backgroundColor: "transparent",
-                color: "var(--sidebar-active)",
-              }}
-            >
-              Save new
-            </button>
-            <button
-              type="button"
-              onClick={() => saveStatPreset(true)}
-              disabled={!selectedPreset}
-              className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
-              style={{
-                border: "1px solid var(--border-color)",
-                backgroundColor: "transparent",
-                color: selectedPreset
-                  ? "var(--main-text)"
-                  : "var(--sidebar-text)",
-                opacity: selectedPreset ? 1 : 0.55,
-              }}
-            >
-              Update
-            </button>
-          </div>
-        </div>
-        {presetStatus && (
-          <p
-            className="mt-2 text-xs font-mono"
-            style={{ color: presetStatus.kind === "error" ? "#f38ba8" : "#a6e3a1" }}
-            data-testid="stat-preset-status"
-          >
-            {presetStatus.message}
-          </p>
-        )}
-      </div>
-
       <div className="flex flex-col md:flex-row items-stretch gap-3 sm:gap-4 mb-4 sm:mb-6">
         <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 3 : 1 }}>
           <SidePanel
@@ -1554,6 +1443,8 @@ export default function SimulateClient({
             rallyMode={rallyMode}
             syncStatsOnHeroChange={syncStatsOnHeroChange}
             onStatSync={handleStatSync}
+            loadedPresetName={loadedPresetNames.attacker}
+            onOpenPreset={() => openStatPresetModal("attacker")}
           />
         </div>
         <div
@@ -1593,9 +1484,142 @@ export default function SimulateClient({
             rallyMode={rallyMode}
             syncStatsOnHeroChange={syncStatsOnHeroChange}
             onStatSync={handleStatSync}
+            loadedPresetName={loadedPresetNames.defender}
+            onOpenPreset={() => openStatPresetModal("defender")}
           />
         </div>
       </div>
+
+      {presetModalSide && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-3 py-6"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.55)" }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="stat-profile-modal-title"
+          data-testid="stat-profile-modal"
+        >
+          <div
+            className="w-full max-w-md rounded p-4 shadow-xl"
+            style={{
+              border: "1px solid var(--border-color)",
+              backgroundColor: "var(--sidebar-bg)",
+            }}
+          >
+            <div className="mb-4 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h3
+                  id="stat-profile-modal-title"
+                  className="text-sm font-bold uppercase tracking-wider"
+                  style={{ color: "var(--sidebar-active)" }}
+                >
+                  {SIDE_LABELS[presetModalSide]} profile
+                </h3>
+                <p className="mt-1 text-xs opacity-60">
+                  Profiles store base player stats only. Hero stats are removed
+                  on create and reapplied on load.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeStatPresetModal}
+                className="rounded px-2 py-1 text-lg leading-none"
+                style={{
+                  border: "1px solid var(--border-color)",
+                  color: "var(--main-text)",
+                }}
+                aria-label="Close profile modal"
+              >
+                ×
+              </button>
+            </div>
+
+            <label className="mb-3 flex flex-col gap-1">
+              <span className="text-[10px] uppercase tracking-wider opacity-50">
+                Loaded profile
+              </span>
+              <select
+                value={activePresetId}
+                onChange={(e) => chooseStatPreset(e.target.value)}
+                className="rounded px-2 py-2 font-mono text-xs min-h-[40px]"
+                style={{
+                  backgroundColor: "var(--main-bg)",
+                  border: "1px solid var(--border-color)",
+                  color: "var(--main-text)",
+                }}
+                aria-label={`${presetModalSide} stat profile`}
+              >
+                <option value="">
+                  {loadingPresets ? "Loading…" : "— None —"}
+                </option>
+                {statPresets.map((preset) => (
+                  <option key={preset.id} value={preset.id}>
+                    {preset.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="mb-4 flex flex-col gap-1">
+              <span className="text-[10px] uppercase tracking-wider opacity-50">
+                New profile name
+              </span>
+              <input
+                type="text"
+                value={presetDraftName}
+                onChange={(e) => setPresetDraftName(e.target.value)}
+                placeholder={`${SIDE_LABELS[presetModalSide]} profile`}
+                className="rounded px-2 py-2 text-sm min-h-[40px]"
+                style={{
+                  backgroundColor: "var(--main-bg)",
+                  border: "1px solid var(--border-color)",
+                  color: "var(--main-text)",
+                }}
+                aria-label={`${presetModalSide} new profile name`}
+              />
+            </label>
+
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={createStatPresetFromSide}
+                className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
+                style={{
+                  border: "1px solid var(--sidebar-active)",
+                  backgroundColor: "transparent",
+                  color: "var(--sidebar-active)",
+                }}
+              >
+                Create from current stats
+              </button>
+              <button
+                type="button"
+                onClick={closeStatPresetModal}
+                className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
+                style={{
+                  border: "1px solid var(--border-color)",
+                  backgroundColor: "var(--main-bg)",
+                  color: "var(--main-text)",
+                }}
+              >
+                Done
+              </button>
+            </div>
+
+            {presetStatus && (
+              <p
+                className="mt-3 text-xs font-mono"
+                style={{
+                  color: presetStatus.kind === "error" ? "#f38ba8" : "#a6e3a1",
+                }}
+                data-testid="stat-preset-status"
+              >
+                {presetStatus.message}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       <div
         className="rounded p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col gap-4"
@@ -2202,6 +2226,8 @@ function SidePanel({
   rallyMode,
   syncStatsOnHeroChange,
   onStatSync,
+  loadedPresetName,
+  onOpenPreset,
 }: {
   title: string;
   which: Side;
@@ -2210,6 +2236,8 @@ function SidePanel({
   rallyMode: boolean;
   syncStatsOnHeroChange: boolean;
   onStatSync: StatSyncHandler;
+  loadedPresetName: string | null;
+  onOpenPreset: () => void;
 }) {
   const troopCountRefs = useRef<Record<TroopCategory, HTMLInputElement | null>>(
     {
@@ -2247,12 +2275,39 @@ function SidePanel({
         backgroundColor: "var(--sidebar-bg)",
       }}
     >
-      <h3
-        className="text-sm uppercase tracking-wider mb-3 sm:mb-4 font-bold"
-        style={{ color: "var(--sidebar-active)" }}
-      >
-        {title}
-      </h3>
+      <div className="mb-3 flex items-center justify-between gap-2 sm:mb-4">
+        <div className="min-w-0">
+          <h3
+            className="text-sm uppercase tracking-wider font-bold"
+            style={{ color: "var(--sidebar-active)" }}
+          >
+            {title}
+          </h3>
+          {loadedPresetName && (
+            <p className="mt-0.5 truncate text-[10px] font-mono opacity-55">
+              {loadedPresetName}
+            </p>
+          )}
+        </div>
+        <button
+          type="button"
+          onClick={onOpenPreset}
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded text-base"
+          style={{
+            border: "1px solid var(--border-color)",
+            backgroundColor: loadedPresetName
+              ? "rgba(137, 180, 250, 0.15)"
+              : "var(--main-bg)",
+            color: loadedPresetName
+              ? "var(--sidebar-active)"
+              : "var(--main-text)",
+          }}
+          title={`${title} player profile`}
+          aria-label={`${which} player profile`}
+        >
+          👤
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-4 sm:mb-5">
         {CATEGORIES.map((cat) => (
