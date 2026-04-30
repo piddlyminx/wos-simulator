@@ -361,6 +361,7 @@ function mergeSideFromOcr(
   prev: SideState,
   ocrSide: {
     troops: Record<TroopCategory, number | null>;
+    troop_types?: Record<TroopCategory, string | null>;
     stats: Record<TroopCategory, Record<string, number | null>>;
   },
   heroes: Record<TroopCategory, string | null>,
@@ -369,6 +370,7 @@ function mergeSideFromOcr(
   skill4Levels: Record<TroopCategory, number>,
 ): SideState {
   const nextTroops = { ...prev.troops };
+  const nextTiers = { ...prev.tiers };
   const nextStats: SideState["stats"] = {
     infantry: { ...prev.stats.infantry },
     lancer: { ...prev.stats.lancer },
@@ -401,6 +403,11 @@ function mergeSideFromOcr(
     const troop = ocrSide.troops?.[cat];
     if (typeof troop === "number" && !isNaN(troop)) {
       nextTroops[cat] = troop;
+    }
+    const troopType = ocrSide.troop_types?.[cat] ?? undefined;
+    const tier = parseTier(cat, troopType);
+    if (troopType && TROOP_TIERS.includes(tier)) {
+      nextTiers[cat] = tier;
     }
     const statRow = ocrSide.stats?.[cat] ?? {};
     for (const stat of STAT_NAMES) {
@@ -442,7 +449,13 @@ function mergeSideFromOcr(
     }
     nextHeroes[cat] = { name: chosen, skills: newSkills };
   }
-  return { ...prev, troops: nextTroops, heroes: nextHeroes, stats: nextStats };
+  return {
+    ...prev,
+    troops: nextTroops,
+    tiers: nextTiers,
+    heroes: nextHeroes,
+    stats: nextStats,
+  };
 }
 
 interface StatSyncToast {
@@ -1153,6 +1166,10 @@ export default function SimulatePage() {
                 </span>
               )}
             </div>
+            <ProgressBar
+              active={loading}
+              label={`Running ${replicates.toLocaleString()} battles…`}
+            />
           </div>
 
           <div
@@ -1237,6 +1254,10 @@ export default function SimulatePage() {
                   {estimatedOptimizeBattles.toLocaleString()} battles
                 </span>
               </div>
+              <ProgressBar
+                active={optimizeLoading}
+                label={`Testing ${estimatedOptimizeCompositions.toLocaleString()} compositions × ${optimizeReplicates.toLocaleString()} reps…`}
+              />
               <p className="text-xs opacity-60">
                 Infantry search band: {resolvedInfantryBounds.minPct}% to{" "}
                 {resolvedInfantryBounds.maxPct}%.
@@ -1570,6 +1591,63 @@ export default function SimulatePage() {
             </div>
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+function ProgressBar({ active, label }: { active: boolean; label: string }) {
+  const [width, setWidth] = useState(0);
+  const [show, setShow] = useState(false);
+  const showRef = useRef(false);
+
+  useEffect(() => {
+    if (active) {
+      setShow(true);
+      showRef.current = true;
+      setWidth(4);
+      const id = setInterval(() => {
+        setWidth((w) => (w < 87 ? w + (87 - w) * 0.08 : w));
+      }, 150);
+      return () => clearInterval(id);
+    } else {
+      if (showRef.current) {
+        setWidth(100);
+        const t = setTimeout(() => {
+          setShow(false);
+          showRef.current = false;
+          setWidth(0);
+        }, 650);
+        return () => clearTimeout(t);
+      }
+    }
+  }, [active]);
+
+  if (!show) return null;
+
+  return (
+    <div className="mt-2">
+      <div
+        className="relative h-1.5 w-full overflow-hidden rounded-full"
+        style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: `${Math.min(width, 100)}%`,
+            backgroundColor: "var(--sidebar-active)",
+            transition: active
+              ? "width 0.15s linear"
+              : "width 0.4s ease-out",
+            borderRadius: "9999px",
+          }}
+        />
+      </div>
+      {active && (
+        <p className="mt-1 font-mono text-xs opacity-50">{label}</p>
       )}
     </div>
   );
