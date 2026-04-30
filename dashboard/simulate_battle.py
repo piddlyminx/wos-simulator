@@ -112,7 +112,8 @@ def main() -> int:
     attacker_cfg = config.get("attacker", {}) or {}
     defender_cfg = config.get("defender", {}) or {}
 
-    for _ in range(replicates):
+    _progress_interval = max(1, replicates // 20)
+    for _i in range(replicates):
         attacker, defender, att_rem, def_rem = run_fight(
             attacker_cfg,
             defender_cfg,
@@ -145,6 +146,9 @@ def main() -> int:
             agg["kills"] += d["kills"]
             total_def_activations += d["activations"]
             total_def_kills += d["kills"]
+
+        if (_i + 1) % _progress_interval == 0 or _i + 1 == replicates:
+            print(json.dumps({"type": "progress", "done": _i + 1, "total": replicates}), file=sys.stderr, flush=True)
 
     mean = statistics.mean(outcomes) if outcomes else 0.0
     std = statistics.pstdev(outcomes) if len(outcomes) > 1 else 0.0

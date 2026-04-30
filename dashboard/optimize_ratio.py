@@ -238,9 +238,15 @@ def main() -> int:
 
     if max_workers <= 1 or len(compositions) <= 1:
         _worker_init(attacker_cfg, defender_cfg, rally_mode, replicates)
-        results = [_evaluate_composition(comp) for comp in compositions]
+        results = []
+        _total_comps = len(compositions)
+        for _ci, _comp in enumerate(compositions):
+            results.append(_evaluate_composition(_comp))
+            print(json.dumps({"type": "progress", "done": _ci + 1, "total": _total_comps}), file=sys.stderr, flush=True)
     else:
         results = []
+        _total_comps = len(compositions)
+        _completed_comps = 0
         with ProcessPoolExecutor(
             max_workers=min(max_workers, len(compositions)),
             initializer=_worker_init,
@@ -249,6 +255,8 @@ def main() -> int:
             futures = [executor.submit(_evaluate_composition, comp) for comp in compositions]
             for future in as_completed(futures):
                 results.append(future.result())
+                _completed_comps += 1
+                print(json.dumps({"type": "progress", "done": _completed_comps, "total": _total_comps}), file=sys.stderr, flush=True)
 
     results.sort(
         key=lambda row: (

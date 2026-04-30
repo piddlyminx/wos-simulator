@@ -509,6 +509,8 @@ export default function SimulatePage() {
     DEFAULT_INFANTRY_MAX_PCT,
   );
   const [savedRunMeta, setSavedRunMeta] = useState<SavedRunMeta | null>(null);
+  const [simulateProgress, setSimulateProgress] = useState<{ done: number; total: number } | null>(null);
+  const [optimizeProgress, setOptimizeProgress] = useState<{ done: number; total: number } | null>(null);
   const [savedRunError, setSavedRunError] = useState<string | null>(null);
   const [loadingSavedRun, setLoadingSavedRun] = useState(Boolean(runIdFromUrl));
   const toastIdRef = useRef(0);
@@ -773,6 +775,7 @@ export default function SimulatePage() {
     setOptimizeError(null);
     setOptimizeResult(null);
     setSavedRunError(null);
+    setSimulateProgress({ done: 0, total: replicates });
     try {
       const payload = toApiPayload(attacker, defender, replicates, rallyMode);
       const res = await fetch("/api/simulate", {
@@ -780,13 +783,49 @@ export default function SimulatePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || `Request failed with ${res.status}`);
-      } else {
-        const saved = data as SimulateApiResponse;
-        setResult(saved);
-        maybeActivateSavedRun(saved);
+
+      if (!res.body) {
+        setError(`Request failed with ${res.status}`);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+          try {
+            const event = JSON.parse(trimmed) as {
+              type: string;
+              done?: number;
+              total?: number;
+              data?: SimulateApiResponse;
+              message?: string;
+            };
+            if (
+              event.type === "progress" &&
+              typeof event.done === "number" &&
+              typeof event.total === "number"
+            ) {
+              setSimulateProgress({ done: event.done, total: event.total });
+            } else if (event.type === "result" && event.data) {
+              setResult(event.data);
+              maybeActivateSavedRun(event.data);
+            } else if (event.type === "error") {
+              setError(event.message ?? "Unknown error");
+            }
+          } catch {
+            // ignore malformed lines
+          }
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -802,6 +841,7 @@ export default function SimulatePage() {
     setOptimizeError(null);
     setOptimizeResult(null);
     setSavedRunError(null);
+    setOptimizeProgress({ done: 0, total: estimatedOptimizeCompositions });
     try {
       const payload = {
         ...toApiPayload(attacker, defender, replicates, rallyMode),
@@ -816,15 +856,49 @@ export default function SimulatePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setOptimizeError(
-          data.stderr || data.error || `Request failed with ${res.status}`,
-        );
-      } else {
-        const saved = data as OptimizeRatioApiResponse;
-        setOptimizeResult(saved);
-        maybeActivateSavedRun(saved);
+
+      if (!res.body) {
+        setOptimizeError(`Request failed with ${res.status}`);
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split("\n");
+        buf = lines.pop() ?? "";
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+          try {
+            const event = JSON.parse(trimmed) as {
+              type: string;
+              done?: number;
+              total?: number;
+              data?: OptimizeRatioApiResponse;
+              message?: string;
+            };
+            if (
+              event.type === "progress" &&
+              typeof event.done === "number" &&
+              typeof event.total === "number"
+            ) {
+              setOptimizeProgress({ done: event.done, total: event.total });
+            } else if (event.type === "result" && event.data) {
+              setOptimizeResult(event.data);
+              maybeActivateSavedRun(event.data);
+            } else if (event.type === "error") {
+              setOptimizeError(event.message ?? "Unknown error");
+            }
+          } catch {
+            // ignore malformed lines
+          }
+        }
       }
     } catch (err) {
       setOptimizeError(err instanceof Error ? err.message : String(err));
@@ -1168,7 +1242,8 @@ export default function SimulatePage() {
             </div>
             <ProgressBar
               active={loading}
-              label={`Running ${replicates.toLocaleString()} battles…`}
+              done={simulateProgress?.done ?? 0}
+              total={simulateProgress?.total ?? replicates}
             />
           </div>
 
@@ -1256,7 +1331,8 @@ export default function SimulatePage() {
               </div>
               <ProgressBar
                 active={optimizeLoading}
-                label={`Testing ${estimatedOptimizeCompositions.toLocaleString()} compositions × ${optimizeReplicates.toLocaleString()} reps…`}
+                done={optimizeProgress?.done ?? 0}
+                total={optimizeProgress?.total ?? estimatedOptimizeCompositions}
               />
               <p className="text-xs opacity-60">
                 Infantry search band: {resolvedInfantryBounds.minPct}% to{" "}
@@ -1596,8 +1672,16 @@ export default function SimulatePage() {
   );
 }
 
-function ProgressBar({ active, label }: { active: boolean; label: string }) {
-  const [width, setWidth] = useState(0);
+function ProgressBar({
+  active,
+  done,
+  total,
+}: {
+  active: boolean;
+  done: number;
+  total: number;
+}) {
+  const [displayPct, setDisplayPct] = useState(0);
   const [show, setShow] = useState(false);
   const showRef = useRef(false);
 
@@ -1605,25 +1689,29 @@ function ProgressBar({ active, label }: { active: boolean; label: string }) {
     if (active) {
       setShow(true);
       showRef.current = true;
-      setWidth(4);
-      const id = setInterval(() => {
-        setWidth((w) => (w < 87 ? w + (87 - w) * 0.08 : w));
-      }, 150);
-      return () => clearInterval(id);
-    } else {
-      if (showRef.current) {
-        setWidth(100);
-        const t = setTimeout(() => {
-          setShow(false);
-          showRef.current = false;
-          setWidth(0);
-        }, 650);
-        return () => clearTimeout(t);
-      }
+    } else if (showRef.current) {
+      setDisplayPct(100);
+      const t = setTimeout(() => {
+        setShow(false);
+        showRef.current = false;
+        setDisplayPct(0);
+      }, 650);
+      return () => clearTimeout(t);
     }
   }, [active]);
 
+  useEffect(() => {
+    if (active) {
+      setDisplayPct(total > 0 ? Math.min(100, (done / total) * 100) : 0);
+    }
+  }, [active, done, total]);
+
   if (!show) return null;
+
+  const label =
+    active && total > 0
+      ? `${done.toLocaleString()} / ${total.toLocaleString()}`
+      : null;
 
   return (
     <div className="mt-2">
@@ -1637,16 +1725,14 @@ function ProgressBar({ active, label }: { active: boolean; label: string }) {
             left: 0,
             top: 0,
             bottom: 0,
-            width: `${Math.min(width, 100)}%`,
+            width: `${Math.min(displayPct, 100)}%`,
             backgroundColor: "var(--sidebar-active)",
-            transition: active
-              ? "width 0.15s linear"
-              : "width 0.4s ease-out",
+            transition: active ? "width 0.2s ease-out" : "width 0.4s ease-out",
             borderRadius: "9999px",
           }}
         />
       </div>
-      {active && (
+      {label && (
         <p className="mt-1 font-mono text-xs opacity-50">{label}</p>
       )}
     </div>
