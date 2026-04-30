@@ -2092,24 +2092,6 @@ export default function SimulateClient({
         </div>
       )}
 
-      <footer
-        className="mt-auto border-t py-4 text-xs"
-        style={{
-          borderColor: "var(--border-color)",
-          color: "var(--sidebar-text)",
-        }}
-        data-testid="simulate-footer"
-      >
-        <a
-          href="https://www.tube8.com"
-          target="_blank"
-          rel="noreferrer"
-          className="underline underline-offset-4 hover:opacity-100"
-          style={{ color: "var(--sidebar-active)", opacity: 0.85 }}
-        >
-          Tube8
-        </a>
-      </footer>
     </div>
   );
 }
