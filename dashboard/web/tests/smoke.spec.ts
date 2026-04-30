@@ -444,6 +444,25 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
+  test("/simulate — sync hero stats is checked by default", async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(err.message));
+
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await expect(
+      page.getByRole("checkbox", { name: "Update stats on hero change" }),
+    ).toBeChecked();
+
+    expect(errors).toHaveLength(0);
+  });
+
   test("/simulate — successful runs update the URL to the saved share link", async ({
     page,
   }) => {

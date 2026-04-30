@@ -616,7 +616,7 @@ export default function SimulateClient({
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
   const [rallyMode, setRallyMode] = useState(() => initialState.rallyMode);
-  const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(false);
+  const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(true);
   const [statSyncToast, setStatSyncToast] = useState<StatSyncToast | null>(
     null,
   );
