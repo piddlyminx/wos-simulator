@@ -105,35 +105,6 @@ def _normalise_pct(raw_value: Any, default_value: float) -> float:
     return max(0.0, min(100.0, value))
 
 
-def _has_active_heroes_or_joiners(side_cfg: Dict[str, Any], rally_mode: bool) -> bool:
-    heroes_cfg = side_cfg.get("heroes", {}) or {}
-    for slot in heroes_cfg.values():
-        if not isinstance(slot, dict):
-            continue
-        if not slot.get("name"):
-            continue
-        skills = slot.get("skills") or []
-        if any(int(level or 0) > 0 for level in skills):
-            return True
-
-    if rally_mode:
-        return any((joiner or {}).get("name") for joiner in side_cfg.get("joiners") or [])
-    return False
-
-
-def _effective_search_replicates(
-    attacker_cfg: Dict[str, Any],
-    defender_cfg: Dict[str, Any],
-    rally_mode: bool,
-    requested_replicates: int,
-) -> int:
-    if _has_active_heroes_or_joiners(attacker_cfg, rally_mode):
-        return requested_replicates
-    if _has_active_heroes_or_joiners(defender_cfg, rally_mode):
-        return requested_replicates
-    return 1
-
-
 def _worker_init(
     attacker_cfg: Dict[str, Any],
     defender_cfg: Dict[str, Any],
@@ -215,13 +186,7 @@ def main() -> int:
         return 2
 
     step = _normalise_step(total, config.get("grid_step"))
-    requested_replicates = _normalise_replicates(config.get("search_replicates"))
-    replicates = _effective_search_replicates(
-        attacker_cfg,
-        defender_cfg,
-        rally_mode,
-        requested_replicates,
-    )
+    replicates = _normalise_replicates(config.get("search_replicates"))
     infantry_min_pct = _normalise_pct(
         config.get("infantry_min_pct"),
         DEFAULT_INFANTRY_MIN_PCT,
@@ -334,7 +299,6 @@ def main() -> int:
             "compositions_tested": composition_count,
             "projected_battles": projected_battles,
             "replicates_per_ratio": replicates,
-            "requested_replicates_per_ratio": requested_replicates,
             "infantry_min_pct": infantry_min_pct,
             "infantry_max_pct": infantry_max_pct,
             "best": best,
