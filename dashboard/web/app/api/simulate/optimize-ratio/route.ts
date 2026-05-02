@@ -12,7 +12,24 @@ import type {
 export const dynamic = "force-dynamic";
 export const maxDuration = 180;
 
-const REPO_ROOT = path.resolve(process.cwd(), "../..");
+function resolveRepoRoot(): string {
+  const candidates = [
+    process.env.SIMULATOR_REPO_ROOT,
+    process.cwd(),
+    path.resolve(process.cwd(), "../.."),
+    "/",
+  ].filter((candidate): candidate is string => Boolean(candidate));
+
+  for (const candidate of candidates) {
+    const cliPath = path.join(candidate, "dashboard", "optimize_ratio.py");
+    if (fs.existsSync(cliPath)) {
+      return candidate;
+    }
+  }
+  return path.resolve(process.cwd(), "../..");
+}
+
+const REPO_ROOT = resolveRepoRoot();
 const CLI_PATH = path.join(REPO_ROOT, "dashboard", "optimize_ratio.py");
 
 function resolvePython(): string {

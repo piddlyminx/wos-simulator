@@ -29,6 +29,7 @@ export interface OptimizeRatioResult {
   compositions_tested: number;
   projected_battles: number;
   replicates_per_ratio: number;
+  requested_replicates_per_ratio?: number;
   infantry_min_pct: number;
   infantry_max_pct: number;
   best: OptimizeRatioPoint;
