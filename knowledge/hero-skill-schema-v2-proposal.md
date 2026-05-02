@@ -34,7 +34,7 @@ The proposal uses this top-level shape:
 
 ```json
 {
-  "schemaVersion": "hero-skill-proposal-v2",
+  "schemaVersion": "hero-skill-proposal-v2.1",
   "defaults": {},
   "vocabulary": {},
   "reservedButNotUsedByCurrentHeroCatalog": {},
@@ -54,7 +54,7 @@ Each hero has:
 Each combat skill keeps only semantic data:
 
 - `slot`, `name`, `text`
-- optional `activation`
+- optional `availability`
 - `effects`
 
 Each effect keeps the shared Benefit concepts needed by tracing and residual
@@ -64,11 +64,30 @@ grouping:
 - optional `side`
 - optional `damageKind`
 - optional `damagePass`
-- optional `targeting`
+- optional `event`
+- optional `benefitTarget`
 - optional `duration`
 - optional `valuePctByLevel`
 - optional `chancePctByLevel`
 - optional explicit former-`special` concepts
+
+## Availability vs Event
+
+Review feedback correctly called out that the first draft still tangled
+skill-level activation with effect-level triggering.
+
+In this proposal, a skill does not have a trigger. A skill has
+`availability`: whether the skill source is available for the battle, on a
+cadence, behind a chance roll, or gated by the source troop still being alive.
+
+An effect has an `event`: the combat event that may instantiate a Benefit from
+an available skill. That distinction matters because a battle-long skill can
+still contain an event-gated effect. For example, a permanent skill with default
+availability can create a Benefit when an eligible troop attacks; that is an
+effect event, not the skill "re-activating".
+
+The old name `activation` was removed from the proposed catalogue because it
+encouraged the wrong mental model.
 
 ## Defaults
 
@@ -76,8 +95,9 @@ The current files repeat many implementation defaults. V2 omits these unless a
 skill or effect differs:
 
 - hero source is `hero_skill`
-- skill activation is passive and battle-long
-- skills are not same-round stackable
+- skill availability is battle-long
+- a skill suppresses retriggering while a previous Benefit from the same skill
+  is still active
 - skills do not require their base troop type to remain alive
 - skill order is `1`
 - effects apply to self
@@ -99,13 +119,14 @@ Current skill-level fields map as follows:
 | `skill_num` | skill `slot` or widget `slot` |
 | `skill_name` | `name` |
 | `skill_description` | `text` |
-| `skill_permanent=false` + `skill_frequency` | `activation.every` |
-| `skill_first_round` | `activation.first` |
-| `skill_last_round` | `activation.last` |
-| `skill_is_chance` / `skill_probability` | `activation.chancePct` |
-| `skill_round_stackable` | `activation.stack: "same_round"` |
-| `skill_type_relation` | `activation.requiresTroopAlive` |
-| `skill_order != 1` | `activation.order` |
+| `skill_permanent=false` + `skill_frequency` | `availability.cadence` |
+| `skill_first_round` | `availability.window.firstTurn` |
+| `skill_last_round` | `availability.window.lastTurn` |
+| `skill_is_chance` / `skill_probability` | `availability.chancePct` |
+| `skill_round_stackable=false` | `availability.retriggerPolicy: "suppress_while_active_benefit_exists"` |
+| `skill_round_stackable=true` | `availability.retriggerPolicy: "allow_overlap"` |
+| `skill_type_relation` | `availability.requiresSourceTroopAlive` |
+| `skill_order != 1` | `availability.resolutionOrder` |
 
 Current effect-level fields map as follows:
 
@@ -117,11 +138,29 @@ Current effect-level fields map as follows:
 | `affects_opponent=true` | `side: "opponent"` |
 | `extra_attack=true` | `damageKind: "extra"` |
 | `benefit_on` | `damagePass` |
-| `trigger_for` / `trigger_vs` | `targeting.trigger` |
-| `benefit_for` / `benefit_vs` | `targeting.applies` |
+| `trigger_for` / `trigger_vs` | `event` |
+| `benefit_for` / `benefit_vs` | `benefitTarget` |
 | `effect_duration` | `duration` |
 | `effect_values` | `valuePctByLevel` |
 | `effect_is_chance` / `effect_probabilities` | `chancePctByLevel` |
+
+## Retrigger Policy vs Same-Event Limits
+
+The original field name `skill_round_stackable` is misleading. In current
+runtime behavior, `skill_round_stackable=false` does not simply mean "cannot
+trigger multiple times in the same turn". It suppresses new benefit creation
+while a valid Benefit from the same skill is carried over from the previous
+round.
+
+The proposal therefore uses `availability.retriggerPolicy`:
+
+- `suppress_while_active_benefit_exists` for current
+  `skill_round_stackable=false`
+- `allow_overlap` for current `skill_round_stackable=true`
+
+Same-event or same-turn repeat limiting remains an effect-event concept. Current
+values such as `trigger_for=once` and the runtime-supported-but-unused
+`trigger_for=first` belong under `event.by`, not under skill availability.
 
 ## Former `special` Concepts
 
@@ -144,9 +183,9 @@ unverified hero entries.
 
 The proposed vocabulary covers every current hero catalogue variant:
 
-- activation cadence: passive, every N turns, every N attacks, first turn,
-  last turn, skill-level chance, same-round stacking, and troop-alive gating
-- effect trigger: all, once, troop-specific trigger; `first` reserved for the
+- availability cadence: battle-long, every N turns, every N attacks, first turn,
+  last turn, skill-level chance, retrigger policy, and troop-alive gating
+- effect event: all, once, troop-specific event; `first` reserved for the
   runtime-supported but currently unused case
 - benefit target: trigger, all, friendly, troop-specific target
 - target relation: any current target, locked target, specific troop type, and

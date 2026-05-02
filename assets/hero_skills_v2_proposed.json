@@ -1,49 +1,56 @@
 {
-  "schemaVersion": "hero-skill-proposal-v2",
+  "schemaVersion": "hero-skill-proposal-v2.1",
   "status": "proposal_only_not_runtime_compatible",
   "generatedFrom": "assets/hero_skills/*.json",
-  "intent": "Concise hero skill schema preserving current trigger, activation, targeting, chance, duration, damage-pass, and widget concepts while removing current implementation-shaped boilerplate.",
+  "intent": "Concise hero skill schema preserving current availability, event, targeting, chance, duration, damage-pass, and widget concepts while removing current implementation-shaped boilerplate.",
+  "reviewNotes": {
+    "2026-05-02": "Renamed skill activation to availability and effect targeting.trigger to event. Split current skill_round_stackable into retriggerPolicy so it is not confused with same-event repeat limits."
+  },
   "defaults": {
     "hero": {
       "source": "hero_skill"
     },
     "skill": {
-      "activation": "passive_battle_long",
-      "stack": "not_same_round",
-      "requiresTroopAlive": false,
-      "order": 1
+      "availability": "battle",
+      "retriggerPolicy": "suppress_while_active_benefit_exists",
+      "requiresSourceTroopAlive": false,
+      "resolutionOrder": 1
     },
     "effect": {
       "side": "self",
       "damageKind": "modifier",
       "damagePass": "all",
-      "targeting": {
-        "trigger": {
-          "by": "all",
-          "vs": "all"
-        },
-        "applies": {
-          "to": "trigger",
-          "vs": "any"
-        }
+      "event": {
+        "by": "all",
+        "vs": "all"
+      },
+      "benefitTarget": {
+        "to": "trigger",
+        "vs": "any"
       },
       "duration": "battle",
       "chance": "deterministic"
     }
   },
   "vocabulary": {
-    "activation": {
-      "passive_battle_long": "Always active while the skill is equipped; current skill_permanent=true with battle duration effects.",
-      "every": "Cadence for non-permanent skills, expressed as {unit: attack|turn, count, first?, last?}.",
-      "chancePct": "Skill-level activation chance, separate from per-effect chancePctByLevel.",
-      "stack": "same_round allows repeated activations in a round; omitted means current non-stackable behavior.",
-      "requiresTroopAlive": "Current skill_type_relation; the hero base troop type must still be alive."
+    "skillAvailability": {
+      "battle": "The skill source is available for the whole battle. This is not the same concept as an effect event.",
+      "cadence": "For non-passive skills, the source is available only every N attack or turn events, with optional turn window.",
+      "chancePct": "Skill-level source availability chance, separate from per-effect chancePctByLevel.",
+      "requiresSourceTroopAlive": "Current skill_type_relation; the hero base troop type must still be alive.",
+      "retriggerPolicy": "Controls whether the skill source may create another benefit while a previous benefit from the same skill is still active.",
+      "suppress_while_active_benefit_exists": "Current skill_round_stackable=false behavior.",
+      "allow_overlap": "Current skill_round_stackable=true behavior.",
+      "resolutionOrder": "Current skill_order for unusual placeholder or sequencing cases."
     },
-    "targeting": {
-      "triggerBy": "Current trigger_for: all, once, first, friendly, or a troop type.",
-      "triggerVs": "Current trigger_vs; hero catalog currently only uses all.",
-      "appliesTo": "Current benefit_for: trigger, all, friendly, or troop type.",
-      "appliesVs": "Current benefit_vs: any, target, all fan-out splash, or troop type."
+    "effectEvent": {
+      "by": "Current trigger_for: all, once, first, friendly, or a troop type. This is the combat event that may instantiate a benefit from an available skill.",
+      "vs": "Current trigger_vs; hero catalog currently only uses all.",
+      "note": "A battle-available skill may still have event-gated effects. That does not mean the skill itself reactivates; it means the effect describes which combat event creates or refreshes a Benefit."
+    },
+    "benefitTarget": {
+      "to": "Current benefit_for: trigger, all, friendly, or troop type.",
+      "vs": "Current benefit_vs: any, target, all fan-out splash, or troop type."
     },
     "effect": {
       "type": "Current effect_type, intentionally preserved for shared Benefit tracing.",
@@ -59,7 +66,7 @@
   "reservedButNotUsedByCurrentHeroCatalog": {
     "hpThreshold": "Runtime checks special.hp_threshold, but no current hero skill file uses it.",
     "onDefense": "Runtime checks special.onDefense, but no current hero skill file uses it.",
-    "triggerByFirst": "Runtime recognizes trigger_for=first, but current hero files do not use it."
+    "eventByFirst": "Runtime recognizes trigger_for=first, but current hero files do not use it."
   },
   "heroes": [
     {
@@ -94,13 +101,11 @@
               "id": "Viper formation/1",
               "type": "DefenseUp",
               "op": 111,
-              "targeting": {
-                "trigger": {
-                  "by": "infantry"
-                },
-                "applies": {
-                  "to": "friendly"
-                }
+              "event": {
+                "by": "infantry"
+              },
+              "benefitTarget": {
+                "to": "friendly"
               },
               "duration": {
                 "unit": "turn",
@@ -120,13 +125,11 @@
               "id": "Viper formation/2",
               "type": "DefenseUp",
               "op": 111,
-              "targeting": {
-                "trigger": {
-                  "by": "infantry"
-                },
-                "applies": {
-                  "to": "infantry"
-                }
+              "event": {
+                "by": "infantry"
+              },
+              "benefitTarget": {
+                "to": "infantry"
               },
               "duration": {
                 "unit": "turn",
@@ -142,12 +145,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 4
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 4
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -159,14 +162,12 @@
               "id": "Prayer of flame/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "infantry"
-                },
-                "applies": {
-                  "to": "infantry",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "infantry"
+              },
+              "benefitTarget": {
+                "to": "infantry",
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 20,
@@ -177,8 +178,8 @@
               }
             }
           ],
-          "activation": {
-            "requiresTroopAlive": true
+          "availability": {
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -190,14 +191,12 @@
               "id": "Blade of light/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "infantry"
-                },
-                "applies": {
-                  "to": "infantry",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "infantry"
+              },
+              "benefitTarget": {
+                "to": "infantry",
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -216,14 +215,12 @@
               "type": "OppDefenseDown",
               "op": 213,
               "side": "opponent",
-              "targeting": {
-                "trigger": {
-                  "by": "infantry"
-                },
-                "applies": {
-                  "to": "all",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "infantry"
+              },
+              "benefitTarget": {
+                "to": "all",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -239,9 +236,9 @@
               }
             }
           ],
-          "activation": {
-            "stack": "same_round",
-            "requiresTroopAlive": true
+          "availability": {
+            "retriggerPolicy": "allow_overlap",
+            "requiresSourceTroopAlive": true
           }
         }
       ]
@@ -278,10 +275,8 @@
               "id": "Onslaught/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -296,13 +291,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -315,11 +310,9 @@
               "type": "OppDamageDown",
               "op": 201,
               "side": "opponent",
-              "targeting": {
-                "applies": {
-                  "to": "all",
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "to": "all",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -342,12 +335,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -360,10 +353,8 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -385,12 +376,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         }
       ]
@@ -428,10 +419,8 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -453,12 +442,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         }
       ]
@@ -495,13 +484,11 @@
               "id": "Veteran's Might/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -522,14 +509,12 @@
               "id": "Power Shot/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all",
-                  "vs": "lancer"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all",
+                "vs": "lancer"
               },
               "valuePctByLevel": {
                 "1": 6,
@@ -543,14 +528,12 @@
               "id": "Power Shot/2",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all",
-                  "vs": "infantry"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all",
+                "vs": "infantry"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -571,13 +554,11 @@
               "id": "Tactical Assistance/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "duration": {
                 "unit": "turn",
@@ -592,10 +573,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 4
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 4
             }
           }
         }
@@ -633,13 +614,11 @@
               "id": "Strategic Balance/1",
               "type": "DefenseUp",
               "op": 111,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "marksmen"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "marksmen"
               },
               "valuePctByLevel": {
                 "1": 4,
@@ -653,14 +632,12 @@
               "id": "Strategic Balance/2",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "lancer",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "lancer",
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 4,
@@ -681,13 +658,11 @@
               "id": "Ironclad/1",
               "type": "DefenseUp",
               "op": 111,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "infantry"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "infantry"
               },
               "valuePctByLevel": {
                 "1": 4,
@@ -698,8 +673,8 @@
               }
             }
           ],
-          "activation": {
-            "requiresTroopAlive": true
+          "availability": {
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -755,14 +730,12 @@
               "id": "Pyromaniac/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "infantry",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "infantry",
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 20,
@@ -773,8 +746,8 @@
               }
             }
           ],
-          "activation": {
-            "requiresTroopAlive": true
+          "availability": {
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -786,10 +759,8 @@
               "id": "Burning resolve/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -810,10 +781,8 @@
               "id": "Immolation/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -860,14 +829,12 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "lancer"
-                },
-                "applies": {
-                  "to": "lancer",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "lancer"
+              },
+              "benefitTarget": {
+                "to": "lancer",
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -886,14 +853,12 @@
               "type": "OppDamageDown",
               "op": 201,
               "side": "opponent",
-              "targeting": {
-                "trigger": {
-                  "by": "lancer"
-                },
-                "applies": {
-                  "to": "all",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "lancer"
+              },
+              "benefitTarget": {
+                "to": "all",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -908,13 +873,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 2
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 2
             },
-            "stack": "same_round",
-            "requiresTroopAlive": true
+            "retriggerPolicy": "allow_overlap",
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -926,14 +891,12 @@
               "id": "Chemical Terror/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "lancer"
-                },
-                "applies": {
-                  "to": "lancer",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "lancer"
+              },
+              "benefitTarget": {
+                "to": "lancer",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -965,12 +928,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 3
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 3
             },
-            "requiresTroopAlive": true
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -983,13 +946,11 @@
               "type": "OppDefenseDown",
               "op": 214,
               "side": "opponent",
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "infantry"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "infantry"
               },
               "duration": {
                 "unit": "turn",
@@ -1008,13 +969,11 @@
               "type": "OppDamageDown",
               "op": 201,
               "side": "opponent",
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "marksmen"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "marksmen"
               },
               "duration": {
                 "unit": "turn",
@@ -1029,10 +988,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 4
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 4
             }
           }
         }
@@ -1070,10 +1029,8 @@
               "id": "Sword of justice/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -1088,13 +1045,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 20,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -1107,11 +1064,9 @@
               "type": "OppDamageDown",
               "op": 201,
               "side": "opponent",
-              "targeting": {
-                "applies": {
-                  "to": "all",
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "to": "all",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -1134,12 +1089,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -1196,10 +1151,8 @@
               "type": "OppDefenseDown",
               "op": 214,
               "side": "opponent",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -1221,10 +1174,8 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -1244,11 +1195,9 @@
               "op": 215,
               "side": "opponent",
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "to": "all",
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "to": "all",
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -1264,12 +1213,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 5
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 5
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -1282,14 +1231,12 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "marksmen"
-                },
-                "applies": {
-                  "to": "marksmen",
-                  "vs": "all"
-                }
+              "event": {
+                "by": "marksmen"
+              },
+              "benefitTarget": {
+                "to": "marksmen",
+                "vs": "all"
               },
               "duration": {
                 "unit": "attack",
@@ -1305,12 +1252,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 4
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 4
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         }
       ]
@@ -1360,10 +1307,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40
           }
@@ -1377,14 +1324,12 @@
               "id": "Rampant/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "infantry",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "infantry",
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -1407,14 +1352,12 @@
               "id": "Rampant/2",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "marksmen",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "marksmen",
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -1434,12 +1377,14 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "last": 10
+            "window": {
+              "lastTurn": 10
+            }
           }
         },
         {
@@ -1452,10 +1397,8 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -1478,10 +1421,10 @@
               "valueSemantics": "total_damage_pct"
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             }
           }
         }
@@ -1516,12 +1459,12 @@
           "slot": 2,
           "name": "Non-combat placeholder",
           "text": "Placeholder skill to satisfy simulator config for non-combat hero data",
-          "activation": {
-            "mode": "manual_or_placeholder",
+          "reason": "No combat effects in current catalog",
+          "availability": {
+            "mode": "non_combat_placeholder",
             "chancePct": 0,
-            "order": 999
-          },
-          "reason": "No combat effects in current catalog"
+            "resolutionOrder": 999
+          }
         }
       ]
     },
@@ -1557,10 +1500,8 @@
               "id": "Battle manifesto/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -1581,10 +1522,8 @@
               "id": "Swordmentor/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -1605,10 +1544,8 @@
               "id": "E Xpert swordsmanship/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -1623,12 +1560,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 4
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 4
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         }
       ]
@@ -1710,12 +1647,12 @@
           "slot": 2,
           "name": "Non-combat placeholder",
           "text": "Placeholder skill to satisfy simulator config for non-combat hero data",
-          "activation": {
-            "mode": "manual_or_placeholder",
+          "reason": "No combat effects in current catalog",
+          "availability": {
+            "mode": "non_combat_placeholder",
             "chancePct": 0,
-            "order": 999
-          },
-          "reason": "No combat effects in current catalog"
+            "resolutionOrder": 999
+          }
         }
       ]
     },
@@ -1835,12 +1772,12 @@
           "slot": 2,
           "name": "Non-combat placeholder",
           "text": "Placeholder skill to satisfy simulator config for non-combat hero data",
-          "activation": {
-            "mode": "manual_or_placeholder",
+          "reason": "No combat effects in current catalog",
+          "availability": {
+            "mode": "non_combat_placeholder",
             "chancePct": 0,
-            "order": 999
-          },
-          "reason": "No combat effects in current catalog"
+            "resolutionOrder": 999
+          }
         }
       ]
     },
@@ -1876,13 +1813,11 @@
               "id": "Song of lion/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "duration": {
                 "unit": "turn",
@@ -1897,13 +1832,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -1916,13 +1851,11 @@
               "type": "OppDamageDown",
               "op": 201,
               "side": "opponent",
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "valuePctByLevel": {
                 "1": 4,
@@ -1943,13 +1876,11 @@
               "id": "Oonai Cadenza/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "trigger": {
-                  "by": "marksmen"
-                },
-                "applies": {
-                  "to": "marksmen"
-                }
+              "event": {
+                "by": "marksmen"
+              },
+              "benefitTarget": {
+                "to": "marksmen"
               },
               "valuePctByLevel": {
                 "1": 1,
@@ -1960,13 +1891,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 3
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 3
             },
-            "stack": "same_round",
-            "requiresTroopAlive": true
+            "retriggerPolicy": "allow_overlap",
+            "requiresSourceTroopAlive": true
           }
         }
       ]
@@ -2004,11 +1935,9 @@
               "type": "OppDefenseDown",
               "op": 212,
               "side": "opponent",
-              "targeting": {
-                "applies": {
-                  "to": "all",
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "to": "all",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -2030,10 +1959,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             }
           }
         },
@@ -2047,10 +1976,8 @@
               "type": "DamageUp",
               "op": 102,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -2065,10 +1992,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 50
           }
@@ -2095,13 +2022,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         }
       ]
@@ -2151,13 +2078,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -2170,10 +2097,8 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -2195,12 +2120,12 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -2212,10 +2137,8 @@
               "id": "Youthful rage/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -2274,13 +2197,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -2292,10 +2215,8 @@
               "id": "Queen of the wild/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -2316,10 +2237,8 @@
               "id": "Call of the wild/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -2365,13 +2284,11 @@
               "id": "Combined arms/1",
               "type": "OppDamageDown",
               "op": 201,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "friendly"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "friendly"
               },
               "valuePctByLevel": {
                 "1": 3,
@@ -2385,14 +2302,12 @@
               "id": "Combined arms/2",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "friendly",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "friendly",
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 3,
@@ -2414,14 +2329,12 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "lancer"
-                },
-                "applies": {
-                  "to": "lancer",
-                  "vs": "all"
-                }
+              "event": {
+                "by": "lancer"
+              },
+              "benefitTarget": {
+                "to": "lancer",
+                "vs": "all"
               },
               "duration": {
                 "unit": "turn",
@@ -2443,13 +2356,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round",
-            "requiresTroopAlive": true
+            "retriggerPolicy": "allow_overlap",
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -2461,10 +2374,8 @@
               "id": "Momentum/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -2496,10 +2407,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 5
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 5
             }
           }
         }
@@ -2581,10 +2492,8 @@
               "id": "Vigor tactics/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 3,
@@ -2618,10 +2527,8 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -2644,12 +2551,12 @@
               "valueSemantics": "total_damage_pct"
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         },
         {
@@ -2674,13 +2581,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
             "chancePct": 40,
-            "stack": "same_round"
+            "retriggerPolicy": "allow_overlap"
           }
         }
       ]
@@ -2718,10 +2625,8 @@
               "type": "DamageUp",
               "op": 101,
               "damagePass": "normal",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 10,
@@ -2767,14 +2672,12 @@
               "type": "DamageUp",
               "op": 101,
               "damageKind": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "lancer"
-                },
-                "applies": {
-                  "to": "lancer",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "lancer"
+              },
+              "benefitTarget": {
+                "to": "lancer",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -2797,12 +2700,12 @@
               "valueSemantics": "total_damage_pct"
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             },
-            "requiresTroopAlive": true
+            "requiresSourceTroopAlive": true
           }
         }
       ]
@@ -2839,13 +2742,11 @@
               "id": "Nightmare Trace/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "lancer"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "lancer"
               },
               "duration": {
                 "unit": "attack",
@@ -2861,10 +2762,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 2
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 2
             }
           }
         },
@@ -2877,14 +2778,12 @@
               "id": "Dreamcatcher/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "lancer",
-                  "vs": "target"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "lancer",
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -2900,12 +2799,14 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 2
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 2
             },
-            "first": 2
+            "window": {
+              "firstTurn": 2
+            }
           }
         },
         {
@@ -2918,10 +2819,8 @@
               "type": "OppDefenseDown",
               "op": 214,
               "side": "opponent",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "turn",
@@ -2937,10 +2836,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 2
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 2
             }
           }
         }
@@ -2959,13 +2858,11 @@
               "id": "Rallying Beat/1",
               "type": "DamageUp",
               "op": 102,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -2983,12 +2880,12 @@
           "slot": 2,
           "name": "Non-combat placeholder",
           "text": "Placeholder skill to satisfy simulator config for non-combat hero data",
-          "activation": {
-            "mode": "manual_or_placeholder",
+          "reason": "No combat effects in current catalog",
+          "availability": {
+            "mode": "non_combat_placeholder",
             "chancePct": 0,
-            "order": 999
-          },
-          "reason": "No combat effects in current catalog"
+            "resolutionOrder": 999
+          }
         }
       ]
     },
@@ -3069,10 +2966,8 @@
               "type": "DamageUp",
               "op": 1010,
               "damageKind": "extra",
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -3087,10 +2982,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 4
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 4
             }
           }
         },
@@ -3104,13 +2999,11 @@
               "type": "DamageUp",
               "op": 1011,
               "damageKind": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "marksmen"
-                },
-                "applies": {
-                  "vs": "lancer"
-                }
+              "event": {
+                "by": "marksmen"
+              },
+              "benefitTarget": {
+                "vs": "lancer"
               },
               "duration": {
                 "unit": "attack",
@@ -3129,13 +3022,11 @@
               "type": "DamageUp",
               "op": 1012,
               "damageKind": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "marksmen"
-                },
-                "applies": {
-                  "vs": "marksmen"
-                }
+              "event": {
+                "by": "marksmen"
+              },
+              "benefitTarget": {
+                "vs": "marksmen"
               },
               "duration": {
                 "unit": "attack",
@@ -3150,13 +3041,13 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "attack",
-              "count": 2
+          "availability": {
+            "cadence": {
+              "event": "attack",
+              "every": 2
             },
-            "stack": "same_round",
-            "requiresTroopAlive": true
+            "retriggerPolicy": "allow_overlap",
+            "requiresSourceTroopAlive": true
           }
         },
         {
@@ -3168,10 +3059,8 @@
               "id": "Fleet/1",
               "type": "DamageUp",
               "op": 1013,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "duration": {
                 "unit": "attack",
@@ -3193,10 +3082,10 @@
               }
             }
           ],
-          "activation": {
-            "every": {
-              "unit": "turn",
-              "count": 1
+          "availability": {
+            "cadence": {
+              "event": "turn",
+              "every": 1
             }
           }
         }
@@ -3235,13 +3124,11 @@
               "type": "DefenseUp",
               "op": 111,
               "damagePass": "normal",
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "infantry"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "infantry"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -3256,13 +3143,11 @@
               "type": "DefenseUp",
               "op": 111,
               "damagePass": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "infantry"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "infantry"
               },
               "valuePctByLevel": {
                 "1": 6,
@@ -3283,13 +3168,11 @@
               "id": "Crescent Uplift/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "valuePctByLevel": {
                 "1": 4,
@@ -3311,13 +3194,11 @@
               "type": "DamageUp",
               "op": 101,
               "damagePass": "extra",
-              "targeting": {
-                "trigger": {
-                  "by": "once"
-                },
-                "applies": {
-                  "to": "all"
-                }
+              "event": {
+                "by": "once"
+              },
+              "benefitTarget": {
+                "to": "all"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -3394,10 +3275,8 @@
               "id": "Positional Battler/1",
               "type": "DamageUp",
               "op": 101,
-              "targeting": {
-                "applies": {
-                  "vs": "target"
-                }
+              "benefitTarget": {
+                "vs": "target"
               },
               "valuePctByLevel": {
                 "1": 5,
@@ -3415,11 +3294,11 @@
           "slot": 2,
           "name": "Bastionist",
           "text": "Increase building speed (non combat placeholder skill)",
-          "activation": {
-            "mode": "manual_or_placeholder",
-            "order": 999
-          },
-          "reason": "No combat effects in current catalog"
+          "reason": "No combat effects in current catalog",
+          "availability": {
+            "mode": "non_combat_placeholder",
+            "resolutionOrder": 999
+          }
         }
       ]
     }
