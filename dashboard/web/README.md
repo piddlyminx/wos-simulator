@@ -28,6 +28,15 @@ For Docker-on-WSL2 development, `docker-compose.yml` runs Turbopack with
 even when native file notifications are unreliable. Set the value to `0` in
 `.env` to disable polling on native Linux filesystems.
 
+The Docker dev app uses named volumes for `/app/node_modules`, `/app/.next`,
+and simulation snapshots. Do not run a second `docker compose run app ...`
+container while the live app is up, because two Next dev servers sharing the
+same `.next` volume can corrupt the dev build cache. Use
+`docker compose exec -u node app ...` for checks inside the running container,
+or stop the app before starting a second app container. The entrypoint holds a
+non-blocking lock on the `.next` volume and exits with a clear error if another
+app container is already using it.
+
 ## Database
 
 The SQLite DB lives at:
