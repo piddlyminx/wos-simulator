@@ -72,6 +72,12 @@ const SIDE_LABELS: Record<Side, string> = {
   attacker: "Attacker",
   defender: "Defender",
 };
+const SAVED_RUN_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
+  dateStyle: "medium",
+  timeStyle: "medium",
+  timeZone: "UTC",
+  hour12: false,
+});
 
 interface HeroSlotState {
   name: string | null;
@@ -106,6 +112,14 @@ interface SaveMetaPayload {
 }
 
 type PresetStatus = { kind: "ok" | "error"; message: string } | null;
+
+function formatSavedRunTimestamp(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) {
+    return iso;
+  }
+  return `${SAVED_RUN_DATE_FORMATTER.format(date)} UTC`;
+}
 
 function defaultSide(): SideState {
   return {
@@ -1422,7 +1436,7 @@ export default function SimulateClient({
                 ? "simulation run"
                 : "ratio search"}{" "}
               <code className="font-mono">{savedRunMeta.id}</code> from{" "}
-              {new Date(savedRunMeta.createdAt).toLocaleString()}. The current
+              {formatSavedRunTimestamp(savedRunMeta.createdAt)}. The current
               URL points at this saved snapshot.
             </span>
           ) : null}
