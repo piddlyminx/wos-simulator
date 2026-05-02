@@ -10,9 +10,7 @@ SCRIPTS = ROOT / "skill" / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-import cv2
-
-from report_stats_parser import _detect_fire_crystal_badge, extract_values_from_ocr_items
+from report_stats_parser import TROOP_TYPES, extract_report_stats_and_troops, extract_values_from_ocr_items
 
 
 class ReportStatsParserTests(unittest.TestCase):
@@ -56,19 +54,58 @@ class ReportStatsParserTests(unittest.TestCase):
         self.assertEqual(len(result["right"]["stat_bonuses"]), 12)
         self.assertEqual(result["meta"]["missing_fields"], [])
 
-    def test_fire_crystal_badge_templates_classify_known_badges(self) -> None:
-        template_root = ROOT / "skill" / "templates" / "fire_crystal_badges"
-        examples = {
-            int(path.stem.removeprefix("fc")): path
-            for path in template_root.glob("fc*.png")
-            if path.stem.removeprefix("fc").isdigit()
-        }
-        self.assertNotIn(9, examples)
-        self.assertGreaterEqual(len(examples), 9)
-        for expected, path in sorted(examples.items()):
-            img = cv2.imread(str(path))
-            self.assertIsNotNone(img, str(path))
-            self.assertEqual(_detect_fire_crystal_badge(img), expected)
+    def test_dashboard_report_fixtures_fire_crystal_badges(self) -> None:
+        expected_rows = [
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [8, 8, 8, 6, 6, 6],
+            [8, 8, 8, 3, 4, 3],
+            [0, 0, 0, 0, 0, 0],
+            [8, 8, None, 8, 8, 8],
+            [8, 8, 8, 8, 8, 8],
+            [8, 8, 8, 6, 6, 6],
+            [7, 8, 7, 7, 7, 7],
+            [7, 7, 8, 6, 6, 5],
+            [7, 8, 7, 7, 7, 7],
+            [8, 8, 8, 6, 6, 3],
+            [7, 8, 7, 7, 7, 7],
+            [8, None, 8, 5, 5, 5],
+            [6, 5, 6, 6, 5, 6],
+            [7, 7, 8, 6, 6, 5],
+            [7, 7, None, 5, 5, 5],
+            [6, 5, 6, 5, 7, None],
+            [4, 4, 4, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4],
+            [4, 4, 3, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4],
+            [0, 0, 0, 0, 0, 0],
+        ]
+        report_paths = sorted((ROOT / "dashboard" / "test_reports").glob("*.png"))
+        self.assertEqual([path.name for path in report_paths], sorted(path.name for path in report_paths))
+        self.assertEqual(len(report_paths), len(expected_rows))
+
+        for path, expected in zip(report_paths, expected_rows, strict=True):
+            with self.subTest(path=path.name):
+                result = extract_report_stats_and_troops(path)
+                actual = []
+                for side in ("left", "right"):
+                    for troop_type in TROOP_TYPES:
+                        troop = next((item for item in result[side]["troops"] if item["type"] == troop_type), None)
+                        actual.append(None if troop is None else troop.get("fire_crystal_level", 0))
+                self.assertEqual(actual, expected)
+
+    def test_dashboard_report_fixture_rejects_negative_stat_ocr(self) -> None:
+        path = ROOT / "dashboard" / "test_reports" / "WOS-278-negative-marksman-defense.png"
+
+        result = extract_report_stats_and_troops(path)
+
+        self.assertEqual(result["left"]["stat_bonuses"]["marksman_defense"], 219.0)
+        self.assertTrue(all(value >= 0 for value in result["left"]["stat_bonuses"].values()))
+        self.assertEqual(result["meta"]["missing_fields"], [])
 
     def test_troop_count_extraction_splits_adjacent_ocr_numbers(self) -> None:
         items = [

@@ -96,8 +96,10 @@ def _normalize_label_text(text: str) -> str:
 
 
 def _parse_percentage(text: str) -> float | None:
-    cleaned = re.sub(r"[^0-9.+\-]", "", text)
-    if not cleaned or cleaned in {"+", "-", "."}:
+    if re.search(r"-\s*\d", text):
+        return None
+    cleaned = re.sub(r"[^0-9.+]", "", text)
+    if not cleaned or cleaned in {"+", "."}:
         return None
     try:
         return float(cleaned)
@@ -229,9 +231,128 @@ def _match_stat_label(text: str) -> tuple[str, float] | None:
     return best_field, min(best_score, 1.0)
 
 
+def _split_mixed_label_value(item: OCRItem) -> tuple[OCRItem | None, OCRItem | None]:
+    match = re.search(r"[+\-]?\d[\d,]*(?:\.\d+)?\s*%", item.text)
+    if match is None:
+        return None, None
+    char_width = item.width / max(1, len(item.text))
+    value_x1 = min(item.x2 - 1, item.x1 + int(round(match.start() * char_width)))
+    value_x2 = min(item.x2, item.x1 + int(round(match.end() * char_width)))
+    label_before = item.text[: match.start()].strip()
+    label_after = item.text[match.end() :].strip()
+    if any(ch.isalpha() for ch in label_before):
+        label_text = label_before
+        label_x1 = item.x1
+        label_x2 = max(item.x1 + 1, value_x1 - 4)
+    elif any(ch.isalpha() for ch in label_after):
+        label_text = label_after
+        label_x1 = min(item.x2 - 1, value_x2 + 4)
+        label_x2 = item.x2
+    else:
+        return None, None
+    label = OCRItem(
+        text=label_text,
+        x1=label_x1,
+        y1=item.y1,
+        x2=label_x2,
+        y2=item.y2,
+        confidence=item.confidence,
+    )
+    value = OCRItem(
+        text=match.group(0).strip(),
+        x1=value_x1,
+        y1=item.y1,
+        x2=item.x2,
+        y2=item.y2,
+        confidence=item.confidence,
+    )
+    return label, value
+
+
+def _strip_label_noise(item: OCRItem) -> OCRItem:
+    text = item.text.strip()
+    cleaned = re.sub(r"\s*[+\-]+$", "", text).strip()
+    if cleaned == text:
+        return item
+    removed = len(text) - len(cleaned)
+    char_width = item.width / max(1, len(text))
+    return OCRItem(
+        text=cleaned,
+        x1=item.x1,
+        y1=item.y1,
+        x2=max(item.x1 + 1, item.x2 - int(round(removed * char_width))),
+        y2=item.y2,
+        confidence=item.confidence,
+    )
+
+
+def _candidate_label_items(items: Iterable[OCRItem]) -> list[OCRItem]:
+    """Return original OCR labels plus same-row word combinations.
+
+    RapidOCR often splits labels such as "Infantry Defense" into adjacent
+    "Infantry" and "Defense" boxes. Matching those fragments independently can
+    map "Defense" to the wrong troop type, so build candidate phrase boxes
+    before selecting the best stat label.
+    """
+    label_words: list[OCRItem] = []
+    for item in items:
+        if not any(ch.isalpha() for ch in item.text):
+            continue
+        label_part, _value_part = _split_mixed_label_value(item)
+        if label_part is not None:
+            label_words.append(_strip_label_noise(label_part))
+            continue
+        if "%" in item.text or _parse_percentage(item.text) is not None or _parse_integer(item.text) is not None:
+            continue
+        label_words.append(_strip_label_noise(item))
+    candidates = list(label_words)
+    for index, item in enumerate(label_words):
+        row = [
+            other
+            for other in label_words
+            if other is not item and abs(other.cy - item.cy) <= max(18, (item.height + other.height) * 0.55)
+        ]
+        row.append(item)
+        row = sorted(row, key=lambda candidate: candidate.x1)
+        try:
+            start = row.index(item)
+        except ValueError:
+            continue
+        for length in (2, 3):
+            phrase_items = row[start : start + length]
+            if len(phrase_items) != length:
+                continue
+            gaps = [phrase_items[pos + 1].x1 - phrase_items[pos].x2 for pos in range(len(phrase_items) - 1)]
+            if any(gap > 40 for gap in gaps):
+                continue
+            text = " ".join(part.text for part in phrase_items)
+            candidates.append(
+                OCRItem(
+                    text=text,
+                    x1=min(part.x1 for part in phrase_items),
+                    y1=min(part.y1 for part in phrase_items),
+                    x2=max(part.x2 for part in phrase_items),
+                    y2=max(part.y2 for part in phrase_items),
+                    confidence=min(part.confidence for part in phrase_items),
+                )
+            )
+    return candidates
+
+
+def _candidate_percentage_items(items: Iterable[OCRItem]) -> list[OCRItem]:
+    candidates: list[OCRItem] = []
+    for item in items:
+        if _parse_percentage(item.text) is not None and "%" in item.text:
+            candidates.append(item)
+        _label_part, value_part = _split_mixed_label_value(item)
+        if value_part is not None:
+            candidates.append(value_part)
+    return candidates
+
+
 def _select_best_label_boxes(items: list[OCRItem], header: OCRItem) -> dict[str, OCRItem]:
     matched: dict[str, tuple[float, OCRItem]] = {}
-    for item in items:
+    for item in _candidate_label_items(items):
         if item.cy <= header.cy + 10 or item.y1 >= header.y2 + 850:
             continue
         label_match = _match_stat_label(item.text)
@@ -247,7 +368,7 @@ def _select_best_label_boxes(items: list[OCRItem], header: OCRItem) -> dict[str,
 
 def _select_best_label_boxes_anywhere(items: list[OCRItem]) -> dict[str, OCRItem]:
     matched: dict[str, tuple[float, OCRItem]] = {}
-    for item in items:
+    for item in _candidate_label_items(items):
         label_match = _match_stat_label(item.text)
         if label_match is None:
             continue
@@ -266,14 +387,14 @@ def _pick_numeric_for_row(numeric_items: list[OCRItem], label_item: OCRItem, *, 
         if abs(item.cy - label_item.cy) > row_tolerance:
             continue
         if side == "left":
-            if item.x2 > label_item.x1 - 4:
+            if item.cx >= label_item.cx:
                 continue
-            gap = label_item.x1 - item.x2
+            gap = max(0, label_item.x1 - item.x2)
             edge_penalty = abs(item.cx - image_width * 0.22)
         else:
-            if item.x1 < label_item.x2 + 4:
+            if item.cx <= label_item.cx:
                 continue
-            gap = item.x1 - label_item.x2
+            gap = max(0, item.x1 - label_item.x2)
             edge_penalty = abs(item.cx - image_width * 0.78)
         score = abs(item.cy - label_item.cy) * 4.0 + gap * 0.02 + edge_penalty * 0.01 - item.confidence
         candidates.append((score, item))
@@ -282,7 +403,9 @@ def _pick_numeric_for_row(numeric_items: list[OCRItem], label_item: OCRItem, *, 
     return sorted(candidates, key=lambda pair: pair[0])[0][1]
 
 
-def _extract_troop_count_slots(items: list[OCRItem], header: OCRItem, image_width: int, image_height: int) -> dict[int, int]:
+def _extract_troop_count_slot_items(
+    items: list[OCRItem], header: OCRItem, image_width: int, image_height: int
+) -> dict[int, tuple[int, OCRItem]]:
     assigned: dict[int, tuple[float, OCRItem, int]] = {}
     scale = image_width / 720.0
     # Troop counts sit in a narrow row just above the Stat Bonuses header. A
@@ -311,7 +434,14 @@ def _extract_troop_count_slots(items: list[OCRItem], header: OCRItem, image_widt
             current = assigned.get(slot)
             if current is None or score < current[0]:
                 assigned[slot] = (score, item, value)
-    return {slot: int(value) for slot, (_score, _item, value) in assigned.items()}
+    return {slot: (int(value), item) for slot, (_score, item, value) in assigned.items()}
+
+
+def _extract_troop_count_slots(items: list[OCRItem], header: OCRItem, image_width: int, image_height: int) -> dict[int, int]:
+    return {
+        slot: value
+        for slot, (value, _item) in _extract_troop_count_slot_items(items, header, image_width, image_height).items()
+    }
 
 
 def _counts_by_side_from_slots(slot_counts: dict[int, int]) -> dict[str, dict[str, int]]:
@@ -609,7 +739,7 @@ def extract_values_from_ocr_items(items: Iterable[OCRItem | dict[str, Any]], *, 
 
     percentage_items = [
         item
-        for item in ocr_items
+        for item in _candidate_percentage_items(ocr_items)
         if (not has_troop_slots or item.cy > header.cy) and _parse_percentage(item.text) is not None and "%" in item.text
     ]
 
@@ -628,10 +758,12 @@ def extract_values_from_ocr_items(items: Iterable[OCRItem | dict[str, Any]], *, 
                 right_stats[field] = value
 
     if has_troop_slots:
-        troop_count_slots = _extract_troop_count_slots(ocr_items, header, image_width, image_height)
+        troop_count_slot_items = _extract_troop_count_slot_items(ocr_items, header, image_width, image_height)
+        troop_count_slots = {slot: value for slot, (value, _item) in troop_count_slot_items.items()}
         troop_counts = _counts_by_side_from_slots(troop_count_slots)
         levels = _extract_level_slots(ocr_items, header, image_width, image_height)
     else:
+        troop_count_slot_items = {}
         troop_count_slots = {}
         troop_counts = {"left": {}, "right": {}}
         levels = {"left": {}, "right": {}}
@@ -642,6 +774,9 @@ def extract_values_from_ocr_items(items: Iterable[OCRItem | dict[str, Any]], *, 
             "header_box": dataclasses.asdict(header),
             "label_boxes": {field: dataclasses.asdict(item) for field, item in label_boxes.items()},
             "ocr_item_count": len(ocr_items),
+            "slot_count_boxes": {
+                str(slot): dataclasses.asdict(item) for slot, (_value, item) in sorted(troop_count_slot_items.items())
+            },
             "slot_counts": {str(slot): count for slot, count in sorted(troop_count_slots.items())},
             "troop_slots_present": has_troop_slots,
             "missing_fields": [],
@@ -821,43 +956,39 @@ def _match_fire_crystal_badge_template(badge_bgr: np.ndarray) -> tuple[int | Non
     if not templates or badge_bgr.size == 0:
         return None, -1.0, "none"
     probe_bgr = _isolate_badge_blob(badge_bgr)
-    probe = _normalise_badge_for_match(probe_bgr)
 
     def score_templates(*, clipped: bool) -> list[tuple[int, str, float, float]]:
         scores: list[tuple[int, str, float, float]] = []
-        for fc_level, name, tpl, tpl_bgr in templates:
+        for fc_level, name, _tpl, tpl_bgr in templates:
             if clipped:
-                tpl_to_match = _top_clipped_badge_template(tpl, tpl_bgr)
+                tpl_to_match = _top_clipped_badge_template(tpl_bgr, tpl_bgr)
                 if tpl_to_match is None:
                     continue
             else:
-                tpl_to_match = tpl
+                tpl_to_match = tpl_bgr
             shell_score = -1.0
-            for scale in (0.75, 0.85, 0.95, 1.0, 1.08, 1.15, 1.25, 1.35, 1.5):
+            for scale_step in range(75, 151):
+                scale = scale_step / 100.0
                 th, tw = tpl_to_match.shape[:2]
                 resized = cv2.resize(tpl_to_match, (max(3, int(tw * scale)), max(3, int(th * scale))), interpolation=cv2.INTER_AREA)
                 rh, rw = resized.shape[:2]
-                ph, pw = probe.shape[:2]
+                ph, pw = probe_bgr.shape[:2]
                 if rh > ph or rw > pw:
                     continue
-                score = float(cv2.minMaxLoc(cv2.matchTemplate(probe, resized, cv2.TM_CCOEFF_NORMED))[1])
+                score = float(cv2.minMaxLoc(cv2.matchTemplate(probe_bgr, resized, cv2.TM_CCOEFF_NORMED))[1])
                 shell_score = max(shell_score, score)
-            scores.append((fc_level, name, shell_score, _score_badge_digit(probe_bgr, tpl_bgr)))
+            digit_score = _score_badge_digit(probe_bgr, tpl_bgr) if fc_level in (6, 8) else shell_score
+            scores.append((fc_level, name, shell_score, digit_score))
         return scores
 
     def choose(scores: list[tuple[int, str, float, float]]) -> tuple[int | None, float, str]:
         if not scores:
             return None, -1.0, "none"
         shell_sorted = sorted(scores, key=lambda item: item[2], reverse=True)
-        top_shell = shell_sorted[0]
-        runner_up_shell = shell_sorted[1][2] if len(shell_sorted) > 1 else -1.0
-        close_shell = [score for score in scores if score[2] >= top_shell[2] - 0.06 and score[3] >= 0.35]
-        if top_shell[2] >= 0.80 and top_shell[2] - runner_up_shell >= 0.03:
-            chosen = top_shell
-        elif close_shell:
-            chosen = max(close_shell, key=lambda item: item[3])
-        else:
-            chosen = top_shell
+        chosen = shell_sorted[0]
+        runner_up = shell_sorted[1] if len(shell_sorted) > 1 else None
+        if runner_up is not None and {chosen[0], runner_up[0]} == {6, 8} and chosen[2] - runner_up[2] <= 0.04:
+            chosen = max((chosen, runner_up), key=lambda item: item[3])
         return chosen[0], chosen[2], chosen[1]
 
     full_match = choose(score_templates(clipped=False))
@@ -870,15 +1001,20 @@ def _match_fire_crystal_badge_template(badge_bgr: np.ndarray) -> tuple[int | Non
     return full_match
 
 
-def _detect_fire_crystal_badge(slot_crop: np.ndarray) -> int | None:
+def _detect_fire_crystal_badge(slot_crop: np.ndarray, *, crop_from_slot: bool = True) -> int | None:
+    fc_level, _score = _detect_fire_crystal_badge_match(slot_crop, crop_from_slot=crop_from_slot)
+    return fc_level
+
+
+def _detect_fire_crystal_badge_match(slot_crop: np.ndarray, *, crop_from_slot: bool = True) -> tuple[int | None, float]:
     """Read the fire-crystal badge number in the top-right of a troop slot.
 
     Returns ``None`` when no badge is visible or the match is not confident.
     """
     if slot_crop.size == 0:
-        return None
+        return None, -1.0
     h, w = slot_crop.shape[:2]
-    if h <= 64 and w <= 64:
+    if not crop_from_slot or (h <= 64 and w <= 64):
         badge = slot_crop
     else:
         top = max(1, int(h * 0.62))
@@ -888,13 +1024,13 @@ def _detect_fire_crystal_badge(slot_crop: np.ndarray) -> int | None:
     red_mask = cv2.inRange(hsv, (0, 70, 80), (12, 255, 255)) | cv2.inRange(hsv, (165, 70, 80), (179, 255, 255))
     red_count = cv2.countNonZero(red_mask)
     if red_count < max(20, badge.shape[0] * badge.shape[1] * 0.04):
-        return None
+        return None, -1.0
 
     fc_level, score, template_name = _match_fire_crystal_badge_template(badge)
     if fc_level is not None and score >= MIN_FC_BADGE_TEMPLATE_SCORE:
-        return fc_level
+        return fc_level, score
 
-    return None
+    return None, score
 
 
 def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.ndarray) -> dict[str, list[dict[str, Any]]]:
@@ -923,8 +1059,19 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
             slot_counts[slot] = int(count)
             slot_avatars[slot] = img_bgr[avatar_y1:avatar_y2, x1:x2]
             badge_x2 = min(image_width, x2 + int(round(image_width * 0.055)))
-            slot_crop = img_bgr[max(0, avatar_y1 - 12):avatar_y2, x1:badge_x2]
-            fc_badge = _detect_fire_crystal_badge(slot_crop)
+            count_box = stats_result.get("meta", {}).get("slot_count_boxes", {}).get(str(slot))
+            if count_box is not None:
+                count_item = OCRItem(**count_box)
+                count_height = max(1, count_item.height)
+                badge_y1 = max(0, count_item.y1 - int(round(4.5 * count_height)))
+                badge_y2 = max(badge_y1 + 1, count_item.y1 - int(round(2.5 * count_height)))
+                slot_crop = img_bgr[badge_y1:badge_y2, x1:badge_x2]
+                count_fc, count_score = _detect_fire_crystal_badge_match(slot_crop, crop_from_slot=False)
+            else:
+                count_fc, count_score = None, -1.0
+            fallback_crop = img_bgr[max(0, avatar_y1 - 12):avatar_y2, x1:badge_x2]
+            fallback_fc, fallback_score = _detect_fire_crystal_badge_match(fallback_crop)
+            fc_badge = count_fc if count_score >= fallback_score else fallback_fc
             if fc_badge is not None:
                 stats_result.setdefault("meta", {}).setdefault("fire_crystal_badges", {})[str(slot)] = fc_badge
 
