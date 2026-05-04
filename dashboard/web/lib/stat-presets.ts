@@ -3,7 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 
 import type { TroopCategory } from "@/lib/heroes-catalogue";
-import { resolveSimulatorRoot } from "@/lib/simulator-root";
+import { resolveRuntimeStoreDir } from "@/lib/simulator-root";
 
 export const STAT_PRESET_CATEGORIES: TroopCategory[] = [
   "infantry",
@@ -35,9 +35,25 @@ const ID_RE = /^[A-Za-z0-9_-]{8,128}$/;
 const MAX_PRESETS = 200;
 const MAX_NAME_LENGTH = 80;
 
-export const STAT_PRESETS_FILE =
-  process.env.STAT_PRESETS_FILE ??
-  path.join(resolveSimulatorRoot(), "tmp", "player-stat-presets.json");
+export function resolveStatPresetsFile(): string {
+  return process.env.STAT_PRESETS_FILE
+    ? path.resolve(process.env.STAT_PRESETS_FILE)
+    : path.join(resolveRuntimeStoreDir(), "player-stat-presets.json");
+}
+
+export const STAT_PRESETS_FILE = resolveStatPresetsFile();
+
+function statPresetFileCandidates(): string[] {
+  const candidates = [STAT_PRESETS_FILE];
+  if (!process.env.STAT_PRESETS_FILE) {
+    candidates.push(
+      path.join(resolveRuntimeStoreDir(), "..", "player-stat-presets.json"),
+      path.resolve(process.cwd(), "../../tmp/player-stat-presets.json"),
+      "/tmp/player-stat-presets.json",
+    );
+  }
+  return [...new Set(candidates.map((p) => path.resolve(p)))];
+}
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -100,20 +116,25 @@ async function ensureStoreDir(): Promise<void> {
 }
 
 async function readAll(): Promise<PlayerStatPreset[]> {
-  try {
-    const raw = await fs.readFile(STAT_PRESETS_FILE, "utf8");
-    const parsed = JSON.parse(raw) as unknown;
-    if (!Array.isArray(parsed)) {
-      throw new Error("Preset store must be an array");
+  for (const filePath of statPresetFileCandidates()) {
+    try {
+      const raw = await fs.readFile(filePath, "utf8");
+      const parsed = JSON.parse(raw) as unknown;
+      if (!Array.isArray(parsed)) {
+        throw new Error("Preset store must be an array");
+      }
+      return parsed.map(normalizePreset).sort((a, b) =>
+        b.updated_at.localeCompare(a.updated_at),
+      );
+    } catch (err) {
+      const nodeErr = err as NodeJS.ErrnoException;
+      if (nodeErr?.code === "ENOENT") {
+        continue;
+      }
+      throw err;
     }
-    return parsed.map(normalizePreset).sort((a, b) =>
-      b.updated_at.localeCompare(a.updated_at),
-    );
-  } catch (err) {
-    const nodeErr = err as NodeJS.ErrnoException;
-    if (nodeErr?.code === "ENOENT") return [];
-    throw err;
   }
+  return [];
 }
 
 async function writeAll(presets: PlayerStatPreset[]): Promise<void> {

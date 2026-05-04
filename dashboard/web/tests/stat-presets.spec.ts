@@ -3,10 +3,14 @@ import { promises as fs } from "fs";
 import path from "path";
 import {
   listPlayerStatPresets,
+  resolveStatPresetsFile,
   savePlayerStatPreset,
   updatePlayerStatPreset,
 } from "../lib/stat-presets";
-import { resolveSimulatorRoot } from "../lib/simulator-root";
+import {
+  resolveRuntimeStoreDir,
+  resolveSimulatorRoot,
+} from "../lib/simulator-root";
 
 test("default player stat preset store resolves to simulator tmp", () => {
   const cwd = process.cwd();
@@ -19,6 +23,31 @@ test("default player stat preset store resolves to simulator tmp", () => {
   expect(resolveSimulatorRoot(process.cwd())).toBe(repoRoot);
   expect(resolveSimulatorRoot(`${repoRoot}/dashboard/web`)).toBe(repoRoot);
   expect(resolveSimulatorRoot(`${repoRoot}/dashboard`)).toBe(repoRoot);
+});
+
+test("default player stat preset store follows persistent simulation store override", () => {
+  const oldRunsDir = process.env.SIM_RUNS_DIR;
+  const oldPresetsFile = process.env.STAT_PRESETS_FILE;
+  try {
+    delete process.env.STAT_PRESETS_FILE;
+    process.env.SIM_RUNS_DIR = "/data/simulations";
+
+    expect(resolveRuntimeStoreDir()).toBe("/data/simulations");
+    expect(resolveStatPresetsFile()).toBe(
+      "/data/simulations/player-stat-presets.json",
+    );
+  } finally {
+    if (oldRunsDir === undefined) {
+      delete process.env.SIM_RUNS_DIR;
+    } else {
+      process.env.SIM_RUNS_DIR = oldRunsDir;
+    }
+    if (oldPresetsFile === undefined) {
+      delete process.env.STAT_PRESETS_FILE;
+    } else {
+      process.env.STAT_PRESETS_FILE = oldPresetsFile;
+    }
+  }
 });
 
 test("player stat preset store saves, updates, and sorts by update time", async () => {

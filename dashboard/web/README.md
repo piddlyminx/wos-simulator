@@ -72,6 +72,16 @@ you want a different host path or a mounted Docker volume:
 SIM_RUNS_DIR=/absolute/path/to/simulate-runs npm run dev
 ```
 
+Saved player stat presets are also stored outside git. By default host mode
+uses `../../tmp/player-stat-presets.json`. When `SIM_RUNS_DIR` is set, presets
+default to `$SIM_RUNS_DIR/player-stat-presets.json` so Docker stores them in the
+same persistent volume as saved simulation runs. Override with
+`STAT_PRESETS_FILE` when needed:
+
+```bash
+STAT_PRESETS_FILE=/absolute/path/to/player-stat-presets.json npm run dev
+```
+
 **The DB does not need to exist for the app to start.** If missing, `/healthz` returns `{ runs: 0, warning: "DB not found" }` and all pages show an empty state.
 
 ## How the DB gets populated
