@@ -8,6 +8,14 @@ Always run `npm run smoke` against the committed `test_results/dashboard.sqlite`
 
 This builds the app, starts the production server, and runs Playwright smoke tests across all routes.
 
+For agent visual QA, do not start ad-hoc dashboard dev servers by default.
+First use the already-running Docker/dev dashboard (`https://wos-sim.ratme.org`
+or `http://localhost:3000`) when it is available. If a local server is
+unavoidable, prefer Playwright's managed `webServer`; otherwise use a
+temporary non-3000 port, check for existing Next/dashboard processes first, and
+stop the server before finishing the heartbeat. Never leave `npm run dev`,
+`next dev`, or `next start` running for the next agent.
+
 ## Installation
 
 ```bash
