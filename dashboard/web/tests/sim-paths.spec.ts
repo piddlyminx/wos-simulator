@@ -57,7 +57,7 @@ test.describe("WOS-188 simulator path filter", () => {
     expect(isSimulatorPath("testcases/emulator_verified/x.json")).toBe(true);
     expect(isSimulatorPath("fighters_data/sharp.json")).toBe(true);
     expect(isSimulatorPath("battle_specs_manual/logan.json")).toBe(true);
-    expect(isSimulatorPath("requirements.txt")).toBe(true);
+    expect(isSimulatorPath("pyproject.toml")).toBe(true);
     expect(isSimulatorPath("check_testcases.py")).toBe(true);
     expect(isSimulatorPath("battle_main.py")).toBe(true);
     expect(isSimulatorPath("compare_results.py")).toBe(true);

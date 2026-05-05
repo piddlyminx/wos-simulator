@@ -1,20 +1,25 @@
-"""Parse a WOS battle-report screenshot into structured JSON.
+"""Parse a WOS battle-report screenshot into structured dashboard JSON.
 
-Reads a base64-encoded image from stdin, runs Tesseract OCR, and extracts:
-  - 3 troop counts per side (attacker left, defender right)
+Reads a base64-encoded image from stdin, delegates to the skill's
+``report_stats_parser.py``, and extracts:
+  - troop counts and troop tier/type data per side (attacker left, defender right)
   - 12 stat-bonus percentages per side (4 stats x 3 troop types)
 
 Output JSON (stdout):
   {
-    "attacker": { "troops": {..}, "stats": {..} },
-    "defender": { "troops": {..}, "stats": {..} },
+    "attacker": { "troops": {..}, "troop_types": {..}, "stats": {..} },
+    "defender": { "troops": {..}, "troop_types": {..}, "stats": {..} },
     "raw_text": "...",
     "warnings": ["..."]
   }
 
 On OCR/parse failure, exits non-zero with JSON error on stdout.
 
-Robustness strategy (WOS-207):
+The legacy Tesseract helpers remain below for compatibility with older unit
+tests and ad-hoc debugging; the production ``parse_report`` path no longer uses
+them.
+
+Legacy robustness strategy (WOS-207):
   1. First pass: PSM 6 on the uploaded image, via image_to_data so we keep
      per-line Y bounding boxes. Parse stat rows / troop counts.
   2. If any of the 12 stat rows (or 6 troop counts) are missing, retry the
@@ -37,14 +42,16 @@ import io
 import json
 import re
 import sys
+import tempfile
+from pathlib import Path
 from typing import Any, Iterable
 
 from PIL import Image, ImageOps
-import pytesseract
 
 
 CATEGORIES = ("infantry", "lancer", "marksman")
 STAT_NAMES = ("attack", "defense", "lethality", "health")
+SIDE_MAP = {"attacker": "left", "defender": "right"}
 
 # Fixed row order in the report's Stat Bonuses section.
 STAT_ROW_ORDER: list[tuple[str, str]] = [
@@ -79,6 +86,8 @@ def _ocr_lines(img: Image.Image, config: str = "--psm 6") -> tuple[list[Line], s
     Each line is ``{"text": "<joined words>", "top": int, "bottom": int}``
     where ``top``/``bottom`` are pixel Y coordinates in the input image.
     """
+    import pytesseract
+
     data = pytesseract.image_to_data(
         img, config=config, output_type=pytesseract.Output.DICT
     )
@@ -529,6 +538,8 @@ def _targeted_row_recovery(
         ]
         for variant, cfg in variants:
             try:
+                import pytesseract
+
                 text = pytesseract.image_to_string(variant, config=cfg)
             except Exception:  # noqa: BLE001
                 continue
@@ -569,7 +580,107 @@ def _shape_side(
     return {"troops": troops, "stats": stat_out}
 
 
+def _tier_key(tier: Any, fire_crystal_level: Any) -> str | None:
+    if not isinstance(tier, int):
+        return None
+    if tier < 1:
+        return None
+    if isinstance(fire_crystal_level, int) and fire_crystal_level > 0:
+        return f"t{tier}_fc{fire_crystal_level}"
+    return f"t{tier}"
+
+
+def _troop_type_key(troop_type: str, tier: Any, fire_crystal_level: Any) -> str | None:
+    tier_part = _tier_key(tier, fire_crystal_level)
+    if tier_part is None:
+        return None
+    return f"{troop_type}_{tier_part}"
+
+
+def _shape_skill_side(side_data: dict[str, Any]) -> dict[str, Any]:
+    troops: dict[str, int | None] = {cat: None for cat in CATEGORIES}
+    troop_types: dict[str, str | None] = {cat: None for cat in CATEGORIES}
+    stat_out: dict[str, dict[str, float | None]] = {
+        cat: {stat: None for stat in STAT_NAMES} for cat in CATEGORIES
+    }
+
+    for troop in side_data.get("troops", []):
+        troop_type = troop.get("type")
+        if troop_type not in CATEGORIES:
+            continue
+        count = troop.get("count")
+        if isinstance(count, int):
+            troops[troop_type] = count
+        troop_types[troop_type] = _troop_type_key(
+            troop_type,
+            troop.get("tier"),
+            troop.get("fire_crystal_level"),
+        )
+
+    # Older fallback fields can still contain counts even when typed troop
+    # details are incomplete.
+    for troop_type, count in side_data.get("troop_counts", {}).items():
+        if troop_type in CATEGORIES and troops[troop_type] is None and isinstance(count, int):
+            troops[troop_type] = count
+
+    for troop_type, level in side_data.get("levels", {}).items():
+        if troop_type not in CATEGORIES or troop_types[troop_type] is not None:
+            continue
+        troop_types[troop_type] = _troop_type_key(
+            troop_type,
+            level.get("tier") if isinstance(level, dict) else None,
+            level.get("fire_crystal_level") if isinstance(level, dict) else None,
+        )
+
+    for field, value in side_data.get("stat_bonuses", {}).items():
+        if not isinstance(value, (int, float)):
+            continue
+        try:
+            troop_type, stat = field.rsplit("_", 1)
+        except ValueError:
+            continue
+        if troop_type in CATEGORIES and stat in STAT_NAMES:
+            stat_out[troop_type][stat] = float(value)
+
+    return {"troops": troops, "troop_types": troop_types, "stats": stat_out}
+
+
+def _warnings_from_skill_result(result: dict[str, Any]) -> list[str]:
+    missing = result.get("meta", {}).get("missing_fields", [])
+    if not missing:
+        return []
+    return ["missing fields: " + ", ".join(str(field) for field in missing)]
+
+
+def _parse_report_with_skill(image_bytes: bytes) -> dict[str, Any]:
+    repo_root = Path(__file__).resolve().parents[1]
+    skill_scripts = repo_root / "skill" / "scripts"
+    skill_scripts_path = str(skill_scripts)
+    if skill_scripts_path not in sys.path:
+        sys.path.insert(0, skill_scripts_path)
+    from report_stats_parser import extract_report_stats_and_troops
+
+    with tempfile.NamedTemporaryFile(suffix=".png") as tmp:
+        tmp.write(image_bytes)
+        tmp.flush()
+        parsed = extract_report_stats_and_troops(tmp.name)
+
+    strategies = parsed.get("meta", {}).get("ocr_strategy", [])
+    return {
+        "attacker": _shape_skill_side(parsed[SIDE_MAP["attacker"]]),
+        "defender": _shape_skill_side(parsed[SIDE_MAP["defender"]]),
+        "raw_text": "",
+        "warnings": _warnings_from_skill_result(parsed),
+        "ocr_retried": len(strategies) > 1,
+        "parser": "skill.report_stats_parser",
+    }
+
+
 def parse_report(image_bytes: bytes) -> dict[str, Any]:
+    return _parse_report_with_skill(image_bytes)
+
+
+def _parse_report_with_tesseract(image_bytes: bytes) -> dict[str, Any]:
     img = Image.open(io.BytesIO(image_bytes))
     if img.mode not in ("RGB", "L"):
         img = img.convert("RGB")
@@ -692,9 +803,6 @@ def main() -> int:
 
     try:
         result = parse_report(image_bytes)
-    except pytesseract.TesseractNotFoundError:
-        print(json.dumps({"error": "tesseract binary not installed"}))
-        return 3
     except Exception as e:  # noqa: BLE001
         print(json.dumps({"error": f"ocr failed: {e}"}))
         return 4

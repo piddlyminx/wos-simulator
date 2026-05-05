@@ -14,7 +14,7 @@ export const SIMULATOR_PATH_PREFIXES: readonly string[] = [
 ];
 
 export const SIMULATOR_ROOT_FILES: ReadonlySet<string> = new Set<string>([
-  "requirements.txt",
+  "pyproject.toml",
   "check_testcases.py",
   "battle_main.py",
   "compare_results.py",

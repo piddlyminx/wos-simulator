@@ -26,7 +26,7 @@ SIMULATOR_PATH_PREFIXES: tuple[str, ...] = (
 
 SIMULATOR_ROOT_FILES: frozenset[str] = frozenset(
     {
-        "requirements.txt",
+        "pyproject.toml",
         "check_testcases.py",
         "battle_main.py",
         "compare_results.py",

@@ -54,23 +54,14 @@ From the repo root:
 
 ```bash
 cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+uv sync
 ```
 
-`requirements.txt` installs the Python pieces used by the dashboard helper
+`pyproject.toml` installs the Python pieces used by the dashboard helper
 scripts:
 
 - `tabulate` for the simulator-backed routes
-- `Pillow` and `pytesseract` for OCR
-
-If you want the "Import report" OCR flow to work, also install the system
-Tesseract binary. On Debian/Ubuntu:
-
-```bash
-sudo apt-get install tesseract-ocr
-```
+- `rapidocr`, ONNX Runtime, OpenCV, NumPy, and Pillow for OCR
 
 ### 2. Install Node dependencies
 

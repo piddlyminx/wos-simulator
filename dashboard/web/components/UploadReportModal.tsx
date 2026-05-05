@@ -16,6 +16,7 @@ export type Skill4LevelMap = Record<TroopCategory, number>;
 
 export interface OcrSideData {
   troops: Record<TroopCategory, number | null>;
+  troop_types?: Record<TroopCategory, string | null>;
   stats: Record<TroopCategory, Record<string, number | null>>;
 }
 

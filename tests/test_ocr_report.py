@@ -3,22 +3,15 @@
 Covers:
   - Parsing helpers (_parse_stat_row_from_text, _match_stat_label).
   - Linear-fit band prediction for missing stat rows.
-  - End-to-end retry: a slightly-faded stat row that the primary PSM 6
-    pass misses but the hardened retry path recovers.
+  - Dashboard adapter mapping for the skill parser result shape.
 
-The end-to-end test depends on having the tesseract binary installed. It
-is skipped automatically when tesseract is missing.
 """
 
 from __future__ import annotations
 
-import io
-import shutil
 import sys
 import unittest
 from pathlib import Path
-
-from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -29,16 +22,10 @@ from dashboard.ocr_report import (  # noqa: E402
     _parse_stat_row_from_text,
     _parse_stats,
     _parse_troop_row,
-    parse_report,
+    _shape_skill_side,
+    _warnings_from_skill_result,
     predict_missing_row_bands,
 )
-
-
-FIXTURES = Path(__file__).parent / "fixtures"
-STAT_BONUSES_PNG = FIXTURES / "stat_bonuses.png"
-DASHBOARD_REPORTS = Path(__file__).resolve().parents[1] / "dashboard" / "test_reports"
-
-TESSERACT_AVAILABLE = shutil.which("tesseract") is not None
 
 
 class ParseStatRowTests(unittest.TestCase):
@@ -216,175 +203,73 @@ class ParseTroopRowTests(unittest.TestCase):
         self.assertEqual(warnings, [])
 
 
-@unittest.skipUnless(
-    TESSERACT_AVAILABLE and STAT_BONUSES_PNG.exists(),
-    "tesseract binary or fixture image unavailable",
-)
-class ParseReportIntegrationTests(unittest.TestCase):
-    def setUp(self) -> None:
-        self.image_bytes = STAT_BONUSES_PNG.read_bytes()
+class SkillParserAdapterTests(unittest.TestCase):
+    def test_maps_typed_partial_troops_and_stats(self) -> None:
+        side = {
+            "troops": [
+                {
+                    "type": "infantry",
+                    "tier": 11,
+                    "fire_crystal_level": 3,
+                    "count": 1200,
+                },
+                {
+                    "type": "marksman",
+                    "tier": 10,
+                    "fire_crystal_level": 0,
+                    "count": 800,
+                },
+            ],
+            "troop_counts": {"infantry": 1200, "marksman": 800},
+            "levels": {},
+            "stat_bonuses": {
+                "infantry_attack": 113.5,
+                "lancer_health": 124.0,
+                "marksman_lethality": 1073.0,
+            },
+        }
 
-    def test_clean_image_parses_all_rows(self) -> None:
-        result = parse_report(self.image_bytes)
-        self.assertFalse(result["ocr_retried"])
-        self.assertFalse(
-            any("missing stat rows" in warning for warning in result["warnings"])
-        )
-        for cat in ("infantry", "lancer", "marksman"):
-            for stat in ("attack", "defense", "lethality", "health"):
-                self.assertIsNotNone(
-                    result["attacker"]["stats"][cat][stat],
-                    f"attacker {cat} {stat} should be populated",
-                )
-                self.assertIsNotNone(
-                    result["defender"]["stats"][cat][stat],
-                    f"defender {cat} {stat} should be populated",
-                )
+        result = _shape_skill_side(side)
 
-    def test_faded_row_recovered_by_retry(self) -> None:
-        """Fade the Infantry Lethality row until primary PSM 6 misses it.
-
-        The hardened retry path must recover the value silently.
-        """
-        img = Image.open(io.BytesIO(self.image_bytes)).convert("RGB")
-        # Infantry Lethality is the 3rd stat row. In this fixture it sits at
-        # roughly y=280-315. Blend with the background tan color to drop its
-        # contrast below PSM 6's detection floor while keeping pixels readable.
-        row = img.crop((0, 278, img.width, 315))
-        overlay = Image.new("RGB", row.size, (246, 232, 200))
-        from PIL import Image as _PIL  # local import to satisfy linters
-
-        blended = _PIL.blend(row, overlay, 0.70)
-        img.paste(blended, (0, 278))
-        buf = io.BytesIO()
-        img.save(buf, format="PNG")
-
-        result = parse_report(buf.getvalue())
-
-        self.assertTrue(
-            result["ocr_retried"],
-            "retry path should have been triggered by faded row",
-        )
-        self.assertFalse(
-            any("missing stat rows" in warning for warning in result["warnings"]),
-            f"expected silent stat recovery, got: {result['warnings']}",
-        )
-        self.assertIsNotNone(
-            result["attacker"]["stats"]["infantry"]["lethality"],
-            "infantry lethality should have been recovered by the retry",
-        )
-
-    @unittest.skipUnless(
-        DASHBOARD_REPORTS.exists(),
-        "dashboard/test_reports unavailable",
-    )
-    def test_troop_row_recovery_uses_header_anchored_band(self) -> None:
-        result = parse_report(
-            (DASHBOARD_REPORTS / "Screenshot 2026-03-20 005937.png").read_bytes()
+        self.assertEqual(
+            result["troops"],
+            {"infantry": 1200, "lancer": None, "marksman": 800},
         )
         self.assertEqual(
-            result["attacker"]["troops"],
-            {"infantry": 91_728, "lancer": 14_112, "marksman": 70_560},
+            result["troop_types"],
+            {
+                "infantry": "infantry_t11_fc3",
+                "lancer": None,
+                "marksman": "marksman_t10",
+            },
         )
+        self.assertEqual(result["stats"]["infantry"]["attack"], 113.5)
+        self.assertEqual(result["stats"]["lancer"]["health"], 124.0)
+        self.assertEqual(result["stats"]["marksman"]["lethality"], 1073.0)
+        self.assertIsNone(result["stats"]["lancer"]["attack"])
+
+    def test_maps_level_fallback_when_typed_troop_lacks_tier(self) -> None:
+        side = {
+            "troops": [{"type": "lancer", "tier": None, "count": 600}],
+            "troop_counts": {"lancer": 600},
+            "levels": {"lancer": {"tier": 9, "fire_crystal_level": None}},
+            "stat_bonuses": {},
+        }
+
+        result = _shape_skill_side(side)
+
+        self.assertEqual(result["troops"]["lancer"], 600)
+        self.assertEqual(result["troop_types"]["lancer"], "lancer_t9")
+
+    def test_missing_fields_become_dashboard_warning(self) -> None:
+        warnings = _warnings_from_skill_result(
+            {"meta": {"missing_fields": ["left_lancer_count", "right_marksman_tier"]}}
+        )
+
         self.assertEqual(
-            result["defender"]["troops"],
-            {"infantry": 60_666, "lancer": 60_666, "marksman": 60_666},
+            warnings,
+            ["missing fields: left_lancer_count, right_marksman_tier"],
         )
-        self.assertEqual(result["warnings"], [])
-
-    @unittest.skipUnless(
-        DASHBOARD_REPORTS.exists(),
-        "dashboard/test_reports unavailable",
-    )
-    def test_partial_troop_rows_warn_but_keep_stat_parse(self) -> None:
-        result = parse_report(
-            (DASHBOARD_REPORTS / "Screenshot 2026-04-20 050746.png").read_bytes()
-        )
-        self.assertEqual(
-            result["attacker"]["troops"],
-            {"infantry": 143_939, "lancer": 104_233, "marksman": None},
-        )
-        self.assertEqual(
-            result["defender"]["troops"],
-            {"infantry": 38_432, "lancer": 19_262, "marksman": 127_047},
-        )
-        self.assertIn(
-            "attacker side has 2 troop counts, mapped left->right as [infantry, lancer]; verify mapping.",
-            result["warnings"],
-        )
-        self.assertNotIn(
-            "could not parse troop counts from the row above 'Stat Bonuses'; populate them manually or retry with a clearer crop",
-            result["warnings"],
-        )
-
-
-@unittest.skipUnless(
-    TESSERACT_AVAILABLE and DASHBOARD_REPORTS.exists(),
-    "tesseract binary or dashboard/test_reports unavailable",
-)
-class DashboardReportCorpusTests(unittest.TestCase):
-    def test_dashboard_report_corpus_parses_cleanly(self) -> None:
-        report_paths = sorted(
-            p for p in DASHBOARD_REPORTS.iterdir()
-            if p.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}
-        )
-        self.assertGreater(len(report_paths), 0, "no dashboard report images found")
-
-        failures: list[str] = []
-        for report_path in report_paths:
-            try:
-                result = parse_report(report_path.read_bytes())
-            except Exception as exc:  # noqa: BLE001
-                failures.append(f"{report_path.name}: exception: {exc}")
-                continue
-
-            missing_stats: list[str] = []
-            missing_troops: list[str] = []
-            for side in ("attacker", "defender"):
-                troops = result[side]["troops"]
-                for cat, val in troops.items():
-                    if val is None:
-                        missing_troops.append(f"{side}.troops.{cat}")
-                for cat, stats in result[side]["stats"].items():
-                    for stat, val in stats.items():
-                        if val is None:
-                            missing_stats.append(f"{side}.stats.{cat}.{stat}")
-
-            warnings = result["warnings"]
-            generic_troop_failures = [
-                warning
-                for warning in warnings
-                if warning.startswith("could not parse troop counts")
-            ]
-            unexpected_warnings = [
-                warning
-                for warning in warnings
-                if not (
-                    warning.startswith("attacker side has ")
-                    or warning.startswith("defender side has ")
-                    or warning.startswith(
-                        "troop row shows percentages rather than absolute counts"
-                    )
-                )
-            ]
-
-            if missing_stats or generic_troop_failures or unexpected_warnings:
-                missing_text = ", ".join(missing_stats + missing_troops) if (missing_stats or missing_troops) else "none"
-                failures.append(
-                    f"{report_path.name}: warnings={warnings!r}; missing={missing_text}"
-                )
-                continue
-
-            if missing_troops and not any("verify mapping" in warning for warning in warnings):
-                failures.append(
-                    f"{report_path.name}: missing troop counts without mapping warning: {', '.join(missing_troops)}"
-                )
-
-        if failures:
-            self.fail(
-                f"{len(failures)}/{len(report_paths)} dashboard screenshots did not parse cleanly:\n"
-                + "\n".join(failures)
-            )
 
 
 if __name__ == "__main__":
