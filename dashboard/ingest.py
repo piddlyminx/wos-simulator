@@ -94,7 +94,10 @@ def open_db(db_path: Optional[Path | str] = None) -> sqlite3.Connection:
     path = Path(db_path) if db_path is not None else DB_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(path))
-    conn.execute("PRAGMA journal_mode=WAL")
+    # The dashboard DB is a git-committed artifact. WAL mode leaves recent
+    # writes in ignored sidecar files, so keep on-disk DBs self-contained.
+    if path != Path(":memory:"):
+        conn.execute("PRAGMA journal_mode=DELETE")
     conn.execute("PRAGMA foreign_keys=ON")
     _apply_migrations(conn)
     if _seed_heroes is not None:
@@ -257,7 +260,7 @@ def record_run(
                     run_id,
                     run_doc.get("started_at"),
                     finished_at,
-                    run_doc.get("git_sha", ""),
+                    run_doc.get("git_sha") or "",
                     1 if run_doc.get("dirty") else 0,
                     run_doc.get("baseline_git_sha"),
                     json.dumps(run_doc.get("cli_args", {})),
