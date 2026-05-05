@@ -1,0 +1,246 @@
+[
+  {
+    "test_id": "alonso_solo_v2",
+    "description": "Alonso solo attacker. minxxx attacks with Alonso (S1: 40% chance lethality +30%, S2: 20% chance opp damage down 40% for 2t, S3: 50% chance extra attack damage up 40%) using 100/100/100 t6 troops. WIP defends with no heroes using 333/333/333 t6. All three skills are chance-based; collect 30 game results for RNG confidence. Reference: WOS-292.",
+    "attacker": {
+      "name": "Piddlyminxxx",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 3,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 221.9,
+          "defense": 214.0,
+          "lethality": 151.5,
+          "health": 161.6
+        },
+        "lanc": {
+          "attack": 208.7,
+          "defense": 203.7,
+          "lethality": 147.9,
+          "health": 143.9
+        },
+        "mark": {
+          "attack": 336.1,
+          "defense": 325.1,
+          "lethality": 166.0,
+          "health": 160.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 333,
+        "lancer_t6": 333,
+        "marksman_t6": 333
+      },
+      "stats": {
+        "inf": {
+          "attack": 126.9,
+          "defense": 131.7,
+          "lethality": 100.5,
+          "health": 103.4
+        },
+        "lanc": {
+          "attack": 129.9,
+          "defense": 124.9,
+          "lethality": 104.0,
+          "health": 96.6
+        },
+        "mark": {
+          "attack": 134.4,
+          "defense": 121.2,
+          "lethality": 113.3,
+          "health": 103.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 498
+      },
+      {
+        "attacker": 0,
+        "defender": 539
+      },
+      {
+        "attacker": 0,
+        "defender": 555
+      },
+      {
+        "attacker": 0,
+        "defender": 509
+      },
+      {
+        "attacker": 0,
+        "defender": 495
+      },
+      {
+        "attacker": 0,
+        "defender": 486
+      }
+    ]
+  },
+  {
+    "test_id": "alonso_solo_v2",
+    "description": "Alonso solo attacker. minxxx attacks with Alonso (S1: 40% chance lethality +30%, S2: 20% chance opp damage down 40% for 2t, S3: 50% chance extra attack damage up 40%) using 100/100/100 t6 troops. WIP defends with no heroes using 333/333/333 t6. All three skills are chance-based; collect 30 game results for RNG confidence. Reference: WOS-292.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxx",
+      "heroes": {
+        "Alonso": {
+          "skill_1": 3,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 239.9,
+          "defense": 237.0,
+          "lethality": 161.5,
+          "health": 171.6
+        },
+        "lanc": {
+          "attack": 226.7,
+          "defense": 226.7,
+          "lethality": 157.9,
+          "health": 153.9
+        },
+        "mark": {
+          "attack": 354.1,
+          "defense": 348.1,
+          "lethality": 176.0,
+          "health": 170.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 333,
+        "lancer_t6": 333,
+        "marksman_t6": 333
+      },
+      "stats": {
+        "inf": {
+          "attack": 126.9,
+          "defense": 131.7,
+          "lethality": 100.5,
+          "health": 103.4
+        },
+        "lanc": {
+          "attack": 129.9,
+          "defense": 124.9,
+          "lethality": 104.0,
+          "health": 96.6
+        },
+        "mark": {
+          "attack": 134.4,
+          "defense": 121.2,
+          "lethality": 113.3,
+          "health": 103.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 61,
+        "defender": 0
+      },
+      {
+        "attacker": 28,
+        "defender": 0
+      },
+      {
+        "attacker": 46,
+        "defender": 0
+      },
+      {
+        "attacker": 71,
+        "defender": 0
+      },
+      {
+        "attacker": 0,
+        "defender": 97
+      },
+      {
+        "attacker": 21,
+        "defender": 0
+      },
+      {
+        "attacker": 0,
+        "defender": 95
+      },
+      {
+        "attacker": 66,
+        "defender": 0
+      },
+      {
+        "attacker": 0,
+        "defender": 8
+      },
+      {
+        "attacker": 61,
+        "defender": 0
+      },
+      {
+        "attacker": 37,
+        "defender": 0
+      },
+      {
+        "attacker": 0,
+        "defender": 39
+      },
+      {
+        "attacker": 0,
+        "defender": 115
+      },
+      {
+        "attacker": 44,
+        "defender": 0
+      },
+      {
+        "attacker": 1,
+        "defender": 0
+      },
+      {
+        "attacker": 30,
+        "defender": 0
+      },
+      {
+        "attacker": 28,
+        "defender": 0
+      },
+      {
+        "attacker": 56,
+        "defender": 0
+      },
+      {
+        "attacker": 6,
+        "defender": 0
+      }
+    ]
+  }
+]

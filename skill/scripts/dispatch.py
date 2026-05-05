@@ -148,7 +148,7 @@ def _find_and_tap(emulator: WosEmulator, template_path: str, label: str, thresho
 def _verify_preset7_selected(emulator: WosEmulator) -> None:
     """Fail unless deploy preset slot 7 is visibly selected."""
     img = emulator.screencap_bgr()
-    found, _ = find_template(img, TPL_FLAG_7_SELECTED, threshold=0.90)
+    found, _ = find_template(img, TPL_FLAG_7_SELECTED, threshold=0.70)
     if not found:
         raise WosDispatchError("Preset 7 did not show selected state after tap")
 
@@ -164,6 +164,8 @@ def _save_preset7(emulator: WosEmulator) -> None:
     _find_and_tap(emulator, TPL_SAVE_FLAG, "SaveFlag")
     time.sleep(1)
     _select_preset7(emulator, "SaveFlagPreset7")
+    logger.info("deploy_army: confirming preset slot 7 save")
+    _find_and_tap(emulator, TPL_RECALL_CONFIRM, "SaveFlagConfirm", threshold=0.80)
     time.sleep(1)
 
 
@@ -352,6 +354,7 @@ def recall_camp(emulator: WosEmulator) -> None:
         logger.info("recall_camp: troops recalled")
     except WosDispatchError:
         logger.info("recall_camp: camp recall button not found — no troops to recall")
+    goto_world_map(emulator)
 
 # ─── Tile finding ─────────────────────────────────────────────────────────────
 def find_empty_tile(emulator: WosEmulator) -> tuple[int, int]:

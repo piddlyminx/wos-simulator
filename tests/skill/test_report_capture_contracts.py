@@ -104,6 +104,24 @@ class ReportCaptureContractTests(unittest.TestCase):
             ("2026-04-29 20:57:28", 1777496248),
         )
 
+    def test_report_timestamp_accepts_split_second_ocr_dot(self) -> None:
+        candidates = [
+            {"text": "We", "x": 193, "y": 241},
+            {"text": "were", "x": 242, "y": 242},
+            {"text": "victorious", "x": 324, "y": 242},
+            {"text": "against", "x": 416, "y": 243},
+            {"text": "[BBQ]XxWIPxX!", "x": 537, "y": 242},
+            {"text": "2026-05-05", "x": 241, "y": 272},
+            {"text": "17:53:4.5", "x": 356, "y": 273},
+            {"text": "Attacker", "x": 230, "y": 352},
+            {"text": "Defeat", "x": 331, "y": 352},
+        ]
+
+        self.assertEqual(
+            _extract_report_timestamp(candidates),
+            ("2026-05-05 17:53:45", 1778003625),
+        )
+
     def test_report_end_detects_battle_details_button_template(self) -> None:
         template = cv2.imread(str(ROOT / "skill" / "templates" / "battle_details_button.png"), cv2.IMREAD_COLOR)
         self.assertIsNotNone(template)
