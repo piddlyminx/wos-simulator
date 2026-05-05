@@ -235,6 +235,7 @@ class Fight:
             'test_id': f'{self.attacker.name}_{self.defender.name}_{len(tests_dict) + 1}',
             **self.battle_report()
         }
+        test_case.pop('sim_result', None)
         test_case['game_report_result'] = [{
                 'attacker': x['attacker'],
                 'defender': x['defender']
