@@ -16,13 +16,6 @@ interface ProjectedPoint extends OptimizeRatioPoint {
   plotY: number;
 }
 
-interface SurfaceTriangle {
-  id: string;
-  vertices: [ProjectedPoint, ProjectedPoint, ProjectedPoint];
-  avgBaseY: number;
-  avgWinRate: number;
-}
-
 const VIEWBOX_WIDTH = 760;
 const VIEWBOX_HEIGHT = 520;
 const ORIGIN_X = VIEWBOX_WIDTH / 2;
@@ -71,60 +64,6 @@ function projectBase(infantryPct: number, lancerPct: number) {
 
 function pointKey(point: Pick<OptimizeRatioPoint, "infantry_count" | "lancer_count">): string {
   return `${point.infantry_count}:${point.lancer_count}`;
-}
-
-function inferGridStep(points: OptimizeRatioPoint[]): number | null {
-  let smallest: number | null = null;
-  for (const point of points) {
-    for (const next of points) {
-      if (point === next) continue;
-      const infDiff = Math.abs(point.infantry_count - next.infantry_count);
-      const lancDiff = Math.abs(point.lancer_count - next.lancer_count);
-      for (const diff of [infDiff, lancDiff]) {
-        if (diff <= 0) continue;
-        if (smallest == null || diff < smallest) smallest = diff;
-      }
-    }
-  }
-  return smallest;
-}
-
-function buildTriangles(projectedPoints: ProjectedPoint[]): SurfaceTriangle[] {
-  const triangles: SurfaceTriangle[] = [];
-  const step = inferGridStep(projectedPoints);
-  if (!step) return triangles;
-
-  const byKey = new Map(projectedPoints.map((point) => [point.key, point]));
-
-  for (const point of projectedPoints) {
-    const right = byKey.get(`${point.infantry_count + step}:${point.lancer_count}`);
-    const up = byKey.get(`${point.infantry_count}:${point.lancer_count + step}`);
-    const diag = byKey.get(
-      `${point.infantry_count + step}:${point.lancer_count + step}`,
-    );
-
-    if (right && up) {
-      const tri: SurfaceTriangle = {
-        id: `${point.key}|a`,
-        vertices: [point, right, up],
-        avgBaseY: (point.baseY + right.baseY + up.baseY) / 3,
-        avgWinRate: (point.win_rate_pct + right.win_rate_pct + up.win_rate_pct) / 3,
-      };
-      triangles.push(tri);
-    }
-
-    if (right && up && diag) {
-      const tri: SurfaceTriangle = {
-        id: `${point.key}|b`,
-        vertices: [right, diag, up],
-        avgBaseY: (right.baseY + diag.baseY + up.baseY) / 3,
-        avgWinRate: (right.win_rate_pct + diag.win_rate_pct + up.win_rate_pct) / 3,
-      };
-      triangles.push(tri);
-    }
-  }
-
-  return triangles.sort((a, b) => a.avgBaseY - b.avgBaseY);
 }
 
 function HoverCard({ point }: { point: OptimizeRatioPoint }) {
@@ -190,7 +129,6 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
     return [...byComposition.values()].sort((a, b) => a.baseY - b.baseY);
   }, [projectedPoints]);
 
-  const triangles = useMemo(() => buildTriangles(surfacePoints), [surfacePoints]);
   const defaultHoverKey = useMemo(
     () => projectedPoints.find((point) => point.is_best)?.key ?? projectedPoints[0]?.key ?? null,
     [projectedPoints],
@@ -220,18 +158,11 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
           viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
           className="h-[380px] w-full"
           role="img"
-          aria-label="3D optimizer surface"
+          aria-label="3D optimizer sampled points"
         >
-          <defs>
-            <linearGradient id="ratio-surface-base" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(137,180,250,0.12)" />
-              <stop offset="100%" stopColor="rgba(17,17,27,0.02)" />
-            </linearGradient>
-          </defs>
-
           <polygon
             points={triangleOutline}
-            fill="url(#ratio-surface-base)"
+            fill="transparent"
             stroke="rgba(255,255,255,0.12)"
             strokeWidth="1"
           />
@@ -327,19 +258,6 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
             Win rate
           </text>
 
-          {triangles.map((triangle) => (
-            <polygon
-              key={triangle.id}
-              points={triangle.vertices
-                .map((vertex) => `${vertex.plotX},${vertex.plotY}`)
-                .join(" ")}
-              fill={winRateColor(triangle.avgWinRate)}
-              fillOpacity={0.22}
-              stroke="rgba(255,255,255,0.12)"
-              strokeWidth="1"
-            />
-          ))}
-
           {surfacePoints.map((point) => (
             <line
               key={`${point.key}-stem`}
@@ -385,8 +303,9 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
 
       <p className="text-xs opacity-60">
         Infantry and lancer define the base plane, marksman is the remainder, and
-        win rate is projected upward. Hollow dots are coarse checks; filled dots
-        are local/final evaluations, with the best finalist highlighted.
+        win rate is projected upward. Only tested ratios are drawn: hollow dots
+        are coarse checks, filled dots are local/final evaluations, and the best
+        finalist is highlighted.
       </p>
     </div>
   );

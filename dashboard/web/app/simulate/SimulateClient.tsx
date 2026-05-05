@@ -2222,7 +2222,7 @@ export default function SimulateClient({
               }}
             >
               <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
-                3D win-rate surface
+                3D win-rate samples
               </h4>
               <OptimizeRatioScatterChart points={optimizeResult.points} />
             </div>
