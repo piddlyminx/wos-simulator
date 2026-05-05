@@ -38,7 +38,6 @@ RUN apt-get update \
       libglib2.0-0 \
       libxcb1 \
       libx11-6 \
-      gosu \
       ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
@@ -64,8 +63,6 @@ RUN mkdir -p /app/.next /data/simulations /data/test_results /test_results \
 USER node
 
 RUN npm ci --no-audit --no-fund
-
-USER root
 
 ENV NODE_ENV=development \
     NEXT_TELEMETRY_DISABLED=1 \

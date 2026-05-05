@@ -32,8 +32,8 @@ The Docker dev app uses named volumes for `/app/node_modules`, `/app/.next`,
 and simulation snapshots. Do not run a second `docker compose run app ...`
 container while the live app is up, because two Next dev servers sharing the
 same `.next` volume can corrupt the dev build cache. Use
-`docker compose exec -u node app ...` for checks inside the running container,
-or stop the app before starting a second app container. The entrypoint holds a
+`docker compose exec app ...` for checks inside the running container, or stop
+the app before starting a second app container. The entrypoint holds a
 non-blocking lock on the `.next` volume and exits with a clear error if another
 app container is already using it.
 
@@ -45,8 +45,9 @@ entrypoint changes.
 
 Do not run local dashboard dev/build/test servers as `root`. Root-run host
 processes can create root-owned `.next`, cache, or result files that the WSL
-shell user and the Docker `node` runtime cannot later update. If a command must
-run inside the container, prefer `docker compose exec -u node app ...`.
+shell user and the Docker `node` runtime cannot later update. The Docker app
+container is configured to run as `node`, so `docker compose exec app ...`
+defaults to UID 1000.
 
 ## Database
 
