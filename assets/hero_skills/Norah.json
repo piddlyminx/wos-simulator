@@ -19,8 +19,8 @@
         "skill_effects": [
             {
                 "affects_opponent": false,
-                "effect_type": "OppDamageDown",
-                "effect_op": 201,
+                "effect_type": "DefenseUp",
+                "effect_op": 111,
                 "extra_attack": false,
                 "effect_is_chance": false,
                 "effect_num": "Combined arms/1",

@@ -20,7 +20,7 @@
             {
                 "affects_opponent": false,
                 "effect_type": "DamageUp",
-                "effect_op": 1010,
+                "effect_op": 101,
                 "extra_attack": true,
                 "effect_is_chance": false,
                 "effect_num": "Thunder Strike/1",
@@ -70,7 +70,7 @@
             {
                 "affects_opponent": false,
                 "effect_type": "DamageUp",
-                "effect_op": 1011,
+                "effect_op": 101,
                 "extra_attack": true,
                 "effect_is_chance": false,
                 "effect_num": "Roundabout Hit/1",
@@ -100,7 +100,7 @@
             {
                 "affects_opponent": false,
                 "effect_type": "DamageUp",
-                "effect_op": 1012,
+                "effect_op": 101,
                 "extra_attack": true,
                 "effect_is_chance": false,
                 "effect_num": "Roundabout Hit/2",

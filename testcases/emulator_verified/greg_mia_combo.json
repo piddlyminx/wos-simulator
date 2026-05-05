@@ -95,5 +95,90 @@
         "defender": 0
       }
     ]
+  },
+  {
+    "test_id": "greg_mia_combo",
+    "description": "Greg (Infantry class) + Mia (Lancer class) combo defender \u2014 both have chance-based skills (Greg S1 20%, Mia S2 50%/S3 40%). Run 5+ battles for statistical confidence. Tests chance-skill stacking across classes. WIP attacks clean; minxxx defends.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1500,
+        "lancer_t6": 1069,
+        "marksman_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 120.0,
+          "defense": 121.8,
+          "lethality": 93.5,
+          "health": 0.0
+        },
+        "lanc": {
+          "attack": 123.0,
+          "defense": 119.0,
+          "lethality": 101.1,
+          "health": 93.2
+        },
+        "mark": {
+          "attack": 127.5,
+          "defense": 115.3,
+          "lethality": 105.5,
+          "health": 95.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Mia": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2
+        },
+        "Greg": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 200,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 243.9,
+          "defense": 228.0,
+          "lethality": 157.5,
+          "health": 167.6
+        },
+        "lanc": {
+          "attack": 322.9,
+          "defense": 314.0,
+          "lethality": 161.2,
+          "health": 157.7
+        },
+        "mark": {
+          "attack": 319.0,
+          "defense": 308.1,
+          "lethality": 172.0,
+          "health": 166.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "sim_result": {
+      "attacker": 2275,
+      "defender": 0
+    },
+    "game_report_result": [
+      {
+        "attacker": 3257,
+        "defender": 0
+      }
+    ]
   }
 ]
