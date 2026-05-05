@@ -50,7 +50,9 @@ RUN python3 -m venv /opt/sim-venv \
       --frozen --no-dev --no-install-project \
  && /opt/sim-venv/bin/uv pip uninstall --python /opt/sim-venv/bin/python opencv-python \
  && /opt/sim-venv/bin/uv pip install --python /opt/sim-venv/bin/python \
-      --no-deps --reinstall "opencv-python-headless==4.13.0.92"
+      --no-deps --reinstall "opencv-python-headless==4.13.0.92" \
+ && rapidocr_models=$(/opt/sim-venv/bin/python -c 'from pathlib import Path; import rapidocr; print(Path(rapidocr.__file__).parent / "models")') \
+ && chown -R node:node "$rapidocr_models"
 
 COPY dashboard/web/package.json dashboard/web/package-lock.json ./
 COPY dashboard/web/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
