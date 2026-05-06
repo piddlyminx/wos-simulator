@@ -108,6 +108,18 @@ Local: the local dashboard SIM_RUNS_DIR
 
 Use Syncthing or Unison, not ad hoc two-way `rsync`.
 
+This repo includes a Unison helper for manual or scheduled sync:
+
+```bash
+LOCAL_SIM_RUNS_DIR=/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/tmp/simulate-runs \
+WOS_SIM_REMOTE=ubuntu@oracle-cloud \
+WOS_SIM_REMOTE_RUNS_DIR=/srv/wos-sim/runtime/simulate-runs \
+./scripts/wos-sync-sim-runs.sh
+```
+
+Install Unison on both machines first. The helper exits without syncing if
+`unison` is not available, because a custom two-way `rsync` flow can lose data.
+
 Syncthing ignore patterns for both sides:
 
 ```text
