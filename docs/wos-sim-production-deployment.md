@@ -87,23 +87,42 @@ or preserve:
 ## Saved Run Sync
 
 `SIM_RUNS_DIR` stores saved simulation runs as UUID-named JSON documents written
-with temp-file plus atomic rename semantics. Sync only completed JSON run
-documents bidirectionally between:
+with temp-file plus atomic rename semantics. In production,
+`docker-compose.prod.yml` bind-mounts this directory from:
+
+```text
+${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}
+```
+
+Sync only completed JSON run documents bidirectionally between:
 
 ```text
 VPS:   /srv/wos-sim/runtime/simulate-runs
 Local: the local dashboard SIM_RUNS_DIR
 ```
 
-Use Syncthing or Unison, not ad hoc two-way `rsync`. Ignore temp files such as:
+Use Syncthing or Unison, not ad hoc two-way `rsync`.
+
+Syncthing ignore patterns for both sides:
 
 ```text
 *.tmp
 *.json.*.tmp
+player-stat-presets.json
 ```
 
-Do not sync `player-stat-presets.json` in this phase. Presets may remain local
-to each environment.
+Unison path filter equivalent:
+
+```text
+ignore = Name *.tmp
+ignore = Name *.json.*.tmp
+ignore = Name player-stat-presets.json
+```
+
+Do not sync `player-stat-presets.json` in this phase. In production,
+`STAT_PRESETS_FILE` is pointed at `/data/stat-presets/player-stat-presets.json`,
+backed by a separate Docker named volume, so presets remain VPS-local even when
+saved run JSONs are synced bidirectionally.
 
 ## Deployment Path
 

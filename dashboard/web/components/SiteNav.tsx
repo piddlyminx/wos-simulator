@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import type { PublicSurface } from "@/lib/public-surface";
 
-const LINKS: { href: string; label: string }[] = [
+const DASHBOARD_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Dashboard" },
   { href: "/runs", label: "Runs" },
   { href: "/coverage", label: "Coverage" },
@@ -14,14 +15,25 @@ const LINKS: { href: string; label: string }[] = [
   { href: "/simulate", label: "Simulate" },
 ];
 
+const SIMULATE_LINKS: { href: string; label: string }[] = [
+  { href: "/simulate", label: "Simulate" },
+];
+
 function isActive(pathname: string, href: string): boolean {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function SiteNav() {
+export default function SiteNav({
+  publicSurface = "dashboard",
+}: {
+  publicSurface?: PublicSurface;
+}) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const links = publicSurface === "simulate" ? SIMULATE_LINKS : DASHBOARD_LINKS;
+  const subtitle =
+    publicSurface === "simulate" ? "Battle Simulator" : "Accuracy Dashboard";
 
   useEffect(() => {
     setOpen(false);
@@ -128,7 +140,7 @@ export default function SiteNav() {
                 <h1 className="text-sm font-bold uppercase tracking-widest opacity-60">
                   WOS Sim
                 </h1>
-                <p className="text-xs opacity-40 mt-1">Accuracy Dashboard</p>
+                <p className="text-xs opacity-40 mt-1">{subtitle}</p>
               </div>
               <button
                 type="button"
@@ -157,7 +169,7 @@ export default function SiteNav() {
                 </svg>
               </button>
             </div>
-            {LINKS.map((link) => {
+            {links.map((link) => {
               const active = isActive(pathname ?? "", link.href);
               return (
                 <Link
@@ -195,9 +207,9 @@ export default function SiteNav() {
           <h1 className="text-sm font-bold uppercase tracking-widest opacity-60">
             WOS Sim
           </h1>
-          <p className="text-xs opacity-40 mt-1">Accuracy Dashboard</p>
+          <p className="text-xs opacity-40 mt-1">{subtitle}</p>
         </div>
-        {LINKS.map((link) => {
+        {links.map((link) => {
           const active = isActive(pathname ?? "", link.href);
           return (
             <Link

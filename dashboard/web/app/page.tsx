@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   getCoverageMatrix,
   getCoverageTrend,
@@ -12,6 +13,7 @@ import {
   getTopRegressions,
 } from "@/lib/db";
 import CoverageTrendChart from "@/components/CoverageTrendChart";
+import { isPublicSimulateSurface } from "@/lib/public-surface";
 import { testcaseDetailHref } from "@/lib/testcase-file";
 
 export const dynamic = "force-dynamic";
@@ -119,6 +121,10 @@ function shortFile(p: string): string {
 }
 
 export default function HomePage() {
+  if (isPublicSimulateSurface()) {
+    redirect("/simulate");
+  }
+
   const latestRunId = getLatestRunId();
 
   if (!latestRunId) {
