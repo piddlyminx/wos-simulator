@@ -1,0 +1,62 @@
+# Production compose file for https://wos-sim.ratme.org.
+#
+# Intended to run on the Oracle VPS alongside the existing Traefik v3 stack.
+# The app image is built before the routed container is replaced; use
+# scripts/wos-prod-deploy.sh for the safe build/restart flow.
+
+name: wos-simulator-prod
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dashboard/web/Dockerfile.prod
+    image: ${WOS_SIM_IMAGE:-wos-simulator-dashboard:prod}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DB_PATH: /data/test_results/dashboard.sqlite
+      SIM_RUNS_DIR: /data/simulations
+      SIMULATOR_PYTHON: /opt/sim-venv/bin/python
+    volumes:
+      - wos_simulate_runs:/data/simulations
+      - ./test_results:/data/test_results:rw
+      - ./test_results:/test_results:rw
+      - ./dashboard:/dashboard:ro
+      - ./skill:/skill:ro
+      - ./Base_classes:/Base_classes:ro
+      - ./assets:/assets:ro
+      - ./fighters_data:/fighters_data
+      - ./check_testcases.py:/check_testcases.py:ro
+      - ./testcases:/testcases:ro
+    expose:
+      - "3000"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    labels:
+      traefik.enable: "true"
+      traefik.docker.network: ${TRAEFIK_NETWORK:-traefik}
+      traefik.http.routers.wos-sim.rule: Host(`${WOS_SIM_HOST:-wos-sim.ratme.org}`)
+      traefik.http.routers.wos-sim.entrypoints: ${TRAEFIK_ENTRYPOINT:-websecure}
+      traefik.http.routers.wos-sim.tls: "true"
+      traefik.http.routers.wos-sim.tls.certresolver: ${TRAEFIK_CERT_RESOLVER:-letsencrypt}
+      traefik.http.services.wos-sim.loadbalancer.server.port: "3000"
+    networks:
+      - default
+      - traefik
+
+volumes:
+  wos_simulate_runs:
+
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-traefik}
