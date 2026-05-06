@@ -4,6 +4,10 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMPOSE_FILE="${COMPOSE_FILE:-docker-compose.prod.yml}"
 SERVICE="${SERVICE:-app}"
+export WOS_SIM_UID="${WOS_SIM_UID:-$(id -u)}"
+export WOS_SIM_GID="${WOS_SIM_GID:-$(id -g)}"
+export WOS_SIM_RUNS_DIR="${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}"
+export WOS_STAT_PRESETS_DIR="${WOS_STAT_PRESETS_DIR:-/srv/wos-sim/runtime/stat-presets}"
 
 cd "$ROOT_DIR"
 
@@ -16,6 +20,8 @@ if [[ ! -f test_results/dashboard.sqlite ]]; then
   echo "Expected test_results/dashboard.sqlite to exist before deploy." >&2
   exit 2
 fi
+
+mkdir -p "$WOS_SIM_RUNS_DIR" "$WOS_STAT_PRESETS_DIR"
 
 echo "Building production image before touching the routed container..."
 docker compose -f "$COMPOSE_FILE" build "$SERVICE"

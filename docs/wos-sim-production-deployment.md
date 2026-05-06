@@ -16,6 +16,11 @@ surface is the simulator page only:
 The VPS deployment still runs production Next (`next build` / `next start`)
 behind the existing Traefik v3 TLS setup.
 
+The production container runs as the host deploy UID/GID exported by
+`scripts/wos-prod-deploy.sh` (`WOS_SIM_UID` / `WOS_SIM_GID`). This keeps
+bind-mounted simulator files writable enough for legacy simulator helpers that
+open `fighters_data` files with `r+`.
+
 ## Relevant Files
 
 - `dashboard/web/Dockerfile.prod`
@@ -130,6 +135,15 @@ Production deployment uses:
 
 ```bash
 ./scripts/wos-prod-deploy.sh
+```
+
+The deploy script exports these defaults before invoking Compose:
+
+```bash
+WOS_SIM_UID=$(id -u)
+WOS_SIM_GID=$(id -g)
+WOS_SIM_RUNS_DIR=/srv/wos-sim/runtime/simulate-runs
+WOS_STAT_PRESETS_DIR=/srv/wos-sim/runtime/stat-presets
 ```
 
 The script builds the image before replacing the routed container:

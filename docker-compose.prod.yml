@@ -12,6 +12,7 @@ services:
       context: .
       dockerfile: dashboard/web/Dockerfile.prod
     image: ${WOS_SIM_IMAGE:-wos-simulator-dashboard:prod}
+    user: "${WOS_SIM_UID:-1000}:${WOS_SIM_GID:-1000}"
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -22,7 +23,7 @@ services:
       SIMULATOR_PYTHON: /opt/sim-venv/bin/python
     volumes:
       - ${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}:/data/simulations
-      - wos_stat_presets:/data/stat-presets
+      - ${WOS_STAT_PRESETS_DIR:-/srv/wos-sim/runtime/stat-presets}:/data/stat-presets
       - ./test_results:/data/test_results:rw
       - ./test_results:/test_results:rw
       - ./dashboard:/dashboard:ro
@@ -55,9 +56,6 @@ services:
     networks:
       - default
       - traefik
-
-volumes:
-  wos_stat_presets:
 
 networks:
   traefik:
