@@ -4,7 +4,6 @@ from __future__ import annotations
 import csv
 import difflib
 import json
-import random
 import subprocess
 import time
 from pathlib import Path
@@ -17,8 +16,6 @@ LABEL_REGION = (20, 1112, 700, 1260)
 ROW_COUNT = 2
 COL_COUNT = 3
 MATCH_THRESHOLD = 0.68
-POST_TAP_DELAY_SEC = 0.03
-POST_TAP_DELAY_MAX_SEC = 0.06
 LOOP_DELAY_SEC = 0.03
 MAX_RUNTIME_SEC = 45.0
 
@@ -28,9 +25,24 @@ _rapid_ocr = None
 def _get_rapid():
     global _rapid_ocr
     if _rapid_ocr is None:
+        from rapidocr import EngineType, LangDet, LangRec, ModelType, OCRVersion
+
         from ocr import RapidOCR
 
-        _rapid_ocr = RapidOCR()
+        _rapid_ocr = RapidOCR(
+            use_angle_cls=False,
+            params={
+                "Global.use_cls": False,
+                "Det.engine_type": EngineType.ONNXRUNTIME,
+                "Det.lang_type": LangDet.CH,
+                "Det.model_type": ModelType.MOBILE,
+                "Det.ocr_version": OCRVersion.PPOCRV5,
+                "Rec.engine_type": EngineType.ONNXRUNTIME,
+                "Rec.lang_type": LangRec.EN,
+                "Rec.model_type": ModelType.MOBILE,
+                "Rec.ocr_version": OCRVersion.PPOCRV5,
+            },
+        )
     return _rapid_ocr
 
 
@@ -93,6 +105,20 @@ def _capture_strip_bgr(serial: str):
     return img[y1:y2, x1:x2, :]
 
 
+def _adb_tap_batch(serial: str, coords: list[tuple[int, int]]) -> None:
+    if not coords:
+        return
+    script = "; ".join(f"input tap {int(x)} {int(y)}" for x, y in coords)
+    result = subprocess.run(
+        ["adb", "-s", serial, "shell", script],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        for x, y in coords:
+            adb_tap(serial, x, y)
+
+
 def _slot_bounds(index: int) -> tuple[int, int, int, int]:
     w = LABEL_REGION[2] - LABEL_REGION[0]
     h = LABEL_REGION[3] - LABEL_REGION[1]
@@ -123,7 +149,7 @@ def _ocr_strip_items(strip_bgr) -> list[dict]:
         return []
 
     enlarged = _ocr_text(strip_bgr)
-    result = _get_rapid()(enlarged)
+    result = _get_rapid()(enlarged, use_cls=False)
     if result and result[0]:
         items: list[dict] = []
         for box, text, _conf in result[0]:
@@ -165,7 +191,18 @@ def _visible_labels(strip_bgr) -> list[dict]:
     return visible
 
 
-def _best_match(text: str, labels: dict[str, tuple[int, int]]) -> tuple[str, tuple[int, int], float] | None:
+def _prepare_label_index(labels: dict[str, tuple[int, int]]) -> list[tuple[str, str, tuple[int, int]]]:
+    return [
+        (label, normalized, coords)
+        for label, coords in labels.items()
+        if (normalized := _normalize_label(label))
+    ]
+
+
+def _best_match(
+    text: str,
+    labels: dict[str, tuple[int, int]] | list[tuple[str, str, tuple[int, int]]],
+) -> tuple[str, tuple[int, int], float] | None:
     normalized = _normalize_label(text)
     if not normalized:
         return None
@@ -173,10 +210,8 @@ def _best_match(text: str, labels: dict[str, tuple[int, int]]) -> tuple[str, tup
     best_label = ""
     best_coords = (0, 0)
     best_score = 0.0
-    for label, coords in labels.items():
-        candidate = _normalize_label(label)
-        if not candidate:
-            continue
+    label_index = _prepare_label_index(labels) if isinstance(labels, dict) else labels
+    for label, candidate, coords in label_index:
         if normalized == candidate:
             return label, coords, 1.0
         score = difflib.SequenceMatcher(None, normalized, candidate).ratio()
@@ -194,9 +229,17 @@ def _best_match(text: str, labels: dict[str, tuple[int, int]]) -> tuple[str, tup
 
 def run_memories(serial: str, map_path: str | Path) -> dict:
     labels = _load_map(map_path)
+    label_index = _prepare_label_index(labels)
     clicked: list[dict] = []
     used_labels: set[str] = set()
     started_at = time.monotonic()
+    timing = {
+        "loops": 0,
+        "capture_sec": 0.0,
+        "ocr_sec": 0.0,
+        "match_sec": 0.0,
+        "tap_sec": 0.0,
+    }
 
     while True:
         if time.monotonic() - started_at >= MAX_RUNTIME_SEC:
@@ -205,18 +248,29 @@ def run_memories(serial: str, map_path: str | Path) -> dict:
                 "clicked": clicked,
                 "total_clicked": len(clicked),
                 "elapsed_sec": round(time.monotonic() - started_at, 3),
+                "timing": {
+                    key: round(value, 3) if isinstance(value, float) else value
+                    for key, value in timing.items()
+                },
             }
 
+        timing["loops"] += 1
+        before_capture = time.monotonic()
         strip = _capture_strip_bgr(serial)
+        timing["capture_sec"] += time.monotonic() - before_capture
+
+        before_ocr = time.monotonic()
         visible = _visible_labels(strip)
+        timing["ocr_sec"] += time.monotonic() - before_ocr
 
         if not visible:
             time.sleep(LOOP_DELAY_SEC)
             continue
 
+        before_match = time.monotonic()
         batch: list[dict] = []
         for item in visible:
-            match = _best_match(item["text"], labels)
+            match = _best_match(item["text"], label_index)
             if match is None:
                 continue
             label, coords, score = match
@@ -228,14 +282,16 @@ def run_memories(serial: str, map_path: str | Path) -> dict:
                 "coords": coords,
                 "score": round(score, 3),
             })
+        timing["match_sec"] += time.monotonic() - before_match
 
         if not batch:
             time.sleep(LOOP_DELAY_SEC)
             continue
 
+        before_tap = time.monotonic()
+        _adb_tap_batch(serial, [chosen["coords"] for chosen in batch])
+        timing["tap_sec"] += time.monotonic() - before_tap
+
         for chosen in batch:
-            x, y = chosen["coords"]
-            adb_tap(serial, x, y)
             clicked.append(chosen)
             used_labels.add(chosen["matched_label"])
-            time.sleep(random.uniform(POST_TAP_DELAY_SEC, POST_TAP_DELAY_MAX_SEC))
