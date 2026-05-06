@@ -15,6 +15,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      PUBLIC_SURFACE: simulate
       DB_PATH: /data/test_results/dashboard.sqlite
       SIM_RUNS_DIR: /data/simulations
       SIMULATOR_PYTHON: /opt/sim-venv/bin/python

@@ -1,134 +1,207 @@
-# WOS Simulator Production Deployment
+# WOS Simulate-Only Production Deployment Spec
 
-This document covers the Oracle VPS deployment for:
+## Context
+
+`https://wos-sim.ratme.org` should not expose the local `next dev` dashboard or
+the private QA accuracy views. Per the final WOS-298 discussion, the public VPS
+surface is the simulator page only:
+
+- Public: `/simulate`, simulate APIs, saved run sharing, and report upload/OCR.
+- Private/local: regression dashboard routes, coverage/history views, and
+  `check_testcases.py` controls.
+- Saved simulation run JSON files sync bidirectionally between the local dev
+  machine and the VPS.
+- Player stat presets do not need bidirectional sync in this phase.
+
+The VPS deployment still runs production Next (`next build` / `next start`)
+behind the existing Traefik v3 TLS setup.
+
+## Relevant Files
+
+- `dashboard/web/Dockerfile.prod`
+- `docker-compose.prod.yml`
+- `scripts/wos-prod-deploy.sh`
+- `dashboard/web/app/simulate/page.tsx`
+- `dashboard/web/app/api/simulate/**`
+- `dashboard/web/app/api/ocr-report/route.ts`
+- `dashboard/web/app/api/check-testcases/route.ts`
+- `dashboard/web/components/SiteNav.tsx`
+- `dashboard/web/lib/simulation-store.ts`
+- `dashboard/web/lib/stat-presets.ts`
+
+## Knowledge Files To Read
+
+Before editing implementation files, read:
+
+- `skill/KNOWLEDGE_INDEX.md`
+- `skill/knowledge/spec-design.md`
+
+If OCR/report parsing behavior changes, also read:
+
+- `skill/knowledge/report-capture-and-parsing.md`
+- `skill/references/reports.md`
+
+## Task
+
+Implement a public-surface mode for the existing Next app, controlled by:
 
 ```text
-https://wos-sim.ratme.org
+PUBLIC_SURFACE=simulate
 ```
 
-Production uses `dashboard/web/Dockerfile.prod` and
-`docker-compose.prod.yml`. The app runs `next build` at image build time and
-`next start` at runtime. It does not use `next dev` or Cloudflare Tunnel.
+Default/local mode must keep the full dashboard unchanged. In
+`PUBLIC_SURFACE=simulate` mode:
 
-## Prerequisites
+- `/` redirects to `/simulate`.
+- `/simulate` renders normally.
+- Public API routes are limited to:
+  - `/api/simulate`
+  - `/api/simulate/optimize-ratio`
+  - `/api/simulate/runs`
+  - `/api/simulate/runs/[id]`
+  - `/api/simulate/stat-presets`
+  - `/api/ocr-report`
+- Private QA routes return 404 or another non-success response:
+  - `/runs`
+  - `/coverage`
+  - `/heroes`
+  - `/testcases`
+  - `/compare/**`
+  - `/api/check-testcases`
+- Navigation in public mode must not advertise private QA dashboard routes.
+- `/healthz` remains available for Traefik/container health checks.
 
-- Docker Compose is installed on the VPS.
-- The existing Traefik v3 stack is running and attached to an external Docker
-  network. The default network name expected by this repo is `traefik`.
-- Traefik has a TLS certificate resolver. The default label uses `letsencrypt`.
-- DNS for `wos-sim.ratme.org` points at the VPS.
-- The repo checkout contains the committed `test_results/dashboard.sqlite`.
+Keep `check_testcases.py` as a development/regression workflow. It must not run
+synchronously from public request handlers.
 
-Override defaults in the shell when your Traefik setup uses different names:
+## OCR Public Safeguards
 
-```bash
-export WOS_SIM_HOST=wos-sim.ratme.org
-export TRAEFIK_NETWORK=traefik
-export TRAEFIK_ENTRYPOINT=websecure
-export TRAEFIK_CERT_RESOLVER=letsencrypt
+Because `/api/ocr-report` accepts uploads and spends CPU, public mode must add
+or preserve:
+
+- request body/image size limit,
+- bounded processing timeout,
+- basic concurrency limiting for OCR requests,
+- clear failure responses for non-battle or unparsable reports.
+
+## Saved Run Sync
+
+`SIM_RUNS_DIR` stores saved simulation runs as UUID-named JSON documents written
+with temp-file plus atomic rename semantics. Sync only completed JSON run
+documents bidirectionally between:
+
+```text
+VPS:   /srv/wos-sim/runtime/simulate-runs
+Local: the local dashboard SIM_RUNS_DIR
 ```
 
-## Deploy
+Use Syncthing or Unison, not ad hoc two-way `rsync`. Ignore temp files such as:
 
-From the simulator repo root on the VPS:
+```text
+*.tmp
+*.json.*.tmp
+```
+
+Do not sync `player-stat-presets.json` in this phase. Presets may remain local
+to each environment.
+
+## Deployment Path
+
+Production deployment uses:
 
 ```bash
-git pull --ff-only
 ./scripts/wos-prod-deploy.sh
 ```
 
-The deploy script is intentionally two-step:
-
-1. `docker compose -f docker-compose.prod.yml build app`
-2. `docker compose -f docker-compose.prod.yml up -d --no-build --no-deps app`
-
-That builds the new image before replacing the currently routed app container.
-If the build fails, the existing container keeps serving traffic.
-
-## Fast Update Flow
-
-JavaScript and Next.js route/component changes require a production image
-rebuild:
+The script builds the image before replacing the routed container:
 
 ```bash
-./scripts/wos-prod-deploy.sh
+docker compose -f docker-compose.prod.yml build app
+docker compose -f docker-compose.prod.yml up -d --no-build --no-deps app
 ```
 
-Python simulator code, config, testcase JSON, hero skill JSON, and the
-dashboard SQLite DB are bind-mounted into the container. After `git pull`, those
-changes are visible to background checks and simulator-backed routes without a
-JS image rebuild. Restart only when you need to refresh a long-lived Node
-process:
+`docker-compose.prod.yml` sets `PUBLIC_SURFACE=simulate` and Traefik labels for
+the `wos-sim.ratme.org` host rule, TLS, and service port `3000`.
+
+JavaScript changes require a production image rebuild. Python/config changes
+that are bind-mounted into the container can be picked up by restart when
+needed. Saved run JSON changes should appear after file sync without an image
+rebuild.
+
+## Non-Goals
+
+- Do not expose the accuracy dashboard publicly.
+- Do not expose `/api/check-testcases` publicly.
+- Do not run full testcase checks from public request handlers.
+- Do not redesign player stat preset storage in this phase.
+- Do not fork the app into a separate codebase unless the single-codebase
+  public mode proves impractical.
+
+## Acceptance Criteria
+
+- Public production mode runs `next build` / `next start`, not `next dev`.
+- `PUBLIC_SURFACE=simulate` exposes `/simulate`, simulate APIs, and OCR upload.
+- `PUBLIC_SURFACE=simulate` blocks private QA pages/APIs.
+- Default local mode keeps the full dashboard behavior unchanged.
+- Public navigation only presents simulate-appropriate links/actions.
+- OCR upload has size, timeout, and concurrency safeguards.
+- `SIM_RUNS_DIR` saved run JSON files have documented bidirectional sync setup;
+  player stat presets are intentionally not synced.
+- Production deployment runs behind Traefik/TLS at `wos-sim.ratme.org`.
+- `/healthz` verifies the production app.
+
+## Validation Commands
+
+From `dashboard/web`:
 
 ```bash
-docker compose -f docker-compose.prod.yml restart app
+npm run build
+npm run lint
 ```
 
-## Refresh Dashboard Data
-
-Run testcase checks from the VPS shell with `uv`. Do not run full checks inside
-public request handlers.
+Production compose validation from repo root:
 
 ```bash
-cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-uv run check_testcases.py
+docker compose -f docker-compose.prod.yml config
+docker compose -f docker-compose.prod.yml build app
 ```
 
-`check_testcases.py` writes run JSON under `test_results/` and updates
-`test_results/dashboard.sqlite` through `dashboard/ingest.py`. The Next server
-opens the SQLite DB read-only, so deploy/restart does not replace or truncate
-the database.
-
-## Health Checks
-
-Container-local:
+Public-mode route checks should cover:
 
 ```bash
-docker compose -f docker-compose.prod.yml exec -T app \
-  node -e "fetch('http://127.0.0.1:3000/healthz').then(async r=>{console.log(r.status, await r.text()); process.exit(r.ok?0:1)}).catch(e=>{console.error(e); process.exit(1)})"
+PUBLIC_SURFACE=simulate npm run build
+PUBLIC_SURFACE=simulate npm run start -- --hostname 0.0.0.0 --port 3001
+curl -fsS http://127.0.0.1:3001/healthz
+curl -I http://127.0.0.1:3001/runs
+curl -I http://127.0.0.1:3001/api/check-testcases
 ```
 
-Public:
+## Visual QA
 
-```bash
-curl -fsS https://wos-sim.ratme.org/healthz
-```
-
-The endpoint returns HTTP 200 with either a run count or a clear warning when
-the DB is missing/querying fails.
-
-## Browser QA Before Closing UI/Deploy Work
-
-After deploy, open the public route with agent-browser and check:
+Before closing implementation, run agent-browser against the production public
+route and verify:
 
 - `https://wos-sim.ratme.org/healthz` returns HTTP 200.
-- `https://wos-sim.ratme.org/runs` loads real dashboard data or a clear empty
-  state without console errors.
-- At least one representative dashboard route, such as `/coverage` or
-  `/simulate`, renders without console errors.
+- `https://wos-sim.ratme.org/` redirects to `/simulate`.
+- `/simulate` renders without private dashboard navigation.
+- A basic simulation works.
+- OCR upload path is available and handles at least one known report image.
+- Private routes such as `/runs` and `/coverage` are blocked.
+- Browser console has no page errors.
 
-## Rollback
+## Risk Notes
 
-Fast rollback to the previous git revision:
+- OCR is CPU-bound and accepts user uploads; concurrency and size limits are
+  required before public exposure.
+- Saved run files are low-conflict because IDs are UUIDs and completed JSON run
+  documents should be immutable.
+- Single-file player stat presets are more conflict-prone, so they are excluded
+  from first-phase sync.
+- Current issue tracking and regression history belong in Paperclip/local QA,
+  not on the public site.
 
-```bash
-git log --oneline -5
-git checkout <previous-good-sha>
-./scripts/wos-prod-deploy.sh
-```
+## Output Expectations
 
-If the new container started but is unhealthy, inspect logs first:
-
-```bash
-docker compose -f docker-compose.prod.yml logs --tail=120 app
-```
-
-Then either redeploy a fixed revision or stop the routed service:
-
-```bash
-docker compose -f docker-compose.prod.yml stop app
-```
-
-Do not delete `test_results/dashboard.sqlite` during rollback. If a database
-refresh produced bad data, restore the file from git or from the VPS backup
-before restarting the app.
+- Commit spec and deployment updates before marking WOS-299 done.
+- Closing comment must include build/lint results, route-blocking checks,
+  `/healthz`, and visual QA details.
