@@ -51,6 +51,19 @@ the app before starting a second app container. The entrypoint holds a
 non-blocking lock on the `.next` volume and exits with a clear error if another
 app container is already using it.
 
+If the optional Docker dev app starts returning `500 Internal Server Error`
+after source, compose, or Next middleware changes, clear only the `.next` cache
+volume and recreate the app container:
+
+```bash
+docker compose stop app
+docker compose rm -f app
+docker volume rm wos-simulator_wos_next_cache
+docker compose up -d app
+```
+
+This preserves `wos_node_modules` and `wos_simulate_runs`.
+
 When the Docker dev app is already running, verify dashboard source/UI changes
 directly at `http://localhost:3000`. The bind mount plus polling watcher should
 pick up edits automatically. Rebuild or recreate the container only for
