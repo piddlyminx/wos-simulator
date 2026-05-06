@@ -9,12 +9,12 @@ Always run `npm run smoke` against the committed `test_results/dashboard.sqlite`
 This builds the app, starts the production server, and runs Playwright smoke tests across all routes.
 
 For agent visual QA, do not start ad-hoc dashboard dev servers by default.
-First use the already-running Docker/dev dashboard (`https://wos-sim.ratme.org`
-or `http://localhost:3000`) when it is available. If a local server is
-unavoidable, prefer Playwright's managed `webServer`; otherwise use a
-temporary non-3000 port, check for existing Next/dashboard processes first, and
-stop the server before finishing the heartbeat. Never leave `npm run dev`,
-`next dev`, or `next start` running for the next agent.
+First use an already-running local dashboard at `http://localhost:3000` when it
+is available. If a local server is unavoidable, prefer Playwright's managed
+`webServer`; otherwise use a temporary non-3000 port, check for existing
+Next/dashboard processes first, and stop the server before finishing the
+heartbeat. Never leave `npm run dev`, `next dev`, or `next start` running for
+the next agent.
 
 ## Installation
 
@@ -31,10 +31,16 @@ npm run dev
 
 The app runs at http://localhost:3000 and redirects to `/runs` by default.
 
-For Docker-on-WSL2 development, `docker-compose.yml` runs Turbopack with
-`NEXT_WATCH_POLL_INTERVAL_MS=1000` so bind-mounted source edits are picked up
-even when native file notifications are unreliable. Set the value to `0` in
-`.env` to disable polling on native Linux filesystems.
+For normal WSL development, prefer `npm run dev` directly. It is simpler,
+matches the local QA workflow, avoids bind-mount file watching edge cases, and
+does not need a local container or tunnel.
+
+`docker-compose.yml` remains available as an optional dev container when you
+specifically want container parity for native dependencies or the bind-mounted
+simulator layout. It runs Turbopack with `NEXT_WATCH_POLL_INTERVAL_MS=1000` so
+bind-mounted source edits are picked up even when native file notifications are
+unreliable. Set the value to `0` in `.env` to disable polling on native Linux
+filesystems.
 
 The Docker dev app uses named volumes for `/app/node_modules`, `/app/.next`,
 and simulation snapshots. Do not run a second `docker compose run app ...`
@@ -46,10 +52,9 @@ non-blocking lock on the `.next` volume and exits with a clear error if another
 app container is already using it.
 
 When the Docker dev app is already running, verify dashboard source/UI changes
-directly at `https://wos-sim.ratme.org` or `http://localhost:3000`. The bind
-mount plus polling watcher should pick up edits automatically. Rebuild or
-recreate the container only for Dockerfile, compose, package/dependency, or
-entrypoint changes.
+directly at `http://localhost:3000`. The bind mount plus polling watcher should
+pick up edits automatically. Rebuild or recreate the container only for
+Dockerfile, compose, package/dependency, or entrypoint changes.
 
 Do not run local dashboard dev/build/test servers as `root`. Root-run host
 processes can create root-owned `.next`, cache, or result files that the WSL

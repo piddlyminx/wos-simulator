@@ -2,10 +2,22 @@
 set -euo pipefail
 
 LOCAL_DIR="${LOCAL_SIM_RUNS_DIR:-$PWD/tmp/simulate-runs}"
-REMOTE="${WOS_SIM_REMOTE:-ubuntu@oracle-cloud}"
-REMOTE_DIR="${WOS_SIM_REMOTE_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}"
+REMOTE="${WOS_SIM_REMOTE:-}"
+REMOTE_DIR="${WOS_SIM_REMOTE_RUNS_DIR:-}"
 LOCAL_UNISON_CMD="${WOS_SIM_UNISON_CMD:-}"
-REMOTE_UNISON_CMD="${WOS_SIM_REMOTE_UNISON_CMD:-unison-2.51+4.13.1}"
+REMOTE_UNISON_CMD="${WOS_SIM_REMOTE_UNISON_CMD:-unison}"
+
+if [[ -z "$REMOTE" || -z "$REMOTE_DIR" ]]; then
+  cat >&2 <<'EOF'
+WOS_SIM_REMOTE and WOS_SIM_REMOTE_RUNS_DIR are required.
+
+Example:
+  WOS_SIM_REMOTE=deploy@example.com \
+  WOS_SIM_REMOTE_RUNS_DIR=/var/lib/wos-sim/simulate-runs \
+  ./scripts/wos-sync-sim-runs.sh
+EOF
+  exit 64
+fi
 
 if [[ -z "$LOCAL_UNISON_CMD" ]]; then
   if command -v unison-2.51+4.13.1 >/dev/null 2>&1; then

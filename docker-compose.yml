@@ -7,11 +7,8 @@
 #                  /app/node_modules and /app/.next are named-volume overlays
 #                  so the container-built native modules (better-sqlite3) and
 #                  Turbopack cache don't fight the host filesystem.
-#   - cloudflared: Cloudflare Tunnel sidecar, authenticated via a
-#                  remotely-managed Tunnel token. Hostname + service routing
-#                  are configured once in the Cloudflare Zero Trust dashboard.
 #
-# See docker-compose.env.example for setup steps.
+# See docker-compose.env.example for optional local settings.
 
 services:
   app:
@@ -75,20 +72,6 @@ services:
     # Optional local access without going through the tunnel.
     ports:
       - "${APP_PORT:-3000}:3000"
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    restart: unless-stopped
-    depends_on:
-      - app
-    environment:
-      TUNNEL_TOKEN: ${TUNNEL_TOKEN:?set TUNNEL_TOKEN in .env (see docker-compose.env.example)}
-    command:
-      - tunnel
-      - --no-autoupdate
-      - --loglevel
-      - info
-      - run
 
 volumes:
   wos_node_modules:
