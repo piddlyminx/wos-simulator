@@ -32,7 +32,8 @@ RUN python3 -m venv /opt/sim-venv \
  && /opt/sim-venv/bin/uv pip install --python /opt/sim-venv/bin/python \
       --no-deps --reinstall "opencv-python-headless==4.13.0.92" \
  && rapidocr_models=$(/opt/sim-venv/bin/python -c 'from pathlib import Path; import rapidocr; print(Path(rapidocr.__file__).parent / "models")') \
- && chown -R node:node "$rapidocr_models"
+ && chown -R node:node "$rapidocr_models" \
+ && chmod -R a+rwX "$rapidocr_models"
 
 COPY dashboard/web/package.json dashboard/web/package-lock.json ./
 RUN npm ci --no-audit --no-fund
