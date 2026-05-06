@@ -60,8 +60,6 @@ Improving the simulator accuracy means finding the correct attributes for the di
 
 # Testcases
 
-The last battle report is always saved in `last_battle_report.json`
-
 It's recommended to save the testcases reports by specifying the actual result from the game report of the battle using `f.save_testcase(testcase_file_path, result)` in `main.py`.
 If you run `check_testcases.py`, it will re-run all battles in the specified files in `testcases` folder, and check the difference to actual game report results.
 This is helpful if you intend to make changes to the skills data or the simulator logic. It allows you to make sure the simulator still works for previous testcases.

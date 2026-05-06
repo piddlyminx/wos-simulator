@@ -18,7 +18,7 @@ class Fight:
         defender (Fighter): Defending fighter.
         max_round (int): Maximum number of rounds before battle ends.
         num_rounds (int): Actual number of rounds the battle lasted.
-        dont_save (bool): If True, doesn't save battle report to file.
+        dont_save (bool): Deprecated compatibility flag.
     """
     def __init__(self, attacker: Fighter, defender: Fighter, max_round = 1500, dont_save= False):
         self.attacker = attacker
@@ -119,10 +119,6 @@ class Fight:
             print('\n--------------- BATTLE ENDED  ----------------')
             print(f'🟩 Result: ({round_idx} rounds)    Attacker : {sum_att} ({prettify(att_remaining)})   -   Defender: {sum_def} ({prettify(def_remaining)})  ')
         
-        if not self.dont_save:
-            with open('last_battle_report.json', 'w+') as f:
-                json.dump(self.battle_report(), f, indent=4)
-
         return sum_att, sum_def
     
     def print_skills_report(self):
