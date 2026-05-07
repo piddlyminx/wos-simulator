@@ -42,10 +42,17 @@ bind-mounted source edits are picked up even when native file notifications are
 unreliable. Set the value to `0` in `.env` to disable polling on native Linux
 filesystems.
 
-The Docker dev app uses named volumes for `/app/node_modules`, `/app/.next`,
-and simulation snapshots. Do not run a second `docker compose run app ...`
-container while the live app is up, because two Next dev servers sharing the
-same `.next` volume can corrupt the dev build cache. Use
+The Docker dev app uses named volumes for `/app/node_modules` and `/app/.next`.
+Saved simulation runs and stat presets are host bind mounts, configured by
+`SIM_RUNS_DIR` and `STAT_PRESETS_DIR` in the ignored repo-root `.env`. Point
+those paths at a trusted shared mount when Docker dev and host dev should use
+the same stores. If the shared mount is FUSE-backed, Docker must be allowed to
+read it from the daemon side; for sshfs that usually means mounting with
+`allow_other` on a host where `/etc/fuse.conf` enables `user_allow_other`.
+
+Do not run a second `docker compose run app ...` container while the live app
+is up, because two Next dev servers sharing the same `.next` volume can corrupt
+the dev build cache. Use
 `docker compose exec app ...` for checks inside the running container, or stop
 the app before starting a second app container. The entrypoint holds a
 non-blocking lock on the `.next` volume and exits with a clear error if another
@@ -62,7 +69,7 @@ docker volume rm wos-simulator_wos_next_cache
 docker compose up -d app
 ```
 
-This preserves `wos_node_modules` and `wos_simulate_runs`.
+This preserves `wos_node_modules` and the host-backed saved-run/preset stores.
 
 When the Docker dev app is already running, verify dashboard source/UI changes
 directly at `http://localhost:3000`. The bind mount plus polling watcher should
