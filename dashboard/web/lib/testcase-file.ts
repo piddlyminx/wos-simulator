@@ -35,7 +35,6 @@ export interface RawTestcase {
   description?: string;
   attacker?: TestcaseArmy;
   defender?: TestcaseArmy;
-  sim_result?: TestcaseBattleResult;
   game_report_result?: TestcaseBattleResult[];
   [k: string]: unknown;
 }

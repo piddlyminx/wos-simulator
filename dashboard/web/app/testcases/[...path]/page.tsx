@@ -534,12 +534,6 @@ export default async function TestcaseDetailPage({
               title="game_report_result (ground truth)"
               results={active.raw.game_report_result}
             />
-            {active.raw.sim_result && (
-              <BattleResultsBlock
-                title="sim_result (stored reference)"
-                results={active.raw.sim_result}
-              />
-            )}
           </div>
         </>
       )}
