@@ -73,10 +73,6 @@
       },
       "joiner_heroes": {}
     },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 391
-    },
     "game_report_result": [
       {
         "attacker": 0,
@@ -156,10 +152,6 @@
         }
       },
       "joiner_heroes": {}
-    },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 393
     },
     "game_report_result": [
       {
@@ -241,10 +233,6 @@
         }
       },
       "joiner_heroes": {}
-    },
-    "sim_result": {
-      "attacker": 0,
-      "defender": 391
     },
     "game_report_result": [
       {
