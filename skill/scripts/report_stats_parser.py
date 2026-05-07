@@ -54,6 +54,7 @@ TROOP_SLOT_CENTERS = (0.09, 0.235, 0.38, 0.62, 0.765, 0.91)
 TROOP_SLOT_HALF_WIDTH = 0.07
 MIN_TROOP_AVATAR_SCORE = 0.55
 MIN_FC_BADGE_TEMPLATE_SCORE = 0.80
+FC_BADGE_TEMPLATE_SCALES = tuple(scale / 100.0 for scale in range(75, 151, 5))
 
 _rapid_ocr: Any = None
 _fast_rapid_ocr: Any = None
@@ -110,7 +111,7 @@ def _get_fast_rapid() -> Any:
 
         _fast_rapid_ocr = RapidOCR(
             use_angle_cls=False,
-            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 416},
+            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 320},
         )
     return _fast_rapid_ocr
 
@@ -1004,8 +1005,7 @@ def _match_fire_crystal_badge_template(badge_bgr: np.ndarray) -> tuple[int | Non
             else:
                 tpl_to_match = tpl_bgr
             shell_score = -1.0
-            for scale_step in range(75, 151):
-                scale = scale_step / 100.0
+            for scale in FC_BADGE_TEMPLATE_SCALES:
                 th, tw = tpl_to_match.shape[:2]
                 resized = cv2.resize(tpl_to_match, (max(3, int(tw * scale)), max(3, int(th * scale))), interpolation=cv2.INTER_AREA)
                 rh, rw = resized.shape[:2]
