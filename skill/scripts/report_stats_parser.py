@@ -1064,10 +1064,6 @@ def _match_fire_crystal_badge_template(badge_bgr: np.ndarray) -> tuple[int | Non
     full_match = choose(score_templates(clipped=False))
     if full_match[0] is not None and full_match[1] >= MIN_FC_BADGE_TEMPLATE_SCORE:
         return full_match
-
-    clipped_match = choose(score_templates(clipped=True))
-    if clipped_match[0] is not None and clipped_match[1] > full_match[1]:
-        return clipped_match
     return full_match
 
 
