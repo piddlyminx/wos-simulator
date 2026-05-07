@@ -1139,9 +1139,12 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
                 count_fc, count_score = _detect_fire_crystal_badge_match(slot_crop, crop_from_slot=False)
             else:
                 count_fc, count_score = None, -1.0
-            fallback_crop = img_bgr[max(0, avatar_y1 - 12):avatar_y2, x1:badge_x2]
-            fallback_fc, fallback_score = _detect_fire_crystal_badge_match(fallback_crop)
-            fc_badge = count_fc if count_score >= fallback_score else fallback_fc
+            if count_fc is not None and count_fc not in (6, 8) and count_score >= MIN_FC_BADGE_TEMPLATE_SCORE:
+                fc_badge = count_fc
+            else:
+                fallback_crop = img_bgr[max(0, avatar_y1 - 12):avatar_y2, x1:badge_x2]
+                fallback_fc, fallback_score = _detect_fire_crystal_badge_match(fallback_crop)
+                fc_badge = count_fc if count_score >= fallback_score else fallback_fc
             if fc_badge is not None:
                 stats_result.setdefault("meta", {}).setdefault("fire_crystal_badges", {})[str(slot)] = fc_badge
 
