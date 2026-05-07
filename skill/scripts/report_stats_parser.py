@@ -54,7 +54,7 @@ TROOP_SLOT_CENTERS = (0.09, 0.235, 0.38, 0.62, 0.765, 0.91)
 TROOP_SLOT_HALF_WIDTH = 0.07
 MIN_TROOP_AVATAR_SCORE = 0.55
 MIN_FC_BADGE_TEMPLATE_SCORE = 0.80
-FC_BADGE_TEMPLATE_SCALES = tuple(scale / 100.0 for scale in range(75, 151, 5))
+FC_BADGE_TEMPLATE_SCALES = (0.95, 1.05, 1.15, 1.25)
 
 _rapid_ocr: Any = None
 _fast_rapid_ocr: Any = None
