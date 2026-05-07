@@ -629,31 +629,36 @@ def _repair_missing_values(result: dict[str, Any], img_bgr: np.ndarray) -> dict[
                     result[side]["stat_bonuses"][field] = value
                     break
 
-    count_y1 = max(0, header.y1 - int(image_height * 0.11))
-    count_y2 = max(count_y1 + 10, header.y1 - int(image_height * 0.015))
-    level_y1 = max(0, header.y1 - int(image_height * 0.19))
-    level_y2 = max(level_y1 + 10, count_y1)
-    for slot_index in range(6):
-        side = "left" if slot_index < 3 else "right"
-        troop_type = TROOP_TYPES[slot_index if side == "left" else slot_index - 3]
-        cx = int(image_width * TROOP_SLOT_CENTERS[slot_index])
-        half_width = int(image_width * TROOP_SLOT_HALF_WIDTH)
-        x1 = max(0, cx - half_width)
-        x2 = min(image_width, cx + half_width)
-        if troop_type not in result[side]["troop_counts"]:
-            crop = img_bgr[count_y1:count_y2, x1:x2]
-            for text in _ocr_crop_texts(crop):
-                value = _parse_integer(text)
-                if value is not None and value > 0:
-                    result[side]["troop_counts"][troop_type] = value
-                    break
-        if result[side]["levels"][troop_type]["tier"] is None:
-            crop = img_bgr[level_y1:level_y2, x1:x2]
-            for text in _ocr_crop_texts(crop):
-                tier = _parse_tier(text)
-                if tier is not None:
-                    result[side]["levels"][troop_type] = {"tier": tier, "fire_crystal_level": None}
-                    break
+    if result.get("meta", {}).get("troop_slots_present") is not False:
+        count_y1 = max(0, header.y1 - int(image_height * 0.11))
+        count_y2 = max(count_y1 + 10, header.y1 - int(image_height * 0.015))
+        level_y1 = max(0, header.y1 - int(image_height * 0.19))
+        level_y2 = max(level_y1 + 10, count_y1)
+        for slot_index in range(6):
+            side = "left" if slot_index < 3 else "right"
+            troop_type = TROOP_TYPES[slot_index if side == "left" else slot_index - 3]
+            cx = int(image_width * TROOP_SLOT_CENTERS[slot_index])
+            half_width = int(image_width * TROOP_SLOT_HALF_WIDTH)
+            x1 = max(0, cx - half_width)
+            x2 = min(image_width, cx + half_width)
+            if troop_type not in result[side]["troop_counts"]:
+                crop = img_bgr[count_y1:count_y2, x1:x2]
+                for text in _ocr_crop_texts(crop):
+                    value = _parse_integer(text)
+                    if value is not None and value > 0:
+                        result[side]["troop_counts"][troop_type] = value
+                        break
+            level = result[side]["levels"].setdefault(
+                troop_type,
+                {"tier": None, "fire_crystal_level": None},
+            )
+            if level["tier"] is None:
+                crop = img_bgr[level_y1:level_y2, x1:x2]
+                for text in _ocr_crop_texts(crop):
+                    tier = _parse_tier(text)
+                    if tier is not None:
+                        result[side]["levels"][troop_type] = {"tier": tier, "fire_crystal_level": None}
+                        break
 
     _refresh_missing_fields(result)
     return result

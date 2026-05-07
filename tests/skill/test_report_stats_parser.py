@@ -3,13 +3,16 @@ from __future__ import annotations
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "skill" / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
+import report_stats_parser
 from report_stats_parser import (
     TROOP_TYPES,
     dashboard_warnings_from_result,
@@ -264,6 +267,44 @@ class ReportStatsParserTests(unittest.TestCase):
                 "right_marksman_tier",
             ],
         )
+
+    def test_stats_only_repair_does_not_require_troop_level_rows(self) -> None:
+        result = {
+            "left": {
+                "troop_counts": {},
+                "levels": {},
+                "stat_bonuses": {"infantry_attack": 113.5},
+            },
+            "right": {
+                "troop_counts": {},
+                "levels": {},
+                "stat_bonuses": {"infantry_attack": 124.0},
+            },
+            "meta": {
+                "header_box": {
+                    "text": "stats-panel",
+                    "x1": 0,
+                    "y1": 80,
+                    "x2": 712,
+                    "y2": 100,
+                    "confidence": 1.0,
+                },
+                "label_boxes": {},
+                "troop_slots_present": False,
+                "missing_fields": ["left_infantry_count"],
+            },
+        }
+
+        with patch.object(report_stats_parser, "_ocr_crop_texts", return_value=[]):
+            repaired = report_stats_parser._repair_missing_values(
+                result,
+                np.zeros((932, 712, 3), dtype=np.uint8),
+            )
+
+        self.assertEqual(repaired["left"]["troop_counts"], {})
+        self.assertEqual(repaired["right"]["levels"], {})
+        self.assertIn("left_infantry_count", repaired["meta"]["missing_fields"])
+        self.assertNotIn("left_infantry_attack", repaired["meta"]["missing_fields"])
 
 
 if __name__ == "__main__":
