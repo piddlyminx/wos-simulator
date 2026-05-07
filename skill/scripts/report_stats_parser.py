@@ -111,7 +111,7 @@ def _get_fast_rapid() -> Any:
 
         _fast_rapid_ocr = RapidOCR(
             use_angle_cls=False,
-            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 224},
+            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 160},
         )
     return _fast_rapid_ocr
 
