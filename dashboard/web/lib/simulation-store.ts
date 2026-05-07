@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 
+import { withDirectoryLock } from "@/lib/file-lock";
 import { resolveSimulatorRoot } from "@/lib/simulator-root";
 import {
   buildSimulationShareUrl,
@@ -68,64 +69,74 @@ export async function saveSimulationRun(
 ): Promise<SavedSimulationRunResponse> {
   await ensureStoreDir();
 
-  const id = randomUUID();
-  const doc: SavedSimulationRunDocument = {
-    version: 1,
-    id,
-    kind,
-    created_at: new Date().toISOString(),
-    request,
-    result,
-  };
+  return withDirectoryLock(SIM_RUNS_DIR, async () => {
+    const id = randomUUID();
+    const doc: SavedSimulationRunDocument = {
+      version: 1,
+      id,
+      kind,
+      created_at: new Date().toISOString(),
+      request,
+      result,
+    };
 
-  const filePath = runPath(id);
-  const tempPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
-  await fs.writeFile(tempPath, `${JSON.stringify(doc, null, 2)}\n`, "utf8");
-  await fs.rename(tempPath, filePath);
-  return withShareUrl(doc);
+    const filePath = runPath(id);
+    const tempPath = `${filePath}.${process.pid}.${Date.now()}.tmp`;
+    await fs.writeFile(tempPath, `${JSON.stringify(doc, null, 2)}\n`, "utf8");
+    await fs.rename(tempPath, filePath);
+    return withShareUrl(doc);
+  });
 }
 
 export async function readSimulationRun(
   id: string,
 ): Promise<SavedSimulationRunResponse | null> {
-  try {
-    const raw = await fs.readFile(runPath(id), "utf8");
-    return withShareUrl(assertSavedSimulationDoc(JSON.parse(raw)));
-  } catch (err) {
-    const nodeErr = err as NodeJS.ErrnoException;
-    if (nodeErr?.code === "ENOENT") {
-      return null;
+  await ensureStoreDir();
+  return withDirectoryLock(SIM_RUNS_DIR, async () => {
+    try {
+      const raw = await fs.readFile(runPath(id), "utf8");
+      return withShareUrl(assertSavedSimulationDoc(JSON.parse(raw)));
+    } catch (err) {
+      const nodeErr = err as NodeJS.ErrnoException;
+      if (nodeErr?.code === "ENOENT") {
+        return null;
+      }
+      throw err;
     }
-    throw err;
-  }
+  });
 }
 
 export async function listSimulationRuns(
   limit = 20,
 ): Promise<SavedSimulationRunListItem[]> {
   await ensureStoreDir();
-  const entries = await fs.readdir(SIM_RUNS_DIR, { withFileTypes: true });
-  const docs: SavedSimulationRunDocument[] = [];
+  return withDirectoryLock(SIM_RUNS_DIR, async () => {
+    const entries = await fs.readdir(SIM_RUNS_DIR, { withFileTypes: true });
+    const docs: SavedSimulationRunDocument[] = [];
 
-  for (const entry of entries) {
-    if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
-    try {
-      const raw = await fs.readFile(path.join(SIM_RUNS_DIR, entry.name), "utf8");
-      docs.push(assertSavedSimulationDoc(JSON.parse(raw)));
-    } catch {
-      // Ignore partial or stale scratch files so one bad save does not break
-      // the recent-run picker.
+    for (const entry of entries) {
+      if (!entry.isFile() || !entry.name.endsWith(".json")) continue;
+      try {
+        const raw = await fs.readFile(
+          path.join(SIM_RUNS_DIR, entry.name),
+          "utf8",
+        );
+        docs.push(assertSavedSimulationDoc(JSON.parse(raw)));
+      } catch {
+        // Ignore partial or stale scratch files so one bad save does not break
+        // the recent-run picker.
+      }
     }
-  }
 
-  return docs
-    .sort((a, b) => b.created_at.localeCompare(a.created_at))
-    .slice(0, Math.max(1, Math.min(100, limit)))
-    .map((doc) => ({
-      id: doc.id,
-      kind: doc.kind,
-      created_at: doc.created_at,
-      share_url: buildSimulationShareUrl(doc.id),
-      title: buildSimulationRunTitle(doc.request),
-    }));
+    return docs
+      .sort((a, b) => b.created_at.localeCompare(a.created_at))
+      .slice(0, Math.max(1, Math.min(100, limit)))
+      .map((doc) => ({
+        id: doc.id,
+        kind: doc.kind,
+        created_at: doc.created_at,
+        share_url: buildSimulationShareUrl(doc.id),
+        title: buildSimulationRunTitle(doc.request),
+      }));
+  });
 }

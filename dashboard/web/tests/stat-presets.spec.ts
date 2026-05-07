@@ -83,3 +83,26 @@ test("player stat preset store saves, updates, and sorts by update time", async 
 
   await fs.rm(process.env.STAT_PRESETS_FILE!, { force: true });
 });
+
+test("player stat preset store preserves concurrent saves", async () => {
+  expect(process.env.STAT_PRESETS_FILE).toBeTruthy();
+  await fs.rm(process.env.STAT_PRESETS_FILE!, { force: true });
+
+  const stats = {
+    infantry: { attack: 101, defense: 102, lethality: 103, health: 104 },
+    lancer: { attack: 111, defense: 112, lethality: 113, health: 114 },
+    marksman: { attack: 121, defense: 122, lethality: 123, health: 124 },
+  };
+
+  await Promise.all(
+    Array.from({ length: 6 }, (_, index) =>
+      savePlayerStatPreset({ name: `Concurrent ${index + 1}`, stats }),
+    ),
+  );
+
+  const all = await listPlayerStatPresets();
+  expect(all).toHaveLength(6);
+  expect(new Set(all.map((preset) => preset.id)).size).toBe(6);
+
+  await fs.rm(process.env.STAT_PRESETS_FILE!, { force: true });
+});

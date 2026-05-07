@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { promises as fs } from "fs";
 import path from "path";
 
+import { withDirectoryLock } from "@/lib/file-lock";
 import type { TroopCategory } from "@/lib/heroes-catalogue";
 import { resolveRuntimeStoreDir } from "@/lib/simulator-root";
 
@@ -115,6 +116,11 @@ async function ensureStoreDir(): Promise<void> {
   await fs.mkdir(path.dirname(STAT_PRESETS_FILE), { recursive: true });
 }
 
+async function withPresetStoreLock<T>(action: () => Promise<T>): Promise<T> {
+  await ensureStoreDir();
+  return withDirectoryLock(path.dirname(STAT_PRESETS_FILE), action);
+}
+
 async function readAll(): Promise<PlayerStatPreset[]> {
   for (const filePath of statPresetFileCandidates()) {
     try {
@@ -148,27 +154,29 @@ async function writeAll(presets: PlayerStatPreset[]): Promise<void> {
 }
 
 export async function listPlayerStatPresets(): Promise<PlayerStatPreset[]> {
-  return readAll();
+  return withPresetStoreLock(readAll);
 }
 
 export async function savePlayerStatPreset(input: {
   name: unknown;
   stats: unknown;
 }): Promise<PlayerStatPreset> {
-  const presets = await readAll();
-  if (presets.length >= MAX_PRESETS) {
-    throw new Error(`Preset limit reached (${MAX_PRESETS})`);
-  }
-  const timestamp = nowIso();
-  const preset: PlayerStatPreset = {
-    id: randomUUID(),
-    name: cleanName(input.name) || `Preset ${presets.length + 1}`,
-    created_at: timestamp,
-    updated_at: timestamp,
-    stats: normalizeStats(input.stats),
-  };
-  await writeAll([preset, ...presets]);
-  return preset;
+  return withPresetStoreLock(async () => {
+    const presets = await readAll();
+    if (presets.length >= MAX_PRESETS) {
+      throw new Error(`Preset limit reached (${MAX_PRESETS})`);
+    }
+    const timestamp = nowIso();
+    const preset: PlayerStatPreset = {
+      id: randomUUID(),
+      name: cleanName(input.name) || `Preset ${presets.length + 1}`,
+      created_at: timestamp,
+      updated_at: timestamp,
+      stats: normalizeStats(input.stats),
+    };
+    await writeAll([preset, ...presets]);
+    return preset;
+  });
 }
 
 export async function updatePlayerStatPreset(
@@ -178,19 +186,21 @@ export async function updatePlayerStatPreset(
   if (!ID_RE.test(id)) {
     throw new Error("Invalid preset id");
   }
-  const presets = await readAll();
-  const index = presets.findIndex((p) => p.id === id);
-  if (index < 0) {
-    throw new Error(`No stat preset found for ${id}`);
-  }
-  const current = presets[index];
-  const updated: PlayerStatPreset = {
-    ...current,
-    name: cleanName(input.name) || current.name,
-    updated_at: nowIso(),
-    stats: normalizeStats(input.stats),
-  };
-  presets[index] = updated;
-  await writeAll(presets);
-  return updated;
+  return withPresetStoreLock(async () => {
+    const presets = await readAll();
+    const index = presets.findIndex((p) => p.id === id);
+    if (index < 0) {
+      throw new Error(`No stat preset found for ${id}`);
+    }
+    const current = presets[index];
+    const updated: PlayerStatPreset = {
+      ...current,
+      name: cleanName(input.name) || current.name,
+      updated_at: nowIso(),
+      stats: normalizeStats(input.stats),
+    };
+    presets[index] = updated;
+    await writeAll(presets);
+    return updated;
+  });
 }
