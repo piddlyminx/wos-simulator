@@ -722,7 +722,7 @@ def cmd_reports(
         )
 
 
-def cmd_memories(instance_name: str, map_path: str) -> int:
+def cmd_memories(instance_name: str, map_path: str, tap_mode: str) -> int:
     try:
         from memories import run_memories
     except Exception as exc:
@@ -731,15 +731,16 @@ def cmd_memories(instance_name: str, map_path: str) -> int:
             command="memories",
             instance_name=instance_name,
             map=map_path,
+            tap_mode=tap_mode,
         )
 
     try:
         emulator = _resolve_emulator(instance_name)
     except WosError as exc:
-        return _fail(str(exc), command="memories", instance_name=instance_name, map=map_path)
+        return _fail(str(exc), command="memories", instance_name=instance_name, map=map_path, tap_mode=tap_mode)
 
     try:
-        data = run_memories(emulator.serial, map_path)
+        data = run_memories(emulator.serial, map_path, tap_mode=tap_mode)
         _emit(data)
         return 0
     except Exception as exc:
@@ -748,6 +749,7 @@ def cmd_memories(instance_name: str, map_path: str) -> int:
             command="memories",
             instance_name=instance_name,
             map=map_path,
+            tap_mode=tap_mode,
         )
 
 
@@ -921,6 +923,12 @@ def build_parser() -> argparse.ArgumentParser:
     reports_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
     memories_p = sub.add_parser("memories", help="Clear visible memories labels using a CSV or JSON map")
+    memories_p.add_argument(
+        "--tap-mode",
+        choices=["threaded", "inline"],
+        default="threaded",
+        help="Tap scheduling mode: threaded overlaps taps with OCR; inline taps in the OCR loop",
+    )
     memories_p.add_argument("map", help="CSV or JSON file mapping label text to screen coordinates")
 
     cap_p = sub.add_parser("screencap", help="Save screenshot to a file")
@@ -984,7 +992,7 @@ def main() -> int:
         )
 
     if args.command == "memories":
-        return cmd_memories(instance_name, args.map)
+        return cmd_memories(instance_name, args.map, args.tap_mode)
 
     if args.command == "screencap":
         return cmd_screencap(instance_name, args.path)
