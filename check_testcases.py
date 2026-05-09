@@ -187,7 +187,7 @@ def compute_testcase_stats(sim_outcomes, game_outcomes, attacker_init, defender_
 
 
 def format_stat(stats):
-    """Pretty-print the z/t/p cell for a per-file row."""
+    """Pretty-print the z|t|p cell for a per-file row."""
     if stats['stat_type'] in ('deterministic', 'zero_var'):
         return 'det' if stats['stat_type'] == 'deterministic' else 'zvar'
     if stats['stat_type'] == 'single_obs':
@@ -199,7 +199,7 @@ def format_stat(stats):
 
 
 def summarize_non_t_stat_label(testcase_stats):
-    """Return a recap label when no z/t-scale statistic exists for a file."""
+    """Return a recap label when no z|t-scale statistic exists for a file."""
     stat_types = {s['stat_type'] for s in testcase_stats}
     if stat_types == {'deterministic'}:
         return 'det'
@@ -637,7 +637,7 @@ def check_testcases(testcases_files, TESTCASES_PATH='testcases', max_diff_ratio=
             ])
 
     print("\n🔹🔹🔹  RECAP 🔹🔹🔹")
-    recap_headers = ['file', 'Mean abs err % init', 'Mean signed bias % init', 'Mean z/t', 'Max |z/t|', '✦✦']
+    recap_headers = ['file', 'Mean abs err % init', 'Mean signed bias % init', 'Mean z|t', 'Max abs z|t', '✦✦']
     print(tabulate(overall_prints, headers=recap_headers, tablefmt="fancy_grid", colalign=("left", "center", "center", "center", "center", "center")))
 
     if overall_z_stats:
@@ -865,9 +865,9 @@ if __name__ == '__main__':
     parser.add_argument("--max-diff-ratio-deterministic", type=float, default=0.01,
                         help="Linear threshold for fully-deterministic testcases (default: 0.01 = 1%%)")
     parser.add_argument("--z-threshold", type=float, default=DEFAULT_Z_THRESHOLD,
-                        help=f"Absolute z/t threshold above which a testcase is flagged as divergent (default: {DEFAULT_Z_THRESHOLD}).")
+                        help=f"Absolute z|t threshold above which a testcase is flagged as divergent (default: {DEFAULT_Z_THRESHOLD}).")
     parser.add_argument("--min-bias-pct", type=float, default=DEFAULT_MIN_BIAS_PCT,
-                        help=f"Practical-significance floor: stochastic testcases with |bias_pct| below this never flag, regardless of |z/t| (default: {DEFAULT_MIN_BIAS_PCT}).")
+                        help=f"Practical-significance floor: stochastic testcases with |bias_pct| below this never flag, regardless of absolute z|t (default: {DEFAULT_MIN_BIAS_PCT}).")
     parser.add_argument("--repeat", type=int, default=100)
     parser.add_argument("--combine-repeats", action="store_true")
     parser.add_argument("--max-repeat-print", type=int, default=5)
