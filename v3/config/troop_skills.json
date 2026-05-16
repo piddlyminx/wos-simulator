@@ -1,0 +1,492 @@
+{
+  "name": "Troop Skills",
+  "skills": {
+    "MasterBrawler": {
+      "description": "Increase Attack Damage to Lancers by 10%",
+      "troop_type": "infantry",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "tier",
+          "value": 0
+        }
+      ],
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "MasterBrawler/1": {
+          "type": "damage_up",
+          "value": [
+            10
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ],
+            "applies_vs": [
+              "lancer"
+            ]
+          }
+        }
+      }
+    },
+    "BandsOfSteel": {
+      "description": "Increase Defense against Lancers by 10%",
+      "troop_type": "infantry",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "tier",
+          "value": 7
+        }
+      ],
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "BandsOfSteel/1": {
+          "type": "defense_up",
+          "value": [
+            10
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ],
+            "applies_vs": [
+              "lancer"
+            ]
+          }
+        }
+      }
+    },
+    "CrystalShield": {
+      "description": "Infantry has a chance to reduce damage when under attack.",
+      "troop_type": "infantry",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 3
+        },
+        {
+          "level": 2,
+          "type": "fc",
+          "value": 5
+        }
+      ],
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          25,
+          37.5
+        ],
+        "units": {
+          "side": "enemy",
+          "applies_vs": [
+            "infantry"
+          ]
+        }
+      },
+      "effects": {
+        "CrystalShield/1": {
+          "type": "damage_taken_down",
+          "value": [
+            36,
+            36
+          ],
+          "units": {
+            "applies_to": "target",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "BodyOfLight": {
+      "description": "Increase Infantry Defense by 4%, and reduce extra damage while Crystal Shield is active.",
+      "troop_type": "infantry",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 8
+        }
+      ],
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "BodyOfLight/1": {
+          "type": "defense_up",
+          "value": [
+            4
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ],
+            "applies_vs": "any"
+          }
+        },
+        "BodyOfLight/2": {
+          "type": "damage_taken_down",
+          "value": [
+            10
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ],
+            "applies_vs": "any"
+          },
+          "requires_effect": "CrystalShield/1"
+        }
+      }
+    },
+    "Charge": {
+      "description": "Increase Attack Damage to Marksmen by 10%",
+      "troop_type": "lancer",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "tier",
+          "value": 0
+        }
+      ],
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "Charge/1": {
+          "type": "damage_up",
+          "value": [
+            10
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": [
+              "marksman"
+            ]
+          }
+        }
+      }
+    },
+    "Ambusher": {
+      "description": "Lancer attacks have a chance to strike Marksmen behind Infantry.",
+      "troop_type": "lancer",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "tier",
+          "value": 7
+        }
+      ],
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          20
+        ]
+      },
+      "effects": {
+        "Ambusher/1": {
+          "type": "attack_order",
+          "value": [
+            "marksman",
+            "infantry",
+            "lancer"
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": [
+              "marksman"
+            ]
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          }
+        }
+      }
+    },
+    "CrystalLance": {
+      "description": "Lancers have a chance to make an extra skill attack for 100% damage.",
+      "troop_type": "lancer",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 3
+        },
+        {
+          "level": 2,
+          "type": "fc",
+          "value": 5
+        }
+      ],
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          10,
+          15
+        ],
+        "units": {
+          "by": [
+            "lancer"
+          ],
+          "applies_vs": "any"
+        }
+      },
+      "effects": {
+        "CrystalLance/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            100,
+            100
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "IncandescentField": {
+      "description": "Lancers have a chance to take half damage when under attack.",
+      "troop_type": "lancer",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 8
+        }
+      ],
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          10
+        ],
+        "units": {
+          "side": "enemy",
+          "applies_vs": [
+            "lancer"
+          ]
+        }
+      },
+      "effects": {
+        "IncandescentField/1": {
+          "type": "damage_taken_down",
+          "value": [
+            50
+          ],
+          "units": {
+            "applies_to": "target",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "RangedStrike": {
+      "description": "Increase Attack Damage to Infantry by 10%",
+      "troop_type": "marksman",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "tier",
+          "value": 0
+        }
+      ],
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "RangedStrike/1": {
+          "type": "damage_up",
+          "value": [
+            10
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ],
+            "applies_vs": [
+              "infantry"
+            ]
+          }
+        }
+      }
+    },
+    "Volley": {
+      "description": "Marksman attacks have a chance to make an extra skill attack for 100% damage.",
+      "troop_type": "marksman",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "tier",
+          "value": 7
+        }
+      ],
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          10
+        ],
+        "units": {
+          "by": [
+            "marksman"
+          ],
+          "applies_vs": "any"
+        }
+      },
+      "effects": {
+        "Volley/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            100
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "CrystalGunpowder": {
+      "description": "Marksmen have a chance to make an extra skill attack for 50% damage.",
+      "troop_type": "marksman",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 3
+        },
+        {
+          "level": 2,
+          "type": "fc",
+          "value": 5
+        }
+      ],
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          20,
+          30
+        ],
+        "units": {
+          "by": [
+            "marksman"
+          ],
+          "applies_vs": "any"
+        }
+      },
+      "effects": {
+        "CrystalGunpowder/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            50,
+            50
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ],
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "FlameCharge": {
+      "description": "Increase Marksmen's basic Attack by 4%.",
+      "troop_type": "marksman",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 8
+        }
+      ],
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "FlameCharge/1": {
+          "type": "attack_up",
+          "value": [
+            4
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ],
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "FlameChargeExtra": {
+      "description": "Marksmen can make an additional extra skill attack while Crystal Gunpowder is active.",
+      "troop_type": "marksman",
+      "requirements": [
+        {
+          "level": 1,
+          "type": "fc",
+          "value": 8
+        }
+      ],
+      "trigger": {
+        "type": "attack",
+        "units": {
+          "by": [
+            "marksman"
+          ],
+          "applies_vs": "any"
+        }
+      },
+      "effects": {
+        "FlameChargeExtra/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            25
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ],
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          },
+          "requires_effect": "CrystalGunpowder/1"
+        }
+      }
+    }
+  }
+}

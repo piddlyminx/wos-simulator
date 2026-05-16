@@ -43,6 +43,8 @@ validation command set before code is changed.
 - Keep damage bucket assignment centralized, not chosen by individual effects.
 - Produce detailed outcomes/traces when requested, while leaving room for a fast
   no-trace mode for high-volume simulation.
+- Provide a testcase runner that can execute every testcase under `v3/testcases`
+  and compare summarized output against existing dashboard results.
 
 ## Non-Goals
 
@@ -67,8 +69,27 @@ interface SkillDefinition {
   name: string;
   trigger: TriggerDefinition;
   effects: EffectIntentDefinition[];
+  troop_type?: UnitType;
+  requirements?: SkillRequirement[];
 }
 ```
+
+Troop skills use the same skill/effect schema as hero skills, with optional
+requirements:
+
+```ts
+interface SkillRequirement {
+  level: number;
+  type: "tier" | "fc";
+  value: number;
+}
+```
+
+For troop skills, `troop_type` identifies which troop line unlocks the skill.
+`requirements` maps skill level to minimum troop tier or Fire Crystal level.
+The loader should activate the highest requirement level satisfied by the
+fighter's configured troop stats for that troop line. If no requirement is
+satisfied, the skill is inactive.
 
 ### Effect Intent
 
@@ -234,6 +255,181 @@ Responsibilities:
 Effects may carry labels such as "health up" or "normal damage up"; the
 classifier/calculator decides whether those labels map to a bucket, which bucket
 they share, and how they stack.
+
+## Public API
+
+The v3 implementation should expose a small library API plus a CLI runner. The
+API should separate configuration loading, testcase adaptation, simulation, and
+comparison.
+
+### Configuration API
+
+```ts
+interface SimulatorConfig {
+  troopStats: TroopStatsCatalogue;
+  heroGenerationStats: HeroGenerationStatsCatalogue;
+  heroDefinitions: Record<string, SkillFile>;
+  troopSkills: SkillFile;
+}
+
+function loadSimulatorConfig(options?: {
+  configDir?: string; // default: v3/config
+}): SimulatorConfig;
+```
+
+The config loader must validate:
+
+- every hero definition is valid JSON
+- every referenced `hero_generation` exists
+- every effect `type` is known to the v3 classifier or explicitly unsupported
+- no v3 config file contains legacy fields such as `legacy`, `effect_op`, or
+  `effect_type`
+- `troop_skills.json` uses the same skill/effect schema as hero definitions
+
+### Simulation API
+
+```ts
+interface BattleInput {
+  attacker: FighterInput;
+  defender: FighterInput;
+  seed?: string | number;
+  maxRounds?: number;
+  trace?: boolean;
+  mechanics?: MechanicsPolicy;
+}
+
+interface BattleResult {
+  winner: SideId | "draw";
+  rounds: number;
+  remaining: Record<SideId, Record<UnitType, number>>;
+  attacks: AttackOutcome[];
+  skillReport: Record<SideId, SkillReportEntry[]>;
+  trace?: BattleTrace;
+}
+
+function simulateBattle(input: BattleInput, config: SimulatorConfig): BattleResult;
+```
+
+The simulator result should expose enough information for acceptance checks:
+
+- resolved attacker/defender troops by unit type
+- resolved hero names and skill ids
+- resolved troop skill ids
+- triggered skill/effect activation counts
+- attack outcomes for normal and extra skill attack jobs
+- final remaining troop counts
+
+### Testcase Runner API
+
+```ts
+interface TestcaseRunOptions {
+  testcaseRoot?: string; // default: v3/testcases
+  dashboardSqlitePath?: string; // default: test_results/dashboard.sqlite
+  matching?: string;
+  includeDisabled?: boolean;
+  repeat?: number;
+  seed?: string | number;
+  trace?: boolean;
+}
+
+interface TestcaseRunReport {
+  selectedFiles: string[];
+  selectedCases: number;
+  cases: TestcaseCaseReport[];
+  aggregate: TestcaseAggregateReport;
+}
+
+function runTestcases(options: TestcaseRunOptions, config: SimulatorConfig): TestcaseRunReport;
+```
+
+The runner should adapt the existing testcase JSON shape into `BattleInput`.
+It must tolerate inaccurate v3 mechanics during early development; the first
+acceptance target is successful execution and useful diagnostics, not parity.
+
+## Acceptance Criteria
+
+Initial v3 acceptance is operational rather than accuracy-gated.
+
+### A. Config Loads
+
+- `loadSimulatorConfig()` loads:
+  - `v3/config/troop_stats.json`
+  - `v3/config/hero_generation_stats.json`
+  - every file under `v3/config/hero_definitions`
+  - `v3/config/troop_skills.json`
+- The loader reports zero legacy fields in v3 config.
+- The loader reports every known effect type and any unsupported records.
+
+### B. Testcases Are Discoverable
+
+- The runner follows the `v3/testcases` symlink.
+- It discovers every `.json` testcase file under that tree.
+- It skips disabled/stale files by default:
+  - `*.disabled`
+  - `*.stale_troops`
+- It reports selected file count and testcase count.
+
+### C. Testcases Run
+
+For every selected testcase:
+
+- The runner can parse the file.
+- Every testcase entry can be adapted into a `BattleInput`.
+- Every referenced hero is either loaded from v3 config or reported as a clear
+  unsupported/missing hero diagnostic.
+- Troops are resolved from testcase troop ids and `v3/config/troop_stats.json`.
+- Fighter stat bonuses from testcase `stats` blocks are applied to the correct
+  attack/lethality/health/defense buckets.
+- Troop skills are resolved from troop tier/Fire Crystal requirements.
+- The simulator returns a `BattleResult` without throwing.
+
+Early acceptance should allow cases with unsupported heroes/effects to complete
+with diagnostics if they can be safely ignored. The report must make ignored
+mechanics visible.
+
+### D. Trigger Visibility
+
+For each case, the report should include:
+
+- attacker and defender hero names resolved
+- attacker and defender troop skill ids resolved
+- skill/effect activation counts by side
+- extra skill attack job counts by source effect
+- attack-control counts, such as dodge/no-attack
+
+This is required even before numeric accuracy is good, because it proves the
+expected heroes, troops, and skills are present and firing.
+
+### E. Dashboard Comparison
+
+The runner should read `test_results/dashboard.sqlite` when present.
+
+Minimum comparison support:
+
+- read existing `runs`, `run_testcase_files`, and `run_testcases`
+- identify prior dashboard rows for each testcase file and testcase id where
+  possible
+- report v3 result beside:
+  - game result from testcase JSON
+  - latest dashboard summary metrics for the same file/case, if present
+- do not require v3 to insert rows into the dashboard database initially
+
+The initial comparison output can be JSON. A later task may add dashboard DB
+write support.
+
+### F. CLI
+
+Provide a CLI equivalent to:
+
+```bash
+npm --prefix v3 run testcases -- --matching emulator_verified --repeat 1
+```
+
+The command should print a structured JSON report and exit:
+
+- `0` when all selected cases execute, even if numeric parity is poor
+- non-zero when files cannot be parsed, required config is missing, or the
+  simulator throws unexpectedly
 
 ## Round Lifecycle
 
@@ -440,19 +636,33 @@ Use these canonical damage buckets:
 interface DamageBuckets {
   numerator: {
     army: RawFactorBucket;
-    attack: StatFactorBucket;
-    lethality: StatFactorBucket;
-    outgoingDamage: PercentFactorBucket;
-    normalDamage: PercentFactorBucket;
-    skillDamage: PercentFactorBucket;
+    attackBase: RawFactorBucket;
+    lethalityBase: RawFactorBucket;
+    attackUp: PercentFactorBucket;
+    lethalityUp: PercentFactorBucket;
+    outgoingDamageUp: PercentFactorBucket;
+    defenseDown: PercentFactorBucket;
+    healthDown: PercentFactorBucket;
+    incomingDamageUp: PercentFactorBucket;
+    normalDamageUp: PercentFactorBucket;
+    normalDefenseDown: PercentFactorBucket;
+    skillDamageUp: PercentFactorBucket;
+    skillDefenseDown: PercentFactorBucket;
     extraSkillSource: RawFactorBucket;
   };
   denominator: {
-    health: StatFactorBucket;
-    defense: StatFactorBucket;
-    incomingDamageReduction: PercentFactorBucket;
-    normalDefense: PercentFactorBucket;
-    skillDefense: PercentFactorBucket;
+    healthBase: RawFactorBucket;
+    defenseBase: RawFactorBucket;
+    attackDown: PercentFactorBucket;
+    lethalityDown: PercentFactorBucket;
+    outgoingDamageDown: PercentFactorBucket;
+    defenseUp: PercentFactorBucket;
+    healthUp: PercentFactorBucket;
+    incomingDamageDown: PercentFactorBucket;
+    normalDamageDown: PercentFactorBucket;
+    normalDefenseUp: PercentFactorBucket;
+    skillDamageDown: PercentFactorBucket;
+    skillDefenseUp: PercentFactorBucket;
   };
 }
 ```
@@ -461,39 +671,48 @@ Factor construction:
 
 ```text
 RawFactorBucket factor = raw value
-StatFactorBucket factor = base stat * (1 + aggregateSignedPct / 100)
-PercentFactorBucket factor = 1 + aggregateSignedPct / 100
+PercentFactorBucket factor = 1 + aggregatePct / 100
 ```
 
-Signed percentages allow one bucket to represent both up and down effects:
-
-```text
-attack +20% -> numerator.attack signed pct +20
-attack -20% -> numerator.attack signed pct -20
-defense +20% -> denominator.defense signed pct +20
-defense -20% -> denominator.defense signed pct -20
-```
+Do not model down effects as negative values in the same bucket as up effects.
+Down effects are positive percentage factors placed on the opposite side of the
+fraction. For example, `health_down: 100` doubles damage via
+`numerator.healthDown = 2.0`; it must not reduce the denominator health factor to
+zero.
 
 The damage equation uses the factors like this:
 
 ```text
 damage =
   numerator.army
-  * numerator.attack
-  * numerator.lethality
-  * numerator.outgoingDamage
+  * numerator.attackBase
+  * numerator.lethalityBase
+  * numerator.attackUp
+  * numerator.lethalityUp
+  * numerator.outgoingDamageUp
+  * numerator.defenseDown
+  * numerator.healthDown
+  * numerator.incomingDamageUp
   * pass-specific numerator bucket
   * numerator.extraSkillSource
-  / denominator.health
-  / denominator.defense
-  / denominator.incomingDamageReduction
+  / denominator.healthBase
+  / denominator.defenseBase
+  / denominator.attackDown
+  / denominator.lethalityDown
+  / denominator.outgoingDamageDown
+  / denominator.defenseUp
+  / denominator.healthUp
+  / denominator.incomingDamageDown
   / pass-specific denominator bucket
   / 100
 ```
 
 For a normal damage job, the pass-specific buckets are
-`numerator.normalDamage` and `denominator.normalDefense`. For a skill damage job,
-they are `numerator.skillDamage` and `denominator.skillDefense`.
+`numerator.normalDamageUp`, `numerator.normalDefenseDown`,
+`denominator.normalDamageDown`, and `denominator.normalDefenseUp`. For a skill
+damage job, they are `numerator.skillDamageUp`,
+`numerator.skillDefenseDown`, `denominator.skillDamageDown`, and
+`denominator.skillDefenseUp`.
 
 `numerator.extraSkillSource` is `1` for normal damage jobs. For an extra skill
 attack job, it is the source attack multiplier, for example `2.0` for 200%.
@@ -502,21 +721,21 @@ attack job, it is the source attack multiplier, for example `2.0` for 200%.
 
 Populate base buckets for each damage job:
 
-- base troop attack -> numerator.attack
-- base troop lethality -> numerator.lethality
-- base troop health -> denominator.health
-- base troop defense -> denominator.defense
+- base troop attack -> numerator.attackBase
+- base troop lethality -> numerator.lethalityBase
+- base troop health -> denominator.healthBase
+- base troop defense -> denominator.defenseBase
 
 Populate stat percentage buckets from non-skill input sources:
 
-- chief attack bonus -> numerator.attack signed pct
-- chief lethality bonus -> numerator.lethality signed pct
-- chief health bonus -> denominator.health signed pct
-- chief defense bonus -> denominator.defense signed pct
-- hero generation attack bonus -> numerator.attack signed pct
-- hero generation lethality bonus -> numerator.lethality signed pct
-- hero generation health bonus -> denominator.health signed pct
-- hero generation defense bonus -> denominator.defense signed pct
+- chief attack bonus -> numerator.attackUp
+- chief lethality bonus -> numerator.lethalityUp
+- chief health bonus -> denominator.healthUp
+- chief defense bonus -> denominator.defenseUp
+- hero generation attack bonus -> numerator.attackUp
+- hero generation lethality bonus -> numerator.lethalityUp
+- hero generation health bonus -> denominator.healthUp
+- hero generation defense bonus -> denominator.defenseUp
 
 If future input data distinguishes additional stat sources, route them through
 the same four stat buckets unless game evidence proves they intentionally
@@ -530,40 +749,43 @@ lock. Then route applicable effects as follows.
 
 For effects affecting the attacking side of the job:
 
-| Source evidence | Signed value | Bucket |
+| Source evidence | Value | Bucket |
 | --- | ---: | --- |
-| `type: "lethality_up"` | `+value` | `numerator.lethality` |
-| `type: "lethality_down"` | `-value` | `numerator.lethality` |
-| `type: "attack_up"` | `+value` | `numerator.attack` |
-| `type: "attack_down"` | `-value` | `numerator.attack` |
-| `type: "damage_up"` | `+value` | `numerator.outgoingDamage` |
-| `type: "damage_down"` | `-value` | `numerator.outgoingDamage` |
-| `type: "normal_damage_up"` | `+value` | `numerator.normalDamage` |
-| `type: "normal_damage_down"` | `-value` | `numerator.normalDamage` |
-| `type: "skill_damage_up"` | `+value` | `numerator.skillDamage` |
-| `type: "skill_damage_down"` | `-value` | `numerator.skillDamage` |
+| `type: "lethality_up"` | `value` | `numerator.lethalityUp` |
+| `type: "lethality_down"` | `value` | `denominator.lethalityDown` |
+| `type: "attack_up"` | `value` | `numerator.attackUp` |
+| `type: "attack_down"` | `value` | `denominator.attackDown` |
+| `type: "damage_up"` | `value` | `numerator.outgoingDamageUp` |
+| `type: "damage_down"` | `value` | `denominator.outgoingDamageDown` |
+| `type: "crit_damage_up"` | `value` | `numerator.outgoingDamageUp` |
+| `type: "normal_damage_up"` | `value` | `numerator.normalDamageUp` |
+| `type: "normal_damage_down"` | `value` | `denominator.normalDamageDown` |
+| `type: "skill_damage_up"` | `value` | `numerator.skillDamageUp` |
+| `type: "skill_damage_down"` | `value` | `denominator.skillDamageDown` |
 
 For effects affecting the defending side of the job:
 
-| Source evidence | Signed value | Bucket |
+| Source evidence | Value | Bucket |
 | --- | ---: | --- |
-| `type: "defense_up"` | `+value` | `denominator.defense` |
-| `type: "defense_down"` | `-value` | `denominator.defense` |
-| `type: "health_up"` | `+value` | `denominator.health` |
-| `type: "health_down"` | `-value` | `denominator.health` |
-| `type: "normal_defense_up"` | `+value` | `denominator.normalDefense` |
-| `type: "normal_defense_down"` | `-value` | `denominator.normalDefense` |
-| `type: "skill_defense_up"` | `+value` | `denominator.skillDefense` |
-| `type: "skill_defense_down"` | `-value` | `denominator.skillDefense` |
+| `type: "defense_up"` | `value` | `denominator.defenseUp` |
+| `type: "defense_down"` | `value` | `numerator.defenseDown` |
+| `type: "health_up"` | `value` | `denominator.healthUp` |
+| `type: "health_down"` | `value` | `numerator.healthDown` |
+| `type: "damage_taken_down"` | `value` | `denominator.incomingDamageDown` |
+| `type: "damage_taken_up"` | `value` | `numerator.incomingDamageUp` |
+| `type: "normal_defense_up"` | `value` | `denominator.normalDefenseUp` |
+| `type: "normal_defense_down"` | `value` | `numerator.normalDefenseDown` |
+| `type: "skill_defense_up"` | `value` | `denominator.skillDefenseUp` |
+| `type: "skill_defense_down"` | `value` | `numerator.skillDefenseDown` |
 
 For `stat_bonus` sources:
 
-| Source evidence | Signed value | Bucket |
+| Source evidence | Value | Bucket |
 | --- | ---: | --- |
-| `type: "stat_bonus", stat: "lethality"` | `+value` | `numerator.lethality` |
-| `type: "stat_bonus", stat: "attack"` | `+value` | `numerator.attack` |
-| `type: "stat_bonus", stat: "health"` | `+value` | `denominator.health` |
-| `type: "stat_bonus", stat: "defense"` | `+value` | `denominator.defense` |
+| `type: "stat_bonus", stat: "lethality"` | `value` | `numerator.lethalityUp` |
+| `type: "stat_bonus", stat: "attack"` | `value` | `numerator.attackUp` |
+| `type: "stat_bonus", stat: "health"` | `value` | `denominator.healthUp` |
+| `type: "stat_bonus", stat: "defense"` | `value` | `denominator.defenseUp` |
 
 These `stat_bonus` routes intentionally share buckets with runtime stat-like
 effects in the initial v3 policy. If game testing later proves a source should
@@ -580,24 +802,36 @@ For special non-bucket effects:
 | unsupported record with `reason` only | report warning; do not affect damage |
 
 The classifier must trace both the source evidence and the selected route. For
-example: `Jessie/StandOfArms/1 type lethality_up -> numerator.lethality`.
+example: `Jessie/StandOfArms/1 type lethality_up -> numerator.lethalityUp`.
+
+`crit_damage_up` is currently modeled as a 100% outgoing damage modifier after
+the crit chance trigger succeeds. Its first-pass bucket is
+`numerator.outgoingDamageUp`. This is a testable policy: if game observations show
+crit multiplies separately from ordinary outgoing damage, move it behind a named
+mechanics policy with a separate bucket.
+
+`requires_effect` is a native applicability condition. An active effect with
+`requires_effect: "<effect id>"` only applies to a damage job when another active
+effect with that effect id is also applicable to the same job. This is used for
+troop skills such as Body of Light and Flame Charge that explicitly depend on a
+Crystal Shield/Gunpowder activation.
 
 ### Stacking
 
 Same-bucket terms aggregate first. Different buckets multiply.
 
-Example if two health-like sources share the `health` bucket:
+Example if two health-up-like sources share the `healthUp` bucket:
 
 ```text
-health bucket = 20 + 25 = 45
-health factor = 1.45
+healthUp bucket = 20 + 25 = 45
+healthUp factor = 1.45
 ```
 
-Example if health and defense are separate buckets:
+Example if health-up and defense-up are separate buckets:
 
 ```text
-health factor = 1.20
-defense factor = 1.25
+healthUp factor = 1.20
+defenseUp factor = 1.25
 combined denominator factor = 1.20 * 1.25
 ```
 
