@@ -1,0 +1,49 @@
+{
+  "name": "Sergey",
+  "hero_generation": "SR",
+  "skills": {
+    "DefendersEdge": {
+      "description": "Reduces damage taken by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "DefendersEdge/1": {
+          "type": "defense_up",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "Weaken": {
+      "description": "Reduces Attack by X% for all enemy troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "Weaken/1": {
+          "type": "attack_down",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "trigger"
+          }
+        }
+      }
+    }
+  }
+}

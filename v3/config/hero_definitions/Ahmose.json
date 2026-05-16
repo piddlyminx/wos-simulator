@@ -1,0 +1,168 @@
+{
+  "name": "Ahmose",
+  "hero_generation": "S4",
+  "skills": {
+    "ViperFormation": {
+      "description": "His infantry pauses the attack once every 4 times reducing damage taken by Lancers and Marksmen by X% and Infantry by X% for 2 turns",
+      "trigger": {
+        "type": "attack",
+        "every": 4,
+        "units": {
+          "by": [
+            "infantry"
+          ]
+        }
+      },
+      "effects": {
+        "ViperFormation/1": {
+          "type": "no_attack",
+          "units": {
+            "applies_to": [
+              "infantry"
+            ]
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          }
+        },
+        "ViperFormation/2": {
+          "type": "defense_up",
+          "value": [
+            10,
+            15,
+            20,
+            25,
+            30
+          ],
+          "units": {
+            "applies_to": [
+              "lancer",
+              "marksman"
+            ]
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2,
+            "delay": 1
+          }
+        },
+        "ViperFormation/3": {
+          "type": "defense_up",
+          "value": [
+            10,
+            25,
+            40,
+            55,
+            70
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ]
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2,
+            "delay": 1
+          }
+        }
+      }
+    },
+    "PrayerOfFlame": {
+      "description": "Ahmose amplifies the combat spirit of friendly infantry with the power of Fire Crystal, increasing their damage dealt by X%",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "PrayerOfFlame/1": {
+          "type": "damage_up",
+          "value": [
+            20,
+            40,
+            60,
+            80,
+            100
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ]
+          }
+        }
+      }
+    },
+    "BladeOfLight": {
+      "description": "Increases his infantries' damage dealt per attack by X% and the target's damage taken by X% for 1 turn",
+      "trigger": {
+        "type": "attack",
+        "units": {
+          "by": [
+            "infantry"
+          ]
+        }
+      },
+      "effects": {
+        "BladeOfLight/1": {
+          "type": "damage_up",
+          "value": [
+            12,
+            24,
+            36,
+            48,
+            60
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ]
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        },
+        "BladeOfLight/2": {
+          "type": "defense_down",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "target"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1,
+            "delay": 1
+          },
+          "same_effect_stacking": "add"
+        }
+      }
+    },
+    "GuardiansVitality": {
+      "description": "Widget bonus: Increase Health by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "GuardiansVitality/1": {
+          "type": "stat_bonus",
+          "stat": "health",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

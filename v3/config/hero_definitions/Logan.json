@@ -1,0 +1,90 @@
+{
+  "name": "Logan",
+  "hero_generation": "S3",
+  "skills": {
+    "LionStrike": {
+      "description": "Reducing all enemy Troops' Attack by X%",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "LionStrike/1": {
+          "type": "attack_down",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "LionIntimidation": {
+      "description": "Reducing damage taken by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "LionIntimidation/1": {
+          "type": "defense_up",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "LeaderInspiration": {
+      "description": "Increasing Health by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "LeaderInspiration/1": {
+          "type": "health_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "IronDen": {
+      "description": "Widget bonus: Increase Defense by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "IronDen/1": {
+          "type": "stat_bonus",
+          "stat": "defense",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

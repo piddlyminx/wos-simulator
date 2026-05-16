@@ -1,0 +1,133 @@
+{
+  "name": "Gwen",
+  "hero_generation": "S5",
+  "skills": {
+    "EagleVision": {
+      "description": "Increasing target's damage taken by X%",
+      "trigger": {
+        "type": "attack"
+      },
+      "effects": {
+        "EagleVision/1": {
+          "type": "defense_down",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "AirDominance": {
+      "description": "Grants all troops' attack X% extra damage after every 5 attacks and causes the target to receive X% extra damage for its next attack received",
+      "trigger": {
+        "type": "attack",
+        "every": 5
+      },
+      "effects": {
+        "AirDominance/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            20,
+            40,
+            60,
+            80,
+            100
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        },
+        "AirDominance/2": {
+          "type": "defense_down",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1,
+            "delay": 1
+          }
+        }
+      }
+    },
+    "Blastmaster": {
+      "description": "Gwen equips her Marksmen with grenades, dealing X% extra damage to all enemies on the next attack of every 4 attacks",
+      "trigger": {
+        "type": "attack",
+        "every": 4,
+        "units": {
+          "by": [
+            "marksman"
+          ]
+        }
+      },
+      "effects": {
+        "Blastmaster/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ],
+            "applies_vs": "all"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1,
+            "delay": 1
+          }
+        }
+      }
+    },
+    "LethalPrecision": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when attacking",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "rally"
+      },
+      "effects": {
+        "LethalPrecision/1": {
+          "type": "stat_bonus",
+          "stat": "lethality",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

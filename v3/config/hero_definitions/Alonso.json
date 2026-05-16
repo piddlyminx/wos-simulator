@@ -1,0 +1,129 @@
+{
+  "name": "Alonso",
+  "hero_generation": "S2",
+  "skills": {
+    "Onslaught": {
+      "description": "Granting a 40% chance of increasing all troop's Lethality by X%",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "Onslaught/1": {
+          "type": "damage_up",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          }
+        }
+      }
+    },
+    "IronStrength": {
+      "description": "Grants all troops' attack a 20% chance of reducing damage dealt by X% for all enemy troops for 2 turns",
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          20,
+          20,
+          20,
+          20,
+          20
+        ]
+      },
+      "effects": {
+        "IronStrength/1": {
+          "type": "damage_down",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "target",
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2,
+            "delay": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "PoisonHarpoon": {
+      "description": "Grants all troops attack a 50% chance of dealing X% more damage",
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "effects": {
+        "PoisonHarpoon/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "RazorVolley": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when attacking",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "rally"
+      },
+      "effects": {
+        "RazorVolley/1": {
+          "type": "stat_bonus",
+          "stat": "lethality",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

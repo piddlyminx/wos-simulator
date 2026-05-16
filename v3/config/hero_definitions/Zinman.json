@@ -1,0 +1,89 @@
+{
+  "name": "Zinman",
+  "hero_generation": "S1",
+  "skills": {
+    "Implacable": {
+      "description": "Increasing all troops' Defense by X% and Health by X%",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "Implacable/1": {
+          "type": "defense_up",
+          "value": [
+            2,
+            4,
+            6,
+            8,
+            10
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        },
+        "Implacable/2": {
+          "type": "health_up",
+          "value": [
+            2,
+            4,
+            6,
+            8,
+            10
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "Bastionist": {
+      "description": "Increase building speed (non combat placeholder skill)",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {}
+    },
+    "PositionalBattler": {
+      "description": "Increasing damage dealt by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "PositionalBattler/1": {
+          "type": "lethality_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "Woodpecker": {
+      "description": "Widget bonus: Increase Attack by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "Woodpecker/1": {
+          "type": "stat_bonus",
+          "stat": "attack",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

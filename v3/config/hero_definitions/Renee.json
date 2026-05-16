@@ -1,0 +1,116 @@
+{
+  "name": "Renee",
+  "hero_generation": "S6",
+  "skills": {
+    "NightmareTrace": {
+      "description": "Troops place Dream Marks on targets every two turns, dealing extra Lancer damage once next turn",
+      "trigger": {
+        "type": "turn",
+        "every": 2
+      },
+      "effects": {
+        "NightmareTrace/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            40,
+            80,
+            120,
+            160,
+            200
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1,
+            "delay": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "Dreamcatcher": {
+      "description": "Dream Marks highlight enemy vulnerabilities, increasing damage dealt by Lancers to marked targets",
+      "trigger": {
+        "type": "turn",
+        "every": 2
+      },
+      "effects": {
+        "Dreamcatcher/1": {
+          "type": "lethality_up",
+          "value": [
+            30,
+            60,
+            90,
+            120,
+            150
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1,
+            "delay": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "Dreamslice": {
+      "description": "Dream Marks expose enemy weaknesses, increasing damage taken by marked targets for all troops",
+      "trigger": {
+        "type": "turn",
+        "every": 2
+      },
+      "effects": {
+        "Dreamslice/1": {
+          "type": "defense_down",
+          "value": [
+            15,
+            30,
+            45,
+            60,
+            75
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1,
+            "delay": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "DreamfangRally": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when rallying",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "rally"
+      },
+      "effects": {
+        "DreamfangRally/1": {
+          "type": "stat_bonus",
+          "stat": "lethality",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

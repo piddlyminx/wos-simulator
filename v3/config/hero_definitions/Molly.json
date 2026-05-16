@@ -1,0 +1,113 @@
+{
+  "name": "Molly",
+  "hero_generation": "S1",
+  "skills": {
+    "CallingOfTheStorm": {
+      "description": "granting a 40% chance of reducing all troops' Damage taken by X%",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "CallingOfTheStorm/1": {
+          "type": "defense_up",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "trigger"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          }
+        }
+      }
+    },
+    "IceDominion": {
+      "description": "Granting all troops' attack a 50% chance of increasing damage dealt by X%",
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "effects": {
+        "IceDominion/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        }
+      }
+    },
+    "YouthfulRage": {
+      "description": "Increasing damage dealt by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "YouthfulRage/1": {
+          "type": "lethality_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "WinterFang": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "WinterFang/1": {
+          "type": "stat_bonus",
+          "stat": "lethality",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

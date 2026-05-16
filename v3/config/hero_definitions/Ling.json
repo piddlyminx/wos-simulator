@@ -1,0 +1,35 @@
+{
+  "name": "Ling",
+  "hero_generation": "SR",
+  "skills": {
+    "FearsomeAura": {
+      "description": "Reducing all enemy Troops' Attack by X%",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "FearsomeAura/1": {
+          "type": "attack_down",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "NonCombatPlaceholder": {
+      "description": "Placeholder skill to satisfy simulator config for non-combat hero data",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {}
+    }
+  }
+}

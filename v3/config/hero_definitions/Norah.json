@@ -1,0 +1,155 @@
+{
+  "name": "Norah",
+  "hero_generation": "S5",
+  "skills": {
+    "CombinedArms": {
+      "description": "Decreasing damage taken by X% and boosting damage dealt by X% for infantry and marksmen",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "CombinedArms/1": {
+          "type": "defense_up",
+          "value": [
+            3,
+            6,
+            9,
+            12,
+            15
+          ],
+          "units": {
+            "applies_to": [
+              "infantry",
+              "marksman"
+            ]
+          }
+        },
+        "CombinedArms/2": {
+          "type": "damage_up",
+          "value": [
+            3,
+            6,
+            9,
+            12,
+            15
+          ],
+          "units": {
+            "applies_to": [
+              "infantry",
+              "marksman"
+            ],
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "SneakStrike": {
+      "description": "Granting her lancers a 20% chance of dealing X% extra damage to all enemies on attack",
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          20,
+          20,
+          20,
+          20,
+          20
+        ],
+        "units": {
+          "by": [
+            "lancer"
+          ]
+        }
+      },
+      "effects": {
+        "SneakStrike/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            20,
+            40,
+            60,
+            80,
+            100
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": "all"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "Momentum": {
+      "description": "Increasing all troops damage dealt by X% and reducing their damage taken by X%, every five attacks made by lancers for 2 turns",
+      "trigger": {
+        "type": "attack",
+        "every": 5,
+        "units": {
+          "by": [
+            "lancer"
+          ]
+        }
+      },
+      "effects": {
+        "Momentum/1": {
+          "type": "damage_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "all",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2
+          }
+        },
+        "Momentum/2": {
+          "type": "defense_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "duration": {
+            "type": "turn",
+            "value": 2,
+            "delay": 1
+          }
+        }
+      }
+    },
+    "SteadfastGuard": {
+      "description": "Widget bonus: Increase Defense by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "SteadfastGuard/1": {
+          "type": "stat_bonus",
+          "stat": "defense",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

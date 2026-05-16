@@ -1,0 +1,124 @@
+{
+  "name": "Mia",
+  "hero_generation": "S3",
+  "skills": {
+    "BadLuckStreak": {
+      "description": "Grants all troops attack a 50% chance of cursing the target, increasing their damage taken by X%",
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "effects": {
+        "BadLuckStreak/1": {
+          "type": "defense_down",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "target"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "LuckyCharm": {
+      "description": "Grants a 50% chance of boosting troops' Attack by X%",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          50,
+          50,
+          50,
+          50,
+          50
+        ]
+      },
+      "effects": {
+        "LuckyCharm/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "all",
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "RitualDeciphering": {
+      "description": "Grants a 40% chance of reducing damage taken by X% for all troops",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "RitualDeciphering/1": {
+          "type": "defense_up",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "duration": {
+            "type": "turn",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "PrecisionDrive": {
+      "description": "Widget bonus: Increase Attack by X% for all troops when attacking",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "rally"
+      },
+      "effects": {
+        "PrecisionDrive/1": {
+          "type": "stat_bonus",
+          "stat": "attack",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

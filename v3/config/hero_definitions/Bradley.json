@@ -1,0 +1,106 @@
+{
+  "name": "Bradley",
+  "hero_generation": "S7",
+  "skills": {
+    "VeteransMight": {
+      "description": "Bradley's years of combat experience enables him to destroy enemies efficiently, increasing Attack by X% for all troops.",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "VeteransMight/1": {
+          "type": "attack_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ]
+        }
+      }
+    },
+    "PowerShot": {
+      "description": "Bradley uses his expertise in suppressive artillery against the enemy vanguard, increasing Damage Dealt to Lancers by X% and to Infantry by Y% for all troops.",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "PowerShot/1": {
+          "type": "lethality_up",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "units": {
+            "applies_vs": [
+              "lancer"
+            ]
+          }
+        },
+        "PowerShot/2": {
+          "type": "lethality_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_vs": [
+              "infantry"
+            ]
+          }
+        }
+      }
+    },
+    "TacticalAssistance": {
+      "description": "Bradley will press every advantage against a beleaguered enemy, increasing Damage Dealt by X% for all troops for 2 turns every 4 turns.",
+      "trigger": {
+        "type": "turn",
+        "every": 4
+      },
+      "effects": {
+        "TacticalAssistance/1": {
+          "type": "lethality_up",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "duration": {
+            "type": "turn",
+            "value": 2
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "SiegeInsight": {
+      "description": "Widget bonus: Increase Attack by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "SiegeInsight/1": {
+          "type": "stat_bonus",
+          "stat": "attack",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

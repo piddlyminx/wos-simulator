@@ -1,0 +1,60 @@
+{
+  "SR": {
+    "attack": 140.11,
+    "defense": 140.11
+  },
+  "S1": {
+    "attack": 200.16,
+    "defense": 200.16,
+    "lethality": 50,
+    "health": 50
+  },
+  "S1_natalia": {
+    "attack": 200.16,
+    "defense": 200.16,
+    "lethality": 55.5,
+    "health": 55.5
+  },
+  "S1_jeronimo": {
+    "attack": 260.2,
+    "defense": 260.2,
+    "lethality": 62.5,
+    "health": 62.5
+  },
+  "S2": {
+    "attack": 240.19,
+    "defense": 240.19,
+    "lethality": 60,
+    "health": 60
+  },
+  "S3": {
+    "attack": 290.23,
+    "defense": 290.23,
+    "lethality": 70,
+    "health": 70
+  },
+  "S4": {
+    "attack": 370.29,
+    "defense": 370.29,
+    "lethality": 92.5,
+    "health": 92.5
+  },
+  "S5": {
+    "attack": 444.35,
+    "defense": 444.35,
+    "lethality": 111,
+    "health": 111
+  },
+  "S6": {
+    "attack": 540.43,
+    "defense": 540.43,
+    "lethality": 133.5,
+    "health": 133.5
+  },
+  "S7": {
+    "attack": 650.52,
+    "defense": 650.52,
+    "lethality": 160.5,
+    "health": 160.5
+  }
+}

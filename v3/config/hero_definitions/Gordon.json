@@ -1,0 +1,179 @@
+{
+  "name": "Gordon",
+  "hero_generation": "S7",
+  "skills": {
+    "VenomInfusion": {
+      "description": "Every 2 attacks, Lancers deal X% extra damage and apply poison to the target for 1 turn. Poisoned enemies deal Y% less damage.",
+      "trigger": {
+        "type": "attack",
+        "every": 2,
+        "units": {
+          "by": [
+            "lancer"
+          ]
+        }
+      },
+      "effects": {
+        "VenomInfusion/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            20,
+            40,
+            60,
+            80,
+            100
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
+        },
+        "VenomInfusion/2": {
+          "type": "damage_down",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "all",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          }
+        }
+      }
+    },
+    "ChemicalTerror": {
+      "description": "Gordon's envenomed weapons terrorizes the field, increasing Lancers' Damage Dealt by X% and reducing Damage Dealt by enemy troops by Y% for 1 turn every 3 turns.",
+      "trigger": {
+        "type": "turn",
+        "every": 3
+      },
+      "effects": {
+        "ChemicalTerror/1": {
+          "type": "lethality_up",
+          "value": [
+            30,
+            60,
+            90,
+            120,
+            150
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        },
+        "ChemicalTerror/2": {
+          "type": "damage_down",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": "trigger"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 1
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "ToxicRelease": {
+      "description": "Gordon generates a defensive bio-toxic fog, increasing Damage Taken by enemy Infantry by X% while reducing Damage Dealt by enemy Marksmen by Y% for 2 turns every 4 turns.",
+      "trigger": {
+        "type": "turn",
+        "every": 4
+      },
+      "effects": {
+        "ToxicRelease/1": {
+          "type": "defense_down",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": [
+              "infantry"
+            ]
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2
+          },
+          "same_effect_stacking": "max"
+        },
+        "ToxicRelease/2": {
+          "type": "damage_down",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "units": {
+            "side": "enemy",
+            "applies_to": [
+              "marksman"
+            ]
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "BioAssault": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "BioAssault/1": {
+          "type": "stat_bonus",
+          "stat": "lethality",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

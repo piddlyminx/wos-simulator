@@ -1,0 +1,48 @@
+{
+  "name": "Jessie",
+  "hero_generation": "SR",
+  "skills": {
+    "StandOfArms": {
+      "description": "Increasing damage dealt by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "StandOfArms/1": {
+          "type": "lethality_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "Bulwarks": {
+      "description": "Reducing damage taken by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "Bulwarks/1": {
+          "type": "defense_up",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    }
+  }
+}

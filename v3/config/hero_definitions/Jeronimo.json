@@ -1,0 +1,97 @@
+{
+  "name": "Jeronimo",
+  "hero_generation": "S1_jeronimo",
+  "skills": {
+    "BattleManifesto": {
+      "description": "Increasing damage dealt by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "BattleManifesto/1": {
+          "type": "lethality_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "Swordmentor": {
+      "description": "Increasing Attack by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "Swordmentor/1": {
+          "type": "attack_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "EXpertSwordsmanship": {
+      "description": "Increasing Damage Dealt by X% for all troops for 2 turns every 4 turns",
+      "trigger": {
+        "type": "turn",
+        "every": 4
+      },
+      "effects": {
+        "EXpertSwordsmanship/1": {
+          "type": "lethality_up",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "any"
+          },
+          "duration": {
+            "type": "turn",
+            "value": 2
+          }
+        }
+      }
+    },
+    "BattleStance": {
+      "description": "Widget bonus: Increase Attack by X% for all troops when attacking",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "rally"
+      },
+      "effects": {
+        "BattleStance/1": {
+          "type": "stat_bonus",
+          "stat": "attack",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}

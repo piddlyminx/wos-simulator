@@ -1,0 +1,34 @@
+{
+  "name": "Jasser",
+  "hero_generation": "SR",
+  "skills": {
+    "TacticalGenius": {
+      "description": "Increasing damage dealt by X% for all troops",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "TacticalGenius/1": {
+          "type": "lethality_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "NonCombatPlaceholder": {
+      "description": "Placeholder skill to satisfy simulator config for non-combat hero data",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {}
+    }
+  }
+}

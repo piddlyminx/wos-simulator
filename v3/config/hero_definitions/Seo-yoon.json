@@ -1,0 +1,31 @@
+{
+  "name": "Seo-yoon",
+  "hero_generation": "SR",
+  "skills": {
+    "RallyingBeat": {
+      "description": "Increasing all Troops Attack by X%",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "RallyingBeat/1": {
+          "type": "attack_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ]
+        }
+      }
+    },
+    "NonCombatPlaceholder": {
+      "description": "Placeholder skill to satisfy simulator config for non-combat hero data",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {}
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "name": "Edith",
+  "hero_generation": "S7",
+  "skills": {
+    "StrategicBalance": {
+      "description": "Mr. Tin's colossal presence automatically shields friendly ranged units, reducing damage taken by X% for Marksmen, and suppresses the enemy, increasing damage dealt by Y% for Lancers.",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "StrategicBalance/1": {
+          "type": "defense_up",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ]
+          }
+        },
+        "StrategicBalance/2": {
+          "type": "lethality_up",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ],
+            "applies_vs": "any"
+          }
+        }
+      }
+    },
+    "Ironclad": {
+      "description": "Mr. Tin's metallic body functions as a fortified wall on the field, reducing damage taken by X% for Infantry.",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "Ironclad/1": {
+          "type": "defense_up",
+          "value": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "units": {
+            "applies_to": [
+              "infantry"
+            ]
+          }
+        }
+      }
+    },
+    "SteelSentinel": {
+      "description": "Edith's mobile defense system is reliable, increasing Health by X% for all troops.",
+      "trigger": {
+        "type": "battle_start"
+      },
+      "effects": {
+        "SteelSentinel/1": {
+          "type": "health_up",
+          "value": [
+            5,
+            10,
+            15,
+            20,
+            25
+          ],
+          "units": {
+            "applies_to": "trigger"
+          }
+        }
+      }
+    },
+    "Fortworks": {
+      "description": "Widget bonus: Increase Health by X% for all troops when defending",
+      "trigger": {
+        "type": "battle_start",
+        "engagement_type": "garrison"
+      },
+      "effects": {
+        "Fortworks/1": {
+          "type": "stat_bonus",
+          "stat": "health",
+          "value": [
+            5,
+            7.5,
+            10,
+            12.5,
+            15
+          ]
+        }
+      }
+    }
+  }
+}
