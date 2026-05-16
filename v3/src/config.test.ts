@@ -1,0 +1,43 @@
+import assert from "node:assert/strict";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { test } from "node:test";
+import { tmpdir } from "node:os";
+
+import { loadSimulatorConfig } from "./config.js";
+
+test("loadSimulatorConfig loads native v3 catalogues and reports effect inventory", () => {
+  const config = loadSimulatorConfig();
+
+  assert.ok(config.troopStats.infantry_t6);
+  assert.ok(config.heroGenerationStats.S2);
+  assert.ok(config.heroDefinitions.Alonso);
+  assert.equal(config.heroDefinitions.Alonso.hero_generation, "S2");
+  assert.ok(config.troopSkills.skills.MasterBrawler);
+  assert.equal(config.diagnostics.legacyFields.length, 0);
+  assert.ok(config.diagnostics.effectTypes.damage_up > 0);
+  assert.ok(config.diagnostics.effectTypes.extra_skill_attack > 0);
+});
+
+test("loadSimulatorConfig rejects legacy fields in v3 config", () => {
+  const root = join(tmpdir(), `wos-v3-config-${Date.now()}`);
+  mkdirSync(join(root, "hero_definitions"), { recursive: true });
+  writeFileSync(
+    join(root, "troop_stats.json"),
+    JSON.stringify({
+      infantry_t1: {
+        id: "infantry_t1",
+        type: "infantry",
+        tier: 1,
+        fc: 0,
+        legacy: true,
+        stats: { Attack: 1, Defense: 1, Lethality: 1, Health: 1 }
+      }
+    })
+  );
+  writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));
+  writeFileSync(join(root, "troop_skills.json"), JSON.stringify({ name: "Troop Skills", skills: {} }));
+  writeFileSync(join(root, "hero_definitions", "Example.json"), JSON.stringify({ name: "Example", hero_generation: "S1", skills: {} }));
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /legacy field/i);
+});

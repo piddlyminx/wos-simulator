@@ -1,0 +1,16 @@
+{
+  "name": "wos-simulator-v3",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npx --yes tsx --test \"src/**/*.test.ts\"",
+    "typecheck": "npx --yes --package typescript --package @types/node tsc --noEmit",
+    "testcases": "npx --yes tsx src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

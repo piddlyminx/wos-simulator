@@ -96,10 +96,18 @@
           25
         ]
       },
-      "effects": {},
-      "unsupported_effects": {
+      "effects": {
         "Fleet/1": {
-          "reason": "unsupported_crit_rate"
+          "type": "crit_damage_up",
+          "value": 100,
+          "units": {
+            "applies_to": "trigger",
+            "applies_vs": "target"
+          },
+          "duration": {
+            "type": "attack",
+            "value": 1
+          }
         }
       }
     },
