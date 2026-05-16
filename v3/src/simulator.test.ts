@@ -34,6 +34,41 @@ test("simulateBattle returns structured result for a no-hero battle", () => {
   assert.ok(result.skillReport.attacker.some((entry) => entry.sourceKind === "troop_skill"));
 });
 
+test("simulateBattle calculates all same-round damage from the round-start troop snapshot", () => {
+  const config = loadSimulatorConfig();
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        name: "A",
+        troops: { infantry_t1: 1 },
+        stats: { inf: { attack: 100000, lethality: 100000 } },
+        heroes: {}
+      },
+      defender: {
+        name: "D",
+        troops: { infantry_t1: 1 },
+        stats: { inf: { attack: 100000, lethality: 100000 } },
+        heroes: {}
+      }
+    },
+    config
+  );
+
+  const normalAttacks = result.attacks.filter((attack) => attack.kind === "normal");
+  assert.equal(normalAttacks.length, 2);
+  assert.deepEqual(
+    normalAttacks.map((attack) => attack.kills),
+    [1, 1]
+  );
+  assert.equal(result.remaining.attacker.infantry, 0);
+  assert.equal(result.remaining.defender.infantry, 0);
+  assert.equal(result.trace?.rounds[0]?.roundStartTroops.attacker.infantry, 1);
+  assert.equal(result.trace?.rounds[0]?.roundStartTroops.defender.infantry, 1);
+  assert.equal(normalAttacks[1]?.trace?.roundStartTroops.defender.infantry, 1);
+});
+
 test("simulateBattle reports resolved heroes, troop skills, activations, controls, and extra skill jobs", () => {
   const config = loadSimulatorConfig();
   const result = simulateBattle(

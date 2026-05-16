@@ -10,6 +10,10 @@ const job: DamageJob = {
   round: 1,
   kind: "normal",
   sourceIntentId: "intent-1",
+  roundStartTroops: {
+    attacker: { infantry: 1000, lancer: 0, marksman: 0 },
+    defender: { infantry: 0, lancer: 1000, marksman: 0 }
+  },
   attackerSide: "attacker",
   attackerUnit: "infantry",
   defenderSide: "defender",
