@@ -47,8 +47,8 @@ export function calculateDamageJob(
 ): AttackOutcome {
   const attacker = fighters[job.attackerSide];
   const defender = fighters[job.defenderSide];
-  const attackerTroops = attacker.troops[job.attackerUnit] ?? 0;
-  const defenderTroops = defender.troops[job.defenderUnit] ?? 0;
+  const attackerTroops = job.roundStartTroops[job.attackerSide][job.attackerUnit] ?? 0;
+  const defenderTroops = job.roundStartTroops[job.defenderSide][job.defenderUnit] ?? 0;
   const minInitialArmy = Math.max(1, Math.min(totalTroops(attacker.initialTroops), totalTroops(defender.initialTroops)));
   const armyTerm = Math.ceil(Math.sqrt(Math.max(0, attackerTroops)) * Math.sqrt(minInitialArmy));
   const attackerStats = attacker.troopDetails[job.attackerUnit]?.stats ?? fallbackStats();
@@ -91,7 +91,10 @@ export function calculateDamageJob(
   const kills = Math.min(defenderTroops, rawDamage > 0 ? Math.max(1, Math.floor(rawDamage)) : 0);
   const trace = options.trace
     ? {
-        roundStartTroops: { attacker: { ...fighters.attacker.troops }, defender: { ...fighters.defender.troops } },
+        roundStartTroops: {
+          attacker: { ...job.roundStartTroops.attacker },
+          defender: { ...job.roundStartTroops.defender }
+        },
         armyTerm,
         buckets,
         appliedEffects,

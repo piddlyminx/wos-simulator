@@ -191,6 +191,7 @@ export interface DamageJob {
   round: number;
   kind: DamageKind;
   sourceIntentId: string;
+  roundStartTroops: Record<SideId, Record<UnitType, number>>;
   attackerSide: SideId;
   attackerUnit: UnitType;
   defenderSide: SideId;
@@ -283,5 +284,5 @@ export interface BattleResult {
 
 export interface BattleTrace {
   resolved: BattleResult["resolved"];
-  rounds: Array<{ round: number; intents: AttackIntent[]; jobs: DamageJob[] }>;
+  rounds: Array<{ round: number; roundStartTroops: Record<SideId, Record<UnitType, number>>; intents: AttackIntent[]; jobs: DamageJob[] }>;
 }
