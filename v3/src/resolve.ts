@@ -119,7 +119,8 @@ function resolveHeroes(
   const heroes: ResolvedHero[] = [];
   const heroLevels = mergedHeroes(input);
   for (const heroName of Object.keys(heroLevels)) {
-    const definition = config.heroDefinitions[heroName];
+    const resolvedHeroName = resolveHeroDefinitionKey(heroName, config);
+    const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
     if (!definition) {
       diagnostics.push(`Missing hero definition for ${heroName}`);
       heroes.push({ name: heroName, generationStats: zeroStats(), skillIds: [], missing: true });
@@ -143,14 +144,15 @@ function resolveHeroes(
 function resolveHeroSkills(input: FighterInput, side: SideId, config: SimulatorConfig, diagnostics: string[]): ResolvedSkill[] {
   const skills: ResolvedSkill[] = [];
   for (const [heroName, levelMap] of Object.entries(mergedHeroes(input))) {
-    const definition = config.heroDefinitions[heroName];
+    const resolvedHeroName = resolveHeroDefinitionKey(heroName, config);
+    const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
     if (!definition) continue;
     let index = 0;
     for (const [skillId, rawSkill] of Object.entries(definition.skills ?? {})) {
       index += 1;
       const level = Number(levelMap[`skill_${index}`] ?? levelMap[skillId] ?? 0);
       if (level <= 0) continue;
-      skills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", heroName));
+      skills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", definition.name ?? resolvedHeroName));
     }
   }
   void diagnostics;
@@ -229,4 +231,24 @@ function levelSelectPreservingOrder(value: unknown, level: number): unknown {
 
 function mergedHeroes(input: FighterInput): Record<string, Record<string, number>> {
   return { ...(input.heroes ?? {}), ...(input.joiner_heroes ?? {}) };
+}
+
+function resolveHeroDefinitionKey(heroName: string, config: SimulatorConfig): string | undefined {
+  if (config.heroDefinitions[heroName]) return heroName;
+  const normalized = normalizeHeroName(heroName);
+  const manualAliases: Record<string, string> = {
+    lingxue: "Ling",
+    lumakbokan: "Lumak",
+    wuming: "WuMing"
+  };
+  const manual = manualAliases[normalized];
+  if (manual && config.heroDefinitions[manual]) return manual;
+  for (const [key, definition] of Object.entries(config.heroDefinitions)) {
+    if (normalizeHeroName(key) === normalized || normalizeHeroName(definition.name ?? "") === normalized) return key;
+  }
+  return undefined;
+}
+
+function normalizeHeroName(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }

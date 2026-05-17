@@ -2,15 +2,24 @@ import type { ActiveEffect, AttackIntent, EffectDuration, EffectIntentDefinition
 import { UNIT_TYPES } from "./types.js";
 import { normalizeUnitType } from "./normalize.js";
 
+export type Rng = () => number;
+
 export function oppositeSide(side: SideId): SideId {
   return side === "attacker" ? "defender" : "attacker";
 }
 
-export function skillMatchesTrigger(skill: ResolvedSkill, triggerType: "battle_start" | "round_start" | "attack_declared", round: number, intent?: AttackIntent): boolean {
+export function skillMatchesTrigger(
+  skill: ResolvedSkill,
+  triggerType: "battle_start" | "round_start" | "attack_declared",
+  round: number,
+  intent?: AttackIntent,
+  engagementType?: string
+): boolean {
   const trigger = skill.trigger;
   if (triggerType === "battle_start" && trigger.type !== "battle_start") return false;
   if (triggerType === "round_start" && trigger.type !== "turn") return false;
   if (triggerType === "attack_declared" && trigger.type !== "attack") return false;
+  if (trigger.engagement_type && normalizeEngagementType(trigger.engagement_type) !== engagementType) return false;
   if (trigger.every && triggerType === "round_start" && !crossedFrequency(round - 1, round, trigger.every)) return false;
   if (trigger.every && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every)) return false;
   if (!intent) return true;
@@ -23,11 +32,22 @@ export function skillMatchesTrigger(skill: ResolvedSkill, triggerType: "battle_s
   return skill.side === intent.attackerSide;
 }
 
-export function chancePasses(skill: ResolvedSkill): boolean {
+export function chancePasses(skill: ResolvedSkill, rng: Rng): boolean {
   const probability = skill.trigger.probability;
   if (probability === undefined) return true;
   const value = Array.isArray(probability) ? Number(probability[Math.max(0, Math.min(probability.length - 1, skill.level - 1))]) : Number(probability);
-  return value > 0;
+  if (!Number.isFinite(value) || value <= 0) return false;
+  if (value >= 100) return true;
+  const threshold = value / 100;
+  return rng() < threshold;
+}
+
+export function createSeededRng(seed: string | number = "v3-default"): Rng {
+  let state = hashSeed(String(seed));
+  return () => {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+    return state / 0x100000000;
+  };
 }
 
 export function crossedFrequency(previous: number, current: number, frequency: number): boolean {
@@ -82,6 +102,12 @@ export function normalizeSelector(value: unknown): UnitType[] | "any" | "target"
   return normalizeUnitList(value);
 }
 
+export function normalizeEngagementType(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const normalized = value.trim().toLowerCase();
+  return normalized ? normalized : undefined;
+}
+
 function resolveAppliesTo(value: unknown, affectedSide: SideId, attackIntent?: AttackIntent): UnitType[] {
   if (value === "trigger" && attackIntent) return [attackIntent.attackerUnit];
   if (value === "target" && attackIntent) return [attackIntent.defenderUnit];
@@ -92,7 +118,10 @@ function resolveAppliesTo(value: unknown, affectedSide: SideId, attackIntent?: A
 }
 
 function resolveAppliesVs(value: unknown, attackIntent?: AttackIntent): UnitType[] | "any" | "target" | "all" {
-  if (value === "target") return attackIntent ? [attackIntent.defenderUnit] : "target";
+  if (value === "target") {
+    void attackIntent;
+    return "target";
+  }
   const selector = normalizeSelector(value);
   return selector ?? "any";
 }
@@ -110,4 +139,13 @@ function normalizeDuration(duration: EffectIntentDefinition["duration"]): Effect
     return { type: rawType, value: Number(duration.value ?? (rawType === "battle" ? 0 : 1)), delay: Number(duration.delay ?? 0) };
   }
   return { type: "battle", value: 0 };
+}
+
+function hashSeed(seed: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < seed.length; index += 1) {
+    hash ^= seed.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
 }
