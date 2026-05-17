@@ -9,12 +9,18 @@ export interface DashboardComparison {
 
 export interface DashboardCaseComparison {
   runId?: string;
+  idx?: number;
   muSim?: number | null;
   muGame?: number | null;
   biasPct?: number | null;
   passes?: boolean;
   nSim?: number;
   nGame?: number;
+}
+
+export interface DashboardCaseLookupOptions {
+  runId?: string;
+  index?: number;
 }
 
 export function readDashboardComparison(path = "test_results/dashboard.sqlite"): DashboardComparison {
@@ -37,19 +43,28 @@ export function readDashboardComparison(path = "test_results/dashboard.sqlite"):
   };
 }
 
-export function readDashboardCase(path: string | undefined, file: string, testcaseId: string): DashboardCaseComparison | undefined {
+export function readDashboardCase(
+  path: string | undefined,
+  file: string,
+  testcaseId: string,
+  options: DashboardCaseLookupOptions = {}
+): DashboardCaseComparison | undefined {
   const sqlitePath = resolveDashboardPath(path ?? "test_results/dashboard.sqlite");
   if (!fileExists(sqlitePath)) return undefined;
-  const escapedFile = sqlString(file);
+  const runId = options.runId ?? readDashboardComparison(path).latestRun?.id;
+  if (!runId) return undefined;
+  const escapedFiles = testcaseFileLookupVariants(file).map(sqlString).join(", ");
   const escapedCase = sqlString(testcaseId);
+  const indexClause = options.index === undefined ? "" : ` and idx = ${sqlInteger(options.index)}`;
   const rows = sqliteQuery(
     sqlitePath,
-    `select run_id, mu_sim, mu_game, bias_pct, passes, n_sim, n_game from run_testcases where file = ${escapedFile} and testcase_id = ${escapedCase} order by id desc limit 1;`
+    `select run_id, idx, mu_sim, mu_game, bias_pct, passes, n_sim, n_game from run_testcases where run_id = ${sqlString(runId)} and file in (${escapedFiles}) and testcase_id = ${escapedCase}${indexClause} order by idx asc limit 1;`
   );
   if (rows.length === 0) return undefined;
-  const [runId, muSim, muGame, biasPct, passes, nSim, nGame] = rows[0].split("\t");
+  const [rowRunId, idx, muSim, muGame, biasPct, passes, nSim, nGame] = rows[0].split("\t");
   return {
-    runId,
+    runId: rowRunId,
+    idx: Number(idx) || 0,
     muSim: nullableNumber(muSim),
     muGame: nullableNumber(muGame),
     biasPct: nullableNumber(biasPct),
@@ -57,6 +72,20 @@ export function readDashboardCase(path: string | undefined, file: string, testca
     nSim: Number(nSim) || 0,
     nGame: Number(nGame) || 0
   };
+}
+
+export function testcaseFileLookupVariants(file: string): string[] {
+  const normalized = file.replaceAll("\\", "/");
+  const variants = new Set<string>([normalized]);
+  const v3Index = normalized.indexOf("v3/testcases/");
+  if (v3Index >= 0) variants.add(`testcases/${normalized.slice(v3Index + "v3/testcases/".length)}`);
+  const testcaseIndex = normalized.indexOf("testcases/");
+  if (testcaseIndex >= 0) {
+    const sourcePath = normalized.slice(testcaseIndex);
+    variants.add(sourcePath);
+    variants.add(`v3/${sourcePath}`);
+  }
+  return [...variants];
 }
 
 function resolveDashboardPath(path: string): string {
@@ -77,6 +106,10 @@ function sqliteQuery(path: string, query: string): string[] {
 
 function sqlString(value: string): string {
   return `'${value.replaceAll("'", "''")}'`;
+}
+
+function sqlInteger(value: number): number {
+  return Math.max(0, Math.trunc(value));
 }
 
 function nullableNumber(value: string): number | null {

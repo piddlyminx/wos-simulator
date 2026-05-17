@@ -62,9 +62,8 @@ export function discoverTestcaseFiles(options: Pick<TestcaseRunOptions, "testcas
   const files: string[] = [];
   walk(root, files);
   return files
-    .filter((file) => file.endsWith(".json") || file.includes(".json."))
+    .filter((file) => isDiscoverableTestcaseFile(file, options.includeDisabled))
     .filter((file) => options.includeDisabled || (!file.endsWith(".disabled") && !file.endsWith(".stale_troops")))
-    .filter((file) => file.endsWith(".json"))
     .filter((file) => !options.matching || file.includes(options.matching))
     .sort();
 }
@@ -102,7 +101,10 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
         report.result = result;
         aggregate.executedCases += 1;
         report.gameResult = (entry as { game_report_result?: unknown }).game_report_result;
-        report.dashboard = readDashboardCase(options.dashboardSqlitePath, relative(process.cwd(), file), testcaseId);
+        report.dashboard = readDashboardCase(options.dashboardSqlitePath, relative(process.cwd(), file), testcaseId, {
+          runId: comparison.latestRun?.id,
+          index
+        });
         report.visibility = visibilityFromResult(result);
         if (result) diagnostics.push(...result.resolved.attacker.diagnostics, ...result.resolved.defender.diagnostics);
       } catch (error) {
@@ -129,6 +131,21 @@ export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | nu
     seed: options.seed,
     trace: options.trace
   };
+}
+
+export function battleScoreDelta(value: unknown): number | undefined {
+  if (isBattleResult(value)) return totalSide(value.remaining.attacker) - totalSide(value.remaining.defender);
+  const gameResult = Array.isArray(value) ? value[0] : value;
+  if (!gameResult || typeof gameResult !== "object") return undefined;
+  const attacker = Number((gameResult as { attacker?: unknown }).attacker);
+  const defender = Number((gameResult as { defender?: unknown }).defender);
+  if (!Number.isFinite(attacker) || !Number.isFinite(defender)) return undefined;
+  return attacker - defender;
+}
+
+function isDiscoverableTestcaseFile(file: string, includeDisabled?: boolean): boolean {
+  if (file.endsWith(".json")) return true;
+  return !!includeDisabled && (file.endsWith(".json.disabled") || file.endsWith(".json.stale_troops"));
 }
 
 function walk(path: string, files: string[]): void {
@@ -190,4 +207,12 @@ function visibilityFromResult(result: BattleResult | undefined): TestcaseCaseRep
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function isBattleResult(value: unknown): value is BattleResult {
+  return !!value && typeof value === "object" && "remaining" in value;
+}
+
+function totalSide(troops: Record<UnitType, number>): number {
+  return (troops.infantry ?? 0) + (troops.lancer ?? 0) + (troops.marksman ?? 0);
 }

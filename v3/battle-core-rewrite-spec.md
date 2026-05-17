@@ -18,9 +18,11 @@ mechanics propose effect intents;
 the battle core owns ordering, validation, bucketing, and damage math.
 ```
 
-## Required Reading
+## Optional Background Reading
 
-Before editing implementation code from this spec, read:
+This spec is intended to be sufficient on its own. The files below are useful
+background if they are available, but an implementation must not depend on
+conversation history or on unstated behavior from those documents:
 
 - `skill/KNOWLEDGE_INDEX.md`
 - `skill/knowledge/spec-design.md`
@@ -29,10 +31,9 @@ Before editing implementation code from this spec, read:
 - `skill/knowledge/effect-sensitivity-tracing.md`
 - `skill/knowledge/testcase-dashboard-calibration.md`
 
-This spec is architectural guidance for a future implementation task. It does
-not authorize simulator mechanics changes by itself. Any implementation issue
-must name the exact files in scope, expected behavior change, and smallest
-validation command set before code is changed.
+Do not inspect or copy previous simulator implementations unless the task
+explicitly allows it. In particular, a clean v3 implementation should be
+possible from this file plus the v3 config/testcase/dashboard data.
 
 ## Goals
 
@@ -154,6 +155,20 @@ interface ActiveEffect {
 
 The previous name `Benefit` is ambiguous because many effects are debuffs or
 damage controls. Prefer `ActiveEffect` or `EffectActivation`.
+
+Applicability rules:
+
+- `affectedSide` determines whether the effect modifies the attacker side or
+  defender side for a given damage job
+- `appliesTo` is evaluated against the affected side's unit in that job
+- `appliesVs: "any"` and `"all"` match any opposing unit
+- `appliesVs: UnitType[]` matches the opposing unit against that list
+- `appliesVs: "target"` preserves a target lock captured at activation time;
+  it must not be eagerly converted into a plain unit list if doing so loses the
+  distinction between "the target of this activation" and "any opposing unit of
+  this type"
+- for defender-side effects, target matching must be checked against the
+  defender unit being damaged, not accidentally against the attacker unit
 
 ### Trigger Responder
 
@@ -286,6 +301,17 @@ The config loader must validate:
   `effect_type`
 - `troop_skills.json` uses the same skill/effect schema as hero definitions
 
+Hero lookup must support display-name aliases as well as file keys. The loader
+should build a normalized alias index using:
+
+- the hero definition object key or filename stem, for example `WuMing`
+- the hero definition `name`, for example `Wu Ming`
+- normalized forms that ignore spaces, underscores, hyphens, case, and simple
+  punctuation, for example `ling_xue`, `Ling Xue`, and `LingXue`
+
+If two heroes normalize to the same alias, loading should fail with a clear
+duplicate-alias error rather than silently choosing one.
+
 ### Simulation API
 
 ```ts
@@ -345,6 +371,49 @@ function runTestcases(options: TestcaseRunOptions, config: SimulatorConfig): Tes
 The runner should adapt the existing testcase JSON shape into `BattleInput`.
 It must tolerate inaccurate v3 mechanics during early development; the first
 acceptance target is successful execution and useful diagnostics, not parity.
+
+Testcase adaptation requirements:
+
+- preserve the testcase entry index as `idx` for diagnostics and dashboard
+  comparison
+- pass `attacker`, `defender`, `seed`, `trace`, and `maxRounds` into
+  `BattleInput`
+- if a testcase entry contains `mechanics`, `engagement_type`, or
+  `engagementType`, pass that through to `BattleInput.mechanics`
+- preserve `game_report_result` or equivalent report data in the testcase case
+  report so v3 output can be compared beside the observed game result
+- keep adaptation errors per case; one bad case should not prevent later files
+  from being parsed and reported
+
+Testcase discovery requirements:
+
+- default root is `v3/testcases`
+- follow the `v3/testcases` symlink if it is a symlink
+- by default include only files ending exactly in `.json`
+- by default exclude files ending in `.json.disabled` and
+  `.json.stale_troops`
+- when `includeDisabled: true`, include `.json`, `.json.disabled`, and
+  `.json.stale_troops`
+- `matching` filters by substring against the full resolved file path
+- report absolute file paths in `selectedFiles`, and include a stable relative
+  display path in each case report if useful
+
+Dashboard comparison requirements:
+
+- default dashboard path is `test_results/dashboard.sqlite` relative to the
+  repository root
+- if the dashboard file is absent, report `dashboardAvailable: false` and still
+  run all selected cases
+- read the latest completed run once, then use that run id for all case lookup
+- case lookup must match by latest `run_id`, testcase file path, testcase id,
+  and testcase entry index/`idx`
+- testcase path matching must handle both symlinked v3 paths and source paths,
+  for example `v3/testcases/emulator_verified/simple_001_nc.json` and
+  `testcases/emulator_verified/simple_001_nc.json`
+- duplicate `(file, test_id)` groups are expected; `idx` is required to avoid
+  assigning the same dashboard row to multiple entries
+- dashboard rows are read-only in the initial implementation; do not insert v3
+  rows into the database
 
 ## Acceptance Criteria
 
@@ -407,8 +476,12 @@ The runner should read `test_results/dashboard.sqlite` when present.
 Minimum comparison support:
 
 - read existing `runs`, `run_testcase_files`, and `run_testcases`
-- identify prior dashboard rows for each testcase file and testcase id where
-  possible
+- identify the latest run id once and constrain all testcase-row lookup to that
+  run
+- identify prior dashboard rows for each testcase file, testcase id, and
+  testcase entry index/`idx` where possible
+- support both symlinked v3 testcase paths and source testcase paths when
+  matching dashboard file records
 - report v3 result beside:
   - game result from testcase JSON
   - latest dashboard summary metrics for the same file/case, if present
@@ -416,6 +489,10 @@ Minimum comparison support:
 
 The initial comparison output can be JSON. A later task may add dashboard DB
 write support.
+
+At least one regression test must cover a multi-entry testcase file where the
+same `test_id` appears more than once. The two entries must resolve to different
+dashboard rows by `idx`.
 
 ### F. CLI
 
@@ -430,6 +507,10 @@ The command should print a structured JSON report and exit:
 - `0` when all selected cases execute, even if numeric parity is poor
 - non-zero when files cannot be parsed, required config is missing, or the
   simulator throws unexpectedly
+
+The JSON report should be machine-readable when run with `npm --silent`. If the
+CLI prints human banners or summaries, they must be disabled in a quiet/json
+mode so shell tools such as `jq` can consume the report.
 
 ## Round Lifecycle
 
@@ -499,6 +580,19 @@ Extra skill attack does **not** recursively fire attack triggers. It may
 increment cumulative attack counters, but it does not itself become a new
 `attack_declared` trigger source.
 
+Attack trigger matching must also honor trigger filters:
+
+- `unit` / attacker unit filters
+- defender or target unit filters
+- counter-frequency filters, using crossing detection rather than exact modulo
+- `probability`, using percentage semantics and the seeded RNG
+- `engagement_type`, using `BattleInput.mechanics.engagement_type` or
+  `BattleInput.mechanics.engagementType`
+
+A trigger with `engagement_type` is inactive unless the input explicitly
+provides the same engagement type. Missing input engagement type means
+rally/garrison-only triggers do not activate.
+
 ### 5. Build Damage Jobs
 
 Each non-cancelled normal attack intent creates one normal damage job.
@@ -507,6 +601,21 @@ Each extra skill attack proposal creates one or more skill damage jobs. Extra
 skill attacks should be represented as explicit jobs for the exact attacker unit
 and defender unit it affects. Do not use a broad "iterate all pairings and apply
 all extra skill attacks" pass.
+
+Extra skill target construction:
+
+- `applies_vs: "target"` means the skill attack targets the defender unit from
+  the source normal attack intent
+- `applies_vs: "all"` or `"any"` means create jobs against every living defender
+  unit in the round-start snapshot, unless the effect has a more specific
+  target rule
+- `applies_vs: UnitType[]` means create jobs only against those defender unit
+  types, and only when those defender units are alive in the round-start
+  snapshot
+- array-valued `applies_vs` must not be collapsed to the source normal attack's
+  current target
+- `applies_to` still scopes the attacking/source unit side of the effect
+- no skill job should be created for a dead attacker unit or dead defender unit
 
 ```ts
 interface DamageJob {
@@ -615,6 +724,33 @@ Known non-product details:
 - Dodge/control effects may cancel a damage job.
 - Randomness may affect whether effects activate, but not the deterministic
   shape of the damage equation once jobs and effects are known.
+
+## Probability
+
+Trigger `probability` values are treated as percentages. For example, `20`
+means a 20% activation chance, `1` means 1%, `0.5` means 0.5%, `100` means
+always, and `0` means never.
+
+The simulator uses a deterministic seeded pseudo-random generator for trigger
+chance rolls. `BattleInput.seed` selects the sequence; when omitted, v3 uses the
+stable default seed `"v3-default"`. Re-running the same battle with the same
+seed and config must produce the same skill activations and result.
+
+Do not reinterpret values less than or equal to `1` as fractions. `0.5` is half
+of one percent, not 50%.
+
+## Engagement Type Gating
+
+Trigger definitions may set `engagement_type`, currently used by rally-only and
+garrison-only widget skills. A gated trigger is inactive unless the battle input
+explicitly provides the same engagement type through `BattleInput.mechanics`
+(`engagement_type` or `engagementType`). When the input does not provide an
+engagement type, rally/garrison gated triggers do not activate by default.
+
+Testcase adaptation should pass testcase-level mechanics through to
+`BattleInput.mechanics` when present. If current testcase data does not contain
+engagement metadata, that absence should be visible in traces/reports for
+gated skills.
 
 ## Damage Buckets
 
@@ -924,6 +1060,13 @@ effects; extra skill attack source effects consume according to their own
 declared mode.
 ```
 
+The current v3 pass implements attack-duration consumption for applicable
+active effects by active-effect id, not by catalogue effect id. Applicable
+one-attack effects are consumed when their normal damage job is evaluated, and
+they are also consumed when that normal attack intent is cancelled by dodge or
+no-attack control. This prevents same-named effects from different activations
+being expired together.
+
 If parity requires legacy-compatible behavior, implement it behind a named
 compatibility mode rather than making it the default architecture.
 
@@ -987,41 +1130,104 @@ calculation.
 
 ## Suggested Implementation Order
 
+Use test-first development where practical. Each item below should have focused
+tests before or alongside implementation.
+
 1. Define core types: triggers, effect intents, active effects, attack intents,
-   damage jobs, outcomes, buckets.
-2. Implement `EffectClassifier` with tests for effect intent/source -> canonical
-   interpretation and bucket routing.
-3. Implement `DamageCalculator` with no skills, using explicit damage jobs and
+   damage jobs, outcomes, buckets, testcase reports, and dashboard comparison
+   records.
+2. Implement config loading and validation:
+   - native v3 JSON only
+   - no legacy fields
+   - hero alias index
+   - troop skill requirement resolution
+3. Implement testcase discovery/adaptation:
+   - symlink root
+   - disabled/stale inclusion rules
+   - testcase `idx`
+   - mechanics passthrough
+4. Implement dashboard read-only comparison:
+   - latest run id
+   - file path variants
+   - testcase id plus `idx`
+   - duplicate-id regression fixture
+5. Implement `EffectClassifier` with tests for effect intent/source -> canonical
+   interpretation, bucket routing, pass-specific buckets, and target
+   applicability.
+6. Implement `DamageCalculator` with no skills, using explicit damage jobs and
    base/chief/stat bucket inputs.
-4. Implement `ActiveEffectRegistry` applicability and duration tests.
-5. Implement `BattleOrderResolver`.
-6. Implement simple battle orchestration for no-skill battles.
-7. Add deterministic battle-start and round-start skill activations.
-8. Add attack-triggered effects and crossing-based frequency checks.
-9. Add controls: dodge and no-attack.
-10. Add extra skill attack as explicit skill damage jobs.
-11. Add trace/report output.
-12. Add compatibility fixtures and parity tests.
+7. Implement `ActiveEffectRegistry` applicability, target locks, seeded
+   probability, engagement gating, and duration tests.
+8. Implement `BattleOrderResolver`.
+9. Implement simple battle orchestration for no-skill battles.
+10. Add deterministic battle-start and round-start skill activations.
+11. Add attack-triggered effects and crossing-based frequency checks.
+12. Add controls: dodge and no-attack, including cancelled attack outcomes and
+    duration consumption.
+13. Add extra skill attack as explicit skill damage jobs, including array-valued
+    `applies_vs` targeting.
+14. Add trace/report output.
+15. Add compatibility fixtures and parity tests.
 
 ## Validation Expectations
 
 Implementation tasks derived from this spec should use focused validation for
 the affected surface before broad regression runs. At minimum:
 
-- typecheck and unit-test the changed v2 modules
+- typecheck and unit-test the changed v3 modules
 - run no-hero controls when damage equation, targeting, or orchestration changes
 - run relevant hero parity fixtures when skill activation, duration, chance,
   extra attack, or controls change
 - confirm default simulation output stays unchanged unless the task explicitly
   proposes and measures a parity-improving behavior change
 
+Baseline validation commands:
+
+```bash
+npm --prefix v3 test
+npm --prefix v3 run typecheck
+npm --silent --prefix v3 run testcases -- --matching emulator_verified --repeat 1
+```
+
+The testcase command should report:
+
+- all selected files parsed, except intentionally disabled/stale files unless
+  requested
+- all selected cases adapted and executed
+- zero unexpected simulator errors
+- resolved hero names for hero cases
+- resolved troop skill ids
+- nonzero skill/effect activation counts for cases containing active skills
+- dashboard rows for all emulator-verified cases when
+  `test_results/dashboard.sqlite` is present
+
+Required focused regression tests:
+
+- pass-specific damage buckets do not leak between normal and skill jobs
+- attack-duration effects expire by active-effect id after the intended
+  applicable use, including cancelled normal attacks
+- `applies_vs: "target"` preserves target lock semantics
+- array-valued `applies_vs` creates extra skill attack jobs for those defender
+  unit types
+- `engagement_type` gated triggers require explicit matching mechanics
+- probability values are percentages, including `1` and `0.5`
+- duplicate testcase ids in one file match dashboard rows by `idx`
+- no-hero base cases expose game/dashboard fields and v3 result fields side by
+  side
+
 ## Key Invariants
 
 - Pairings are fixed before damage calculation for the round.
 - Damage is committed simultaneously after all round damage jobs are calculated.
 - Extra skill attack does not fire attack triggers.
+- Extra skill attack may increment cumulative attack counters.
 - Damage bucket assignment is centralized.
 - Same-bucket values aggregate before multiplication.
 - Different buckets multiply through the damage equation.
 - `stat_bonus` is not a separate calculation mechanism; it is source evidence
   for effect classification unless proven otherwise by game evidence.
+- Probability values are percentages, not fractions.
+- Gated engagement triggers are inactive unless battle mechanics explicitly
+  match.
+- Dashboard comparison identity is latest run id + testcase file variant +
+  testcase id + testcase `idx`.

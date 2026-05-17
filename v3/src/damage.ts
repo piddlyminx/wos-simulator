@@ -65,11 +65,13 @@ export function calculateDamageJob(
 
   const appliedEffects: DamageEquationTrace["appliedEffects"] = [];
   const rejectedEffects: DamageEquationTrace["rejectedEffects"] = [];
+  const consumedEffectIds = new Set<string>();
   for (const effect of activeEffects) {
     if (!isEffectActive(effect, job.round)) {
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "not_active_this_round" });
       continue;
     }
+    if (effect.duration.type === "attack" && basicEffectApplies(effect, job)) consumedEffectIds.add(effect.id);
     if (effect.intent.requires_effect && !requiredEffectApplies(effect.intent.requires_effect, activeEffects, job.round, job)) {
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: `requires_effect:${effect.intent.requires_effect}` });
       continue;
@@ -81,6 +83,10 @@ export function calculateDamageJob(
     }
     const valuePct = effect.valuePct ?? 0;
     const [side, bucketName] = classification.bucket.split(".") as ["numerator" | "denominator", string];
+    if (!bucketAppliesToJob(bucketName, job.kind)) {
+      rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: `wrong_damage_kind:${job.kind}` });
+      continue;
+    }
     addPercent(buckets[side][bucketName], valuePct, effect.source.effectId ?? effect.id, sourceLabel(effect), classification.bucket);
     appliedEffects.push({ effectId: effect.source.effectId ?? effect.id, bucket: classification.bucket, valuePct, source: sourceLabel(effect) });
   }
@@ -116,7 +122,7 @@ export function calculateDamageJob(
       { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" },
       { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" }
     ],
-    consumedEffectIds: job.sourceEffectId ? [job.sourceEffectId] : [],
+    consumedEffectIds: [...consumedEffectIds, ...(job.sourceEffectId ? [job.sourceEffectId] : [])],
     trace
   };
 }
@@ -161,6 +167,12 @@ function product(values: number[]): number {
 
 function totalTroops(troops: Record<UnitType, number>): number {
   return UNIT_TYPES.reduce((sum, unit) => sum + (troops[unit] ?? 0), 0);
+}
+
+function bucketAppliesToJob(bucketName: string, kind: DamageJob["kind"]): boolean {
+  if (bucketName.startsWith("normal")) return kind === "normal";
+  if (bucketName.startsWith("skill")) return kind === "skill";
+  return true;
 }
 
 function fallbackStats(): StatBlock {

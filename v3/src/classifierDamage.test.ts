@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { classifyEffectForJob } from "./classifier.js";
 import { calculateDamageJob } from "./damage.js";
+import { activateEffect } from "./effects.js";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types.js";
 
 const job: DamageJob = {
@@ -86,3 +87,102 @@ test("damage calculator uses centralized buckets including stat_bonus routing", 
   assert.ok(outcome.kills > 0);
   assert.ok(outcome.kills < 1000);
 });
+
+test("pass-specific buckets only apply to matching damage job kind", () => {
+  const normalEffect = effect("normal_damage_up", "attacker", 100);
+  const skillEffect = effect("skill_damage_up", "attacker", 100);
+  const fighters = simpleFighters();
+  const normalOutcome = calculateDamageJob(job, fighters, [normalEffect, skillEffect], { trace: true });
+  const skillOutcome = calculateDamageJob({ ...job, id: "job-skill", kind: "skill", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
+    trace: true
+  });
+
+  assert.equal(normalOutcome.trace?.buckets.numerator.normalDamageUp.totalPct, 100);
+  assert.equal(normalOutcome.trace?.buckets.numerator.skillDamageUp.totalPct, 0);
+  assert.equal(skillOutcome.trace?.buckets.numerator.normalDamageUp.totalPct, 0);
+  assert.equal(skillOutcome.trace?.buckets.numerator.skillDamageUp.totalPct, 100);
+});
+
+test("attack-duration bucket effects are consumed by the applicable attack job", () => {
+  const oneAttackEffect = {
+    ...effect("attack_up", "attacker", 100),
+    id: "attack-up-active",
+    duration: { type: "attack" as const, value: 1 }
+  };
+
+  const outcome = calculateDamageJob(job, simpleFighters(), [oneAttackEffect], { trace: true });
+
+  assert.ok(outcome.consumedEffectIds.includes("attack-up-active"));
+  assert.equal(outcome.trace?.buckets.numerator.attackUp.totalPct, 100);
+});
+
+test('applies_vs "target" is preserved as a target lock for defender-side effects', () => {
+  const active = activateEffect(
+    {
+      id: "TargetSkill",
+      name: "TargetSkill",
+      sourceKind: "hero_skill",
+      side: "defender",
+      heroName: "Targeter",
+      level: 1,
+      trigger: { type: "attack", units: { side: "enemy" } },
+      effects: []
+    },
+    {
+      id: "targeted-defense",
+      type: "damage_taken_down",
+      value: 50,
+      units: { side: "self", applies_to: "target", applies_vs: "target" }
+    },
+    1,
+    {
+      id: "intent",
+      round: 1,
+      source: "normal",
+      attackerSide: "attacker",
+      attackerUnit: "infantry",
+      defenderSide: "defender",
+      defenderUnit: "lancer",
+      orderIndex: 0,
+      previousAttackCount: 0,
+      projectedAttackCount: 1,
+      previousReceivedAttackCount: 0,
+      projectedReceivedAttackCount: 1
+    }
+  );
+
+  assert.equal(active.appliesVs, "target");
+  assert.equal(active.lockedTarget, "lancer");
+  assert.equal(classifyEffectForJob(active, job)?.bucket, "denominator.incomingDamageDown");
+});
+
+function simpleFighters(): Record<"attacker" | "defender", ResolvedFighter> {
+  const attacker: ResolvedFighter = {
+    side: "attacker",
+    name: "A",
+    troops: { infantry: 1000, lancer: 0, marksman: 0 },
+    initialTroops: { infantry: 1000, lancer: 0, marksman: 0 },
+    troopDetails: {
+      infantry: { id: "infantry_t1", type: "infantry", tier: 1, fc: 0, count: 1000, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }
+    },
+    statBonuses: {
+      infantry: { attack: 0, lethality: 0, defense: 0, health: 0 },
+      lancer: { attack: 0, lethality: 0, defense: 0, health: 0 },
+      marksman: { attack: 0, lethality: 0, defense: 0, health: 0 }
+    },
+    heroes: [],
+    troopSkills: [],
+    diagnostics: []
+  };
+  const defender: ResolvedFighter = {
+    ...attacker,
+    side: "defender",
+    name: "D",
+    troops: { infantry: 0, lancer: 1000, marksman: 0 },
+    initialTroops: { infantry: 0, lancer: 1000, marksman: 0 },
+    troopDetails: {
+      lancer: { id: "lancer_t1", type: "lancer", tier: 1, fc: 0, count: 1000, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }
+    }
+  };
+  return { attacker, defender };
+}
