@@ -29,11 +29,11 @@ conversation history or on unstated behavior from those documents:
 - `skill/knowledge/battle-mechanics.md`
 - `skill/knowledge/skill-divergence-debugging.md`
 - `skill/knowledge/effect-sensitivity-tracing.md`
-- `skill/knowledge/testcase-dashboard-calibration.md`
 
 Do not inspect or copy previous simulator implementations unless the task
 explicitly allows it. In particular, a clean v3 implementation should be
-possible from this file plus the v3 config/testcase/dashboard data.
+possible from this file plus the v3 config, testcase, and calibration-result
+data.
 
 ## Goals
 
@@ -45,7 +45,8 @@ possible from this file plus the v3 config/testcase/dashboard data.
 - Produce detailed outcomes/traces when requested, while leaving room for a fast
   no-trace mode for high-volume simulation.
 - Provide a testcase runner that can execute every testcase under `v3/testcases`
-  and compare summarized output against existing dashboard results.
+  and compare summarized output against `v3/testcase_results/*.json`
+  calibration reports.
 
 ## Non-Goals
 
@@ -350,7 +351,7 @@ The simulator result should expose enough information for acceptance checks:
 ```ts
 interface TestcaseRunOptions {
   testcaseRoot?: string; // default: v3/testcases
-  dashboardSqlitePath?: string; // default: test_results/dashboard.sqlite
+  calibrationReportPath?: string; // default: latest v3/testcase_results/*.json
   matching?: string;
   includeDisabled?: boolean;
   repeat?: number;
@@ -374,7 +375,7 @@ acceptance target is successful execution and useful diagnostics, not parity.
 
 Testcase adaptation requirements:
 
-- preserve the testcase entry index as `idx` for diagnostics and dashboard
+- preserve the testcase entry index as `idx` for diagnostics and calibration
   comparison
 - pass `attacker`, `defender`, `seed`, `trace`, and `maxRounds` into
   `BattleInput`
@@ -398,22 +399,21 @@ Testcase discovery requirements:
 - report absolute file paths in `selectedFiles`, and include a stable relative
   display path in each case report if useful
 
-Dashboard comparison requirements:
+Calibration comparison requirements:
 
-- default dashboard path is `test_results/dashboard.sqlite` relative to the
-  repository root
-- if the dashboard file is absent, report `dashboardAvailable: false` and still
-  run all selected cases
-- read the latest completed run once, then use that run id for all case lookup
-- case lookup must match by latest `run_id`, testcase file path, testcase id,
-  and testcase entry index/`idx`
+- default calibration report is the latest JSON file under
+  `v3/testcase_results`
+- if no calibration report is present, report `calibrationAvailable: false` and
+  still run all selected cases
+- case lookup must match by testcase file path, testcase id, and testcase entry
+  index/`idx`
 - testcase path matching must handle both symlinked v3 paths and source paths,
   for example `v3/testcases/emulator_verified/simple_001_nc.json` and
   `testcases/emulator_verified/simple_001_nc.json`
 - duplicate `(file, test_id)` groups are expected; `idx` is required to avoid
-  assigning the same dashboard row to multiple entries
-- dashboard rows are read-only in the initial implementation; do not insert v3
-  rows into the database
+  assigning the same calibration result to multiple entries
+- calibration reports are read-only evidence; do not write testcase results
+  during the initial implementation
 
 ## Acceptance Criteria
 
@@ -469,30 +469,29 @@ For each case, the report should include:
 This is required even before numeric accuracy is good, because it proves the
 expected heroes, troops, and skills are present and firing.
 
-### E. Dashboard Comparison
+### E. Calibration Comparison
 
-The runner should read `test_results/dashboard.sqlite` when present.
+The runner should read `v3/testcase_results/*.json` when present.
 
 Minimum comparison support:
 
-- read existing `runs`, `run_testcase_files`, and `run_testcases`
-- identify the latest run id once and constrain all testcase-row lookup to that
-  run
-- identify prior dashboard rows for each testcase file, testcase id, and
-  testcase entry index/`idx` where possible
+- identify the latest calibration report by `finished_at` or file mtime
+- identify calibration rows for each testcase file, testcase id, and testcase
+  entry index/`idx` where possible
 - support both symlinked v3 testcase paths and source testcase paths when
-  matching dashboard file records
+  matching calibration records
 - report v3 result beside:
   - game result from testcase JSON
-  - latest dashboard summary metrics for the same file/case, if present
-- do not require v3 to insert rows into the dashboard database initially
+  - calibration summary metrics for the same file/case, if present
+  - v1 simulator output (`mu_sim`) and observed game output (`mu_game`)
+  - v3 delta versus observed game output
 
-The initial comparison output can be JSON. A later task may add dashboard DB
-write support.
+The initial comparison output is JSON and should include a parity comparison
+table suitable for sorting by divergence.
 
 At least one regression test must cover a multi-entry testcase file where the
 same `test_id` appears more than once. The two entries must resolve to different
-dashboard rows by `idx`.
+calibration records by `idx`.
 
 ### F. CLI
 
@@ -1134,7 +1133,7 @@ Use test-first development where practical. Each item below should have focused
 tests before or alongside implementation.
 
 1. Define core types: triggers, effect intents, active effects, attack intents,
-   damage jobs, outcomes, buckets, testcase reports, and dashboard comparison
+   damage jobs, outcomes, buckets, testcase reports, and calibration comparison
    records.
 2. Implement config loading and validation:
    - native v3 JSON only
@@ -1146,8 +1145,8 @@ tests before or alongside implementation.
    - disabled/stale inclusion rules
    - testcase `idx`
    - mechanics passthrough
-4. Implement dashboard read-only comparison:
-   - latest run id
+4. Implement calibration JSON read-only comparison:
+   - latest calibration report
    - file path variants
    - testcase id plus `idx`
    - duplicate-id regression fixture
@@ -1198,8 +1197,7 @@ The testcase command should report:
 - resolved hero names for hero cases
 - resolved troop skill ids
 - nonzero skill/effect activation counts for cases containing active skills
-- dashboard rows for all emulator-verified cases when
-  `test_results/dashboard.sqlite` is present
+- calibration comparison rows when `v3/testcase_results/*.json` is present
 
 Required focused regression tests:
 
@@ -1211,9 +1209,8 @@ Required focused regression tests:
   unit types
 - `engagement_type` gated triggers require explicit matching mechanics
 - probability values are percentages, including `1` and `0.5`
-- duplicate testcase ids in one file match dashboard rows by `idx`
-- no-hero base cases expose game/dashboard fields and v3 result fields side by
-  side
+- duplicate testcase ids in one file match calibration records by `idx`
+- no-hero base cases expose game, calibration, and v3 result fields side by side
 
 ## Key Invariants
 

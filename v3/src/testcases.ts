@@ -2,13 +2,19 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { readDashboardCase, readDashboardComparison, type DashboardCaseComparison, type DashboardComparison } from "./dashboard.js";
+import {
+  addCalibrationTableRow,
+  loadCalibrationComparison,
+  readCalibrationCase,
+  type CalibrationCaseComparison,
+  type CalibrationComparison
+} from "./calibration.js";
 import { simulateBattle } from "./simulator.js";
 import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, UnitType } from "./types.js";
 
 export interface TestcaseRunOptions {
   testcaseRoot?: string;
-  dashboardSqlitePath?: string;
+  calibrationReportPath?: string;
   matching?: string;
   includeDisabled?: boolean;
   repeat?: number;
@@ -22,8 +28,9 @@ export interface TestcaseCaseReport {
   index: number;
   diagnostics: string[];
   gameResult?: unknown;
-  dashboard?: DashboardCaseComparison;
+  calibration?: CalibrationCaseComparison;
   result?: BattleResult;
+  v3ScoreDelta?: number;
   visibility: {
     attacker: CaseVisibility;
     defender: CaseVisibility;
@@ -43,7 +50,7 @@ export interface TestcaseRunReport {
     unexpectedErrors: number;
     diagnostics: number;
   };
-  comparison: DashboardComparison;
+  comparison: CalibrationComparison;
 }
 
 interface CaseVisibility {
@@ -72,7 +79,7 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
   const files = discoverTestcaseFiles(options);
   const cases: TestcaseCaseReport[] = [];
   const aggregate = { parsedFiles: 0, parseErrors: 0, adaptedCases: 0, executedCases: 0, unexpectedErrors: 0, diagnostics: 0 };
-  const comparison = readDashboardComparison(options.dashboardSqlitePath);
+  const comparison = loadCalibrationComparison(options.calibrationReportPath);
   const repeat = Math.max(1, options.repeat ?? 1);
 
   for (const file of files) {
@@ -99,11 +106,16 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
           result = simulateBattle(input, config);
         }
         report.result = result;
+        report.v3ScoreDelta = battleScoreDelta(result);
         aggregate.executedCases += 1;
         report.gameResult = (entry as { game_report_result?: unknown }).game_report_result;
-        report.dashboard = readDashboardCase(options.dashboardSqlitePath, relative(process.cwd(), file), testcaseId, {
-          runId: comparison.latestRun?.id,
-          index
+        report.calibration = readCalibrationCase(comparison, relative(process.cwd(), file), testcaseId, { index });
+        addCalibrationTableRow(comparison, {
+          file,
+          testcaseId,
+          index,
+          v3ScoreDelta: report.v3ScoreDelta,
+          calibration: report.calibration
         });
         report.visibility = visibilityFromResult(result);
         if (result) diagnostics.push(...result.resolved.attacker.diagnostics, ...result.resolved.defender.diagnostics);
@@ -121,15 +133,26 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
 }
 
 export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | number; trace?: boolean } = {}, diagnostics: string[] = []): BattleInput {
-  const object = entry as { attacker?: FighterInput; defender?: FighterInput; test_id?: string };
+  const object = entry as {
+    attacker?: FighterInput;
+    defender?: FighterInput;
+    test_id?: string;
+    mechanics?: Record<string, unknown>;
+    engagement_type?: unknown;
+    engagementType?: unknown;
+    maxRounds?: unknown;
+    max_rounds?: unknown;
+  };
   if (!object.attacker || !object.defender) throw new Error(`Testcase ${object.test_id ?? "(unknown)"} is missing attacker or defender`);
   diagnostics.push(...diagnoseFighterShape("attacker", object.attacker), ...diagnoseFighterShape("defender", object.defender));
+  const mechanics = testcaseMechanics(object);
   return {
     attacker: object.attacker,
     defender: object.defender,
-    maxRounds: 100,
+    maxRounds: Number(object.maxRounds ?? object.max_rounds) || 100,
     seed: options.seed,
-    trace: options.trace
+    trace: options.trace,
+    ...(mechanics ? { mechanics } : {})
   };
 }
 
@@ -180,6 +203,13 @@ function diagnoseFighterShape(side: string, fighter: FighterInput): string[] {
   if (!fighter.troops || Object.keys(fighter.troops).length === 0) diagnostics.push(`${side} has no troops`);
   if (!fighter.stats) diagnostics.push(`${side} has no stats block`);
   return diagnostics;
+}
+
+function testcaseMechanics(entry: { mechanics?: Record<string, unknown>; engagement_type?: unknown; engagementType?: unknown }): Record<string, unknown> | undefined {
+  const mechanics = entry.mechanics && typeof entry.mechanics === "object" ? { ...entry.mechanics } : {};
+  if (entry.engagement_type !== undefined) mechanics.engagement_type = entry.engagement_type;
+  if (entry.engagementType !== undefined) mechanics.engagementType = entry.engagementType;
+  return Object.keys(mechanics).length > 0 ? mechanics : undefined;
 }
 
 function visibilityFromResult(result: BattleResult | undefined): TestcaseCaseReport["visibility"] {

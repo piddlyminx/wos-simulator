@@ -6,25 +6,37 @@ details.
 
 ## Source Boundaries
 
+Default rule: v3 subagents should work from inside `v3/**`. Do not broaden the
+context unless the task packet explicitly justifies it. The easiest way to avoid
+importing v1 complexity is to keep agents from reading v1 or legacy code.
+
 Allowed cold-start sources:
 
 - `v3/battle-core-rewrite-spec.md`
 - `v3/config/**`
 - `v3/testcases/**` through the `v3/testcases` symlink
+- `v3/testcase_results/*.json` as read-only calibration evidence for
+  parity/comparison tasks
 - `v3/package.json`
 - current v3 source and tests for the assigned slice only
-- `test_results/dashboard.sqlite` only for read-only dashboard comparison tasks
 
 Forbidden unless the task packet explicitly allows them:
 
 - `Base_classes/**`
 - `v2/src/simulator/mechanics/**`
+- non-v3 repository paths other than the `v3/testcases` symlink target
 - legacy simulator implementation paths used as behavioral authority
 - transcript history or previous agent conclusions not copied into the task
   packet
 
 If a subagent thinks a forbidden path is needed, it must stop with
 `NEEDS_CONTEXT` and explain the exact missing fact.
+
+There is usually no reason for an implementation subagent to inspect outside
+`v3`. The `v3/testcases` symlink is the preferred path for testcase data even
+though it points at `../testcases`. Calibration files under
+`v3/testcase_results` are evidence for comparison, not implementation
+templates.
 
 ## Controller Workflow
 
@@ -40,7 +52,8 @@ If a subagent thinks a forbidden path is needed, it must stop with
 
 Good slices are narrow enough to validate with focused probes:
 
-- dashboard comparison and testcase discovery
+- testcase discovery and calibration-result comparison
+- v1/game calibration report comparison
 - config loading and hero alias resolution
 - active-effect lifetime and target locks
 - pass-specific bucket classification
@@ -97,14 +110,13 @@ Before production edits:
 Run these exact commands and report the meaningful output:
 - `npm --prefix v3 test`
 - `npm --prefix v3 run typecheck`
-- `<focused testcase or dashboard command for this slice>`
+- `<focused testcase or calibration comparison command for this slice>`
 
 ## Not Done If
 - any forbidden source was used without explicit permission
 - the test was not seen failing before production code
-- dashboard matching ignores latest `run_id`, testcase path variants, testcase
-  id, or `idx`
-- duplicate testcase ids can reuse the same dashboard row
+- calibration matching ignores testcase path variants, testcase id, or `idx`
+- duplicate testcase ids can reuse the same calibration result
 - `v3/testcases` symlink behavior is untested when testcase discovery changes
 - hero display-name aliases are not covered when config loading changes
 - pass-specific buckets leak between normal and skill jobs
@@ -147,12 +159,12 @@ tests assert behavior instead of implementation accidents.
 
 Use these as explicit probes when the touched area is relevant:
 
-- Dashboard comparison matches by latest `run_id`, testcase path variant,
-  testcase id, and testcase `idx`.
+- Calibration comparison matches by testcase path variant, testcase id, and
+  testcase `idx`.
 - `v3/testcases` follows the symlink to `../testcases`; disabled or stale files
   are excluded by default and included only when requested.
-- Duplicate no-hero testcase ids align to distinct dashboard rows; the known
-  duplicate rows have `mu_game` values `3752` and `3652`.
+- Duplicate no-hero testcase ids align to distinct calibration results; the
+  known duplicate cases have `mu_game` values `3752` and `3652`.
 - Hero lookup supports display-name aliases and fails clearly on duplicate
   normalized aliases.
 - Runtime effects are `ActiveEffect` or `EffectActivation` style mutable tokens
@@ -182,6 +194,52 @@ Use these as explicit probes when the touched area is relevant:
   attack triggers -> active effects / extra skill proposals -> damage jobs ->
   calculate -> simultaneous commit.
 
+## Calibration Artifacts and Accuracy Targets
+
+Files under `v3/testcase_results/*.json` may contain run snapshots from the v1
+Python simulator plus observed game-result distributions. Treat them as
+read-only calibration evidence. They are useful for ranking divergence and
+measuring progress, but they are not authority to copy v1 architecture,
+terminology, or interdependent configuration knobs.
+
+Prefer these JSON files for parity work. A calibration report is expected to
+key cases by testcase file plus `idx` and include fields such as `testcase_id`,
+`mu_sim`, `mu_game`, `sigma_game`, `bias_pct`, and `passes`. Match cases by
+testcase path variant, testcase id, and `idx`; never collapse duplicate
+testcase ids into one comparison row.
+
+The project goal is a simulator that matches observed in-game results to a
+useful degree of confidence across a representative testcase set. The initial
+v3 goal is deliberately narrower:
+
+- keep the battle engine simple, explicit, and diagnosable
+- preserve visibility into testcase inputs, resolved heroes/skills, triggers,
+  damage jobs, buckets, and final results
+- match existing simulator/game confidence criteria for at least about 50% of
+  cases before treating broader tuning work as meaningful
+- avoid adding mechanics solely to chase one divergent testcase without first
+  identifying whether the discrepancy is general
+
+Parity-oriented subagents must classify divergences before proposing mechanics:
+
+- config/adaptation issue
+- missing diagnostic visibility
+- intentional simplified-v3 gap
+- likely missing mechanic with evidence across multiple cases
+- unknown, needs more data
+
+They must report:
+
+- total cases considered and pass rate
+- no-hero vs hero split when available
+- worst divergences by `bias_pct` or equivalent metric
+- whether divergence is against observed game data, v1 simulator output, or
+  both
+- why any proposed mechanic is distinct from existing v3 concepts
+
+Not done if a parity task imports v1 complexity, copies legacy implementation
+structure, or adds vague knobs that cannot be tied to clear battle mechanics.
+
 ## Baseline Verification
 
 Run focused tests first, then broaden. Baseline commands:
@@ -200,7 +258,8 @@ Expected broad testcase evidence:
 - hero cases resolve hero names
 - troop skills resolve where applicable
 - skill/effect activation counts are nonzero for active skill cases
-- dashboard rows are available when `test_results/dashboard.sqlite` exists
+- calibration comparison can be made against `v3/testcase_results/*.json` when
+  parity evidence is required
 
 Do not claim a slice is complete until the final report includes fresh command
 output or a concrete explanation for any command that could not be run.

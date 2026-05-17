@@ -21,7 +21,7 @@ function parseArgs(args: string[]): TestcaseRunOptions {
     if (arg === "--matching") options.matching = args[++index];
     else if (arg === "--repeat") options.repeat = Number(args[++index]) || 1;
     else if (arg === "--testcase-root") options.testcaseRoot = args[++index];
-    else if (arg === "--dashboard-sqlite-path") options.dashboardSqlitePath = args[++index];
+    else if (arg === "--calibration-report") options.calibrationReportPath = args[++index];
     else if (arg === "--include-disabled") options.includeDisabled = true;
     else if (arg === "--trace") options.trace = true;
     else if (arg === "--seed") options.seed = args[++index];
