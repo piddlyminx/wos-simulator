@@ -1,7 +1,7 @@
 [
   {
-    "test_id": "greg_mia_combo_archived_stats",
-    "description": "Greg (Infantry class) + Mia (Lancer class) combo defender with archived low-stat attacker/defender snapshot \u2014 both have chance-based skills (Greg S1 20%, Mia S2 50%/S3 40%). Run 5+ battles for statistical confidence. Tests chance-skill stacking across classes. WIP attacks clean; minxxx defends.",
+    "test_id": "greg_mia_combo",
+    "description": "Greg (Infantry class) + Mia (Lancer class) combo defender \u2014 both have chance-based skills (Greg S1 20%, Mia S2 50%/S3 40%). Run 5+ battles for statistical confidence. Tests chance-skill stacking across classes. WIP attacks clean; minxxx defends.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
@@ -93,8 +93,8 @@
     ]
   },
   {
-    "test_id": "greg_mia_combo_current_stats",
-    "description": "Greg (Infantry class) + Mia (Lancer class) combo defender with current attacker/defender stat snapshot \u2014 both have chance-based skills (Greg S1 20%, Mia S2 50%/S3 40%). Run 5+ battles for statistical confidence. Tests chance-skill stacking across classes. WIP attacks clean; minxxx defends.",
+    "test_id": "greg_mia_combo",
+    "description": "Greg (Infantry class) + Mia (Lancer class) combo defender \u2014 both have chance-based skills (Greg S1 20%, Mia S2 50%/S3 40%). Run 5+ battles for statistical confidence. Tests chance-skill stacking across classes. WIP attacks clean; minxxx defends.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
