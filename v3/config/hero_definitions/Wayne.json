@@ -19,14 +19,20 @@
             100
           ],
           "units": {
-            "applies_to": "trigger",
+            "applies_to": "trigger.source",
             "applies_vs": "any"
           },
           "duration": {
             "type": "attack",
             "value": 1
           },
-          "same_effect_stacking": "max"
+          "same_effect_stacking": "max",
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
         }
       }
     },
@@ -52,15 +58,21 @@
             40
           ],
           "units": {
-            "applies_to": "trigger",
-            "applies_vs": [
-              "lancer"
-            ]
+            "applies_to": "trigger.source",
+            "applies_vs": "any"
           },
           "duration": {
             "type": "attack",
             "value": 1
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": [
+                "lancer"
+              ]
+            }
+          ]
         },
         "RoundaboutHit/2": {
           "type": "extra_skill_attack",
@@ -72,15 +84,21 @@
             20
           ],
           "units": {
-            "applies_to": "trigger",
-            "applies_vs": [
-              "marksman"
-            ]
+            "applies_to": "trigger.source",
+            "applies_vs": "any"
           },
           "duration": {
             "type": "attack",
             "value": 1
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": [
+                "marksman"
+              ]
+            }
+          ]
         }
       }
     },

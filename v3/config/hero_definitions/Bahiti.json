@@ -46,13 +46,19 @@
             50
           ],
           "units": {
-            "applies_to": "trigger",
-            "applies_vs": "target"
+            "applies_to": "trigger.source",
+            "applies_vs": "any"
           },
           "duration": {
             "type": "attack",
             "value": 1
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "activation.target"
+            }
+          ]
         }
       }
     }

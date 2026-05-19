@@ -7,11 +7,10 @@ import type {
   ResolvedSkill,
   ResolvedUnitScope,
   SideId,
-  TriggerDamageJobDefinition,
   UnitType
 } from "./types.js";
 import { ALL_UNIT_MASK, UNIT_TYPES, unitMask } from "./types.js";
-import { normalizeUnitType, valueAtLevel } from "./normalize.js";
+import { normalizeUnitType } from "./normalize.js";
 
 export type Rng = () => number;
 
@@ -95,7 +94,7 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
     valuePct: typeof intent.value === "number" ? intent.value : undefined,
     appliesTo,
     appliesVs,
-    triggerDamageJobs: effectKind === "extra_attack" ? triggerDamageJobsForIntent(intent, skill.level) : undefined,
+    triggerDamageJobs: effectKind === "extra_attack" ? intent.trigger_damage_jobs : undefined,
     createdRound: round,
     startRound: round + delay,
     duration,
@@ -153,47 +152,6 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
   if (intent.type === "dodge" || intent.type === "no_attack") return "control";
   if (intent.type === "attack_order") return "battle_order";
   return "modifier";
-}
-
-function triggerDamageJobsForIntent(intent: EffectIntentDefinition, level: number): ActiveEffect["triggerDamageJobs"] {
-  const explicit = intent.trigger_damage_jobs;
-  if (explicit && explicit.length > 0) {
-    return explicit.map((job) => normalizeTriggerDamageJobDefinition(job, level));
-  }
-  return [
-    {
-      source: "use.source",
-      target: legacyExtraSkillTargetSelector(intent.units?.applies_vs),
-      multiplier: normalizeTriggerDamageJobMultiplier(intent.value, level)
-    }
-  ];
-}
-
-function normalizeTriggerDamageJobDefinition(job: TriggerDamageJobDefinition, level: number): TriggerDamageJobDefinition {
-  return {
-    id: typeof job.id === "string" ? job.id : undefined,
-    source: normalizeTriggerDamageJobSelector(job.source),
-    target: normalizeTriggerDamageJobSelector(job.target),
-    multiplier: normalizeTriggerDamageJobMultiplier(job.multiplier, level)
-  };
-}
-
-function normalizeTriggerDamageJobSelector(selector: unknown): TriggerDamageJobDefinition["target"] | undefined {
-  if (selector === undefined) return undefined;
-  if (Array.isArray(selector)) return selector.map(String);
-  if (typeof selector === "string") return selector;
-  return undefined;
-}
-
-function normalizeTriggerDamageJobMultiplier(multiplier: unknown, level: number): TriggerDamageJobDefinition["multiplier"] | undefined {
-  if (multiplier === undefined) return undefined;
-  return valueAtLevel(multiplier, level);
-}
-
-function legacyExtraSkillTargetSelector(appliesVs: unknown): TriggerDamageJobDefinition["target"] {
-  if (appliesVs === undefined || appliesVs === "any" || appliesVs === "target") return "use.target";
-  if (appliesVs === "all") return "enemy.living";
-  return normalizeTriggerDamageJobSelector(appliesVs) ?? "use.target";
 }
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {

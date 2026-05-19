@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { tmpdir } from "node:os";
 
 import { loadSimulatorConfig } from "./config.js";
+import type { EffectIntentDefinition, SkillFile } from "./types.js";
 
 test("loadSimulatorConfig loads native v3 catalogues and reports effect inventory", () => {
   const config = loadSimulatorConfig();
@@ -64,3 +65,26 @@ test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {
 
   assert.throws(() => loadSimulatorConfig({ configDir: root }), /duplicate hero alias.*samehero/i);
 });
+
+test("native v3 extra skill attacks define trigger_damage_jobs", () => {
+  const config = loadSimulatorConfig();
+  const missing: string[] = [];
+
+  collectMissingTriggerDamageJobs("config/troop_skills.json", config.troopSkills, missing);
+  for (const [heroName, heroDefinition] of Object.entries(config.heroDefinitions)) {
+    collectMissingTriggerDamageJobs(`config/hero_definitions/${heroName}.json`, heroDefinition, missing);
+  }
+
+  assert.deepEqual(missing, []);
+});
+
+function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, missing: string[]): void {
+  for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
+    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+      const intent = effect as EffectIntentDefinition;
+      if (intent.type === "extra_skill_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
+        missing.push(`${file}:${skillId}.${effectId}`);
+      }
+    }
+  }
+}
