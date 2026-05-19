@@ -105,6 +105,10 @@ test("runTestcases reports a parity comparison table from calibration JSON", () 
   assert.equal(row?.idx, 0);
   assert.equal(row?.muGame, -186);
   assert.equal(row?.matched, true);
+  assert.equal(row?.biasRaw, 0);
+  assert.equal(row?.sem, 0);
+  assert.equal(row?.p, null);
+  assert.equal(row?.q, null);
   assert.equal(typeof row?.v3ScoreDelta, "number");
   assert.equal(typeof row?.v3VsGameRaw, "number");
   assert.equal(row?.v3?.n, 1);
