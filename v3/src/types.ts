@@ -202,6 +202,8 @@ export interface ActiveEffect {
   ownerSide: SideId;
   kind: ActiveEffectKind;
   valuePct?: number;
+  // Resolved ActiveEffect usage gates. Native applies_vs config accepts "any",
+  // trigger-relative selectors, or concrete unit selectors; it does not accept "all".
   appliesTo: ResolvedUnitScope;
   appliesVs: ResolvedUnitScope;
   triggerDamageJobs?: TriggerDamageJobDefinition[];

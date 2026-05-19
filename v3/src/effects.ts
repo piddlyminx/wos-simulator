@@ -32,13 +32,13 @@ export function skillMatchesTrigger(
   if (trigger.every && triggerType === "attack_declared" && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every)) return false;
   if (!intent) return true;
   const units = trigger.units ?? {};
-  const triggerFor = normalizeSelector(units.for);
+  const triggerFor = normalizeTriggerMatchSelector(units.for);
   if (triggerFor !== "any" && triggerFor !== "all" && triggerFor !== "target" && triggerFor && !triggerFor.includes(intent.attackerUnit)) {
     return false;
   }
   const by = normalizeUnitList(units.by);
   if (by && !by.includes(intent.attackerUnit)) return false;
-  const appliesVs = normalizeSelector(units.applies_vs);
+  const appliesVs = normalizeTriggerMatchSelector(units.applies_vs);
   if (appliesVs !== "any" && appliesVs !== "all" && appliesVs !== "target" && appliesVs && !appliesVs.includes(intent.defenderUnit)) {
     return false;
   }
@@ -110,7 +110,9 @@ export function isEffectActive(effect: ActiveEffect, round: number): boolean {
   return effect.uses < Math.max(1, effect.duration.value);
 }
 
-export function normalizeSelector(value: unknown): UnitType[] | "any" | "target" | "all" | undefined {
+// Trigger filters still accept legacy "all". ActiveEffect usage gates are
+// resolved by resolveUnitScope after config validation rejects applies_vs "all".
+export function normalizeTriggerMatchSelector(value: unknown): UnitType[] | "any" | "target" | "all" | undefined {
   if (value === undefined) return "any";
   if (value === "any" || value === "target" || value === "all") return value;
   return normalizeUnitList(value);

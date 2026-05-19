@@ -112,7 +112,7 @@ Examples:
 ```ts
 { kind: "catalogue_effect", label: "health_up", valuePct: 25 }
 { kind: "catalogue_effect", label: "normal_damage_up", valuePct: 20 }
-{ kind: "extra_skill_attack", valuePct: 200, targets: "all" }
+{ kind: "extra_skill_attack", valuePct: 200, triggerDamageJobs: [{ source: "use.source", target: "enemy.living" }] }
 { kind: "attack_control", control: "dodge", pass: "normal" }
 { kind: "battle_order", order: ["marksman", "infantry", "lancer"] }
 ```
@@ -123,7 +123,7 @@ Effect intents may include scope and duration:
 interface EffectScope {
   affectedSide: "self" | "enemy";
   appliesTo: UnitSelector | "trigger" | "target" | "friendly" | "all";
-  appliesVs: UnitSelector | "any" | "target" | "all";
+  appliesVs: UnitSelector | "any" | "target" | "trigger.target";
 }
 
 interface EffectDuration {
@@ -147,7 +147,7 @@ interface ActiveEffect {
   affectedSide: SideId;
   valuePct?: number;
   appliesTo: UnitType[];
-  appliesVs: UnitType[] | "any" | "target" | "all";
+  appliesVs: UnitType[] | "any" | "target";
   lockedTarget?: UnitType;
   sourceUnit?: UnitType;
   createdRound: number;
@@ -166,12 +166,14 @@ Applicability rules:
 - `affectedSide` determines whether the effect modifies the attacker side or
   defender side for a given damage job
 - `appliesTo` is evaluated against the affected side's unit in that job
-- `appliesVs: "any"` and `"all"` match any opposing unit
+- `appliesVs: "any"` matches any opposing unit
 - `appliesVs: UnitType[]` matches the opposing unit against that list
 - `appliesVs: "target"` preserves a target lock captured at activation time;
   it must not be eagerly converted into a plain unit list if doing so loses the
   distinction between "the target of this activation" and "any opposing unit of
   this type"
+- native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
+  unrestricted usage gate
 - for defender-side effects, target matching must be checked against the
   defender unit being damaged, not accidentally against the attacker unit
 
@@ -567,8 +569,9 @@ gets a concrete trigger context with that unit as `trigger` and that unit's
 current primary target as `target`, so an effect using `appliesTo: "trigger"`
 and `appliesVs: "target"` creates one unit-scoped, target-locked active effect
 per living unit type after a single turn-level roll. This is distinct from
-splash damage fan-out: `appliesVs: "all"` on an `extra_skill_attack` creates
-multiple damage jobs, one against each surviving enemy unit type.
+multi-target skill damage output: an `extra_skill_attack` uses
+`trigger_damage_jobs[].target` selectors such as `"enemy.living"` or explicit
+unit lists to create one damage job per resolved concrete defender unit type.
 
 There is no required `round_end` trigger unless a future mechanic proves it is
 needed. End-of-round cleanup should be explicit cleanup, not an artificial
@@ -635,17 +638,20 @@ all extra skill attacks" pass.
 
 Extra skill target construction:
 
-- `applies_vs: "target"` means the skill attack targets the defender unit from
-  the source normal attack intent
-- `applies_vs: "all"` or `"any"` means create jobs against every living defender
-  unit in the round-start snapshot, unless the effect has a more specific
-  target rule
-- `applies_vs: UnitType[]` means create jobs only against those defender unit
-  types, and only when those defender units are alive in the round-start
-  snapshot
-- array-valued `applies_vs` must not be collapsed to the source normal attack's
-  current target
-- `applies_to` still scopes the attacking/source unit side of the effect
+- `applies_vs` is an ActiveEffect usage gate. It accepts `"any"`,
+  trigger-relative selectors such as `"target"` / `"trigger.target"`, or
+  concrete unit selectors. It does not accept `"all"`.
+- `trigger_damage_jobs[].source` resolves the concrete attacking/source unit for
+  each skill damage job.
+- `trigger_damage_jobs[].target` resolves the concrete defender target unit or
+  units for each skill damage job.
+- selectors such as `"enemy.living"` or explicit unit lists may resolve to
+  multiple concrete target unit types; create one `DamageJob` per resolved
+  concrete target.
+- array-valued selectors must not be collapsed to the source normal attack's
+  current target.
+- `applies_to` still scopes whether the active effect can be used by the
+  attacking/source unit side before `trigger_damage_jobs` are expanded.
 - no skill job should be created for a dead attacker unit or dead defender unit
 
 ```ts
