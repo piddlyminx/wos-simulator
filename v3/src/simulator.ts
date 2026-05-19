@@ -14,7 +14,7 @@ import type {
   SkillReportEntry,
   UnitType
 } from "./types.js";
-import { UNIT_TYPES } from "./types.js";
+import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
 import { calculateDamageJob } from "./damage.js";
 import { activateEffect, chancePasses, createSeededRng, isEffectActive, oppositeSide, skillMatchesTrigger, type Rng } from "./effects.js";
 import { basicEffectApplies, classifyEffectForJob } from "./classifier.js";
@@ -124,7 +124,7 @@ function triggerRoundStartSkills(
     if (report) report.skillActivations += 1;
     let orderIndex = 0;
     for (const attackerUnit of roundTriggerUnits(skill, roundStartTroops)) {
-      const defenderUnit = chooseDefenderUnit(attackerUnit, defenderSide, roundStartTroops, runtime.activeEffects, round);
+      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.activeEffects, round);
       if (!defenderUnit) continue;
       const intent = syntheticRoundIntent(round, side, attackerUnit, defenderSide, defenderUnit, orderIndex, runtime);
       if (!skillMatchesTrigger(skill, "round_start", round, intent)) continue;
@@ -276,7 +276,7 @@ function resolveAttackIntents(
     let orderIndex = 0;
     for (const attackerUnit of UNIT_TYPES) {
       if ((roundStartTroops[side][attackerUnit] ?? 0) <= 0) continue;
-      const defenderUnit = chooseDefenderUnit(attackerUnit, defenderSide, roundStartTroops, runtime.activeEffects, round);
+      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.activeEffects, round);
       if (!defenderUnit) continue;
       const previousAttackCount = runtime.counters.attacks[side][attackerUnit];
       const previousReceivedAttackCount = runtime.counters.received[defenderSide][defenderUnit];
@@ -302,19 +302,20 @@ function resolveAttackIntents(
 
 function chooseDefenderUnit(
   attackerUnit: UnitType,
+  attackerSide: SideId,
   defenderSide: SideId,
   roundStartTroops: DamageJob["roundStartTroops"],
   effects: ActiveEffect[],
   round: number
 ): UnitType | undefined {
-  const order = orderFromEffects(attackerUnit, effects, round) ?? UNIT_TYPES;
+  const order = orderFromEffects(attackerUnit, attackerSide, effects, round) ?? UNIT_TYPES;
   return order.find((unit) => (roundStartTroops[defenderSide][unit] ?? 0) > 0);
 }
 
-function orderFromEffects(attackerUnit: UnitType, effects: ActiveEffect[], round: number): UnitType[] | undefined {
+function orderFromEffects(attackerUnit: UnitType, attackerSide: SideId, effects: ActiveEffect[], round: number): UnitType[] | undefined {
   for (const effect of effects) {
     if (!isEffectActive(effect, round) || effect.intent.type !== "attack_order") continue;
-    if (!effect.appliesTo.includes(attackerUnit)) continue;
+    if (effect.appliesTo.side !== attackerSide || !unitMaskHas(effect.appliesTo.units, attackerUnit)) continue;
     if (Array.isArray(effect.intent.value)) {
       try {
         return effect.intent.value.map((value) => normalizeUnitType(String(value)));
@@ -374,7 +375,7 @@ function extraSkillJobs(
   const jobs: DamageJob[] = [];
   for (const effect of effects) {
     if (effect.intent.type !== "extra_skill_attack") continue;
-    if (!effect.appliesTo.includes(intent.attackerUnit)) continue;
+    if (effect.appliesTo.side !== intent.attackerSide || !unitMaskHas(effect.appliesTo.units, intent.attackerUnit)) continue;
     const targets = extraSkillTargets(effect, intent).filter((unit) => (roundStartTroops[intent.defenderSide][unit] ?? 0) > 0);
     let targetIndex = 0;
     for (const defenderUnit of targets) {
@@ -402,9 +403,8 @@ function extraSkillJobs(
 }
 
 function extraSkillTargets(effect: ActiveEffect, intent: AttackIntent): UnitType[] {
-  if (effect.appliesVs === "all") return UNIT_TYPES;
-  if (Array.isArray(effect.appliesVs)) return effect.appliesVs;
-  return [intent.defenderUnit];
+  if (effect.appliesVs.side !== intent.defenderSide) return [];
+  return unitsFromMask(effect.appliesVs.units);
 }
 
 function cancelledOutcome(intent: AttackIntent, effectId: string, reason: "dodge" | "no_attack", consumedEffectIds: string[] = [effectId]): AttackOutcome {

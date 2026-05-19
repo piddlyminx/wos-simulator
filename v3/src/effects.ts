@@ -1,5 +1,5 @@
-import type { ActiveEffect, AttackIntent, EffectDuration, EffectIntentDefinition, ResolvedSkill, SideId, UnitType } from "./types.js";
-import { UNIT_TYPES } from "./types.js";
+import type { ActiveEffect, ActiveEffectKind, AttackIntent, EffectDuration, EffectIntentDefinition, ResolvedSkill, ResolvedUnitScope, SideId, UnitType } from "./types.js";
+import { ALL_UNIT_MASK, UNIT_TYPES, unitMask } from "./types.js";
 import { normalizeUnitType } from "./normalize.js";
 
 export type Rng = () => number;
@@ -61,9 +61,9 @@ export function crossedFrequency(previous: number, current: number, frequency: n
 export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinition, round: number, attackIntent?: AttackIntent): ActiveEffect {
   const units = intent.units ?? {};
   const ownerSide = skill.side;
-  const affectedSide = units.side === "enemy" ? oppositeSide(ownerSide) : ownerSide;
-  const appliesTo = resolveAppliesTo(units.applies_to, affectedSide, attackIntent);
-  const appliesVs = resolveAppliesVs(units.applies_vs, attackIntent);
+  const defaultAppliesToSide = units.side === "enemy" ? oppositeSide(ownerSide) : ownerSide;
+  const appliesTo = resolveUnitScope(units.applies_to, defaultAppliesToSide, attackIntent);
+  const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), attackIntent);
   const duration = normalizeDuration(intent.duration);
   const delay = duration.delay ?? 0;
   return {
@@ -79,12 +79,10 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
     },
     intent,
     ownerSide,
-    affectedSide,
+    kind: kindForIntent(intent),
     valuePct: typeof intent.value === "number" ? intent.value : undefined,
     appliesTo,
     appliesVs,
-    lockedTarget: attackIntent?.defenderUnit,
-    sourceUnit: attackIntent?.attackerUnit,
     createdRound: round,
     startRound: round + delay,
     duration,
@@ -112,28 +110,28 @@ export function normalizeEngagementType(value: unknown): string | undefined {
   return normalized ? normalized : undefined;
 }
 
-function resolveAppliesTo(value: unknown, affectedSide: SideId, attackIntent?: AttackIntent): UnitType[] {
-  if (value === "trigger" && attackIntent) return [attackIntent.attackerUnit];
-  if (value === "target" && attackIntent) return [attackIntent.defenderUnit];
-  const list = normalizeUnitList(value);
-  if (list) return list;
-  void affectedSide;
-  return [...UNIT_TYPES];
-}
-
-function resolveAppliesVs(value: unknown, attackIntent?: AttackIntent): UnitType[] | "any" | "target" | "all" {
-  if (value === "target") {
-    void attackIntent;
-    return "target";
+function resolveUnitScope(value: unknown, defaultSide: SideId, attackIntent?: AttackIntent): ResolvedUnitScope {
+  if ((value === "trigger.source" || value === "trigger") && attackIntent) {
+    return { side: attackIntent.attackerSide, units: unitMask(attackIntent.attackerUnit) };
   }
-  const selector = normalizeSelector(value);
-  return selector ?? "any";
+  if ((value === "trigger.target" || value === "target") && attackIntent) {
+    return { side: attackIntent.defenderSide, units: unitMask(attackIntent.defenderUnit) };
+  }
+  const list = normalizeUnitList(value);
+  return { side: defaultSide, units: list ? unitMask(list) : ALL_UNIT_MASK };
 }
 
 function normalizeUnitList(value: unknown): UnitType[] | undefined {
   if (Array.isArray(value)) return value.map((entry) => normalizeUnitType(String(entry)));
-  if (typeof value === "string" && !["any", "target", "all", "trigger", "friendly"].includes(value)) return [normalizeUnitType(value)];
+  if (typeof value === "string" && !["any", "target", "all", "trigger", "trigger.source", "trigger.target", "friendly"].includes(value)) return [normalizeUnitType(value)];
   return undefined;
+}
+
+function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
+  if (intent.type === "extra_skill_attack") return "extra_attack";
+  if (intent.type === "dodge" || intent.type === "no_attack") return "control";
+  if (intent.type === "attack_order") return "battle_order";
+  return "modifier";
 }
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {

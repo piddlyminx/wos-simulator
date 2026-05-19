@@ -5,6 +5,7 @@ import { classifyEffectForJob } from "./classifier.js";
 import { calculateDamageJob } from "./damage.js";
 import { activateEffect } from "./effects.js";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types.js";
+import { ALL_UNIT_MASK, unitMask } from "./types.js";
 
 const job: DamageJob = {
   id: "job-1",
@@ -22,16 +23,51 @@ const job: DamageJob = {
   sourceMultiplier: 1
 };
 
+test("resolved effect scope matches concrete side and unit masks", () => {
+  const active: ActiveEffect = {
+    id: "resolved-scope",
+    source: { kind: "hero_skill", side: "attacker", heroName: "Example", skillId: "Scope", effectId: "scope/1" },
+    intent: { id: "scope/1", type: "damage_up", value: 25 },
+    ownerSide: "attacker",
+    kind: "modifier",
+    valuePct: 25,
+    appliesTo: { side: "attacker", units: unitMask(["infantry"]) },
+    appliesVs: { side: "defender", units: unitMask(["lancer"]) },
+    createdRound: 1,
+    startRound: 1,
+    duration: { type: "battle", value: 0 },
+    uses: 0
+  };
+
+  assert.equal(classifyEffectForJob(active, job)?.bucket, "numerator.outgoingDamageUp");
+  assert.equal(
+    classifyEffectForJob(active, {
+      ...job,
+      id: "job-attacker-marksman",
+      attackerUnit: "marksman"
+    })?.reason,
+    "not_applicable_to_job"
+  );
+  assert.equal(
+    classifyEffectForJob(active, {
+      ...job,
+      id: "job-defender-marksman",
+      defenderUnit: "marksman"
+    })?.reason,
+    "not_applicable_to_job"
+  );
+});
+
 function effect(type: string, ownerSide: "attacker" | "defender", valuePct = 25): ActiveEffect {
   return {
     id: `${type}-1`,
     source: { kind: "hero_skill", side: ownerSide, heroName: "Example", skillId: "Skill", effectId: `${type}/1` },
     intent: { id: `${type}/1`, type, value: [valuePct] },
     ownerSide,
-    affectedSide: ownerSide,
+    kind: "modifier",
     valuePct,
-    appliesTo: ["infantry", "lancer", "marksman"],
-    appliesVs: "any",
+    appliesTo: { side: ownerSide, units: ALL_UNIT_MASK },
+    appliesVs: { side: ownerSide === "attacker" ? "defender" : "attacker", units: ALL_UNIT_MASK },
     createdRound: 1,
     startRound: 1,
     duration: { type: "battle", value: 0 },
@@ -116,7 +152,7 @@ test("attack-duration bucket effects are consumed by the applicable attack job",
   assert.equal(outcome.trace?.buckets.numerator.attackUp.totalPct, 100);
 });
 
-test('applies_vs "target" is preserved as a target lock for defender-side effects', () => {
+test('applies_vs "target" resolves to the concrete defender target scope', () => {
   const active = activateEffect(
     {
       id: "TargetSkill",
@@ -151,8 +187,8 @@ test('applies_vs "target" is preserved as a target lock for defender-side effect
     }
   );
 
-  assert.equal(active.appliesVs, "target");
-  assert.equal(active.lockedTarget, "lancer");
+  assert.deepEqual(active.appliesTo, { side: "defender", units: unitMask("lancer") });
+  assert.deepEqual(active.appliesVs, { side: "defender", units: unitMask("lancer") });
   assert.equal(classifyEffectForJob(active, job)?.bucket, "denominator.incomingDamageDown");
 });
 
