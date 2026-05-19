@@ -9,22 +9,55 @@ export interface ParityReportDescriptor {
   mtimeMs: number;
 }
 
+export interface ParityMetric {
+  n_candidate: number;
+  mu_candidate: number;
+  sigma_candidate: number;
+  n_reference: number;
+  mu_reference: number;
+  sigma_reference: number;
+  bias_raw: number;
+  bias_pct: number;
+  sem: number;
+  stat_type: string;
+  stat: number | null;
+  p: number | null;
+  q: number | null;
+  passes: boolean;
+}
+
 export interface ParitySummary {
-  selectedCases: number;
+  filesFound: number;
+  testcasesFound: number;
   executedCases: number;
+  warnings: number;
+  errors: number;
+  comparedToV1: number;
+  comparedToGame: number;
+  v3VsV1Failures: number;
+  v3VsGameFailures: number;
+
+  // Compatibility fields for pre-Task 5 components.
+  selectedCases: number;
   parseErrors: number;
   unexpectedErrors: number;
   diagnostics: number;
   matchedRows: number;
   unmatchedRows: number;
-  v3VsV1Failures: number;
-  v3VsGameFailures: number;
 }
 
 export interface ParityComparisonRow {
+  key: string;
   file: string;
   testcaseId: string;
   idx: number;
+  detailArtifact?: string;
+  deterministic?: boolean;
+  sampleCount?: number;
+  game: ParityMetric | null;
+  v1: ParityMetric | null;
+
+  // Compatibility fields for pre-Task 5 components.
   matched?: boolean;
   nSim?: number;
   muSim?: number;
@@ -50,6 +83,7 @@ export interface ParityComparisonRow {
 }
 
 export interface ParityCaseReport {
+  reportKind?: string;
   file: string;
   testcaseId: string;
   index: number;
@@ -68,22 +102,37 @@ export interface ParityCaseReport {
   };
 }
 
+interface ParityReportTestcase {
+  file?: string;
+  testcase_id?: string;
+  testcaseId?: string;
+  idx?: number;
+  detailArtifact?: string;
+  deterministic?: boolean;
+  sampleCount?: number;
+  game?: ParityMetric | null;
+  v1?: ParityMetric | null;
+}
+
 export interface ParityReportJson {
-  selectedFiles?: string[];
-  selectedCases?: number;
-  aggregate?: Partial<
+  reportKind?: string;
+  schemaVersion?: number;
+  createdAt?: string;
+  artifactRoot?: string;
+  options?: Record<string, unknown>;
+  counts?: Partial<
     Record<
-      | "parsedFiles"
-      | "parseErrors"
-      | "adaptedCases"
+      | "filesFound"
+      | "testcasesFound"
       | "executedCases"
-      | "unexpectedErrors"
-      | "diagnostics",
+      | "comparedToV1"
+      | "comparedToGame",
       number
     >
   >;
-  cases?: ParityCaseReport[];
-  comparison?: { table?: ParityComparisonRow[] };
+  warnings?: unknown[];
+  errors?: unknown[];
+  testcases?: Record<string, ParityReportTestcase>;
 }
 
 export interface LoadedParityReport extends ParityReportDescriptor {
@@ -138,9 +187,14 @@ export function getParityReport(
     : reports[0];
   if (!descriptor) return undefined;
   const data = JSON.parse(fs.readFileSync(descriptor.path, "utf8")) as ParityReportJson;
-  const rows = data.comparison?.table ?? [];
-  const cases = data.cases ?? [];
-  return { ...descriptor, data, rows, cases, summary: summarizeParityReport(data) };
+  const rows = rowsFromReport(data);
+  return {
+    ...descriptor,
+    data,
+    rows,
+    cases: [],
+    summary: summarizeParityReport(data),
+  };
 }
 
 export function getParityReportCase(
@@ -153,23 +207,42 @@ export function getParityReportCase(
   const report = getParityReport(reportId, dir);
   const row = report?.rows.find((entry) => rowMatches(entry, key));
   if (!report || !row) return undefined;
-  const caseReport = report.cases.find((entry) => caseMatches(entry, key));
-  return { report, row, case: caseReport };
+  return {
+    report,
+    row,
+    case: loadDetailArtifact(path.dirname(report.path), row.detailArtifact),
+  };
 }
 
 export function summarizeParityReport(report: ParityReportJson): ParitySummary {
-  const rows = report.comparison?.table ?? [];
-  const aggregate = report.aggregate ?? {};
+  const rows = rowsFromReport(report);
+  const counts = report.counts ?? {};
+  const warnings = Array.isArray(report.warnings) ? report.warnings.length : 0;
+  const errors = Array.isArray(report.errors) ? report.errors.length : 0;
+  const comparedToV1 = Number(
+    counts.comparedToV1 ?? rows.filter((row) => row.v1 !== null).length,
+  );
+  const comparedToGame = Number(
+    counts.comparedToGame ?? rows.filter((row) => row.game !== null).length,
+  );
+
   return {
-    selectedCases: Number(report.selectedCases ?? rows.length),
-    executedCases: Number(aggregate.executedCases ?? report.cases?.length ?? 0),
-    parseErrors: Number(aggregate.parseErrors ?? 0),
-    unexpectedErrors: Number(aggregate.unexpectedErrors ?? 0),
-    diagnostics: Number(aggregate.diagnostics ?? 0),
-    matchedRows: rows.filter((row) => row.matched).length,
-    unmatchedRows: rows.filter((row) => !row.matched).length,
-    v3VsV1Failures: rows.filter((row) => row.v3VsV1Passes === false).length,
-    v3VsGameFailures: rows.filter((row) => row.v3VsGamePasses === false).length,
+    filesFound: Number(counts.filesFound ?? 0),
+    testcasesFound: Number(counts.testcasesFound ?? rows.length),
+    executedCases: Number(counts.executedCases ?? rows.length),
+    warnings,
+    errors,
+    comparedToV1,
+    comparedToGame,
+    v3VsV1Failures: rows.filter((row) => row.v1?.passes === false).length,
+    v3VsGameFailures: rows.filter((row) => row.game?.passes === false).length,
+
+    selectedCases: Number(counts.testcasesFound ?? rows.length),
+    parseErrors: 0,
+    unexpectedErrors: errors,
+    diagnostics: warnings,
+    matchedRows: rows.filter((row) => row.v1 !== null || row.game !== null).length,
+    unmatchedRows: rows.filter((row) => row.v1 === null && row.game === null).length,
   };
 }
 
@@ -185,10 +258,99 @@ export function parityReportDetailHref(
   return `/parity/${encodeURIComponent(reportId)}/case?${params.toString()}`;
 }
 
-function isParityReportJson(value: unknown): value is ParityReportJson {
+function rowsFromReport(report: ParityReportJson): ParityComparisonRow[] {
+  if (!isParityReportJson(report)) return [];
+  return Object.entries(report.testcases)
+    .map(([key, testcase]) => rowFromTestcase(key, testcase))
+    .sort((a, b) => a.key.localeCompare(b.key));
+}
+
+function rowFromTestcase(
+  key: string,
+  testcase: ParityReportTestcase,
+): ParityComparisonRow {
+  const game = testcase.game ?? null;
+  const v1 = testcase.v1 ?? null;
+  const candidate = v1 ?? game;
+  const file = testcase.file ?? key.split("#", 1)[0] ?? "";
+  const testcaseId = testcase.testcase_id ?? testcase.testcaseId ?? "";
+  const idx = Number(testcase.idx ?? key.match(/#(\d+)$/)?.[1] ?? 0);
+
+  return {
+    key,
+    file,
+    testcaseId,
+    idx,
+    detailArtifact: testcase.detailArtifact,
+    deterministic: testcase.deterministic,
+    sampleCount: testcase.sampleCount,
+    game,
+    v1,
+
+    matched: v1 !== null || game !== null,
+    nSim: v1?.n_reference,
+    muSim: v1?.mu_reference,
+    sigmaSim: v1?.sigma_reference,
+    nGame: game?.n_reference,
+    muGame: game?.mu_reference,
+    sigmaGame: game?.sigma_reference,
+    referencePasses: game?.passes,
+    referenceBiasPct: game?.bias_pct,
+    v3N: candidate?.n_candidate,
+    v3Mu: candidate?.mu_candidate,
+    v3Sigma: candidate?.sigma_candidate,
+    v3Sem: candidate?.sem,
+    v3VsV1Passes: v1?.passes,
+    v3VsV1BiasRaw: v1?.bias_raw,
+    v3VsV1BiasPct: v1?.bias_pct,
+    v3VsV1Z: v1?.stat ?? undefined,
+    v3VsGamePasses: game?.passes,
+    v3VsGameBiasRaw: game?.bias_raw,
+    v3VsGameBiasPct: game?.bias_pct,
+    v3VsGameZ: game?.stat ?? undefined,
+  };
+}
+
+function loadDetailArtifact(
+  reportDir: string,
+  detailArtifact: string | undefined,
+): ParityCaseReport | undefined {
+  if (!detailArtifact) return undefined;
+  const reportRoot = path.resolve(reportDir);
+  const artifactPath = path.resolve(reportRoot, detailArtifact);
+  if (!isSubpath(reportRoot, artifactPath)) return undefined;
+
+  try {
+    const data = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
+    if (!isParityCaseDetail(data)) return undefined;
+    return data;
+  } catch {
+    return undefined;
+  }
+}
+
+function isParityReportJson(value: unknown): value is ParityReportJson & {
+  testcases: Record<string, ParityReportTestcase>;
+} {
   if (!value || typeof value !== "object") return false;
   const report = value as ParityReportJson;
-  return Array.isArray(report.cases) && Array.isArray(report.comparison?.table);
+  return (
+    report.reportKind === "v3-parity-summary" &&
+    !!report.testcases &&
+    typeof report.testcases === "object" &&
+    !Array.isArray(report.testcases)
+  );
+}
+
+function isParityCaseDetail(value: unknown): value is ParityCaseReport {
+  if (!value || typeof value !== "object") return false;
+  const detail = value as ParityCaseReport;
+  return (
+    detail.reportKind === "v3-parity-case-detail" &&
+    typeof detail.file === "string" &&
+    typeof detail.testcaseId === "string" &&
+    typeof detail.index === "number"
+  );
 }
 
 function rowMatches(
@@ -202,27 +364,9 @@ function rowMatches(
   );
 }
 
-function caseMatches(
-  row: ParityCaseReport,
-  key: { file: string; testcaseId: string; idx: number },
-): boolean {
-  return (
-    row.testcaseId === key.testcaseId &&
-    row.index === key.idx &&
-    pathVariants(row.file).has(normalizePath(key.file))
-  );
-}
-
-function pathVariants(value: string): Set<string> {
-  const normalized = normalizePath(value);
-  const variants = new Set<string>([normalized]);
-  const idx = normalized.indexOf("testcases/");
-  if (idx >= 0) variants.add(normalized.slice(idx));
-  const v3Idx = normalized.indexOf("v3/testcases/");
-  if (v3Idx >= 0) {
-    variants.add(`testcases/${normalized.slice(v3Idx + "v3/testcases/".length)}`);
-  }
-  return variants;
+function isSubpath(root: string, candidate: string): boolean {
+  const relative = path.relative(root, candidate);
+  return !!relative && !relative.startsWith("..") && !path.isAbsolute(relative);
 }
 
 function normalizePath(value: string): string {
