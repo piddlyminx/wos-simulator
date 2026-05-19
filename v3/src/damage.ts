@@ -94,7 +94,7 @@ export function calculateDamageJob(
   const numeratorProduct = product(NUMERATOR_BUCKETS.map((bucket) => buckets.numerator[bucket].factor));
   const denominatorProduct = product(DENOMINATOR_BUCKETS.map((bucket) => buckets.denominator[bucket].factor)) * 100;
   const rawDamage = denominatorProduct > 0 ? numeratorProduct / denominatorProduct : 0;
-  const kills = Math.min(defenderTroops, rawDamage > 0 ? Math.max(1, Math.floor(rawDamage)) : 0);
+  const kills = Math.min(defenderTroops, Math.max(0, rawDamage));
   const trace = options.trace
     ? {
         roundStartTroops: {

@@ -17,6 +17,22 @@ export interface CalibrationCaseComparison {
   passes?: boolean;
 }
 
+export interface SampleStats {
+  n: number;
+  mu: number;
+  sigma: number;
+  sem: number;
+  samples?: number[];
+}
+
+export interface DistributionCompatibility {
+  biasRaw?: number;
+  biasPct?: number;
+  z?: number;
+  passes?: boolean;
+  statType: "deterministic" | "distribution" | "unmatched";
+}
+
 export interface CalibrationComparison {
   calibrationAvailable: boolean;
   reportPath?: string;
@@ -36,9 +52,24 @@ export interface CalibrationComparisonRow extends CalibrationCaseComparison {
   referencePasses?: boolean;
   referenceBiasPct?: number;
   v3ScoreDelta?: number;
+  v3?: SampleStats;
+  v3VsV1?: DistributionCompatibility;
+  v3VsGame?: DistributionCompatibility;
   v3VsGameRaw?: number;
   v3VsGamePct?: number;
   v3Passes?: boolean;
+  v3N?: number;
+  v3Mu?: number;
+  v3Sigma?: number;
+  v3Sem?: number;
+  v3VsV1BiasRaw?: number;
+  v3VsV1BiasPct?: number;
+  v3VsV1Z?: number;
+  v3VsV1Passes?: boolean;
+  v3VsGameBiasRaw?: number;
+  v3VsGameBiasPct?: number;
+  v3VsGameZ?: number;
+  v3VsGamePasses?: boolean;
 }
 
 export function defaultCalibrationDir(): string {
@@ -103,12 +134,16 @@ export function addCalibrationTableRow(
     testcaseId: string;
     index: number;
     v3ScoreDelta?: number;
+    v3Stats?: SampleStats;
     calibration?: CalibrationCaseComparison;
   }
 ): CalibrationComparisonRow {
   const calibration = caseReport.calibration;
-  const v3VsGameRaw = calibration?.muGame !== undefined && caseReport.v3ScoreDelta !== undefined ? caseReport.v3ScoreDelta - calibration.muGame : undefined;
-  const v3VsGamePct = v3VsGameRaw !== undefined && calibration?.muGame !== undefined ? percentDelta(v3VsGameRaw, calibration.muGame) : undefined;
+  const v3 = caseReport.v3Stats;
+  const v3VsV1 = compareDistributions(v3, calibration?.muSim, calibration?.sigmaSim, calibration?.nSim, comparison.thresholds, calibration?.statType);
+  const v3VsGame = compareDistributions(v3, calibration?.muGame, calibration?.sigmaGame, calibration?.nGame, comparison.thresholds, calibration?.statType);
+  const v3VsGameRaw = v3VsGame.biasRaw;
+  const v3VsGamePct = v3VsGame.biasPct;
   const row: CalibrationComparisonRow = {
     file: relativeDisplayPath(caseReport.file),
     testcaseId: caseReport.testcaseId,
@@ -126,12 +161,42 @@ export function addCalibrationTableRow(
     passes: calibration?.passes,
     biasPct: calibration?.biasPct,
     v3ScoreDelta: caseReport.v3ScoreDelta,
+    v3,
+    v3VsV1,
+    v3VsGame,
     v3VsGameRaw,
     v3VsGamePct,
-    v3Passes: v3VsGameRaw === undefined ? undefined : passesThreshold(v3VsGameRaw, v3VsGamePct, comparison.thresholds)
+    v3Passes: v3VsGame.passes,
+    v3N: v3?.n,
+    v3Mu: v3?.mu,
+    v3Sigma: v3?.sigma,
+    v3Sem: v3?.sem,
+    v3VsV1BiasRaw: v3VsV1.biasRaw,
+    v3VsV1BiasPct: v3VsV1.biasPct,
+    v3VsV1Z: v3VsV1.z,
+    v3VsV1Passes: v3VsV1.passes,
+    v3VsGameBiasRaw: v3VsGame.biasRaw,
+    v3VsGameBiasPct: v3VsGame.biasPct,
+    v3VsGameZ: v3VsGame.z,
+    v3VsGamePasses: v3VsGame.passes
   };
   comparison.table.push(row);
   return row;
+}
+
+export function sampleStats(samples: number[], options: { includeSamples?: boolean } = {}): SampleStats {
+  const n = samples.length;
+  const mu = n > 0 ? samples.reduce((sum, value) => sum + value, 0) / n : 0;
+  const variance = n > 1 ? samples.reduce((sum, value) => sum + (value - mu) ** 2, 0) / (n - 1) : 0;
+  const sigma = Math.sqrt(variance);
+  const sem = n > 0 ? sigma / Math.sqrt(n) : 0;
+  return {
+    n,
+    mu,
+    sigma,
+    sem,
+    ...(options.includeSamples ? { samples: [...samples] } : {})
+  };
 }
 
 function latestCalibrationReportPath(dir: string): string | undefined {
@@ -212,10 +277,48 @@ function normalizeThresholds(value: unknown): Record<string, number> | undefined
   return entries.length > 0 ? Object.fromEntries(entries) : undefined;
 }
 
-function passesThreshold(v3VsGameRaw: number, v3VsGamePct: number | undefined, thresholds?: Record<string, number>): boolean {
-  if (v3VsGamePct === undefined) return v3VsGameRaw === 0;
-  const maxDiffRatio = thresholds?.max_diff_ratio ?? 0.05;
-  return Math.abs(v3VsGamePct) <= maxDiffRatio * 100;
+function compareDistributions(
+  v3: SampleStats | undefined,
+  referenceMu: number | undefined,
+  referenceSigma: number | undefined,
+  referenceN: number | undefined,
+  thresholds?: Record<string, number>,
+  referenceStatType?: string
+): DistributionCompatibility {
+  if (!v3 || referenceMu === undefined || referenceSigma === undefined || referenceN === undefined) return { statType: "unmatched" };
+  const biasRaw = v3.mu - referenceMu;
+  const biasPct = percentDelta(biasRaw, referenceMu);
+  const combinedSem = Math.sqrt((v3.sigma ** 2) / Math.max(1, v3.n) + (referenceSigma ** 2) / Math.max(1, referenceN));
+  const deterministic = referenceStatType === "deterministic" || (v3.sigma === 0 && referenceSigma === 0);
+  if (deterministic || combinedSem === 0) {
+    return {
+      biasRaw,
+      biasPct,
+      statType: "deterministic",
+      passes: deterministicPasses(biasRaw, biasPct, thresholds)
+    };
+  }
+  const z = biasRaw / combinedSem;
+  return {
+    biasRaw,
+    biasPct,
+    z,
+    statType: "distribution",
+    passes: distributionPasses(z, biasPct, thresholds)
+  };
+}
+
+function deterministicPasses(raw: number, pct: number | undefined, thresholds?: Record<string, number>): boolean {
+  if (pct === undefined) return raw === 0;
+  const maxDiffRatio = thresholds?.max_diff_ratio_deterministic ?? thresholds?.max_diff_ratio ?? 0.01;
+  return Math.abs(pct) <= maxDiffRatio * 100;
+}
+
+function distributionPasses(z: number, pct: number | undefined, thresholds?: Record<string, number>): boolean {
+  const minBiasPct = thresholds?.min_bias_pct ?? 0.5;
+  if (pct !== undefined && Math.abs(pct) < minBiasPct) return true;
+  const zThreshold = thresholds?.z_threshold ?? 2;
+  return Math.abs(z) <= zThreshold;
 }
 
 function percentDelta(rawDelta: number, expected: number): number | undefined {

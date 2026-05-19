@@ -85,9 +85,15 @@
     "SiegeInsight": {
       "description": "Widget bonus: Increase Attack by X% for all troops when defending",
       "trigger": {
-        "type": "battle_start",
-        "engagement_type": "garrison"
+        "type": "battle_start"
       },
+      "requirements": [
+        {
+          "level": 1,
+          "type": "engagement_type",
+          "value": "garrison"
+        }
+      ],
       "effects": {
         "SiegeInsight/1": {
           "type": "stat_bonus",

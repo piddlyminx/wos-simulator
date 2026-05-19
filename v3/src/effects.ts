@@ -12,22 +12,26 @@ export function skillMatchesTrigger(
   skill: ResolvedSkill,
   triggerType: "battle_start" | "round_start" | "attack_declared",
   round: number,
-  intent?: AttackIntent,
-  engagementType?: string
+  intent?: AttackIntent
 ): boolean {
   const trigger = skill.trigger;
   if (triggerType === "battle_start" && trigger.type !== "battle_start") return false;
   if (triggerType === "round_start" && trigger.type !== "turn") return false;
   if (triggerType === "attack_declared" && trigger.type !== "attack") return false;
-  if (trigger.engagement_type && normalizeEngagementType(trigger.engagement_type) !== engagementType) return false;
   if (trigger.every && triggerType === "round_start" && !crossedFrequency(round - 1, round, trigger.every)) return false;
-  if (trigger.every && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every)) return false;
+  if (trigger.every && triggerType === "attack_declared" && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every)) return false;
   if (!intent) return true;
   const units = trigger.units ?? {};
+  const triggerFor = normalizeSelector(units.for);
+  if (triggerFor !== "any" && triggerFor !== "all" && triggerFor !== "target" && triggerFor && !triggerFor.includes(intent.attackerUnit)) {
+    return false;
+  }
   const by = normalizeUnitList(units.by);
   if (by && !by.includes(intent.attackerUnit)) return false;
   const appliesVs = normalizeSelector(units.applies_vs);
-  if (appliesVs !== "any" && appliesVs !== "all" && appliesVs !== "target" && appliesVs && !appliesVs.includes(intent.defenderUnit)) return false;
+  if (appliesVs !== "any" && appliesVs !== "all" && appliesVs !== "target" && appliesVs && !appliesVs.includes(intent.defenderUnit)) {
+    return false;
+  }
   if (units.side === "enemy") return skill.side === intent.defenderSide;
   return skill.side === intent.attackerSide;
 }

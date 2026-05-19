@@ -82,8 +82,8 @@ requirements:
 ```ts
 interface SkillRequirement {
   level: number;
-  type: "tier" | "fc";
-  value: number;
+  type: "tier" | "fc" | "engagement_type";
+  value: number | "rally" | "garrison";
 }
 ```
 
@@ -92,6 +92,10 @@ For troop skills, `troop_type` identifies which troop line unlocks the skill.
 The loader should activate the highest requirement level satisfied by the
 fighter's configured troop stats for that troop line. If no requirement is
 satisfied, the skill is inactive.
+
+Hero skills may also use `requirements` for battle-context gates such as
+`engagement_type`. These gates are resolved before `ResolvedSkill` creation, so
+skills whose requirements are not satisfied never enter trigger matching.
 
 ### Effect Intent
 
@@ -256,6 +260,18 @@ Responsibilities:
 - produce one normal `AttackIntent` per attacking living unit type
 - fix pairings before damage calculation for the round
 
+Default target resolution is well-defined: for each attacking troop type, choose
+the first defender troop type that remains alive in this order:
+
+```text
+infantry -> lancer -> marksman
+```
+
+This default order is the same for infantry, lancer, and marksman attackers.
+Skills may modify target order. For example, from tier 7 onward lancers can
+unlock `Ambusher`, which gives lancers a 20% chance to target marksmen directly
+even when infantry and lancers remain alive.
+
 ### Damage Calculator
 
 Owns the complete damage equation and all bucket routing.
@@ -354,7 +370,7 @@ interface TestcaseRunOptions {
   calibrationReportPath?: string; // default: latest v3/testcase_results/*.json
   matching?: string;
   includeDisabled?: boolean;
-  repeat?: number;
+  repeat?: number; // maximum samples for non-deterministic cases
   seed?: string | number;
   trace?: boolean;
 }
@@ -368,6 +384,14 @@ interface TestcaseRunReport {
 
 function runTestcases(options: TestcaseRunOptions, config: SimulatorConfig): TestcaseRunReport;
 ```
+
+`repeat` is a sample count for cases that can use chance-triggered mechanics.
+The runner should resolve both fighters first, inspect the resulting
+`ResolvedSkill` entries, and treat a case as non-deterministic when any resolved
+skill has a trigger `probability` value greater than `0` and less than `100` at
+that skill's active level. Deterministic cases should run once even when
+`repeat` is greater than `1`; non-deterministic cases should run up to `repeat`
+samples with stable per-sample seeds.
 
 The runner should adapt the existing testcase JSON shape into `BattleInput`.
 It must tolerate inaccurate v3 mechanics during early development; the first
@@ -395,7 +419,9 @@ Testcase discovery requirements:
   `.json.stale_troops`
 - when `includeDisabled: true`, include `.json`, `.json.disabled`, and
   `.json.stale_troops`
-- `matching` filters by substring against the full resolved file path
+- with no `matching` filter, run and compare every selected `.json` testcase
+- `matching` is optional and filters by substring against the full resolved file
+  path when provided
 - report absolute file paths in `selectedFiles`, and include a stable relative
   display path in each case report if useful
 
@@ -498,7 +524,7 @@ calibration records by `idx`.
 Provide a CLI equivalent to:
 
 ```bash
-npm --prefix v3 run testcases -- --matching emulator_verified --repeat 1
+npm --prefix v3 run testcases -- --repeat 1
 ```
 
 The command should print a structured JSON report and exit:
@@ -534,6 +560,16 @@ together after normal and extra skill attack for the round have been calculated.
 - Register returned active effects.
 - Collect battle order modifiers.
 
+Round-start triggers may declare `trigger.units.for`. A `turn` trigger rolls its
+chance gate once per round. If it passes, `trigger.units.for: "all"` fans effect
+creation out once for each living friendly unit type. Each fan-out activation
+gets a concrete trigger context with that unit as `trigger` and that unit's
+current primary target as `target`, so an effect using `appliesTo: "trigger"`
+and `appliesVs: "target"` creates one unit-scoped, target-locked active effect
+per living unit type after a single turn-level roll. This is distinct from
+splash damage fan-out: `appliesVs: "all"` on an `extra_skill_attack` creates
+multiple damage jobs, one against each surviving enemy unit type.
+
 There is no required `round_end` trigger unless a future mechanic proves it is
 needed. End-of-round cleanup should be explicit cleanup, not an artificial
 event.
@@ -541,7 +577,9 @@ event.
 ### 3. Resolve Normal Attack Intents
 
 Use the round-start snapshot and active order modifiers to produce normal attack
-intents.
+intents. For each attacking living unit type, resolve the defender unit from the
+default target order `infantry -> lancer -> marksman` unless an active order
+modifier changes the order for that attacker unit.
 
 ```ts
 interface AttackIntent {
@@ -585,12 +623,6 @@ Attack trigger matching must also honor trigger filters:
 - defender or target unit filters
 - counter-frequency filters, using crossing detection rather than exact modulo
 - `probability`, using percentage semantics and the seeded RNG
-- `engagement_type`, using `BattleInput.mechanics.engagement_type` or
-  `BattleInput.mechanics.engagementType`
-
-A trigger with `engagement_type` is inactive unless the input explicitly
-provides the same engagement type. Missing input engagement type means
-rally/garrison-only triggers do not activate.
 
 ### 5. Build Damage Jobs
 
@@ -735,16 +767,21 @@ chance rolls. `BattleInput.seed` selects the sequence; when omitted, v3 uses the
 stable default seed `"v3-default"`. Re-running the same battle with the same
 seed and config must produce the same skill activations and result.
 
+Resolved skills with chance trigger probabilities strictly between `0` and
+`100` make a battle non-deterministic for testcase sampling purposes. Skills
+that do not resolve because their skill level, troop tier/FC, or battle-context
+requirements are not satisfied must not affect the deterministic classification.
+
 Do not reinterpret values less than or equal to `1` as fractions. `0.5` is half
 of one percent, not 50%.
 
 ## Engagement Type Gating
 
-Trigger definitions may set `engagement_type`, currently used by rally-only and
-garrison-only widget skills. A gated trigger is inactive unless the battle input
-explicitly provides the same engagement type through `BattleInput.mechanics`
-(`engagement_type` or `engagementType`). When the input does not provide an
-engagement type, rally/garrison gated triggers do not activate by default.
+Skill requirements may set `type: "engagement_type"`, currently used by
+rally-only and garrison-only widget skills. The loader resolves this requirement
+against `BattleInput.mechanics` (`engagement_type` or `engagementType`) before
+creating `ResolvedSkill` entries. When the input does not provide an engagement
+type, rally/garrison gated skills do not activate by default.
 
 Testcase adaptation should pass testcase-level mechanics through to
 `BattleInput.mechanics` when present. If current testcase data does not contain
@@ -1156,7 +1193,7 @@ tests before or alongside implementation.
 6. Implement `DamageCalculator` with no skills, using explicit damage jobs and
    base/chief/stat bucket inputs.
 7. Implement `ActiveEffectRegistry` applicability, target locks, seeded
-   probability, engagement gating, and duration tests.
+   probability, and duration tests.
 8. Implement `BattleOrderResolver`.
 9. Implement simple battle orchestration for no-skill battles.
 10. Add deterministic battle-start and round-start skill activations.
@@ -1185,7 +1222,7 @@ Baseline validation commands:
 ```bash
 npm --prefix v3 test
 npm --prefix v3 run typecheck
-npm --silent --prefix v3 run testcases -- --matching emulator_verified --repeat 1
+npm --silent --prefix v3 run testcases -- --repeat 1
 ```
 
 The testcase command should report:
@@ -1196,6 +1233,7 @@ The testcase command should report:
 - zero unexpected simulator errors
 - resolved hero names for hero cases
 - resolved troop skill ids
+- deterministic/non-deterministic classification and sample count
 - nonzero skill/effect activation counts for cases containing active skills
 - calibration comparison rows when `v3/testcase_results/*.json` is present
 
@@ -1207,8 +1245,10 @@ Required focused regression tests:
 - `applies_vs: "target"` preserves target lock semantics
 - array-valued `applies_vs` creates extra skill attack jobs for those defender
   unit types
-- `engagement_type` gated triggers require explicit matching mechanics
+- `engagement_type` skill requirements require explicit matching mechanics
 - probability values are percentages, including `1` and `0.5`
+- deterministic testcase classification is based on resolved skills with chance
+  triggers, and deterministic cases run once even when `repeat` is larger
 - duplicate testcase ids in one file match calibration records by `idx`
 - no-hero base cases expose game, calibration, and v3 result fields side by side
 
@@ -1224,7 +1264,7 @@ Required focused regression tests:
 - `stat_bonus` is not a separate calculation mechanism; it is source evidence
   for effect classification unless proven otherwise by game evidence.
 - Probability values are percentages, not fractions.
-- Gated engagement triggers are inactive unless battle mechanics explicitly
-  match.
-- Dashboard comparison identity is latest run id + testcase file variant +
-  testcase id + testcase `idx`.
+- Engagement type skill requirements are inactive unless battle mechanics
+  explicitly match.
+- Calibration comparison identity is testcase file variant + testcase id +
+  testcase `idx`.

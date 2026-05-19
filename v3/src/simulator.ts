@@ -3,6 +3,7 @@ import type {
   AttackIntent,
   AttackOutcome,
   BattleInput,
+  BattleRandomness,
   BattleResult,
   BattleTrace,
   DamageJob,
@@ -15,10 +16,12 @@ import type {
 } from "./types.js";
 import { UNIT_TYPES } from "./types.js";
 import { calculateDamageJob } from "./damage.js";
-import { activateEffect, chancePasses, createSeededRng, isEffectActive, normalizeEngagementType, oppositeSide, skillMatchesTrigger, type Rng } from "./effects.js";
+import { activateEffect, chancePasses, createSeededRng, isEffectActive, oppositeSide, skillMatchesTrigger, type Rng } from "./effects.js";
 import { basicEffectApplies, classifyEffectForJob } from "./classifier.js";
 import { normalizeUnitType } from "./normalize.js";
 import { emptyTroops, resolveFighter } from "./resolve.js";
+
+const DEFAULT_MAX_ROUNDS = 1500;
 
 interface Runtime {
   activeEffects: ActiveEffect[];
@@ -34,16 +37,15 @@ interface Runtime {
 }
 
 export function simulateBattle(input: BattleInput, config: SimulatorConfig): BattleResult {
-  const attacker = resolveFighter(input.attacker, "attacker", config);
-  const defender = resolveFighter(input.defender, "defender", config);
+  const attacker = resolveFighter(input.attacker, "attacker", config, input.mechanics);
+  const defender = resolveFighter(input.defender, "defender", config, input.mechanics);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
   const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "v3-default"));
   const trace: BattleTrace | undefined = input.trace ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;
   const attacks: AttackOutcome[] = [];
-  const maxRounds = input.maxRounds ?? 100;
-  const engagementType = battleEngagementType(input);
+  const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
 
-  triggerSkills("battle_start", 0, allSkills(fighters), runtime, undefined, engagementType);
+  triggerSkills("battle_start", 0, allSkills(fighters), runtime);
 
   let rounds = 0;
   for (let round = 1; round <= maxRounds; round += 1) {
@@ -51,14 +53,14 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
     rounds = round;
     const roundStartTroops = snapshotTroops(fighters);
     expireInactive(runtime, round);
-    triggerSkills("round_start", round, allSkills(fighters), runtime, undefined, engagementType);
+    triggerRoundStartSkills(round, fighters, runtime, roundStartTroops);
 
     const intents = resolveAttackIntents(round, fighters, runtime, roundStartTroops);
     const jobs: DamageJob[] = [];
     const cancelled: AttackOutcome[] = [];
 
     for (const intent of intents) {
-      const attackEffects = triggerSkills("attack_declared", round, allSkills(fighters), runtime, intent, engagementType);
+      const attackEffects = triggerSkills("attack_declared", round, allSkills(fighters), runtime, intent);
       const controls = applicableControls(intent, round, runtime.activeEffects, roundStartTroops);
       if (controls.no_attack || controls.dodge) {
         const control = controls.no_attack ?? controls.dodge!;
@@ -87,7 +89,7 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
   return {
     winner,
     rounds,
-    remaining: { attacker: { ...attacker.troops }, defender: { ...defender.troops } },
+    remaining: { attacker: ceilTroops(attacker.troops), defender: ceilTroops(defender.troops) },
     attacks,
     skillReport: {
       attacker: [...runtime.skillReports.attacker.values()],
@@ -97,8 +99,118 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
     effectActivationCounts: runtime.effectActivationCounts,
     extraSkillAttackJobsByEffect: runtime.extraSkillAttackJobsByEffect,
     attackControlCounts: runtime.attackControlCounts,
+    randomness: classifyRandomness(fighters),
     trace
   };
+}
+
+function triggerRoundStartSkills(
+  round: number,
+  fighters: Record<SideId, ResolvedFighter>,
+  runtime: Runtime,
+  roundStartTroops: DamageJob["roundStartTroops"]
+): ActiveEffect[] {
+  const activated: ActiveEffect[] = [];
+  const skills = allSkills(fighters);
+  activated.push(...triggerSkills("round_start", round, skills.filter((skill) => !hasPerUnitRoundTrigger(skill)), runtime));
+  for (const skill of skills) {
+    if (!hasPerUnitRoundTrigger(skill)) continue;
+    const side = skill.side;
+    const defenderSide = oppositeSide(side);
+    if (!skillMatchesTrigger(skill, "round_start", round)) continue;
+    const report = runtime.skillReports[skill.side].get(reportKey(skill));
+    if (report) report.triggersSeen += 1;
+    if (!chancePasses(skill, runtime.rng)) continue;
+    if (report) report.skillActivations += 1;
+    let orderIndex = 0;
+    const activatedEffectIds = new Set<string>();
+    for (const attackerUnit of roundTriggerUnits(skill, roundStartTroops)) {
+      const defenderUnit = chooseDefenderUnit(attackerUnit, defenderSide, roundStartTroops, runtime.activeEffects, round);
+      if (!defenderUnit) continue;
+      const intent = syntheticRoundIntent(round, side, attackerUnit, defenderSide, defenderUnit, orderIndex, runtime);
+      if (!skillMatchesTrigger(skill, "round_start", round, intent)) continue;
+      for (const effectIntent of skill.effects) {
+        if (effectIntent.requires_effect && !activatedEffectIds.has(effectIntent.requires_effect)) {
+          const hasActiveRequired = runtime.activeEffects.some((effect) => effect.intent.id === effectIntent.requires_effect && isEffectActive(effect, round));
+          if (!hasActiveRequired) continue;
+        }
+        const effect = activateEffect(skill, effectIntent, round, intent);
+        activatedEffectIds.add(effectIntent.id);
+        if (effectIntent.type !== "extra_skill_attack") runtime.activeEffects.push(effect);
+        activated.push(effect);
+        runtime.effectActivationCounts[skill.side] += 1;
+        if (report) report.effectActivations += 1;
+      }
+      orderIndex += 1;
+    }
+  }
+  return activated;
+}
+
+function hasPerUnitRoundTrigger(skill: ResolvedSkill): boolean {
+  return skill.trigger.type === "turn" && skill.trigger.units !== undefined && Object.prototype.hasOwnProperty.call(skill.trigger.units, "for");
+}
+
+function roundTriggerUnits(skill: ResolvedSkill, roundStartTroops: DamageJob["roundStartTroops"]): UnitType[] {
+  const selector = skill.trigger.units?.for;
+  const living = UNIT_TYPES.filter((unit) => (roundStartTroops[skill.side][unit] ?? 0) > 0);
+  if (selector === "all" || selector === "any") return living;
+  if (Array.isArray(selector)) {
+    const selected = selector.map((value) => normalizeUnitType(String(value)));
+    return living.filter((unit) => selected.includes(unit));
+  }
+  if (typeof selector === "string") {
+    try {
+      const unit = normalizeUnitType(selector);
+      return living.includes(unit) ? [unit] : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function syntheticRoundIntent(
+  round: number,
+  attackerSide: SideId,
+  attackerUnit: UnitType,
+  defenderSide: SideId,
+  defenderUnit: UnitType,
+  orderIndex: number,
+  runtime: Runtime
+): AttackIntent {
+  return {
+    id: `r${round}:${attackerSide}:${attackerUnit}:turn:${orderIndex}`,
+    round,
+    source: "normal",
+    attackerSide,
+    attackerUnit,
+    defenderSide,
+    defenderUnit,
+    orderIndex,
+    previousAttackCount: runtime.counters.attacks[attackerSide][attackerUnit],
+    projectedAttackCount: runtime.counters.attacks[attackerSide][attackerUnit],
+    previousReceivedAttackCount: runtime.counters.received[defenderSide][defenderUnit],
+    projectedReceivedAttackCount: runtime.counters.received[defenderSide][defenderUnit]
+  };
+}
+
+function classifyRandomness(fighters: Record<SideId, ResolvedFighter>): BattleRandomness {
+  const chanceSkillIds: Record<SideId, string[]> = { attacker: [], defender: [] };
+  for (const skill of allSkills(fighters)) {
+    if (hasChanceTrigger(skill)) chanceSkillIds[skill.side].push(skill.id);
+  }
+  return {
+    deterministic: chanceSkillIds.attacker.length === 0 && chanceSkillIds.defender.length === 0,
+    chanceSkillIds
+  };
+}
+
+function hasChanceTrigger(skill: ResolvedSkill): boolean {
+  const probability = skill.trigger.probability;
+  if (probability === undefined) return false;
+  const value = Array.isArray(probability) ? Number(probability[Math.max(0, Math.min(probability.length - 1, skill.level - 1))]) : Number(probability);
+  return Number.isFinite(value) && value > 0 && value < 100;
 }
 
 function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
@@ -138,13 +250,12 @@ function triggerSkills(
   round: number,
   skills: ResolvedSkill[],
   runtime: Runtime,
-  intent?: AttackIntent,
-  engagementType?: string
+  intent?: AttackIntent
 ): ActiveEffect[] {
   const activated: ActiveEffect[] = [];
   const activatedEffectIds = new Set<string>();
   for (const skill of skills) {
-    if (!skillMatchesTrigger(skill, triggerType, round, intent, engagementType)) continue;
+    if (!skillMatchesTrigger(skill, triggerType, round, intent)) continue;
     const report = runtime.skillReports[skill.side].get(reportKey(skill));
     if (report) report.triggersSeen += 1;
     if (!chancePasses(skill, runtime.rng)) continue;
@@ -381,6 +492,10 @@ function snapshotTroops(fighters: Record<SideId, ResolvedFighter>): DamageJob["r
   };
 }
 
+function ceilTroops(troops: Record<UnitType, number>): Record<UnitType, number> {
+  return Object.fromEntries(UNIT_TYPES.map((unit) => [unit, Math.ceil(troops[unit] ?? 0)])) as Record<UnitType, number>;
+}
+
 function buildResolved(attacker: ResolvedFighter, defender: ResolvedFighter): BattleResult["resolved"] {
   return {
     attacker: {
@@ -400,8 +515,4 @@ function buildResolved(attacker: ResolvedFighter, defender: ResolvedFighter): Ba
 
 function reportKey(skill: ResolvedSkill): string {
   return `${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? ""}:${skill.id}`;
-}
-
-function battleEngagementType(input: BattleInput): string | undefined {
-  return normalizeEngagementType(input.mechanics?.engagement_type ?? input.mechanics?.engagementType);
 }

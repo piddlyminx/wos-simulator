@@ -69,12 +69,14 @@ export function loadSimulatorConfig(options: { configDir?: string } = {}): Simul
     collectEffectDiagnostics(hero, join(heroDir, `${name}.json`), diagnostics);
   }
 
+  const heroAliasIndex = buildHeroAliasIndex(heroDefinitions);
+
   if (diagnostics.legacyFields.length > 0) {
     const first = diagnostics.legacyFields[0];
     throw new Error(`Legacy field found in v3 config: ${first.field} at ${first.file}:${first.path}`);
   }
 
-  return { troopStats, heroGenerationStats, heroDefinitions, troopSkills, diagnostics };
+  return { troopStats, heroGenerationStats, heroDefinitions, heroAliasIndex, troopSkills, diagnostics };
 }
 
 function readJson(path: string, diagnostics: ConfigDiagnostics): unknown {
@@ -111,6 +113,29 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       }
     }
   }
+}
+
+function buildHeroAliasIndex(heroDefinitions: Record<string, SkillFile>): Record<string, string> {
+  const index: Record<string, string> = {};
+  for (const [key, definition] of Object.entries(heroDefinitions)) {
+    addHeroAlias(index, key, key);
+    if (definition.name) addHeroAlias(index, definition.name, key);
+  }
+  return index;
+}
+
+function addHeroAlias(index: Record<string, string>, alias: string, heroKey: string): void {
+  const normalized = normalizeHeroAlias(alias);
+  if (!normalized) return;
+  const existing = index[normalized];
+  if (existing && existing !== heroKey) {
+    throw new Error(`Duplicate hero alias ${normalized} resolves to both ${existing} and ${heroKey}`);
+  }
+  index[normalized] = heroKey;
+}
+
+function normalizeHeroAlias(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
 export function fileExists(path: string): boolean {

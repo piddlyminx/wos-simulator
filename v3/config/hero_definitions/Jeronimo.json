@@ -76,9 +76,15 @@
     "BattleStance": {
       "description": "Widget bonus: Increase Attack by X% for all troops when attacking",
       "trigger": {
-        "type": "battle_start",
-        "engagement_type": "rally"
+        "type": "battle_start"
       },
+      "requirements": [
+        {
+          "level": 1,
+          "type": "engagement_type",
+          "value": "rally"
+        }
+      ],
       "effects": {
         "BattleStance/1": {
           "type": "stat_bonus",

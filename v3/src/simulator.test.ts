@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfig } from "./config.js";
 import { createSeededRng, chancePasses } from "./effects.js";
 import { resolveFighter } from "./resolve.js";
 import { simulateBattle } from "./simulator.js";
-import type { ResolvedSkill, SimulatorConfig, SkillFile } from "./types.js";
+import type { BattleInput, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types.js";
 
 test("simulateBattle returns structured result for a no-hero battle", () => {
   const config = loadSimulatorConfig();
@@ -70,6 +72,72 @@ test("simulateBattle calculates all same-round damage from the round-start troop
   assert.equal(result.trace?.rounds[0]?.roundStartTroops.attacker.infantry, 1);
   assert.equal(result.trace?.rounds[0]?.roundStartTroops.defender.infantry, 1);
   assert.equal(normalAttacks[1]?.trace?.roundStartTroops.defender.infantry, 1);
+});
+
+test("simulateBattle carries fractional casualties between rounds and ceils final survivors", () => {
+  const config = loadSimulatorConfig();
+  const fixturePath = fileURLToPath(new URL("../testcases/emulator_verified/simple_001_nc.json", import.meta.url));
+  const testcases = JSON.parse(readFileSync(fixturePath, "utf8")) as Array<BattleInput & { test_id: string }>;
+  const input = testcases.find((testcase) => testcase.test_id === "simple_001");
+  assert.notEqual(input, undefined);
+
+  const result = simulateBattle({ ...input!, trace: true }, config);
+
+  assert.equal(totalRemaining(result.remaining.attacker) - totalRemaining(result.remaining.defender), -186);
+  assert.equal(result.remaining.defender.lancer, 186);
+  assert.equal(result.trace?.rounds[1]?.roundStartTroops.defender.lancer.toFixed(6), "198.003308");
+});
+
+test("simulateBattle defaults to a 1500 round cap when no explicit maxRounds is provided", () => {
+  const result = simulateBattle(
+    {
+      attacker: { troops: {}, heroes: {} },
+      defender: { troops: {}, heroes: {} }
+    },
+    minimalConfig()
+  );
+
+  assert.equal(result.winner, "draw");
+  assert.equal(result.rounds, 1500);
+});
+
+test("round-start trigger units.for all rolls once then creates one target-locked effect per live unit type", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 100, lancer_t1: 100 },
+        heroes: { PerUnit: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { lancer_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      PerUnit: {
+        name: "PerUnit",
+        skills: {
+          RoundFanout: {
+            trigger: { type: "turn", units: { for: "all" } },
+            effects: {
+              buff: {
+                type: "damage_up",
+                value: 100,
+                units: { applies_to: "trigger", applies_vs: "target" },
+                duration: { type: "turn", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const report = result.skillReport.attacker.find((entry) => entry.skillId === "RoundFanout");
+  assert.equal(report?.triggersSeen, 1);
+  assert.equal(report?.skillActivations, 1);
+  assert.equal(report?.effectActivations, 2);
 });
 
 test("simulateBattle reports resolved heroes, troop skills, activations, controls, and extra skill jobs", () => {
@@ -224,17 +292,19 @@ test("extra skill attacks with array applies_vs target those defender unit types
   );
 });
 
-test("engagement_type-gated triggers require matching battle mechanics", () => {
+test("engagement_type requirements decide whether hero skills resolve", () => {
   const config = minimalConfig({
     Gated: {
       name: "Gated",
       skills: {
         RallyOnly: {
-          trigger: { type: "battle_start", engagement_type: "rally" },
+          requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
+          trigger: { type: "battle_start" },
           effects: { rally: { type: "stat_bonus", stat: "attack", value: 10 } }
         },
         GarrisonOnly: {
-          trigger: { type: "battle_start", engagement_type: "garrison" },
+          requirements: [{ level: 1, type: "engagement_type", value: "garrison" }],
+          trigger: { type: "battle_start" },
           effects: { garrison: { type: "stat_bonus", stat: "defense", value: 10 } }
         }
       }
@@ -258,10 +328,59 @@ test("engagement_type-gated triggers require matching battle mechanics", () => {
 
   assert.equal(skillActivations(defaultResult, "RallyOnly"), 0);
   assert.equal(skillActivations(defaultResult, "GarrisonOnly"), 0);
+  assert.equal(defaultResult.skillReport.attacker.some((entry) => entry.skillId === "RallyOnly"), false);
+  assert.equal(defaultResult.skillReport.attacker.some((entry) => entry.skillId === "GarrisonOnly"), false);
   assert.equal(skillActivations(rallyResult, "RallyOnly"), 1);
   assert.equal(skillActivations(rallyResult, "GarrisonOnly"), 0);
+  assert.equal(rallyResult.skillReport.attacker.some((entry) => entry.skillId === "GarrisonOnly"), false);
   assert.equal(skillActivations(garrisonResult, "RallyOnly"), 0);
   assert.equal(skillActivations(garrisonResult, "GarrisonOnly"), 1);
+  assert.equal(garrisonResult.skillReport.attacker.some((entry) => entry.skillId === "RallyOnly"), false);
+});
+
+test("simulateBattle identifies stochastic battles from resolved chance triggers", () => {
+  const config = minimalConfig({
+    Chance: {
+      name: "Chance",
+      skills: {
+        CoinFlip: {
+          trigger: { type: "battle_start", probability: [50] },
+          effects: { buff: { type: "stat_bonus", stat: "attack", value: 10 } }
+        },
+        RallyCoinFlip: {
+          requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
+          trigger: { type: "battle_start", probability: [50] },
+          effects: { rally: { type: "stat_bonus", stat: "attack", value: 10 } }
+        }
+      }
+    }
+  });
+
+  const input = {
+    maxRounds: 0,
+    attacker: {
+      troops: { infantry_t1: 10 },
+      heroes: { Chance: { skill_1: 1, skill_2: 1 } }
+    },
+    defender: {
+      troops: { infantry_t1: 10 },
+      heroes: {}
+    }
+  };
+
+  const chanceResult = simulateBattle(input, config);
+  const gatedOnlyResult = simulateBattle(
+    {
+      ...input,
+      attacker: { ...input.attacker, heroes: { Chance: { skill_2: 1 } } }
+    },
+    config
+  );
+
+  assert.equal(chanceResult.randomness.deterministic, false);
+  assert.deepEqual(chanceResult.randomness.chanceSkillIds.attacker, ["CoinFlip"]);
+  assert.equal(gatedOnlyResult.randomness.deterministic, true);
+  assert.deepEqual(gatedOnlyResult.randomness.chanceSkillIds.attacker, []);
 });
 
 test("seeded probability rolls are deterministic and compare percentage thresholds", () => {
@@ -295,6 +414,10 @@ test("seeded probability rolls are deterministic and compare percentage threshol
 
 function skillActivations(result: ReturnType<typeof simulateBattle>, skillId: string): number {
   return result.skillReport.attacker.find((entry) => entry.skillId === skillId)?.skillActivations ?? 0;
+}
+
+function totalRemaining(troops: Record<UnitType, number>): number {
+  return Object.values(troops).reduce((sum, count) => sum + count, 0);
 }
 
 function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): SimulatorConfig {

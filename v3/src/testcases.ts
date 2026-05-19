@@ -7,7 +7,9 @@ import {
   loadCalibrationComparison,
   readCalibrationCase,
   type CalibrationCaseComparison,
-  type CalibrationComparison
+  type CalibrationComparison,
+  type SampleStats,
+  sampleStats
 } from "./calibration.js";
 import { simulateBattle } from "./simulator.js";
 import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, UnitType } from "./types.js";
@@ -31,6 +33,9 @@ export interface TestcaseCaseReport {
   calibration?: CalibrationCaseComparison;
   result?: BattleResult;
   v3ScoreDelta?: number;
+  v3Stats?: SampleStats;
+  deterministic?: boolean;
+  sampleCount?: number;
   visibility: {
     attacker: CaseVisibility;
     defender: CaseVisibility;
@@ -101,11 +106,21 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
       try {
         const input = adaptTestcaseEntry(entry, { seed: options.seed, trace: options.trace }, diagnostics);
         aggregate.adaptedCases += 1;
-        let result: BattleResult | undefined;
-        for (let iteration = 0; iteration < repeat; iteration += 1) {
-          result = simulateBattle(input, config);
+        const samples: number[] = [];
+        let result = simulateBattle(sampleInput(input, options.seed, file, testcaseId, index, 0), config);
+        const firstScore = battleScoreDelta(result);
+        if (firstScore !== undefined) samples.push(firstScore);
+        const sampleCount = result.randomness.deterministic ? 1 : repeat;
+        for (let iteration = 1; iteration < sampleCount; iteration += 1) {
+          result = simulateBattle(sampleInput(input, options.seed, file, testcaseId, index, iteration), config);
+          const score = battleScoreDelta(result);
+          if (score !== undefined) samples.push(score);
         }
+        const stats = sampleStats(samples);
         report.result = result;
+        report.deterministic = result.randomness.deterministic;
+        report.sampleCount = sampleCount;
+        report.v3Stats = stats;
         report.v3ScoreDelta = battleScoreDelta(result);
         aggregate.executedCases += 1;
         report.gameResult = (entry as { game_report_result?: unknown }).game_report_result;
@@ -115,6 +130,7 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
           testcaseId,
           index,
           v3ScoreDelta: report.v3ScoreDelta,
+          v3Stats: report.v3Stats,
           calibration: report.calibration
         });
         report.visibility = visibilityFromResult(result);
@@ -146,12 +162,13 @@ export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | nu
   if (!object.attacker || !object.defender) throw new Error(`Testcase ${object.test_id ?? "(unknown)"} is missing attacker or defender`);
   diagnostics.push(...diagnoseFighterShape("attacker", object.attacker), ...diagnoseFighterShape("defender", object.defender));
   const mechanics = testcaseMechanics(object);
+  const maxRounds = optionalNumber(object.maxRounds ?? object.max_rounds);
   return {
     attacker: object.attacker,
     defender: object.defender,
-    maxRounds: Number(object.maxRounds ?? object.max_rounds) || 100,
     seed: options.seed,
     trace: options.trace,
+    ...(maxRounds !== undefined ? { maxRounds } : {}),
     ...(mechanics ? { mechanics } : {})
   };
 }
@@ -239,10 +256,24 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+function optionalNumber(value: unknown): number | undefined {
+  if (value === undefined) return undefined;
+  const number = Number(value);
+  return Number.isFinite(number) ? number : undefined;
+}
+
 function isBattleResult(value: unknown): value is BattleResult {
   return !!value && typeof value === "object" && "remaining" in value;
 }
 
 function totalSide(troops: Record<UnitType, number>): number {
   return (troops.infantry ?? 0) + (troops.lancer ?? 0) + (troops.marksman ?? 0);
+}
+
+function sampleSeed(baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): string {
+  return `${baseSeed ?? "v3-default"}:${relative(process.cwd(), file)}:${testcaseId}:${index}:${iteration}`;
+}
+
+function sampleInput(input: BattleInput, baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): BattleInput {
+  return { ...input, seed: sampleSeed(baseSeed ?? input.seed, file, testcaseId, index, iteration) };
 }
