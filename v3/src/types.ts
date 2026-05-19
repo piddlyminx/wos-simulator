@@ -1,8 +1,38 @@
 export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
 export type DamageKind = "normal" | "skill";
+export type UnitMask = number;
+export type ActiveEffectKind = "modifier" | "extra_attack" | "control" | "battle_order";
 
 export const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
+export const UNIT_BITS: Record<UnitType, UnitMask> = {
+  infantry: 1 << 0,
+  lancer: 1 << 1,
+  marksman: 1 << 2
+};
+export const ALL_UNIT_MASK: UnitMask = UNIT_TYPES.reduce((mask, unit) => mask | UNIT_BITS[unit], 0);
+
+export interface ResolvedUnitScope {
+  side: SideId;
+  units: UnitMask;
+}
+
+export interface TriggerDamageJobDefinition {
+  id: string;
+}
+
+export function unitMask(units: UnitType | UnitType[]): UnitMask {
+  const list = Array.isArray(units) ? units : [units];
+  return list.reduce((mask, unit) => mask | UNIT_BITS[unit], 0);
+}
+
+export function unitMaskHas(mask: UnitMask, unit: UnitType): boolean {
+  return (mask & UNIT_BITS[unit]) !== 0;
+}
+
+export function unitsFromMask(mask: UnitMask): UnitType[] {
+  return UNIT_TYPES.filter((unit) => unitMaskHas(mask, unit));
+}
 
 export interface StatBlock {
   attack: number;
@@ -157,12 +187,11 @@ export interface ActiveEffect {
   source: EffectSource;
   intent: EffectIntentDefinition;
   ownerSide: SideId;
-  affectedSide: SideId;
+  kind: ActiveEffectKind;
   valuePct?: number;
-  appliesTo: UnitType[];
-  appliesVs: UnitType[] | "any" | "target" | "all";
-  lockedTarget?: UnitType;
-  sourceUnit?: UnitType;
+  appliesTo: ResolvedUnitScope;
+  appliesVs: ResolvedUnitScope;
+  triggerDamageJobs?: TriggerDamageJobDefinition[];
   createdRound: number;
   startRound: number;
   duration: EffectDuration;

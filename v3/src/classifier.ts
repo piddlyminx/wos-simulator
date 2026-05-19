@@ -1,4 +1,5 @@
-import type { ActiveEffect, DamageJob, UnitType } from "./types.js";
+import type { ActiveEffect, DamageJob, SideId, UnitType } from "./types.js";
+import { unitMaskHas } from "./types.js";
 
 export type BucketName = `numerator.${string}` | `denominator.${string}`;
 
@@ -53,11 +54,11 @@ export function classifyEffectForJob(effect: ActiveEffect, job: DamageJob): Clas
     const bucket = STAT_BONUS_BUCKETS[String(effect.intent.stat ?? "").toLowerCase()];
     return bucket ? { kind: "bucket", bucket } : { kind: "report_only", reason: "unsupported_stat_bonus" };
   }
-  if (effect.affectedSide === job.attackerSide) {
+  if (effect.appliesTo.side === job.attackerSide) {
     const bucket = ATTACKER_BUCKETS[type];
     return bucket ? { kind: "bucket", bucket } : { kind: "report_only", reason: "unsupported_attacker_effect" };
   }
-  if (effect.affectedSide === job.defenderSide) {
+  if (effect.appliesTo.side === job.defenderSide) {
     const bucket = DEFENDER_BUCKETS[type];
     return bucket ? { kind: "bucket", bucket } : { kind: "report_only", reason: "unsupported_defender_effect" };
   }
@@ -65,10 +66,15 @@ export function classifyEffectForJob(effect: ActiveEffect, job: DamageJob): Clas
 }
 
 export function basicEffectApplies(effect: ActiveEffect, job: DamageJob): boolean {
-  const affectedUnit = effect.affectedSide === job.attackerSide ? job.attackerUnit : effect.affectedSide === job.defenderSide ? job.defenderUnit : undefined;
-  if (!affectedUnit || !effect.appliesTo.includes(affectedUnit)) return false;
-  if (effect.appliesVs === "any" || effect.appliesVs === "all") return true;
-  if (effect.appliesVs === "target") return !effect.lockedTarget || effect.lockedTarget === job.defenderUnit;
-  const opposingUnit: UnitType = effect.affectedSide === job.attackerSide ? job.defenderUnit : job.attackerUnit;
-  return effect.appliesVs.includes(opposingUnit);
+  const affectedUnit = unitForSide(effect.appliesTo.side, job);
+  if (!affectedUnit || !unitMaskHas(effect.appliesTo.units, affectedUnit)) return false;
+  const opposingUnit = unitForSide(effect.appliesVs.side, job);
+  if (!opposingUnit || !unitMaskHas(effect.appliesVs.units, opposingUnit)) return false;
+  return true;
+}
+
+function unitForSide(side: SideId, job: DamageJob): UnitType | undefined {
+  if (side === job.attackerSide) return job.attackerUnit;
+  if (side === job.defenderSide) return job.defenderUnit;
+  return undefined;
 }

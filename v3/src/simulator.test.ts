@@ -334,6 +334,49 @@ test("extra skill attacks with array applies_vs target those defender unit types
   );
 });
 
+test("attack-triggered source and target selectors resolve to concrete active scopes", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { infantry_t1: 100 },
+        heroes: { Debuffer: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      Debuffer: {
+        name: "Debuffer",
+        skills: {
+          TargetedDebuff: {
+            trigger: { type: "attack", units: { by: "infantry" } },
+            effects: {
+              down: {
+                type: "damage_down",
+                value: 50,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                duration: { type: "turn", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const attackerAttack = result.attacks.find((attack) => attack.attackerSide === "attacker" && attack.attackerUnit === "infantry");
+  const defenderLancerAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "lancer");
+  const defenderMarksmanAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "marksman");
+
+  assert.equal(attackerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 50);
+  assert.equal(defenderLancerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+  assert.equal(defenderMarksmanAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+});
+
 test("engagement_type requirements decide whether hero skills resolve", () => {
   const config = minimalConfig({
     Gated: {
