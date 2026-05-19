@@ -1,6 +1,6 @@
 import type { ActiveEffect, ActiveEffectKind, AttackIntent, EffectDuration, EffectIntentDefinition, ResolvedSkill, ResolvedUnitScope, SideId, UnitType } from "./types.js";
 import { ALL_UNIT_MASK, UNIT_TYPES, unitMask } from "./types.js";
-import { normalizeUnitType } from "./normalize.js";
+import { normalizeUnitType, valueAtLevel } from "./normalize.js";
 
 export type Rng = () => number;
 
@@ -66,6 +66,7 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
   const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent);
   const duration = normalizeDuration(intent.duration);
   const delay = duration.delay ?? 0;
+  const effectKind = kindForIntent(intent);
   return {
     id: `${skill.side}:${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? "global"}:${skill.id}:${intent.id}:r${round}:${attackIntent?.id ?? "global"}`,
     source: {
@@ -79,10 +80,11 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
     },
     intent,
     ownerSide,
-    kind: kindForIntent(intent),
+    kind: effectKind,
     valuePct: typeof intent.value === "number" ? intent.value : undefined,
     appliesTo,
     appliesVs,
+    triggerDamageJobs: effectKind === "extra_attack" ? triggerDamageJobsForIntent(intent, skill.level) : undefined,
     createdRound: round,
     startRound: round + delay,
     duration,
@@ -140,6 +142,30 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
   if (intent.type === "dodge" || intent.type === "no_attack") return "control";
   if (intent.type === "attack_order") return "battle_order";
   return "modifier";
+}
+
+function triggerDamageJobsForIntent(intent: EffectIntentDefinition, level: number): ActiveEffect["triggerDamageJobs"] {
+  const explicit = intent.trigger_damage_jobs;
+  if (explicit && explicit.length > 0) {
+    return explicit.map((job) => ({
+      ...job,
+      multiplier: job.multiplier === undefined ? undefined : valueAtLevel(job.multiplier, level)
+    }));
+  }
+  const appliesVs = intent.units?.applies_vs;
+  return [
+    {
+      source: "use.source",
+      target: legacyExtraSkillTargetSelector(appliesVs),
+      multiplier: intent.value
+    }
+  ];
+}
+
+function legacyExtraSkillTargetSelector(appliesVs: unknown): unknown {
+  if (appliesVs === undefined || appliesVs === "any" || appliesVs === "target") return "use.target";
+  if (appliesVs === "all") return "enemy.living";
+  return appliesVs;
 }
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {

@@ -18,7 +18,10 @@ export interface ResolvedUnitScope {
 }
 
 export interface TriggerDamageJobDefinition {
-  id: string;
+  id?: string;
+  source?: unknown;
+  target?: unknown;
+  multiplier?: unknown;
 }
 
 export function unitMask(units: UnitType | UnitType[]): UnitMask {
@@ -64,6 +67,7 @@ export interface EffectIntentDefinition {
   stat?: string;
   value?: unknown;
   units?: Record<string, unknown>;
+  trigger_damage_jobs?: TriggerDamageJobDefinition[];
   duration?: { type?: string; value?: number; delay?: number };
   same_effect_stacking?: string;
   reason?: string;
@@ -226,6 +230,7 @@ export interface DamageJob {
   defenderUnit: UnitType;
   sourceEffectId?: string;
   sourceMultiplier?: number;
+  consumedEffectIds?: string[];
 }
 
 export interface CounterDelta {
