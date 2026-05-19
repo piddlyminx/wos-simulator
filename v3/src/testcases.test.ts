@@ -21,23 +21,39 @@ test("discoverTestcaseFiles includes disabled and stale testcase files when requ
   assert.ok(files.some((file) => file.endsWith("emulator_verified/reina_logan_combo_v2.json.stale_troops")));
 });
 
-test("runTestcases adapts selected testcase entries and includes calibration comparison metadata", () => {
+test("runTestcases returns compact summary entries and full detail entries separately", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 5 }, config);
+  const key = Object.keys(report.testcases)[0];
+  const summary = report.testcases[key];
+  const detail = report.details[0];
 
-  assert.equal(report.selectedCases, 1);
-  assert.equal(report.aggregate.executedCases, 1);
-  assert.equal(report.aggregate.unexpectedErrors, 0);
-  assert.equal(report.cases[0]?.testcaseId, "simple_001");
-  assert.ok(report.cases[0]?.result);
-  assert.equal(report.cases[0]?.deterministic, false);
-  assert.equal(report.cases[0]?.sampleCount, 5);
-  assert.equal(report.cases[0]?.v3Stats?.n, 5);
-  assert.equal(typeof report.cases[0]?.v3Stats?.mu, "number");
-  assert.equal(typeof report.cases[0]?.v3Stats?.sigma, "number");
-  assert.ok(report.cases[0]?.visibility.attacker.troops.lancer);
-  assert.ok(report.comparison.calibrationAvailable);
-  assert.equal(report.comparison.totalReferenceCases, 164);
+  assert.equal(report.reportKind, "v3-parity-summary");
+  assert.equal(report.counts.filesFound, 1);
+  assert.equal(report.counts.testcasesFound, 1);
+  assert.equal(report.counts.executed, 1);
+  assert.equal(report.counts.errors, 0);
+  assert.equal(summary?.testcase_id, "simple_001");
+  assert.equal(summary?.deterministic, false);
+  assert.equal(summary?.sampleCount, 5);
+  assert.equal(typeof summary?.game?.mu_candidate, "number");
+  assert.equal(typeof summary?.v1?.mu_candidate, "number");
+  assert.deepEqual(Object.keys(summary?.game ?? {}), Object.keys(summary?.v1 ?? {}));
+  assert.equal("result" in (summary as object), false);
+  assert.ok(detail?.result);
+  assert.equal(detail?.v3Stats?.n, 5);
+  assert.ok(detail?.visibility.attacker.troops.lancer);
+});
+
+test("runTestcases keeps executed testcase and warns when v1 snapshot row is missing", () => {
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ matching: "simple_001", repeat: 1, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
+  const summary = Object.values(report.testcases)[0];
+
+  assert.equal(report.counts.executed, 1);
+  assert.equal(summary?.game?.n_candidate, 1);
+  assert.equal(summary?.v1, null);
+  assert.equal(report.warnings[0]?.stage, "v1_comparison");
 });
 
 test("calibration lookup supports v3 symlink and source testcase path variants", () => {
@@ -57,11 +73,11 @@ test("duplicate no-hero testcase ids align calibration rows by file and case ind
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "greg_mia_nohero_control_current", repeat: 1 }, config);
 
-  assert.equal(report.selectedCases, 2);
-  assert.equal(report.aggregate.executedCases, 2);
+  assert.equal(report.counts.testcasesFound, 2);
+  assert.equal(report.counts.executed, 2);
 
-  const first = report.cases.find((entry) => entry.index === 0);
-  const second = report.cases.find((entry) => entry.index === 1);
+  const first = report.details.find((entry) => entry.index === 0);
+  const second = report.details.find((entry) => entry.index === 1);
   assert.equal(first?.testcaseId, "greg_mia_nohero_control_current");
   assert.equal(second?.testcaseId, "greg_mia_nohero_control_current");
   assert.equal(first?.visibility.attacker.heroes.length, 0);
@@ -77,9 +93,13 @@ test("duplicate no-hero testcase ids align calibration rows by file and case ind
 test("no-hero simple testcase loads, runs, compares to calibration, and exposes aligned core fields", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
-  const entry = report.cases[0];
+  const entry = report.details[0];
+  const summary = Object.values(report.testcases)[0];
 
-  assert.equal(report.selectedCases, 1);
+  assert.equal(report.counts.testcasesFound, 1);
+  assert.equal(summary?.testcase_id, "simple_001");
+  assert.equal(summary?.game?.n_reference, 1);
+  assert.equal(summary?.v1?.n_reference, 100);
   assert.equal(entry?.visibility.attacker.heroes.length, 0);
   assert.equal(entry?.visibility.defender.heroes.length, 0);
   assert.equal(entry?.calibration?.muGame, -186);
@@ -90,33 +110,36 @@ test("no-hero simple testcase loads, runs, compares to calibration, and exposes 
 test("runTestcases default round cap lets long no-hero baselines reach battle end", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "1-testcases_no-heroes_t6_single-type_nc.json", repeat: 1 }, config);
-  const entry = report.cases.find((item) => item.testcaseId === "daut_viper_9");
+  const entry = report.details.find((item) => item.testcaseId === "daut_viper_9");
 
   assert.equal(entry?.result?.winner, "attacker");
   assert.ok((entry?.result?.rounds ?? 0) > 100);
 });
 
-test("runTestcases reports a parity comparison table from calibration JSON", () => {
+test("runTestcases reports a parity summary from calibration JSON", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
-  const row = report.comparison.table[0];
+  const row = Object.values(report.testcases)[0];
+  const detail = report.details[0];
 
-  assert.equal(row?.testcaseId, "simple_001");
+  assert.equal(row?.testcase_id, "simple_001");
   assert.equal(row?.idx, 0);
-  assert.equal(row?.muGame, -186);
-  assert.equal(row?.matched, true);
-  assert.equal(row?.biasRaw, 0);
-  assert.equal(row?.sem, 0);
-  assert.equal(row?.p, null);
-  assert.equal(row?.q, null);
-  assert.equal(typeof row?.v3ScoreDelta, "number");
-  assert.equal(typeof row?.v3VsGameRaw, "number");
-  assert.equal(row?.v3?.n, 1);
-  assert.equal(typeof row?.v3?.mu, "number");
-  assert.equal(typeof row?.v3VsV1?.biasRaw, "number");
-  assert.equal(typeof row?.v3VsGame?.biasRaw, "number");
-  assert.equal(typeof row?.v3VsV1?.passes, "boolean");
-  assert.equal(typeof row?.v3VsGame?.passes, "boolean");
+  assert.equal(row?.game?.mu_reference, -186);
+  assert.equal(row?.v1?.mu_reference, -186);
+  assert.equal(row?.v1?.bias_raw, 0);
+  assert.equal(row?.v1?.sem, 0);
+  assert.equal(row?.v1?.p, null);
+  assert.equal(row?.v1?.q, null);
+  assert.equal(typeof detail?.v3ScoreDelta, "number");
+  assert.equal(typeof row?.game?.bias_raw, "number");
+  assert.equal(row?.game?.n_candidate, 1);
+  assert.equal(typeof row?.game?.mu_candidate, "number");
+  assert.equal(typeof row?.v1?.bias_raw, "number");
+  assert.equal(typeof row?.game?.bias_raw, "number");
+  assert.equal(typeof row?.v1?.passes, "boolean");
+  assert.equal(typeof row?.game?.passes, "boolean");
+  assert.equal(report.counts.comparedToGame, 1);
+  assert.equal(report.counts.comparedToV1, 1);
 });
 
 test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into BattleInput", () => {

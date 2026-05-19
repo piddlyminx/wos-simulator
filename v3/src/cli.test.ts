@@ -34,8 +34,10 @@ test("cli writes a timestamped parity report to the output directory by default"
   assert.match(files[0]!, /^v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.json$/);
 
   const report = JSON.parse(readFileSync(resolve(outputDir, files[0]!), "utf8"));
-  assert.equal(report.selectedCases, 1);
-  assert.equal(report.cases[0]?.testcaseId, "simple_001");
+  assert.equal(report.reportKind, "v3-parity-summary");
+  assert.equal(report.counts.executed, 1);
+  const testcase = Object.values(report.testcases as Record<string, { testcase_id: string }>)[0];
+  assert.equal(testcase?.testcase_id, "simple_001");
 });
 
 test("cli --no-run-snapshot writes the parity report to stdout and creates no file", () => {
@@ -60,8 +62,10 @@ test("cli --no-run-snapshot writes the parity report to stdout and creates no fi
 
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
-  assert.equal(report.selectedCases, 1);
-  assert.equal(report.cases[0]?.testcaseId, "simple_001");
+  assert.equal(report.reportKind, "v3-parity-summary");
+  assert.equal(report.counts.executed, 1);
+  const testcase = Object.values(report.testcases as Record<string, { testcase_id: string }>)[0];
+  assert.equal(testcase?.testcase_id, "simple_001");
   assert.deepEqual(readdirSync(outputDir), []);
 });
 

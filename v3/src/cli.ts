@@ -17,7 +17,7 @@ try {
     const outputPath = writeRunSnapshot(json, options.outputDir);
     console.error(JSON.stringify({ outputPath }, null, 2));
   }
-  const failed = report.aggregate.parseErrors > 0 || report.aggregate.unexpectedErrors > 0;
+  const failed = report.counts.errors > 0;
   process.exitCode = failed ? 1 : 0;
 } catch (error) {
   console.error(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }, null, 2));

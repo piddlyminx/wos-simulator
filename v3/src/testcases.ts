@@ -3,14 +3,13 @@ import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  addCalibrationTableRow,
   loadCalibrationComparison,
   readCalibrationCase,
   type CalibrationCaseComparison,
-  type CalibrationComparison,
   type SampleStats,
   sampleStats
 } from "./calibration.js";
+import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics.js";
 import { simulateBattle } from "./simulator.js";
 import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, UnitType } from "./types.js";
 
@@ -43,19 +42,44 @@ export interface TestcaseCaseReport {
   error?: string;
 }
 
+export interface TestcaseRunWarning {
+  file: string;
+  testcase_id: string;
+  idx: number;
+  stage: "parse" | "adapt" | "execute" | "game_comparison" | "v1_comparison" | "artifact";
+  reason: string;
+}
+
+export interface TestcaseSummaryEntry {
+  file: string;
+  testcase_id: string;
+  idx: number;
+  detailArtifact?: string;
+  deterministic: boolean;
+  sampleCount: number;
+  game: ParityComparisonMetrics | null;
+  v1: ParityComparisonMetrics | null;
+}
+
 export interface TestcaseRunReport {
-  selectedFiles: string[];
-  selectedCases: number;
-  cases: TestcaseCaseReport[];
-  aggregate: {
-    parsedFiles: number;
-    parseErrors: number;
-    adaptedCases: number;
-    executedCases: number;
-    unexpectedErrors: number;
-    diagnostics: number;
+  reportKind: "v3-parity-summary";
+  schemaVersion: 1;
+  createdAt: string;
+  options: TestcaseRunOptions;
+  artifactRoot?: string;
+  counts: {
+    filesFound: number;
+    testcasesFound: number;
+    executed: number;
+    warnings: number;
+    errors: number;
+    comparedToGame: number;
+    comparedToV1: number;
   };
-  comparison: CalibrationComparison;
+  warnings: TestcaseRunWarning[];
+  errors: TestcaseRunWarning[];
+  testcases: Record<string, TestcaseSummaryEntry>;
+  details: TestcaseCaseReport[];
 }
 
 interface CaseVisibility {
@@ -82,30 +106,49 @@ export function discoverTestcaseFiles(options: Pick<TestcaseRunOptions, "testcas
 
 export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfig): TestcaseRunReport {
   const files = discoverTestcaseFiles(options);
-  const cases: TestcaseCaseReport[] = [];
-  const aggregate = { parsedFiles: 0, parseErrors: 0, adaptedCases: 0, executedCases: 0, unexpectedErrors: 0, diagnostics: 0 };
   const comparison = loadCalibrationComparison(options.calibrationReportPath);
   const repeat = Math.max(1, options.repeat ?? 1);
+  const report: TestcaseRunReport = {
+    reportKind: "v3-parity-summary",
+    schemaVersion: 1,
+    createdAt: new Date().toISOString(),
+    options: { ...options },
+    counts: { filesFound: files.length, testcasesFound: 0, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToV1: 0 },
+    warnings: [],
+    errors: [],
+    testcases: {},
+    details: []
+  };
 
   for (const file of files) {
+    const reportFile = normalizeReportPath(relative(process.cwd(), file));
     let entries: unknown[];
     try {
       const parsed = JSON.parse(readFileSync(file, "utf8"));
       entries = Array.isArray(parsed) ? parsed : [parsed];
-      aggregate.parsedFiles += 1;
     } catch (error) {
-      aggregate.parseErrors += 1;
-      cases.push(emptyCaseReport(file, "(parse_error)", 0, [`Failed to parse JSON: ${errorMessage(error)}`]));
+      report.errors.push({ file: reportFile, testcase_id: "(parse_error)", idx: 0, stage: "parse", reason: `Failed to parse JSON: ${errorMessage(error)}` });
       continue;
     }
 
     entries.forEach((entry, index) => {
+      report.counts.testcasesFound += 1;
       const testcaseId = testcaseIdFor(entry, index);
       const diagnostics: string[] = [];
-      const report: TestcaseCaseReport = emptyCaseReport(file, testcaseId, index, diagnostics);
+      const detail = emptyCaseReport(reportFile, testcaseId, index, diagnostics);
+      const key = snapshotKey(reportFile, index);
+      let input: BattleInput;
       try {
-        const input = adaptTestcaseEntry(entry, { seed: options.seed, trace: options.trace }, diagnostics);
-        aggregate.adaptedCases += 1;
+        input = adaptTestcaseEntry(entry, { seed: options.seed, trace: options.trace }, diagnostics);
+      } catch (error) {
+        detail.error = errorMessage(error);
+        diagnostics.push(detail.error);
+        report.errors.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "adapt", reason: detail.error });
+        report.details.push(detail);
+        return;
+      }
+
+      try {
         const samples: number[] = [];
         let result = simulateBattle(sampleInput(input, options.seed, file, testcaseId, index, 0), config);
         const firstScore = battleScoreDelta(result);
@@ -117,35 +160,72 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
           if (score !== undefined) samples.push(score);
         }
         const stats = sampleStats(samples);
-        report.result = result;
-        report.deterministic = result.randomness.deterministic;
-        report.sampleCount = sampleCount;
-        report.v3Stats = stats;
-        report.v3ScoreDelta = battleScoreDelta(result);
-        aggregate.executedCases += 1;
-        report.gameResult = (entry as { game_report_result?: unknown }).game_report_result;
-        report.calibration = readCalibrationCase(comparison, relative(process.cwd(), file), testcaseId, { index });
-        addCalibrationTableRow(comparison, {
-          file,
-          testcaseId,
-          index,
-          v3ScoreDelta: report.v3ScoreDelta,
-          v3Stats: report.v3Stats,
-          calibration: report.calibration
-        });
-        report.visibility = visibilityFromResult(result);
+        const gameResult = (entry as { game_report_result?: unknown }).game_report_result;
+        const calibration = readCalibrationCase(comparison, reportFile, testcaseId, { index });
+        const initialTroops = totalInputTroops(input.attacker) + totalInputTroops(input.defender);
+        const v3Distribution = { n: stats.n, mu: stats.mu, sigma: stats.sigma };
+        const gameDistribution = distributionFromGameResult(gameResult);
+        const game = gameDistribution
+          ? compareOutcomeDistribution({
+              candidate: v3Distribution,
+              reference: gameDistribution,
+              initialTroops,
+              deterministic: result.randomness.deterministic,
+              thresholds: comparison.thresholds
+            })
+          : null;
+        const v1 = calibration?.nSim !== undefined && calibration.muSim !== undefined && calibration.sigmaSim !== undefined
+          ? compareOutcomeDistribution({
+              candidate: v3Distribution,
+              reference: { n: calibration.nSim, mu: calibration.muSim, sigma: calibration.sigmaSim },
+              initialTroops,
+              deterministic: result.randomness.deterministic,
+              thresholds: comparison.thresholds
+            })
+          : null;
+
+        detail.result = result;
+        detail.deterministic = result.randomness.deterministic;
+        detail.sampleCount = sampleCount;
+        detail.v3Stats = stats;
+        detail.v3ScoreDelta = battleScoreDelta(result);
+        detail.gameResult = gameResult;
+        detail.calibration = calibration;
+        detail.visibility = visibilityFromResult(result);
         if (result) diagnostics.push(...result.resolved.attacker.diagnostics, ...result.resolved.defender.diagnostics);
+        if (!game) {
+          report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "game_comparison", reason: "Missing game_report_result" });
+        }
+        if (!v1) {
+          report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "v1_comparison", reason: "No matching v1 snapshot row" });
+        }
+        report.counts.executed += 1;
+        report.testcases[key] = {
+          file: reportFile,
+          testcase_id: testcaseId,
+          idx: index,
+          deterministic: result.randomness.deterministic,
+          sampleCount,
+          game,
+          v1
+        };
       } catch (error) {
-        aggregate.unexpectedErrors += 1;
-        report.error = errorMessage(error);
-        diagnostics.push(report.error);
+        detail.error = errorMessage(error);
+        diagnostics.push(detail.error);
+        report.errors.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "execute", reason: detail.error });
       }
-      aggregate.diagnostics += diagnostics.length;
-      cases.push(report);
+      report.details.push(detail);
     });
   }
 
-  return { selectedFiles: files, selectedCases: cases.length, cases, aggregate, comparison };
+  const comparedMetrics = Object.values(report.testcases).flatMap((entry) => [entry.game, entry.v1].filter((value): value is ParityComparisonMetrics => !!value));
+  applyBenjaminiHochberg(comparedMetrics);
+  report.counts.warnings = report.warnings.length;
+  report.counts.errors = report.errors.length;
+  report.counts.comparedToGame = Object.values(report.testcases).filter((entry) => entry.game).length;
+  report.counts.comparedToV1 = Object.values(report.testcases).filter((entry) => entry.v1).length;
+
+  return report;
 }
 
 export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | number; trace?: boolean } = {}, diagnostics: string[] = []): BattleInput {
@@ -276,4 +356,32 @@ function sampleSeed(baseSeed: string | number | undefined, file: string, testcas
 
 function sampleInput(input: BattleInput, baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): BattleInput {
   return { ...input, seed: sampleSeed(baseSeed ?? input.seed, file, testcaseId, index, iteration) };
+}
+
+function snapshotKey(filePath: string, index: number): string {
+  return `${normalizeReportPath(filePath)}#${index}`;
+}
+
+function normalizeReportPath(filePath: string): string {
+  const normalized = filePath.replaceAll("\\", "/");
+  const testcaseIndex = normalized.indexOf("testcases/");
+  return testcaseIndex >= 0 ? normalized.slice(testcaseIndex) : normalized;
+}
+
+function distributionFromGameResult(value: unknown): { n: number; mu: number; sigma: number } | undefined {
+  const outcomes = extractOutcomeScores(value);
+  if (outcomes.length === 0) return undefined;
+  const stats = sampleStats(outcomes);
+  return { n: stats.n, mu: stats.mu, sigma: stats.sigma };
+}
+
+function extractOutcomeScores(value: unknown): number[] {
+  const rows = Array.isArray(value) ? value : value ? [value] : [];
+  return rows
+    .map((row) => battleScoreDelta(row))
+    .filter((score): score is number => score !== undefined);
+}
+
+function totalInputTroops(fighter: FighterInput): number {
+  return Object.values(fighter.troops ?? {}).reduce((sum, count) => sum + Number(count || 0), 0);
 }
