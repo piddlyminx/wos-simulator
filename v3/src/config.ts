@@ -103,6 +103,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
     for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
       const type = String((effect as { type?: unknown }).type ?? "");
       diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
+      validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
         diagnostics.unsupportedEffects.push({
@@ -115,6 +116,14 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       }
     }
   }
+}
+
+function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
+  if (effect.units?.applies_vs !== "all") return;
+  const path = `${relative(process.cwd(), file)}:${skillId}.${effectId}`;
+  throw new Error(
+    `native effect units.applies_vs cannot be "all" at ${path}; use "any" for an unrestricted usage gate or trigger_damage_jobs target selectors for multi-target damage`
+  );
 }
 
 function validateExtraSkillAttackEffect(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {

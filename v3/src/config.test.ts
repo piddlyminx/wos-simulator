@@ -91,6 +91,28 @@ test("native v3 trigger_damage_jobs use validated selectors and scalar multiplie
   assert.deepEqual(violations, []);
 });
 
+test('native v3 effects do not use applies_vs "all"', () => {
+  const config = loadSimulatorConfig();
+  const offenders: string[] = [];
+
+  collectAppliesVsAllOffenders("config/troop_skills.json", config.troopSkills, offenders);
+  for (const [heroName, heroDefinition] of Object.entries(config.heroDefinitions)) {
+    collectAppliesVsAllOffenders(`config/hero_definitions/${heroName}.json`, heroDefinition, offenders);
+  }
+
+  assert.deepEqual(offenders, []);
+});
+
+test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
+  const root = writeConfigWithTroopEffect({
+    type: "damage_up",
+    value: 10,
+    units: { applies_to: "trigger.source", applies_vs: "all" }
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /applies_vs.*all/i);
+});
+
 test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings", () => {
   const root = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
@@ -157,7 +179,7 @@ test("loadSimulatorConfig rejects activation.target jobs without activation-conc
   });
 
   assert.throws(() => loadSimulatorConfig({ configDir: omittedRoot }), /activation\.target.*concrete applies_vs/i);
-  assert.throws(() => loadSimulatorConfig({ configDir: allRoot }), /activation\.target.*applies_vs.*all/i);
+  assert.throws(() => loadSimulatorConfig({ configDir: allRoot }), /applies_vs.*all/i);
 });
 
 function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, missing: string[]): void {
@@ -166,6 +188,17 @@ function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, mis
       const intent = effect as EffectIntentDefinition;
       if (intent.type === "extra_skill_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
         missing.push(`${file}:${skillId}.${effectId}`);
+      }
+    }
+  }
+}
+
+function collectAppliesVsAllOffenders(file: string, skillFile: SkillFile, offenders: string[]): void {
+  for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
+    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+      const intent = effect as EffectIntentDefinition;
+      if (intent.units?.applies_vs === "all") {
+        offenders.push(`${file}:${skillId}.${effectId}`);
       }
     }
   }
