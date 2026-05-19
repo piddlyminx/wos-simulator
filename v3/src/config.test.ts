@@ -5,7 +5,8 @@ import { test } from "node:test";
 import { tmpdir } from "node:os";
 
 import { loadSimulatorConfig } from "./config.js";
-import type { EffectIntentDefinition, SkillFile } from "./types.js";
+import { UNIT_TYPES } from "./types.js";
+import type { EffectIntentDefinition, SkillFile, TriggerDamageJobDefinition } from "./types.js";
 
 test("loadSimulatorConfig loads native v3 catalogues and reports effect inventory", () => {
   const config = loadSimulatorConfig();
@@ -78,6 +79,40 @@ test("native v3 extra skill attacks define trigger_damage_jobs", () => {
   assert.deepEqual(missing, []);
 });
 
+test("native v3 trigger_damage_jobs use validated selectors and scalar multipliers", () => {
+  const config = loadSimulatorConfig();
+  const violations: string[] = [];
+
+  collectTriggerDamageJobViolations("config/troop_skills.json", config.troopSkills, violations);
+  for (const [heroName, heroDefinition] of Object.entries(config.heroDefinitions)) {
+    collectTriggerDamageJobViolations(`config/hero_definitions/${heroName}.json`, heroDefinition, violations);
+  }
+
+  assert.deepEqual(violations, []);
+});
+
+test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "activation.targte" }]
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /invalid trigger_damage_jobs target selector.*activation\.targte/i);
+});
+
+test('loadSimulatorConfig rejects activation.target jobs gated by applies_vs "any"', () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "any" },
+    trigger_damage_jobs: [{ source: "use.source", target: "activation.target" }]
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /activation\.target.*applies_vs.*any/i);
+});
+
 function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, missing: string[]): void {
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
     for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
@@ -87,4 +122,76 @@ function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, mis
       }
     }
   }
+}
+
+function collectTriggerDamageJobViolations(file: string, skillFile: SkillFile, violations: string[]): void {
+  for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
+    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+      const intent = effect as EffectIntentDefinition;
+      if (intent.type !== "extra_skill_attack") continue;
+      if (!Array.isArray(intent.trigger_damage_jobs)) continue;
+      intent.trigger_damage_jobs.forEach((job, index) => {
+        collectSelectorViolation(file, skillId, effectId, index, "source", job.source, violations);
+        collectSelectorViolation(file, skillId, effectId, index, "target", job.target, violations);
+        if (job.target === "activation.target" && intent.units?.applies_vs === "any") {
+          violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${index}].target uses activation.target with applies_vs any`);
+        }
+        if (job.multiplier !== undefined && typeof job.multiplier !== "number") {
+          violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${index}].multiplier must be a number`);
+        }
+      });
+    }
+  }
+}
+
+function collectSelectorViolation(
+  file: string,
+  skillId: string,
+  effectId: string,
+  jobIndex: number,
+  role: "source" | "target",
+  selector: TriggerDamageJobDefinition["source"],
+  violations: string[]
+): void {
+  if (selector === undefined) return;
+  if (isAllowedTriggerDamageJobSelector(selector)) return;
+  violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${jobIndex}].${role} has invalid selector ${JSON.stringify(selector)}`);
+}
+
+function isAllowedTriggerDamageJobSelector(selector: TriggerDamageJobDefinition["source"]): boolean {
+  const supported = new Set(["use.source", "use.target", "activation.source", "activation.target", "enemy.living", "self.living"]);
+  if (typeof selector === "string") return supported.has(selector) || (UNIT_TYPES as string[]).includes(selector);
+  if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
+  return false;
+}
+
+function writeConfigWithTroopEffect(effect: Record<string, unknown>): string {
+  const root = join(tmpdir(), `wos-v3-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+  mkdirSync(join(root, "hero_definitions"), { recursive: true });
+  writeFileSync(
+    join(root, "troop_stats.json"),
+    JSON.stringify({
+      infantry_t1: {
+        id: "infantry_t1",
+        type: "infantry",
+        tier: 1,
+        fc: 0,
+        stats: { Attack: 1, Defense: 1, Lethality: 1, Health: 1 }
+      }
+    })
+  );
+  writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));
+  writeFileSync(
+    join(root, "troop_skills.json"),
+    JSON.stringify({
+      name: "Troop Skills",
+      skills: {
+        ExampleSkill: {
+          trigger: { type: "attack" },
+          effects: { "ExampleSkill/1": effect }
+        }
+      }
+    })
+  );
+  return root;
 }
