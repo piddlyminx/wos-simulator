@@ -12,7 +12,11 @@ export interface CalibrationCaseComparison {
   nGame?: number;
   muGame?: number;
   sigmaGame?: number;
+  biasRaw?: number;
   biasPct?: number;
+  sem?: number;
+  p?: number | null;
+  q?: number | null;
   statType?: string;
   passes?: boolean;
 }
@@ -252,7 +256,11 @@ function normalizeCalibrationCase(value: unknown): CalibrationCaseComparison | u
     nGame: numberOrUndefined(object.n_game),
     muGame: numberOrUndefined(object.mu_game),
     sigmaGame: numberOrUndefined(object.sigma_game),
+    biasRaw: numberOrUndefined(object.bias_raw),
     biasPct: numberOrUndefined(object.bias_pct),
+    sem: numberOrUndefined(object.sem),
+    p: nullableNumber(object.p),
+    q: nullableNumber(object.q),
     statType: stringOrUndefined(object.stat_type),
     passes: booleanOrUndefined(object.passes)
   };
@@ -344,6 +352,11 @@ function stringOrUndefined(value: unknown): string | undefined {
 function numberOrUndefined(value: unknown): number | undefined {
   const number = Number(value);
   return Number.isFinite(number) ? number : undefined;
+}
+
+function nullableNumber(value: unknown): number | null | undefined {
+  if (value === null) return null;
+  return numberOrUndefined(value);
 }
 
 function numberOrDefault(value: unknown, fallback: number): number {
