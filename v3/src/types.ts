@@ -24,8 +24,8 @@ export type SupportedTriggerDamageJobSelector =
   | "activation.target"
   | "enemy.living"
   | "self.living";
-export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitType | UnitType[] | string | string[];
-export type TriggerDamageJobMultiplier = number | number[] | string | string[];
+export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitType | UnitType[];
+export type TriggerDamageJobMultiplier = number;
 
 export interface TriggerDamageJobDefinition {
   id?: string;

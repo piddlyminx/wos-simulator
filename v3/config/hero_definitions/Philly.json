@@ -61,7 +61,7 @@
           ],
           "units": {
             "applies_to": "trigger.source",
-            "applies_vs": "any"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",

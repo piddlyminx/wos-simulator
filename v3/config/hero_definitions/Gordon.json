@@ -27,7 +27,7 @@
             "applies_to": [
               "lancer"
             ],
-            "applies_vs": "any"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",

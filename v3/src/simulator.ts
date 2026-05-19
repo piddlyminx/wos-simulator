@@ -12,6 +12,7 @@ import type {
   SideId,
   SimulatorConfig,
   SkillReportEntry,
+  TriggerDamageJobSelector,
   UnitType
 } from "./types.js";
 import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
@@ -432,7 +433,7 @@ interface TriggerJobUnit {
 }
 
 function resolveTriggerJobSelector(
-  selector: unknown,
+  selector: TriggerDamageJobSelector | undefined,
   role: "source" | "target",
   effect: ActiveEffect,
   normalAttack: DamageJob,
@@ -455,7 +456,7 @@ function livingUnits(side: SideId, roundStartTroops: DamageJob["roundStartTroops
   return UNIT_TYPES.filter((unit) => (roundStartTroops[side][unit] ?? 0) > 0).map((unit) => ({ side, unit }));
 }
 
-function unitListFromSelector(selector: unknown): UnitType[] | undefined {
+function unitListFromSelector(selector: TriggerDamageJobSelector | undefined): UnitType[] | undefined {
   if (Array.isArray(selector)) {
     try {
       return selector.map((entry) => normalizeUnitType(String(entry)));
@@ -473,7 +474,7 @@ function unitListFromSelector(selector: unknown): UnitType[] | undefined {
   return undefined;
 }
 
-function multiplierForTriggerDamageJob(multiplier: unknown, effect: ActiveEffect): number {
+function multiplierForTriggerDamageJob(multiplier: number | undefined, effect: ActiveEffect): number {
   const raw = multiplier === undefined ? effect.valuePct : multiplier;
   const pct = Number(raw ?? 0);
   return Number.isFinite(pct) ? pct / 100 : 0;

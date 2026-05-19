@@ -2,7 +2,8 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { ConfigDiagnostics, SimulatorConfig, SkillFile } from "./types.js";
+import { UNIT_TYPES } from "./types.js";
+import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
 
 const LEGACY_FIELDS = new Set(["legacy", "effect_op", "effect_type"]);
 const KNOWN_EFFECT_TYPES = new Set([
@@ -102,6 +103,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
     for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
       const type = String((effect as { type?: unknown }).type ?? "");
       diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
+      if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
         diagnostics.unsupportedEffects.push({
           file: relative(process.cwd(), file),
@@ -113,6 +115,40 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       }
     }
   }
+}
+
+function validateExtraSkillAttackEffect(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
+  const path = `${relative(process.cwd(), file)}:${skillId}.${effectId}`;
+  if (!Array.isArray(effect.trigger_damage_jobs) || effect.trigger_damage_jobs.length === 0) {
+    throw new Error(`extra_skill_attack requires non-empty trigger_damage_jobs at ${path}`);
+  }
+  effect.trigger_damage_jobs.forEach((job, index) => {
+    validateTriggerDamageJobSelector(job.source, "source", path, index);
+    validateTriggerDamageJobSelector(job.target, "target", path, index);
+    if (job.target === "activation.target" && effect.units?.applies_vs === "any") {
+      throw new Error(`trigger_damage_jobs target activation.target requires a concrete applies_vs, not any, at ${path}.trigger_damage_jobs[${index}]`);
+    }
+    if (job.multiplier !== undefined && typeof job.multiplier !== "number") {
+      throw new Error(`trigger_damage_jobs multiplier must be a number at ${path}.trigger_damage_jobs[${index}]`);
+    }
+  });
+}
+
+function validateTriggerDamageJobSelector(
+  selector: TriggerDamageJobDefinition["source"],
+  role: "source" | "target",
+  path: string,
+  jobIndex: number
+): void {
+  if (selector === undefined || isAllowedTriggerDamageJobSelector(selector)) return;
+  throw new Error(`invalid trigger_damage_jobs ${role} selector ${JSON.stringify(selector)} at ${path}.trigger_damage_jobs[${jobIndex}]`);
+}
+
+function isAllowedTriggerDamageJobSelector(selector: TriggerDamageJobDefinition["source"]): boolean {
+  const supported = new Set(["use.source", "use.target", "activation.source", "activation.target", "enemy.living", "self.living"]);
+  if (typeof selector === "string") return supported.has(selector) || (UNIT_TYPES as string[]).includes(selector);
+  if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
+  return false;
 }
 
 function buildHeroAliasIndex(heroDefinitions: Record<string, SkillFile>): Record<string, string> {

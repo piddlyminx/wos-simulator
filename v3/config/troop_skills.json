@@ -255,7 +255,7 @@
             "applies_to": [
               "lancer"
             ],
-            "applies_vs": "any"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",
@@ -369,7 +369,7 @@
           ],
           "units": {
             "applies_to": "trigger.source",
-            "applies_vs": "any"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",
@@ -423,7 +423,7 @@
             "applies_to": [
               "marksman"
             ],
-            "applies_vs": "any"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",
@@ -495,7 +495,7 @@
             "applies_to": [
               "marksman"
             ],
-            "applies_vs": "any"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",
