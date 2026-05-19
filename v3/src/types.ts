@@ -242,6 +242,7 @@ export interface DamageJob {
   sourceMultiplier?: number;
   consumedEffectIds?: string[];
   consumedEffectUseKey?: string;
+  consumedEffectUseId?: string;
 }
 
 export interface CounterDelta {
@@ -283,6 +284,7 @@ export interface AttackOutcome {
   counterDeltas: CounterDelta[];
   consumedEffectIds: string[];
   consumedEffectUseKey?: string;
+  consumedEffectUseId?: string;
   cancelledBy?: string;
   cancelReason?: "dodge" | "no_attack";
   trace?: DamageEquationTrace;

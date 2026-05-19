@@ -327,10 +327,7 @@ test("extra skill attacks with array applies_vs target those defender unit types
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
   assert.deepEqual(
     skillJobs.map((job) => [job.sourceEffectId, job.defenderUnit]),
-    [
-      ["hitLancer", "lancer"],
-      ["hitMarksman", "marksman"]
-    ]
+    [["hitLancer", "lancer"]]
   );
 });
 
@@ -465,14 +462,14 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitAgain: 1 });
 });
 
-test("extra skill trigger damage jobs can fan out to living enemy targets without recursive attack triggers", () => {
+test("extra skill trigger damage jobs can resolve to multiple living enemy targets without recursive attack triggers", () => {
   const result = simulateBattle(
     {
       maxRounds: 1,
       trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
-        heroes: { FanOut: { skill_1: 1, skill_2: 1 } }
+        heroes: { MultiTarget: { skill_1: 1, skill_2: 1 } }
       },
       defender: {
         troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
@@ -480,13 +477,13 @@ test("extra skill trigger damage jobs can fan out to living enemy targets withou
       }
     },
     minimalConfig({
-      FanOut: {
-        name: "FanOut",
+      MultiTarget: {
+        name: "MultiTarget",
         skills: {
-          FanOutShot: {
+          MultiTargetShot: {
             trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
             effects: {
-              fanOut: {
+              hitLiving: {
                 type: "extra_skill_attack",
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
@@ -517,18 +514,18 @@ test("extra skill trigger damage jobs can fan out to living enemy targets withou
     skillJobs.map((job) => job.defenderUnit).sort(),
     ["infantry", "infantry", "lancer", "marksman"]
   );
-  assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "FanOutShot")?.triggersSeen, 1);
+  assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "MultiTargetShot")?.triggersSeen, 1);
   assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "RecursiveGuard")?.triggersSeen, 1);
 });
 
-test("fan-out extra skill attack consumes one use regardless of generated target jobs", () => {
+test("extra skill attack consumes one use regardless of multiple generated target jobs", () => {
   const result = simulateBattle(
     {
       maxRounds: 2,
       trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
-        heroes: { FanOut: { skill_1: 1 } }
+        heroes: { MultiTarget: { skill_1: 1 } }
       },
       defender: {
         troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
@@ -536,13 +533,13 @@ test("fan-out extra skill attack consumes one use regardless of generated target
       }
     },
     minimalConfig({
-      FanOut: {
-        name: "FanOut",
+      MultiTarget: {
+        name: "MultiTarget",
         skills: {
-          FanOutShot: {
+          MultiTargetShot: {
             trigger: { type: "battle_start" },
             effects: {
-              fanOut: {
+              hitLiving: {
                 type: "extra_skill_attack",
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "all" },
@@ -558,7 +555,105 @@ test("fan-out extra skill attack consumes one use regardless of generated target
 
   const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
   assert.deepEqual(skillJobsByRound, [3, 3]);
-  assert.deepEqual(result.extraSkillAttackJobsByEffect, { fanOut: 6 });
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 6 });
+});
+
+test("extra skill attack applies_vs must match the current normal attack target", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          LancerOnlyFollowUp: {
+            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            effects: {
+              hitLancer: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: ["lancer"] },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const jobs = result.trace?.rounds[0]?.jobs ?? [];
+  assert.deepEqual(
+    jobs.map((job) => `${job.kind}:${job.attackerUnit}->${job.defenderUnit}`),
+    ["normal:marksman->infantry", "normal:infantry->marksman", "normal:lancer->marksman"]
+  );
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, {});
+});
+
+test("extra skill de-dupe does not suppress unrelated attack-duration effect consumption", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          MultiTargetFollowUp: {
+            trigger: { type: "battle_start" },
+            effects: {
+              hitLiving: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: ["marksman"], applies_vs: "all" },
+                trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
+                duration: { type: "attack", value: 2 }
+              }
+            }
+          },
+          SkillDamageBoost: {
+            trigger: { type: "battle_start" },
+            effects: {
+              boost: {
+                type: "skill_damage_up",
+                value: 100,
+                units: { applies_to: ["marksman"], applies_vs: "all" },
+                duration: { type: "attack", value: 4 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
+  const skillBoosts = result.attacks
+    .filter((attack) => attack.kind === "skill")
+    .map((attack) => attack.trace?.buckets.numerator.skillDamageUp.totalPct ?? 0);
+  assert.deepEqual(skillJobsByRound, [2, 2]);
+  assert.deepEqual(skillBoosts, [100, 100, 0, 0]);
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 4 });
 });
 
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {

@@ -158,25 +158,42 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
 function triggerDamageJobsForIntent(intent: EffectIntentDefinition, level: number): ActiveEffect["triggerDamageJobs"] {
   const explicit = intent.trigger_damage_jobs;
   if (explicit && explicit.length > 0) {
-    return explicit.map((job) => ({
-      ...job,
-      multiplier: job.multiplier === undefined ? undefined : valueAtLevel(job.multiplier, level)
-    }));
+    return explicit.map((job) => normalizeTriggerDamageJobDefinition(job, level));
   }
-  const appliesVs = intent.units?.applies_vs;
   return [
     {
       source: "use.source",
-      target: legacyExtraSkillTargetSelector(appliesVs),
-      multiplier: intent.value as TriggerDamageJobDefinition["multiplier"]
+      target: legacyExtraSkillTargetSelector(intent.units?.applies_vs),
+      multiplier: normalizeTriggerDamageJobMultiplier(intent.value, level)
     }
   ];
+}
+
+function normalizeTriggerDamageJobDefinition(job: TriggerDamageJobDefinition, level: number): TriggerDamageJobDefinition {
+  return {
+    id: typeof job.id === "string" ? job.id : undefined,
+    source: normalizeTriggerDamageJobSelector(job.source),
+    target: normalizeTriggerDamageJobSelector(job.target),
+    multiplier: normalizeTriggerDamageJobMultiplier(job.multiplier, level)
+  };
+}
+
+function normalizeTriggerDamageJobSelector(selector: unknown): TriggerDamageJobDefinition["target"] | undefined {
+  if (selector === undefined) return undefined;
+  if (Array.isArray(selector)) return selector.map(String);
+  if (typeof selector === "string") return selector;
+  return undefined;
+}
+
+function normalizeTriggerDamageJobMultiplier(multiplier: unknown, level: number): TriggerDamageJobDefinition["multiplier"] | undefined {
+  if (multiplier === undefined) return undefined;
+  return valueAtLevel(multiplier, level);
 }
 
 function legacyExtraSkillTargetSelector(appliesVs: unknown): TriggerDamageJobDefinition["target"] {
   if (appliesVs === undefined || appliesVs === "any" || appliesVs === "target") return "use.target";
   if (appliesVs === "all") return "enemy.living";
-  return appliesVs as TriggerDamageJobDefinition["target"];
+  return normalizeTriggerDamageJobSelector(appliesVs) ?? "use.target";
 }
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {

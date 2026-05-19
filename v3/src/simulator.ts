@@ -80,7 +80,7 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
     for (const job of jobs) {
       const outcome = calculateDamageJob(job, fighters, runtime.activeEffects, { trace: input.trace });
       roundOutcomes.push(outcome);
-      consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey);
+      consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId);
     }
     attacks.push(...cancelled, ...roundOutcomes);
     commitOutcomes(roundOutcomes, fighters, runtime);
@@ -403,7 +403,8 @@ function extraSkillJobs(
             sourceEffectId,
             sourceMultiplier: multiplier,
             consumedEffectIds: [effect.id],
-            consumedEffectUseKey
+            consumedEffectUseKey,
+            consumedEffectUseId: effect.id
           });
           runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
         }
@@ -415,7 +416,12 @@ function extraSkillJobs(
 }
 
 function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {
-  return effect.appliesTo.side === normalAttack.attackerSide && unitMaskHas(effect.appliesTo.units, normalAttack.attackerUnit);
+  return (
+    effect.appliesTo.side === normalAttack.attackerSide &&
+    unitMaskHas(effect.appliesTo.units, normalAttack.attackerUnit) &&
+    effect.appliesVs.side === normalAttack.defenderSide &&
+    unitMaskHas(effect.appliesVs.units, normalAttack.defenderUnit)
+  );
 }
 
 interface TriggerJobUnit {
@@ -513,12 +519,13 @@ function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: A
     .map((effect) => effect.id);
 }
 
-function consumeEffects(runtime: Runtime, consumedEffectIds: string[], consumedEffectUseKey?: string): void {
-  if (consumedEffectUseKey) {
-    if (runtime.consumedEffectUseKeys.has(consumedEffectUseKey)) return;
-    runtime.consumedEffectUseKeys.add(consumedEffectUseKey);
-  }
+function consumeEffects(runtime: Runtime, consumedEffectIds: string[], consumedEffectUseKey?: string, consumedEffectUseId?: string): void {
   for (const consumed of consumedEffectIds) {
+    if (consumedEffectUseKey && consumedEffectUseId === consumed) {
+      const useKey = `${consumedEffectUseKey}:${consumed}`;
+      if (runtime.consumedEffectUseKeys.has(useKey)) continue;
+      runtime.consumedEffectUseKeys.add(useKey);
+    }
     for (const effect of runtime.activeEffects.filter((activeEffect) => activeEffect.id === consumed)) effect.uses += 1;
   }
 }

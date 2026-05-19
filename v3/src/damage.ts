@@ -120,6 +120,7 @@ export function calculateDamageJob(
     ],
     consumedEffectIds: [...consumedEffectIds, ...(job.consumedEffectIds ?? [])],
     consumedEffectUseKey: job.consumedEffectUseKey,
+    consumedEffectUseId: job.consumedEffectUseId,
     trace
   };
 }
