@@ -19,7 +19,7 @@
             200
           ],
           "units": {
-            "applies_to": "trigger",
+            "applies_to": "trigger.source",
             "applies_vs": "any"
           },
           "duration": {
@@ -27,7 +27,13 @@
             "value": 1,
             "delay": 1
           },
-          "same_effect_stacking": "max"
+          "same_effect_stacking": "max",
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
         }
       }
     },

@@ -284,7 +284,7 @@ test("requires_effect is ignored by native v3 effect activation", () => {
   assert.equal(report?.effectActivations, 2);
 });
 
-test("extra skill attacks with array applies_vs target those defender unit types", () => {
+test("extra skill attacks with array trigger damage targets hit those defender unit types", () => {
   const result = simulateBattle(
     {
       maxRounds: 1,
@@ -308,13 +308,15 @@ test("extra skill attacks with array applies_vs target those defender unit types
               hitLancer: {
                 type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: "trigger", applies_vs: ["lancer"] },
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: ["lancer"] }],
                 duration: { type: "attack", value: 1 }
               },
               hitMarksman: {
                 type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: "trigger", applies_vs: ["marksman"] },
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: ["marksman"] }],
                 duration: { type: "attack", value: 1 }
               }
             }
@@ -327,7 +329,10 @@ test("extra skill attacks with array applies_vs target those defender unit types
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
   assert.deepEqual(
     skillJobs.map((job) => [job.sourceEffectId, job.defenderUnit]),
-    [["hitLancer", "lancer"]]
+    [
+      ["hitLancer", "lancer"],
+      ["hitMarksman", "marksman"]
+    ]
   );
 });
 
@@ -355,7 +360,8 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
               hitAny: {
                 type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: "trigger", applies_vs: "any" },
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
                 duration: { type: "attack", value: 1 }
               }
             }

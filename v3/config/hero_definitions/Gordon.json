@@ -27,12 +27,18 @@
             "applies_to": [
               "lancer"
             ],
-            "applies_vs": "target"
+            "applies_vs": "any"
           },
           "duration": {
             "type": "attack",
             "value": 1
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "activation.target"
+            }
+          ]
         },
         "VenomInfusion/2": {
           "type": "damage_down",
