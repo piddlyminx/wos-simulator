@@ -57,7 +57,7 @@ function defaultOutputDir(): string {
 }
 
 function timestampedReportName(date = new Date()): string {
-  return `v3_parity_${date.toISOString().replace(/\.\d{3}Z$/, "Z").replace(/:/g, "-")}.json`;
+  return `v3_parity_${date.toISOString().replace(/:/g, "-")}.json`;
 }
 
 function writeRunSnapshot(report: TestcaseRunReport, outputDir: string): { summaryPath: string; artifactRoot: string } {

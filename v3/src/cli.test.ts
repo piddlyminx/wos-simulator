@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { test } from "node:test";
@@ -35,12 +35,12 @@ test("cli writes compact summary and per-case detail artifacts by default", () =
   assert.equal("details" in stdoutReport, false);
   assert.equal(result.stdout.includes("\"result\""), false);
   assert.equal(result.stdout.includes("\"attacks\""), false);
-  assert.match(stderrReport.summaryPath, /v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.json$/);
-  assert.match(stderrReport.artifactRoot, /^v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z$/);
+  assert.match(stderrReport.summaryPath, /v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.\d{3}Z\.json$/);
+  assert.match(stderrReport.artifactRoot, /^v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.\d{3}Z$/);
 
   const files = readdirSync(outputDir).filter((name) => name.endsWith(".json"));
   assert.equal(files.length, 1);
-  assert.match(files[0]!, /^v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z\.json$/);
+  assert.match(files[0]!, /^v3_parity_\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.\d{3}Z\.json$/);
 
   const report = JSON.parse(readFileSync(resolve(outputDir, files[0]!), "utf8"));
   assert.equal(report.reportKind, "v3-parity-summary");
@@ -92,8 +92,83 @@ test("cli --no-run-snapshot writes compact stdout only and creates no artifacts"
   assert.deepEqual(readdirSync(outputDir), []);
 });
 
+test("cli snapshot paths include milliseconds to avoid same-second collisions", () => {
+  const outputDir = tempDir("v3-parity-collision");
+  const preloadPath = resolve(outputDir, "fixed-date.mjs");
+  writeFileSync(
+    preloadPath,
+    `
+const fixedDate = process.env.FIXED_DATE;
+const RealDate = Date;
+globalThis.Date = class FixedDate extends RealDate {
+  constructor(...args) {
+    if (args.length === 0 && fixedDate) return new RealDate(fixedDate);
+    return new RealDate(...args);
+  }
+
+  static now() {
+    return fixedDate ? new RealDate(fixedDate).getTime() : RealDate.now();
+  }
+
+  static parse(value) {
+    return RealDate.parse(value);
+  }
+
+  static UTC(...args) {
+    return RealDate.UTC(...args);
+  }
+};
+`,
+  );
+
+  const first = runCliWithFixedDate(outputDir, preloadPath, "2026-01-02T03:04:05.123Z");
+  const second = runCliWithFixedDate(outputDir, preloadPath, "2026-01-02T03:04:05.456Z");
+
+  assert.equal(first.status, 0, first.stderr);
+  assert.equal(second.status, 0, second.stderr);
+  const firstSnapshot = JSON.parse(first.stderr);
+  const secondSnapshot = JSON.parse(second.stderr);
+  assert.notEqual(firstSnapshot.summaryPath, secondSnapshot.summaryPath);
+  assert.notEqual(firstSnapshot.artifactRoot, secondSnapshot.artifactRoot);
+
+  const summaries = readdirSync(outputDir).filter((name) => name.endsWith(".json"));
+  assert.deepEqual(
+    summaries.sort(),
+    [
+      "v3_parity_2026-01-02T03-04-05.123Z.json",
+      "v3_parity_2026-01-02T03-04-05.456Z.json",
+    ],
+  );
+  assert.equal(statSync(resolve(outputDir, "v3_parity_2026-01-02T03-04-05.123Z", "cases", "000001.json")).isFile(), true);
+  assert.equal(statSync(resolve(outputDir, "v3_parity_2026-01-02T03-04-05.456Z", "cases", "000001.json")).isFile(), true);
+});
+
 function tempDir(prefix: string): string {
   const dir = resolve(tmpdir(), `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   mkdirSync(dir, { recursive: true });
   return dir;
+}
+
+function runCliWithFixedDate(outputDir: string, preloadPath: string, fixedDate: string): ReturnType<typeof spawnSync> {
+  return spawnSync(
+    "env",
+    [
+      `FIXED_DATE=${fixedDate}`,
+      `NODE_OPTIONS=--import=${preloadPath}`,
+      "npx",
+      "--yes",
+      "tsx",
+      "src/cli.ts",
+      "--matching",
+      "simple_001",
+      "--repeat",
+      "1",
+      "--output-dir",
+      outputDir,
+    ],
+    {
+      cwd: packageRoot,
+      encoding: "utf8",
+    },
+  );
 }
