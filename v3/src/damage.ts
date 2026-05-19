@@ -71,7 +71,7 @@ export function calculateDamageJob(
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "not_active_this_round" });
       continue;
     }
-    if (effect.duration.type === "attack" && basicEffectApplies(effect, job)) consumedEffectIds.add(effect.id);
+    if (effect.kind !== "extra_attack" && effect.duration.type === "attack" && basicEffectApplies(effect, job)) consumedEffectIds.add(effect.id);
     const classification = classifyEffectForJob(effect, job);
     if (!classification || classification.kind !== "bucket" || !classification.bucket) {
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: classification?.reason ?? classification?.kind ?? "not_bucket_effect" });
@@ -118,7 +118,7 @@ export function calculateDamageJob(
       { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" },
       { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" }
     ],
-    consumedEffectIds: [...consumedEffectIds, ...(job.sourceEffectId ? [job.sourceEffectId] : [])],
+    consumedEffectIds: [...consumedEffectIds, ...(job.consumedEffectIds ?? []), ...(job.sourceEffectId ? [job.sourceEffectId] : [])],
     trace
   };
 }

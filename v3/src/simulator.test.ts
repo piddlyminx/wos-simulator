@@ -375,6 +375,109 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
   );
 });
 
+test("attack-triggered extra skill attacks activate then resolve trigger damage jobs on normal attack use", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { lancer_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          FollowUpShot: {
+            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            effects: {
+              hitAgain: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const jobs = result.trace?.rounds[0]?.jobs ?? [];
+  const normalJobs = jobs.filter((job) => job.kind === "normal");
+  const skillJobs = jobs.filter((job) => job.kind === "skill");
+
+  assert.equal(normalJobs.length, 2);
+  assert.equal(skillJobs.length, 1);
+  assert.equal(skillJobs[0]?.attackerSide, normalJobs[0]?.attackerSide);
+  assert.equal(skillJobs[0]?.attackerUnit, normalJobs[0]?.attackerUnit);
+  assert.equal(skillJobs[0]?.defenderSide, normalJobs[0]?.defenderSide);
+  assert.equal(skillJobs[0]?.defenderUnit, normalJobs[0]?.defenderUnit);
+});
+
+test("extra skill trigger damage jobs can fan out to living enemy targets without recursive attack triggers", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FanOut: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FanOut: {
+        name: "FanOut",
+        skills: {
+          FanOutShot: {
+            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            effects: {
+              fanOut: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          },
+          RecursiveGuard: {
+            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            effects: {
+              recursive: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
+  assert.deepEqual(
+    skillJobs.map((job) => job.defenderUnit).sort(),
+    ["infantry", "infantry", "lancer", "marksman"]
+  );
+  assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "FanOutShot")?.triggersSeen, 1);
+  assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "RecursiveGuard")?.triggersSeen, 1);
+});
+
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {
   const result = simulateBattle(
     {
