@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { loadSimulatorConfig } from "./config.js";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration.js";
+import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics.js";
 import { adaptTestcaseEntry, battleScoreDelta, discoverTestcaseFiles, runTestcases } from "./testcases.js";
 
 test("discoverTestcaseFiles follows v3/testcases symlink and skips disabled or stale files by default", () => {
@@ -124,4 +125,70 @@ test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into B
   });
 
   assert.deepEqual(input.mechanics, { weather: "clear", engagement_type: "rally" });
+});
+
+test("compareOutcomeDistribution matches check_testcases deterministic zero-bias shape", () => {
+  const metrics = compareOutcomeDistribution({
+    candidate: { n: 1, mu: -186, sigma: 0 },
+    reference: { n: 1, mu: -186, sigma: 0 },
+    initialTroops: 1200,
+    deterministic: true,
+    thresholds: { max_diff_ratio_deterministic: 0.01, z_threshold: 2, min_bias_pct: 0.5 }
+  });
+
+  assert.deepEqual(metrics, {
+    n_candidate: 1,
+    mu_candidate: -186,
+    sigma_candidate: 0,
+    n_reference: 1,
+    mu_reference: -186,
+    sigma_reference: 0,
+    bias_raw: 0,
+    bias_pct: 0,
+    sem: 0,
+    stat_type: "deterministic",
+    stat: null,
+    p: null,
+    q: null,
+    passes: true
+  } satisfies ParityComparisonMetrics);
+});
+
+test("compareOutcomeDistribution reports single-observation stochastic references as low evidence", () => {
+  const metrics = compareOutcomeDistribution({
+    candidate: { n: 5, mu: 10, sigma: 2 },
+    reference: { n: 1, mu: 8, sigma: 0 },
+    initialTroops: 100,
+    deterministic: false,
+    thresholds: { max_diff_ratio_deterministic: 0.01, z_threshold: 2, min_bias_pct: 0.5 }
+  });
+
+  assert.equal(metrics.stat_type, "single_obs");
+  assert.equal(metrics.passes, true);
+  assert.equal(metrics.bias_raw, 2);
+  assert.equal(metrics.bias_pct, 2);
+});
+
+test("applyBenjaminiHochberg fills q values on p-valued comparisons", () => {
+  const rows = [
+    { p: 0.01, q: null },
+    { p: 0.03, q: null },
+    { p: null, q: null }
+  ];
+
+  applyBenjaminiHochberg(rows);
+
+  assert.equal(rows[0].q, 0.02);
+  assert.equal(rows[1].q, 0.03);
+  assert.equal(rows[2].q, null);
+});
+
+test("calibration lookup exposes full v1 snapshot metrics", () => {
+  const comparison = loadCalibrationComparison();
+  const row = readCalibrationCase(comparison, "testcases/emulator_verified/simple_001_nc.json", "simple_001");
+
+  assert.equal(row?.biasRaw, 0);
+  assert.equal(row?.sem, 0);
+  assert.equal(row?.p, null);
+  assert.equal(row?.q, null);
 });
