@@ -30,6 +30,7 @@ interface Runtime {
   effectActivationCounts: Record<SideId, number>;
   extraSkillAttackJobsByEffect: Record<string, number>;
   attackControlCounts: { dodge: number; no_attack: number };
+  consumedEffectUseKeys: Set<string>;
   counters: {
     attacks: Record<SideId, Record<UnitType, number>>;
     received: Record<SideId, Record<UnitType, number>>;
@@ -79,7 +80,7 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
     for (const job of jobs) {
       const outcome = calculateDamageJob(job, fighters, runtime.activeEffects, { trace: input.trace });
       roundOutcomes.push(outcome);
-      consumeEffects(runtime, outcome.consumedEffectIds);
+      consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey);
     }
     attacks.push(...cancelled, ...roundOutcomes);
     commitOutcomes(roundOutcomes, fighters, runtime);
@@ -233,6 +234,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
     effectActivationCounts: { attacker: 0, defender: 0 },
     extraSkillAttackJobsByEffect: {},
     attackControlCounts: { dodge: 0, no_attack: 0 },
+    consumedEffectUseKeys: new Set(),
     counters: {
       attacks: { attacker: emptyTroops(), defender: emptyTroops() },
       received: { attacker: emptyTroops(), defender: emptyTroops() }
@@ -374,9 +376,9 @@ function extraSkillJobs(
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
   for (const effect of runtime.activeEffects) {
-    if (effect.kind !== "extra_attack" || !isEffectActive(effect, round) || !basicEffectApplies(effect, normalAttack)) continue;
+    if (effect.kind !== "extra_attack" || !isEffectActive(effect, round) || !extraAttackEffectAppliesToNormalAttack(effect, normalAttack)) continue;
     const definitions = effect.triggerDamageJobs ?? [];
-    const initialJobCount = jobs.length;
+    const consumedEffectUseKey = `${normalAttack.sourceIntentId}:${effect.id}`;
     let definitionIndex = 0;
     for (const definition of definitions) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
@@ -399,16 +401,21 @@ function extraSkillJobs(
             defenderSide: target.side,
             defenderUnit: target.unit,
             sourceEffectId,
-            sourceMultiplier: multiplier
+            sourceMultiplier: multiplier,
+            consumedEffectIds: [effect.id],
+            consumedEffectUseKey
           });
           runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
         }
       }
       definitionIndex += 1;
     }
-    if (jobs.length > initialJobCount) effect.uses += 1;
   }
   return jobs;
+}
+
+function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {
+  return effect.appliesTo.side === normalAttack.attackerSide && unitMaskHas(effect.appliesTo.units, normalAttack.attackerUnit);
 }
 
 interface TriggerJobUnit {
@@ -506,11 +513,13 @@ function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: A
     .map((effect) => effect.id);
 }
 
-function consumeEffects(runtime: Runtime, consumedEffectIds: string[]): void {
+function consumeEffects(runtime: Runtime, consumedEffectIds: string[], consumedEffectUseKey?: string): void {
+  if (consumedEffectUseKey) {
+    if (runtime.consumedEffectUseKeys.has(consumedEffectUseKey)) return;
+    runtime.consumedEffectUseKeys.add(consumedEffectUseKey);
+  }
   for (const consumed of consumedEffectIds) {
-    const exactMatches = runtime.activeEffects.filter((effect) => effect.id === consumed);
-    const matches = exactMatches.length > 0 ? exactMatches : runtime.activeEffects.filter((effect) => effect.source.effectId === consumed);
-    for (const effect of matches) effect.uses += 1;
+    for (const effect of runtime.activeEffects.filter((activeEffect) => activeEffect.id === consumed)) effect.uses += 1;
   }
 }
 
