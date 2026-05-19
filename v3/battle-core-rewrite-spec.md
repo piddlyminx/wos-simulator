@@ -110,20 +110,20 @@ bucket.
 Examples:
 
 ```ts
-{ kind: "catalogue_effect", label: "health_up", valuePct: 25 }
-{ kind: "catalogue_effect", label: "normal_damage_up", valuePct: 20 }
-{ kind: "extra_skill_attack", valuePct: 200, triggerDamageJobs: [{ source: "use.source", target: "enemy.living" }] }
-{ kind: "attack_control", control: "dodge", pass: "normal" }
-{ kind: "battle_order", order: ["marksman", "infantry", "lancer"] }
+{ type: "catalogue_effect", label: "health_up", value: 25 }
+{ type: "catalogue_effect", label: "normal_damage_up", value: 20 }
+{ type: "extra_skill_attack", value: 200, trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }] }
+{ type: "attack_control", control: "dodge", pass: "normal" }
+{ type: "battle_order", order: ["marksman", "infantry", "lancer"] }
 ```
 
 Effect intents may include scope and duration:
 
 ```ts
-interface EffectScope {
-  affectedSide: "self" | "enemy";
-  appliesTo: UnitSelector | "trigger" | "target" | "friendly" | "all";
-  appliesVs: UnitSelector | "any" | "target" | "trigger.target";
+interface EffectUnits {
+  side?: "self" | "enemy";
+  applies_to?: UnitSelector | "trigger" | "target" | "friendly" | "all";
+  applies_vs?: UnitSelector | "any" | "target" | "trigger.target";
 }
 
 interface EffectDuration {
@@ -144,12 +144,11 @@ interface ActiveEffect {
   source: EffectSource;
   intent: EffectIntentDefinition;
   ownerSide: SideId;
-  affectedSide: SideId;
+  kind: ActiveEffectKind;
   valuePct?: number;
-  appliesTo: UnitType[];
-  appliesVs: UnitType[] | "any" | "target";
-  lockedTarget?: UnitType;
-  sourceUnit?: UnitType;
+  appliesTo: ResolvedUnitScope;
+  appliesVs: ResolvedUnitScope;
+  triggerDamageJobs?: TriggerDamageJobDefinition[];
   createdRound: number;
   startRound: number;
   duration: EffectDuration;
@@ -163,15 +162,13 @@ damage controls. Prefer `ActiveEffect` or `EffectActivation`.
 
 Applicability rules:
 
-- `affectedSide` determines whether the effect modifies the attacker side or
+- `appliesTo.side` determines whether the effect modifies the attacker side or
   defender side for a given damage job
-- `appliesTo` is evaluated against the affected side's unit in that job
-- `appliesVs: "any"` matches any opposing unit
-- `appliesVs: UnitType[]` matches the opposing unit against that list
-- `appliesVs: "target"` preserves a target lock captured at activation time;
-  it must not be eagerly converted into a plain unit list if doing so loses the
-  distinction between "the target of this activation" and "any opposing unit of
-  this type"
+- `appliesTo.units` is evaluated against that side's unit in the job
+- `appliesVs.side` identifies the opposing side to gate against
+- `appliesVs.units` is the concrete resolved unit mask for the opposing unit
+  gate; config selectors such as `"any"`, `"target"`, and
+  `"trigger.target"` must already be resolved before runtime classification
 - native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
   unrestricted usage gate
 - for defender-side effects, target matching must be checked against the
@@ -1243,8 +1240,8 @@ Required focused regression tests:
 - attack-duration effects expire by active-effect id after the intended
   applicable use, including cancelled normal attacks
 - `applies_vs: "target"` preserves target lock semantics
-- array-valued `applies_vs` creates extra skill attack jobs for those defender
-  unit types
+- `trigger_damage_jobs[].target` resolving to multiple unit types creates one
+  DamageJob for each resolved target unit type
 - `engagement_type` skill requirements require explicit matching mechanics
 - probability values are percentages, including `1` and `0.5`
 - deterministic testcase classification is based on resolved skills with chance

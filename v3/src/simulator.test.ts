@@ -588,7 +588,7 @@ test("extra skill attack consumes one use regardless of multiple generated targe
               hitLiving: {
                 type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: ["marksman"], applies_vs: "all" },
+                units: { applies_to: ["marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
                 duration: { type: "attack", value: 2 }
               }
@@ -602,6 +602,44 @@ test("extra skill attack consumes one use regardless of multiple generated targe
   const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
   assert.deepEqual(skillJobsByRound, [3, 3]);
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 6 });
+});
+
+test('direct simulator configs reject applies_vs "all" usage gates', () => {
+  assert.throws(
+    () =>
+      simulateBattle(
+        {
+          maxRounds: 1,
+          attacker: {
+            troops: { marksman_t1: 100 },
+            heroes: { MultiTarget: { skill_1: 1 } }
+          },
+          defender: {
+            troops: { infantry_t1: 100 },
+            heroes: {}
+          }
+        },
+        minimalConfig({
+          MultiTarget: {
+            name: "MultiTarget",
+            skills: {
+              MultiTargetShot: {
+                trigger: { type: "battle_start" },
+                effects: {
+                  hitLiving: {
+                    type: "extra_skill_attack",
+                    value: 100,
+                    units: { applies_to: ["marksman"], applies_vs: "all" },
+                    trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }]
+                  }
+                }
+              }
+            }
+          }
+        })
+      ),
+    /applies_vs.*all/i
+  );
 });
 
 test("extra skill attack consumes one use when multiple same-round normal attacks match the effect", () => {
@@ -628,7 +666,7 @@ test("extra skill attack consumes one use when multiple same-round normal attack
               hitAgain: {
                 type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: ["infantry", "marksman"], applies_vs: "all" },
+                units: { applies_to: ["infantry", "marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
                 duration: { type: "attack", value: 1 }
               }
@@ -711,7 +749,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
               hitLiving: {
                 type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: ["marksman"], applies_vs: "all" },
+                units: { applies_to: ["marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
                 duration: { type: "attack", value: 2 }
               }
@@ -723,7 +761,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
               boost: {
                 type: "skill_damage_up",
                 value: 100,
-                units: { applies_to: ["marksman"], applies_vs: "all" },
+                units: { applies_to: ["marksman"], applies_vs: "any" },
                 duration: { type: "attack", value: 4 }
               }
             }

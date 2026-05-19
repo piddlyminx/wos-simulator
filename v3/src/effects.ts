@@ -110,8 +110,8 @@ export function isEffectActive(effect: ActiveEffect, round: number): boolean {
   return effect.uses < Math.max(1, effect.duration.value);
 }
 
-// Trigger filters still accept legacy "all". ActiveEffect usage gates are
-// resolved by resolveUnitScope after config validation rejects applies_vs "all".
+// Trigger filters still accept legacy "all". ActiveEffect usage gates reject
+// applies_vs "all" even for direct in-memory simulator configs.
 export function normalizeTriggerMatchSelector(value: unknown): UnitType[] | "any" | "target" | "all" | undefined {
   if (value === undefined) return "any";
   if (value === "any" || value === "target" || value === "all") return value;
@@ -125,6 +125,9 @@ export function normalizeEngagementType(value: unknown): string | undefined {
 }
 
 function resolveUnitScope(value: unknown, defaultSide: SideId, role: "applies_to" | "applies_vs", attackIntent?: AttackIntent): ResolvedUnitScope {
+  if (role === "applies_vs" && value === "all") {
+    throw new Error('effect units.applies_vs cannot be "all"; use "any" for an unrestricted usage gate');
+  }
   if ((value === "trigger.source" || value === "trigger") && attackIntent) {
     return { side: attackIntent.attackerSide, units: unitMask(attackIntent.attackerUnit) };
   }
