@@ -72,10 +72,6 @@ export function calculateDamageJob(
       continue;
     }
     if (effect.duration.type === "attack" && basicEffectApplies(effect, job)) consumedEffectIds.add(effect.id);
-    if (effect.intent.requires_effect && !requiredEffectApplies(effect.intent.requires_effect, activeEffects, job.round, job)) {
-      rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: `requires_effect:${effect.intent.requires_effect}` });
-      continue;
-    }
     const classification = classifyEffectForJob(effect, job);
     if (!classification || classification.kind !== "bucket" || !classification.bucket) {
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: classification?.reason ?? classification?.kind ?? "not_bucket_effect" });
@@ -155,10 +151,6 @@ function addInputStatBuckets(buckets: Buckets, attacker: StatBlock, defender: St
   addPercent(buckets.numerator.lethalityUp, attacker.lethality, "input:lethality", "input_stats", "numerator.lethalityUp");
   addPercent(buckets.denominator.defenseUp, defender.defense, "input:defense", "input_stats", "denominator.defenseUp");
   addPercent(buckets.denominator.healthUp, defender.health, "input:health", "input_stats", "denominator.healthUp");
-}
-
-function requiredEffectApplies(requiredEffectId: string, effects: ActiveEffect[], round: number, job: DamageJob): boolean {
-  return effects.some((effect) => (effect.intent.id === requiredEffectId || effect.source.effectId === requiredEffectId) && isEffectActive(effect, round) && basicEffectApplies(effect, job));
 }
 
 function product(values: number[]): number {

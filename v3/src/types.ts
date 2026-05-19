@@ -35,7 +35,6 @@ export interface EffectIntentDefinition {
   value?: unknown;
   units?: Record<string, unknown>;
   duration?: { type?: string; value?: number; delay?: number };
-  requires_effect?: string;
   same_effect_stacking?: string;
   reason?: string;
 }

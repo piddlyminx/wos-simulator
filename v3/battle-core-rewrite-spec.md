@@ -982,12 +982,6 @@ the crit chance trigger succeeds. Its first-pass bucket is
 crit multiplies separately from ordinary outgoing damage, move it behind a named
 mechanics policy with a separate bucket.
 
-`requires_effect` is a native applicability condition. An active effect with
-`requires_effect: "<effect id>"` only applies to a damage job when another active
-effect with that effect id is also applicable to the same job. This is used for
-troop skills such as Body of Light and Flame Charge that explicitly depend on a
-Crystal Shield/Gunpowder activation.
-
 ### Stacking
 
 Same-bucket terms aggregate first. Different buckets multiply.
