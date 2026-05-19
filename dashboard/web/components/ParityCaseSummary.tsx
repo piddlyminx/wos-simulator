@@ -1,9 +1,10 @@
 import type {
   ParityCaseReport,
   ParityComparisonRow,
+  ParityMetric,
 } from "@/lib/parity-reports";
 
-function fmt(value: number | undefined, digits = 2): string {
+function fmt(value: number | null | undefined, digits = 2): string {
   return Number.isFinite(value) ? value!.toFixed(digits) : "-";
 }
 
@@ -29,27 +30,32 @@ export default function ParityCaseSummary({
   caseReport?: ParityCaseReport;
 }) {
   const attacks = caseReport?.result?.attacks ?? [];
+  const v3 = row.game ?? row.v1;
+  const v3Mu = v3?.mu_candidate ?? caseReport?.v3Stats?.mu;
+  const deterministic = row.deterministic ?? caseReport?.deterministic;
+  const sampleCount = row.sampleCount ?? caseReport?.sampleCount;
   return (
     <div className="space-y-6">
       <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <Summary label="v3 mu" value={fmt(row.v3Mu)} />
-        <Summary label="v1 mu" value={fmt(row.muSim)} />
-        <Summary label="game mu" value={fmt(row.muGame)} />
-        <Summary label="score delta" value={fmt(row.v3ScoreDelta, 0)} />
-        <Summary label="v3 vs v1 z" value={fmt(row.v3VsV1Z)} />
-        <Summary label="v3 vs game z" value={fmt(row.v3VsGameZ)} />
-        <Summary label="v3 vs v1 bias%" value={fmt(row.v3VsV1BiasPct)} />
-        <Summary label="v3 vs game bias%" value={fmt(row.v3VsGameBiasPct)} />
+        <Summary label="v3 mu" value={fmt(v3Mu)} />
+        <Summary label="v1 mu" value={fmt(row.v1?.mu_reference)} />
+        <Summary label="game mu" value={fmt(row.game?.mu_reference)} />
+        <Summary label="v3 vs v1 stat" value={fmt(row.v1?.stat)} />
+        <Summary label="v3 vs game stat" value={fmt(row.game?.stat)} />
+        <Summary label="v3 vs v1 bias%" value={fmt(row.v1?.bias_pct)} />
+        <Summary label="v3 vs game bias%" value={fmt(row.game?.bias_pct)} />
       </section>
 
       <section>
         <h3 className="mb-2 text-sm font-bold">V3 Sample Metadata</h3>
         <JsonBlock
           value={{
-            deterministic: caseReport?.deterministic,
-            sampleCount: caseReport?.sampleCount,
-            v3Stats: caseReport?.v3Stats,
-            v3ScoreDelta: caseReport?.v3ScoreDelta,
+            deterministic,
+            sampleCount,
+            game: row.game,
+            v1: row.v1,
+            v3Stats: caseReport?.v3Stats ?? metricToV3Stats(v3),
+            v3ScoreDelta: caseReport?.v3ScoreDelta ?? row.v3ScoreDelta,
           }}
         />
       </section>
@@ -94,6 +100,16 @@ export default function ParityCaseSummary({
       </details>
     </div>
   );
+}
+
+function metricToV3Stats(metric: ParityMetric | null) {
+  if (!metric) return undefined;
+  return {
+    n: metric.n_candidate,
+    mu: metric.mu_candidate,
+    sigma: metric.sigma_candidate,
+    sem: metric.sem,
+  };
 }
 
 function Summary({ label, value }: { label: string; value: string }) {

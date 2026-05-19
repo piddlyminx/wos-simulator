@@ -82,8 +82,7 @@ export default async function ParityPage({
             className="mt-2 block overflow-x-auto rounded p-3 text-xs"
             style={{ backgroundColor: "var(--sidebar-bg)" }}
           >
-            npm --prefix v3 run testcases -- --repeat 100 &gt;
-            v3/testcase_results/v3_parity_latest.json
+            npm --silent --prefix v3 run testcases -- --repeat 100
           </code>
         </div>
       ) : (
