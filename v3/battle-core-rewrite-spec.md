@@ -133,6 +133,20 @@ interface EffectDuration {
 }
 ```
 
+Skill definitions use symbolic selectors because they are context-free static
+catalogue data. Selectors such as `"self"`, `"enemy.living"`, `"trigger"`,
+`"target"`, `"trigger.source"`, and `"trigger.target"` describe relationships
+that only become concrete while handling a trigger.
+
+Config selector rules:
+
+- `applies_vs` accepts `"any"`, trigger-relative selectors such as `"target"`
+  / `"trigger.target"`, or concrete unit selectors.
+- native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
+  unrestricted usage gate.
+- trigger resolution converts config selectors into concrete ActiveEffect
+  scopes before runtime classification.
+
 ### Active Effect
 
 An active effect is a runtime activation of an effect intent. It is mutable
@@ -166,11 +180,14 @@ Applicability rules:
   defender side for a given damage job
 - `appliesTo.units` is evaluated against that side's unit in the job
 - `appliesVs.side` identifies the opposing side to gate against
-- `appliesVs.units` is the concrete resolved unit mask for the opposing unit
-  gate; config selectors such as `"any"`, `"target"`, and
-  `"trigger.target"` must already be resolved before runtime classification
-- native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
-  unrestricted usage gate
+- `appliesVs.units` is evaluated against the opposing unit in the job
+- `appliesTo` and `appliesVs` are `ResolvedUnitScope` values created during
+  trigger resolution
+- `ResolvedUnitScope.units` is a concrete unit mask; use an unrestricted mask
+  for an unrestricted gate
+- ActiveEffects store only resolved sides and unit masks for applicability.
+  They do not store proxy selectors such as `"enemy"`, `"trigger.source"`, or
+  `"trigger.target"`.
 - for defender-side effects, target matching must be checked against the
   defender unit being damaged, not accidentally against the attacker unit
 
@@ -560,12 +577,12 @@ together after normal and extra skill attack for the round have been calculated.
 - Collect battle order modifiers.
 
 Round-start triggers may declare `trigger.units.for`. A `turn` trigger rolls its
-chance gate once per round. If it passes, `trigger.units.for: "all"` fans effect
-creation out once for each living friendly unit type. Each fan-out activation
-gets a concrete trigger context with that unit as `trigger` and that unit's
-current primary target as `target`, so an effect using `appliesTo: "trigger"`
-and `appliesVs: "target"` creates one unit-scoped, target-locked active effect
-per living unit type after a single turn-level roll. This is distinct from
+chance gate once per round. If it passes, `trigger.units.for: "all"` creates
+one effect activation for each living friendly unit type. Each activation gets
+a concrete trigger context with that unit as `trigger` and that unit's current
+primary target as `target`, so an effect using `appliesTo: "trigger"` and
+`appliesVs: "target"` creates one unit-scoped, target-locked active effect per
+living unit type after a single turn-level roll. This is distinct from
 multi-target skill damage output: an `extra_skill_attack` uses
 `trigger_damage_jobs[].target` selectors such as `"enemy.living"` or explicit
 unit lists to create one damage job per resolved concrete defender unit type.
@@ -617,6 +634,11 @@ Extra skill attack does **not** recursively fire attack triggers. It may
 increment cumulative attack counters, but it does not itself become a new
 `attack_declared` trigger source.
 
+An `extra_skill_attack` response registers an ActiveEffect. When a normal
+attack uses that ActiveEffect, the effect's `trigger_damage_jobs` definitions
+resolve against the use context. That resolution creates concrete skill
+`DamageJob` records with resolved attacker side/unit and defender side/unit.
+
 Attack trigger matching must also honor trigger filters:
 
 - `unit` / attacker unit filters
@@ -628,10 +650,15 @@ Attack trigger matching must also honor trigger filters:
 
 Each non-cancelled normal attack intent creates one normal damage job.
 
-Each extra skill attack proposal creates one or more skill damage jobs. Extra
-skill attacks should be represented as explicit jobs for the exact attacker unit
-and defender unit it affects. Do not use a broad "iterate all pairings and apply
-all extra skill attacks" pass.
+Each used extra skill attack ActiveEffect creates one or more skill damage jobs.
+Extra skill attacks should be represented as explicit jobs for the exact
+attacker unit and defender unit it affects. Do not use a broad "iterate all
+pairings and apply all extra skill attacks" pass.
+
+For `extra_skill_attack`, the trigger response creates an ActiveEffect first.
+When a normal attack consumes or otherwise uses that ActiveEffect, its
+`trigger_damage_jobs` entries are resolved in the use context to create concrete
+skill `DamageJob` records.
 
 Extra skill target construction:
 
@@ -643,13 +670,15 @@ Extra skill target construction:
 - `trigger_damage_jobs[].target` resolves the concrete defender target unit or
   units for each skill damage job.
 - selectors such as `"enemy.living"` or explicit unit lists may resolve to
-  multiple concrete target unit types; create one `DamageJob` per resolved
-  concrete target.
+  multiple concrete target unit types; create one `DamageJob` for each resolved
+  target unit type.
 - array-valued selectors must not be collapsed to the source normal attack's
   current target.
 - `applies_to` still scopes whether the active effect can be used by the
   attacking/source unit side before `trigger_damage_jobs` are expanded.
 - no skill job should be created for a dead attacker unit or dead defender unit
+- skill `DamageJob` records do not fire attack skills or create
+  `attack_declared` triggers
 
 ```ts
 interface DamageJob {
@@ -970,7 +999,7 @@ For special non-bucket effects:
 
 | Source evidence | Classification |
 | --- | --- |
-| `type: "extra_skill_attack"` | create extra skill attack proposal/job |
+| `type: "extra_skill_attack"` | create ActiveEffect that can create skill damage jobs |
 | `type: "dodge"` | attack control |
 | `type: "no_attack"` | attack control |
 | `type: "attack_order"` | battle order modifier |
@@ -1054,12 +1083,20 @@ frequency is 3, the trigger threshold was crossed even though `4 % 3 !== 0`.
 
 ## Extra Skill Attack
 
-Extra skill attack is damage produced by an active effect or attack-triggered
-proposal. It is not a normal attack.
+Extra skill attack is damage produced by an ActiveEffect created from an
+`extra_skill_attack` intent. It is not a normal attack.
 
 Rules:
 
+- `extra_skill_attack` creates an ActiveEffect with resolved applicability
+  scopes.
+- When a normal attack uses that ActiveEffect, its `trigger_damage_jobs`
+  definitions resolve against the use context and create concrete skill
+  `DamageJob` records.
+- If a `trigger_damage_jobs[].target` selector resolves to multiple target unit
+  types, create one `DamageJob` for each target unit.
 - It does not fire attack triggers recursively.
+- Skill `DamageJob` records do not trigger attack skills.
 - It can increment cumulative attack and received-attack counters.
 - It should create explicit skill damage jobs for the exact target units hit.
 - Its source multiplier participates as a numerator factor.
