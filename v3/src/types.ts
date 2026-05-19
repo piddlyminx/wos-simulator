@@ -28,9 +28,8 @@ export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitT
 export type TriggerDamageJobMultiplier = number;
 
 export interface TriggerDamageJobDefinition {
-  id?: string;
-  source?: TriggerDamageJobSelector;
-  target?: TriggerDamageJobSelector;
+  source: TriggerDamageJobSelector;
+  target: TriggerDamageJobSelector;
   multiplier?: TriggerDamageJobMultiplier;
 }
 

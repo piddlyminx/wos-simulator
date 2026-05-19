@@ -378,6 +378,46 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
   );
 });
 
+test("extra skill trigger damage jobs reject missing runtime selectors", () => {
+  assert.throws(
+    () =>
+      simulateBattle(
+        {
+          maxRounds: 1,
+          trace: true,
+          attacker: {
+            troops: { marksman_t1: 100 },
+            heroes: { Malformed: { skill_1: 1 } }
+          },
+          defender: {
+            troops: { lancer_t1: 100 },
+            heroes: {}
+          }
+        },
+        minimalConfig({
+          Malformed: {
+            name: "Malformed",
+            skills: {
+              MissingSelector: {
+                trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+                effects: {
+                  hitAgain: {
+                    type: "extra_skill_attack",
+                    value: 100,
+                    units: { applies_to: "trigger.source", applies_vs: "any" },
+                    trigger_damage_jobs: [{ source: "use.source" } as never],
+                    duration: { type: "attack", value: 1 }
+                  }
+                }
+              }
+            }
+          }
+        })
+      ),
+    /target selector is required/i
+  );
+});
+
 test("attack-triggered extra skill attacks activate then resolve trigger damage jobs on normal attack use", () => {
   const result = simulateBattle(
     {

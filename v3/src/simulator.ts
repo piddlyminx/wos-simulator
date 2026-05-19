@@ -433,7 +433,7 @@ interface TriggerJobUnit {
 }
 
 function resolveTriggerJobSelector(
-  selector: TriggerDamageJobSelector | undefined,
+  selector: TriggerDamageJobSelector,
   role: "source" | "target",
   effect: ActiveEffect,
   normalAttack: DamageJob,
@@ -445,10 +445,11 @@ function resolveTriggerJobSelector(
   if (selector === "activation.target") return unitsFromMask(effect.appliesVs.units).map((unit) => ({ side: effect.appliesVs.side, unit }));
   if (selector === "enemy.living") return livingUnits(normalAttack.defenderSide, roundStartTroops);
   if (selector === "self.living") return livingUnits(normalAttack.attackerSide, roundStartTroops);
-  const fallbackSide = role === "source" ? normalAttack.attackerSide : normalAttack.defenderSide;
-  const fallbackUnit = role === "source" ? normalAttack.attackerUnit : normalAttack.defenderUnit;
   const units = unitListFromSelector(selector);
-  if (!units) return [{ side: fallbackSide, unit: fallbackUnit }];
+  if (!units) {
+    throw new Error(`trigger_damage_jobs ${role} selector is required and must be a supported selector, got ${JSON.stringify(selector)}`);
+  }
+  const fallbackSide = role === "source" ? normalAttack.attackerSide : normalAttack.defenderSide;
   return units.map((unit) => ({ side: fallbackSide, unit }));
 }
 
@@ -456,7 +457,7 @@ function livingUnits(side: SideId, roundStartTroops: DamageJob["roundStartTroops
   return UNIT_TYPES.filter((unit) => (roundStartTroops[side][unit] ?? 0) > 0).map((unit) => ({ side, unit }));
 }
 
-function unitListFromSelector(selector: TriggerDamageJobSelector | undefined): UnitType[] | undefined {
+function unitListFromSelector(selector: TriggerDamageJobSelector): UnitType[] | undefined {
   if (Array.isArray(selector)) {
     try {
       return selector.map((entry) => normalizeUnitType(String(entry)));
