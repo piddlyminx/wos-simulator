@@ -422,6 +422,49 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
   assert.equal(skillJobs[0]?.defenderUnit, normalJobs[0]?.defenderUnit);
 });
 
+test("extra skill attack effects cannot be used by later enemy normal attacks", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          FollowUpShot: {
+            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            effects: {
+              hitAgain: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 2 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
+  assert.deepEqual(
+    skillJobs.map((job) => `${job.attackerSide}.${job.attackerUnit}->${job.defenderSide}.${job.defenderUnit}`),
+    ["attacker.marksman->defender.infantry"]
+  );
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitAgain: 1 });
+});
+
 test("extra skill trigger damage jobs can fan out to living enemy targets without recursive attack triggers", () => {
   const result = simulateBattle(
     {
@@ -476,6 +519,46 @@ test("extra skill trigger damage jobs can fan out to living enemy targets withou
   );
   assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "FanOutShot")?.triggersSeen, 1);
   assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "RecursiveGuard")?.triggersSeen, 1);
+});
+
+test("fan-out extra skill attack consumes one use regardless of generated target jobs", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FanOut: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FanOut: {
+        name: "FanOut",
+        skills: {
+          FanOutShot: {
+            trigger: { type: "battle_start" },
+            effects: {
+              fanOut: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: ["marksman"], applies_vs: "all" },
+                trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
+                duration: { type: "attack", value: 2 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
+  assert.deepEqual(skillJobsByRound, [3, 3]);
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { fanOut: 6 });
 });
 
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {

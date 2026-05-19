@@ -17,11 +17,21 @@ export interface ResolvedUnitScope {
   units: UnitMask;
 }
 
+export type SupportedTriggerDamageJobSelector =
+  | "use.source"
+  | "use.target"
+  | "activation.source"
+  | "activation.target"
+  | "enemy.living"
+  | "self.living";
+export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitType | UnitType[] | string | string[];
+export type TriggerDamageJobMultiplier = number | number[] | string | string[];
+
 export interface TriggerDamageJobDefinition {
   id?: string;
-  source?: unknown;
-  target?: unknown;
-  multiplier?: unknown;
+  source?: TriggerDamageJobSelector;
+  target?: TriggerDamageJobSelector;
+  multiplier?: TriggerDamageJobMultiplier;
 }
 
 export function unitMask(units: UnitType | UnitType[]): UnitMask {
@@ -231,6 +241,7 @@ export interface DamageJob {
   sourceEffectId?: string;
   sourceMultiplier?: number;
   consumedEffectIds?: string[];
+  consumedEffectUseKey?: string;
 }
 
 export interface CounterDelta {
@@ -271,6 +282,7 @@ export interface AttackOutcome {
   kills: number;
   counterDeltas: CounterDelta[];
   consumedEffectIds: string[];
+  consumedEffectUseKey?: string;
   cancelledBy?: string;
   cancelReason?: "dodge" | "no_attack";
   trace?: DamageEquationTrace;

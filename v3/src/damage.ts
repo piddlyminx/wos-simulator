@@ -118,7 +118,8 @@ export function calculateDamageJob(
       { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" },
       { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" }
     ],
-    consumedEffectIds: [...consumedEffectIds, ...(job.consumedEffectIds ?? []), ...(job.sourceEffectId ? [job.sourceEffectId] : [])],
+    consumedEffectIds: [...consumedEffectIds, ...(job.consumedEffectIds ?? [])],
+    consumedEffectUseKey: job.consumedEffectUseKey,
     trace
   };
 }

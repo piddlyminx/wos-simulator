@@ -1,4 +1,15 @@
-import type { ActiveEffect, ActiveEffectKind, AttackIntent, EffectDuration, EffectIntentDefinition, ResolvedSkill, ResolvedUnitScope, SideId, UnitType } from "./types.js";
+import type {
+  ActiveEffect,
+  ActiveEffectKind,
+  AttackIntent,
+  EffectDuration,
+  EffectIntentDefinition,
+  ResolvedSkill,
+  ResolvedUnitScope,
+  SideId,
+  TriggerDamageJobDefinition,
+  UnitType
+} from "./types.js";
 import { ALL_UNIT_MASK, UNIT_TYPES, unitMask } from "./types.js";
 import { normalizeUnitType, valueAtLevel } from "./normalize.js";
 
@@ -157,15 +168,15 @@ function triggerDamageJobsForIntent(intent: EffectIntentDefinition, level: numbe
     {
       source: "use.source",
       target: legacyExtraSkillTargetSelector(appliesVs),
-      multiplier: intent.value
+      multiplier: intent.value as TriggerDamageJobDefinition["multiplier"]
     }
   ];
 }
 
-function legacyExtraSkillTargetSelector(appliesVs: unknown): unknown {
+function legacyExtraSkillTargetSelector(appliesVs: unknown): TriggerDamageJobDefinition["target"] {
   if (appliesVs === undefined || appliesVs === "any" || appliesVs === "target") return "use.target";
   if (appliesVs === "all") return "enemy.living";
-  return appliesVs;
+  return appliesVs as TriggerDamageJobDefinition["target"];
 }
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {
