@@ -403,6 +403,8 @@ function extraSkillJobs(
 }
 
 function extraSkillTargets(effect: ActiveEffect, intent: AttackIntent): UnitType[] {
+  const selector = effect.intent.units?.applies_vs;
+  if (selector === undefined || selector === "any" || selector === "target" || selector === "trigger.target") return [intent.defenderUnit];
   if (effect.appliesVs.side !== intent.defenderSide) return [];
   return unitsFromMask(effect.appliesVs.units);
 }

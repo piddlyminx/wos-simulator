@@ -334,6 +334,47 @@ test("extra skill attacks with array applies_vs target those defender unit types
   );
 });
 
+test('extra skill attacks with applies_vs "any" keep current-target compatibility', () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { Router: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      Router: {
+        name: "Router",
+        skills: {
+          SingleHit: {
+            trigger: { type: "attack", units: { by: ["marksman"] } },
+            effects: {
+              hitAny: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger", applies_vs: "any" },
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
+  assert.deepEqual(
+    skillJobs.map((job) => [job.sourceEffectId, job.defenderUnit]),
+    [["hitAny", "lancer"]]
+  );
+});
+
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {
   const result = simulateBattle(
     {
@@ -374,6 +415,49 @@ test("attack-triggered source and target selectors resolve to concrete active sc
 
   assert.equal(attackerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 50);
   assert.equal(defenderLancerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+  assert.equal(defenderMarksmanAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+});
+
+test('attack-triggered target selector with applies_vs "any" gates later opposing attacks', () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { infantry_t1: 100 },
+        heroes: { Debuffer: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      Debuffer: {
+        name: "Debuffer",
+        skills: {
+          TargetAnyDebuff: {
+            trigger: { type: "attack", units: { by: "infantry" } },
+            effects: {
+              down: {
+                type: "damage_down",
+                value: 50,
+                units: { applies_to: "trigger.target", applies_vs: "any" },
+                duration: { type: "turn", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const attackerAttack = result.attacks.find((attack) => attack.attackerSide === "attacker" && attack.attackerUnit === "infantry");
+  const defenderLancerAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "lancer");
+  const defenderMarksmanAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "marksman");
+
+  assert.equal(attackerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+  assert.equal(defenderLancerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 50);
   assert.equal(defenderMarksmanAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
 });
 

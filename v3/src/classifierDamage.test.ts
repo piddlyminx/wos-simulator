@@ -152,7 +152,7 @@ test("attack-duration bucket effects are consumed by the applicable attack job",
   assert.equal(outcome.trace?.buckets.numerator.attackUp.totalPct, 100);
 });
 
-test('applies_vs "target" resolves to the concrete defender target scope', () => {
+test('applies_vs "target" resolves to the trigger source when gating a concrete target', () => {
   const active = activateEffect(
     {
       id: "TargetSkill",
@@ -188,7 +188,7 @@ test('applies_vs "target" resolves to the concrete defender target scope', () =>
   );
 
   assert.deepEqual(active.appliesTo, { side: "defender", units: unitMask("lancer") });
-  assert.deepEqual(active.appliesVs, { side: "defender", units: unitMask("lancer") });
+  assert.deepEqual(active.appliesVs, { side: "attacker", units: unitMask("infantry") });
   assert.equal(classifyEffectForJob(active, job)?.bucket, "denominator.incomingDamageDown");
 });
 
