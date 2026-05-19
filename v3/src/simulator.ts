@@ -123,19 +123,13 @@ function triggerRoundStartSkills(
     if (!chancePasses(skill, runtime.rng)) continue;
     if (report) report.skillActivations += 1;
     let orderIndex = 0;
-    const activatedEffectIds = new Set<string>();
     for (const attackerUnit of roundTriggerUnits(skill, roundStartTroops)) {
       const defenderUnit = chooseDefenderUnit(attackerUnit, defenderSide, roundStartTroops, runtime.activeEffects, round);
       if (!defenderUnit) continue;
       const intent = syntheticRoundIntent(round, side, attackerUnit, defenderSide, defenderUnit, orderIndex, runtime);
       if (!skillMatchesTrigger(skill, "round_start", round, intent)) continue;
       for (const effectIntent of skill.effects) {
-        if (effectIntent.requires_effect && !activatedEffectIds.has(effectIntent.requires_effect)) {
-          const hasActiveRequired = runtime.activeEffects.some((effect) => effect.intent.id === effectIntent.requires_effect && isEffectActive(effect, round));
-          if (!hasActiveRequired) continue;
-        }
         const effect = activateEffect(skill, effectIntent, round, intent);
-        activatedEffectIds.add(effectIntent.id);
         if (effectIntent.type !== "extra_skill_attack") runtime.activeEffects.push(effect);
         activated.push(effect);
         runtime.effectActivationCounts[skill.side] += 1;
@@ -253,7 +247,6 @@ function triggerSkills(
   intent?: AttackIntent
 ): ActiveEffect[] {
   const activated: ActiveEffect[] = [];
-  const activatedEffectIds = new Set<string>();
   for (const skill of skills) {
     if (!skillMatchesTrigger(skill, triggerType, round, intent)) continue;
     const report = runtime.skillReports[skill.side].get(reportKey(skill));
@@ -261,12 +254,7 @@ function triggerSkills(
     if (!chancePasses(skill, runtime.rng)) continue;
     if (report) report.skillActivations += 1;
     for (const effectIntent of skill.effects) {
-      if (effectIntent.requires_effect && !activatedEffectIds.has(effectIntent.requires_effect)) {
-        const hasActiveRequired = runtime.activeEffects.some((effect) => effect.intent.id === effectIntent.requires_effect && isEffectActive(effect, round));
-        if (!hasActiveRequired) continue;
-      }
       const effect = activateEffect(skill, effectIntent, round, intent);
-      activatedEffectIds.add(effectIntent.id);
       if (effectIntent.type !== "extra_skill_attack") runtime.activeEffects.push(effect);
       activated.push(effect);
       runtime.effectActivationCounts[skill.side] += 1;

@@ -242,6 +242,48 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
   assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":debuff:")));
 });
 
+test("requires_effect is ignored by native v3 effect activation", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 0,
+      attacker: {
+        troops: { infantry_t1: 10 },
+        heroes: { LegacyDependency: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 10 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      LegacyDependency: {
+        name: "LegacyDependency",
+        skills: {
+          BothEffectsActivate: {
+            trigger: { type: "battle_start" },
+            effects: {
+              base: {
+                type: "stat_bonus",
+                stat: "attack",
+                value: 10
+              },
+              legacyDependent: {
+                ...({ requires_effect: "missing-effect" } as Record<string, unknown>),
+                type: "stat_bonus",
+                stat: "defense",
+                value: 10
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const report = result.skillReport.attacker.find((entry) => entry.skillId === "BothEffectsActivate");
+  assert.equal(report?.effectActivations, 2);
+});
+
 test("extra skill attacks with array applies_vs target those defender unit types", () => {
   const result = simulateBattle(
     {
