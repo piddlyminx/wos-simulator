@@ -379,6 +379,7 @@ function extraSkillJobs(
     if (effect.kind !== "extra_attack" || !isEffectActive(effect, round) || !extraAttackEffectAppliesToNormalAttack(effect, normalAttack)) continue;
     const definitions = effect.triggerDamageJobs ?? [];
     const consumedEffectUseKey = `${normalAttack.sourceIntentId}:${effect.id}`;
+    const firstJobIndex = jobs.length;
     let definitionIndex = 0;
     for (const definition of definitions) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
@@ -411,6 +412,7 @@ function extraSkillJobs(
       }
       definitionIndex += 1;
     }
+    if (jobs.length > firstJobIndex) reserveConsumedEffectUse(runtime, consumedEffectUseKey, effect.id);
   }
   return jobs;
 }
@@ -528,6 +530,13 @@ function consumeEffects(runtime: Runtime, consumedEffectIds: string[], consumedE
     }
     for (const effect of runtime.activeEffects.filter((activeEffect) => activeEffect.id === consumed)) effect.uses += 1;
   }
+}
+
+function reserveConsumedEffectUse(runtime: Runtime, consumedEffectUseKey: string, consumedEffectId: string): void {
+  const useKey = `${consumedEffectUseKey}:${consumedEffectId}`;
+  if (runtime.consumedEffectUseKeys.has(useKey)) return;
+  runtime.consumedEffectUseKeys.add(useKey);
+  for (const effect of runtime.activeEffects.filter((activeEffect) => activeEffect.id === consumedEffectId)) effect.uses += 1;
 }
 
 function allSkills(fighters: Record<SideId, ResolvedFighter>): ResolvedSkill[] {

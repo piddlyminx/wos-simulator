@@ -558,6 +558,46 @@ test("extra skill attack consumes one use regardless of multiple generated targe
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 6 });
 });
 
+test("extra skill attack consumes one use when multiple same-round normal attacks match the effect", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { infantry_t1: 100, marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          OneUseFollowUp: {
+            trigger: { type: "battle_start" },
+            effects: {
+              hitAgain: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: ["infantry", "marksman"], applies_vs: "all" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
+  assert.equal(skillJobs.length, 1);
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitAgain: 1 });
+});
+
 test("extra skill attack applies_vs must match the current normal attack target", () => {
   const result = simulateBattle(
     {
