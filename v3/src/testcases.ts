@@ -27,6 +27,7 @@ export interface TestcaseCaseReport {
   file: string;
   testcaseId: string;
   index: number;
+  detailArtifact?: string;
   diagnostics: string[];
   gameResult?: unknown;
   calibration?: CalibrationCaseComparison;
@@ -48,6 +49,7 @@ export interface TestcaseRunWarning {
   idx: number;
   stage: "parse" | "adapt" | "execute" | "game_comparison" | "v1_comparison" | "artifact";
   reason: string;
+  detailArtifact?: string;
 }
 
 export interface TestcaseSummaryEntry {
@@ -220,8 +222,7 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
     });
   }
 
-  const comparedMetrics = Object.values(report.testcases).flatMap((entry) => [entry.game, entry.v1].filter((value): value is ParityComparisonMetrics => !!value));
-  applyBenjaminiHochberg(comparedMetrics);
+  applyComparisonQValues(report);
   report.counts.warnings = report.warnings.length;
   report.counts.errors = report.errors.length;
   report.counts.comparedToGame = Object.values(report.testcases).filter((entry) => entry.game).length;
@@ -230,10 +231,23 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
   return report;
 }
 
+export function applyComparisonQValues(report: Pick<TestcaseRunReport, "testcases">): void {
+  applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.game).filter((value): value is ParityComparisonMetrics => !!value));
+  applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.v1).filter((value): value is ParityComparisonMetrics => !!value));
+}
+
 export function assignDetailArtifactPaths(report: TestcaseRunReport, artifactRoot: string): void {
   report.artifactRoot = artifactRoot;
-  Object.keys(report.testcases).forEach((key, index) => {
-    report.testcases[key]!.detailArtifact = `${artifactRoot}/cases/${String(index + 1).padStart(6, "0")}.json`;
+  report.details.forEach((detail, index) => {
+    const detailArtifact = `${artifactRoot}/cases/${String(index + 1).padStart(6, "0")}.json`;
+    detail.detailArtifact = detailArtifact;
+    const testcase = report.testcases[snapshotKey(detail.file, detail.index)];
+    if (testcase) testcase.detailArtifact = detailArtifact;
+    for (const issue of [...report.warnings, ...report.errors]) {
+      if (issue.file === detail.file && issue.idx === detail.index && issue.testcase_id === detail.testcaseId) {
+        issue.detailArtifact = detailArtifact;
+      }
+    }
   });
 }
 

@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { resolve } from "node:path";
 import { test } from "node:test";
 
 import { loadSimulatorConfig } from "./config.js";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration.js";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics.js";
-import { adaptTestcaseEntry, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, discoverTestcaseFiles, runTestcases } from "./testcases.js";
+import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases.js";
 
 test("discoverTestcaseFiles follows v3/testcases symlink and skips disabled or stale files by default", () => {
   const files = discoverTestcaseFiles();
@@ -71,6 +74,24 @@ test("buildSummaryForOutput excludes full detail artifacts from compact output",
   assert.equal(Object.values(summary.testcases)[0]?.detailArtifact, "v3_parity_test/cases/000001.json");
 });
 
+test("assignDetailArtifactPaths exposes failed testcase diagnostics through errors", () => {
+  const testcaseRoot = tempDir("v3-invalid-testcases");
+  writeFileSync(
+    resolve(testcaseRoot, "invalid.json"),
+    JSON.stringify([{ test_id: "bad_case", attacker: { troops: { infantry_t1: 1 } } }]),
+  );
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ testcaseRoot, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
+
+  assignDetailArtifactPaths(report, "v3_parity_failed");
+
+  assert.equal(report.counts.errors, 1);
+  assert.equal(report.details[0]?.detailArtifact, "v3_parity_failed/cases/000001.json");
+  assert.equal(report.errors[0]?.detailArtifact, "v3_parity_failed/cases/000001.json");
+  assert.equal(report.errors[0]?.stage, "adapt");
+  assert.equal(Object.keys(report.testcases).length, 0);
+});
+
 test("runTestcases keeps executed testcase and warns when v1 snapshot row is missing", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
@@ -80,6 +101,22 @@ test("runTestcases keeps executed testcase and warns when v1 snapshot row is mis
   assert.equal(summary?.game?.n_candidate, 1);
   assert.equal(summary?.v1, null);
   assert.equal(report.warnings[0]?.stage, "v1_comparison");
+});
+
+test("applyComparisonQValues keeps game and v1 correction families separate", () => {
+  const firstGame = comparisonMetric(0.01);
+  const secondGame = comparisonMetric(0.02);
+  const onlyV1 = comparisonMetric(0.04);
+  const testcases: Record<string, TestcaseSummaryEntry> = {
+    "testcases/a.json#0": summaryEntry("a", 0, firstGame, onlyV1),
+    "testcases/b.json#0": summaryEntry("b", 0, secondGame, null)
+  };
+
+  applyComparisonQValues({ testcases });
+
+  assert.equal(firstGame.q, 0.02);
+  assert.equal(secondGame.q, 0.02);
+  assert.equal(onlyV1.q, 0.04);
 });
 
 test("calibration lookup supports v3 symlink and source testcase path variants", () => {
@@ -245,3 +282,40 @@ test("calibration lookup exposes full v1 snapshot metrics", () => {
   assert.equal(row?.p, null);
   assert.equal(row?.q, null);
 });
+
+function tempDir(prefix: string): string {
+  const dir = resolve(tmpdir(), `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+  mkdirSync(dir, { recursive: true });
+  return dir;
+}
+
+function comparisonMetric(p: number): ParityComparisonMetrics {
+  return {
+    n_candidate: 2,
+    mu_candidate: 10,
+    sigma_candidate: 1,
+    n_reference: 2,
+    mu_reference: 8,
+    sigma_reference: 1,
+    bias_raw: 2,
+    bias_pct: 1,
+    sem: 1,
+    stat_type: "t",
+    stat: 2,
+    p,
+    q: null,
+    passes: true
+  };
+}
+
+function summaryEntry(testcaseId: string, idx: number, game: ParityComparisonMetrics | null, v1: ParityComparisonMetrics | null): TestcaseSummaryEntry {
+  return {
+    file: `testcases/${testcaseId}.json`,
+    testcase_id: testcaseId,
+    idx,
+    deterministic: false,
+    sampleCount: 2,
+    game,
+    v1
+  };
+}

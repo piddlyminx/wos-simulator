@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -62,18 +62,14 @@ function timestampedReportName(date = new Date()): string {
 
 function writeRunSnapshot(report: TestcaseRunReport, outputDir: string): { summaryPath: string; artifactRoot: string } {
   mkdirSync(outputDir, { recursive: true });
-  const summaryName = timestampedReportName();
-  const summaryPath = resolve(outputDir, summaryName);
-  const artifactRoot = summaryName.replace(/\.json$/, "");
+  const { summaryPath, artifactRoot, artifactDir } = reserveSnapshotPaths(outputDir);
   assignDetailArtifactPaths(report, artifactRoot);
 
-  const casesDir = resolve(outputDir, artifactRoot, "cases");
-  mkdirSync(casesDir, { recursive: true });
-  const usedDetailArtifacts = new Set(Object.values(report.testcases).map((entry) => entry.detailArtifact).filter((value): value is string => !!value));
-  let nextUnreferencedDetailIndex = usedDetailArtifacts.size + 1;
+  const casesDir = resolve(artifactDir, "cases");
+  mkdirSync(casesDir);
   for (const detail of report.details) {
-    const detailArtifact = detailArtifactFor(report, detail) ?? `${artifactRoot}/cases/${String(nextUnreferencedDetailIndex++).padStart(6, "0")}.json`;
-    const detailPath = resolve(outputDir, detailArtifact);
+    if (!detail.detailArtifact) throw new Error(`Missing detail artifact path for ${detail.file}#${detail.index}`);
+    const detailPath = resolve(outputDir, detail.detailArtifact);
     writeFileSync(detailPath, `${JSON.stringify(wrapCaseDetail(report, detail), null, 2)}\n`);
   }
 
@@ -81,8 +77,30 @@ function writeRunSnapshot(report: TestcaseRunReport, outputDir: string): { summa
   return { summaryPath, artifactRoot };
 }
 
-function detailArtifactFor(report: TestcaseRunReport, detail: TestcaseCaseReport): string | undefined {
-  return Object.values(report.testcases).find((entry) => entry.file === detail.file && entry.idx === detail.index)?.detailArtifact;
+function reserveSnapshotPaths(outputDir: string): { summaryPath: string; artifactRoot: string; artifactDir: string } {
+  const baseRoot = timestampedReportName().replace(/\.json$/, "");
+  for (let attempt = 0; attempt < 1000; attempt += 1) {
+    const artifactRoot = attempt === 0 ? baseRoot : `${baseRoot}-${String(attempt).padStart(3, "0")}`;
+    const summaryPath = resolve(outputDir, `${artifactRoot}.json`);
+    if (pathExists(summaryPath)) continue;
+    const artifactDir = resolve(outputDir, artifactRoot);
+    try {
+      mkdirSync(artifactDir);
+      return { summaryPath, artifactRoot, artifactDir };
+    } catch (error) {
+      if ((error as { code?: unknown }).code !== "EEXIST") throw error;
+    }
+  }
+  throw new Error(`Could not allocate unique v3 parity artifact directory in ${outputDir}`);
+}
+
+function pathExists(path: string): boolean {
+  try {
+    statSync(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function wrapCaseDetail(report: TestcaseRunReport, detail: TestcaseCaseReport): TestcaseCaseReport & {

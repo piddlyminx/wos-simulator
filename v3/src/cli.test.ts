@@ -92,7 +92,7 @@ test("cli --no-run-snapshot writes compact stdout only and creates no artifacts"
   assert.deepEqual(readdirSync(outputDir), []);
 });
 
-test("cli snapshot paths include milliseconds to avoid same-second collisions", () => {
+test("cli snapshot paths are unique when timestamps collide", () => {
   const outputDir = tempDir("v3-parity-collision");
   const preloadPath = resolve(outputDir, "fixed-date.mjs");
   writeFileSync(
@@ -122,7 +122,7 @@ globalThis.Date = class FixedDate extends RealDate {
   );
 
   const first = runCliWithFixedDate(outputDir, preloadPath, "2026-01-02T03:04:05.123Z");
-  const second = runCliWithFixedDate(outputDir, preloadPath, "2026-01-02T03:04:05.456Z");
+  const second = runCliWithFixedDate(outputDir, preloadPath, "2026-01-02T03:04:05.123Z");
 
   assert.equal(first.status, 0, first.stderr);
   assert.equal(second.status, 0, second.stderr);
@@ -133,14 +133,18 @@ globalThis.Date = class FixedDate extends RealDate {
 
   const summaries = readdirSync(outputDir).filter((name) => name.endsWith(".json"));
   assert.deepEqual(
-    summaries.sort(),
-    [
+    new Set(summaries),
+    new Set([
       "v3_parity_2026-01-02T03-04-05.123Z.json",
-      "v3_parity_2026-01-02T03-04-05.456Z.json",
-    ],
+      "v3_parity_2026-01-02T03-04-05.123Z-001.json",
+    ]),
+  );
+  assert.deepEqual(
+    summaries.length,
+    2,
   );
   assert.equal(statSync(resolve(outputDir, "v3_parity_2026-01-02T03-04-05.123Z", "cases", "000001.json")).isFile(), true);
-  assert.equal(statSync(resolve(outputDir, "v3_parity_2026-01-02T03-04-05.456Z", "cases", "000001.json")).isFile(), true);
+  assert.equal(statSync(resolve(outputDir, "v3_parity_2026-01-02T03-04-05.123Z-001", "cases", "000001.json")).isFile(), true);
 });
 
 function tempDir(prefix: string): string {
