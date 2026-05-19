@@ -62,8 +62,8 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
   const units = intent.units ?? {};
   const ownerSide = skill.side;
   const defaultAppliesToSide = units.side === "enemy" ? oppositeSide(ownerSide) : ownerSide;
-  const appliesTo = resolveUnitScope(units.applies_to, defaultAppliesToSide, attackIntent);
-  const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), attackIntent);
+  const appliesTo = resolveUnitScope(units.applies_to, defaultAppliesToSide, "applies_to", attackIntent);
+  const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent);
   const duration = normalizeDuration(intent.duration);
   const delay = duration.delay ?? 0;
   return {
@@ -110,15 +110,23 @@ export function normalizeEngagementType(value: unknown): string | undefined {
   return normalized ? normalized : undefined;
 }
 
-function resolveUnitScope(value: unknown, defaultSide: SideId, attackIntent?: AttackIntent): ResolvedUnitScope {
+function resolveUnitScope(value: unknown, defaultSide: SideId, role: "applies_to" | "applies_vs", attackIntent?: AttackIntent): ResolvedUnitScope {
   if ((value === "trigger.source" || value === "trigger") && attackIntent) {
     return { side: attackIntent.attackerSide, units: unitMask(attackIntent.attackerUnit) };
+  }
+  if (value === "target" && role === "applies_vs" && attackIntent) {
+    return scopeForTriggerSide(defaultSide, attackIntent);
   }
   if ((value === "trigger.target" || value === "target") && attackIntent) {
     return { side: attackIntent.defenderSide, units: unitMask(attackIntent.defenderUnit) };
   }
   const list = normalizeUnitList(value);
   return { side: defaultSide, units: list ? unitMask(list) : ALL_UNIT_MASK };
+}
+
+function scopeForTriggerSide(side: SideId, attackIntent: AttackIntent): ResolvedUnitScope {
+  if (side === attackIntent.attackerSide) return { side, units: unitMask(attackIntent.attackerUnit) };
+  return { side, units: unitMask(attackIntent.defenderUnit) };
 }
 
 function normalizeUnitList(value: unknown): UnitType[] | undefined {
