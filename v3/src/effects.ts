@@ -77,6 +77,9 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
   const duration = normalizeDuration(intent.duration);
   const delay = duration.delay ?? 0;
   const effectKind = kindForIntent(intent);
+  if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
+    throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
+  }
   return {
     id: `${skill.side}:${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? "global"}:${skill.id}:${intent.id}:r${round}:${attackIntent?.id ?? "global"}`,
     source: {

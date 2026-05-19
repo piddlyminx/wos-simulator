@@ -418,6 +418,44 @@ test("extra skill trigger damage jobs reject missing runtime selectors", () => {
   );
 });
 
+test("extra skill attacks reject missing trigger damage jobs at activation", () => {
+  assert.throws(
+    () =>
+      simulateBattle(
+        {
+          maxRounds: 1,
+          attacker: {
+            troops: { marksman_t1: 100 },
+            heroes: { Malformed: { skill_1: 1 } }
+          },
+          defender: {
+            troops: { lancer_t1: 100 },
+            heroes: {}
+          }
+        },
+        minimalConfig({
+          Malformed: {
+            name: "Malformed",
+            skills: {
+              MissingJobs: {
+                trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+                effects: {
+                  hitAgain: {
+                    type: "extra_skill_attack",
+                    value: 100,
+                    units: { applies_to: "trigger.source", applies_vs: "any" },
+                    duration: { type: "attack", value: 1 }
+                  }
+                }
+              }
+            }
+          }
+        })
+      ),
+    /extra_skill_attack.*trigger_damage_jobs/i
+  );
+});
+
 test("attack-triggered extra skill attacks activate then resolve trigger damage jobs on normal attack use", () => {
   const result = simulateBattle(
     {
@@ -463,6 +501,66 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
   assert.equal(skillJobs[0]?.attackerUnit, normalJobs[0]?.attackerUnit);
   assert.equal(skillJobs[0]?.defenderSide, normalJobs[0]?.defenderSide);
   assert.equal(skillJobs[0]?.defenderUnit, normalJobs[0]?.defenderUnit);
+});
+
+test("cancelled normal attacks do not consume extra skill attack uses", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: { Canceller: { skill_1: 1 } }
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          OneUseFollowUp: {
+            trigger: { type: "battle_start" },
+            effects: {
+              hitAgain: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: ["marksman"], applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      },
+      Canceller: {
+        name: "Canceller",
+        skills: {
+          CancelFirstMarksman: {
+            trigger: { type: "battle_start" },
+            effects: {
+              cancel: {
+                type: "no_attack",
+                value: 100,
+                units: { side: "enemy", applies_to: ["marksman"], applies_vs: "any" },
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const cancelled = result.attacks.find((attack) => attack.cancelReason === "no_attack");
+  assert.notEqual(cancelled, undefined);
+  assert.equal(cancelled!.consumedEffectIds.some((id) => id.includes(":hitAgain:")), false);
+
+  const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
+  assert.deepEqual(skillJobsByRound, [0, 1]);
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitAgain: 1 });
 });
 
 test("extra skill attack effects cannot be used by later enemy normal attacks", () => {

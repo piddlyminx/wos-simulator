@@ -519,7 +519,7 @@ function expireInactive(runtime: Runtime, round: number): void {
 
 function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: ActiveEffect[]): string[] {
   return effects
-    .filter((effect) => effect.duration.type === "attack" && isEffectActive(effect, round) && basicEffectApplies(effect, job))
+    .filter((effect) => effect.kind !== "extra_attack" && effect.duration.type === "attack" && isEffectActive(effect, round) && basicEffectApplies(effect, job))
     .map((effect) => effect.id);
 }
 
