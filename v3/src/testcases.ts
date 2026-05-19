@@ -82,6 +82,8 @@ export interface TestcaseRunReport {
   details: TestcaseCaseReport[];
 }
 
+export type TestcaseSummaryOutput = Omit<TestcaseRunReport, "details">;
+
 interface CaseVisibility {
   heroes: string[];
   troopSkillIds: string[];
@@ -226,6 +228,18 @@ export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfi
   report.counts.comparedToV1 = Object.values(report.testcases).filter((entry) => entry.v1).length;
 
   return report;
+}
+
+export function assignDetailArtifactPaths(report: TestcaseRunReport, artifactRoot: string): void {
+  report.artifactRoot = artifactRoot;
+  Object.keys(report.testcases).forEach((key, index) => {
+    report.testcases[key]!.detailArtifact = `${artifactRoot}/cases/${String(index + 1).padStart(6, "0")}.json`;
+  });
+}
+
+export function buildSummaryForOutput(report: TestcaseRunReport): TestcaseSummaryOutput {
+  const { details: _details, ...summary } = report;
+  return summary;
 }
 
 export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | number; trace?: boolean } = {}, diagnostics: string[] = []): BattleInput {

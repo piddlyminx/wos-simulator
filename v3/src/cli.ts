@@ -3,19 +3,19 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfig } from "./config.js";
-import { runTestcases, type TestcaseRunOptions } from "./testcases.js";
+import { assignDetailArtifactPaths, buildSummaryForOutput, runTestcases, type TestcaseCaseReport, type TestcaseRunOptions, type TestcaseRunReport } from "./testcases.js";
 
 const options = parseArgs(process.argv.slice(2));
 
 try {
   const config = loadSimulatorConfig();
   const report = runTestcases(options.testcaseOptions, config);
-  const json = JSON.stringify(report, null, 2);
   if (options.noRunSnapshot) {
-    console.log(json);
+    console.log(JSON.stringify(buildSummaryForOutput(report), null, 2));
   } else {
-    const outputPath = writeRunSnapshot(json, options.outputDir);
-    console.error(JSON.stringify({ outputPath }, null, 2));
+    const snapshot = writeRunSnapshot(report, options.outputDir);
+    console.log(JSON.stringify(buildSummaryForOutput(report), null, 2));
+    console.error(JSON.stringify(snapshot, null, 2));
   }
   const failed = report.counts.errors > 0;
   process.exitCode = failed ? 1 : 0;
@@ -60,9 +60,40 @@ function timestampedReportName(date = new Date()): string {
   return `v3_parity_${date.toISOString().replace(/\.\d{3}Z$/, "Z").replace(/:/g, "-")}.json`;
 }
 
-function writeRunSnapshot(json: string, outputDir: string): string {
+function writeRunSnapshot(report: TestcaseRunReport, outputDir: string): { summaryPath: string; artifactRoot: string } {
   mkdirSync(outputDir, { recursive: true });
-  const outputPath = resolve(outputDir, timestampedReportName());
-  writeFileSync(outputPath, `${json}\n`);
-  return outputPath;
+  const summaryName = timestampedReportName();
+  const summaryPath = resolve(outputDir, summaryName);
+  const artifactRoot = summaryName.replace(/\.json$/, "");
+  assignDetailArtifactPaths(report, artifactRoot);
+
+  const casesDir = resolve(outputDir, artifactRoot, "cases");
+  mkdirSync(casesDir, { recursive: true });
+  const usedDetailArtifacts = new Set(Object.values(report.testcases).map((entry) => entry.detailArtifact).filter((value): value is string => !!value));
+  let nextUnreferencedDetailIndex = usedDetailArtifacts.size + 1;
+  for (const detail of report.details) {
+    const detailArtifact = detailArtifactFor(report, detail) ?? `${artifactRoot}/cases/${String(nextUnreferencedDetailIndex++).padStart(6, "0")}.json`;
+    const detailPath = resolve(outputDir, detailArtifact);
+    writeFileSync(detailPath, `${JSON.stringify(wrapCaseDetail(report, detail), null, 2)}\n`);
+  }
+
+  writeFileSync(summaryPath, `${JSON.stringify(buildSummaryForOutput(report), null, 2)}\n`);
+  return { summaryPath, artifactRoot };
+}
+
+function detailArtifactFor(report: TestcaseRunReport, detail: TestcaseCaseReport): string | undefined {
+  return Object.values(report.testcases).find((entry) => entry.file === detail.file && entry.idx === detail.index)?.detailArtifact;
+}
+
+function wrapCaseDetail(report: TestcaseRunReport, detail: TestcaseCaseReport): TestcaseCaseReport & {
+  reportKind: "v3-parity-case-detail";
+  schemaVersion: TestcaseRunReport["schemaVersion"];
+  createdAt: string;
+} {
+  return {
+    reportKind: "v3-parity-case-detail",
+    schemaVersion: report.schemaVersion,
+    createdAt: report.createdAt,
+    ...detail
+  };
 }

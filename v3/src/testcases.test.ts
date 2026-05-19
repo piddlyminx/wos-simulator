@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { loadSimulatorConfig } from "./config.js";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration.js";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics.js";
-import { adaptTestcaseEntry, battleScoreDelta, discoverTestcaseFiles, runTestcases } from "./testcases.js";
+import { adaptTestcaseEntry, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, discoverTestcaseFiles, runTestcases } from "./testcases.js";
 
 test("discoverTestcaseFiles follows v3/testcases symlink and skips disabled or stale files by default", () => {
   const files = discoverTestcaseFiles();
@@ -43,6 +43,32 @@ test("runTestcases returns compact summary entries and full detail entries separ
   assert.ok(detail?.result);
   assert.equal(detail?.v3Stats?.n, 5);
   assert.ok(detail?.visibility.attacker.troops.lancer);
+});
+
+test("assignDetailArtifactPaths assigns deterministic compact detail paths", () => {
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
+
+  assignDetailArtifactPaths(report, "v3_parity_test");
+
+  assert.equal(report.artifactRoot, "v3_parity_test");
+  const keys = Object.keys(report.testcases);
+  assert.deepEqual(keys, [...keys].sort());
+  assert.equal(report.testcases[keys[0]!]?.detailArtifact, "v3_parity_test/cases/000001.json");
+});
+
+test("buildSummaryForOutput excludes full detail artifacts from compact output", () => {
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
+  assignDetailArtifactPaths(report, "v3_parity_test");
+
+  const summary = buildSummaryForOutput(report);
+  const json = JSON.stringify(summary);
+
+  assert.equal("details" in summary, false);
+  assert.equal(json.includes("\"result\""), false);
+  assert.equal(json.includes("\"attacks\""), false);
+  assert.equal(Object.values(summary.testcases)[0]?.detailArtifact, "v3_parity_test/cases/000001.json");
 });
 
 test("runTestcases keeps executed testcase and warns when v1 snapshot row is missing", () => {
