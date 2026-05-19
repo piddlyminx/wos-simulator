@@ -90,7 +90,9 @@ function summary(name: string, overrides: Record<string, unknown> = {}) {
     counts: {
       filesFound: 1,
       testcasesFound: 1,
-      executedCases: 1,
+      executed: 1,
+      warnings: 0,
+      errors: 0,
       comparedToV1: 1,
       comparedToGame: 1,
     },
@@ -198,7 +200,15 @@ test.describe("v3 parity report helpers", () => {
 
   test("summarizeParityReport counts missing and failing rows", () => {
     const value = summary("case_c", {
-      counts: { filesFound: 2, testcasesFound: 2, executedCases: 1 },
+      counts: {
+        filesFound: 2,
+        testcasesFound: 2,
+        executed: 1,
+        warnings: 3,
+        errors: 4,
+        comparedToV1: 5,
+        comparedToGame: 6,
+      },
       warnings: ["missing game comparison"],
       errors: ["case failed"],
       testcases: {
@@ -224,8 +234,10 @@ test.describe("v3 parity report helpers", () => {
     expect(result.filesFound).toBe(2);
     expect(result.testcasesFound).toBe(2);
     expect(result.executedCases).toBe(1);
-    expect(result.warnings).toBe(1);
-    expect(result.errors).toBe(1);
+    expect(result.warnings).toBe(3);
+    expect(result.errors).toBe(4);
+    expect(result.comparedToV1).toBe(5);
+    expect(result.comparedToGame).toBe(6);
     expect(result.v3VsV1Failures).toBe(1);
     expect(result.v3VsGameFailures).toBe(1);
   });

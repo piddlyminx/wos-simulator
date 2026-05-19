@@ -114,22 +114,23 @@ interface ParityReportTestcase {
   v1?: ParityMetric | null;
 }
 
+interface ParityReportCounts {
+  filesFound: number;
+  testcasesFound: number;
+  executed: number;
+  warnings: number;
+  errors: number;
+  comparedToGame: number;
+  comparedToV1: number;
+}
+
 export interface ParityReportJson {
   reportKind?: string;
   schemaVersion?: number;
   createdAt?: string;
   artifactRoot?: string;
   options?: Record<string, unknown>;
-  counts?: Partial<
-    Record<
-      | "filesFound"
-      | "testcasesFound"
-      | "executedCases"
-      | "comparedToV1"
-      | "comparedToGame",
-      number
-    >
-  >;
+  counts?: ParityReportCounts;
   warnings?: unknown[];
   errors?: unknown[];
   testcases?: Record<string, ParityReportTestcase>;
@@ -216,9 +217,15 @@ export function getParityReportCase(
 
 export function summarizeParityReport(report: ParityReportJson): ParitySummary {
   const rows = rowsFromReport(report);
-  const counts = report.counts ?? {};
-  const warnings = Array.isArray(report.warnings) ? report.warnings.length : 0;
-  const errors = Array.isArray(report.errors) ? report.errors.length : 0;
+  const counts = (report.counts ?? {}) as Partial<ParityReportCounts> & {
+    executedCases?: number;
+  };
+  const warnings = Number(
+    counts.warnings ?? (Array.isArray(report.warnings) ? report.warnings.length : 0),
+  );
+  const errors = Number(
+    counts.errors ?? (Array.isArray(report.errors) ? report.errors.length : 0),
+  );
   const comparedToV1 = Number(
     counts.comparedToV1 ?? rows.filter((row) => row.v1 !== null).length,
   );
@@ -229,7 +236,7 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
   return {
     filesFound: Number(counts.filesFound ?? 0),
     testcasesFound: Number(counts.testcasesFound ?? rows.length),
-    executedCases: Number(counts.executedCases ?? rows.length),
+    executedCases: Number(counts.executed ?? counts.executedCases ?? rows.length),
     warnings,
     errors,
     comparedToV1,
