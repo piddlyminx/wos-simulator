@@ -102,6 +102,35 @@ test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings",
   assert.throws(() => loadSimulatorConfig({ configDir: root }), /invalid trigger_damage_jobs target selector.*activation\.targte/i);
 });
 
+test("loadSimulatorConfig rejects trigger_damage_jobs with typoed keys", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ soruce: "use.source", target: "activation.target" }]
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /unknown trigger_damage_jobs key soruce/i);
+});
+
+test("loadSimulatorConfig requires trigger_damage_jobs source and target", () => {
+  const missingSourceRoot = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ target: "activation.target" }]
+  });
+  const missingTargetRoot = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source" }]
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: missingSourceRoot }), /requires source/i);
+  assert.throws(() => loadSimulatorConfig({ configDir: missingTargetRoot }), /requires target/i);
+});
+
 test('loadSimulatorConfig rejects activation.target jobs gated by applies_vs "any"', () => {
   const root = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
@@ -111,6 +140,24 @@ test('loadSimulatorConfig rejects activation.target jobs gated by applies_vs "an
   });
 
   assert.throws(() => loadSimulatorConfig({ configDir: root }), /activation\.target.*applies_vs.*any/i);
+});
+
+test("loadSimulatorConfig rejects activation.target jobs without activation-concrete applies_vs", () => {
+  const omittedRoot = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source" },
+    trigger_damage_jobs: [{ source: "use.source", target: "activation.target" }]
+  });
+  const allRoot = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "all" },
+    trigger_damage_jobs: [{ source: "use.source", target: "activation.target" }]
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: omittedRoot }), /activation\.target.*concrete applies_vs/i);
+  assert.throws(() => loadSimulatorConfig({ configDir: allRoot }), /activation\.target.*applies_vs.*all/i);
 });
 
 function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, missing: string[]): void {
@@ -131,16 +178,41 @@ function collectTriggerDamageJobViolations(file: string, skillFile: SkillFile, v
       if (intent.type !== "extra_skill_attack") continue;
       if (!Array.isArray(intent.trigger_damage_jobs)) continue;
       intent.trigger_damage_jobs.forEach((job, index) => {
+        collectJobShapeViolation(file, skillId, effectId, index, job, violations);
         collectSelectorViolation(file, skillId, effectId, index, "source", job.source, violations);
         collectSelectorViolation(file, skillId, effectId, index, "target", job.target, violations);
-        if (job.target === "activation.target" && intent.units?.applies_vs === "any") {
-          violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${index}].target uses activation.target with applies_vs any`);
+        if (job.target === "activation.target" && !isActivationConcreteAppliesVs(intent.units?.applies_vs)) {
+          violations.push(
+            `${file}:${skillId}.${effectId}.trigger_damage_jobs[${index}].target uses activation.target with non-concrete applies_vs ${JSON.stringify(intent.units?.applies_vs)}`
+          );
         }
         if (job.multiplier !== undefined && typeof job.multiplier !== "number") {
           violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${index}].multiplier must be a number`);
         }
       });
     }
+  }
+}
+
+function collectJobShapeViolation(
+  file: string,
+  skillId: string,
+  effectId: string,
+  jobIndex: number,
+  job: TriggerDamageJobDefinition,
+  violations: string[]
+): void {
+  const allowedKeys = new Set(["source", "target", "multiplier"]);
+  for (const key of Object.keys(job)) {
+    if (!allowedKeys.has(key)) {
+      violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${jobIndex}] has unknown key ${key}`);
+    }
+  }
+  if (job.source === undefined) {
+    violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${jobIndex}] is missing source`);
+  }
+  if (job.target === undefined) {
+    violations.push(`${file}:${skillId}.${effectId}.trigger_damage_jobs[${jobIndex}] is missing target`);
   }
 }
 
@@ -161,6 +233,13 @@ function collectSelectorViolation(
 function isAllowedTriggerDamageJobSelector(selector: TriggerDamageJobDefinition["source"]): boolean {
   const supported = new Set(["use.source", "use.target", "activation.source", "activation.target", "enemy.living", "self.living"]);
   if (typeof selector === "string") return supported.has(selector) || (UNIT_TYPES as string[]).includes(selector);
+  if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
+  return false;
+}
+
+function isActivationConcreteAppliesVs(selector: unknown): boolean {
+  if (selector === "trigger.target" || selector === "target") return true;
+  if (typeof selector === "string") return (UNIT_TYPES as string[]).includes(selector);
   if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
   return false;
 }

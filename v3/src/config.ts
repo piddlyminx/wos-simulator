@@ -123,15 +123,37 @@ function validateExtraSkillAttackEffect(effect: EffectIntentDefinition, file: st
     throw new Error(`extra_skill_attack requires non-empty trigger_damage_jobs at ${path}`);
   }
   effect.trigger_damage_jobs.forEach((job, index) => {
+    validateTriggerDamageJobShape(job, path, index);
     validateTriggerDamageJobSelector(job.source, "source", path, index);
     validateTriggerDamageJobSelector(job.target, "target", path, index);
-    if (job.target === "activation.target" && effect.units?.applies_vs === "any") {
-      throw new Error(`trigger_damage_jobs target activation.target requires a concrete applies_vs, not any, at ${path}.trigger_damage_jobs[${index}]`);
+    if (job.target === "activation.target" && !isActivationConcreteAppliesVs(effect.units?.applies_vs)) {
+      throw new Error(
+        `trigger_damage_jobs target activation.target requires a concrete applies_vs, not ${JSON.stringify(effect.units?.applies_vs)}, at ${path}.trigger_damage_jobs[${index}]`
+      );
     }
     if (job.multiplier !== undefined && typeof job.multiplier !== "number") {
       throw new Error(`trigger_damage_jobs multiplier must be a number at ${path}.trigger_damage_jobs[${index}]`);
     }
   });
+}
+
+function validateTriggerDamageJobShape(job: unknown, path: string, jobIndex: number): asserts job is TriggerDamageJobDefinition {
+  if (!job || typeof job !== "object" || Array.isArray(job)) {
+    throw new Error(`trigger_damage_jobs entry must be an object at ${path}.trigger_damage_jobs[${jobIndex}]`);
+  }
+  const allowedKeys = new Set(["source", "target", "multiplier"]);
+  for (const key of Object.keys(job)) {
+    if (!allowedKeys.has(key)) {
+      throw new Error(`unknown trigger_damage_jobs key ${key} at ${path}.trigger_damage_jobs[${jobIndex}]`);
+    }
+  }
+  const record = job as Record<string, unknown>;
+  if (record.source === undefined) {
+    throw new Error(`trigger_damage_jobs entry requires source at ${path}.trigger_damage_jobs[${jobIndex}]`);
+  }
+  if (record.target === undefined) {
+    throw new Error(`trigger_damage_jobs entry requires target at ${path}.trigger_damage_jobs[${jobIndex}]`);
+  }
 }
 
 function validateTriggerDamageJobSelector(
@@ -140,13 +162,20 @@ function validateTriggerDamageJobSelector(
   path: string,
   jobIndex: number
 ): void {
-  if (selector === undefined || isAllowedTriggerDamageJobSelector(selector)) return;
+  if (isAllowedTriggerDamageJobSelector(selector)) return;
   throw new Error(`invalid trigger_damage_jobs ${role} selector ${JSON.stringify(selector)} at ${path}.trigger_damage_jobs[${jobIndex}]`);
 }
 
 function isAllowedTriggerDamageJobSelector(selector: TriggerDamageJobDefinition["source"]): boolean {
   const supported = new Set(["use.source", "use.target", "activation.source", "activation.target", "enemy.living", "self.living"]);
   if (typeof selector === "string") return supported.has(selector) || (UNIT_TYPES as string[]).includes(selector);
+  if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
+  return false;
+}
+
+function isActivationConcreteAppliesVs(selector: unknown): boolean {
+  if (selector === "trigger.target" || selector === "target") return true;
+  if (typeof selector === "string") return (UNIT_TYPES as string[]).includes(selector);
   if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
   return false;
 }
