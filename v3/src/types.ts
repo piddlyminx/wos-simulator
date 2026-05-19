@@ -45,7 +45,6 @@ export interface TriggerDefinition {
   probability?: unknown;
   every?: number;
   units?: Record<string, unknown>;
-  engagement_type?: string;
 }
 
 export interface SkillDefinition {
@@ -60,8 +59,8 @@ export interface SkillDefinition {
 
 export interface SkillRequirement {
   level: number;
-  type: "tier" | "fc" | string;
-  value: number;
+  type: "tier" | "fc" | "engagement_type" | string;
+  value: number | string;
 }
 
 export interface SkillFile {
@@ -80,6 +79,7 @@ export interface SimulatorConfig {
   troopStats: TroopStatsCatalogue;
   heroGenerationStats: HeroGenerationStatsCatalogue;
   heroDefinitions: Record<string, SkillFile>;
+  heroAliasIndex?: Record<string, string>;
   troopSkills: SkillFile;
   diagnostics: ConfigDiagnostics;
 }
@@ -279,7 +279,13 @@ export interface BattleResult {
   effectActivationCounts: Record<SideId, number>;
   extraSkillAttackJobsByEffect: Record<string, number>;
   attackControlCounts: { dodge: number; no_attack: number };
+  randomness: BattleRandomness;
   trace?: BattleTrace;
+}
+
+export interface BattleRandomness {
+  deterministic: boolean;
+  chanceSkillIds: Record<SideId, string[]>;
 }
 
 export interface BattleTrace {

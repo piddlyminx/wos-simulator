@@ -86,9 +86,15 @@
     "SilentThreat": {
       "description": "Widget bonus: Increase Lethality by X% for all troops when defending",
       "trigger": {
-        "type": "battle_start",
-        "engagement_type": "garrison"
+        "type": "battle_start"
       },
+      "requirements": [
+        {
+          "level": 1,
+          "type": "engagement_type",
+          "value": "garrison"
+        }
+      ],
       "effects": {
         "SilentThreat/1": {
           "type": "stat_bonus",

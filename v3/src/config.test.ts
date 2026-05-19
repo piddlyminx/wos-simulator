@@ -41,3 +41,26 @@ test("loadSimulatorConfig rejects legacy fields in v3 config", () => {
 
   assert.throws(() => loadSimulatorConfig({ configDir: root }), /legacy field/i);
 });
+
+test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {
+  const root = join(tmpdir(), `wos-v3-config-alias-${Date.now()}`);
+  mkdirSync(join(root, "hero_definitions"), { recursive: true });
+  writeFileSync(
+    join(root, "troop_stats.json"),
+    JSON.stringify({
+      infantry_t1: {
+        id: "infantry_t1",
+        type: "infantry",
+        tier: 1,
+        fc: 0,
+        stats: { Attack: 1, Defense: 1, Lethality: 1, Health: 1 }
+      }
+    })
+  );
+  writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));
+  writeFileSync(join(root, "troop_skills.json"), JSON.stringify({ name: "Troop Skills", skills: {} }));
+  writeFileSync(join(root, "hero_definitions", "Alpha.json"), JSON.stringify({ name: "Same Hero", hero_generation: "S1", skills: {} }));
+  writeFileSync(join(root, "hero_definitions", "Beta.json"), JSON.stringify({ name: "Same-Hero", hero_generation: "S1", skills: {} }));
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /duplicate hero alias.*samehero/i);
+});

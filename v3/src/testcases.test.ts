@@ -22,13 +22,18 @@ test("discoverTestcaseFiles includes disabled and stale testcase files when requ
 
 test("runTestcases adapts selected testcase entries and includes calibration comparison metadata", () => {
   const config = loadSimulatorConfig();
-  const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
+  const report = runTestcases({ matching: "simple_001", repeat: 5 }, config);
 
   assert.equal(report.selectedCases, 1);
   assert.equal(report.aggregate.executedCases, 1);
   assert.equal(report.aggregate.unexpectedErrors, 0);
   assert.equal(report.cases[0]?.testcaseId, "simple_001");
   assert.ok(report.cases[0]?.result);
+  assert.equal(report.cases[0]?.deterministic, false);
+  assert.equal(report.cases[0]?.sampleCount, 5);
+  assert.equal(report.cases[0]?.v3Stats?.n, 5);
+  assert.equal(typeof report.cases[0]?.v3Stats?.mu, "number");
+  assert.equal(typeof report.cases[0]?.v3Stats?.sigma, "number");
   assert.ok(report.cases[0]?.visibility.attacker.troops.lancer);
   assert.ok(report.comparison.calibrationAvailable);
   assert.equal(report.comparison.totalReferenceCases, 164);
@@ -81,6 +86,15 @@ test("no-hero simple testcase loads, runs, compares to calibration, and exposes 
   assert.equal(battleScoreDelta(entry?.result), entry ? entry.result!.remaining.attacker.infantry + entry.result!.remaining.attacker.lancer + entry.result!.remaining.attacker.marksman - (entry.result!.remaining.defender.infantry + entry.result!.remaining.defender.lancer + entry.result!.remaining.defender.marksman) : undefined);
 });
 
+test("runTestcases default round cap lets long no-hero baselines reach battle end", () => {
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ matching: "1-testcases_no-heroes_t6_single-type_nc.json", repeat: 1 }, config);
+  const entry = report.cases.find((item) => item.testcaseId === "daut_viper_9");
+
+  assert.equal(entry?.result?.winner, "attacker");
+  assert.ok((entry?.result?.rounds ?? 0) > 100);
+});
+
 test("runTestcases reports a parity comparison table from calibration JSON", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
@@ -92,6 +106,12 @@ test("runTestcases reports a parity comparison table from calibration JSON", () 
   assert.equal(row?.matched, true);
   assert.equal(typeof row?.v3ScoreDelta, "number");
   assert.equal(typeof row?.v3VsGameRaw, "number");
+  assert.equal(row?.v3?.n, 1);
+  assert.equal(typeof row?.v3?.mu, "number");
+  assert.equal(typeof row?.v3VsV1?.biasRaw, "number");
+  assert.equal(typeof row?.v3VsGame?.biasRaw, "number");
+  assert.equal(typeof row?.v3VsV1?.passes, "boolean");
+  assert.equal(typeof row?.v3VsGame?.passes, "boolean");
 });
 
 test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into BattleInput", () => {
