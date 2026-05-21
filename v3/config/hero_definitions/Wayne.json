@@ -116,7 +116,7 @@
       },
       "effects": {
         "Fleet/1": {
-          "type": "crit_damage_up",
+          "type": "damage_up",
           "value": 100,
           "units": {
             "applies_to": "trigger",
