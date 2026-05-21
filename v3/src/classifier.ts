@@ -1,7 +1,6 @@
 import type { ActiveEffect, DamageJob, SideId, UnitType } from "./types.js";
 import { unitMaskHas } from "./types.js";
-
-export type BucketName = `numerator.${string}` | `denominator.${string}`;
+import type { BucketName } from "./damageBuckets.js";
 
 export interface Classification {
   kind: "bucket" | "control" | "extra_skill_attack" | "battle_order" | "report_only";

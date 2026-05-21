@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { classifyEffectForJob } from "./classifier.js";
 import { calculateDamageJob } from "./damage.js";
+import { DENOMINATOR_BUCKETS, NUMERATOR_BUCKETS } from "./damageBuckets.js";
 import { activateEffect } from "./effects.js";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types.js";
 import { ALL_UNIT_MASK, unitMask } from "./types.js";
@@ -82,6 +83,73 @@ test("classifier routes up/down effects into separate product buckets", () => {
   assert.equal(classifyEffectForJob(effect("health_down", "defender"), job)?.bucket, "numerator.healthDown");
   assert.equal(classifyEffectForJob(effect("attack_up", "attacker"), job)?.bucket, "numerator.runtimeAttackUp");
   assert.equal(classifyEffectForJob(effect("attack_down", "attacker"), job)?.bucket, "denominator.attackDown");
+});
+
+test("classifier routes the complete native bucket policy into damage product buckets", () => {
+  const productBuckets = new Set([
+    ...NUMERATOR_BUCKETS.map((bucket) => `numerator.${bucket}`),
+    ...DENOMINATOR_BUCKETS.map((bucket) => `denominator.${bucket}`)
+  ]);
+  const expected = new Map([
+    ["lethality_up", "numerator.runtimeLethalityUp"],
+    ["lethality_down", "denominator.lethalityDown"],
+    ["attack_up", "numerator.runtimeAttackUp"],
+    ["attack_down", "denominator.attackDown"],
+    ["damage_up", "numerator.outgoingDamageUp"],
+    ["damage_down", "denominator.outgoingDamageDown"],
+    ["crit_damage_up", "numerator.outgoingDamageUp"],
+    ["normal_damage_up", "numerator.normalDamageUp"],
+    ["normal_damage_down", "denominator.normalDamageDown"],
+    ["skill_damage_up", "numerator.skillDamageUp"],
+    ["skill_damage_down", "denominator.skillDamageDown"],
+    ["defense_up", "denominator.runtimeDefenseUp"],
+    ["defense_down", "numerator.defenseDown"],
+    ["health_up", "denominator.runtimeHealthUp"],
+    ["health_down", "numerator.healthDown"],
+    ["damage_taken_down", "denominator.incomingDamageDown"],
+    ["damage_taken_up", "numerator.incomingDamageUp"],
+    ["normal_defense_up", "denominator.normalDefenseUp"],
+    ["normal_defense_down", "numerator.normalDefenseDown"],
+    ["skill_defense_up", "denominator.skillDefenseUp"],
+    ["skill_defense_down", "numerator.skillDefenseDown"]
+  ]);
+  const defenderEffectTypes = new Set([
+    "defense_up",
+    "defense_down",
+    "health_up",
+    "health_down",
+    "damage_taken_down",
+    "damage_taken_up",
+    "normal_defense_up",
+    "normal_defense_down",
+    "skill_defense_up",
+    "skill_defense_down"
+  ]);
+
+  for (const [type, expectedBucket] of expected) {
+    const ownerSide = defenderEffectTypes.has(type) ? "defender" : "attacker";
+    const bucket = classifyEffectForJob(effect(type, ownerSide), job)?.bucket;
+    assert.equal(bucket, expectedBucket, type);
+    assert.ok(productBuckets.has(bucket ?? ""), `${type} route ${bucket} is not in damage products`);
+  }
+
+  const statBonusExpected = new Map([
+    ["attack", "numerator.attackUp"],
+    ["lethality", "numerator.lethalityUp"],
+    ["health", "denominator.healthUp"],
+    ["defense", "denominator.defenseUp"]
+  ]);
+
+  for (const [stat, expectedBucket] of statBonusExpected) {
+    const ownerSide = stat === "attack" || stat === "lethality" ? "attacker" : "defender";
+    const statBonus = {
+      ...effect("stat_bonus", ownerSide),
+      intent: { id: `stat_bonus/${stat}`, type: "stat_bonus", stat, value: 25 }
+    };
+    const bucket = classifyEffectForJob(statBonus, job)?.bucket;
+    assert.equal(bucket, expectedBucket, `stat_bonus:${stat}`);
+    assert.ok(productBuckets.has(bucket ?? ""), `stat_bonus:${stat} route ${bucket} is not in damage products`);
+  }
 });
 
 test("damage calculator uses centralized buckets including stat_bonus routing", () => {
