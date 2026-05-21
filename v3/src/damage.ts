@@ -12,47 +12,14 @@ import type {
 } from "./types.js";
 import { UNIT_TYPES } from "./types.js";
 import { classifyEffectForJob, basicEffectApplies } from "./classifier.js";
+import { DENOMINATOR_BUCKETS, NUMERATOR_BUCKETS } from "./damageBuckets.js";
+import type { DenominatorBucket, NumeratorBucket } from "./damageBuckets.js";
 import { isEffectActive } from "./effects.js";
 
 type Buckets = {
-  numerator: Record<string, DamageBucketTrace>;
-  denominator: Record<string, DamageBucketTrace>;
+  numerator: Record<NumeratorBucket, DamageBucketTrace>;
+  denominator: Record<DenominatorBucket, DamageBucketTrace>;
 };
-
-const NUMERATOR_BUCKETS = [
-  "army",
-  "attackBase",
-  "lethalityBase",
-  "attackUp",
-  "lethalityUp",
-  "runtimeAttackUp",
-  "runtimeLethalityUp",
-  "outgoingDamageUp",
-  "defenseDown",
-  "healthDown",
-  "incomingDamageUp",
-  "normalDamageUp",
-  "normalDefenseDown",
-  "skillDamageUp",
-  "skillDefenseDown",
-  "extraSkillSource"
-];
-const DENOMINATOR_BUCKETS = [
-  "healthBase",
-  "defenseBase",
-  "attackDown",
-  "lethalityDown",
-  "outgoingDamageDown",
-  "defenseUp",
-  "healthUp",
-  "runtimeDefenseUp",
-  "runtimeHealthUp",
-  "incomingDamageDown",
-  "normalDamageDown",
-  "normalDefenseUp",
-  "skillDamageDown",
-  "skillDefenseUp"
-];
 
 export function calculateDamageJob(
   job: DamageJob,
@@ -93,13 +60,14 @@ export function calculateDamageJob(
       continue;
     }
     const valuePct = effect.valuePct ?? 0;
-    const [side, bucketName] = classification.bucket.split(".") as ["numerator" | "denominator", string];
+    const [side, bucketName] = classification.bucket.split(".") as ["numerator" | "denominator", NumeratorBucket | DenominatorBucket];
     if (!bucketAppliesToJob(bucketName, job.kind)) {
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: `wrong_damage_kind:${job.kind}` });
       continue;
     }
+    const bucket = side === "numerator" ? buckets.numerator[bucketName as NumeratorBucket] : buckets.denominator[bucketName as DenominatorBucket];
     const appliedValuePct = addPercent(
-      buckets[side][bucketName],
+      bucket,
       valuePct,
       effect.source.effectId ?? effect.id,
       sourceLabel(effect),
@@ -161,8 +129,8 @@ export function calculateDamageJob(
 
 function emptyBuckets(): Buckets {
   return {
-    numerator: Object.fromEntries(NUMERATOR_BUCKETS.map((bucket) => [bucket, percentBucket()])) as Record<string, DamageBucketTrace>,
-    denominator: Object.fromEntries(DENOMINATOR_BUCKETS.map((bucket) => [bucket, percentBucket()])) as Record<string, DamageBucketTrace>
+    numerator: Object.fromEntries(NUMERATOR_BUCKETS.map((bucket) => [bucket, percentBucket()])) as Record<NumeratorBucket, DamageBucketTrace>,
+    denominator: Object.fromEntries(DENOMINATOR_BUCKETS.map((bucket) => [bucket, percentBucket()])) as Record<DenominatorBucket, DamageBucketTrace>
   };
 }
 
@@ -221,7 +189,7 @@ function totalTroops(troops: Record<UnitType, number>): number {
   return UNIT_TYPES.reduce((sum, unit) => sum + (troops[unit] ?? 0), 0);
 }
 
-function bucketAppliesToJob(bucketName: string, kind: DamageJob["kind"]): boolean {
+function bucketAppliesToJob(bucketName: NumeratorBucket | DenominatorBucket, kind: DamageJob["kind"]): boolean {
   if (bucketName.startsWith("normal")) return kind === "normal";
   if (bucketName.startsWith("skill")) return kind === "skill";
   return true;
