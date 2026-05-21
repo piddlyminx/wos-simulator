@@ -38,7 +38,7 @@
               "infantry",
               "marksman"
             ],
-            "applies_vs": "any"
+            "applies_vs": "target"
           }
         }
       }
