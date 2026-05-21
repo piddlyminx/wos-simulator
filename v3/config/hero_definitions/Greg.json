@@ -16,7 +16,7 @@
       },
       "effects": {
         "SwordOfJustice/1": {
-          "type": "lethality_up",
+          "type": "damage_up",
           "value": [
             8,
             16,
