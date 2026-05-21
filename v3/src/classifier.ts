@@ -11,9 +11,9 @@ export interface Classification {
 }
 
 const ATTACKER_BUCKETS: Record<string, BucketName> = {
-  lethality_up: "numerator.lethalityUp",
+  lethality_up: "numerator.runtimeLethalityUp",
   lethality_down: "denominator.lethalityDown",
-  attack_up: "numerator.attackUp",
+  attack_up: "numerator.runtimeAttackUp",
   attack_down: "denominator.attackDown",
   damage_up: "numerator.outgoingDamageUp",
   damage_down: "denominator.outgoingDamageDown",
@@ -25,9 +25,9 @@ const ATTACKER_BUCKETS: Record<string, BucketName> = {
 };
 
 const DEFENDER_BUCKETS: Record<string, BucketName> = {
-  defense_up: "denominator.defenseUp",
+  defense_up: "denominator.runtimeDefenseUp",
   defense_down: "numerator.defenseDown",
-  health_up: "denominator.healthUp",
+  health_up: "denominator.runtimeHealthUp",
   health_down: "numerator.healthDown",
   damage_taken_down: "denominator.incomingDamageDown",
   damage_taken_up: "numerator.incomingDamageUp",

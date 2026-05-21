@@ -78,9 +78,9 @@ function effect(type: string, ownerSide: "attacker" | "defender", valuePct = 25)
 }
 
 test("classifier routes up/down effects into separate product buckets", () => {
-  assert.equal(classifyEffectForJob(effect("health_up", "defender"), job)?.bucket, "denominator.healthUp");
+  assert.equal(classifyEffectForJob(effect("health_up", "defender"), job)?.bucket, "denominator.runtimeHealthUp");
   assert.equal(classifyEffectForJob(effect("health_down", "defender"), job)?.bucket, "numerator.healthDown");
-  assert.equal(classifyEffectForJob(effect("attack_up", "attacker"), job)?.bucket, "numerator.attackUp");
+  assert.equal(classifyEffectForJob(effect("attack_up", "attacker"), job)?.bucket, "numerator.runtimeAttackUp");
   assert.equal(classifyEffectForJob(effect("attack_down", "attacker"), job)?.bucket, "denominator.attackDown");
 });
 
@@ -126,6 +126,20 @@ test("damage calculator uses centralized buckets including stat_bonus routing", 
   assert.ok(outcome.kills < 1000);
 });
 
+test("runtime stat-up effects multiply separately from input stat bonuses", () => {
+  const fighters = simpleFighters();
+  fighters.attacker.statBonuses.infantry.attack = 100;
+
+  const baseline = calculateDamageJob(job, fighters, [], { trace: true });
+  const withRuntimeAttackUp = calculateDamageJob(job, fighters, [effect("attack_up", "attacker", 100)], { trace: true });
+
+  assert.equal(baseline.trace?.buckets.numerator.attackUp.totalPct, 100);
+  assert.equal(baseline.trace?.buckets.numerator.runtimeAttackUp.totalPct, 0);
+  assert.equal(withRuntimeAttackUp.trace?.buckets.numerator.attackUp.totalPct, 100);
+  assert.equal(withRuntimeAttackUp.trace?.buckets.numerator.runtimeAttackUp.totalPct, 100);
+  assert.equal(withRuntimeAttackUp.kills, baseline.kills * 2);
+});
+
 test("pass-specific buckets only apply to matching damage job kind", () => {
   const normalEffect = effect("normal_damage_up", "attacker", 100);
   const skillEffect = effect("skill_damage_up", "attacker", 100);
@@ -151,7 +165,7 @@ test("attack-duration bucket effects are consumed by the applicable attack job",
   const outcome = calculateDamageJob(job, simpleFighters(), [oneAttackEffect], { trace: true });
 
   assert.ok(outcome.consumedEffectIds.includes("attack-up-active"));
-  assert.equal(outcome.trace?.buckets.numerator.attackUp.totalPct, 100);
+  assert.equal(outcome.trace?.buckets.numerator.runtimeAttackUp.totalPct, 100);
 });
 
 test('applies_vs "target" resolves to the trigger source when gating a concrete target', () => {
