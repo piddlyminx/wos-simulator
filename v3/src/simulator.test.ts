@@ -195,6 +195,28 @@ test("display-name hero aliases resolve to v3 hero definitions", () => {
   assert.equal(fighter.diagnostics.some((line) => line.includes("Missing hero definition")), false);
 });
 
+test("hero generation stats are opt-in because testcase stats are authoritative", () => {
+  const config = minimalConfig({
+    Example: {
+      name: "Example",
+      hero_generation: "S1",
+      skills: {}
+    }
+  });
+  config.heroGenerationStats.S1 = { attack: 50, defense: 40, lethality: 30, health: 20 };
+  const input = {
+    troops: { infantry_t1: 10 },
+    stats: { inf: { attack: 1, defense: 2, lethality: 3, health: 4 } },
+    heroes: { Example: { skill_1: 1 } }
+  };
+
+  const defaultFighter = resolveFighter(input, "attacker", config);
+  const optInFighter = resolveFighter(input, "attacker", config, { hero_generation_stats: true });
+
+  assert.deepEqual(defaultFighter.statBonuses.infantry, { attack: 1, defense: 2, lethality: 3, health: 4 });
+  assert.deepEqual(optInFighter.statBonuses.infantry, { attack: 51, defense: 42, lethality: 33, health: 24 });
+});
+
 test("attack-duration effects are consumed even when a normal attack is cancelled", () => {
   const result = simulateBattle(
     {

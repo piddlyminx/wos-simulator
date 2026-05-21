@@ -131,8 +131,10 @@ function resolveHeroes(
       continue;
     }
     const generationStats = normalizeStatBlock(config.heroGenerationStats[definition.hero_generation ?? ""] as Record<string, unknown>);
-    for (const unit of UNIT_TYPES) {
-      statBonuses[unit] = addStats(statBonuses[unit], generationStats);
+    if (shouldApplyHeroGenerationStats(mechanics)) {
+      for (const unit of UNIT_TYPES) {
+        statBonuses[unit] = addStats(statBonuses[unit], generationStats);
+      }
     }
     heroes.push({
       name: definition.name ?? heroName,
@@ -224,6 +226,10 @@ function battleRequirementsSatisfied(requirements: SkillRequirement[], level: nu
 
 function currentEngagementType(mechanics?: BattleInput["mechanics"]): string | undefined {
   return normalizeEngagementType(mechanics?.engagement_type ?? mechanics?.engagementType);
+}
+
+function shouldApplyHeroGenerationStats(mechanics?: BattleInput["mechanics"]): boolean {
+  return mechanics?.hero_generation_stats === true || mechanics?.heroGenerationStats === true;
 }
 
 function hydrateSkill(
