@@ -6,6 +6,7 @@ import type {
   EffectIntentDefinition,
   ResolvedSkill,
   ResolvedUnitScope,
+  SameEffectStacking,
   SideId,
   UnitType
 } from "./types.js";
@@ -102,7 +103,8 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
     startRound: round + delay,
     duration,
     uses: 0,
-    stackingKey: `${skill.side}:${intent.id}`
+    stackingKey: `${skill.side}:${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? "global"}:${skill.id}:${intent.id}`,
+    sameEffectStacking: normalizeSameEffectStacking(intent.same_effect_stacking)
   };
 }
 
@@ -169,6 +171,10 @@ function normalizeDuration(duration: EffectIntentDefinition["duration"]): Effect
     return { type: rawType, value: Number(duration.value ?? (rawType === "battle" ? 0 : 1)), delay: Number(duration.delay ?? 0) };
   }
   return { type: "battle", value: 0 };
+}
+
+function normalizeSameEffectStacking(value: EffectIntentDefinition["same_effect_stacking"]): SameEffectStacking {
+  return value === "max" ? "max" : "add";
 }
 
 function hashSeed(seed: string): number {
