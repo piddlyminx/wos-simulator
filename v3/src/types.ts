@@ -3,6 +3,7 @@ export type UnitType = "infantry" | "lancer" | "marksman";
 export type DamageKind = "normal" | "skill";
 export type UnitMask = number;
 export type ActiveEffectKind = "modifier" | "extra_attack" | "control" | "battle_order";
+export type SameEffectStacking = "add" | "max";
 
 export const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
 export const UNIT_BITS: Record<UnitType, UnitMask> = {
@@ -78,7 +79,7 @@ export interface EffectIntentDefinition {
   units?: Record<string, unknown>;
   trigger_damage_jobs?: TriggerDamageJobDefinition[];
   duration?: { type?: string; value?: number; delay?: number };
-  same_effect_stacking?: string;
+  same_effect_stacking?: SameEffectStacking;
   reason?: string;
 }
 
@@ -212,6 +213,7 @@ export interface ActiveEffect {
   duration: EffectDuration;
   uses: number;
   stackingKey?: string;
+  sameEffectStacking: SameEffectStacking;
 }
 
 export interface AttackIntent {
@@ -258,7 +260,7 @@ export interface DamageBucketTrace {
   totalPct?: number;
   factor: number;
   raw?: number;
-  contributors: Array<{ effectId: string; source: string; valuePct: number; bucket: string }>;
+  contributors: Array<{ effectId: string; source: string; valuePct: number; bucket: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
 }
 
 export interface DamageEquationTrace {
@@ -268,7 +270,7 @@ export interface DamageEquationTrace {
     numerator: Record<string, DamageBucketTrace>;
     denominator: Record<string, DamageBucketTrace>;
   };
-  appliedEffects: Array<{ effectId: string; bucket: string; valuePct: number; source: string }>;
+  appliedEffects: Array<{ effectId: string; bucket: string; valuePct: number; source: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
   rejectedEffects: Array<{ effectId: string; reason: string }>;
   rawDamage: number;
   finalKills: number;

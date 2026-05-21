@@ -376,8 +376,10 @@ function extraSkillJobs(
   roundStartTroops: DamageJob["roundStartTroops"]
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
-  for (const effect of runtime.activeEffects) {
-    if (effect.kind !== "extra_attack" || !isEffectActive(effect, round) || !extraAttackEffectAppliesToNormalAttack(effect, normalAttack)) continue;
+  const effects = selectStackedExtraAttackEffects(
+    runtime.activeEffects.filter((effect) => effect.kind === "extra_attack" && isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack))
+  );
+  for (const effect of effects) {
     const definitions = effect.triggerDamageJobs ?? [];
     const consumedEffectUseKey = `${normalAttack.sourceIntentId}:${effect.id}`;
     const firstJobIndex = jobs.length;
@@ -416,6 +418,26 @@ function extraSkillJobs(
     if (jobs.length > firstJobIndex) reserveConsumedEffectUse(runtime, consumedEffectUseKey, effect.id);
   }
   return jobs;
+}
+
+function selectStackedExtraAttackEffects(effects: ActiveEffect[]): ActiveEffect[] {
+  const selected: ActiveEffect[] = [];
+  const maxByKey = new Map<string, number>();
+  for (const effect of effects) {
+    if (effect.sameEffectStacking !== "max" || !effect.stackingKey) {
+      selected.push(effect);
+      continue;
+    }
+    const existingIndex = maxByKey.get(effect.stackingKey);
+    if (existingIndex === undefined) {
+      maxByKey.set(effect.stackingKey, selected.length);
+      selected.push(effect);
+      continue;
+    }
+    const existing = selected[existingIndex];
+    if ((effect.valuePct ?? 0) > (existing.valuePct ?? 0)) selected[existingIndex] = effect;
+  }
+  return selected;
 }
 
 function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {

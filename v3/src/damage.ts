@@ -1,4 +1,15 @@
-import type { ActiveEffect, AttackOutcome, DamageBucketTrace, DamageEquationTrace, DamageJob, ResolvedFighter, SideId, StatBlock, UnitType } from "./types.js";
+import type {
+  ActiveEffect,
+  AttackOutcome,
+  DamageBucketTrace,
+  DamageEquationTrace,
+  DamageJob,
+  ResolvedFighter,
+  SameEffectStacking,
+  SideId,
+  StatBlock,
+  UnitType
+} from "./types.js";
 import { UNIT_TYPES } from "./types.js";
 import { classifyEffectForJob, basicEffectApplies } from "./classifier.js";
 import { isEffectActive } from "./effects.js";
@@ -83,8 +94,27 @@ export function calculateDamageJob(
       rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: `wrong_damage_kind:${job.kind}` });
       continue;
     }
-    addPercent(buckets[side][bucketName], valuePct, effect.source.effectId ?? effect.id, sourceLabel(effect), classification.bucket);
-    appliedEffects.push({ effectId: effect.source.effectId ?? effect.id, bucket: classification.bucket, valuePct, source: sourceLabel(effect) });
+    const appliedValuePct = addPercent(
+      buckets[side][bucketName],
+      valuePct,
+      effect.source.effectId ?? effect.id,
+      sourceLabel(effect),
+      classification.bucket,
+      effect.stackingKey,
+      effect.sameEffectStacking
+    );
+    if (appliedValuePct !== 0) {
+      appliedEffects.push({
+        effectId: effect.source.effectId ?? effect.id,
+        bucket: classification.bucket,
+        valuePct: appliedValuePct,
+        source: sourceLabel(effect),
+        stackingKey: effect.stackingKey,
+        sameEffectStacking: effect.sameEffectStacking
+      });
+    } else {
+      rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "same_effect_max_superseded" });
+    }
   }
 
   const numeratorProduct = product(NUMERATOR_BUCKETS.map((bucket) => buckets.numerator[bucket].factor));
@@ -142,10 +172,34 @@ function setRaw(bucket: DamageBucketTrace, raw: number): void {
   delete bucket.totalPct;
 }
 
-function addPercent(bucket: DamageBucketTrace, valuePct: number, effectId: string, source: string, bucketName: string): void {
+function addPercent(
+  bucket: DamageBucketTrace,
+  valuePct: number,
+  effectId: string,
+  source: string,
+  bucketName: string,
+  stackingKey?: string,
+  sameEffectStacking: SameEffectStacking = "add"
+): number {
+  if (sameEffectStacking === "max" && stackingKey) {
+    const existing = bucket.contributors.find((contributor) => contributor.stackingKey === stackingKey);
+    if (existing) {
+      if (existing.valuePct >= valuePct) return 0;
+      const delta = valuePct - existing.valuePct;
+      bucket.totalPct = (bucket.totalPct ?? 0) + valuePct - existing.valuePct;
+      existing.effectId = effectId;
+      existing.source = source;
+      existing.valuePct = valuePct;
+      existing.bucket = bucketName;
+      existing.sameEffectStacking = sameEffectStacking;
+      bucket.factor = 1 + (bucket.totalPct ?? 0) / 100;
+      return delta;
+    }
+  }
   bucket.totalPct = (bucket.totalPct ?? 0) + valuePct;
   bucket.factor = 1 + bucket.totalPct / 100;
-  bucket.contributors.push({ effectId, source, valuePct, bucket: bucketName });
+  bucket.contributors.push({ effectId, source, valuePct, bucket: bucketName, stackingKey, sameEffectStacking });
+  return valuePct;
 }
 
 function addInputStatBuckets(buckets: Buckets, attacker: StatBlock, defender: StatBlock): void {

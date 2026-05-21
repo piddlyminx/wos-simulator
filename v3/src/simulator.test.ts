@@ -7,7 +7,7 @@ import { loadSimulatorConfig } from "./config.js";
 import { createSeededRng, chancePasses } from "./effects.js";
 import { resolveFighter } from "./resolve.js";
 import { simulateBattle } from "./simulator.js";
-import type { BattleInput, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types.js";
+import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types.js";
 
 test("simulateBattle returns structured result for a no-hero battle", () => {
   const config = loadSimulatorConfig();
@@ -262,6 +262,32 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
   assert.equal(cancelledAttack.consumedEffectIds.length, 2);
   assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":cancel:")));
   assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":debuff:")));
+});
+
+test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
+  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "damage_up"));
+  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "damage_up"));
+
+  const maxRoundTwo = maxResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
+  const addRoundTwo = addResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
+
+  assert.equal(maxRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.totalPct, 100);
+  assert.equal(maxRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.contributors.length, 1);
+  assert.equal(addRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.totalPct, 200);
+  assert.equal(addRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.contributors.length, 2);
+});
+
+test("same_effect_stacking max caps overlapping extra skill attacks while add keeps all activations", () => {
+  const maxResult = simulateBattle(sameEffectStackingInput("MaxExtra"), sameEffectStackingConfig("MaxExtra", "max", "extra_skill_attack"));
+  const addResult = simulateBattle(sameEffectStackingInput("AddExtra"), sameEffectStackingConfig("AddExtra", "add", "extra_skill_attack"));
+
+  const maxRoundTwoSkillJobs = maxResult.trace?.rounds[1]?.jobs.filter((job) => job.kind === "skill") ?? [];
+  const addRoundTwoSkillJobs = addResult.trace?.rounds[1]?.jobs.filter((job) => job.kind === "skill") ?? [];
+
+  assert.equal(maxRoundTwoSkillJobs.length, 1);
+  assert.equal(addRoundTwoSkillJobs.length, 2);
+  assert.deepEqual(maxResult.extraSkillAttackJobsByEffect, { stacking: 2 });
+  assert.deepEqual(addResult.extraSkillAttackJobsByEffect, { stacking: 3 });
 });
 
 test("requires_effect is ignored by native v3 effect activation", () => {
@@ -1112,6 +1138,52 @@ function skillActivations(result: ReturnType<typeof simulateBattle>, skillId: st
 
 function totalRemaining(troops: Record<UnitType, number>): number {
   return Object.values(troops).reduce((sum, count) => sum + count, 0);
+}
+
+function sameEffectStackingInput(heroName: string): BattleInput {
+  return {
+    maxRounds: 2,
+    trace: true,
+    attacker: {
+      troops: { infantry_t1: 10000 },
+      heroes: { [heroName]: { skill_1: 1 } }
+    },
+    defender: {
+      troops: { infantry_t1: 10000 },
+      heroes: {}
+    }
+  };
+}
+
+function sameEffectStackingConfig(heroName: string, same_effect_stacking: "add" | "max", type: "damage_up" | "extra_skill_attack"): SimulatorConfig {
+  const effect: Omit<EffectIntentDefinition, "id"> =
+    type === "extra_skill_attack"
+      ? {
+          type,
+          value: 100,
+          same_effect_stacking,
+          units: { applies_to: ["infantry"], applies_vs: "any" },
+          trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+          duration: { type: "turn", value: 2 }
+        }
+      : {
+          type,
+          value: 100,
+          same_effect_stacking,
+          units: { applies_to: ["infantry"], applies_vs: "any" },
+          duration: { type: "turn", value: 2 }
+        };
+  return minimalConfig({
+    [heroName]: {
+      name: heroName,
+      skills: {
+        Overlap: {
+          trigger: { type: "turn" },
+          effects: { stacking: effect }
+        }
+      }
+    }
+  });
 }
 
 function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): SimulatorConfig {

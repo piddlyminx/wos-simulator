@@ -36,7 +36,8 @@ test("resolved effect scope matches concrete side and unit masks", () => {
     createdRound: 1,
     startRound: 1,
     duration: { type: "battle", value: 0 },
-    uses: 0
+    uses: 0,
+    sameEffectStacking: "add"
   };
 
   assert.equal(classifyEffectForJob(active, job)?.bucket, "numerator.outgoingDamageUp");
@@ -71,7 +72,8 @@ function effect(type: string, ownerSide: "attacker" | "defender", valuePct = 25)
     createdRound: 1,
     startRound: 1,
     duration: { type: "battle", value: 0 },
-    uses: 0
+    uses: 0,
+    sameEffectStacking: "add"
   };
 }
 
