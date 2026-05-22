@@ -1,4 +1,5 @@
-export { loadSimulatorConfig } from "./config.js";
+export { buildSimulatorConfig, loadSimulatorConfig } from "./config.js";
+export type { RawSimulatorConfig } from "./config.js";
 export { simulateBattle } from "./simulator.js";
 export { discoverTestcaseFiles, runTestcases, adaptTestcaseEntry } from "./testcases.js";
 export { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration.js";

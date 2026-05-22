@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { tmpdir } from "node:os";
 
 import { loadSimulatorConfig } from "./config.js";
+import { loadSimulatorConfigFromDir } from "./config-node.js";
 import { UNIT_TYPES } from "./types.js";
 import type { EffectIntentDefinition, SkillFile, TriggerDamageJobDefinition } from "./types.js";
 
@@ -29,7 +30,7 @@ test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-rela
     units: { applies_to: "trigger.source", applies_vs: "target" }
   });
 
-  const config = loadSimulatorConfig({ configDir: root });
+  const config = loadSimulatorConfigFromDir(root);
 
   assert.deepEqual(config.diagnostics.ambiguousTurnTriggerSelectors, [
     {
@@ -69,7 +70,7 @@ test("loadSimulatorConfig rejects legacy fields in v3 config", () => {
   writeFileSync(join(root, "troop_skills.json"), JSON.stringify({ name: "Troop Skills", skills: {} }));
   writeFileSync(join(root, "hero_definitions", "Example.json"), JSON.stringify({ name: "Example", hero_generation: "S1", skills: {} }));
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /legacy field/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /legacy field/i);
 });
 
 test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {
@@ -92,7 +93,7 @@ test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {
   writeFileSync(join(root, "hero_definitions", "Alpha.json"), JSON.stringify({ name: "Same Hero", hero_generation: "S1", skills: {} }));
   writeFileSync(join(root, "hero_definitions", "Beta.json"), JSON.stringify({ name: "Same-Hero", hero_generation: "S1", skills: {} }));
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /duplicate hero alias.*samehero/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /duplicate hero alias.*samehero/i);
 });
 
 test("native v3 extra skill attacks define trigger_damage_jobs", () => {
@@ -175,7 +176,7 @@ test("loadSimulatorConfig rejects legacy trigger units filters", () => {
   troopSkills.skills.ExampleSkill.trigger = { type: "attack", units: { side: "enemy", applies_vs: ["infantry"] } } as never;
   writeFileSync(join(root, "troop_skills.json"), JSON.stringify(troopSkills));
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /legacy trigger units/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /legacy trigger units/i);
 });
 
 test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
@@ -185,7 +186,7 @@ test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
     units: { applies_to: "trigger.source", applies_vs: "all" }
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /applies_vs.*all/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /applies_vs.*all/i);
 });
 
 test("loadSimulatorConfig rejects native effect units.side", () => {
@@ -195,7 +196,7 @@ test("loadSimulatorConfig rejects native effect units.side", () => {
     units: { side: "enemy", applies_to: "target" }
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /units\.side/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /units\.side/i);
 });
 
 test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings", () => {
@@ -206,7 +207,7 @@ test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings",
     trigger_damage_jobs: [{ source: "use.source", target: "activation.targte" }]
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /invalid trigger_damage_jobs target selector.*activation\.targte/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /invalid trigger_damage_jobs target selector.*activation\.targte/i);
 });
 
 test("loadSimulatorConfig rejects trigger_damage_jobs with typoed keys", () => {
@@ -217,7 +218,7 @@ test("loadSimulatorConfig rejects trigger_damage_jobs with typoed keys", () => {
     trigger_damage_jobs: [{ soruce: "use.source", target: "activation.target" }]
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /unknown trigger_damage_jobs key soruce/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key soruce/i);
 });
 
 test("loadSimulatorConfig requires trigger_damage_jobs source and target", () => {
@@ -234,8 +235,8 @@ test("loadSimulatorConfig requires trigger_damage_jobs source and target", () =>
     trigger_damage_jobs: [{ source: "use.source" }]
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: missingSourceRoot }), /requires source/i);
-  assert.throws(() => loadSimulatorConfig({ configDir: missingTargetRoot }), /requires target/i);
+  assert.throws(() => loadSimulatorConfigFromDir(missingSourceRoot), /requires source/i);
+  assert.throws(() => loadSimulatorConfigFromDir(missingTargetRoot), /requires target/i);
 });
 
 test('loadSimulatorConfig rejects activation.target jobs gated by applies_vs "any"', () => {
@@ -246,7 +247,7 @@ test('loadSimulatorConfig rejects activation.target jobs gated by applies_vs "an
     trigger_damage_jobs: [{ source: "use.source", target: "activation.target" }]
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: root }), /activation\.target.*applies_vs.*any/i);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /activation\.target.*applies_vs.*any/i);
 });
 
 test("loadSimulatorConfig rejects activation.target jobs without activation-concrete applies_vs", () => {
@@ -263,8 +264,8 @@ test("loadSimulatorConfig rejects activation.target jobs without activation-conc
     trigger_damage_jobs: [{ source: "use.source", target: "activation.target" }]
   });
 
-  assert.throws(() => loadSimulatorConfig({ configDir: omittedRoot }), /activation\.target.*concrete applies_vs/i);
-  assert.throws(() => loadSimulatorConfig({ configDir: allRoot }), /applies_vs.*all/i);
+  assert.throws(() => loadSimulatorConfigFromDir(omittedRoot), /activation\.target.*concrete applies_vs/i);
+  assert.throws(() => loadSimulatorConfigFromDir(allRoot), /applies_vs.*all/i);
 });
 
 function collectMissingTriggerDamageJobs(file: string, skillFile: SkillFile, missing: string[]): void {

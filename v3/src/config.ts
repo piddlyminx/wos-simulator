@@ -1,6 +1,36 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, resolve, relative } from "node:path";
-import { fileURLToPath } from "node:url";
+import troopStatsJson from "../config/troop_stats.json" with { type: "json" };
+import heroGenerationStatsJson from "../config/hero_generation_stats.json" with { type: "json" };
+import troopSkillsJson from "../config/troop_skills.json" with { type: "json" };
+import Ahmose from "../config/hero_definitions/Ahmose.json" with { type: "json" };
+import Alonso from "../config/hero_definitions/Alonso.json" with { type: "json" };
+import Bahiti from "../config/hero_definitions/Bahiti.json" with { type: "json" };
+import Bradley from "../config/hero_definitions/Bradley.json" with { type: "json" };
+import Edith from "../config/hero_definitions/Edith.json" with { type: "json" };
+import Flint from "../config/hero_definitions/Flint.json" with { type: "json" };
+import Gordon from "../config/hero_definitions/Gordon.json" with { type: "json" };
+import Greg from "../config/hero_definitions/Greg.json" with { type: "json" };
+import Gwen from "../config/hero_definitions/Gwen.json" with { type: "json" };
+import Hector from "../config/hero_definitions/Hector.json" with { type: "json" };
+import Jasser from "../config/hero_definitions/Jasser.json" with { type: "json" };
+import Jeronimo from "../config/hero_definitions/Jeronimo.json" with { type: "json" };
+import Jessie from "../config/hero_definitions/Jessie.json" with { type: "json" };
+import Ling from "../config/hero_definitions/Ling.json" with { type: "json" };
+import Logan from "../config/hero_definitions/Logan.json" with { type: "json" };
+import Lumak from "../config/hero_definitions/Lumak.json" with { type: "json" };
+import Lynn from "../config/hero_definitions/Lynn.json" with { type: "json" };
+import Mia from "../config/hero_definitions/Mia.json" with { type: "json" };
+import Molly from "../config/hero_definitions/Molly.json" with { type: "json" };
+import Natalia from "../config/hero_definitions/Natalia.json" with { type: "json" };
+import Norah from "../config/hero_definitions/Norah.json" with { type: "json" };
+import Patrick from "../config/hero_definitions/Patrick.json" with { type: "json" };
+import Philly from "../config/hero_definitions/Philly.json" with { type: "json" };
+import Reina from "../config/hero_definitions/Reina.json" with { type: "json" };
+import Renee from "../config/hero_definitions/Renee.json" with { type: "json" };
+import SeoYoon from "../config/hero_definitions/Seo-yoon.json" with { type: "json" };
+import Sergey from "../config/hero_definitions/Sergey.json" with { type: "json" };
+import Wayne from "../config/hero_definitions/Wayne.json" with { type: "json" };
+import WuMing from "../config/hero_definitions/WuMing.json" with { type: "json" };
+import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" };
 
 import { UNIT_TYPES } from "./types.js";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
@@ -15,28 +45,74 @@ const KNOWN_EFFECT_TYPES = new Set([
   "attack_order"
 ]);
 
-export function defaultConfigDir(): string {
-  return resolve(dirname(fileURLToPath(import.meta.url)), "..", "config");
+const DEFAULT_HERO_DEFINITIONS = {
+  Ahmose,
+  Alonso,
+  Bahiti,
+  Bradley,
+  Edith,
+  Flint,
+  Gordon,
+  Greg,
+  Gwen,
+  Hector,
+  Jasser,
+  Jeronimo,
+  Jessie,
+  Ling,
+  Logan,
+  Lumak,
+  Lynn,
+  Mia,
+  Molly,
+  Natalia,
+  Norah,
+  Patrick,
+  Philly,
+  Reina,
+  Renee,
+  "Seo-yoon": SeoYoon,
+  Sergey,
+  Wayne,
+  WuMing,
+  Zinman
+} as unknown as Record<string, SkillFile>;
+
+export interface RawSimulatorConfig {
+  troopStats: SimulatorConfig["troopStats"];
+  heroGenerationStats: SimulatorConfig["heroGenerationStats"];
+  troopSkills: SkillFile;
+  heroDefinitions: Record<string, SkillFile>;
+  fileLabel?: (kind: "troop_stats" | "hero_generation_stats" | "troop_skills" | "hero_definition", key?: string) => string;
 }
 
-export function loadSimulatorConfig(options: { configDir?: string } = {}): SimulatorConfig {
-  const configDir = resolve(options.configDir ?? defaultConfigDir());
-  const diagnostics: ConfigDiagnostics = { legacyFields: [], effectTypes: {}, unsupportedEffects: [], ambiguousTurnTriggerSelectors: [] };
+export function loadSimulatorConfig(): SimulatorConfig {
+  return buildSimulatorConfig({
+    troopStats: troopStatsJson as SimulatorConfig["troopStats"],
+    heroGenerationStats: heroGenerationStatsJson as SimulatorConfig["heroGenerationStats"],
+    troopSkills: troopSkillsJson as SkillFile,
+    heroDefinitions: DEFAULT_HERO_DEFINITIONS
+  });
+}
 
-  const troopStats = readJson(join(configDir, "troop_stats.json"), diagnostics) as SimulatorConfig["troopStats"];
-  const heroGenerationStats = readJson(join(configDir, "hero_generation_stats.json"), diagnostics) as SimulatorConfig["heroGenerationStats"];
-  const troopSkills = readJson(join(configDir, "troop_skills.json"), diagnostics) as SkillFile;
-  const heroDir = join(configDir, "hero_definitions");
-  const heroDefinitions: Record<string, SkillFile> = {};
+export function buildSimulatorConfig(raw: RawSimulatorConfig): SimulatorConfig {
+  const diagnostics: ConfigDiagnostics = {
+    legacyFields: [],
+    effectTypes: {},
+    unsupportedEffects: [],
+    ambiguousTurnTriggerSelectors: []
+  };
 
-  for (const file of readdirSync(heroDir).filter((name: string) => name.endsWith(".json")).sort()) {
-    const fullPath = join(heroDir, file);
-    const hero = readJson(fullPath, diagnostics) as SkillFile;
-    const key = file.slice(0, -".json".length);
-    heroDefinitions[key] = hero;
-    if (hero.hero_generation && !heroGenerationStats[hero.hero_generation]) {
+  scanLegacyFields(raw.troopStats, raw.fileLabel?.("troop_stats") ?? "config/troop_stats.json", "$", diagnostics);
+  scanLegacyFields(raw.heroGenerationStats, raw.fileLabel?.("hero_generation_stats") ?? "config/hero_generation_stats.json", "$", diagnostics);
+  scanLegacyFields(raw.troopSkills, raw.fileLabel?.("troop_skills") ?? "config/troop_skills.json", "$", diagnostics);
+
+  for (const [name, hero] of Object.entries(raw.heroDefinitions)) {
+    const file = raw.fileLabel?.("hero_definition", name) ?? `config/hero_definitions/${name}.json`;
+    scanLegacyFields(hero, file, "$", diagnostics);
+    if (hero.hero_generation && !raw.heroGenerationStats[hero.hero_generation]) {
       diagnostics.unsupportedEffects.push({
-        file: relative(process.cwd(), fullPath),
+        file,
         skillId: "(hero_generation)",
         effectId: hero.hero_generation,
         type: "missing_hero_generation",
@@ -45,25 +121,26 @@ export function loadSimulatorConfig(options: { configDir?: string } = {}): Simul
     }
   }
 
-  collectEffectDiagnostics(troopSkills, join(configDir, "troop_skills.json"), diagnostics);
-  for (const [name, hero] of Object.entries(heroDefinitions)) {
-    collectEffectDiagnostics(hero, join(heroDir, `${name}.json`), diagnostics);
+  collectEffectDiagnostics(raw.troopSkills, raw.fileLabel?.("troop_skills") ?? "config/troop_skills.json", diagnostics);
+  for (const [name, hero] of Object.entries(raw.heroDefinitions)) {
+    collectEffectDiagnostics(hero, raw.fileLabel?.("hero_definition", name) ?? `config/hero_definitions/${name}.json`, diagnostics);
   }
 
-  const heroAliasIndex = buildHeroAliasIndex(heroDefinitions);
+  const heroAliasIndex = buildHeroAliasIndex(raw.heroDefinitions);
 
   if (diagnostics.legacyFields.length > 0) {
     const first = diagnostics.legacyFields[0];
     throw new Error(`Legacy field found in v3 config: ${first.field} at ${first.file}:${first.path}`);
   }
 
-  return { troopStats, heroGenerationStats, heroDefinitions, heroAliasIndex, troopSkills, diagnostics };
-}
-
-function readJson(path: string, diagnostics: ConfigDiagnostics): unknown {
-  const parsed = JSON.parse(readFileSync(path, "utf8"));
-  scanLegacyFields(parsed, relative(process.cwd(), path), "$", diagnostics);
-  return parsed;
+  return {
+    troopStats: raw.troopStats,
+    heroGenerationStats: raw.heroGenerationStats,
+    heroDefinitions: raw.heroDefinitions,
+    heroAliasIndex,
+    troopSkills: raw.troopSkills,
+    diagnostics
+  };
 }
 
 function scanLegacyFields(value: unknown, file: string, path: string, diagnostics: ConfigDiagnostics): void {
@@ -89,7 +166,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
         diagnostics.unsupportedEffects.push({
-          file: relative(process.cwd(), file),
+          file,
           skillId,
           effectId,
           type,
@@ -112,7 +189,7 @@ function collectAmbiguousTurnTriggerSelectorDiagnostics(
   for (const selector of [effect.units?.applies_to, effect.units?.applies_vs]) {
     if (!isTriggerRelativeUnitSelector(selector)) continue;
     diagnostics.ambiguousTurnTriggerSelectors.push({
-      file: relative(process.cwd(), file),
+      file,
       skillId,
       effectId,
       selector,
@@ -124,7 +201,7 @@ function collectAmbiguousTurnTriggerSelectorDiagnostics(
 function validateTriggerDefinition(trigger: SkillFile["skills"][string]["trigger"], file: string, skillId: string): void {
   const legacyUnits = (trigger as unknown as Record<string, unknown>).units;
   if (legacyUnits !== undefined) {
-    throw new Error(`legacy trigger units filters are not supported at ${relative(process.cwd(), file)}:${skillId}.trigger.units; use trigger.source and trigger.target`);
+    throw new Error(`legacy trigger units filters are not supported at ${file}:${skillId}.trigger.units; use trigger.source and trigger.target`);
   }
 }
 
@@ -133,7 +210,7 @@ function isTriggerRelativeUnitSelector(selector: unknown): selector is string {
 }
 
 function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
-  const path = `${relative(process.cwd(), file)}:${skillId}.${effectId}`;
+  const path = `${file}:${skillId}.${effectId}`;
   if (effect.units && "side" in effect.units) {
     throw new Error(`native effect units.side is not supported at ${path}; use relation-qualified applies_to selectors such as enemy.any or trigger.target`);
   }
@@ -144,7 +221,7 @@ function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string,
 }
 
 function validateExtraSkillAttackEffect(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
-  const path = `${relative(process.cwd(), file)}:${skillId}.${effectId}`;
+  const path = `${file}:${skillId}.${effectId}`;
   if (!Array.isArray(effect.trigger_damage_jobs) || effect.trigger_damage_jobs.length === 0) {
     throw new Error(`extra_skill_attack requires non-empty trigger_damage_jobs at ${path}`);
   }
@@ -227,12 +304,4 @@ function addHeroAlias(index: Record<string, string>, alias: string, heroKey: str
 
 function normalizeHeroAlias(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]/g, "");
-}
-
-export function fileExists(path: string): boolean {
-  try {
-    return statSync(path).isFile();
-  } catch {
-    return false;
-  }
 }
