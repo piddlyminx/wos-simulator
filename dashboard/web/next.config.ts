@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
     // Force all pages to be dynamically rendered at request time.
     // This bypasses the broken /_not-found static prerender in Next.js 15.5.x.
   },
+  webpack: (config) => {
+    config.resolve = config.resolve ?? {};
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      "@v3": path.resolve(__dirname, "../../v3/src"),
+    };
+    return config;
+  },
 };
 
 export default nextConfig;
