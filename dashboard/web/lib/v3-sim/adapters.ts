@@ -2,7 +2,6 @@ import type { BattleInput, FighterInput, StatBlock, UnitType } from "@v3/types";
 import type { SimulateRequestPayload, SimulateSidePayload } from "@/lib/simulate-run";
 
 const CATEGORIES = ["infantry", "lancer", "marksman"] as const;
-const STAT_KEYS = ["attack", "defense", "lethality", "health"] as const;
 
 export function toBattleInput(request: SimulateRequestPayload, seed: string | number): BattleInput {
   return {
@@ -43,7 +42,12 @@ function toJoinerHeroes(side: SimulateSidePayload): FighterInput["joiner_heroes"
 }
 
 function skillMap(skills: readonly number[]): Record<string, number> {
-  return Object.fromEntries(skills.map((value, index) => [`skill_${index + 1}`, Math.max(0, Math.floor(value || 0))]).filter(([, value]) => value > 0));
+  const out: Record<string, number> = {};
+  skills.forEach((value, index) => {
+    const level = Math.max(0, Math.floor(value || 0));
+    if (level > 0) out[`skill_${index + 1}`] = level;
+  });
+  return out;
 }
 
 function toStats(side: SimulateSidePayload, opponent: SimulateSidePayload): Record<UnitType, Partial<StatBlock>> {
@@ -63,5 +67,10 @@ function tupleToStats(tuple: [number, number, number, number], side: SimulateSid
     lethality: own.lethality ?? 0,
     health: own.health ?? 0,
   };
-  return Object.fromEntries(STAT_KEYS.map((key, index) => [key, tuple[index] * (1 + modifiers[key] / 100)])) as StatBlock;
+  return {
+    attack: tuple[0] * (1 + modifiers.attack / 100),
+    defense: tuple[1] * (1 + modifiers.defense / 100),
+    lethality: tuple[2] * (1 + modifiers.lethality / 100),
+    health: tuple[3] * (1 + modifiers.health / 100),
+  };
 }
