@@ -7,6 +7,7 @@
     "dev:docker": "scripts/next-cache-lock.sh dev --turbopack",
     "build": "scripts/next-cache-lock.sh build",
     "start": "scripts/next-cache-lock.sh start",
+    "test": "npx --yes tsx --test \"lib/**/*.test.ts\"",
     "lint": "next lint",
     "smoke": "scripts/next-cache-lock.sh build && playwright test"
   },
