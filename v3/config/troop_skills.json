@@ -82,12 +82,8 @@
           25,
           37.5
         ],
-        "units": {
-          "side": "enemy",
-          "applies_vs": [
-            "infantry"
-          ]
-        }
+        "source": "enemy.any",
+        "target": "self.infantry"
       },
       "effects": {
         "CrystalShield/1": {
@@ -237,12 +233,7 @@
           10,
           15
         ],
-        "units": {
-          "by": [
-            "lancer"
-          ],
-          "applies_vs": "any"
-        }
+        "source": "lancer"
       },
       "effects": {
         "CrystalLance/1": {
@@ -285,12 +276,8 @@
         "probability": [
           10
         ],
-        "units": {
-          "side": "enemy",
-          "applies_vs": [
-            "lancer"
-          ]
-        }
+        "source": "enemy.any",
+        "target": "self.lancer"
       },
       "effects": {
         "IncandescentField/1": {
@@ -354,12 +341,7 @@
         "probability": [
           10
         ],
-        "units": {
-          "by": [
-            "marksman"
-          ],
-          "applies_vs": "any"
-        }
+        "source": "marksman"
       },
       "effects": {
         "Volley/1": {
@@ -405,12 +387,7 @@
           20,
           30
         ],
-        "units": {
-          "by": [
-            "marksman"
-          ],
-          "applies_vs": "any"
-        }
+        "source": "marksman"
       },
       "effects": {
         "CrystalGunpowder/1": {
@@ -478,12 +455,7 @@
       ],
       "trigger": {
         "type": "attack",
-        "units": {
-          "by": [
-            "marksman"
-          ],
-          "applies_vs": "any"
-        }
+        "source": "marksman"
       },
       "effects": {
         "FlameChargeExtra/1": {

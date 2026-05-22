@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, relative } from "node:path";
 import { test } from "node:test";
 import { tmpdir } from "node:os";
 
@@ -17,8 +17,36 @@ test("loadSimulatorConfig loads native v3 catalogues and reports effect inventor
   assert.equal(config.heroDefinitions.Alonso.hero_generation, "S2");
   assert.ok(config.troopSkills.skills.MasterBrawler);
   assert.equal(config.diagnostics.legacyFields.length, 0);
+  assert.equal(config.diagnostics.ambiguousTurnTriggerSelectors.length, 0);
   assert.ok(config.diagnostics.effectTypes["active.hero.damage.up"] > 0);
   assert.ok(config.diagnostics.effectTypes.extra_skill_attack > 0);
+});
+
+test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-relative effect selectors", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.damage.up",
+    value: 10,
+    units: { applies_to: "trigger.source", applies_vs: "target" }
+  });
+
+  const config = loadSimulatorConfig({ configDir: root });
+
+  assert.deepEqual(config.diagnostics.ambiguousTurnTriggerSelectors, [
+    {
+      file: relative(process.cwd(), join(root, "troop_skills.json")),
+      skillId: "ExampleSkill",
+      effectId: "ExampleSkill/1",
+      selector: "trigger.source",
+      reason: "Turn trigger has no concrete attack intent; trigger-relative unit selectors fall back to all units"
+    },
+    {
+      file: relative(process.cwd(), join(root, "troop_skills.json")),
+      skillId: "ExampleSkill",
+      effectId: "ExampleSkill/1",
+      selector: "target",
+      reason: "Turn trigger has no concrete attack intent; trigger-relative unit selectors fall back to all units"
+    }
+  ]);
 });
 
 test("loadSimulatorConfig rejects legacy fields in v3 config", () => {
@@ -111,6 +139,31 @@ test('native v3 effects do not use applies_vs "all"', () => {
   }
 
   assert.deepEqual(offenders, []);
+});
+
+test("native v3 triggers do not use legacy units filters", () => {
+  const config = loadSimulatorConfig();
+  const offenders: string[] = [];
+
+  collectLegacyTriggerUnitsOffenders("config/troop_skills.json", config.troopSkills, offenders);
+  for (const [heroName, heroDefinition] of Object.entries(config.heroDefinitions)) {
+    collectLegacyTriggerUnitsOffenders(`config/hero_definitions/${heroName}.json`, heroDefinition, offenders);
+  }
+
+  assert.deepEqual(offenders, []);
+});
+
+test("loadSimulatorConfig rejects legacy trigger units filters", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.damage.up",
+    value: 10,
+    units: { applies_to: "trigger.source", applies_vs: "target" }
+  });
+  const troopSkills = JSON.parse(readFileSync(join(root, "troop_skills.json"), "utf8")) as SkillFile;
+  troopSkills.skills.ExampleSkill.trigger = { type: "attack", units: { side: "enemy", applies_vs: ["infantry"] } } as never;
+  writeFileSync(join(root, "troop_skills.json"), JSON.stringify(troopSkills));
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /legacy trigger units/i);
 });
 
 test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
@@ -214,6 +267,14 @@ function collectAppliesVsAllOffenders(file: string, skillFile: SkillFile, offend
   }
 }
 
+function collectLegacyTriggerUnitsOffenders(file: string, skillFile: SkillFile, offenders: string[]): void {
+  for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
+    if (skill.trigger && "units" in skill.trigger) {
+      offenders.push(`${file}:${skillId}.trigger.units`);
+    }
+  }
+}
+
 function collectTriggerDamageJobViolations(file: string, skillFile: SkillFile, violations: string[]): void {
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
     for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
@@ -309,7 +370,7 @@ function writeConfigWithTroopEffect(effect: Record<string, unknown>): string {
       name: "Troop Skills",
       skills: {
         ExampleSkill: {
-          trigger: { type: "attack" },
+          trigger: { type: "turn" },
           effects: { "ExampleSkill/1": effect }
         }
       }

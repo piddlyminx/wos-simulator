@@ -54,11 +54,7 @@
           20,
           20
         ],
-        "units": {
-          "by": [
-            "lancer"
-          ]
-        }
+        "source": "lancer"
       },
       "effects": {
         "SneakStrike/1": {
@@ -95,11 +91,7 @@
       "trigger": {
         "type": "attack",
         "every": 5,
-        "units": {
-          "by": [
-            "lancer"
-          ]
-        }
+        "source": "lancer"
       },
       "effects": {
         "Momentum/1": {

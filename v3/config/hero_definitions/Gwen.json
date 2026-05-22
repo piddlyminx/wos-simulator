@@ -85,11 +85,7 @@
       "trigger": {
         "type": "attack",
         "every": 4,
-        "units": {
-          "by": [
-            "marksman"
-          ]
-        }
+        "source": "marksman"
       },
       "effects": {
         "Blastmaster/1": {

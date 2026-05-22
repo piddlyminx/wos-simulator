@@ -7,11 +7,7 @@
       "trigger": {
         "type": "attack",
         "every": 4,
-        "units": {
-          "by": [
-            "infantry"
-          ]
-        }
+        "source": "infantry"
       },
       "effects": {
         "ViperFormation/1": {
@@ -96,11 +92,7 @@
       "description": "Increases his infantries' damage dealt per attack by X% and the target's damage taken by X% for 1 turn",
       "trigger": {
         "type": "attack",
-        "units": {
-          "by": [
-            "infantry"
-          ]
-        }
+        "source": "infantry"
       },
       "effects": {
         "BladeOfLight/1": {

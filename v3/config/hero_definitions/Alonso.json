@@ -6,16 +6,14 @@
       "description": "Granting a 40% chance of increasing all troop's Lethality by X%",
       "trigger": {
         "type": "turn",
-        "units": {
-          "for": "all"
-        },
         "probability": [
           40,
           40,
           40,
           40,
           40
-        ]
+        ],
+        "source": "self.any"
       },
       "effects": {
         "Onslaught/1": {

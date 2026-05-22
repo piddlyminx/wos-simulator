@@ -6,7 +6,8 @@
       "description": "Wayne's brilliant battle planning allows all troops to launch an extra attack every 4 turns, dealing X% damage.",
       "trigger": {
         "type": "turn",
-        "every": 4
+        "every": 4,
+        "source": "self.any"
       },
       "effects": {
         "ThunderStrike/1": {
@@ -41,11 +42,7 @@
       "trigger": {
         "type": "attack",
         "every": 2,
-        "units": {
-          "by": [
-            "marksman"
-          ]
-        }
+        "source": "marksman"
       },
       "effects": {
         "RoundaboutHit/1": {

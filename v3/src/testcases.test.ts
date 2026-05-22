@@ -226,6 +226,7 @@ test("runTestcases reports a parity summary from calibration JSON", () => {
   const row = Object.values(report.testcases)[0];
   const detail = report.details[0];
 
+  assert.ok(report.calibrationReportPath?.endsWith("v1_result_2026-05-21T04-46-47Z.json"));
   assert.equal(row?.testcase_id, "simple_001");
   assert.equal(row?.idx, 0);
   assert.equal(row?.game?.mu_reference, -186);

@@ -87,7 +87,8 @@ export interface TriggerDefinition {
   type: string;
   probability?: unknown;
   every?: number;
-  units?: Record<string, unknown>;
+  source?: unknown;
+  target?: unknown;
 }
 
 export interface SkillDefinition {
@@ -116,6 +117,7 @@ export interface ConfigDiagnostics {
   legacyFields: Array<{ file: string; path: string; field: string }>;
   effectTypes: Record<string, number>;
   unsupportedEffects: Array<{ file: string; skillId: string; effectId: string; type: string; reason: string }>;
+  ambiguousTurnTriggerSelectors: Array<{ file: string; skillId: string; effectId: string; selector: string; reason: string }>;
 }
 
 export interface SimulatorConfig {

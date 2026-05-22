@@ -7,11 +7,7 @@
       "trigger": {
         "type": "attack",
         "every": 2,
-        "units": {
-          "by": [
-            "lancer"
-          ]
-        }
+        "source": "lancer"
       },
       "effects": {
         "VenomInfusion/1": {
@@ -100,7 +96,8 @@
           ],
           "units": {
             "side": "enemy",
-            "applies_to": "trigger"
+            "applies_to": "all",
+            "applies_vs": "any"
           },
           "duration": {
             "type": "turn",

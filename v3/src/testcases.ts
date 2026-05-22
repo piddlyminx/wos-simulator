@@ -71,6 +71,7 @@ export interface TestcaseRunReport {
   schemaVersion: 1;
   createdAt: string;
   options: TestcaseRunOptions;
+  calibrationReportPath?: string;
   artifactRoot?: string;
   counts: {
     filesFound: number;
@@ -203,6 +204,7 @@ export function runPreparedTestcases(
     schemaVersion: 1,
     createdAt: new Date().toISOString(),
     options: { ...options },
+    calibrationReportPath: comparison.reportPath,
     counts: { filesFound: prepared.filesFound, testcasesFound: prepared.cases.length, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToV1: 0 },
     warnings: [],
     errors: [...prepared.parseErrors],
@@ -245,6 +247,7 @@ export async function runPreparedTestcasesAsync(
     schemaVersion: 1,
     createdAt: new Date().toISOString(),
     options: { ...options },
+    calibrationReportPath: comparison.reportPath,
     counts: { filesFound: prepared.filesFound, testcasesFound: prepared.cases.length, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToV1: 0 },
     warnings: [],
     errors: [...prepared.parseErrors],

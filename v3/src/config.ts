@@ -21,7 +21,7 @@ export function defaultConfigDir(): string {
 
 export function loadSimulatorConfig(options: { configDir?: string } = {}): SimulatorConfig {
   const configDir = resolve(options.configDir ?? defaultConfigDir());
-  const diagnostics: ConfigDiagnostics = { legacyFields: [], effectTypes: {}, unsupportedEffects: [] };
+  const diagnostics: ConfigDiagnostics = { legacyFields: [], effectTypes: {}, unsupportedEffects: [], ambiguousTurnTriggerSelectors: [] };
 
   const troopStats = readJson(join(configDir, "troop_stats.json"), diagnostics) as SimulatorConfig["troopStats"];
   const heroGenerationStats = readJson(join(configDir, "hero_generation_stats.json"), diagnostics) as SimulatorConfig["heroGenerationStats"];
@@ -80,9 +80,11 @@ function scanLegacyFields(value: unknown, file: string, path: string, diagnostic
 
 function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostics: ConfigDiagnostics): void {
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
+    validateTriggerDefinition(skill.trigger, file, skillId);
     for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
       const type = String((effect as { type?: unknown }).type ?? "");
       diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
+      collectAmbiguousTurnTriggerSelectorDiagnostics(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId, diagnostics);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
@@ -96,6 +98,38 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       }
     }
   }
+}
+
+function collectAmbiguousTurnTriggerSelectorDiagnostics(
+  trigger: SkillFile["skills"][string]["trigger"],
+  effect: EffectIntentDefinition,
+  file: string,
+  skillId: string,
+  effectId: string,
+  diagnostics: ConfigDiagnostics
+): void {
+  if (trigger.type !== "turn" || trigger.source !== undefined) return;
+  for (const selector of [effect.units?.applies_to, effect.units?.applies_vs]) {
+    if (!isTriggerRelativeUnitSelector(selector)) continue;
+    diagnostics.ambiguousTurnTriggerSelectors.push({
+      file: relative(process.cwd(), file),
+      skillId,
+      effectId,
+      selector,
+      reason: "Turn trigger has no concrete attack intent; trigger-relative unit selectors fall back to all units"
+    });
+  }
+}
+
+function validateTriggerDefinition(trigger: SkillFile["skills"][string]["trigger"], file: string, skillId: string): void {
+  const legacyUnits = (trigger as unknown as Record<string, unknown>).units;
+  if (legacyUnits !== undefined) {
+    throw new Error(`legacy trigger units filters are not supported at ${relative(process.cwd(), file)}:${skillId}.trigger.units; use trigger.source and trigger.target`);
+  }
+}
+
+function isTriggerRelativeUnitSelector(selector: unknown): selector is string {
+  return selector === "trigger" || selector === "trigger.source" || selector === "target" || selector === "trigger.target";
 }
 
 function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {

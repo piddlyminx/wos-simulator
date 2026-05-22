@@ -63,7 +63,7 @@
             30
           ],
           "units": {
-            "applies_to": "trigger",
+            "applies_to": "all",
             "applies_vs": "any"
           },
           "duration": {

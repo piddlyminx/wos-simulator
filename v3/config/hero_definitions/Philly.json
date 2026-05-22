@@ -99,7 +99,7 @@
             50
           ],
           "units": {
-            "applies_to": "trigger"
+            "applies_to": "all"
           },
           "duration": {
             "type": "turn",
