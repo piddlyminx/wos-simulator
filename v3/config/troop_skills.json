@@ -93,8 +93,8 @@
             36
           ],
           "units": {
-            "applies_to": "target",
-            "applies_vs": "target"
+            "applies_to": "trigger.target",
+            "applies_vs": "trigger.source"
           },
           "duration": {
             "type": "attack",
@@ -286,8 +286,8 @@
             50
           ],
           "units": {
-            "applies_to": "target",
-            "applies_vs": "target"
+            "applies_to": "trigger.target",
+            "applies_vs": "trigger.source"
           },
           "duration": {
             "type": "attack",

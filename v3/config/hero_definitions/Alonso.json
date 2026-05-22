@@ -27,7 +27,7 @@
           ],
           "units": {
             "applies_to": "trigger",
-            "applies_vs": "target"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "turn",
