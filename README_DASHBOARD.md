@@ -14,16 +14,20 @@ Use this guide for three common setups:
 
 - The web app lives in `dashboard/web`.
 - The default SQLite DB lives at `test_results/dashboard.sqlite`.
-- The `/simulate` route spawns `dashboard/simulate_battle.py`.
+- The `/simulate` page runs battle simulation and ratio optimisation in a
+  browser Web Worker using the v3 TypeScript simulator.
 - Saved `/simulate` share links live outside git. Host mode defaults to
   `tmp/simulate-runs/`; Docker mounts a named volume at `/data/simulations`.
+- Saved `/simulate` share links, recent runs, stat presets, and OCR upload
+  remain server-backed.
 - The `/api/ocr-report` route spawns `dashboard/ocr_report.py`.
 
 That means:
 
 - You can browse the dashboard UI even if the DB does not exist yet, but the
   pages will show empty-state data.
-- The simulate and OCR features need Python available.
+- OCR/report upload still needs the Python/OCR runtime where that route is
+  enabled.
 - The OCR import flow also needs the `tesseract` binary installed.
 
 ## Populate or refresh the DB

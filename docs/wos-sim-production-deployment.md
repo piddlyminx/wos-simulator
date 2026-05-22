@@ -6,7 +6,7 @@
 the private QA accuracy views. Per the final WOS-298 discussion, the public VPS
 surface is the simulator page only:
 
-- Public: `/simulate`, simulate APIs, saved run sharing, and report upload/OCR.
+- Public: `/simulate`, saved run sharing, stat presets, and report upload/OCR.
 - Private/local: regression dashboard routes, coverage/history views, and
   `check_testcases.py` controls.
 - Saved simulation run JSON files sync bidirectionally between the local dev
@@ -59,9 +59,10 @@ Default/local mode must keep the full dashboard unchanged. In
 
 - `/` redirects to `/simulate`.
 - `/simulate` renders normally.
+- Public simulate APIs are limited to saved-run persistence/loading, stat
+  presets, and OCR upload. Browser-side v3 workers handle battle and ratio
+  calculations.
 - Public API routes are limited to:
-  - `/api/simulate`
-  - `/api/simulate/optimize-ratio`
   - `/api/simulate/runs`
   - `/api/simulate/runs/[id]`
   - `/api/simulate/stat-presets`

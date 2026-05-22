@@ -31,6 +31,10 @@ npm run dev
 
 The app runs at http://localhost:3000 and redirects to `/runs` by default.
 
+The Simulate and Optimise Ratio buttons do not call server compute routes. They
+run v3 TypeScript calculations in a browser worker, then POST completed results
+to `/api/simulate/runs` for share-link persistence.
+
 For normal WSL development, prefer `npm run dev` directly. It is simpler,
 matches the local QA workflow, avoids bind-mount file watching edge cases, and
 does not need a local container or tunnel.

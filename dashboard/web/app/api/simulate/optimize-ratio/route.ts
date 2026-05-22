@@ -41,6 +41,7 @@ function resolvePython(): string {
 
 const enc = (obj: unknown) =>
   new TextEncoder().encode(JSON.stringify(obj) + "\n");
+const DEPRECATED_HEADERS = { "X-WOS-Deprecated": "browser-v3-worker" };
 
 export async function POST(req: NextRequest) {
   let body: unknown;
@@ -49,14 +50,14 @@ export async function POST(req: NextRequest) {
   } catch {
     return new Response(enc({ type: "error", message: "Invalid JSON body" }), {
       status: 400,
-      headers: { "Content-Type": "application/x-ndjson" },
+      headers: { "Content-Type": "application/x-ndjson", ...DEPRECATED_HEADERS },
     });
   }
 
   if (!fs.existsSync(CLI_PATH)) {
     return new Response(
       enc({ type: "error", message: `Optimizer CLI not found at ${CLI_PATH}` }),
-      { status: 500, headers: { "Content-Type": "application/x-ndjson" } },
+      { status: 500, headers: { "Content-Type": "application/x-ndjson", ...DEPRECATED_HEADERS } },
     );
   }
 
@@ -181,6 +182,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/x-ndjson",
       "Transfer-Encoding": "chunked",
       "X-Content-Type-Options": "nosniff",
+      ...DEPRECATED_HEADERS,
     },
   });
 }

@@ -51,10 +51,10 @@ services:
       # The parser delegates to the imported agent skill under /skill.
       - ./dashboard:/dashboard:ro
       - ./skill:/skill:ro
-      # The /api/simulate route spawns dashboard/simulate_battle.py, which
-      # computes _REPO_ROOT = dirname(dirname(__file__)) = "/" and imports
-      # Base_classes / reads assets + fighters_data relative to that root.
-      # Mount the host simulator source tree read-only at the matching paths.
+      # Deprecated /api/simulate fallback routes still spawn Python helpers for
+      # one release. Browser-side v3 workers now handle normal simulate and
+      # optimise calculations, but keep these mounts until the fallback routes
+      # are removed.
       - ./Base_classes:/Base_classes:ro
       - ./assets:/assets:ro
       # fighters_data is NOT mounted :ro because JsonUtil.load_fighters_data
