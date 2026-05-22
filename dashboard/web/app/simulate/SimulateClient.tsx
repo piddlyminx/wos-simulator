@@ -54,13 +54,16 @@ import {
   OptimizeRatioApiResponse,
   OptimizeRatioRequestPayload,
   SavedSimulationKind,
+  SavedSimulationResult,
   SavedSimulationRunResponse,
+  SimulateApiResult,
   SimulateApiResponse,
   SimulateRequestPayload,
   SimulateSidePayload,
   SimulateStatModifiersPayload,
 } from "@/lib/simulate-run";
 import type { PlayerStatPreset, StatPresetValues } from "@/lib/stat-presets";
+import { runWorkerOptimizeRatio, runWorkerSimulation } from "@/lib/v3-sim/worker-client";
 
 type Side = "attacker" | "defender";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
@@ -819,7 +822,7 @@ export default function SimulateClient({
     () => initialState.replicates,
   );
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<SimulateApiResponse | null>(
+  const [result, setResult] = useState<SimulateApiResult | SimulateApiResponse | null>(
     () => initialState.result,
   );
   const [error, setError] = useState<string | null>(null);
@@ -833,7 +836,7 @@ export default function SimulateClient({
   const [optimizeLoading, setOptimizeLoading] = useState(false);
   const [optimizeError, setOptimizeError] = useState<string | null>(null);
   const [optimizeResult, setOptimizeResult] =
-    useState<OptimizeRatioApiResponse | null>(
+    useState<OptimizeRatioResult | OptimizeRatioApiResponse | null>(
       () => initialState.optimizeResult,
     );
   const [optimizePanelOpen, setOptimizePanelOpen] = useState(false);
@@ -884,10 +887,6 @@ export default function SimulateClient({
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loadedRunIdRef = useRef<string | null>(initialSavedRun?.id ?? null);
   const previousInitialRunIdRef = useRef<string | null>(initialRunId);
-  const pendingSimulateRequestRef = useRef<SimulateRequestPayload | null>(null);
-  const pendingOptimizeRequestRef = useRef<OptimizeRatioRequestPayload | null>(
-    null,
-  );
   // When true, the defender panel is rendered on the left. Shared with the
   // upload modal so both views always display sides in the same order.
   const [sidesSwapped, setSidesSwapped] = useState(false);
@@ -1115,6 +1114,26 @@ export default function SimulateClient({
       },
       ...prev.filter((run) => run.id !== id),
     ]);
+  }
+
+  async function saveComputedRun(
+    kind: SavedSimulationKind,
+    request: SimulateRequestPayload | OptimizeRatioRequestPayload,
+    computedResult: SavedSimulationResult,
+  ): Promise<SaveMetaPayload | null> {
+    const res = await fetch("/api/simulate/runs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ kind, request, result: computedResult }),
+    });
+    const data = (await res.json()) as SaveMetaPayload | { error?: string };
+    if (!res.ok) {
+      throw new Error(
+        ("error" in data && data.error) ||
+          `Saved run request failed with ${res.status}`,
+      );
+    }
+    return data as SaveMetaPayload;
   }
 
   useEffect(() => {
@@ -1402,79 +1421,25 @@ export default function SimulateClient({
         rallyMode,
         loadedPresetNames,
       );
-      pendingSimulateRequestRef.current = payload;
-      const res = await fetch("/api/simulate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.body) {
-        setError(`Request failed with ${res.status}`);
-        return;
+      const job = runWorkerSimulation(payload, (done, total) =>
+        setSimulateProgress({ done, total }),
+      );
+      const computed = await job.promise;
+      setResult(computed);
+      try {
+        const saveMeta = await saveComputedRun("simulate", payload, computed);
+        if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
+      } catch (saveErr) {
+        setSavedRunError(
+          saveErr instanceof Error
+            ? saveErr.message
+            : "Simulation completed but failed to save",
+        );
       }
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop() ?? "";
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed) continue;
-          try {
-            handleSimulateEvent(trimmed);
-          } catch {
-            // ignore malformed lines
-          }
-        }
-      }
-      if (buf.trim()) handleSimulateEvent(buf.trim());
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
-      pendingSimulateRequestRef.current = null;
       setLoading(false);
-    }
-  }
-
-  function handleSimulateEvent(line: string) {
-    const parsed = JSON.parse(line) as
-      | {
-          type: string;
-          done?: number;
-          total?: number;
-          data?: SimulateApiResponse;
-          message?: string;
-        }
-      | SimulateApiResponse;
-    const event =
-      "type" in parsed ? parsed : ({ type: "result", data: parsed } as const);
-    if (
-      event.type === "progress" &&
-      typeof event.done === "number" &&
-      typeof event.total === "number"
-    ) {
-      setSimulateProgress({ done: event.done, total: event.total });
-    } else if (event.type === "result" && event.data) {
-      setResult(event.data);
-      const request =
-        pendingSimulateRequestRef.current ??
-        toApiPayload(
-          attacker,
-          defender,
-          replicates,
-          rallyMode,
-          loadedPresetNames,
-        );
-      maybeActivateSavedRun(event.data, request);
-    } else if (event.type === "error") {
-      setError(event.message ?? "Unknown error");
     }
   }
 
@@ -1504,88 +1469,25 @@ export default function SimulateClient({
         search_mode: optimizeSearchMode,
         optimize_side: optimizeSide,
       } satisfies OptimizeRatioRequestPayload;
-      pendingOptimizeRequestRef.current = payload;
-      const res = await fetch("/api/simulate/optimize-ratio", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.body) {
-        setOptimizeError(`Request failed with ${res.status}`);
-        return;
+      const job = runWorkerOptimizeRatio(payload, (done, total) =>
+        setOptimizeProgress({ done, total }),
+      );
+      const computed = await job.promise;
+      setOptimizeResult(computed);
+      try {
+        const saveMeta = await saveComputedRun("optimize_ratio", payload, computed);
+        if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
+      } catch (saveErr) {
+        setSavedRunError(
+          saveErr instanceof Error
+            ? saveErr.message
+            : "Ratio search completed but failed to save",
+        );
       }
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split("\n");
-        buf = lines.pop() ?? "";
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed) continue;
-          try {
-            handleOptimizeEvent(trimmed);
-          } catch {
-            // ignore malformed lines
-          }
-        }
-      }
-      if (buf.trim()) handleOptimizeEvent(buf.trim());
     } catch (err) {
       setOptimizeError(err instanceof Error ? err.message : String(err));
     } finally {
-      pendingOptimizeRequestRef.current = null;
       setOptimizeLoading(false);
-    }
-  }
-
-  function handleOptimizeEvent(line: string) {
-    const parsed = JSON.parse(line) as
-      | {
-          type: string;
-          done?: number;
-          total?: number;
-          data?: OptimizeRatioApiResponse;
-          message?: string;
-        }
-      | OptimizeRatioApiResponse;
-    const event =
-      "type" in parsed ? parsed : ({ type: "result", data: parsed } as const);
-    if (
-      event.type === "progress" &&
-      typeof event.done === "number" &&
-      typeof event.total === "number"
-    ) {
-      setOptimizeProgress({ done: event.done, total: event.total });
-    } else if (event.type === "result" && event.data) {
-      setOptimizeResult(event.data);
-      const request =
-        pendingOptimizeRequestRef.current ??
-        ({
-          ...toApiPayload(
-            attacker,
-            defender,
-            replicates,
-            rallyMode,
-            loadedPresetNames,
-          ),
-          grid_step: resolvedOptimizeStep,
-          search_replicates: optimizeReplicates,
-          infantry_min_pct: resolvedInfantryBounds.minPct,
-          infantry_max_pct: resolvedInfantryBounds.maxPct,
-          top_n: DEFAULT_TOP_RESULTS,
-          search_mode: optimizeSearchMode,
-          optimize_side: optimizeSide,
-        } satisfies OptimizeRatioRequestPayload);
-      maybeActivateSavedRun(event.data, request);
-    } else if (event.type === "error") {
-      setOptimizeError(event.message ?? "Unknown error");
     }
   }
 
