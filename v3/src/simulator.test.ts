@@ -713,7 +713,7 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
               cancel: {
                 type: "no_attack",
                 value: 100,
-                units: { side: "enemy", applies_to: ["marksman"], applies_vs: "any" },
+                units: { applies_to: "enemy.marksman", applies_vs: "any" },
                 duration: { type: "attack", value: 1 }
               }
             }

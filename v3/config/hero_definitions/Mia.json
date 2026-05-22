@@ -25,7 +25,6 @@
             50
           ],
           "units": {
-            "side": "enemy",
             "applies_to": "target"
           },
           "duration": {

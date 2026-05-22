@@ -281,10 +281,19 @@ export interface DamageEquationTrace {
   armyTerm: number;
   atomicBuckets: Record<string, DamageBucketTrace>;
   aggregationGroups: Record<string, DamageAggregationGroupTrace>;
-  appliedEffects: Array<{ effectId: string; bucket: string; valuePct: number; source: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
+  appliedEffects: AppliedEffectTrace[];
   rejectedEffects: Array<{ effectId: string; reason: string }>;
   rawDamage: number;
   finalKills: number;
+}
+
+export interface AppliedEffectTrace {
+  effectId: string;
+  bucket: string;
+  valuePct: number;
+  source: string;
+  stackingKey?: string;
+  sameEffectStacking?: SameEffectStacking;
 }
 
 export interface AttackOutcome {
@@ -296,6 +305,8 @@ export interface AttackOutcome {
   defenderUnit: UnitType;
   kills: number;
   counterDeltas: CounterDelta[];
+  appliedEffectIds: string[];
+  appliedEffects: AppliedEffectTrace[];
   consumedEffectIds: string[];
   consumedEffectUseKey?: string;
   consumedEffectUseId?: string;

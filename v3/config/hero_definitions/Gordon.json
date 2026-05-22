@@ -46,8 +46,7 @@
             20
           ],
           "units": {
-            "side": "enemy",
-            "applies_to": "all",
+            "applies_to": "enemy.any",
             "applies_vs": "trigger.source"
           },
           "duration": {
@@ -95,8 +94,7 @@
             30
           ],
           "units": {
-            "side": "enemy",
-            "applies_to": "all",
+            "applies_to": "enemy.any",
             "applies_vs": "any"
           },
           "duration": {
@@ -124,10 +122,7 @@
             30
           ],
           "units": {
-            "side": "enemy",
-            "applies_to": [
-              "infantry"
-            ]
+            "applies_to": "enemy.infantry"
           },
           "duration": {
             "type": "turn",
@@ -145,10 +140,7 @@
             30
           ],
           "units": {
-            "side": "enemy",
-            "applies_to": [
-              "marksman"
-            ]
+            "applies_to": "enemy.marksman"
           },
           "duration": {
             "type": "turn",

@@ -119,14 +119,15 @@ export function calculateDamageJob(
       selected.effect.sameEffectStacking
     );
     if (appliedValuePct !== 0) {
-      appliedEffects.push({
+      const appliedEffect: DamageEquationTrace["appliedEffects"][number] = {
         effectId: selected.effect.source.effectId ?? selected.effect.id,
         bucket: selected.bucket,
         valuePct: appliedValuePct,
         source: sourceLabel(selected.effect),
-        stackingKey: selected.effect.stackingKey,
         sameEffectStacking: selected.effect.sameEffectStacking
-      });
+      };
+      if (selected.effect.stackingKey !== undefined) appliedEffect.stackingKey = selected.effect.stackingKey;
+      appliedEffects.push(appliedEffect);
       for (const candidate of candidateGroup) {
         if (candidate.effect.duration.type === "attack") consumedEffectIds.add(candidate.effect.id);
         if (candidate !== selected) rejectedEffects.push({ effectId: candidate.effect.source.effectId ?? candidate.effect.id, reason: "same_effect_max_suppressed" });
@@ -168,6 +169,8 @@ export function calculateDamageJob(
       { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" },
       { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" }
     ],
+    appliedEffectIds: appliedEffects.map((effect) => effect.effectId),
+    appliedEffects,
     consumedEffectIds: [...consumedEffectIds, ...(job.consumedEffectIds ?? [])],
     consumedEffectUseKey: job.consumedEffectUseKey,
     consumedEffectUseId: job.consumedEffectUseId,

@@ -60,7 +60,6 @@
           ],
           "same_effect_stacking": "max",
           "units": {
-            "side": "enemy",
             "applies_to": "trigger.target",
             "applies_vs": "trigger.source"
           },

@@ -133,8 +133,11 @@ function isTriggerRelativeUnitSelector(selector: unknown): selector is string {
 }
 
 function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
-  if (effect.units?.applies_vs !== "all") return;
   const path = `${relative(process.cwd(), file)}:${skillId}.${effectId}`;
+  if (effect.units && "side" in effect.units) {
+    throw new Error(`native effect units.side is not supported at ${path}; use relation-qualified applies_to selectors such as enemy.any or trigger.target`);
+  }
+  if (effect.units?.applies_vs !== "all") return;
   throw new Error(
     `native effect units.applies_vs cannot be "all" at ${path}; use "any" for an unrestricted usage gate or trigger_damage_jobs target selectors for multi-target damage`
   );

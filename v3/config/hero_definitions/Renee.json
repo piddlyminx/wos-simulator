@@ -88,7 +88,6 @@
             75
           ],
           "units": {
-            "side": "enemy",
             "applies_to": "target",
             "applies_vs": "any"
           },

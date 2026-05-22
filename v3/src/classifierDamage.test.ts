@@ -330,6 +330,29 @@ test("attack-duration bucket effects are consumed by the applicable attack job",
   assert.equal(outcome.trace?.atomicBuckets["active.hero.attack.up"].totalPct, 100);
 });
 
+test("turn-duration bucket effects are visible on the attack outcome without being consumed", () => {
+  const turnEffect = {
+    ...effect("active.hero.defense.down", "defender", 30),
+    id: "bad-luck-like",
+    source: { ...effect("active.hero.defense.down", "defender", 30).source, effectId: "BadLuckStreak/1" },
+    duration: { type: "round" as const, value: 1 }
+  };
+
+  const outcome = calculateDamageJob(job, simpleFighters(), [turnEffect], { trace: false });
+
+  assert.equal(outcome.consumedEffectIds.includes("bad-luck-like"), false);
+  assert.ok(outcome.appliedEffectIds.includes("BadLuckStreak/1"));
+  assert.deepEqual(outcome.appliedEffects, [
+    {
+      effectId: "BadLuckStreak/1",
+      bucket: "active.hero.defense.down",
+      valuePct: 30,
+      source: "Example/Skill/BadLuckStreak/1",
+      sameEffectStacking: "add"
+    }
+  ]);
+});
+
 test("attack-duration effects are only consumed when they participate in the calculation", () => {
   const defenderOutgoingBuff = {
     ...effect("active.hero.damage.up", "defender", 100),
@@ -433,7 +456,7 @@ test('applies_vs "trigger.source" resolves to the trigger source when gating a c
       id: "targeted-defense",
       type: "active.hero.damageTaken.down",
       value: 50,
-      units: { side: "self", applies_to: "trigger.target", applies_vs: "trigger.source" }
+      units: { applies_to: "trigger.target", applies_vs: "trigger.source" }
     },
     1,
     {

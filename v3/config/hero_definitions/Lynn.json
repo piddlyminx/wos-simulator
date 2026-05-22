@@ -48,7 +48,7 @@
             20
           ],
           "units": {
-            "side": "enemy"
+            "applies_to": "enemy.any"
           }
         }
       }

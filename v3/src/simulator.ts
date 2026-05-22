@@ -539,6 +539,8 @@ function cancelledOutcome(intent: AttackIntent, effectId: string, reason: "dodge
       { side: intent.attackerSide, unit: intent.attackerUnit, counter: "attacks", by: 1, cause: "normal_attack" },
       { side: intent.defenderSide, unit: intent.defenderUnit, counter: "received_attacks", by: 1, cause: "normal_attack" }
     ],
+    appliedEffectIds: [],
+    appliedEffects: [],
     consumedEffectIds,
     cancelledBy: effectId,
     cancelReason: reason

@@ -153,6 +153,18 @@ test("native v3 triggers do not use legacy units filters", () => {
   assert.deepEqual(offenders, []);
 });
 
+test("native v3 effects do not use units.side", () => {
+  const config = loadSimulatorConfig();
+  const offenders: string[] = [];
+
+  collectEffectUnitsSideOffenders("config/troop_skills.json", config.troopSkills, offenders);
+  for (const [heroName, heroDefinition] of Object.entries(config.heroDefinitions)) {
+    collectEffectUnitsSideOffenders(`config/hero_definitions/${heroName}.json`, heroDefinition, offenders);
+  }
+
+  assert.deepEqual(offenders, []);
+});
+
 test("loadSimulatorConfig rejects legacy trigger units filters", () => {
   const root = writeConfigWithTroopEffect({
     type: "active.hero.damage.up",
@@ -174,6 +186,16 @@ test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
   });
 
   assert.throws(() => loadSimulatorConfig({ configDir: root }), /applies_vs.*all/i);
+});
+
+test("loadSimulatorConfig rejects native effect units.side", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.damage.up",
+    value: 10,
+    units: { side: "enemy", applies_to: "target" }
+  });
+
+  assert.throws(() => loadSimulatorConfig({ configDir: root }), /units\.side/i);
 });
 
 test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings", () => {
@@ -271,6 +293,17 @@ function collectLegacyTriggerUnitsOffenders(file: string, skillFile: SkillFile, 
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
     if (skill.trigger && "units" in skill.trigger) {
       offenders.push(`${file}:${skillId}.trigger.units`);
+    }
+  }
+}
+
+function collectEffectUnitsSideOffenders(file: string, skillFile: SkillFile, offenders: string[]): void {
+  for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
+    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+      const intent = effect as EffectIntentDefinition;
+      if (intent.units && "side" in intent.units) {
+        offenders.push(`${file}:${skillId}.${effectId}.units.side`);
+      }
     }
   }
 }

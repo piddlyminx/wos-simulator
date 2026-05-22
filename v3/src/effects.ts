@@ -63,9 +63,8 @@ export function crossedFrequency(previous: number, current: number, frequency: n
 export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinition, round: number, attackIntent?: AttackIntent): ActiveEffect {
   const units = intent.units ?? {};
   const ownerSide = skill.side;
-  const defaultAppliesToSide = units.side === "enemy" ? oppositeSide(ownerSide) : ownerSide;
-  const appliesTo = resolveUnitScope(units.applies_to, defaultAppliesToSide, "applies_to", attackIntent);
-  const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent);
+  const appliesTo = resolveUnitScope(units.applies_to, ownerSide, "applies_to", attackIntent, ownerSide);
+  const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent, ownerSide);
   const duration = normalizeDuration(intent.duration);
   const delay = duration.delay ?? 0;
   const effectKind = kindForIntent(intent);
@@ -164,7 +163,13 @@ export function normalizeEngagementType(value: unknown): string | undefined {
   return normalized ? normalized : undefined;
 }
 
-function resolveUnitScope(value: unknown, defaultSide: SideId, role: "applies_to" | "applies_vs", attackIntent?: AttackIntent): ResolvedUnitScope {
+function resolveUnitScope(
+  value: unknown,
+  defaultSide: SideId,
+  role: "applies_to" | "applies_vs",
+  attackIntent?: AttackIntent,
+  ownerSide?: SideId
+): ResolvedUnitScope {
   if (role === "applies_vs" && value === "all") {
     throw new Error('effect units.applies_vs cannot be "all"; use "any" for an unrestricted usage gate');
   }
@@ -174,6 +179,11 @@ function resolveUnitScope(value: unknown, defaultSide: SideId, role: "applies_to
   if ((value === "trigger.target" || value === "target") && attackIntent) {
     return { side: attackIntent.defenderSide, units: unitMask(attackIntent.defenderUnit) };
   }
+  if (ownerSide && isRelationQualifiedSelector(value)) {
+    const selector = parseTriggerSelector(value, "self");
+    const side = sideForTriggerRelation(ownerSide, selector.relation);
+    return { side, units: selector.units ? unitMask(selector.units) : ALL_UNIT_MASK };
+  }
   const list = normalizeUnitList(value);
   return { side: defaultSide, units: list ? unitMask(list) : ALL_UNIT_MASK };
 }
@@ -182,6 +192,10 @@ function normalizeUnitList(value: unknown): UnitType[] | undefined {
   if (Array.isArray(value)) return value.map((entry) => normalizeUnitType(String(entry)));
   if (typeof value === "string" && !["any", "target", "all", "trigger", "trigger.source", "trigger.target", "friendly"].includes(value)) return [normalizeUnitType(value)];
   return undefined;
+}
+
+function isRelationQualifiedSelector(value: unknown): value is string {
+  return typeof value === "string" && (value === "self" || value === "enemy" || value.startsWith("self.") || value.startsWith("enemy."));
 }
 
 function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
