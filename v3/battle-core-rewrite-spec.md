@@ -155,7 +155,7 @@ Effect intents may include scope and duration:
 interface EffectUnits {
   side?: "self" | "enemy";
   applies_to?: UnitSelector | "trigger" | "target" | "friendly" | "all";
-  applies_vs?: UnitSelector | "any" | "target" | "trigger.target";
+  applies_vs?: UnitSelector | "any" | "target" | "trigger.source" | "trigger.target";
 }
 
 interface EffectDuration {
@@ -172,8 +172,11 @@ that only become concrete while handling a trigger.
 
 Config selector rules:
 
-- `applies_vs` accepts `"any"`, trigger-relative selectors such as `"target"`
-  / `"trigger.target"`, or concrete unit selectors.
+- `applies_vs` accepts `"any"`, trigger-relative selectors such as
+  `"trigger.source"`, `"target"` / `"trigger.target"`, or concrete unit
+  selectors.
+- `"target"` always means the trigger target. Use `"trigger.source"` for an
+  effect that should be gated against the unit that caused the trigger.
 - native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
   unrestricted usage gate.
 - trigger resolution converts config selectors into concrete ActiveEffect
@@ -609,14 +612,15 @@ together after normal and extra skill attack for the round have been calculated.
 - Register returned active effects.
 - Collect battle order modifiers.
 
-Round-start triggers may declare `trigger.units.for`. A `turn` trigger rolls its
-chance gate once per round. If it passes, `trigger.units.for: "all"` creates
-one effect activation for each living friendly unit type. Each activation gets
-a concrete trigger context with that unit as `trigger` and that unit's current
-primary target as `target`, so an effect using `appliesTo: "trigger"` and
-`appliesVs: "target"` creates one unit-scoped, target-locked active effect per
-living unit type after a single turn-level roll. This is distinct from
-multi-target skill damage output: an `extra_skill_attack` uses
+Round-start triggers may declare `source`. A `turn` trigger rolls its chance
+gate once per round. If it passes, `source: "self.any"` creates one effect
+activation for each living friendly unit type. Each activation gets a concrete
+trigger context with that unit as `trigger.source` and that unit's current
+primary target as `target` / `trigger.target`, so an effect using
+`appliesTo: "trigger.source"` and `appliesVs: "target"` creates one
+unit-scoped, target-locked active effect per living unit type after a single
+turn-level roll. This is distinct from multi-target skill damage output: an
+`extra_skill_attack` uses
 `trigger_damage_jobs[].target` selectors such as `"enemy.living"` or explicit
 unit lists to create one damage job per resolved concrete defender unit type.
 
@@ -698,8 +702,8 @@ skill `DamageJob` records.
 Extra skill target construction:
 
 - `applies_vs` is an ActiveEffect usage gate. It accepts `"any"`,
-  trigger-relative selectors such as `"target"` / `"trigger.target"`, or
-  concrete unit selectors. It does not accept `"all"`.
+  trigger-relative selectors such as `"trigger.source"` and `"target"` /
+  `"trigger.target"`, or concrete unit selectors. It does not accept `"all"`.
 - `trigger_damage_jobs[].source` resolves the concrete attacking/source unit for
   each skill damage job.
 - `trigger_damage_jobs[].target` resolves the concrete defender target unit or
@@ -1395,7 +1399,8 @@ Required focused regression tests:
 - pass-specific damage buckets do not leak between normal and skill jobs
 - attack-duration effects expire by active-effect id after the intended
   applicable use, including cancelled normal attacks
-- `applies_vs: "target"` preserves target lock semantics
+- `applies_vs: "target"` resolves to the trigger target, and
+  `applies_vs: "trigger.source"` resolves to the unit that caused the trigger
 - `trigger_damage_jobs[].target` resolving to multiple unit types creates one
   DamageJob for each resolved target unit type
 - `engagement_type` skill requirements require explicit matching mechanics

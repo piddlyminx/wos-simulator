@@ -48,7 +48,7 @@
           "units": {
             "side": "enemy",
             "applies_to": "all",
-            "applies_vs": "target"
+            "applies_vs": "trigger.source"
           },
           "duration": {
             "type": "turn",

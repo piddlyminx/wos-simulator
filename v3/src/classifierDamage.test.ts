@@ -417,7 +417,7 @@ test("max-stacked attack-duration effects consume the whole eligible group and o
   assert.deepEqual(new Set(outcome.consumedEffectIds), new Set(["max-weaker", "max-stronger-decayed"]));
 });
 
-test('applies_vs "target" resolves to the trigger source when gating a concrete target', () => {
+test('applies_vs "trigger.source" resolves to the trigger source when gating a concrete target', () => {
   const active = activateEffect(
     {
       id: "TargetSkill",
@@ -433,7 +433,7 @@ test('applies_vs "target" resolves to the trigger source when gating a concrete 
       id: "targeted-defense",
       type: "active.hero.damageTaken.down",
       value: 50,
-      units: { side: "self", applies_to: "target", applies_vs: "target" }
+      units: { side: "self", applies_to: "trigger.target", applies_vs: "trigger.source" }
     },
     1,
     {
@@ -455,6 +455,84 @@ test('applies_vs "target" resolves to the trigger source when gating a concrete 
   assert.deepEqual(active.appliesTo, { side: "defender", units: unitMask("lancer") });
   assert.deepEqual(active.appliesVs, { side: "attacker", units: unitMask("infantry") });
   assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.damageTaken.down");
+});
+
+test('applies_vs "target" resolves to the trigger target', () => {
+  const active = activateEffect(
+    {
+      id: "TargetSkill",
+      name: "TargetSkill",
+      sourceKind: "hero_skill",
+      side: "attacker",
+      heroName: "Targeter",
+      level: 1,
+      trigger: { type: "attack", source: "self.any", target: "enemy.any" },
+      effects: []
+    },
+    {
+      id: "targeted-offense",
+      type: "active.hero.damage.up",
+      value: 50,
+      units: { applies_to: "trigger.source", applies_vs: "target" }
+    },
+    1,
+    {
+      id: "intent",
+      round: 1,
+      source: "normal",
+      attackerSide: "attacker",
+      attackerUnit: "infantry",
+      defenderSide: "defender",
+      defenderUnit: "lancer",
+      orderIndex: 0,
+      previousAttackCount: 0,
+      projectedAttackCount: 1,
+      previousReceivedAttackCount: 0,
+      projectedReceivedAttackCount: 1
+    }
+  );
+
+  assert.deepEqual(active.appliesTo, { side: "attacker", units: unitMask("infantry") });
+  assert.deepEqual(active.appliesVs, { side: "defender", units: unitMask("lancer") });
+});
+
+test('applies_vs "target" still resolves to the trigger target for defensive effects', () => {
+  const active = activateEffect(
+    {
+      id: "TargetSkill",
+      name: "TargetSkill",
+      sourceKind: "hero_skill",
+      side: "defender",
+      heroName: "Targeter",
+      level: 1,
+      trigger: { type: "attack", source: "enemy.any", target: "self.any" },
+      effects: []
+    },
+    {
+      id: "targeted-defense",
+      type: "active.hero.damageTaken.down",
+      value: 50,
+      units: { applies_to: "trigger.target", applies_vs: "target" }
+    },
+    1,
+    {
+      id: "intent",
+      round: 1,
+      source: "normal",
+      attackerSide: "attacker",
+      attackerUnit: "infantry",
+      defenderSide: "defender",
+      defenderUnit: "lancer",
+      orderIndex: 0,
+      previousAttackCount: 0,
+      projectedAttackCount: 1,
+      previousReceivedAttackCount: 0,
+      projectedReceivedAttackCount: 1
+    }
+  );
+
+  assert.deepEqual(active.appliesTo, { side: "defender", units: unitMask("lancer") });
+  assert.deepEqual(active.appliesVs, { side: "defender", units: unitMask("lancer") });
 });
 
 function simpleFighters(): Record<"attacker" | "defender", ResolvedFighter> {

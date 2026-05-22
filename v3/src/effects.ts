@@ -171,19 +171,11 @@ function resolveUnitScope(value: unknown, defaultSide: SideId, role: "applies_to
   if ((value === "trigger.source" || value === "trigger") && attackIntent) {
     return { side: attackIntent.attackerSide, units: unitMask(attackIntent.attackerUnit) };
   }
-  if (value === "target" && role === "applies_vs" && attackIntent) {
-    return scopeForTriggerSide(defaultSide, attackIntent);
-  }
   if ((value === "trigger.target" || value === "target") && attackIntent) {
     return { side: attackIntent.defenderSide, units: unitMask(attackIntent.defenderUnit) };
   }
   const list = normalizeUnitList(value);
   return { side: defaultSide, units: list ? unitMask(list) : ALL_UNIT_MASK };
-}
-
-function scopeForTriggerSide(side: SideId, attackIntent: AttackIntent): ResolvedUnitScope {
-  if (side === attackIntent.attackerSide) return { side, units: unitMask(attackIntent.attackerUnit) };
-  return { side, units: unitMask(attackIntent.defenderUnit) };
 }
 
 function normalizeUnitList(value: unknown): UnitType[] | undefined {
