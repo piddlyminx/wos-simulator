@@ -1,4 +1,5 @@
-import { loadSimulatorConfig, simulateBattle } from "@v3/index";
+import { loadSimulatorConfig } from "@v3/config";
+import { simulateBattle } from "@v3/simulator";
 import type { BattleResult, SimulatorConfig } from "@v3/types";
 import type { SimulateApiResult, SimulateRequestPayload, SimulateSkillSummary } from "@/lib/simulate-run";
 import { toBattleInput } from "./adapters";

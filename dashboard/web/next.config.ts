@@ -36,6 +36,10 @@ const nextConfig: NextConfig = {
       ...(config.resolve.alias ?? {}),
       "@v3": path.resolve(__dirname, "../../v3/src"),
     };
+    config.resolve.extensionAlias = {
+      ...(config.resolve.extensionAlias ?? {}),
+      ".js": [".ts", ".js"],
+    };
     return config;
   },
 };

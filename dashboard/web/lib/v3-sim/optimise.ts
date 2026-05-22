@@ -1,4 +1,5 @@
-import { loadSimulatorConfig, simulateBattle } from "@v3/index";
+import { loadSimulatorConfig } from "@v3/config";
+import { simulateBattle } from "@v3/simulator";
 import type { SimulatorConfig } from "@v3/types";
 import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
 import { MAX_OPTIMIZE_BATTLES, MAX_OPTIMIZE_COMPOSITIONS, type OptimizeRatioPoint, type OptimizeRatioResult, type OptimizeSide } from "@/lib/optimize-ratio";

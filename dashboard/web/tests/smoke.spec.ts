@@ -474,34 +474,33 @@ test.describe("Dashboard smoke tests", () => {
     });
     page.on("pageerror", (err) => errors.push(err.message));
 
-    await page.route("**/api/simulate", async (route) => {
+    await page.route("**/api/simulate/runs", async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.continue();
+        return;
+      }
       const payload = route.request().postDataJSON();
-      expect(payload.attacker.stat_profile_name).toBeNull();
-      expect(payload.defender.stat_profile_name).toBeNull();
+      expect(payload.kind).toBe("simulate");
+      expect(payload.request.attacker.stat_profile_name).toBeNull();
+      expect(payload.request.defender.stat_profile_name).toBeNull();
       await route.fulfill({
         status: 200,
-        contentType: "application/x-ndjson",
-        body:
-          JSON.stringify({
-            type: "result",
-            data: {
-              ...SAVED_SIMULATION_RESULT,
-              saved_run_id: SAVED_SIMULATION_ID,
-              saved_at: "2026-04-23T08:30:00.000Z",
-              saved_kind: "simulate",
-              share_url: `/simulate?run=${SAVED_SIMULATION_ID}`,
-            },
-          }) + "\n",
+        contentType: "application/json",
+        body: JSON.stringify({
+          saved_run_id: SAVED_SIMULATION_ID,
+          saved_at: "2026-04-23T08:30:00.000Z",
+          saved_kind: "simulate",
+          share_url: `/simulate?run=${SAVED_SIMULATION_ID}`,
+        }),
       });
     });
 
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
+    await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
     await page.getByRole("button", { name: /^Simulate$/i }).click();
-    await expect(
-      page.locator("h3").filter({ hasText: /Results \(222 replicates\)/ }),
-    ).toBeVisible();
+    await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
     await expect(page).toHaveURL(
       new RegExp(`/simulate\\?run=${SAVED_SIMULATION_ID}$`),
     );
@@ -561,14 +560,24 @@ test.describe("Dashboard smoke tests", () => {
       });
     });
 
-    await page.route("**/api/simulate", async (route) => {
+    await page.route("**/api/simulate/runs", async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.continue();
+        return;
+      }
       const payload = route.request().postDataJSON();
-      expect(payload.attacker.stat_profile_name).toBe("Attacker saved profile");
-      expect(payload.defender.stat_profile_name).toBeNull();
+      expect(payload.kind).toBe("simulate");
+      expect(payload.request.attacker.stat_profile_name).toBe("Attacker saved profile");
+      expect(payload.request.defender.stat_profile_name).toBeNull();
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify(SAVED_SIMULATION_RESULT),
+        body: JSON.stringify({
+          saved_run_id: "profile-snapshot-run",
+          saved_at: "2026-04-23T08:31:00.000Z",
+          saved_kind: "simulate",
+          share_url: "/simulate?run=profile-snapshot-run",
+        }),
       });
     });
 
@@ -583,10 +592,9 @@ test.describe("Dashboard smoke tests", () => {
     await expect(dialog).toBeHidden();
     await expect(page.locator("body")).toContainText("Attacker saved profile");
 
+    await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
     await page.getByRole("button", { name: /^Simulate$/i }).click();
-    await expect(
-      page.locator("h3").filter({ hasText: /Results \(222 replicates\)/ }),
-    ).toBeVisible();
+    await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
 
     expect(errors).toHaveLength(0);
   });
@@ -793,103 +801,20 @@ test.describe("Dashboard smoke tests", () => {
     });
     page.on("pageerror", (err) => errors.push(err.message));
 
-    await page.route("**/api/simulate", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          replicates: 1000,
-          summary: {
-            mean: 125.4,
-            std: 31.2,
-            best: { value: 250, winner: "attacker" },
-            worst: { value: -120, winner: "defender" },
-            attacker_win_rate: 0.62,
-            avg_skill_activations: 8.2,
-            avg_skill_kills: 140.8,
-            avg_attacker_activations: 4.1,
-            avg_defender_activations: 4.1,
-            avg_attacker_kills: 81.3,
-            avg_defender_kills: 59.5,
-          },
-          outcomes: [120, 90, 140, 180],
-          per_side_skills: {
-            attacker: [],
-            defender: [],
-          },
-        }),
-      });
-    });
-
-    await page.route("**/api/simulate/optimize-ratio", async (route) => {
+    await page.route("**/api/simulate/runs", async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.continue();
+        return;
+      }
       const payload = route.request().postDataJSON();
-      expect(payload.search_mode).toBe("adaptive");
-      expect(payload.optimize_side).toBe("attacker");
-      expect(payload.infantry_min_pct).toBe(30);
-      expect(payload.infantry_max_pct).toBe(70);
       await route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          total_troops: 3000,
-          optimized_side: "attacker",
-          search_mode: "adaptive",
-          grid_step: 100,
-          compositions_tested: 240,
-          projected_battles: 4800,
-          replicates_per_ratio: 100,
-          infantry_min_pct: 30,
-          infantry_max_pct: 70,
-          best: {
-            infantry_count: 800,
-            lancer_count: 900,
-            marksman_count: 1300,
-            infantry_pct: 26.7,
-            lancer_pct: 30.0,
-            marksman_pct: 43.3,
-            win_rate: 0.9,
-            win_rate_pct: 90.0,
-            avg_margin: 415.2,
-            avg_attacker_left: 622.1,
-            avg_defender_left: 0,
-            rank: 1,
-            is_best: true,
-          },
-          top_results: [
-            {
-              infantry_count: 800,
-              lancer_count: 900,
-              marksman_count: 1300,
-              infantry_pct: 26.7,
-              lancer_pct: 30.0,
-              marksman_pct: 43.3,
-              win_rate: 0.9,
-              win_rate_pct: 90.0,
-              avg_margin: 415.2,
-              avg_attacker_left: 622.1,
-              avg_defender_left: 0,
-              rank: 1,
-              is_best: true,
-            },
-          ],
-          points: [
-            {
-              infantry_count: 800,
-              lancer_count: 900,
-              marksman_count: 1300,
-              infantry_pct: 26.7,
-              lancer_pct: 30.0,
-              marksman_pct: 43.3,
-              win_rate: 0.9,
-              win_rate_pct: 90.0,
-              avg_margin: 415.2,
-              avg_attacker_left: 622.1,
-              avg_defender_left: 0,
-              search_phase: "coarse",
-              phase_replicates: 30,
-              is_best: true,
-            },
-          ],
+          saved_run_id: `${payload.kind}-replace-test`,
+          saved_at: "2026-04-23T08:32:00.000Z",
+          saved_kind: payload.kind,
+          share_url: `/simulate?run=${payload.kind}-replace-test`,
         }),
       });
     });
@@ -908,6 +833,12 @@ test.describe("Dashboard smoke tests", () => {
       "1,119 comps · 30/10/100 reps · 16,770 battles",
     );
 
+    await page.locator('input[aria-label="infantry troop count"]').first().fill("1");
+    await page.locator('input[aria-label="lancer troop count"]').first().fill("1");
+    await page.locator('input[aria-label="marksman troop count"]').first().fill("1");
+    await page.getByRole("button", { name: /^grid$/i }).click();
+    await page.getByLabel("Ratio reps").fill("1");
+    await page.getByLabel("Grid step").fill("1");
     await page.getByRole("button", { name: /^Optimise ratio$/i }).click();
     await expect(
       page.getByRole("heading", { name: "Ratio Optimisation" }),
@@ -916,10 +847,9 @@ test.describe("Dashboard smoke tests", () => {
       page.locator("h3").filter({ hasText: /Results \(/ }),
     ).toHaveCount(0);
 
+    await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
     await page.getByRole("button", { name: /^Simulate$/i }).click();
-    await expect(
-      page.locator("h3").filter({ hasText: /Results \(/ }),
-    ).toBeVisible();
+    await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Ratio Optimisation" }),
     ).toHaveCount(0);
@@ -936,131 +866,20 @@ test.describe("Dashboard smoke tests", () => {
     });
     page.on("pageerror", (err) => errors.push(err.message));
 
-    await page.route("**/api/simulate/optimize-ratio", async (route) => {
+    await page.route("**/api/simulate/runs", async (route) => {
+      if (route.request().method() !== "POST") {
+        await route.continue();
+        return;
+      }
+      const payload = route.request().postDataJSON();
       await route.fulfill({
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          total_troops: 3000,
-          optimized_side: "attacker",
-          search_mode: "adaptive",
-          grid_step: 100,
-          compositions_tested: 240,
-          projected_battles: 4800,
-          replicates_per_ratio: 100,
-          infantry_min_pct: 30,
-          infantry_max_pct: 70,
-          best: {
-            infantry_count: 800,
-            lancer_count: 900,
-            marksman_count: 1300,
-            infantry_pct: 26.7,
-            lancer_pct: 30.0,
-            marksman_pct: 43.3,
-            win_rate: 0.9,
-            win_rate_pct: 90.0,
-            avg_margin: 415.2,
-            avg_attacker_left: 622.1,
-            avg_defender_left: 0,
-            rank: 1,
-            is_best: true,
-          },
-          top_results: [
-            {
-              infantry_count: 800,
-              lancer_count: 900,
-              marksman_count: 1300,
-              infantry_pct: 26.7,
-              lancer_pct: 30.0,
-              marksman_pct: 43.3,
-              win_rate: 0.9,
-              win_rate_pct: 90.0,
-              avg_margin: 415.2,
-              avg_attacker_left: 622.1,
-              avg_defender_left: 0,
-              rank: 1,
-              is_best: true,
-            },
-            {
-              infantry_count: 900,
-              lancer_count: 900,
-              marksman_count: 1200,
-              infantry_pct: 30.0,
-              lancer_pct: 30.0,
-              marksman_pct: 40.0,
-              win_rate: 0.85,
-              win_rate_pct: 85.0,
-              avg_margin: 370.0,
-              avg_attacker_left: 580.4,
-              avg_defender_left: 12.3,
-              rank: 2,
-              is_best: false,
-            },
-          ],
-          points: [
-            {
-              infantry_count: 800,
-              lancer_count: 900,
-              marksman_count: 1300,
-              infantry_pct: 26.7,
-              lancer_pct: 30.0,
-              marksman_pct: 43.3,
-              win_rate: 0.9,
-              win_rate_pct: 90.0,
-              avg_margin: 415.2,
-              avg_attacker_left: 622.1,
-              avg_defender_left: 0,
-              is_best: true,
-            },
-            {
-              infantry_count: 900,
-              lancer_count: 900,
-              marksman_count: 1200,
-              infantry_pct: 30.0,
-              lancer_pct: 30.0,
-              marksman_pct: 40.0,
-              win_rate: 0.85,
-              win_rate_pct: 85.0,
-              avg_margin: 370.0,
-              avg_attacker_left: 580.4,
-              avg_defender_left: 12.3,
-              search_phase: "local",
-              phase_replicates: 10,
-              is_best: false,
-            },
-            {
-              infantry_count: 1000,
-              lancer_count: 1000,
-              marksman_count: 1000,
-              infantry_pct: 33.3,
-              lancer_pct: 33.3,
-              marksman_pct: 33.3,
-              win_rate: 0.72,
-              win_rate_pct: 72.0,
-              avg_margin: 211.7,
-              avg_attacker_left: 345.8,
-              avg_defender_left: 88.2,
-              search_phase: "finalist",
-              phase_replicates: 100,
-              is_best: false,
-            },
-            {
-              infantry_count: 1100,
-              lancer_count: 900,
-              marksman_count: 1000,
-              infantry_pct: 36.7,
-              lancer_pct: 30.0,
-              marksman_pct: 33.3,
-              win_rate: 0.78,
-              win_rate_pct: 78.0,
-              avg_margin: 260.1,
-              avg_attacker_left: 401.6,
-              avg_defender_left: 54.3,
-              search_phase: "finalist",
-              phase_replicates: 100,
-              is_best: false,
-            },
-          ],
+          saved_run_id: "optimize-apply-test",
+          saved_at: "2026-04-23T08:33:00.000Z",
+          saved_kind: payload.kind,
+          share_url: "/simulate?run=optimize-apply-test",
         }),
       });
     });
@@ -1068,25 +887,28 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
+    await page.locator('input[aria-label="infantry troop count"]').first().fill("3");
+    await page.locator('input[aria-label="lancer troop count"]').first().fill("0");
+    await page.locator('input[aria-label="marksman troop count"]').first().fill("0");
+    await page.getByTestId("optimize-options-toggle").click();
+    await page.getByRole("button", { name: /^grid$/i }).click();
+    await page.getByLabel("Ratio reps").fill("1");
+    await page.getByLabel("Grid step").fill("1");
     await page.getByRole("button", { name: /Optimise ratio/i }).click();
     await expect(page.locator("body")).toContainText("Ratio Optimisation");
     await expect(page.locator("body")).toContainText("Top 10 ratios");
     await expect(page.locator("body")).toContainText("3D win-rate samples");
     await expect(page.locator("body")).toContainText("Only tested ratios are drawn");
     await expect(page.locator("body")).not.toContainText("Avg optimized survivors");
-    await expect(page.locator("body")).toContainText("26.7 / 30.0 / 43.3%");
     await expect(page.locator("body")).toContainText("30%–70%");
 
     await page.getByRole("button", { name: /Use best attacker ratio/i }).click();
-    await expect(
-      page.locator('input[aria-label="infantry troop count"]').first(),
-    ).toHaveValue("800");
-    await expect(
-      page.locator('input[aria-label="lancer troop count"]').first(),
-    ).toHaveValue("900");
-    await expect(
-      page.locator('input[aria-label="marksman troop count"]').first(),
-    ).toHaveValue("1300");
+    const appliedCounts = await Promise.all([
+      page.locator('input[aria-label="infantry troop count"]').first().inputValue(),
+      page.locator('input[aria-label="lancer troop count"]').first().inputValue(),
+      page.locator('input[aria-label="marksman troop count"]').first().inputValue(),
+    ]);
+    expect(appliedCounts.map(Number).reduce((sum, value) => sum + value, 0)).toBe(3);
 
     expect(errors).toHaveLength(0);
   });

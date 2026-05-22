@@ -2394,6 +2394,7 @@ export default function SimulateClient({
       {optimizeResult && (
         <div
           className="rounded p-3 sm:p-4 mb-6"
+          data-testid="optimize-results"
           style={{
             border: "1px solid var(--border-color)",
             backgroundColor: "var(--sidebar-bg)",
