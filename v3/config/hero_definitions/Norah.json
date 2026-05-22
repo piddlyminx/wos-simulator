@@ -9,7 +9,7 @@
       },
       "effects": {
         "CombinedArms/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             3,
             6,
@@ -25,7 +25,7 @@
           }
         },
         "CombinedArms/2": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             3,
             6,
@@ -103,7 +103,7 @@
       },
       "effects": {
         "Momentum/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             5,
             10,
@@ -121,7 +121,7 @@
           }
         },
         "Momentum/2": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             5,
             10,
@@ -151,8 +151,7 @@
       ],
       "effects": {
         "SteadfastGuard/1": {
-          "type": "stat_bonus",
-          "stat": "defense",
+          "type": "passive.defense.up",
           "value": [
             5,
             7.5,

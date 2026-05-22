@@ -16,7 +16,7 @@
       },
       "effects": {
         "BadLuckStreak/1": {
-          "type": "defense_down",
+          "type": "active.hero.defense.down",
           "value": [
             10,
             20,
@@ -90,7 +90,7 @@
       },
       "effects": {
         "RitualDeciphering/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             20,
@@ -120,8 +120,7 @@
       ],
       "effects": {
         "PrecisionDrive/1": {
-          "type": "stat_bonus",
-          "stat": "attack",
+          "type": "passive.attack.up",
           "value": [
             5,
             7.5,

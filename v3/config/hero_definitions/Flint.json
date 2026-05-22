@@ -9,7 +9,7 @@
       },
       "effects": {
         "Pyromaniac/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             20,
             40,
@@ -33,7 +33,7 @@
       },
       "effects": {
         "BurningResolve/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             5,
             10,
@@ -55,7 +55,7 @@
       },
       "effects": {
         "Immolation/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,
@@ -84,8 +84,7 @@
       ],
       "effects": {
         "FortressSpear/1": {
-          "type": "stat_bonus",
-          "stat": "attack",
+          "type": "passive.attack.up",
           "value": [
             5,
             7.5,

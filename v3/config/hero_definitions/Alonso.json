@@ -19,7 +19,7 @@
       },
       "effects": {
         "Onslaught/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             10,
             20,
@@ -52,7 +52,7 @@
       },
       "effects": {
         "IronStrength/1": {
-          "type": "damage_down",
+          "type": "active.hero.damage.down",
           "value": [
             10,
             20,
@@ -128,8 +128,7 @@
       ],
       "effects": {
         "RazorVolley/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,

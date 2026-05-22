@@ -9,7 +9,7 @@
       },
       "effects": {
         "StrategicBalance/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             4,
             8,
@@ -24,7 +24,7 @@
           }
         },
         "StrategicBalance/2": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             4,
             8,
@@ -48,7 +48,7 @@
       },
       "effects": {
         "Ironclad/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             4,
             8,
@@ -71,7 +71,7 @@
       },
       "effects": {
         "SteelSentinel/1": {
-          "type": "health_up",
+          "type": "active.hero.health.up",
           "value": [
             5,
             10,
@@ -99,8 +99,7 @@
       ],
       "effects": {
         "Fortworks/1": {
-          "type": "stat_bonus",
-          "stat": "health",
+          "type": "passive.health.up",
           "value": [
             5,
             7.5,

@@ -116,16 +116,28 @@
       },
       "effects": {
         "Fleet/1": {
-          "type": "damage_up",
-          "value": 100,
+          "type": "extra_skill_attack",
+          "value": [
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
           "units": {
-            "applies_to": "trigger",
-            "applies_vs": "target"
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "type": "attack",
             "value": 1
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
         }
       }
     },
@@ -143,8 +155,7 @@
       ],
       "effects": {
         "TacticalEdge/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,

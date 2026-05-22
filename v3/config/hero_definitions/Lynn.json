@@ -16,7 +16,7 @@
       },
       "effects": {
         "SongOfLion/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             10,
             20,
@@ -39,7 +39,7 @@
       },
       "effects": {
         "MelancholicBallad/1": {
-          "type": "damage_down",
+          "type": "active.hero.damage.down",
           "value": [
             4,
             8,
@@ -66,7 +66,7 @@
       },
       "effects": {
         "OonaiCadenza/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             1,
             2,
@@ -97,8 +97,7 @@
       ],
       "effects": {
         "SilentThreat/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,

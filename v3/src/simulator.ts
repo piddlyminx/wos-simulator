@@ -17,8 +17,8 @@ import type {
 } from "./types.js";
 import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
 import { calculateDamageJob } from "./damage.js";
-import { activateEffect, chancePasses, createSeededRng, isEffectActive, oppositeSide, skillMatchesTrigger, type Rng } from "./effects.js";
-import { basicEffectApplies, classifyEffectForJob } from "./classifier.js";
+import { activateEffect, chancePasses, createSeededRng, currentEffectValuePct, isEffectActive, oppositeSide, skillMatchesTrigger, type Rng } from "./effects.js";
+import { classifyEffectForJob } from "./classifier.js";
 import { normalizeUnitType } from "./normalize.js";
 import { emptyTroops, resolveFighter } from "./resolve.js";
 
@@ -36,6 +36,11 @@ interface Runtime {
     attacks: Record<SideId, Record<UnitType, number>>;
     received: Record<SideId, Record<UnitType, number>>;
   };
+}
+
+interface ExtraAttackEffectGroup {
+  selected: ActiveEffect;
+  effects: ActiveEffect[];
 }
 
 export function simulateBattle(input: BattleInput, config: SimulatorConfig): BattleResult {
@@ -81,7 +86,7 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
     for (const job of jobs) {
       const outcome = calculateDamageJob(job, fighters, runtime.activeEffects, { trace: input.trace });
       roundOutcomes.push(outcome);
-      consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId);
+      consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId, outcome.consumedEffectUseIds);
     }
     attacks.push(...cancelled, ...roundOutcomes);
     commitOutcomes(roundOutcomes, fighters, runtime);
@@ -376,18 +381,21 @@ function extraSkillJobs(
   roundStartTroops: DamageJob["roundStartTroops"]
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
-  const effects = selectStackedExtraAttackEffects(
-    runtime.activeEffects.filter((effect) => effect.kind === "extra_attack" && isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack))
+  const effectGroups = selectStackedExtraAttackEffectGroups(
+    runtime.activeEffects.filter((effect) => effect.kind === "extra_attack" && isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
+    round
   );
-  for (const effect of effects) {
+  for (const effectGroup of effectGroups) {
+    const effect = effectGroup.selected;
     const definitions = effect.triggerDamageJobs ?? [];
-    const consumedEffectUseKey = `${normalAttack.sourceIntentId}:${effect.id}`;
+    const consumedEffectIds = effectGroup.effects.map((groupEffect) => groupEffect.id);
+    const consumedEffectUseKey = `${normalAttack.sourceIntentId}:${effect.stackingKey ?? effect.id}`;
     const firstJobIndex = jobs.length;
     let definitionIndex = 0;
     for (const definition of definitions) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
-      const multiplier = multiplierForTriggerDamageJob(definition.multiplier, effect);
+      const multiplier = multiplierForTriggerDamageJob(definition.multiplier, effect, round);
       if (multiplier <= 0) continue;
       const sourceEffectId = effect.source.effectId ?? effect.intent.id;
       for (const source of sources) {
@@ -406,36 +414,40 @@ function extraSkillJobs(
             defenderUnit: target.unit,
             sourceEffectId,
             sourceMultiplier: multiplier,
-            consumedEffectIds: [effect.id],
+            consumedEffectIds,
             consumedEffectUseKey,
-            consumedEffectUseId: effect.id
+            consumedEffectUseId: effect.id,
+            consumedEffectUseIds: consumedEffectIds
           });
           runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
         }
       }
       definitionIndex += 1;
     }
-    if (jobs.length > firstJobIndex) reserveConsumedEffectUse(runtime, consumedEffectUseKey, effect.id);
+    if (jobs.length > firstJobIndex) {
+      for (const consumedEffectId of consumedEffectIds) reserveConsumedEffectUse(runtime, consumedEffectUseKey, consumedEffectId);
+    }
   }
   return jobs;
 }
 
-function selectStackedExtraAttackEffects(effects: ActiveEffect[]): ActiveEffect[] {
-  const selected: ActiveEffect[] = [];
+function selectStackedExtraAttackEffectGroups(effects: ActiveEffect[], round: number): ExtraAttackEffectGroup[] {
+  const selected: ExtraAttackEffectGroup[] = [];
   const maxByKey = new Map<string, number>();
   for (const effect of effects) {
     if (effect.sameEffectStacking !== "max" || !effect.stackingKey) {
-      selected.push(effect);
+      selected.push({ selected: effect, effects: [effect] });
       continue;
     }
     const existingIndex = maxByKey.get(effect.stackingKey);
     if (existingIndex === undefined) {
       maxByKey.set(effect.stackingKey, selected.length);
-      selected.push(effect);
+      selected.push({ selected: effect, effects: [effect] });
       continue;
     }
     const existing = selected[existingIndex];
-    if ((effect.valuePct ?? 0) > (existing.valuePct ?? 0)) selected[existingIndex] = effect;
+    existing.effects.push(effect);
+    if (currentEffectValuePct(effect, round) > currentEffectValuePct(existing.selected, round)) existing.selected = effect;
   }
   return selected;
 }
@@ -497,8 +509,8 @@ function unitListFromSelector(selector: TriggerDamageJobSelector): UnitType[] | 
   return undefined;
 }
 
-function multiplierForTriggerDamageJob(multiplier: number | undefined, effect: ActiveEffect): number {
-  const raw = multiplier === undefined ? effect.valuePct : multiplier;
+function multiplierForTriggerDamageJob(multiplier: number | undefined, effect: ActiveEffect, round: number): number {
+  const raw = multiplier === undefined ? currentEffectValuePct(effect, round) : multiplier;
   const pct = Number(raw ?? 0);
   return Number.isFinite(pct) ? pct / 100 : 0;
 }
@@ -541,13 +553,24 @@ function expireInactive(runtime: Runtime, round: number): void {
 
 function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: ActiveEffect[]): string[] {
   return effects
-    .filter((effect) => effect.kind !== "extra_attack" && effect.duration.type === "attack" && isEffectActive(effect, round) && basicEffectApplies(effect, job))
+    .filter((effect) => {
+      if (effect.kind === "extra_attack" || effect.duration.type !== "attack" || !isEffectActive(effect, round)) return false;
+      const classification = classifyEffectForJob(effect, job);
+      return classification?.kind === "bucket" || classification?.kind === "control";
+    })
     .map((effect) => effect.id);
 }
 
-function consumeEffects(runtime: Runtime, consumedEffectIds: string[], consumedEffectUseKey?: string, consumedEffectUseId?: string): void {
+function consumeEffects(
+  runtime: Runtime,
+  consumedEffectIds: string[],
+  consumedEffectUseKey?: string,
+  consumedEffectUseId?: string,
+  consumedEffectUseIds?: string[]
+): void {
+  const dedupeIds = consumedEffectUseIds ?? (consumedEffectUseId ? [consumedEffectUseId] : undefined);
   for (const consumed of consumedEffectIds) {
-    if (consumedEffectUseKey && consumedEffectUseId === consumed) {
+    if (consumedEffectUseKey && dedupeIds?.includes(consumed)) {
       const useKey = `${consumedEffectUseKey}:${consumed}`;
       if (runtime.consumedEffectUseKeys.has(useKey)) continue;
       runtime.consumedEffectUseKeys.add(useKey);

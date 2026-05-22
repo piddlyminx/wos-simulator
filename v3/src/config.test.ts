@@ -17,7 +17,7 @@ test("loadSimulatorConfig loads native v3 catalogues and reports effect inventor
   assert.equal(config.heroDefinitions.Alonso.hero_generation, "S2");
   assert.ok(config.troopSkills.skills.MasterBrawler);
   assert.equal(config.diagnostics.legacyFields.length, 0);
-  assert.ok(config.diagnostics.effectTypes.damage_up > 0);
+  assert.ok(config.diagnostics.effectTypes["active.hero.damage.up"] > 0);
   assert.ok(config.diagnostics.effectTypes.extra_skill_attack > 0);
 });
 
@@ -91,6 +91,16 @@ test("native v3 trigger_damage_jobs use validated selectors and scalar multiplie
   assert.deepEqual(violations, []);
 });
 
+test("Wayne Fleet is modeled as a chance extra skill attack against the same target", () => {
+  const config = loadSimulatorConfig();
+  const fleet = config.heroDefinitions.Wayne.skills.Fleet.effects["Fleet/1"] as EffectIntentDefinition;
+
+  assert.equal(fleet.type, "extra_skill_attack");
+  assert.deepEqual(fleet.value, [100, 100, 100, 100, 100]);
+  assert.deepEqual(fleet.units, { applies_to: "trigger.source", applies_vs: "trigger.target" });
+  assert.deepEqual(fleet.trigger_damage_jobs, [{ source: "use.source", target: "use.target" }]);
+});
+
 test('native v3 effects do not use applies_vs "all"', () => {
   const config = loadSimulatorConfig();
   const offenders: string[] = [];
@@ -105,7 +115,7 @@ test('native v3 effects do not use applies_vs "all"', () => {
 
 test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
   const root = writeConfigWithTroopEffect({
-    type: "damage_up",
+    type: "active.hero.damage.up",
     value: 10,
     units: { applies_to: "trigger.source", applies_vs: "all" }
   });

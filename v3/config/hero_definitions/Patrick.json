@@ -9,7 +9,7 @@
       },
       "effects": {
         "SuperNutrients/1": {
-          "type": "health_up",
+          "type": "active.hero.health.up",
           "value": [
             5,
             10,
@@ -30,7 +30,7 @@
       },
       "effects": {
         "CaloricBooster/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             5,
             10,

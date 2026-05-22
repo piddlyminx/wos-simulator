@@ -9,7 +9,7 @@
       },
       "effects": {
         "VigorTactics/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             3,
             6,
@@ -23,7 +23,7 @@
           }
         },
         "VigorTactics/2": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             2,
             4,
@@ -90,7 +90,7 @@
       },
       "effects": {
         "NumbingSpores/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             20,
@@ -122,8 +122,7 @@
       ],
       "effects": {
         "GuardianBloom/1": {
-          "type": "stat_bonus",
-          "stat": "health",
+          "type": "passive.health.up",
           "value": [
             5,
             7.5,

@@ -9,7 +9,7 @@
       },
       "effects": {
         "FearsomeAura/1": {
-          "type": "attack_down",
+          "type": "active.hero.attack.down",
           "value": [
             4,
             8,

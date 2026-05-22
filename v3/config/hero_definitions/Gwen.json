@@ -9,7 +9,7 @@
       },
       "effects": {
         "EagleVision/1": {
-          "type": "defense_down",
+          "type": "active.hero.defense.down",
           "value": [
             5,
             10,
@@ -60,7 +60,7 @@
           ]
         },
         "AirDominance/2": {
-          "type": "defense_down",
+          "type": "active.hero.defense.down",
           "value": [
             5,
             7.5,
@@ -135,8 +135,7 @@
       ],
       "effects": {
         "LethalPrecision/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,

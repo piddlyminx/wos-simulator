@@ -92,6 +92,39 @@ test("cli --no-run-snapshot writes compact stdout only and creates no artifacts"
   assert.deepEqual(readdirSync(outputDir), []);
 });
 
+test("cli --workers runs testcase cases through worker pool", () => {
+  const outputDir = tempDir("v3-parity-workers");
+
+  const result = spawnSync(
+    "npx",
+    [
+      "--yes",
+      "tsx",
+      "src/cli.ts",
+      "--matching",
+      "simple_001",
+      "--repeat",
+      "2",
+      "--workers",
+      "2",
+      "--output-dir",
+      outputDir,
+      "--no-run-snapshot",
+    ],
+    { cwd: packageRoot, encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 0, result.stderr);
+  const report = JSON.parse(result.stdout);
+  assert.equal(report.options.workers, 2);
+  assert.equal(report.counts.executed, 1);
+  assert.equal(report.counts.errors, 0);
+  const testcase = Object.values(report.testcases as Record<string, { testcase_id: string; sampleCount: number }>)[0];
+  assert.equal(testcase?.testcase_id, "simple_001");
+  assert.equal(testcase?.sampleCount, 2);
+  assert.deepEqual(readdirSync(outputDir), []);
+});
+
 test("cli snapshot paths are unique when timestamps collide", () => {
   const outputDir = tempDir("v3-parity-collision");
   const preloadPath = resolve(outputDir, "fixed-date.mjs");

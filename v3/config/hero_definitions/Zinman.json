@@ -9,7 +9,7 @@
       },
       "effects": {
         "Implacable/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             2,
             4,
@@ -22,7 +22,7 @@
           }
         },
         "Implacable/2": {
-          "type": "health_up",
+          "type": "active.hero.health.up",
           "value": [
             2,
             4,
@@ -50,7 +50,7 @@
       },
       "effects": {
         "PositionalBattler/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,
@@ -79,8 +79,7 @@
       ],
       "effects": {
         "Woodpecker/1": {
-          "type": "stat_bonus",
-          "stat": "attack",
+          "type": "passive.attack.up",
           "value": [
             5,
             7.5,

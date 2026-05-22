@@ -9,7 +9,7 @@
       },
       "effects": {
         "SixthSense/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             4,
             8,

@@ -16,7 +16,7 @@
       },
       "effects": {
         "CallingOfTheStorm/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             20,
@@ -80,7 +80,7 @@
       },
       "effects": {
         "YouthfulRage/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,
@@ -109,8 +109,7 @@
       ],
       "effects": {
         "WinterFang/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,

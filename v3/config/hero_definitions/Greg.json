@@ -16,7 +16,7 @@
       },
       "effects": {
         "SwordOfJustice/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             8,
             16,
@@ -50,7 +50,7 @@
       },
       "effects": {
         "DeterrenceOfLaw/1": {
-          "type": "damage_down",
+          "type": "active.hero.damage.down",
           "value": [
             10,
             20,
@@ -79,7 +79,7 @@
       },
       "effects": {
         "LawAndOrder/2": {
-          "type": "health_up",
+          "type": "active.hero.health.up",
           "value": [
             5,
             10,
@@ -107,8 +107,7 @@
       ],
       "effects": {
         "VitalSurge/1": {
-          "type": "stat_bonus",
-          "stat": "health",
+          "type": "passive.health.up",
           "value": [
             5,
             7.5,

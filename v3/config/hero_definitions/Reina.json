@@ -9,7 +9,7 @@
       },
       "effects": {
         "AssassinsInstinct/1": {
-          "type": "normal_damage_up",
+          "type": "type.normal.damage.up",
           "value": [
             10,
             15,
@@ -115,8 +115,7 @@
       ],
       "effects": {
         "LancersEdge/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,
