@@ -29,4 +29,6 @@ EOF
   exit 75
 fi
 
+export WOS_NEXT_CACHE_LOCK_HELD=1
+
 exec "$@"

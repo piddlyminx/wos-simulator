@@ -37,9 +37,8 @@
           16,
           20
         ],
-        "units": {
-          "side": "enemy"
-        }
+        "source": "enemy.any",
+        "target": "self.any"
       },
       "effects": {
         "SwiftJive/1": {
@@ -65,11 +64,7 @@
           25,
           25
         ],
-        "units": {
-          "by": [
-            "lancer"
-          ]
-        }
+        "source": "lancer"
       },
       "effects": {
         "ShadowBlade/1": {

@@ -58,11 +58,7 @@
       "trigger": {
         "type": "attack",
         "every": 3,
-        "units": {
-          "by": [
-            "marksman"
-          ]
-        }
+        "source": "marksman"
       },
       "effects": {
         "OonaiCadenza/1": {

@@ -101,7 +101,7 @@ test("simulateBattle defaults to a 1500 round cap when no explicit maxRounds is 
   assert.equal(result.rounds, 1500);
 });
 
-test("round-start trigger units.for all rolls once then creates one target-locked effect per live unit type", () => {
+test("round-start trigger source self.any rolls once then creates one target-locked effect per live unit type", () => {
   const result = simulateBattle(
     {
       maxRounds: 1,
@@ -119,7 +119,7 @@ test("round-start trigger units.for all rolls once then creates one target-locke
         name: "PerUnit",
         skills: {
           RoundFanout: {
-            trigger: { type: "turn", units: { for: "all" } },
+            trigger: { type: "turn", source: "self.any" },
             effects: {
               buff: {
                 type: "active.hero.damage.up",
@@ -137,6 +137,45 @@ test("round-start trigger units.for all rolls once then creates one target-locke
   const report = result.skillReport.attacker.find((entry) => entry.skillId === "RoundFanout");
   assert.equal(report?.triggersSeen, 1);
   assert.equal(report?.skillActivations, 1);
+  assert.equal(report?.effectActivations, 2);
+});
+
+test("attack trigger source and target selectors match relative to the skill owner", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 100, lancer_t1: 100 },
+        heroes: {}
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: { Shield: { skill_1: 1 } }
+      }
+    },
+    minimalConfig({
+      Shield: {
+        name: "Shield",
+        skills: {
+          EnemyHitsInfantry: {
+            trigger: { type: "attack", source: "enemy.any", target: "self.infantry" },
+            effects: {
+              guard: {
+                type: "active.hero.damageTaken.down",
+                value: 100,
+                units: { applies_to: "target", applies_vs: "target" },
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const report = result.skillReport.defender.find((entry) => entry.skillId === "EnemyHitsInfantry");
+  assert.equal(report?.triggersSeen, 2);
+  assert.equal(report?.skillActivations, 2);
   assert.equal(report?.effectActivations, 2);
 });
 
@@ -235,7 +274,7 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
         name: "Canceller",
         skills: {
           CancelAndDebuff: {
-            trigger: { type: "attack", units: { by: "infantry" } },
+            trigger: { type: "attack", source: "infantry" },
             effects: {
               cancel: {
                 type: "no_attack",
@@ -262,6 +301,48 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
   assert.equal(cancelledAttack.consumedEffectIds.length, 2);
   assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":cancel:")));
   assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":debuff:")));
+  assert.deepEqual(cancelledAttack.counterDeltas, [
+    { side: "attacker", unit: "infantry", counter: "attacks", by: 1, cause: "normal_attack" },
+    { side: "defender", unit: "infantry", counter: "received_attacks", by: 1, cause: "normal_attack" }
+  ]);
+});
+
+test("cancelled normal attacks advance attack counters for later frequency checks", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 4,
+      attacker: {
+        troops: { infantry_t1: 100 },
+        heroes: { EveryOtherCancel: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      EveryOtherCancel: {
+        name: "EveryOtherCancel",
+        skills: {
+          Pause: {
+            trigger: { type: "attack", every: 2, source: "infantry" },
+            effects: {
+              cancel: {
+                type: "no_attack",
+                units: { applies_to: "trigger", applies_vs: "target" },
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  assert.deepEqual(
+    result.attacks.filter((attack) => attack.cancelReason === "no_attack").map((attack) => attack.jobId),
+    ["r2:attacker:infantry:0:cancelled", "r4:attacker:infantry:0:cancelled"]
+  );
 });
 
 test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
@@ -391,7 +472,7 @@ test("extra skill attacks with array trigger damage targets hit those defender u
         name: "Router",
         skills: {
           SplitHit: {
-            trigger: { type: "attack", units: { by: ["marksman"] } },
+            trigger: { type: "attack", source: "marksman" },
             effects: {
               hitLancer: {
                 type: "extra_skill_attack",
@@ -443,7 +524,7 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
         name: "Router",
         skills: {
           SingleHit: {
-            trigger: { type: "attack", units: { by: ["marksman"] } },
+            trigger: { type: "attack", source: "marksman" },
             effects: {
               hitAny: {
                 type: "extra_skill_attack",
@@ -487,7 +568,7 @@ test("extra skill trigger damage jobs reject missing runtime selectors", () => {
             name: "Malformed",
             skills: {
               MissingSelector: {
-                trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+                trigger: { type: "attack", probability: 100, source: "marksman" },
                 effects: {
                   hitAgain: {
                     type: "extra_skill_attack",
@@ -526,7 +607,7 @@ test("extra skill attacks reject missing trigger damage jobs at activation", () 
             name: "Malformed",
             skills: {
               MissingJobs: {
-                trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+                trigger: { type: "attack", probability: 100, source: "marksman" },
                 effects: {
                   hitAgain: {
                     type: "extra_skill_attack",
@@ -563,7 +644,7 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
         name: "FollowUp",
         skills: {
           FollowUpShot: {
-            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            trigger: { type: "attack", probability: 100, source: "marksman" },
             effects: {
               hitAgain: {
                 type: "extra_skill_attack",
@@ -670,7 +751,7 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
         name: "FollowUp",
         skills: {
           FollowUpShot: {
-            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            trigger: { type: "attack", probability: 100, source: "marksman" },
             effects: {
               hitAgain: {
                 type: "extra_skill_attack",
@@ -713,7 +794,7 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
         name: "MultiTarget",
         skills: {
           MultiTargetShot: {
-            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            trigger: { type: "attack", probability: 100, source: "marksman" },
             effects: {
               hitLiving: {
                 type: "extra_skill_attack",
@@ -725,7 +806,7 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
             }
           },
           RecursiveGuard: {
-            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            trigger: { type: "attack", probability: 100, source: "marksman" },
             effects: {
               recursive: {
                 type: "extra_skill_attack",
@@ -887,7 +968,7 @@ test("extra skill attack applies_vs must match the current normal attack target"
         name: "FollowUp",
         skills: {
           LancerOnlyFollowUp: {
-            trigger: { type: "attack", probability: 100, units: { by: "marksman" } },
+            trigger: { type: "attack", probability: 100, source: "marksman" },
             effects: {
               hitLancer: {
                 type: "extra_skill_attack",
@@ -985,7 +1066,7 @@ test("attack-triggered source and target selectors resolve to concrete active sc
         name: "Debuffer",
         skills: {
           TargetedDebuff: {
-            trigger: { type: "attack", units: { by: "infantry" } },
+            trigger: { type: "attack", source: "infantry" },
             effects: {
               down: {
                 type: "active.hero.damage.down",
@@ -1028,7 +1109,7 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
         name: "Debuffer",
         skills: {
           TargetAnyDebuff: {
-            trigger: { type: "attack", units: { by: "infantry" } },
+            trigger: { type: "attack", source: "infantry" },
             effects: {
               down: {
                 type: "active.hero.damage.down",
@@ -1236,6 +1317,6 @@ function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): Simulat
     heroGenerationStats: {},
     heroDefinitions,
     troopSkills: { name: "troop skills", skills: {} },
-    diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [] }
+    diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [], ambiguousTurnTriggerSelectors: [] }
   };
 }

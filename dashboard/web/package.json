@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "dev:docker": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
+    "dev": "scripts/next-cache-lock.sh dev --turbopack",
+    "dev:docker": "scripts/next-cache-lock.sh dev --turbopack",
+    "build": "scripts/next-cache-lock.sh build",
+    "start": "scripts/next-cache-lock.sh start",
     "lint": "next lint",
-    "smoke": "next build && playwright test"
+    "smoke": "scripts/next-cache-lock.sh build && playwright test"
   },
   "dependencies": {
     "@types/diff": "^7.0.2",

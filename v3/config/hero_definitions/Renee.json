@@ -19,7 +19,9 @@
             200
           ],
           "units": {
-            "applies_to": "trigger.source",
+            "applies_to": [
+              "lancer"
+            ],
             "applies_vs": "any"
           },
           "duration": {
@@ -72,7 +74,8 @@
       "description": "Dream Marks expose enemy weaknesses, increasing damage taken by marked targets for all troops",
       "trigger": {
         "type": "turn",
-        "every": 2
+        "every": 2,
+        "source": "self.any"
       },
       "effects": {
         "Dreamslice/1": {
@@ -86,7 +89,7 @@
           ],
           "units": {
             "side": "enemy",
-            "applies_to": "trigger",
+            "applies_to": "target",
             "applies_vs": "any"
           },
           "duration": {

@@ -32,19 +32,10 @@ export function skillMatchesTrigger(
   if (trigger.every && triggerType === "round_start" && !crossedFrequency(round - 1, round, trigger.every)) return false;
   if (trigger.every && triggerType === "attack_declared" && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every)) return false;
   if (!intent) return true;
-  const units = trigger.units ?? {};
-  const triggerFor = normalizeTriggerMatchSelector(units.for);
-  if (triggerFor !== "any" && triggerFor !== "all" && triggerFor !== "target" && triggerFor && !triggerFor.includes(intent.attackerUnit)) {
-    return false;
-  }
-  const by = normalizeUnitList(units.by);
-  if (by && !by.includes(intent.attackerUnit)) return false;
-  const appliesVs = normalizeTriggerMatchSelector(units.applies_vs);
-  if (appliesVs !== "any" && appliesVs !== "all" && appliesVs !== "target" && appliesVs && !appliesVs.includes(intent.defenderUnit)) {
-    return false;
-  }
-  if (units.side === "enemy") return skill.side === intent.defenderSide;
-  return skill.side === intent.attackerSide;
+  return (
+    triggerSelectorMatches(trigger.source, "self", skill.side, intent.attackerSide, intent.attackerUnit) &&
+    triggerSelectorMatches(trigger.target, "enemy", skill.side, intent.defenderSide, intent.defenderUnit)
+  );
 }
 
 export function chancePasses(skill: ResolvedSkill, rng: Rng): boolean {
@@ -132,12 +123,39 @@ export function currentEffectValuePct(effect: ActiveEffect, round: number): numb
   return baseValue;
 }
 
-// Trigger filters still accept legacy "all". ActiveEffect usage gates reject
-// applies_vs "all" even for direct in-memory simulator configs.
-export function normalizeTriggerMatchSelector(value: unknown): UnitType[] | "any" | "target" | "all" | undefined {
-  if (value === undefined) return "any";
-  if (value === "any" || value === "target" || value === "all") return value;
-  return normalizeUnitList(value);
+export type TriggerSelectorRelation = "self" | "enemy";
+
+export interface ParsedTriggerSelector {
+  relation: TriggerSelectorRelation;
+  units?: UnitType[];
+}
+
+export function parseTriggerSelector(value: unknown, defaultRelation: TriggerSelectorRelation): ParsedTriggerSelector {
+  if (typeof value === "string") {
+    const [maybeRelation, maybeUnit, ...extra] = value.split(".");
+    if (extra.length === 0 && (maybeRelation === "self" || maybeRelation === "enemy")) {
+      if (maybeUnit === undefined || maybeUnit === "any" || maybeUnit === "all") return { relation: maybeRelation };
+      return { relation: maybeRelation, units: [normalizeUnitType(maybeUnit)] };
+    }
+    if (value === "any" || value === "all") return { relation: defaultRelation };
+  }
+  return { relation: defaultRelation, units: normalizeUnitList(value) };
+}
+
+export function sideForTriggerRelation(skillSide: SideId, relation: TriggerSelectorRelation): SideId {
+  return relation === "self" ? skillSide : oppositeSide(skillSide);
+}
+
+function triggerSelectorMatches(
+  value: unknown,
+  defaultRelation: TriggerSelectorRelation,
+  skillSide: SideId,
+  actualSide: SideId,
+  actualUnit: UnitType
+): boolean {
+  const selector = parseTriggerSelector(value, defaultRelation);
+  if (sideForTriggerRelation(skillSide, selector.relation) !== actualSide) return false;
+  return selector.units === undefined || selector.units.includes(actualUnit);
 }
 
 export function normalizeEngagementType(value: unknown): string | undefined {

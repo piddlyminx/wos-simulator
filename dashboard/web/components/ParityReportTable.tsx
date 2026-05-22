@@ -6,7 +6,6 @@ import type { ParityComparisonRow, ParityMetric } from "@/lib/parity-reports";
 
 type SortKey =
   | "rank"
-  | "file"
   | "testcaseId"
   | "gameStat"
   | "gameBiasPct"
@@ -16,6 +15,10 @@ type SortKey =
 
 function fmt(value: number | null | undefined, digits = 2): string {
   return Number.isFinite(value) ? value!.toFixed(digits) : "-";
+}
+
+function fmtPct(value: number | null | undefined, digits = 2): string {
+  return Number.isFinite(value) ? `${value!.toFixed(digits)}%` : "-";
 }
 
 function pass(value: boolean | null | undefined) {
@@ -33,6 +36,15 @@ function pass(value: boolean | null | undefined) {
       {value ? "P" : "F"}
     </span>
   );
+}
+
+const groupBorderColor = "color-mix(in srgb, var(--border-color) 75%, transparent)";
+
+function groupStyle(options: { left?: boolean; right?: boolean }) {
+  return {
+    ...(options.left ? { borderLeft: `1px solid ${groupBorderColor}` } : {}),
+    ...(options.right ? { borderRight: `1px solid ${groupBorderColor}` } : {}),
+  };
 }
 
 function candidate(row: ParityComparisonRow): ParityMetric | null {
@@ -98,7 +110,7 @@ export default function ParityReportTable({
         return `${row.file} ${row.testcaseId}`.toLowerCase().includes(q);
       })
       .sort((a, b) => {
-        if (sortKey === "file" || sortKey === "testcaseId") {
+        if (sortKey === "testcaseId") {
           const result = String(a[sortKey] ?? "").localeCompare(
             String(b[sortKey] ?? ""),
           );
@@ -152,31 +164,23 @@ export default function ParityReportTable({
               style={{ borderBottom: "1px solid var(--border-color)" }}
             >
               <th className="pb-2 pr-3">
-                <button type="button" onClick={() => setSort("file")}>
-                  File
-                </button>
-              </th>
-              <th className="pb-2 pr-3">
                 <button type="button" onClick={() => setSort("testcaseId")}>
                   Testcase
                 </button>
               </th>
               <th className="pb-2 pr-3">Idx</th>
-              <th className="pb-2 pr-3">v1N</th>
+              <th className="pb-2 pl-3 pr-3" style={groupStyle({ left: true })}>gameMu</th>
               <th className="pb-2 pr-3">v1Mu</th>
-              <th className="pb-2 pr-3">v1Sig</th>
-              <th className="pb-2 pr-3">gameN</th>
-              <th className="pb-2 pr-3">gameMu</th>
-              <th className="pb-2 pr-3">gameSig</th>
-              <th className="pb-2 pr-3">v3N</th>
-              <th className="pb-2 pr-3">
+              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>
                 <button type="button" onClick={() => setSort("v3Mu")}>
                   v3Mu
                 </button>
               </th>
-              <th className="pb-2 pr-3">v3Sig</th>
-              <th className="pb-2 pr-3">v3Sem</th>
-              <th className="pb-2 pr-3">v1</th>
+              <th className="pb-2 pl-3 pr-3">gameSd</th>
+              <th className="pb-2 pr-3">v1Sd</th>
+              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>v3Sd</th>
+              <th className="pb-2 pl-3 pr-3">v1N</th>
+              <th className="pb-2 pr-3">v3N</th>
               <th className="pb-2 pr-3">v1Raw</th>
               <th className="pb-2 pr-3">
                 <button type="button" onClick={() => setSort("v1BiasPct")}>
@@ -188,7 +192,9 @@ export default function ParityReportTable({
                   v1Stat
                 </button>
               </th>
-              <th className="pb-2 pr-3">game</th>
+              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>v1Pass</th>
+              <th className="pb-2 pl-3 pr-3">gameN</th>
+              <th className="pb-2 pr-3">v3N</th>
               <th className="pb-2 pr-3">gameRaw</th>
               <th className="pb-2 pr-3">
                 <button type="button" onClick={() => setSort("gameBiasPct")}>
@@ -200,6 +206,7 @@ export default function ParityReportTable({
                   gameStat
                 </button>
               </th>
+              <th className="pb-2 pl-3" style={groupStyle({ right: true })}>gamePass</th>
             </tr>
           </thead>
           <tbody>
@@ -211,7 +218,7 @@ export default function ParityReportTable({
                   style={{ borderBottom: "1px solid var(--border-color)" }}
                 >
                   <td
-                    className="max-w-56 truncate py-1.5 pr-3"
+                    className="max-w-64 truncate py-1.5 pr-3"
                     title={row.file}
                   >
                     <Link
@@ -219,47 +226,48 @@ export default function ParityReportTable({
                       className="underline hover:opacity-80"
                       style={{ color: "var(--sidebar-active)" }}
                     >
-                      {row.file}
+                      {row.testcaseId}
                     </Link>
                   </td>
-                  <td className="py-1.5 pr-3">{row.testcaseId}</td>
                   <td className="py-1.5 pr-3">{row.idx}</td>
-                  <td className="py-1.5 pr-3">
-                    {row.v1?.n_reference ?? "-"}
+                  <td className="py-1.5 pl-3 pr-3" style={groupStyle({ left: true })}>
+                    {fmt(row.game?.mu_reference)}
                   </td>
                   <td className="py-1.5 pr-3">
                     {fmt(row.v1?.mu_reference)}
                   </td>
-                  <td className="py-1.5 pr-3">
-                    {fmt(row.v1?.sigma_reference)}
+                  <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
+                    {fmt(v3?.mu_candidate)}
                   </td>
-                  <td className="py-1.5 pr-3">
-                    {row.game?.n_reference ?? "-"}
-                  </td>
-                  <td className="py-1.5 pr-3">
-                    {fmt(row.game?.mu_reference)}
-                  </td>
-                  <td className="py-1.5 pr-3">
+                  <td className="py-1.5 pl-3 pr-3">
                     {fmt(row.game?.sigma_reference)}
                   </td>
                   <td className="py-1.5 pr-3">
-                    {v3?.n_candidate ?? "-"}
+                    {fmt(row.v1?.sigma_reference)}
                   </td>
-                  <td className="py-1.5 pr-3">
-                    {fmt(v3?.mu_candidate)}
-                  </td>
-                  <td className="py-1.5 pr-3">
+                  <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
                     {fmt(v3?.sigma_candidate)}
                   </td>
-                  <td className="py-1.5 pr-3">{fmt(v3?.sem)}</td>
-                  <td className="py-1.5 pr-3">{pass(row.v1?.passes)}</td>
+                  <td className="py-1.5 pl-3 pr-3">
+                    {row.v1?.n_reference ?? "-"}
+                  </td>
+                  <td className="py-1.5 pr-3">{row.v1?.n_candidate ?? "-"}</td>
                   <td className="py-1.5 pr-3">{fmt(row.v1?.bias_raw)}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.v1?.bias_pct)}</td>
+                  <td className="py-1.5 pr-3">{fmtPct(row.v1?.bias_pct)}</td>
                   <td className="py-1.5 pr-3">{fmt(row.v1?.stat)}</td>
-                  <td className="py-1.5 pr-3">{pass(row.game?.passes)}</td>
+                  <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
+                    {pass(row.v1?.passes)}
+                  </td>
+                  <td className="py-1.5 pl-3 pr-3">
+                    {row.game?.n_reference ?? "-"}
+                  </td>
+                  <td className="py-1.5 pr-3">{row.game?.n_candidate ?? "-"}</td>
                   <td className="py-1.5 pr-3">{fmt(row.game?.bias_raw)}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.game?.bias_pct)}</td>
-                  <td className="py-1.5">{fmt(row.game?.stat)}</td>
+                  <td className="py-1.5 pr-3">{fmtPct(row.game?.bias_pct)}</td>
+                  <td className="py-1.5 pr-3">{fmt(row.game?.stat)}</td>
+                  <td className="py-1.5 pl-3" style={groupStyle({ right: true })}>
+                    {pass(row.game?.passes)}
+                  </td>
                 </tr>
               );
             })}

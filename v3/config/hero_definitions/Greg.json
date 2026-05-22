@@ -26,8 +26,8 @@
           ],
           "same_effect_stacking": "max",
           "units": {
-            "applies_to": "trigger",
-            "applies_vs": "target"
+            "applies_to": "all",
+            "applies_vs": "any"
           },
           "duration": {
             "type": "turn",

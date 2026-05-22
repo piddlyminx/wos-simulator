@@ -17,7 +17,18 @@ import type {
 } from "./types.js";
 import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
 import { calculateDamageJob } from "./damage.js";
-import { activateEffect, chancePasses, createSeededRng, currentEffectValuePct, isEffectActive, oppositeSide, skillMatchesTrigger, type Rng } from "./effects.js";
+import {
+  activateEffect,
+  chancePasses,
+  createSeededRng,
+  currentEffectValuePct,
+  isEffectActive,
+  oppositeSide,
+  parseTriggerSelector,
+  sideForTriggerRelation,
+  skillMatchesTrigger,
+  type Rng
+} from "./effects.js";
 import { classifyEffectForJob } from "./classifier.js";
 import { normalizeUnitType } from "./normalize.js";
 import { emptyTroops, resolveFighter } from "./resolve.js";
@@ -88,8 +99,9 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
       roundOutcomes.push(outcome);
       consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId, outcome.consumedEffectUseIds);
     }
-    attacks.push(...cancelled, ...roundOutcomes);
-    commitOutcomes(roundOutcomes, fighters, runtime);
+    const committedOutcomes = [...cancelled, ...roundOutcomes];
+    attacks.push(...committedOutcomes);
+    commitOutcomes(committedOutcomes, fighters, runtime);
     trace?.rounds.push({ round, roundStartTroops, intents, jobs });
   }
 
@@ -123,8 +135,8 @@ function triggerRoundStartSkills(
   activated.push(...triggerSkills("round_start", round, skills.filter((skill) => !hasPerUnitRoundTrigger(skill)), runtime));
   for (const skill of skills) {
     if (!hasPerUnitRoundTrigger(skill)) continue;
-    const side = skill.side;
-    const defenderSide = oppositeSide(side);
+    const side = roundTriggerSourceSide(skill);
+    const defenderSide = roundTriggerTargetSide(skill, side);
     if (!skillMatchesTrigger(skill, "round_start", round)) continue;
     const report = runtime.skillReports[skill.side].get(reportKey(skill));
     if (report) report.triggersSeen += 1;
@@ -150,26 +162,25 @@ function triggerRoundStartSkills(
 }
 
 function hasPerUnitRoundTrigger(skill: ResolvedSkill): boolean {
-  return skill.trigger.type === "turn" && skill.trigger.units !== undefined && Object.prototype.hasOwnProperty.call(skill.trigger.units, "for");
+  return skill.trigger.type === "turn" && skill.trigger.source !== undefined;
 }
 
 function roundTriggerUnits(skill: ResolvedSkill, roundStartTroops: DamageJob["roundStartTroops"]): UnitType[] {
-  const selector = skill.trigger.units?.for;
-  const living = UNIT_TYPES.filter((unit) => (roundStartTroops[skill.side][unit] ?? 0) > 0);
-  if (selector === "all" || selector === "any") return living;
-  if (Array.isArray(selector)) {
-    const selected = selector.map((value) => normalizeUnitType(String(value)));
-    return living.filter((unit) => selected.includes(unit));
-  }
-  if (typeof selector === "string") {
-    try {
-      const unit = normalizeUnitType(selector);
-      return living.includes(unit) ? [unit] : [];
-    } catch {
-      return [];
-    }
-  }
-  return [];
+  const selector = parseTriggerSelector(skill.trigger.source, "self");
+  const side = sideForTriggerRelation(skill.side, selector.relation);
+  const living = UNIT_TYPES.filter((unit) => (roundStartTroops[side][unit] ?? 0) > 0);
+  return selector.units === undefined ? living : living.filter((unit) => selector.units?.includes(unit));
+}
+
+function roundTriggerSourceSide(skill: ResolvedSkill): SideId {
+  const selector = parseTriggerSelector(skill.trigger.source, "self");
+  return sideForTriggerRelation(skill.side, selector.relation);
+}
+
+function roundTriggerTargetSide(skill: ResolvedSkill, sourceSide: SideId): SideId {
+  const selector = parseTriggerSelector(skill.trigger.target, "enemy");
+  const targetSide = sideForTriggerRelation(skill.side, selector.relation);
+  return targetSide === sourceSide ? oppositeSide(sourceSide) : targetSide;
 }
 
 function syntheticRoundIntent(
@@ -524,7 +535,10 @@ function cancelledOutcome(intent: AttackIntent, effectId: string, reason: "dodge
     defenderSide: intent.defenderSide,
     defenderUnit: intent.defenderUnit,
     kills: 0,
-    counterDeltas: [],
+    counterDeltas: [
+      { side: intent.attackerSide, unit: intent.attackerUnit, counter: "attacks", by: 1, cause: "normal_attack" },
+      { side: intent.defenderSide, unit: intent.defenderUnit, counter: "received_attacks", by: 1, cause: "normal_attack" }
+    ],
     consumedEffectIds,
     cancelledBy: effectId,
     cancelReason: reason

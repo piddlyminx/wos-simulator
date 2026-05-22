@@ -75,6 +75,39 @@ interface SkillDefinition {
 }
 ```
 
+Attack triggers use explicit source and target selectors:
+
+```ts
+interface TriggerDefinition {
+  type: "battle_start" | "turn" | "attack";
+  probability?: number | number[];
+  every?: number;
+  source?: TriggerUnitSelector;
+  target?: TriggerUnitSelector;
+}
+
+type TriggerUnitSelector =
+  | UnitType
+  | UnitType[]
+  | "any"
+  | "self.any"
+  | "enemy.any"
+  | `self.${UnitType}`
+  | `enemy.${UnitType}`;
+```
+
+For attack triggers, omitted `source` means `self.any` and omitted `target`
+means `enemy.any`. Unqualified unit selectors use the field default, so
+`source: "lancer"` means `self.lancer`, and `target: "infantry"` means
+`enemy.infantry`. Defensive reactions should be written explicitly, for example
+`source: "enemy.any", target: "self.infantry"`.
+
+For turn triggers, omitted `source` means one global turn activation. An explicit
+`source` creates one synthetic per-unit activation intent for each matching
+living source unit. Native v3 trigger definitions must not use the old
+`trigger.units.for`, `trigger.units.by`, `trigger.units.applies_vs`, or
+`trigger.units.side` shape.
+
 Troop skills use the same skill/effect schema as hero skills, with optional
 requirements:
 
@@ -133,7 +166,7 @@ interface EffectDuration {
 ```
 
 Skill definitions use symbolic selectors because they are context-free static
-catalogue data. Selectors such as `"self"`, `"enemy.living"`, `"trigger"`,
+catalogue data. Selectors such as `"self.any"`, `"enemy.living"`, `"trigger"`,
 `"target"`, `"trigger.source"`, and `"trigger.target"` describe relationships
 that only become concrete while handling a trigger.
 
@@ -641,8 +674,10 @@ resolve against the use context. That resolution creates concrete skill
 
 Attack trigger matching must also honor trigger filters:
 
-- `unit` / attacker unit filters
-- defender or target unit filters
+- `source`, matched against the attacker's side and unit relative to the skill
+  owner
+- `target`, matched against the defender's side and unit relative to the skill
+  owner
 - counter-frequency filters, using crossing detection rather than exact modulo
 - `probability`, using percentage semantics and the seeded RNG
 

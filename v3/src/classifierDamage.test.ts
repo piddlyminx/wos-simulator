@@ -426,7 +426,7 @@ test('applies_vs "target" resolves to the trigger source when gating a concrete 
       side: "defender",
       heroName: "Targeter",
       level: 1,
-      trigger: { type: "attack", units: { side: "enemy" } },
+      trigger: { type: "attack", source: "enemy.any", target: "self.any" },
       effects: []
     },
     {
