@@ -122,7 +122,7 @@ test("round-start trigger units.for all rolls once then creates one target-locke
             trigger: { type: "turn", units: { for: "all" } },
             effects: {
               buff: {
-                type: "damage_up",
+                type: "active.hero.damage.up",
                 value: 100,
                 units: { applies_to: "trigger", applies_vs: "target" },
                 duration: { type: "turn", value: 1 }
@@ -244,7 +244,7 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
                 duration: { type: "attack", value: 1 }
               },
               debuff: {
-                type: "attack_up",
+                type: "active.hero.attack.up",
                 value: 100,
                 units: { applies_to: "trigger", applies_vs: "target" },
                 duration: { type: "attack", value: 1 }
@@ -265,16 +265,16 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
 });
 
 test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
-  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "damage_up"));
-  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "damage_up"));
+  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.damage.up"));
+  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.damage.up"));
 
   const maxRoundTwo = maxResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
   const addRoundTwo = addResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
 
-  assert.equal(maxRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.totalPct, 100);
-  assert.equal(maxRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.contributors.length, 1);
-  assert.equal(addRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.totalPct, 200);
-  assert.equal(addRoundTwo?.trace?.buckets.numerator.outgoingDamageUp.contributors.length, 2);
+  assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 100);
+  assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 1);
+  assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 200);
+  assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 2);
 });
 
 test("same_effect_stacking max caps overlapping extra skill attacks while add keeps all activations", () => {
@@ -288,6 +288,48 @@ test("same_effect_stacking max caps overlapping extra skill attacks while add ke
   assert.equal(addRoundTwoSkillJobs.length, 2);
   assert.deepEqual(maxResult.extraSkillAttackJobsByEffect, { stacking: 2 });
   assert.deepEqual(addResult.extraSkillAttackJobsByEffect, { stacking: 3 });
+});
+
+test("same_effect_stacking max consumes overlapping attack-duration extra skill effects as one group", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      trace: true,
+      attacker: {
+        troops: { infantry_t1: 10000 },
+        heroes: { MaxExtraAttackDuration: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 10000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      MaxExtraAttackDuration: {
+        name: "MaxExtraAttackDuration",
+        skills: {
+          Overlap: {
+            trigger: { type: "turn" },
+            effects: {
+              hitAgain: {
+                type: "extra_skill_attack",
+                value: 100,
+                same_effect_stacking: "max",
+                units: { applies_to: ["infantry"], applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 2 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const roundTwoSkillOutcome = result.attacks.find((attack) => attack.kind === "skill" && attack.jobId.startsWith("r2:attacker:infantry"));
+
+  assert.notEqual(roundTwoSkillOutcome, undefined);
+  assert.equal(roundTwoSkillOutcome!.consumedEffectIds.length, 2);
 });
 
 test("requires_effect is ignored by native v3 effect activation", () => {
@@ -311,14 +353,12 @@ test("requires_effect is ignored by native v3 effect activation", () => {
             trigger: { type: "battle_start" },
             effects: {
               base: {
-                type: "stat_bonus",
-                stat: "attack",
+                type: "passive.attack.up",
                 value: 10
               },
               legacyDependent: {
                 ...({ requires_effect: "missing-effect" } as Record<string, unknown>),
-                type: "stat_bonus",
-                stat: "defense",
+                type: "passive.defense.up",
                 value: 10
               }
             }
@@ -905,10 +945,10 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
             trigger: { type: "battle_start" },
             effects: {
               boost: {
-                type: "skill_damage_up",
+                type: "type.skill.damage.up",
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "any" },
-                duration: { type: "attack", value: 4 }
+                duration: { type: "attack", value: 2 }
               }
             }
           }
@@ -920,7 +960,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
   const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
   const skillBoosts = result.attacks
     .filter((attack) => attack.kind === "skill")
-    .map((attack) => attack.trace?.buckets.numerator.skillDamageUp.totalPct ?? 0);
+    .map((attack) => attack.trace?.atomicBuckets["type.skill.damage.up"].totalPct ?? 0);
   assert.deepEqual(skillJobsByRound, [2, 2]);
   assert.deepEqual(skillBoosts, [100, 100, 0, 0]);
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 4 });
@@ -948,7 +988,7 @@ test("attack-triggered source and target selectors resolve to concrete active sc
             trigger: { type: "attack", units: { by: "infantry" } },
             effects: {
               down: {
-                type: "damage_down",
+                type: "active.hero.damage.down",
                 value: 50,
                 units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
                 duration: { type: "turn", value: 1 }
@@ -964,9 +1004,9 @@ test("attack-triggered source and target selectors resolve to concrete active sc
   const defenderLancerAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "lancer");
   const defenderMarksmanAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "marksman");
 
-  assert.equal(attackerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 50);
-  assert.equal(defenderLancerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
-  assert.equal(defenderMarksmanAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+  assert.equal(attackerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 50);
+  assert.equal(defenderLancerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
+  assert.equal(defenderMarksmanAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
 });
 
 test('attack-triggered target selector with applies_vs "any" gates later opposing attacks', () => {
@@ -991,7 +1031,7 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
             trigger: { type: "attack", units: { by: "infantry" } },
             effects: {
               down: {
-                type: "damage_down",
+                type: "active.hero.damage.down",
                 value: 50,
                 units: { applies_to: "trigger.target", applies_vs: "any" },
                 duration: { type: "turn", value: 1 }
@@ -1007,9 +1047,9 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
   const defenderLancerAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "lancer");
   const defenderMarksmanAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "marksman");
 
-  assert.equal(attackerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
-  assert.equal(defenderLancerAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 50);
-  assert.equal(defenderMarksmanAttack?.trace?.buckets.denominator.outgoingDamageDown.totalPct, 0);
+  assert.equal(attackerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
+  assert.equal(defenderLancerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 50);
+  assert.equal(defenderMarksmanAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
 });
 
 test("engagement_type requirements decide whether hero skills resolve", () => {
@@ -1020,12 +1060,12 @@ test("engagement_type requirements decide whether hero skills resolve", () => {
         RallyOnly: {
           requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
           trigger: { type: "battle_start" },
-          effects: { rally: { type: "stat_bonus", stat: "attack", value: 10 } }
+          effects: { rally: { type: "passive.attack.up", value: 10 } }
         },
         GarrisonOnly: {
           requirements: [{ level: 1, type: "engagement_type", value: "garrison" }],
           trigger: { type: "battle_start" },
-          effects: { garrison: { type: "stat_bonus", stat: "defense", value: 10 } }
+          effects: { garrison: { type: "passive.defense.up", value: 10 } }
         }
       }
     }
@@ -1065,12 +1105,12 @@ test("simulateBattle identifies stochastic battles from resolved chance triggers
       skills: {
         CoinFlip: {
           trigger: { type: "battle_start", probability: [50] },
-          effects: { buff: { type: "stat_bonus", stat: "attack", value: 10 } }
+          effects: { buff: { type: "passive.attack.up", value: 10 } }
         },
         RallyCoinFlip: {
           requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
           trigger: { type: "battle_start", probability: [50] },
-          effects: { rally: { type: "stat_bonus", stat: "attack", value: 10 } }
+          effects: { rally: { type: "passive.attack.up", value: 10 } }
         }
       }
     }
@@ -1155,7 +1195,7 @@ function sameEffectStackingInput(heroName: string): BattleInput {
   };
 }
 
-function sameEffectStackingConfig(heroName: string, same_effect_stacking: "add" | "max", type: "damage_up" | "extra_skill_attack"): SimulatorConfig {
+function sameEffectStackingConfig(heroName: string, same_effect_stacking: "add" | "max", type: "active.hero.damage.up" | "extra_skill_attack"): SimulatorConfig {
   const effect: Omit<EffectIntentDefinition, "id"> =
     type === "extra_skill_attack"
       ? {

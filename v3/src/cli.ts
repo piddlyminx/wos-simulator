@@ -3,13 +3,23 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfig } from "./config.js";
-import { assignDetailArtifactPaths, buildSummaryForOutput, runTestcases, type TestcaseCaseReport, type TestcaseRunOptions, type TestcaseRunReport } from "./testcases.js";
+import {
+  assignDetailArtifactPaths,
+  buildSummaryForOutput,
+  prepareTestcaseCases,
+  runPreparedTestcasesAsync,
+  runTestcases,
+  type TestcaseCaseReport,
+  type TestcaseRunOptions,
+  type TestcaseRunReport
+} from "./testcases.js";
+import { TestcaseWorkerPool } from "./testcaseWorkerPool.js";
 
 const options = parseArgs(process.argv.slice(2));
 
 try {
   const config = loadSimulatorConfig();
-  const report = runTestcases(options.testcaseOptions, config);
+  const report = await runCliTestcases(options, config);
   if (options.noRunSnapshot) {
     console.log(JSON.stringify(buildSummaryForOutput(report), null, 2));
   } else {
@@ -22,6 +32,18 @@ try {
 } catch (error) {
   console.error(JSON.stringify({ error: error instanceof Error ? error.message : String(error) }, null, 2));
   process.exitCode = 1;
+}
+
+async function runCliTestcases(options: CliOptions, config: ReturnType<typeof loadSimulatorConfig>): Promise<TestcaseRunReport> {
+  const workers = options.testcaseOptions.workers ?? 1;
+  if (workers <= 1) return runTestcases(options.testcaseOptions, config);
+  const prepared = prepareTestcaseCases(options.testcaseOptions);
+  const pool = new TestcaseWorkerPool(workers);
+  try {
+    return await runPreparedTestcasesAsync(options.testcaseOptions, prepared, (job) => pool.run(job));
+  } finally {
+    await pool.close();
+  }
 }
 
 interface CliOptions {
@@ -46,6 +68,7 @@ function parseArgs(args: string[]): CliOptions {
     else if (arg === "--include-disabled") testcaseOptions.includeDisabled = true;
     else if (arg === "--trace") testcaseOptions.trace = true;
     else if (arg === "--seed") testcaseOptions.seed = args[++index];
+    else if (arg === "--workers") testcaseOptions.workers = Math.max(1, Number(args[++index]) || 1);
     else if (arg === "--output-dir") options.outputDir = resolve(args[++index]);
     else if (arg === "--no-run-snapshot") options.noRunSnapshot = true;
   }

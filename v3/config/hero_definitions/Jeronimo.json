@@ -9,7 +9,7 @@
       },
       "effects": {
         "BattleManifesto/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,
@@ -31,7 +31,7 @@
       },
       "effects": {
         "Swordmentor/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             5,
             10,
@@ -54,7 +54,7 @@
       },
       "effects": {
         "EXpertSwordsmanship/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             6,
             12,
@@ -87,8 +87,7 @@
       ],
       "effects": {
         "BattleStance/1": {
-          "type": "stat_bonus",
-          "stat": "attack",
+          "type": "passive.attack.up",
           "value": [
             5,
             7.5,

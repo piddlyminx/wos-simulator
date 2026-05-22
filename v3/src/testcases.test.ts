@@ -92,6 +92,47 @@ test("assignDetailArtifactPaths exposes failed testcase diagnostics through erro
   assert.equal(Object.keys(report.testcases).length, 0);
 });
 
+test("runTestcases logs structured damage aggregation errors and continues", () => {
+  const testcaseRoot = tempDir("v3-aggregation-error-testcases");
+  writeFileSync(
+    resolve(testcaseRoot, "bad-aggregation.json"),
+    JSON.stringify([
+      {
+        test_id: "bad_aggregation",
+        attacker: {
+          troops: { infantry_t1: 1000 },
+          stats: { infantry: { attack: 0, defense: 0, lethality: 0, health: 0 } }
+        },
+        defender: {
+          troops: { lancer_t1: 1000 },
+          stats: { lancer: { attack: 0, defense: 0, lethality: 0, health: -105 } }
+        }
+      },
+      {
+        test_id: "next_case_runs",
+        attacker: {
+          troops: { infantry_t1: 1000 },
+          stats: { infantry: { attack: 0, defense: 0, lethality: 0, health: 0 } }
+        },
+        defender: {
+          troops: { lancer_t1: 1000 },
+          stats: { lancer: { attack: 0, defense: 0, lethality: 0, health: 0 } }
+        }
+      }
+    ])
+  );
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ testcaseRoot, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
+
+  assert.equal(report.counts.errors, 1);
+  assert.equal(report.counts.executed, 1);
+  assert.equal(report.errors[0]?.testcase_id, "bad_aggregation");
+  assert.equal(report.details[0]?.errorDetails?.type, "DamageAggregationError");
+  assert.equal(report.details[0]?.errorDetails?.groupId, "player.defender.health");
+  assert.equal(report.details[0]?.errorDetails?.factor, -0.050000000000000044);
+  assert.equal(Object.values(report.testcases)[0]?.testcase_id, "next_case_runs");
+});
+
 test("runTestcases keeps executed testcase and warns when v1 snapshot row is missing", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1, calibrationReportPath: "/tmp/does-not-exist.json" }, config);

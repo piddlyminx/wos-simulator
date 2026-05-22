@@ -4,31 +4,11 @@ import { fileURLToPath } from "node:url";
 
 import { UNIT_TYPES } from "./types.js";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
+import { ATOMIC_BUCKETS } from "./damageBuckets.js";
 
 const LEGACY_FIELDS = new Set(["legacy", "effect_op", "effect_type"]);
 const KNOWN_EFFECT_TYPES = new Set([
-  "lethality_up",
-  "lethality_down",
-  "attack_up",
-  "attack_down",
-  "damage_up",
-  "damage_down",
-  "crit_damage_up",
-  "normal_damage_up",
-  "normal_damage_down",
-  "skill_damage_up",
-  "skill_damage_down",
-  "defense_up",
-  "defense_down",
-  "health_up",
-  "health_down",
-  "damage_taken_down",
-  "damage_taken_up",
-  "normal_defense_up",
-  "normal_defense_down",
-  "skill_defense_up",
-  "skill_defense_down",
-  "stat_bonus",
+  ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("passive.") || bucket.startsWith("type.")),
   "extra_skill_attack",
   "dodge",
   "no_attack",

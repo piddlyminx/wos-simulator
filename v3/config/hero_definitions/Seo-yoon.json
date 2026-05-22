@@ -9,7 +9,7 @@
       },
       "effects": {
         "RallyingBeat/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             5,
             10,

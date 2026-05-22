@@ -9,7 +9,7 @@
       },
       "effects": {
         "ShadowsEvasion/1": {
-          "type": "normal_defense_up",
+          "type": "type.normal.defense.up",
           "value": [
             5,
             10,
@@ -24,7 +24,7 @@
           }
         },
         "ShadowsEvasion/2": {
-          "type": "skill_defense_up",
+          "type": "type.skill.defense.up",
           "value": [
             6,
             12,
@@ -47,7 +47,7 @@
       },
       "effects": {
         "CrescentUplift/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             4,
             8,
@@ -65,7 +65,7 @@
       },
       "effects": {
         "ElementalResonance/1": {
-          "type": "skill_damage_up",
+          "type": "type.skill.damage.up",
           "value": [
             5,
             10,
@@ -90,8 +90,7 @@
       ],
       "effects": {
         "IronBastion/1": {
-          "type": "stat_bonus",
-          "stat": "defense",
+          "type": "passive.defense.up",
           "value": [
             5,
             7.5,

@@ -16,7 +16,7 @@
       },
       "effects": {
         "WildlingRoar/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             20,
@@ -41,7 +41,7 @@
       },
       "effects": {
         "QueenOfTheWild/1": {
-          "type": "attack_up",
+          "type": "active.hero.attack.up",
           "value": [
             5,
             10,
@@ -63,7 +63,7 @@
       },
       "effects": {
         "CallOfTheWild/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,
@@ -92,8 +92,7 @@
       ],
       "effects": {
         "GaleForce/1": {
-          "type": "stat_bonus",
-          "stat": "lethality",
+          "type": "passive.lethality.up",
           "value": [
             5,
             7.5,

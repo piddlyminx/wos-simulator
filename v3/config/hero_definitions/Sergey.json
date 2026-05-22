@@ -9,7 +9,7 @@
       },
       "effects": {
         "DefendersEdge/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             4,
             8,
@@ -30,7 +30,7 @@
       },
       "effects": {
         "Weaken/1": {
-          "type": "attack_down",
+          "type": "active.hero.attack.down",
           "value": [
             4,
             8,

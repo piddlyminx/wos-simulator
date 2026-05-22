@@ -9,7 +9,7 @@
       },
       "effects": {
         "LionStrike/1": {
-          "type": "attack_down",
+          "type": "active.hero.attack.down",
           "value": [
             4,
             8,
@@ -31,7 +31,7 @@
       },
       "effects": {
         "LionIntimidation/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             4,
             8,
@@ -52,7 +52,7 @@
       },
       "effects": {
         "LeaderInspiration/1": {
-          "type": "health_up",
+          "type": "active.hero.health.up",
           "value": [
             5,
             10,
@@ -80,8 +80,7 @@
       ],
       "effects": {
         "IronDen/1": {
-          "type": "stat_bonus",
-          "stat": "defense",
+          "type": "passive.defense.up",
           "value": [
             5,
             7.5,

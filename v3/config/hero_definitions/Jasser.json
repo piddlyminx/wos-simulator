@@ -9,7 +9,7 @@
       },
       "effects": {
         "TacticalGenius/1": {
-          "type": "lethality_up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,

@@ -74,8 +74,8 @@ export interface EffectDuration {
 export interface EffectIntentDefinition {
   id: string;
   type: string;
-  stat?: string;
   value?: unknown;
+  value_evolution?: { type?: string; step?: string; value?: number };
   units?: Record<string, unknown>;
   trigger_damage_jobs?: TriggerDamageJobDefinition[];
   duration?: { type?: string; value?: number; delay?: number };
@@ -246,6 +246,7 @@ export interface DamageJob {
   consumedEffectIds?: string[];
   consumedEffectUseKey?: string;
   consumedEffectUseId?: string;
+  consumedEffectUseIds?: string[];
 }
 
 export interface CounterDelta {
@@ -263,13 +264,21 @@ export interface DamageBucketTrace {
   contributors: Array<{ effectId: string; source: string; valuePct: number; bucket: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
 }
 
+export interface DamageAggregationGroupTrace {
+  id: string;
+  mode: string;
+  placement: "numerator" | "denominator";
+  inputBuckets: string[];
+  totalPct?: number;
+  factor: number;
+  contributors: DamageBucketTrace["contributors"];
+}
+
 export interface DamageEquationTrace {
   roundStartTroops: Record<SideId, Record<UnitType, number>>;
   armyTerm: number;
-  buckets: {
-    numerator: Record<string, DamageBucketTrace>;
-    denominator: Record<string, DamageBucketTrace>;
-  };
+  atomicBuckets: Record<string, DamageBucketTrace>;
+  aggregationGroups: Record<string, DamageAggregationGroupTrace>;
   appliedEffects: Array<{ effectId: string; bucket: string; valuePct: number; source: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
   rejectedEffects: Array<{ effectId: string; reason: string }>;
   rawDamage: number;
@@ -288,6 +297,7 @@ export interface AttackOutcome {
   consumedEffectIds: string[];
   consumedEffectUseKey?: string;
   consumedEffectUseId?: string;
+  consumedEffectUseIds?: string[];
   cancelledBy?: string;
   cancelReason?: "dodge" | "no_attack";
   trace?: DamageEquationTrace;

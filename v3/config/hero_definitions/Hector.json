@@ -16,7 +16,7 @@
       },
       "effects": {
         "SurvivalInstincts/1": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             20,
@@ -39,7 +39,7 @@
       },
       "effects": {
         "Rampant/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             100,
             125,
@@ -64,7 +64,7 @@
           }
         },
         "Rampant/2": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             20,
             40,
@@ -120,7 +120,6 @@
             "type": "attack",
             "value": 1
           },
-          "same_effect_stacking": "max",
           "trigger_damage_jobs": [
             {
               "source": "use.source",
@@ -144,8 +143,7 @@
       ],
       "effects": {
         "BulwarkCommander/1": {
-          "type": "stat_bonus",
-          "stat": "attack",
+          "type": "passive.attack.up",
           "value": [
             5,
             7.5,

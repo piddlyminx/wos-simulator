@@ -27,7 +27,7 @@
           }
         },
         "ViperFormation/2": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             15,
@@ -48,7 +48,7 @@
           }
         },
         "ViperFormation/3": {
-          "type": "defense_up",
+          "type": "active.hero.defense.up",
           "value": [
             10,
             25,
@@ -76,7 +76,7 @@
       },
       "effects": {
         "PrayerOfFlame/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             20,
             40,
@@ -104,7 +104,7 @@
       },
       "effects": {
         "BladeOfLight/1": {
-          "type": "damage_up",
+          "type": "active.hero.damage.up",
           "value": [
             12,
             24,
@@ -123,7 +123,7 @@
           }
         },
         "BladeOfLight/2": {
-          "type": "defense_down",
+          "type": "active.hero.defense.down",
           "value": [
             5,
             10,
@@ -158,8 +158,7 @@
       ],
       "effects": {
         "GuardiansVitality/1": {
-          "type": "stat_bonus",
-          "stat": "health",
+          "type": "passive.health.up",
           "value": [
             5,
             7.5,

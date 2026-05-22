@@ -115,6 +115,23 @@ export function isEffectActive(effect: ActiveEffect, round: number): boolean {
   return effect.uses < Math.max(1, effect.duration.value);
 }
 
+export function currentEffectValuePct(effect: ActiveEffect, round: number): number {
+  const baseValue = Number(effect.valuePct ?? 0);
+  if (!Number.isFinite(baseValue)) return 0;
+  const evolution = effect.intent.value_evolution;
+  if (!evolution) return baseValue;
+  const firstActiveRound = Math.max(1, effect.startRound);
+  const stepCount = evolution.step === "attack" ? effect.uses : evolution.step === "round" || evolution.step === "turn" ? Math.max(0, round - firstActiveRound) : 0;
+  const amount = Number(evolution.value ?? 0);
+  if (!Number.isFinite(amount) || stepCount <= 0) return baseValue;
+  if (evolution.type === "pct_decay") {
+    const factor = Math.max(0, 1 - amount / 100);
+    return baseValue * factor ** stepCount;
+  }
+  if (evolution.type === "fixed_decay") return Math.max(0, baseValue - stepCount * amount);
+  return baseValue;
+}
+
 // Trigger filters still accept legacy "all". ActiveEffect usage gates reject
 // applies_vs "all" even for direct in-memory simulator configs.
 export function normalizeTriggerMatchSelector(value: unknown): UnitType[] | "any" | "target" | "all" | undefined {
