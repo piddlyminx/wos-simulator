@@ -129,12 +129,21 @@ export interface SimulatorConfig {
   diagnostics: ConfigDiagnostics;
 }
 
+export type HeroSkillLevels = Record<string, number>;
+
+export interface HeroInputEntry {
+  name: string;
+  levels?: HeroSkillLevels;
+}
+
+export type HeroInputCollection = Record<string, HeroSkillLevels> | HeroInputEntry[];
+
 export interface FighterInput {
   name?: string;
   troops: Record<string, number>;
   stats?: Record<string, Partial<StatBlock>>;
-  heroes?: Record<string, Record<string, number>>;
-  joiner_heroes?: Record<string, Record<string, number>>;
+  heroes?: HeroInputCollection;
+  joiner_heroes?: HeroInputCollection;
 }
 
 export interface BattleInput {
@@ -161,6 +170,8 @@ export interface ResolvedSkill {
   sourceKind: "hero_skill" | "troop_skill";
   side: SideId;
   heroName?: string;
+  heroInstanceId?: string;
+  heroRole?: "main" | "joiner";
   troopType?: UnitType;
   level: number;
   trigger: TriggerDefinition;
@@ -172,6 +183,8 @@ export interface ResolvedHero {
   heroGeneration?: string;
   generationStats: StatBlock;
   skillIds: string[];
+  instanceId?: string;
+  role?: "main" | "joiner";
   missing?: boolean;
 }
 
