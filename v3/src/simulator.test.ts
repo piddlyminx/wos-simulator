@@ -256,6 +256,88 @@ test("hero generation stats are opt-in because testcase stats are authoritative"
   assert.deepEqual(optInFighter.statBonuses.infantry, { attack: 51, defense: 42, lethality: 33, health: 24 });
 });
 
+test("array joiner heroes preserve duplicate skill instances", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 100 },
+        heroes: [],
+        joiner_heroes: [
+          { name: "Repeat", levels: { skill_1: 1 } },
+          { name: "Repeat", levels: { skill_1: 1 } }
+        ]
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      Repeat: {
+        name: "Repeat",
+        skills: {
+          Buff: {
+            trigger: { type: "battle_start" },
+            effects: {
+              boost: {
+                type: "active.hero.damage.up",
+                value: 10,
+                units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
+                duration: { type: "battle", value: 1 },
+                same_effect_stacking: "add"
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const reports = result.skillReport.attacker.filter((entry) => entry.heroName === "Repeat" && entry.skillId === "Buff");
+  assert.equal(reports.length, 2);
+  assert.deepEqual(
+    reports.map((entry) => entry.effectActivations),
+    [1, 1]
+  );
+});
+
+test("joiner hero generation stats are not applied when main hero stats are enabled", () => {
+  const config = minimalConfig({
+    Main: {
+      name: "Main",
+      hero_generation: "S1",
+      skills: {}
+    },
+    Joiner: {
+      name: "Joiner",
+      hero_generation: "S2",
+      skills: {
+        JoinerBuff: {
+          trigger: { type: "battle_start" },
+          effects: {}
+        }
+      }
+    }
+  });
+  config.heroGenerationStats.S1 = { attack: 10, defense: 20, lethality: 30, health: 40 };
+  config.heroGenerationStats.S2 = { attack: 100, defense: 200, lethality: 300, health: 400 };
+
+  const fighter = resolveFighter(
+    {
+      troops: { infantry_t1: 10 },
+      stats: { inf: { attack: 1, defense: 2, lethality: 3, health: 4 } },
+      heroes: [{ name: "Main", levels: {} }],
+      joiner_heroes: [{ name: "Joiner", levels: { skill_1: 1 } }]
+    },
+    "attacker",
+    config,
+    { hero_generation_stats: true }
+  );
+
+  assert.deepEqual(fighter.statBonuses.infantry, { attack: 11, defense: 22, lethality: 33, health: 44 });
+});
+
 test("attack-duration effects are consumed even when a normal attack is cancelled", () => {
   const result = simulateBattle(
     {
@@ -356,6 +438,30 @@ test("same_effect_stacking max caps overlapping modifier activations while add s
   assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 1);
   assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 200);
   assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 2);
+});
+
+test("same_effect_stacking max caps duplicate hero instances of the same skill effect", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { infantry_t1: 100 },
+        heroes: [{ name: "Repeat", levels: { skill_1: 1 } }],
+        joiner_heroes: [{ name: "Repeat", levels: { skill_1: 1 } }]
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: {}
+      }
+    },
+    sameEffectStackingConfig("Repeat", "max", "active.hero.damage.up")
+  );
+
+  const attack = result.attacks.find((entry) => entry.jobId.startsWith("r1:attacker:infantry") && entry.kind === "normal");
+  assert.equal(result.skillReport.attacker.filter((entry) => entry.heroName === "Repeat" && entry.skillId === "Overlap").length, 2);
+  assert.equal(attack?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 100);
+  assert.equal(attack?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 1);
 });
 
 test("same_effect_stacking max caps overlapping extra skill attacks while add keeps all activations", () => {
@@ -1177,6 +1283,50 @@ test("engagement_type requirements decide whether hero skills resolve", () => {
   assert.equal(skillActivations(garrisonResult, "RallyOnly"), 0);
   assert.equal(skillActivations(garrisonResult, "GarrisonOnly"), 1);
   assert.equal(garrisonResult.skillReport.attacker.some((entry) => entry.skillId === "RallyOnly"), false);
+});
+
+test("rally engagement resolves hero widget roles by owning side", () => {
+  const config = minimalConfig({
+    Gated: {
+      name: "Gated",
+      skills: {
+        RallyOnly: {
+          requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
+          trigger: { type: "battle_start" },
+          effects: { rally: { type: "passive.attack.up", value: 10 } }
+        },
+        GarrisonOnly: {
+          requirements: [{ level: 1, type: "engagement_type", value: "garrison" }],
+          trigger: { type: "battle_start" },
+          effects: { garrison: { type: "passive.defense.up", value: 10 } }
+        }
+      }
+    }
+  });
+  const input = {
+    maxRounds: 0,
+    mechanics: { engagement_type: "rally" },
+    attacker: {
+      troops: { infantry_t1: 10 },
+      heroes: { Gated: { skill_1: 1, skill_2: 1 } }
+    },
+    defender: {
+      troops: { infantry_t1: 10 },
+      heroes: { Gated: { skill_1: 1, skill_2: 1 } }
+    }
+  };
+
+  const result = simulateBattle(input, config);
+
+  const attackerRally = result.skillReport.attacker.find((entry) => entry.skillId === "RallyOnly");
+  const defenderGarrison = result.skillReport.defender.find((entry) => entry.skillId === "GarrisonOnly");
+
+  assert.equal(attackerRally?.skillActivations, 1);
+  assert.equal(defenderGarrison?.skillActivations, 1);
+  assert.equal(Boolean(attackerRally), true);
+  assert.equal(result.skillReport.attacker.some((entry) => entry.skillId === "GarrisonOnly"), false);
+  assert.equal(result.skillReport.defender.some((entry) => entry.skillId === "RallyOnly"), false);
+  assert.equal(Boolean(defenderGarrison), true);
 });
 
 test("simulateBattle identifies stochastic battles from resolved chance triggers", () => {

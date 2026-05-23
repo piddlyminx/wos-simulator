@@ -71,8 +71,9 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
   if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
     throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
   }
+  const sourceKey = skillActivationSourceKey(skill);
   return {
-    id: `${skill.side}:${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? "global"}:${skill.id}:${intent.id}:r${round}:${attackIntent?.id ?? "global"}`,
+    id: `${skill.side}:${skill.sourceKind}:${sourceKey}:${skill.id}:${intent.id}:r${round}:${attackIntent?.id ?? "global"}`,
     source: {
       kind: skill.sourceKind,
       side: skill.side,
@@ -93,9 +94,17 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
     startRound: round + delay,
     duration,
     uses: 0,
-    stackingKey: `${skill.side}:${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? "global"}:${skill.id}:${intent.id}`,
+    stackingKey: `${skill.side}:${skill.sourceKind}:${skillStackingSourceKey(skill)}:${skill.id}:${intent.id}`,
     sameEffectStacking: normalizeSameEffectStacking(intent.same_effect_stacking)
   };
+}
+
+function skillActivationSourceKey(skill: ResolvedSkill): string {
+  return skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? "global";
+}
+
+function skillStackingSourceKey(skill: ResolvedSkill): string {
+  return skill.heroName ?? skill.troopType ?? "global";
 }
 
 export function isEffectActive(effect: ActiveEffect, round: number): boolean {

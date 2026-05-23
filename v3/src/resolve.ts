@@ -1,6 +1,7 @@
 import type {
   EffectIntentDefinition,
   FighterInput,
+  HeroInputCollection,
   BattleInput,
   ResolvedFighter,
   ResolvedHero,
@@ -112,6 +113,36 @@ function resolveInputStatBonuses(stats: FighterInput["stats"]): Record<UnitType,
   return byUnit;
 }
 
+interface HeroInputInstance {
+  name: string;
+  levels: Record<string, number>;
+  role: "main" | "joiner";
+  instanceId: string;
+}
+
+function heroInputInstances(input: FighterInput): HeroInputInstance[] {
+  return [...heroCollectionInstances(input.heroes, "main"), ...heroCollectionInstances(input.joiner_heroes, "joiner")];
+}
+
+function heroCollectionInstances(collection: HeroInputCollection | undefined, role: "main" | "joiner"): HeroInputInstance[] {
+  if (!collection) return [];
+  const entries = Array.isArray(collection)
+    ? collection.map((entry) => ({ name: entry.name, levels: entry.levels ?? {} }))
+    : Object.entries(collection).map(([name, levels]) => ({ name, levels }));
+  const counts = new Map<string, number>();
+  return entries.map((entry) => {
+    const key = `${role}:${normalizeHeroName(entry.name)}`;
+    const index = counts.get(key) ?? 0;
+    counts.set(key, index + 1);
+    return {
+      name: entry.name,
+      levels: entry.levels,
+      role,
+      instanceId: `${role}:${normalizeHeroName(entry.name)}:${index}`
+    };
+  });
+}
+
 function resolveHeroes(
   input: FighterInput,
   side: SideId,
@@ -121,26 +152,34 @@ function resolveHeroes(
   mechanics?: BattleInput["mechanics"]
 ): ResolvedHero[] {
   const heroes: ResolvedHero[] = [];
-  const heroLevels = mergedHeroes(input);
-  for (const heroName of Object.keys(heroLevels)) {
-    const resolvedHeroName = resolveHeroDefinitionKey(heroName, config);
+  for (const instance of heroInputInstances(input)) {
+    const resolvedHeroName = resolveHeroDefinitionKey(instance.name, config);
     const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
     if (!definition) {
-      diagnostics.push(`Missing hero definition for ${heroName}`);
-      heroes.push({ name: heroName, generationStats: zeroStats(), skillIds: [], missing: true });
+      diagnostics.push(`Missing hero definition for ${instance.name}`);
+      heroes.push({
+        name: instance.name,
+        generationStats: zeroStats(),
+        skillIds: [],
+        instanceId: instance.instanceId,
+        role: instance.role,
+        missing: true
+      });
       continue;
     }
     const generationStats = normalizeStatBlock(config.heroGenerationStats[definition.hero_generation ?? ""] as Record<string, unknown>);
-    if (shouldApplyHeroGenerationStats(mechanics)) {
+    if (instance.role === "main" && shouldApplyHeroGenerationStats(mechanics)) {
       for (const unit of UNIT_TYPES) {
         statBonuses[unit] = addStats(statBonuses[unit], generationStats);
       }
     }
     heroes.push({
-      name: definition.name ?? heroName,
+      name: definition.name ?? instance.name,
       heroGeneration: definition.hero_generation,
       generationStats,
-      skillIds: resolveHeroSkillIds(definition, heroLevels[heroName], mechanics)
+      skillIds: resolveHeroSkillIds(definition, instance.levels, side, mechanics),
+      instanceId: instance.instanceId,
+      role: instance.role
     });
   }
   void side;
@@ -155,30 +194,30 @@ function resolveHeroSkills(
   mechanics?: BattleInput["mechanics"]
 ): ResolvedSkill[] {
   const skills: ResolvedSkill[] = [];
-  for (const [heroName, levelMap] of Object.entries(mergedHeroes(input))) {
-    const resolvedHeroName = resolveHeroDefinitionKey(heroName, config);
+  for (const instance of heroInputInstances(input)) {
+    const resolvedHeroName = resolveHeroDefinitionKey(instance.name, config);
     const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
     if (!definition) continue;
     let index = 0;
     for (const [skillId, rawSkill] of Object.entries(definition.skills ?? {})) {
       index += 1;
-      const level = Number(levelMap[`skill_${index}`] ?? levelMap[skillId] ?? 0);
+      const level = Number(instance.levels[`skill_${index}`] ?? instance.levels[skillId] ?? 0);
       if (level <= 0) continue;
-      if (!heroRequirementsSatisfied(rawSkill.requirements, level, mechanics)) continue;
-      skills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", definition.name ?? resolvedHeroName));
+      if (!heroRequirementsSatisfied(rawSkill.requirements, level, side, mechanics)) continue;
+      skills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", definition.name ?? resolvedHeroName, undefined, instance.instanceId, instance.role));
     }
   }
   void diagnostics;
   return skills;
 }
 
-function resolveHeroSkillIds(definition: SkillFile, levelMap: Record<string, number>, mechanics?: BattleInput["mechanics"]): string[] {
+function resolveHeroSkillIds(definition: SkillFile, levelMap: Record<string, number>, side: SideId, mechanics?: BattleInput["mechanics"]): string[] {
   const ids: string[] = [];
   let index = 0;
   for (const [skillId, rawSkill] of Object.entries(definition.skills ?? {})) {
     index += 1;
     const level = Number(levelMap[`skill_${index}`] ?? levelMap[skillId] ?? 0);
-    if (level > 0 && heroRequirementsSatisfied(rawSkill.requirements, level, mechanics)) ids.push(skillId);
+    if (level > 0 && heroRequirementsSatisfied(rawSkill.requirements, level, side, mechanics)) ids.push(skillId);
   }
   return ids;
 }
@@ -211,8 +250,12 @@ function resolveTroopSkills(
   return skills;
 }
 
-function heroRequirementsSatisfied(requirements: SkillRequirement[] | undefined, level: number, mechanics?: BattleInput["mechanics"]): boolean {
-  return battleRequirementsSatisfied(requirements ?? [], level, mechanics);
+function heroRequirementsSatisfied(requirements: SkillRequirement[] | undefined, level: number, side: SideId, mechanics?: BattleInput["mechanics"]): boolean {
+  return (requirements ?? []).every((requirement) => {
+    if (requirement.type !== "engagement_type") return battleRequirementsSatisfied([requirement], level, mechanics);
+    if (level < Number(requirement.level ?? 1)) return true;
+    return heroEngagementRequirementSatisfied(requirement, side, mechanics);
+  });
 }
 
 function battleRequirementsSatisfied(requirements: SkillRequirement[], level: number, mechanics?: BattleInput["mechanics"]): boolean {
@@ -222,6 +265,17 @@ function battleRequirementsSatisfied(requirements: SkillRequirement[], level: nu
     if (level < Number(requirement.level ?? 1)) return true;
     return normalizeEngagementType(requirement.value) === currentEngagementType(mechanics);
   });
+}
+
+function heroEngagementRequirementSatisfied(requirement: SkillRequirement, side: SideId, mechanics?: BattleInput["mechanics"]): boolean {
+  const required = normalizeEngagementType(requirement.value);
+  const current = currentEngagementType(mechanics);
+  if (required === current) {
+    if (current !== "rally") return true;
+    return side === "attacker";
+  }
+  if (required === "garrison" && current === "rally") return side === "defender";
+  return false;
 }
 
 function currentEngagementType(mechanics?: BattleInput["mechanics"]): string | undefined {
@@ -239,7 +293,9 @@ function hydrateSkill(
   level: number,
   sourceKind: "hero_skill" | "troop_skill",
   heroName?: string,
-  troopType?: UnitType
+  troopType?: UnitType,
+  heroInstanceId?: string,
+  heroRole?: "main" | "joiner"
 ): ResolvedSkill {
   const effects: EffectIntentDefinition[] = [];
   for (const [effectId, effect] of Object.entries(rawSkill.effects ?? {})) {
@@ -255,6 +311,8 @@ function hydrateSkill(
     sourceKind,
     side,
     heroName,
+    heroInstanceId,
+    heroRole,
     troopType,
     level,
     trigger: rawSkill.trigger,
@@ -265,10 +323,6 @@ function hydrateSkill(
 function levelSelectPreservingOrder(value: unknown, level: number): unknown {
   if (Array.isArray(value) && value.every((entry) => typeof entry === "string")) return value;
   return valueAtLevel(value, level);
-}
-
-function mergedHeroes(input: FighterInput): Record<string, Record<string, number>> {
-  return { ...(input.heroes ?? {}), ...(input.joiner_heroes ?? {}) };
 }
 
 function resolveHeroDefinitionKey(heroName: string, config: SimulatorConfig): string | undefined {

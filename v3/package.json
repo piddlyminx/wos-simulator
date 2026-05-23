@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npx --yes tsx --test \"src/**/*.test.ts\"",
     "typecheck": "npx --yes --package typescript --package @types/node tsc --noEmit",
-    "testcases": "npx --yes tsx src/cli.ts"
+    "testcases": "npx --yes tsx src/cli.ts",
+    "tournament:dual-swiss": "npx --yes tsx src/tournament/dualSwissCli.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

@@ -647,5 +647,5 @@ function buildResolved(attacker: ResolvedFighter, defender: ResolvedFighter): Ba
 }
 
 function reportKey(skill: ResolvedSkill): string {
-  return `${skill.sourceKind}:${skill.heroName ?? skill.troopType ?? ""}:${skill.id}`;
+  return `${skill.sourceKind}:${skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? ""}:${skill.id}`;
 }
