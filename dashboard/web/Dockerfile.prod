@@ -39,6 +39,10 @@ COPY dashboard/web/package.json dashboard/web/package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 COPY dashboard/web/ ./
+# The browser-side v3 simulator imports @v3/* during the Next build. The
+# dashboard app lives at /app, so next.config.ts resolves that alias to /v3/src.
+COPY v3/src /v3/src
+COPY v3/config /v3/config
 RUN npm run build
 
 RUN mkdir -p /data/simulations /data/test_results /test_results \

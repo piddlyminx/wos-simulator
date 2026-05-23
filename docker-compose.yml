@@ -34,6 +34,10 @@ services:
       # Live bind mount of the source tree. Edits on disk -> Turbopack hot
       # reload in the container.
       - ./dashboard/web:/app
+      # Browser-side v3 worker imports @v3/*, which resolves to /v3/src in the
+      # container because the dashboard app is mounted at /app.
+      - ./v3/src:/v3/src:ro
+      - ./v3/config:/v3/config:ro
       # Named-volume overlays: keep container-built node_modules and the
       # Turbopack/Next cache out of the host tree.
       - wos_node_modules:/app/node_modules
