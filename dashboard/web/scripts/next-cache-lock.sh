@@ -29,6 +29,10 @@ if [ "$#" -eq 0 ]; then
   exit 64
 fi
 
+if [ "$1" = "start" ]; then
+  exec ./node_modules/.bin/next "$@"
+fi
+
 if [ "${WOS_NEXT_CACHE_LOCK_HELD:-}" = "1" ]; then
   exec ./node_modules/.bin/next "$@"
 fi
