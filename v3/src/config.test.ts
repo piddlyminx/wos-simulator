@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { test } from "node:test";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfig } from "./config.js";
 import { loadSimulatorConfigFromDir } from "./config-node.js";
@@ -71,6 +72,25 @@ test("loadSimulatorConfig rejects legacy fields in v3 config", () => {
   writeFileSync(join(root, "hero_definitions", "Example.json"), JSON.stringify({ name: "Example", hero_generation: "S1", skills: {} }));
 
   assert.throws(() => loadSimulatorConfigFromDir(root), /legacy field/i);
+});
+
+test("loadSimulatorConfig rejects legacy effect metadata fields without naming them in source", () => {
+  const legacyEffectMetadataKey = ["effect", "op"].join("_");
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.damage.up",
+    value: 10,
+    units: { applies_to: "trigger.source", applies_vs: "target" },
+    [legacyEffectMetadataKey]: 101
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /legacy field/i);
+});
+
+test("v3 config source does not reference legacy effect metadata names", () => {
+  const legacyEffectMetadataKey = ["effect", "op"].join("_");
+  const source = readFileSync(fileURLToPath(new URL("./config.ts", import.meta.url)), "utf8");
+
+  assert.equal(source.includes(legacyEffectMetadataKey), false);
 });
 
 test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {

@@ -1,7 +1,7 @@
 [
   {
     "test_id": "gwen_solo",
-    "description": "Gwen solo defender test. WIP attacking with no heroes, minxxx defending with Gwen. Gwen has per-attack triggers (S2: every 5 attacks, S3: every 4 attacks for marksmen). S2 and S3 have effect_op=101.",
+    "description": "Gwen solo defender test. WIP attacking with no heroes, minxxx defending with Gwen.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
