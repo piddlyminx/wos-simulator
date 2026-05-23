@@ -472,8 +472,16 @@ function formatStatNumber(value: number): string {
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
 }
 
-function effectiveStatPreview(baseValue: number, bonusPercent: number): string {
-  return formatStatNumber(baseValue * (1 + bonusPercent / 100));
+function applyStatBonusGroups(baseValue: number, upPercent: number, downPercent: number): number {
+  return ((100 + baseValue) * (1 + upPercent / 100)) / (1 + downPercent / 100) - 100;
+}
+
+function removeStatBonusGroup(displayedValue: number, upPercent: number): number {
+  return (100 + displayedValue) / (1 + upPercent / 100) - 100;
+}
+
+function effectiveStatPreview(baseValue: number, upPercent: number, downPercent: number): string {
+  return formatStatNumber(applyStatBonusGroups(baseValue, upPercent, downPercent));
 }
 
 function signedPercent(value: number): string {
@@ -505,28 +513,28 @@ function sideSkill4BonusPercent(
   return total;
 }
 
-function manualStatModifierPercent(
+function manualStatModifierGroups(
   ownModifiers: StatModifierState,
   opponentModifiers: StatModifierState,
   stat: StatName,
-): number {
-  let total = ownModifiers[stat] ?? 0;
-  if (stat === "attack") total -= opponentModifiers.enemy_attack;
-  if (stat === "defense") total -= opponentModifiers.enemy_defense;
-  return total;
+): { up: number; down: number } {
+  const own = ownModifiers[stat] ?? 0;
+  let down = 0;
+  if (stat === "attack") down = opponentModifiers.enemy_attack;
+  if (stat === "defense") down = opponentModifiers.enemy_defense;
+  return { up: Math.max(0, own), down: Math.max(0, down) };
 }
 
-function effectiveStatBonusPercent(
+function effectiveStatBonusGroups(
   side: SideState,
   opponent: SideState,
   which: Side,
   stat: StatName,
   rallyMode: boolean,
-): number {
-  return (
-    sideSkill4BonusPercent(side, which, stat as Skill4Stat, rallyMode) +
-    manualStatModifierPercent(side.statModifiers, opponent.statModifiers, stat)
-  );
+): { up: number; down: number } {
+  const skill4Up = sideSkill4BonusPercent(side, which, stat as Skill4Stat, rallyMode);
+  const manual = manualStatModifierGroups(side.statModifiers, opponent.statModifiers, stat);
+  return { up: skill4Up + manual.up, down: manual.down };
 }
 
 function statModifierDescription(name: StatModifierName, value: number): string {
@@ -604,9 +612,10 @@ function mergeSideFromOcr(
       const v = statRow[stat];
       if (typeof v === "number" && !isNaN(v)) {
         const bonus = scaleByStat[stat] ?? 0;
-        // Image value = base * (1 + bonus/100) → base = image / (1 + bonus/100).
+        // Report stat bonuses sit on top of the standard 100%.
+        // displayed = (100 + base) * (1 + bonus/100) - 100
         // Round to one decimal to match input precision.
-        const scaled = bonus > 0 ? v / (1 + bonus / 100) : v;
+        const scaled = bonus > 0 ? removeStatBonusGroup(v, bonus) : v;
         nextStats[cat][stat] = Math.round(scaled * 10) / 10;
       }
     }
@@ -2984,12 +2993,12 @@ function SidePanel({
                   stat as Skill4Stat,
                   rallyMode,
                 );
-                const manualBonus = manualStatModifierPercent(
+                const manualGroups = manualStatModifierGroups(
                   state.statModifiers,
                   opponent.statModifiers,
                   stat,
                 );
-                const bonus = effectiveStatBonusPercent(
+                const bonusGroups = effectiveStatBonusGroups(
                   state,
                   opponent,
                   which,
@@ -2997,14 +3006,41 @@ function SidePanel({
                   rallyMode,
                 );
                 const baseValue = state.stats[cat][stat];
+                const hasBonus =
+                  bonusGroups.up !== 0 || bonusGroups.down !== 0;
                 const previewValue =
-                  bonus !== 0 ? effectiveStatPreview(baseValue, bonus) : null;
+                  hasBonus
+                    ? effectiveStatPreview(
+                        baseValue,
+                        bonusGroups.up,
+                        bonusGroups.down,
+                      )
+                    : null;
+                const previewNumber =
+                  hasBonus
+                    ? applyStatBonusGroups(
+                        baseValue,
+                        bonusGroups.up,
+                        bonusGroups.down,
+                      )
+                    : baseValue;
+                const modifierSummary = [
+                  bonusGroups.up !== 0 ? signedPercent(bonusGroups.up) : null,
+                  bonusGroups.down !== 0
+                    ? `-${bonusGroups.down.toFixed(1)}%`
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" / ");
                 const sourceText = [
                   skill4Bonus !== 0
                     ? `skill 4 ${signedPercent(skill4Bonus)}`
                     : null,
-                  manualBonus !== 0
-                    ? `manual ${signedPercent(manualBonus)}`
+                  manualGroups.up !== 0
+                    ? `manual ${signedPercent(manualGroups.up)}`
+                    : null,
+                  manualGroups.down !== 0
+                    ? `manual -${manualGroups.down.toFixed(1)}%`
                     : null,
                 ]
                   .filter(Boolean)
@@ -3040,15 +3076,15 @@ function SidePanel({
                       <span
                         className="flex flex-col items-center justify-start text-center font-mono text-[9px] leading-tight sm:text-[10px]"
                         style={{
-                          color: bonus > 0 ? "#a6e3a1" : "#f38ba8",
+                          color: previewNumber >= baseValue ? "#a6e3a1" : "#f38ba8",
                         }}
                       >
                         <span
-                          title={`${sourceText || "Manual modifiers"} combine to ${signedPercent(bonus)} before battle, for an effective stat of ${previewValue}.`}
+                          title={`${sourceText || "Manual modifiers"} apply before battle, for an effective stat of ${previewValue}.`}
                           data-testid={`stat-preview-${which}-${cat}-${stat}`}
                         >
                           <span>[{previewValue}]</span>
-                          <span>{signedPercent(bonus)}</span>
+                          <span>{modifierSummary}</span>
                         </span>
                       </span>
                     ) : null}
