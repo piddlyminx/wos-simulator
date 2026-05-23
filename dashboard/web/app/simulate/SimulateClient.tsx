@@ -2171,7 +2171,7 @@ export default function SimulateClient({
                   {optimizeSearchMode === "adaptive"
                     ? "30/10/100 reps"
                     : `${optimizeReplicates.toLocaleString()} reps`}{" "}
-                  ·{" "}
+                  · {optimizeSearchMode === "adaptive" ? "up to " : ""}
                   {estimatedOptimizeBattles.toLocaleString()} battles
                 </span>
               </div>
@@ -2410,10 +2410,11 @@ export default function SimulateClient({
                 {(optimizeResult.optimized_side ?? optimizeSide) === "defender"
                   ? "defender"
                   : "attacker"}{" "}
-                ratio with {optimizeResult.search_mode ?? "grid"} search.
-                Tested {optimizeResult.compositions_tested.toLocaleString()}{" "}
-                candidates with{" "}
-                {optimizeResult.replicates_per_ratio.toLocaleString()}{" "}
+                ratio with {optimizeResult.search_mode ?? "grid"} search. Ran{" "}
+                {optimizeResult.projected_battles.toLocaleString()} battle
+                simulations across{" "}
+                {optimizeResult.compositions_tested.toLocaleString()} candidates,
+                with {optimizeResult.replicates_per_ratio.toLocaleString()}{" "}
                 replicates for each finalist. Infantry was constrained to{" "}
                 {optimizeResult.infantry_min_pct}%–
                 {optimizeResult.infantry_max_pct}%.

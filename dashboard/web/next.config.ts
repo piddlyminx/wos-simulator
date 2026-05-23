@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
+import fs from "fs";
 import path from "path";
 
 const pollIntervalMs = Number(process.env.NEXT_WATCH_POLL_INTERVAL_MS ?? 0);
+const v3SourceRoot = fs.existsSync(path.resolve(__dirname, "../../src"))
+  ? path.resolve(__dirname, "../../src")
+  : path.resolve(__dirname, "../../v3/src");
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ["better-sqlite3"],
@@ -34,7 +38,7 @@ const nextConfig: NextConfig = {
     config.resolve = config.resolve ?? {};
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
-      "@v3": path.resolve(__dirname, "../../v3/src"),
+      "@v3": v3SourceRoot,
     };
     config.resolve.extensionAlias = {
       ...(config.resolve.extensionAlias ?? {}),
