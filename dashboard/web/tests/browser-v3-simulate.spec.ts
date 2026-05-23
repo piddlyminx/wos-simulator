@@ -58,6 +58,7 @@ test("/simulate uses browser worker for optimise ratio and saves afterward", asy
     await route.continue();
   });
   await page.goto("/simulate");
+  await expect(page.locator("body")).toContainText(/up to .* battles/i);
   await page.locator('input[aria-label="infantry troop count"]').first().fill("3");
   await page.locator('input[aria-label="lancer troop count"]').first().fill("0");
   await page.locator('input[aria-label="marksman troop count"]').first().fill("0");
@@ -67,5 +68,8 @@ test("/simulate uses browser worker for optimise ratio and saves afterward", asy
   await page.getByLabel("Grid step").fill("1");
   await page.getByRole("button", { name: /optimise ratio/i }).click();
   await expect(page.getByTestId("optimize-results")).toBeVisible();
+  await expect(page.getByTestId("optimize-results")).toContainText(
+    /battle simulations/i,
+  );
   expect(forbidden).toEqual([]);
 });
