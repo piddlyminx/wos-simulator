@@ -62,15 +62,19 @@ function tupleToStats(tuple: [number, number, number, number], side: SimulateSid
   const own = side.stat_modifiers ?? { attack: 0, defense: 0, lethality: 0, health: 0, enemy_attack: 0, enemy_defense: 0 };
   const opp = opponent.stat_modifiers ?? { attack: 0, defense: 0, lethality: 0, health: 0, enemy_attack: 0, enemy_defense: 0 };
   const modifiers = {
-    attack: (own.attack ?? 0) + (opp.enemy_attack ?? 0),
-    defense: (own.defense ?? 0) + (opp.enemy_defense ?? 0),
-    lethality: own.lethality ?? 0,
-    health: own.health ?? 0,
+    attack: { up: own.attack ?? 0, down: Math.abs(Math.min(0, opp.enemy_attack ?? 0)) },
+    defense: { up: own.defense ?? 0, down: Math.abs(Math.min(0, opp.enemy_defense ?? 0)) },
+    lethality: { up: own.lethality ?? 0, down: 0 },
+    health: { up: own.health ?? 0, down: 0 },
   };
   return {
-    attack: tuple[0] * (1 + modifiers.attack / 100),
-    defense: tuple[1] * (1 + modifiers.defense / 100),
-    lethality: tuple[2] * (1 + modifiers.lethality / 100),
-    health: tuple[3] * (1 + modifiers.health / 100),
+    attack: applyStatBonusGroups(tuple[0], modifiers.attack.up, modifiers.attack.down),
+    defense: applyStatBonusGroups(tuple[1], modifiers.defense.up, modifiers.defense.down),
+    lethality: applyStatBonusGroups(tuple[2], modifiers.lethality.up, modifiers.lethality.down),
+    health: applyStatBonusGroups(tuple[3], modifiers.health.up, modifiers.health.down),
   };
+}
+
+function applyStatBonusGroups(baseValue: number, upPercent: number, downPercent: number): number {
+  return ((100 + baseValue) * (1 + upPercent / 100)) / (1 + downPercent / 100) - 100;
 }

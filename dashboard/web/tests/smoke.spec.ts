@@ -748,7 +748,7 @@ test.describe("Dashboard smoke tests", () => {
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
     await expect(preview).toBeVisible();
-    await expect(preview).toContainText("[115]");
+    await expect(preview).toContainText("[130]");
     await expect(preview).toContainText("+15.0%");
 
     expect(errors).toHaveLength(0);
@@ -776,7 +776,7 @@ test.describe("Dashboard smoke tests", () => {
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
     await expect(lethalityPreview).toBeVisible();
-    await expect(lethalityPreview).toContainText("[125]");
+    await expect(lethalityPreview).toContainText("[150]");
     await expect(lethalityPreview).toContainText("+25.0%");
 
     await page
@@ -792,8 +792,9 @@ test.describe("Dashboard smoke tests", () => {
     const attackPreview = page.locator(
       '[data-testid="stat-preview-attacker-infantry-attack"]',
     );
-    await expect(attackPreview).toContainText("[90]");
-    await expect(attackPreview).toContainText("-10.0%");
+    await expect(attackPreview).toContainText("[83.3]");
+    await expect(attackPreview).toContainText("+10.0%");
+    await expect(attackPreview).toContainText("-20.0%");
 
     expect(errors).toHaveLength(0);
   });
