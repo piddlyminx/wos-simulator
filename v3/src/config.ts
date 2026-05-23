@@ -36,7 +36,6 @@ import { UNIT_TYPES } from "./types.js";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
 import { ATOMIC_BUCKETS } from "./damageBuckets.js";
 
-const LEGACY_FIELDS = new Set(["legacy", "effect_op", "effect_type"]);
 const KNOWN_EFFECT_TYPES = new Set([
   ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("passive.") || bucket.startsWith("type.")),
   "extra_skill_attack",
@@ -150,9 +149,16 @@ function scanLegacyFields(value: unknown, file: string, path: string, diagnostic
     return;
   }
   for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
-    if (LEGACY_FIELDS.has(key)) diagnostics.legacyFields.push({ file, path, field: key });
+    if (isLegacyConfigField(key)) diagnostics.legacyFields.push({ file, path, field: key });
     scanLegacyFields(child, file, `${path}.${key}`, diagnostics);
   }
+}
+
+function isLegacyConfigField(key: string): boolean {
+  if (key === "legacy") return true;
+  if (!key.startsWith("effect_")) return false;
+  const suffix = key.slice("effect_".length);
+  return suffix === "op" || suffix === "type";
 }
 
 function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostics: ConfigDiagnostics): void {
