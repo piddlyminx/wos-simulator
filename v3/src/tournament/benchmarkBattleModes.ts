@@ -9,9 +9,9 @@ interface BenchmarkSummary {
   battles: number;
   elapsedMs: number;
   msPerBattle: number;
+  averageSignedScore: number;
   averageRounds?: number;
   averageAttackOutcomes?: number;
-  scoreChecksum?: number;
 }
 
 const battleCount = parseBattleCount(process.argv[2] ?? "60");
@@ -27,6 +27,7 @@ printSummary("fast", fast);
 function benchmarkFull(tasks: BattleTask[], config: SimulatorConfig): BenchmarkSummary {
   let totalRounds = 0;
   let totalAttackOutcomes = 0;
+  let totalSignedScore = 0;
   const start = Date.now();
   for (const task of tasks) {
     for (let rep = 0; rep < task.reps; rep += 1) {
@@ -34,6 +35,7 @@ function benchmarkFull(tasks: BattleTask[], config: SimulatorConfig): BenchmarkS
       const result: BattleResult = simulateBattle(input, config, { detail: "full" });
       totalRounds += result.rounds;
       totalAttackOutcomes += result.attacks.length;
+      totalSignedScore += signedScoreForResult(result);
     }
   }
   const elapsedMs = Date.now() - start;
@@ -42,18 +44,19 @@ function benchmarkFull(tasks: BattleTask[], config: SimulatorConfig): BenchmarkS
     battles,
     elapsedMs,
     msPerBattle: elapsedMs / battles,
+    averageSignedScore: totalSignedScore / battles,
     averageRounds: totalRounds / battles,
     averageAttackOutcomes: totalAttackOutcomes / battles
   };
 }
 
 function benchmarkFastScore(tasks: BattleTask[], config: SimulatorConfig): BenchmarkSummary {
-  let scoreChecksum = 0;
+  let totalSignedScore = 0;
   const start = Date.now();
   for (const task of tasks) {
     for (let rep = 0; rep < task.reps; rep += 1) {
       const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-      scoreChecksum += simulateBattleScore(input, config);
+      totalSignedScore += simulateBattleScore(input, config);
     }
   }
   const elapsedMs = Date.now() - start;
@@ -62,7 +65,7 @@ function benchmarkFastScore(tasks: BattleTask[], config: SimulatorConfig): Bench
     battles,
     elapsedMs,
     msPerBattle: elapsedMs / battles,
-    scoreChecksum
+    averageSignedScore: totalSignedScore / battles
   };
 }
 
@@ -88,15 +91,25 @@ function parseBattleCount(value: string): number {
   return parsed;
 }
 
+function signedScoreForResult(result: BattleResult): number {
+  if (result.winner === "attacker") return totalRemaining(result.remaining.attacker);
+  if (result.winner === "defender") return -totalRemaining(result.remaining.defender);
+  return 0;
+}
+
+function totalRemaining(remaining: BattleResult["remaining"]["attacker"]): number {
+  return (remaining.infantry ?? 0) + (remaining.lancer ?? 0) + (remaining.marksman ?? 0);
+}
+
 function printSummary(label: "full" | "fast", summary: BenchmarkSummary): void {
   const fields = [
     `${label}:`,
     `battles=${summary.battles}`,
     `elapsed_ms=${summary.elapsedMs.toFixed(2)}`,
-    `ms_per_battle=${summary.msPerBattle.toFixed(3)}`
+    `ms_per_battle=${summary.msPerBattle.toFixed(3)}`,
+    `avg_signed_score=${summary.averageSignedScore.toFixed(2)}`
   ];
   if (summary.averageRounds !== undefined) fields.push(`avg_rounds=${summary.averageRounds.toFixed(2)}`);
   if (summary.averageAttackOutcomes !== undefined) fields.push(`avg_attack_outcomes=${summary.averageAttackOutcomes.toFixed(2)}`);
-  if (summary.scoreChecksum !== undefined) fields.push(`score_checksum=${summary.scoreChecksum}`);
   console.log(fields.join(" "));
 }
