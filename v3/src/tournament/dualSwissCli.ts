@@ -56,14 +56,14 @@ export function parseCliArgs(argv: string[]): CliOptions {
     rounds: 30,
     seedRounds: 2,
     reps: 1,
-    topN: 200,
+    topN: 500,
     jobs: cpus().length || 4,
     seed: 1234,
     freezeRate: 0.2,
     startFreezeRound: 8,
     minPoolSize: 200,
     finalsTopM: 200,
-    finalsMaxSameHeroes: 0,
+    finalsMaxSameHeroes: 10,
     repeatJoiners: true
   };
 
