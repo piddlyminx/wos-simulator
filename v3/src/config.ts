@@ -34,7 +34,7 @@ import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" 
 
 import { UNIT_TYPES } from "./types.js";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
-import { ATOMIC_BUCKETS } from "./damageBuckets.js";
+import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets.js";
 
 const KNOWN_EFFECT_TYPES = new Set([
   ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("passive.") || bucket.startsWith("type.")),
@@ -169,6 +169,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
       collectAmbiguousTurnTriggerSelectorDiagnostics(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId, diagnostics);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
+      validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
         diagnostics.unsupportedEffects.push({
@@ -224,6 +225,21 @@ function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string,
   throw new Error(
     `native effect units.applies_vs cannot be "all" at ${path}; use "any" for an unrestricted usage gate or trigger_damage_jobs target selectors for multi-target damage`
   );
+}
+
+function validateNativeEffectValue(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
+  const definition = bucketDefinition(effect.type);
+  if (!definition || definition.valueType !== "pct") return;
+  const values = Array.isArray(effect.value) ? effect.value : [effect.value];
+  for (const value of values) {
+    if (value === undefined) continue;
+    if (typeof value !== "number" || !Number.isFinite(value)) {
+      throw new Error(`native bucket effect ${effect.type} value must be a finite number at ${file}:${skillId}.${effectId}`);
+    }
+    if (value < 0) {
+      throw new Error(`negative native bucket effect ${effect.type} value is not supported at ${file}:${skillId}.${effectId}; use positive magnitudes`);
+    }
+  }
 }
 
 function validateExtraSkillAttackEffect(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {

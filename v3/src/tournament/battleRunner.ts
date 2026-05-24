@@ -11,7 +11,7 @@ export function runSingleBattleDirect(task: BattleTask, config: SimulatorConfig)
   let totalDefenderLeft = 0;
   for (let rep = 0; rep < task.reps; rep += 1) {
     const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-    const result = simulateBattle(input, config);
+    const result = simulateBattle(input, config, { detail: "fast" });
     totalAttackerLeft += totalRemaining(result.remaining.attacker);
     totalDefenderLeft += totalRemaining(result.remaining.defender);
   }

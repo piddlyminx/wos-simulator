@@ -155,6 +155,12 @@ export interface BattleInput {
   mechanics?: Record<string, unknown>;
 }
 
+export type SimulationDetail = "full" | "fast";
+
+export interface SimulationOptions {
+  detail?: SimulationDetail;
+}
+
 export interface ResolvedTroopLine {
   id: string;
   type: UnitType;

@@ -10,6 +10,7 @@ import type {
   ResolvedFighter,
   ResolvedSkill,
   SideId,
+  SimulationOptions,
   SimulatorConfig,
   SkillReportEntry,
   TriggerDamageJobSelector,
@@ -30,6 +31,7 @@ import {
   type Rng
 } from "./effects.js";
 import { classifyEffectForJob } from "./classifier.js";
+import { createEffectIndex, indexEffect, pruneEffectIndex, type EffectIndex } from "./effectIndex.js";
 import { normalizeUnitType } from "./normalize.js";
 import { emptyTroops, resolveFighter } from "./resolve.js";
 
@@ -37,6 +39,7 @@ const DEFAULT_MAX_ROUNDS = 1500;
 
 interface Runtime {
   activeEffects: ActiveEffect[];
+  effectIndex: EffectIndex;
   rng: Rng;
   skillReports: Record<SideId, Map<string, SkillReportEntry>>;
   effectActivationCounts: Record<SideId, number>;
@@ -54,12 +57,14 @@ interface ExtraAttackEffectGroup {
   effects: ActiveEffect[];
 }
 
-export function simulateBattle(input: BattleInput, config: SimulatorConfig): BattleResult {
+export function simulateBattle(input: BattleInput, config: SimulatorConfig, options: SimulationOptions = {}): BattleResult {
   const attacker = resolveFighter(input.attacker, "attacker", config, input.mechanics);
   const defender = resolveFighter(input.defender, "defender", config, input.mechanics);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
   const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "v3-default"));
-  const trace: BattleTrace | undefined = input.trace ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;
+  const detail = options.detail ?? "full";
+  const traceEnabled = detail === "full" && input.trace;
+  const trace: BattleTrace | undefined = traceEnabled ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;
   const attacks: AttackOutcome[] = [];
   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
 
@@ -79,7 +84,7 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
 
     for (const intent of intents) {
       triggerSkills("attack_declared", round, allSkills(fighters), runtime, intent);
-      const controls = applicableControls(intent, round, runtime.activeEffects, roundStartTroops);
+      const controls = applicableControls(intent, round, runtime, roundStartTroops);
       if (controls.no_attack || controls.dodge) {
         const control = controls.no_attack ?? controls.dodge!;
         runtime.attackControlCounts[control.reason] += 1;
@@ -95,12 +100,15 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig): Bat
 
     const roundOutcomes: AttackOutcome[] = [];
     for (const job of jobs) {
-      const outcome = calculateDamageJob(job, fighters, runtime.activeEffects, { trace: input.trace });
+      const outcome =
+        detail === "fast"
+          ? calculateDamageJob(job, fighters, runtime.activeEffects, { detail: "fast", effectIndex: runtime.effectIndex })
+          : calculateDamageJob(job, fighters, runtime.activeEffects, { trace: traceEnabled, effectIndex: runtime.effectIndex });
       roundOutcomes.push(outcome);
       consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId, outcome.consumedEffectUseIds);
     }
     const committedOutcomes = [...cancelled, ...roundOutcomes];
-    attacks.push(...committedOutcomes);
+    if (detail === "full") attacks.push(...committedOutcomes);
     commitOutcomes(committedOutcomes, fighters, runtime);
     trace?.rounds.push({ round, roundStartTroops, intents, jobs });
   }
@@ -144,13 +152,13 @@ function triggerRoundStartSkills(
     if (report) report.skillActivations += 1;
     let orderIndex = 0;
     for (const attackerUnit of roundTriggerUnits(skill, roundStartTroops)) {
-      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.activeEffects, round);
+      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.effectIndex, round);
       if (!defenderUnit) continue;
       const intent = syntheticRoundIntent(round, side, attackerUnit, defenderSide, defenderUnit, orderIndex, runtime);
       if (!skillMatchesTrigger(skill, "round_start", round, intent)) continue;
       for (const effectIntent of skill.effects) {
         const effect = activateEffect(skill, effectIntent, round, intent);
-        runtime.activeEffects.push(effect);
+        addActiveEffect(runtime, effect);
         activated.push(effect);
         runtime.effectActivationCounts[skill.side] += 1;
         if (report) report.effectActivations += 1;
@@ -246,6 +254,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
   }
   return {
     activeEffects: [],
+    effectIndex: createEffectIndex(),
     rng,
     skillReports: reports,
     effectActivationCounts: { attacker: 0, defender: 0 },
@@ -257,6 +266,11 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
       received: { attacker: emptyTroops(), defender: emptyTroops() }
     }
   };
+}
+
+function addActiveEffect(runtime: Runtime, effect: ActiveEffect): void {
+  runtime.activeEffects.push(effect);
+  indexEffect(runtime.effectIndex, effect);
 }
 
 function triggerSkills(
@@ -275,7 +289,7 @@ function triggerSkills(
     if (report) report.skillActivations += 1;
     for (const effectIntent of skill.effects) {
       const effect = activateEffect(skill, effectIntent, round, intent);
-      runtime.activeEffects.push(effect);
+      addActiveEffect(runtime, effect);
       activated.push(effect);
       runtime.effectActivationCounts[skill.side] += 1;
       if (report) report.effectActivations += 1;
@@ -296,7 +310,7 @@ function resolveAttackIntents(
     let orderIndex = 0;
     for (const attackerUnit of UNIT_TYPES) {
       if ((roundStartTroops[side][attackerUnit] ?? 0) <= 0) continue;
-      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.activeEffects, round);
+      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.effectIndex, round);
       if (!defenderUnit) continue;
       const previousAttackCount = runtime.counters.attacks[side][attackerUnit];
       const previousReceivedAttackCount = runtime.counters.received[defenderSide][defenderUnit];
@@ -325,15 +339,15 @@ function chooseDefenderUnit(
   attackerSide: SideId,
   defenderSide: SideId,
   roundStartTroops: DamageJob["roundStartTroops"],
-  effects: ActiveEffect[],
+  effectIndex: EffectIndex,
   round: number
 ): UnitType | undefined {
-  const order = orderFromEffects(attackerUnit, attackerSide, effects, round) ?? UNIT_TYPES;
+  const order = orderFromEffects(attackerUnit, attackerSide, effectIndex, round) ?? UNIT_TYPES;
   return order.find((unit) => (roundStartTroops[defenderSide][unit] ?? 0) > 0);
 }
 
-function orderFromEffects(attackerUnit: UnitType, attackerSide: SideId, effects: ActiveEffect[], round: number): UnitType[] | undefined {
-  for (const effect of effects) {
+function orderFromEffects(attackerUnit: UnitType, attackerSide: SideId, index: EffectIndex, round: number): UnitType[] | undefined {
+  for (const effect of index.battleOrder) {
     if (!isEffectActive(effect, round) || effect.intent.type !== "attack_order") continue;
     if (effect.appliesTo.side !== attackerSide || !unitMaskHas(effect.appliesTo.units, attackerUnit)) continue;
     if (Array.isArray(effect.intent.value)) {
@@ -350,12 +364,12 @@ function orderFromEffects(attackerUnit: UnitType, attackerSide: SideId, effects:
 function applicableControls(
   intent: AttackIntent,
   round: number,
-  effects: ActiveEffect[],
+  runtime: Runtime,
   roundStartTroops: DamageJob["roundStartTroops"]
 ): { dodge?: Control; no_attack?: Control } {
   const job = normalJob(intent, roundStartTroops);
   const controls: { dodge?: Control; no_attack?: Control } = {};
-  for (const effect of effects) {
+  for (const effect of runtime.effectIndex.controls) {
     if (!isEffectActive(effect, round)) continue;
     const classification = classifyEffectForJob(effect, job);
     if (classification?.kind === "control" && classification.control) {
@@ -393,7 +407,7 @@ function extraSkillJobs(
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
   const effectGroups = selectStackedExtraAttackEffectGroups(
-    runtime.activeEffects.filter((effect) => effect.kind === "extra_attack" && isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
+    runtime.effectIndex.extraAttacks.filter((effect) => isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
     round
   );
   for (const effectGroup of effectGroups) {
@@ -565,6 +579,7 @@ function commitOutcomes(outcomes: AttackOutcome[], fighters: Record<SideId, Reso
 
 function expireInactive(runtime: Runtime, round: number): void {
   runtime.activeEffects = runtime.activeEffects.filter((effect) => isEffectActive(effect, round));
+  pruneEffectIndex(runtime.effectIndex, (effect) => isEffectActive(effect, round));
 }
 
 function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: ActiveEffect[]): string[] {

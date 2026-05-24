@@ -219,6 +219,16 @@ test("loadSimulatorConfig rejects native effect units.side", () => {
   assert.throws(() => loadSimulatorConfigFromDir(root), /units\.side/i);
 });
 
+test("loadSimulatorConfig rejects negative native bucket effect values", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.attack.down",
+    value: -10,
+    units: { applies_to: "trigger.source", applies_vs: "target" }
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /negative.*active\.hero\.attack\.down.*value/i);
+});
+
 test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings", () => {
   const root = writeConfigWithTroopEffect({
     type: "extra_skill_attack",

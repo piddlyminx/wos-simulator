@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { classifyEffectForJob } from "./classifier.js";
-import { activeBucketsMultiplyExpression, calculateDamageJob } from "./damage.js";
+import { calculateDamageJob } from "./damage.js";
 import { ATOMIC_BUCKETS } from "./damageBuckets.js";
+import { createEffectIndex, indexEffect } from "./effectIndex.js";
 import { activateEffect } from "./effects.js";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types.js";
 import { ALL_UNIT_MASK, unitMask } from "./types.js";
@@ -238,6 +239,18 @@ test("active stat-up effects multiply separately from player stat bonuses", () =
   assert.equal(withRuntimeAttackUp.kills, baseline.kills * 2);
 });
 
+test("traced damage uses the effect index for applied bucket candidates", () => {
+  const indexedEffect = effect("active.hero.attack.up", "attacker", 100);
+  const index = createEffectIndex();
+  indexEffect(index, indexedEffect);
+
+  const baseline = calculateDamageJob(job, simpleFighters(), [], { trace: true });
+  const outcome = calculateDamageJob(job, simpleFighters(), [], { trace: true, effectIndex: index });
+
+  assert.equal(outcome.trace?.atomicBuckets["active.hero.attack.up"].totalPct, 100);
+  assert.equal(outcome.kills, baseline.kills * 2);
+});
+
 test("passive stat bonuses aggregate as up sum over down sum on top of player stats", () => {
   const fighters = simpleFighters();
   fighters.attacker.statBonuses.infantry.attack = 2015.2;
@@ -272,20 +285,6 @@ test("default aggregation multiplies hero and troop active damage buckets", () =
   assert.equal(combined.trace?.aggregationGroups["active.hero.attacker.lethality.up"].factor, 1.2);
   assert.equal(combined.trace?.aggregationGroups["active.troop.attacker.lethality.up"].factor, 1.1);
   assert.equal(combined.kills, baseline.kills * 1.2 * 1.1);
-});
-
-test("alternate damage expression can keep active damage and lethality in separate same-source buckets", () => {
-  const fighters = simpleFighters();
-  const effects = [effect("active.hero.lethality.up", "attacker", 100), effect("active.hero.damage.up", "attacker", 100)];
-  const defaultOutcome = calculateDamageJob(job, fighters, effects, { trace: true });
-  const separated = calculateDamageJob(job, fighters, effects, { damageExpression: activeBucketsMultiplyExpression, trace: true });
-
-  assert.equal(defaultOutcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 100);
-  assert.equal(defaultOutcome.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 100);
-  assert.equal(defaultOutcome.trace?.aggregationGroups["active.hero.attacker.lethality.up"].factor, 3);
-  assert.equal(separated.trace?.aggregationGroups["active.hero.attacker.lethality.up"].factor, 2);
-  assert.equal(separated.trace?.aggregationGroups["active.hero.attacker.damage.up"].factor, 2);
-  assert.equal(separated.kills, (defaultOutcome.kills / 3) * 4);
 });
 
 test("negative passive stat bonuses route to down buckets with positive factors", () => {

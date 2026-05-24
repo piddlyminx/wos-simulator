@@ -1374,6 +1374,123 @@ test("simulateBattle identifies stochastic battles from resolved chance triggers
   assert.deepEqual(gatedOnlyResult.randomness.chanceSkillIds.attacker, []);
 });
 
+test("fast simulation matches full semantic output without detailed attacks", () => {
+  const cases: Array<{ name: string; input: BattleInput; config: SimulatorConfig }> = [
+    {
+      name: "no-hero baseline",
+      input: {
+        maxRounds: 3,
+        seed: "fast-baseline",
+        attacker: {
+          troops: { infantry_t1: 250, lancer_t1: 150 },
+          stats: { inf: { attack: 10, defense: 10, lethality: 2, health: 2 } },
+          heroes: {}
+        },
+        defender: {
+          troops: { infantry_t1: 300, marksman_t1: 80 },
+          stats: { inf: { attack: 8, defense: 12, lethality: 2, health: 3 } },
+          heroes: {}
+        }
+      },
+      config: minimalConfig()
+    },
+    {
+      name: "duplicate max-stacked hero instances",
+      input: {
+        maxRounds: 2,
+        seed: "fast-duplicate-max",
+        attacker: {
+          troops: { infantry_t1: 10000 },
+          heroes: [{ name: "Repeat", levels: { skill_1: 1 } }],
+          joiner_heroes: [{ name: "Repeat", levels: { skill_1: 1 } }]
+        },
+        defender: {
+          troops: { infantry_t1: 10000 },
+          heroes: {}
+        }
+      },
+      config: sameEffectStackingConfig("Repeat", "max", "active.hero.damage.up")
+    },
+    {
+      name: "controls and extra skill attacks",
+      input: {
+        maxRounds: 3,
+        seed: "fast-controls-extra",
+        attacker: {
+          troops: { marksman_t1: 400, infantry_t1: 100 },
+          heroes: { FollowUp: { skill_1: 1 } }
+        },
+        defender: {
+          troops: { infantry_t1: 450, lancer_t1: 100 },
+          heroes: { Canceller: { skill_1: 1 } }
+        }
+      },
+      config: minimalConfig({
+        FollowUp: {
+          name: "FollowUp",
+          skills: {
+            FollowUpShot: {
+              trigger: { type: "attack", probability: 100, source: "marksman" },
+              effects: {
+                hitAgain: {
+                  type: "extra_skill_attack",
+                  value: 100,
+                  units: { applies_to: "trigger.source", applies_vs: "any" },
+                  trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                  duration: { type: "attack", value: 2 }
+                }
+              }
+            }
+          }
+        },
+        Canceller: {
+          name: "Canceller",
+          skills: {
+            PauseFirstHit: {
+              trigger: { type: "battle_start" },
+              effects: {
+                pause: {
+                  type: "no_attack",
+                  units: { applies_to: "enemy.marksman", applies_vs: "any" },
+                  duration: { type: "attack", value: 1 }
+                }
+              }
+            }
+          }
+        }
+      })
+    },
+    {
+      name: "stochastic real hero battle",
+      input: {
+        maxRounds: 8,
+        seed: "fast-real-heroes",
+        mechanics: { hero_generation_stats: true, engagement_type: "rally" },
+        attacker: {
+          troops: { infantry_t10: 500, lancer_t10: 200, marksman_t10: 300 },
+          heroes: { "Wu Ming": { skill_1: 5, skill_2: 5, skill_3: 5 }, Mia: { skill_1: 5, skill_2: 5, skill_3: 5 } },
+          joiner_heroes: [{ name: "Jessie", levels: { skill_1: 5 } }]
+        },
+        defender: {
+          troops: { infantry_t10: 500, lancer_t10: 200, marksman_t10: 300 },
+          heroes: { "Wu Ming": { skill_1: 5, skill_2: 5, skill_3: 5 }, Bradley: { skill_1: 5, skill_2: 5, skill_3: 5 } },
+          joiner_heroes: [{ name: "Norah", levels: { skill_1: 5 } }]
+        }
+      },
+      config: loadSimulatorConfig()
+    }
+  ];
+
+  for (const { name, input, config } of cases) {
+    const full = simulateBattle({ ...input, trace: true }, config);
+    const fast = simulateBattle({ ...input, trace: true }, config, { detail: "fast" });
+
+    assert.deepEqual(semanticBattleSummary(fast), semanticBattleSummary(full), name);
+    assert.deepEqual(fast.attacks, [], name);
+    assert.equal(fast.trace, undefined, name);
+  }
+});
+
 test("seeded probability rolls are deterministic and compare percentage thresholds", () => {
   const skill: ResolvedSkill = {
     id: "Chance",
@@ -1409,6 +1526,20 @@ function skillActivations(result: ReturnType<typeof simulateBattle>, skillId: st
 
 function totalRemaining(troops: Record<UnitType, number>): number {
   return Object.values(troops).reduce((sum, count) => sum + count, 0);
+}
+
+function semanticBattleSummary(result: ReturnType<typeof simulateBattle>): Pick<
+  ReturnType<typeof simulateBattle>,
+  "winner" | "rounds" | "remaining" | "effectActivationCounts" | "extraSkillAttackJobsByEffect" | "attackControlCounts"
+> {
+  return {
+    winner: result.winner,
+    rounds: result.rounds,
+    remaining: result.remaining,
+    effectActivationCounts: result.effectActivationCounts,
+    extraSkillAttackJobsByEffect: result.extraSkillAttackJobsByEffect,
+    attackControlCounts: result.attackControlCounts
+  };
 }
 
 function sameEffectStackingInput(heroName: string): BattleInput {
