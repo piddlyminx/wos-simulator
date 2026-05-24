@@ -1,0 +1,22 @@
+{
+  "test_id": "wos425_wip_patrick_health_nc",
+  "description": "WOS-425 health-up fixture. minxxx attacks WIP; WIP defends with Patrick. Heroic troops only; deterministic current WIP kit is S1 health-up plus S2 attack-up.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Patrick": {}
+    },
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}

@@ -1,0 +1,90 @@
+[
+  {
+    "test_id": "wos425_wip_philly_defense",
+    "description": "WOS-425 defense-up fixture with relaxed RNG constraint. minxxx attacks WIP; WIP defends with Philly. Heroic infantry only. Current WIP Philly has deterministic S1 attack-up plus defense-up and active chance S2 damage-up, so collect repeated observations.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 800
+      },
+      "stats": {
+        "inf": {
+          "attack": 260.9,
+          "defense": 256.0,
+          "lethality": 198.9,
+          "health": 204.3
+        },
+        "lanc": {
+          "attack": 261.9,
+          "defense": 253.0,
+          "lethality": 183.5,
+          "health": 181.0
+        },
+        "mark": {
+          "attack": 269.4,
+          "defense": 264.5,
+          "lethality": 217.2,
+          "health": 208.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWPxX",
+      "heroes": {
+        "Philly": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 176.7,
+          "defense": 178.0,
+          "lethality": 137.2,
+          "health": 149.6
+        },
+        "lanc": {
+          "attack": 230.4,
+          "defense": 231.2,
+          "lethality": 136.2,
+          "health": 124.8
+        },
+        "mark": {
+          "attack": 173.7,
+          "defense": 169.5,
+          "lethality": 142.5,
+          "health": 139.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 769,
+        "defender": 0
+      },
+      {
+        "attacker": 769,
+        "defender": 0
+      },
+      {
+        "attacker": 769,
+        "defender": 0
+      },
+      {
+        "attacker": 768,
+        "defender": 0
+      },
+      {
+        "attacker": 768,
+        "defender": 0
+      }
+    ]
+  }
+]

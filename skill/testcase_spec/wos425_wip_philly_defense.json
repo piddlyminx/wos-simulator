@@ -1,0 +1,22 @@
+{
+  "test_id": "wos425_wip_philly_defense",
+  "description": "WOS-425 defense-up fixture with relaxed RNG constraint. minxxx attacks WIP; WIP defends with Philly. Heroic infantry only. Current WIP Philly has deterministic S1 attack-up plus defense-up and active chance S2 damage-up, so collect repeated observations.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Philly": {}
+    },
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}
