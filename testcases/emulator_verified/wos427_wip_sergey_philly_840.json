@@ -70,6 +70,10 @@
     },
     "game_report_result": [
       {
+        "attacker": 24,
+        "defender": 0
+      },
+      {
         "attacker": 7,
         "defender": 0
       },
