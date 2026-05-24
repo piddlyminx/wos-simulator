@@ -18,6 +18,14 @@ const DEFAULT_INFANTRY_MAX_PCT = 70;
 
 type Composition = [number, number, number];
 type RankableOptimizeRow = Pick<OptimizeRatioPoint, "win_rate" | "avg_margin" | "avg_attacker_left" | "avg_defender_left">;
+type OptimizeBattleSimulator = typeof simulateBattle;
+
+interface RunOptimizeRatioOptions {
+  config?: SimulatorConfig;
+  seedBase?: string;
+  onProgress?: (done: number, total: number) => void;
+  simulateBattle?: OptimizeBattleSimulator;
+}
 
 export function* compositionGrid(total: number, step: number, infantryMinPct: number, infantryMaxPct: number): Iterable<Composition> {
   const safeTotal = Math.max(0, Math.floor(total));
@@ -71,9 +79,10 @@ export function rankOptimizeRows<T extends RankableOptimizeRow>(rows: readonly T
 
 export function runOptimizeRatioInV3(
   request: OptimizeRatioRequestPayload,
-  options: { config?: SimulatorConfig; seedBase?: string; onProgress?: (done: number, total: number) => void } = {}
+  options: RunOptimizeRatioOptions = {}
 ): OptimizeRatioResult {
   const config = options.config ?? loadSimulatorConfig();
+  const battleSimulator = options.simulateBattle ?? simulateBattle;
   const optimizeSide = normalizeOptimizeSide(request.optimize_side);
   const searchMode = request.search_mode === "grid" ? "grid" : "adaptive";
   const optimized = optimizeSide === "defender" ? request.defender : request.attacker;
@@ -88,8 +97,8 @@ export function runOptimizeRatioInV3(
   const topN = Math.max(1, Math.min(25, Math.floor(request.top_n || DEFAULT_TOP_RESULTS)));
 
   return searchMode === "grid"
-    ? runGridOptimize(request, total, step, replicates, infantryMinPct, infantryMaxPct, topN, config, options)
-    : runAdaptiveOptimize(request, total, step, infantryMinPct, infantryMaxPct, topN, config, options);
+    ? runGridOptimize(request, total, step, replicates, infantryMinPct, infantryMaxPct, topN, config, battleSimulator, options)
+    : runAdaptiveOptimize(request, total, step, infantryMinPct, infantryMaxPct, topN, config, battleSimulator, options);
 }
 
 function runGridOptimize(
@@ -101,6 +110,7 @@ function runGridOptimize(
   infantryMaxPct: number,
   topN: number,
   config: SimulatorConfig,
+  battleSimulator: OptimizeBattleSimulator,
   options: { seedBase?: string; onProgress?: (done: number, total: number) => void }
 ): OptimizeRatioResult {
   const compositions = [...compositionGrid(total, step, infantryMinPct, infantryMaxPct)];
@@ -113,7 +123,7 @@ function runGridOptimize(
     throw new Error(`Search too expensive: ${projectedBattles} projected battles exceeds the limit of ${MAX_OPTIMIZE_BATTLES}. Increase the grid step or lower search replicates.`);
   }
 
-  const points = evaluateBatch(request, compositions, replicates, config, options.seedBase ?? "optimize", "grid", 0, compositions.length, options.onProgress);
+  const points = evaluateBatch(request, compositions, replicates, config, battleSimulator, options.seedBase ?? "optimize", "grid", 0, compositions.length, options.onProgress);
   return finalizeOptimizeResult(request, {
     total,
     step,
@@ -137,6 +147,7 @@ function runAdaptiveOptimize(
   infantryMaxPct: number,
   topN: number,
   config: SimulatorConfig,
+  battleSimulator: OptimizeBattleSimulator,
   options: { seedBase?: string; onProgress?: (done: number, total: number) => void }
 ): OptimizeRatioResult {
   const phase1Compositions = [...percentageGrid(total, 5, infantryMinPct, infantryMaxPct)];
@@ -144,7 +155,7 @@ function runAdaptiveOptimize(
 
   const estimatedTotal = estimatedAdaptiveCompositions(phase1Compositions.length);
   const seedBase = options.seedBase ?? "optimize";
-  const phase1 = evaluateBatch(request, phase1Compositions, ADAPTIVE_PHASE1_REPLICATES, config, seedBase, "coarse", 0, estimatedTotal, options.onProgress);
+  const phase1 = evaluateBatch(request, phase1Compositions, ADAPTIVE_PHASE1_REPLICATES, config, battleSimulator, seedBase, "coarse", 0, estimatedTotal, options.onProgress);
   const optimizeSide = normalizeOptimizeSide(request.optimize_side);
   const topByWin = rankOptimizeRows(phase1, optimizeSide).slice(0, 10);
   const topByMargin = [...phase1].sort((a, b) => b.avg_margin - a.avg_margin).slice(0, 10);
@@ -154,6 +165,7 @@ function runAdaptiveOptimize(
     phase2Compositions,
     ADAPTIVE_PHASE2_REPLICATES,
     config,
+    battleSimulator,
     seedBase,
     "local",
     phase1Compositions.length,
@@ -173,6 +185,7 @@ function runAdaptiveOptimize(
     finalists,
     ADAPTIVE_FINAL_REPLICATES,
     config,
+    battleSimulator,
     seedBase,
     "finalist",
     phase1Compositions.length + phase2Compositions.length,
@@ -209,6 +222,7 @@ function evaluateBatch(
   compositions: readonly Composition[],
   replicates: number,
   config: SimulatorConfig,
+  battleSimulator: OptimizeBattleSimulator,
   seedBase: string,
   phase: NonNullable<OptimizeRatioPoint["search_phase"]>,
   progressStart: number,
@@ -216,7 +230,7 @@ function evaluateBatch(
   onProgress?: (done: number, total: number) => void
 ): OptimizeRatioPoint[] {
   return compositions.map((composition, index) => {
-    const point = evaluateComposition(request, composition, replicates, config, `${seedBase}:${phase}`);
+    const point = evaluateComposition(request, composition, replicates, config, battleSimulator, `${seedBase}:${phase}`);
     point.search_phase = phase;
     point.phase_replicates = replicates;
     onProgress?.(progressStart + index + 1, progressTotal);
@@ -229,6 +243,7 @@ function evaluateComposition(
   composition: Composition,
   phaseReplicates: number,
   config: SimulatorConfig,
+  battleSimulator: OptimizeBattleSimulator,
   seedBase: string
 ): OptimizeRatioPoint {
   const optimizeSide = normalizeOptimizeSide(request.optimize_side);
@@ -240,7 +255,7 @@ function evaluateComposition(
   let totalAttackerLeft = 0;
   let totalDefenderLeft = 0;
   for (let index = 0; index < phaseReplicates; index += 1) {
-    const result = simulateBattle(toBattleInput(candidate, `${seedBase}:${composition.join("-")}:${index}`), config);
+    const result = battleSimulator(toBattleInput(candidate, `${seedBase}:${composition.join("-")}:${index}`), config, { detail: "fast" });
     const attackerLeft = totalSide(result.remaining.attacker);
     const defenderLeft = totalSide(result.remaining.defender);
     const margin = optimizeSide === "attacker" ? attackerLeft - defenderLeft : defenderLeft - attackerLeft;

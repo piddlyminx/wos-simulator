@@ -31,15 +31,17 @@ import {
   type Rng
 } from "./effects.js";
 import { classifyEffectForJob } from "./classifier.js";
-import { createEffectIndex, indexEffect, pruneEffectIndex, type EffectIndex } from "./effectIndex.js";
+import { createEffectIndex, indexEffect, pruneEffectIndex, removeStaticProfileBucketEffects, type EffectIndex } from "./effectIndex.js";
 import { normalizeUnitType } from "./normalize.js";
 import { emptyTroops, resolveFighter } from "./resolve.js";
+import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile.js";
 
 const DEFAULT_MAX_ROUNDS = 1500;
 
 interface Runtime {
   activeEffects: ActiveEffect[];
   effectIndex: EffectIndex;
+  staticDamageProfile?: StaticDamageProfile;
   rng: Rng;
   skillReports: Record<SideId, Map<string, SkillReportEntry>>;
   effectActivationCounts: Record<SideId, number>;
@@ -69,6 +71,8 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig, opti
   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
 
   triggerSkills("battle_start", 0, allSkills(fighters), runtime);
+  runtime.staticDamageProfile = buildStaticDamageProfile(fighters, runtime.activeEffects);
+  removeStaticProfileBucketEffects(runtime.effectIndex);
 
   let rounds = 0;
   for (let round = 1; round <= maxRounds; round += 1) {
@@ -102,8 +106,16 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig, opti
     for (const job of jobs) {
       const outcome =
         detail === "fast"
-          ? calculateDamageJob(job, fighters, runtime.activeEffects, { detail: "fast", effectIndex: runtime.effectIndex })
-          : calculateDamageJob(job, fighters, runtime.activeEffects, { trace: traceEnabled, effectIndex: runtime.effectIndex });
+          ? calculateDamageJob(job, fighters, runtime.activeEffects, {
+              detail: "fast",
+              effectIndex: runtime.effectIndex,
+              staticDamageProfile: runtime.staticDamageProfile
+            })
+          : calculateDamageJob(job, fighters, runtime.activeEffects, {
+              trace: traceEnabled,
+              effectIndex: runtime.effectIndex,
+              staticDamageProfile: runtime.staticDamageProfile
+            });
       roundOutcomes.push(outcome);
       consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId, outcome.consumedEffectUseIds);
     }
@@ -255,6 +267,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
   return {
     activeEffects: [],
     effectIndex: createEffectIndex(),
+    staticDamageProfile: undefined,
     rng,
     skillReports: reports,
     effectActivationCounts: { attacker: 0, defender: 0 },

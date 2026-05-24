@@ -35,9 +35,11 @@ import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" 
 import { UNIT_TYPES } from "./types.js";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
 import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets.js";
+import { assertStaticPassiveEffectDefinition, isPassiveBucket, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile.js";
 
 const KNOWN_EFFECT_TYPES = new Set([
-  ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("passive.") || bucket.startsWith("type.")),
+  ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("type.")),
+  ...STATIC_PASSIVE_BUCKETS,
   "extra_skill_attack",
   "dodge",
   "no_attack",
@@ -170,6 +172,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       collectAmbiguousTurnTriggerSelectorDiagnostics(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId, diagnostics);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
+      assertStaticPassiveEffectDefinition(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
         diagnostics.unsupportedEffects.push({
@@ -229,7 +232,7 @@ function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string,
 
 function validateNativeEffectValue(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
   const definition = bucketDefinition(effect.type);
-  if (!definition || definition.valueType !== "pct") return;
+  if ((!definition || definition.valueType !== "pct") && !isPassiveBucket(effect.type)) return;
   const values = Array.isArray(effect.value) ? effect.value : [effect.value];
   for (const value of values) {
     if (value === undefined) continue;

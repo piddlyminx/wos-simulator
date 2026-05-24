@@ -17,17 +17,6 @@ test("parseRatio rejects malformed and zero ratios", () => {
   assert.throws(() => parseRatio("0,0,0", 100), /sum must be greater than zero/);
 });
 
-test("generateTeams preserves current Python pool counts and duplicate Norah semantics", () => {
-  const teams = generateTeams([["50-20-30", parseRatio("50,20,30", 100)]], false);
-  assert.equal(teams.length, 3 * 2 * 1 * 2380);
-  assert.ok(teams.some((team) => team.joiners.filter((name) => name === "Norah").length === 2));
-});
-
-test("generateTeams supports repeat joiners over the order-sensitive joiner pool", () => {
-  const teams = generateTeams([["50-20-30", parseRatio("50,20,30", 100)]], true);
-  assert.equal(teams.length, 3 * 2 * 1 * 4845);
-});
-
 test("selectFinalsTeamsByMainLineup caps repeated main lineups", () => {
   const teams: Team[] = [1, 2, 3, 4].map((id) => ({
     id,

@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "id": "61df978f-fff1-40eb-a716-48f7e1032452",
+  "kind": "simulate",
+  "created_at": "2026-05-22T22:14:32.848Z",
+  "request": {
+    "attacker": {
+      "troops": {
+        "infantry": 1,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "troop_types": {
+        "infantry": "infantry_t6",
+        "lancer": "lancer_t6",
+        "marksman": "marksman_t6"
+      },
+      "heroes": {},
+      "joiners": [],
+      "stats": {
+        "inf": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "lanc": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "mark": [
+          100,
+          100,
+          100,
+          100
+        ]
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry": 1,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "troop_types": {
+        "infantry": "infantry_t6",
+        "lancer": "lancer_t6",
+        "marksman": "marksman_t6"
+      },
+      "heroes": {},
+      "joiners": [],
+      "stats": {
+        "inf": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "lanc": [
+          100,
+          100,
+          100,
+          100
+        ],
+        "mark": [
+          100,
+          100,
+          100,
+          100
+        ]
+      }
+    },
+    "replicates": 1,
+    "rally_mode": false
+  },
+  "result": {
+    "replicates": 1,
+    "summary": {
+      "mean": 0,
+      "std": 0,
+      "best": {
+        "value": 0,
+        "winner": "draw"
+      },
+      "worst": {
+        "value": 0,
+        "winner": "draw"
+      },
+      "attacker_win_rate": 0,
+      "avg_skill_activations": 0,
+      "avg_skill_kills": 0,
+      "avg_attacker_activations": 0,
+      "avg_defender_activations": 0,
+      "avg_attacker_kills": 0,
+      "avg_defender_kills": 0
+    },
+    "outcomes": [
+      0
+    ],
+    "per_side_skills": {
+      "attacker": [],
+      "defender": []
+    }
+  }
+}

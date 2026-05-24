@@ -1,0 +1,166 @@
+--- src/damage.ts
++++ src/damage.ts
+@@ -64,6 +64,19 @@
+   contributors?: DamageBucketTrace["contributors"][];
+ }
+ 
++export interface DamageScratch {}
++
++interface MutableDamageScratch extends DamageScratch {
++  buckets: ScratchDamageBuckets;
++  candidates: BucketCandidate[];
++}
++
++interface ScratchDamageBuckets extends NumericDamageBuckets {
++  pctSet: Uint8Array;
++  touchedRaw: number[];
++  touchedPct: number[];
++}
++
+ const BUCKET_IDS = Object.fromEntries(ATOMIC_BUCKETS.map((bucket, index) => [bucket, index])) as Record<AtomicBucket, NumericBucketId>;
+ const EMPTY_AGGREGATION_GROUPS: Record<string, DamageAggregationGroupTrace> = {};
+ 
+@@ -143,11 +156,18 @@
+   }
+ }
+ 
++export function createDamageScratch(): DamageScratch {
++  return {
++    buckets: createScratchDamageBuckets(),
++    candidates: []
++  } satisfies MutableDamageScratch;
++}
++
+ export function calculateDamageJob(
+   job: DamageJob,
+   fighters: Record<SideId, ResolvedFighter>,
+   activeEffects: ActiveEffect[],
+-  options: { trace?: boolean; effectIndex?: EffectIndex; detail?: DamageDetail } = {}
++  options: { trace?: boolean; effectIndex?: EffectIndex; detail?: DamageDetail; scratch?: DamageScratch } = {}
+ ): AttackOutcome {
+   const detail = options.detail ?? "full";
+   const traceEnabled = detail === "full" && options.trace === true;
+@@ -160,7 +180,8 @@
+   const attackerStats = attacker.troopDetails[job.attackerUnit]?.stats ?? fallbackStats();
+   const defenderStats = defender.troopDetails[job.defenderUnit]?.stats ?? fallbackStats();
+   const needsTraceBuckets = traceEnabled;
+-  const buckets = createNumericDamageBuckets(needsTraceBuckets);
++  const scratch = options.scratch ? prepareDamageScratch(options.scratch, needsTraceBuckets) : undefined;
++  const buckets = scratch?.buckets ?? createNumericDamageBuckets(needsTraceBuckets);
+   setRaw(buckets, "troops.count", armyTerm);
+   setRaw(buckets, "troops.baseAttack", attackerStats.attack);
+   setRaw(buckets, "troops.baseLethality", attackerStats.lethality);
+@@ -173,7 +194,7 @@
+   const appliedEffects: DamageEquationTrace["appliedEffects"] = detail === "full" ? [] : [];
+   const rejectedEffects: DamageEquationTrace["rejectedEffects"] = detail === "full" ? [] : [];
+   const consumedEffectIds = new Set<string>();
+-  const candidates: BucketCandidate[] = [];
++  const candidates = scratch?.candidates ?? [];
+   const handledCandidateEffectIds = traceEnabled ? new Set<string>() : undefined;
+   if (options.effectIndex) {
+     for (const candidate of bucketCandidatesForJob(options.effectIndex, job)) {
+@@ -347,6 +368,46 @@
+   return { kind: "constant", value };
+ }
+ 
++function createScratchDamageBuckets(): ScratchDamageBuckets {
++  return {
++    raw: new Float64Array(ATOMIC_BUCKETS.length),
++    pct: new Float64Array(ATOMIC_BUCKETS.length),
++    rawSet: new Uint8Array(ATOMIC_BUCKETS.length),
++    pctSet: new Uint8Array(ATOMIC_BUCKETS.length),
++    touchedRaw: [],
++    touchedPct: []
++  };
++}
++
++function prepareDamageScratch(scratch: DamageScratch, collectTrace: boolean): MutableDamageScratch {
++  const mutable = scratch as MutableDamageScratch;
++  resetScratchDamageBuckets(mutable.buckets, collectTrace);
++  mutable.candidates.length = 0;
++  return mutable;
++}
++
++function resetScratchDamageBuckets(buckets: ScratchDamageBuckets, collectTrace: boolean): void {
++  for (const index of buckets.touchedRaw) {
++    buckets.raw[index] = 0;
++    buckets.rawSet[index] = 0;
++  }
++  buckets.touchedRaw.length = 0;
++  for (const index of buckets.touchedPct) {
++    buckets.pct[index] = 0;
++    buckets.pctSet[index] = 0;
++  }
++  buckets.touchedPct.length = 0;
++  if (!collectTrace) {
++    buckets.contributors = undefined;
++    return;
++  }
++  if (!buckets.contributors) {
++    buckets.contributors = Array.from({ length: ATOMIC_BUCKETS.length }, () => []);
++    return;
++  }
++  for (const contributors of buckets.contributors) contributors.length = 0;
++}
++
+ function createNumericDamageBuckets(collectTrace: boolean): NumericDamageBuckets {
+   return {
+     raw: new Float64Array(ATOMIC_BUCKETS.length),
+@@ -358,6 +419,7 @@
+ 
+ function setRaw(buckets: NumericDamageBuckets, bucket: AtomicBucket, raw: number): void {
+   const index = BUCKET_IDS[bucket];
++  if (isScratchDamageBuckets(buckets) && buckets.rawSet[index] === 0) buckets.touchedRaw.push(index);
+   buckets.raw[index] = raw;
+   buckets.rawSet[index] = 1;
+ }
+@@ -373,11 +435,19 @@
+   sameEffectStacking: SameEffectStacking = "add"
+ ): number {
+   const index = BUCKET_IDS[bucketName];
++  if (isScratchDamageBuckets(buckets) && buckets.pctSet[index] === 0 && valuePct !== 0) {
++    buckets.pctSet[index] = 1;
++    buckets.touchedPct.push(index);
++  }
+   buckets.pct[index] += valuePct;
+   buckets.contributors?.[index].push({ effectId, source, valuePct, bucket: traceBucketName, stackingKey, sameEffectStacking });
+   return valuePct;
+ }
+ 
++function isScratchDamageBuckets(buckets: NumericDamageBuckets): buckets is ScratchDamageBuckets {
++  return "touchedRaw" in buckets;
++}
++
+ function addInputStatBuckets(buckets: NumericDamageBuckets, attacker: StatBlock, defender: StatBlock): void {
+   addPercent(buckets, "player.attack", attacker.attack, "input:attack", "input_stats", "player.attack");
+   addPercent(buckets, "player.lethality", attacker.lethality, "input:lethality", "input_stats", "player.lethality");
+--- src/simulator.ts
++++ src/simulator.ts
+@@ -17,7 +17,7 @@
+   UnitType
+ } from "./types.js";
+ import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
+-import { calculateDamageJob } from "./damage.js";
++import { calculateDamageJob, createDamageScratch } from "./damage.js";
+ import {
+   activateEffect,
+   chancePasses,
+@@ -66,6 +66,7 @@
+   const traceEnabled = detail === "full" && input.trace;
+   const trace: BattleTrace | undefined = traceEnabled ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;
+   const attacks: AttackOutcome[] = [];
++  const damageScratch = createDamageScratch();
+   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
+ 
+   triggerSkills("battle_start", 0, allSkills(fighters), runtime);
+@@ -102,8 +103,8 @@
+     for (const job of jobs) {
+       const outcome =
+         detail === "fast"
+-          ? calculateDamageJob(job, fighters, runtime.activeEffects, { detail: "fast", effectIndex: runtime.effectIndex })
+-          : calculateDamageJob(job, fighters, runtime.activeEffects, { trace: traceEnabled, effectIndex: runtime.effectIndex });
++          ? calculateDamageJob(job, fighters, runtime.activeEffects, { detail: "fast", effectIndex: runtime.effectIndex, scratch: damageScratch })
++          : calculateDamageJob(job, fighters, runtime.activeEffects, { trace: traceEnabled, effectIndex: runtime.effectIndex, scratch: damageScratch });
+       roundOutcomes.push(outcome);
+       consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId, outcome.consumedEffectUseIds);
+     }
