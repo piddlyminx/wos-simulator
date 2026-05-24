@@ -1,6 +1,7 @@
 import type { ActiveEffect, DamageJob, DamageKind, SideId, UnitType } from "./types.js";
 import { unitsFromMask } from "./types.js";
 import { bucketDefinition, type AtomicBucket } from "./damageBuckets.js";
+import { isStaticProfileBucket } from "./staticDamageProfile.js";
 
 export type DamageEffectKey = `${DamageKind}:${SideId}:${UnitType}:${SideId}:${UnitType}:${AtomicBucket}`;
 export type DamageJobShapeKey = `${DamageKind}:${SideId}:${UnitType}:${SideId}:${UnitType}`;
@@ -80,6 +81,16 @@ export function pruneEffectIndex(index: EffectIndex, isActive: (effect: ActiveEf
   }
 }
 
+export function removeStaticProfileBucketEffects(index: EffectIndex): void {
+  compactEffects(index.all, (effect) => !isStaticProfileEffect(effect));
+  for (let slot = 0; slot < index.damageByJobShape.length; slot += 1) {
+    const candidates = index.damageByJobShape[slot];
+    if (!candidates) continue;
+    compactCandidates(candidates, (effect, candidate) => !isStaticProfileBucket(candidate.bucket));
+    if (candidates.length === 0) index.damageByJobShape[slot] = undefined;
+  }
+}
+
 export function bucketCandidatesForJob(index: EffectIndex, job: DamageJob): IndexedBucketEffect[] {
   return index.damageByJobShape[damageJobShapeSlot(job.kind, job.attackerSide, job.attackerUnit, job.defenderSide, job.defenderUnit)] ?? [];
 }
@@ -144,11 +155,16 @@ function compactEffects(effects: ActiveEffect[], isActive: (effect: ActiveEffect
   effects.length = write;
 }
 
-function compactCandidates(candidates: IndexedBucketEffect[], isActive: (effect: ActiveEffect) => boolean): void {
+function isStaticProfileEffect(effect: ActiveEffect): boolean {
+  const definition = bucketDefinition(effect.intent.type);
+  return isStaticProfileBucket(effect.intent.type) || (definition !== undefined && isStaticProfileBucket(definition.path));
+}
+
+function compactCandidates(candidates: IndexedBucketEffect[], isActive: (effect: ActiveEffect, candidate: IndexedBucketEffect) => boolean): void {
   let write = 0;
   for (let read = 0; read < candidates.length; read += 1) {
     const candidate = candidates[read];
-    if (!isActive(candidate.effect)) continue;
+    if (!isActive(candidate.effect, candidate)) continue;
     candidates[write] = candidate;
     write += 1;
   }

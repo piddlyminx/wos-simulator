@@ -41,7 +41,8 @@
             "type": "turn",
             "value": 2,
             "delay": 1
-          }
+          },
+          "same_effect_stacking": "max"
         },
         "ViperFormation/3": {
           "type": "active.hero.defense.up",
@@ -61,7 +62,8 @@
             "type": "turn",
             "value": 2,
             "delay": 1
-          }
+          },
+          "same_effect_stacking": "max"
         }
       }
     },

@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { compositionGrid, countsForPercentages, rankOptimizeRows, wilsonLowerBound } from "./optimise";
+import { loadSimulatorConfig } from "@v3/config";
+import type { BattleInput, BattleResult, SimulationOptions, SimulatorConfig } from "@v3/types";
+import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
+import { compositionGrid, countsForPercentages, rankOptimizeRows, runOptimizeRatioInV3, wilsonLowerBound } from "./optimise";
 
 test("countsForPercentages preserves total troops", () => {
   assert.deepEqual(countsForPercentages(101, 30, 30), [30, 30, 41]);
@@ -26,3 +29,65 @@ test("rankOptimizeRows sorts by win rate then margin", () => {
   ], "attacker");
   assert.equal(ranked[0].avg_margin, 20);
 });
+
+test("runOptimizeRatioInV3 evaluates candidate battles in fast simulator mode", () => {
+  const calls: SimulationOptions[] = [];
+  const result = runOptimizeRatioInV3(sampleOptimizePayload(), {
+    config: loadSimulatorConfig(),
+    simulateBattle: (_input: BattleInput, _config: SimulatorConfig, options?: SimulationOptions) => {
+      calls.push(options ?? {});
+      return fakeBattleResult();
+    },
+  });
+
+  assert.equal(result.best.infantry_count, 10);
+  assert.ok(calls.length > 0);
+  assert.deepEqual(calls.map((options) => options.detail), calls.map(() => "fast"));
+});
+
+function sampleOptimizePayload(): OptimizeRatioRequestPayload {
+  return {
+    attacker: sampleSide({ infantry: 10, lancer: 0, marksman: 0 }),
+    defender: sampleSide({ infantry: 10, lancer: 0, marksman: 0 }),
+    replicates: 1,
+    rally_mode: false,
+    grid_step: 10,
+    search_replicates: 1,
+    infantry_min_pct: 100,
+    infantry_max_pct: 100,
+    top_n: 1,
+    search_mode: "grid",
+    optimize_side: "attacker",
+  };
+}
+
+function sampleSide(troops: Record<"infantry" | "lancer" | "marksman", number>): OptimizeRatioRequestPayload["attacker"] {
+  return {
+    troops,
+    troop_types: {
+      infantry: "infantry_t10",
+      lancer: "lancer_t10",
+      marksman: "marksman_t10",
+    },
+    heroes: {
+      infantry: { name: null, skills: [0, 0, 0, 0] },
+      lancer: { name: null, skills: [0, 0, 0, 0] },
+      marksman: { name: null, skills: [0, 0, 0, 0] },
+    },
+    joiners: [],
+    stats: {
+      inf: [0, 0, 0, 0],
+      lanc: [0, 0, 0, 0],
+      mark: [0, 0, 0, 0],
+    },
+  };
+}
+
+function fakeBattleResult(): BattleResult {
+  return {
+    remaining: {
+      attacker: { infantry: 10, lancer: 0, marksman: 0 },
+      defender: { infantry: 0, lancer: 0, marksman: 0 },
+    },
+  } as BattleResult;
+}

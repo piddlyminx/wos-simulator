@@ -229,6 +229,33 @@ test("loadSimulatorConfig rejects negative native bucket effect values", () => {
   assert.throws(() => loadSimulatorConfigFromDir(root), /negative.*active\.hero\.attack\.down.*value/i);
 });
 
+test("loadSimulatorConfig rejects passive effects that are not battle-start static", () => {
+  const turnRoot = writeConfigWithTroopEffect({
+    type: "passive.attack.up",
+    value: 10
+  });
+  const durationRoot = writeConfigWithTroopEffect(
+    {
+      type: "passive.attack.up",
+      value: 10,
+      duration: { type: "round", value: 1 }
+    },
+    { type: "battle_start" }
+  );
+  const evolvingRoot = writeConfigWithTroopEffect(
+    {
+      type: "passive.attack.up",
+      value: 10,
+      value_evolution: { type: "fixed_decay", step: "round", value: 1 }
+    },
+    { type: "battle_start" }
+  );
+
+  assert.throws(() => loadSimulatorConfigFromDir(turnRoot), /passive.*battle_start/i);
+  assert.throws(() => loadSimulatorConfigFromDir(durationRoot), /passive.*battle.*duration/i);
+  assert.throws(() => loadSimulatorConfigFromDir(evolvingRoot), /passive.*value_evolution/i);
+});
+
 test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings", () => {
   const root = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
@@ -412,7 +439,7 @@ function isActivationConcreteAppliesVs(selector: unknown): boolean {
   return false;
 }
 
-function writeConfigWithTroopEffect(effect: Record<string, unknown>): string {
+function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "turn" }): string {
   const root = join(tmpdir(), `wos-v3-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });
   writeFileSync(
@@ -434,7 +461,7 @@ function writeConfigWithTroopEffect(effect: Record<string, unknown>): string {
       name: "Troop Skills",
       skills: {
         ExampleSkill: {
-          trigger: { type: "turn" },
+          trigger,
           effects: { "ExampleSkill/1": effect }
         }
       }

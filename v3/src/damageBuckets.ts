@@ -15,35 +15,7 @@ type BucketTree = {
 
 export const BUCKETS = {
   troops: {
-    count: { role: "attacker", valueType: "raw" },
-    baseAttack: { role: "attacker", valueType: "raw" },
-    baseLethality: { role: "attacker", valueType: "raw" },
-    baseHealth: { role: "defender", valueType: "raw" },
-    baseDefense: { role: "defender", valueType: "raw" }
-  },
-  player: {
-    attack: { role: "attacker", valueType: "pct" },
-    lethality: { role: "attacker", valueType: "pct" },
-    health: { role: "defender", valueType: "pct" },
-    defense: { role: "defender", valueType: "pct" }
-  },
-  passive: {
-    attack: {
-      up: { role: "attacker", valueType: "pct" },
-      down: { role: "attacker", valueType: "pct" }
-    },
-    lethality: {
-      up: { role: "attacker", valueType: "pct" },
-      down: { role: "attacker", valueType: "pct" }
-    },
-    health: {
-      up: { role: "defender", valueType: "pct" },
-      down: { role: "defender", valueType: "pct" }
-    },
-    defense: {
-      up: { role: "defender", valueType: "pct" },
-      down: { role: "defender", valueType: "pct" }
-    }
+    count: { role: "attacker", valueType: "raw" }
   },
   active: {
     hero: {

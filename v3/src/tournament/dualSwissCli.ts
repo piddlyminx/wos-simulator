@@ -53,7 +53,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
     ratios: ["50,20,30"],
     total: 100000,
-    rounds: 10,
+    rounds: 30,
     seedRounds: 2,
     reps: 1,
     topN: 200,
@@ -62,9 +62,9 @@ export function parseCliArgs(argv: string[]): CliOptions {
     freezeRate: 0.2,
     startFreezeRound: 8,
     minPoolSize: 200,
-    finalsTopM: 0,
+    finalsTopM: 200,
     finalsMaxSameHeroes: 0,
-    repeatJoiners: false
+    repeatJoiners: true
   };
 
   for (let index = 0; index < argv.length; index += 1) {
