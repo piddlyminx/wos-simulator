@@ -1,5 +1,5 @@
 import { loadSimulatorConfig } from "../config.js";
-import { simulateBattle } from "../simulator.js";
+import { simulateBattleScore } from "../simulator.js";
 import type { BattleResult, SimulatorConfig } from "../types.js";
 import { teamToBattleInput } from "./teamInput.js";
 import { TournamentWorkerPool } from "./workerPool.js";
@@ -11,9 +11,9 @@ export function runSingleBattleDirect(task: BattleTask, config: SimulatorConfig)
   let totalDefenderLeft = 0;
   for (let rep = 0; rep < task.reps; rep += 1) {
     const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-    const result = simulateBattle(input, config, { detail: "fast" });
-    totalAttackerLeft += totalRemaining(result.remaining.attacker);
-    totalDefenderLeft += totalRemaining(result.remaining.defender);
+    const score = simulateBattleScore(input, config);
+    if (score > 0) totalAttackerLeft += score;
+    else if (score < 0) totalDefenderLeft += -score;
   }
   return {
     attackerId: task.attacker.id,

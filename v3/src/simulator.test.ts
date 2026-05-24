@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { loadSimulatorConfig } from "./config.js";
 import { createSeededRng, chancePasses } from "./effects.js";
 import { resolveFighter } from "./resolve.js";
-import { simulateBattle } from "./simulator.js";
+import { simulateBattle, simulateBattleScore } from "./simulator.js";
 import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types.js";
 
 test("simulateBattle returns structured result for a no-hero battle", () => {
@@ -1491,6 +1491,30 @@ test("fast simulation matches full semantic output without detailed attacks", ()
   }
 });
 
+test("simulateBattleScore returns signed remaining troops from the same battle semantics", () => {
+  const config = loadSimulatorConfig();
+  const input: BattleInput = {
+    maxRounds: 8,
+    seed: "score-real-heroes",
+    mechanics: { hero_generation_stats: true, engagement_type: "rally" },
+    attacker: {
+      troops: { infantry_t10: 500, lancer_t10: 200, marksman_t10: 300 },
+      heroes: { "Wu Ming": { skill_1: 5, skill_2: 5, skill_3: 5 }, Mia: { skill_1: 5, skill_2: 5, skill_3: 5 } },
+      joiner_heroes: [{ name: "Jessie", levels: { skill_1: 5 } }]
+    },
+    defender: {
+      troops: { infantry_t10: 500, lancer_t10: 200, marksman_t10: 300 },
+      heroes: { "Wu Ming": { skill_1: 5, skill_2: 5, skill_3: 5 }, Bradley: { skill_1: 5, skill_2: 5, skill_3: 5 } },
+      joiner_heroes: [{ name: "Norah", levels: { skill_1: 5 } }]
+    }
+  };
+
+  const result = simulateBattle(input, config, { detail: "fast" });
+  const score = simulateBattleScore(input, config);
+
+  assert.equal(score, signedRemainingScore(result));
+});
+
 test("seeded probability rolls are deterministic and compare percentage thresholds", () => {
   const skill: ResolvedSkill = {
     id: "Chance",
@@ -1526,6 +1550,12 @@ function skillActivations(result: ReturnType<typeof simulateBattle>, skillId: st
 
 function totalRemaining(troops: Record<UnitType, number>): number {
   return Object.values(troops).reduce((sum, count) => sum + count, 0);
+}
+
+function signedRemainingScore(result: ReturnType<typeof simulateBattle>): number {
+  if (result.winner === "attacker") return totalRemaining(result.remaining.attacker);
+  if (result.winner === "defender") return -totalRemaining(result.remaining.defender);
+  return 0;
 }
 
 function semanticBattleSummary(result: ReturnType<typeof simulateBattle>): Pick<

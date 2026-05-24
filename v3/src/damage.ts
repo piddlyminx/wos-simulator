@@ -74,8 +74,13 @@ interface NumericDamageBuckets {
   contributors?: DamageBucketTrace["contributors"][];
 }
 
+export type DamageScratch = NumericDamageBuckets;
+
 const BUCKET_IDS = Object.fromEntries(ATOMIC_BUCKETS.map((bucket, index) => [bucket, index])) as Record<AtomicBucket, NumericBucketId>;
 const EMPTY_AGGREGATION_GROUPS: Record<string, DamageAggregationGroupTrace> = {};
+const EMPTY_APPLIED_EFFECT_IDS: AttackOutcome["appliedEffectIds"] = [];
+const EMPTY_COUNTER_DELTAS: AttackOutcome["counterDeltas"] = [];
+const EMPTY_CONSUMED_EFFECT_IDS: AttackOutcome["consumedEffectIds"] = [];
 const TROOPS_COUNT_TERM = rawTerm("troops.count", "troops.count", "numerator");
 const SOURCE_EXTRA_SKILL_TERM = rawTerm("source.extraSkill", "source.extraSkill", "numerator");
 
@@ -146,7 +151,7 @@ export function calculateDamageJob(
   job: DamageJob,
   fighters: Record<SideId, ResolvedFighter>,
   activeEffects: ActiveEffect[],
-  options: { trace?: boolean; effectIndex: EffectIndex; detail?: DamageDetail; staticDamageProfile?: StaticDamageProfile }
+  options: { trace?: boolean; effectIndex: EffectIndex; detail?: DamageDetail; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch }
 ): AttackOutcome {
   if (!options?.effectIndex) throw new Error("calculateDamageJob requires an effectIndex");
   const detail = options.detail ?? "full";
@@ -159,7 +164,7 @@ export function calculateDamageJob(
   const minInitialArmy = Math.max(1, Math.min(totalTroops(attacker.initialTroops), totalTroops(defender.initialTroops)));
   const armyTerm = Math.ceil(Math.sqrt(Math.max(0, attackerTroops)) * Math.sqrt(minInitialArmy));
   const needsTraceBuckets = traceEnabled;
-  const buckets = createNumericDamageBuckets(needsTraceBuckets);
+  const buckets = needsTraceBuckets || !options.scratch ? createNumericDamageBuckets(needsTraceBuckets) : resetDamageScratch(options.scratch);
   setRaw(buckets, "troops.count", armyTerm);
   setRaw(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
 
@@ -218,6 +223,10 @@ export function calculateDamageJob(
       }
     : undefined;
 
+  const fast = detail === "fast";
+  const returnedConsumedEffectIds =
+    fast && consumedEffectIds.size === 0 ? job.consumedEffectIds ?? EMPTY_CONSUMED_EFFECT_IDS : [...consumedEffectIds, ...(job.consumedEffectIds ?? [])];
+
   return {
     jobId: job.id,
     kind: job.kind,
@@ -226,13 +235,15 @@ export function calculateDamageJob(
     defenderSide: job.defenderSide,
     defenderUnit: job.defenderUnit,
     kills,
-    counterDeltas: [
-      { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" },
-      { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" }
-    ],
-    appliedEffectIds: appliedEffects.map((effect) => effect.effectId),
+    counterDeltas: fast
+      ? EMPTY_COUNTER_DELTAS
+      : [
+          { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" },
+          { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause: job.kind === "skill" ? "extra_skill_attack" : "normal_attack" }
+        ],
+    appliedEffectIds: fast ? EMPTY_APPLIED_EFFECT_IDS : appliedEffects.map((effect) => effect.effectId),
     appliedEffects,
-    consumedEffectIds: [...consumedEffectIds, ...(job.consumedEffectIds ?? [])],
+    consumedEffectIds: returnedConsumedEffectIds,
     consumedEffectUseKey: job.consumedEffectUseKey,
     consumedEffectUseId: job.consumedEffectUseId,
     consumedEffectUseIds: job.consumedEffectUseIds,
@@ -350,6 +361,17 @@ function createNumericDamageBuckets(collectTrace: boolean): NumericDamageBuckets
     rawSet: new Uint8Array(ATOMIC_BUCKETS.length),
     contributors: collectTrace ? Array.from({ length: ATOMIC_BUCKETS.length }, () => []) : undefined
   };
+}
+
+export function createFastDamageScratch(): DamageScratch {
+  return createNumericDamageBuckets(false);
+}
+
+function resetDamageScratch(buckets: DamageScratch): DamageScratch {
+  buckets.raw.fill(0);
+  buckets.pct.fill(0);
+  buckets.rawSet.fill(0);
+  return buckets;
 }
 
 function setRaw(buckets: NumericDamageBuckets, bucket: AtomicBucket, raw: number): void {

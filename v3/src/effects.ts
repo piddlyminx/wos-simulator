@@ -15,6 +15,13 @@ import { normalizeUnitType } from "./normalize.js";
 
 export type Rng = () => number;
 
+interface CompiledTriggerSelectors {
+  source: ParsedTriggerSelector;
+  target: ParsedTriggerSelector;
+}
+
+const TRIGGER_SELECTOR_CACHE = new WeakMap<ResolvedSkill, CompiledTriggerSelectors>();
+
 export function oppositeSide(side: SideId): SideId {
   return side === "attacker" ? "defender" : "attacker";
 }
@@ -32,10 +39,22 @@ export function skillMatchesTrigger(
   if (trigger.every && triggerType === "round_start" && !crossedFrequency(round - 1, round, trigger.every)) return false;
   if (trigger.every && triggerType === "attack_declared" && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every)) return false;
   if (!intent) return true;
+  const selectors = compiledTriggerSelectors(skill);
   return (
-    triggerSelectorMatches(trigger.source, "self", skill.side, intent.attackerSide, intent.attackerUnit) &&
-    triggerSelectorMatches(trigger.target, "enemy", skill.side, intent.defenderSide, intent.defenderUnit)
+    triggerSelectorMatches(selectors.source, skill.side, intent.attackerSide, intent.attackerUnit) &&
+    triggerSelectorMatches(selectors.target, skill.side, intent.defenderSide, intent.defenderUnit)
   );
+}
+
+function compiledTriggerSelectors(skill: ResolvedSkill): CompiledTriggerSelectors {
+  const cached = TRIGGER_SELECTOR_CACHE.get(skill);
+  if (cached) return cached;
+  const compiled = {
+    source: parseTriggerSelector(skill.trigger.source, "self"),
+    target: parseTriggerSelector(skill.trigger.target, "enemy")
+  };
+  TRIGGER_SELECTOR_CACHE.set(skill, compiled);
+  return compiled;
 }
 
 export function chancePasses(skill: ResolvedSkill, rng: Rng): boolean {
@@ -154,14 +173,7 @@ export function sideForTriggerRelation(skillSide: SideId, relation: TriggerSelec
   return relation === "self" ? skillSide : oppositeSide(skillSide);
 }
 
-function triggerSelectorMatches(
-  value: unknown,
-  defaultRelation: TriggerSelectorRelation,
-  skillSide: SideId,
-  actualSide: SideId,
-  actualUnit: UnitType
-): boolean {
-  const selector = parseTriggerSelector(value, defaultRelation);
+function triggerSelectorMatches(selector: ParsedTriggerSelector, skillSide: SideId, actualSide: SideId, actualUnit: UnitType): boolean {
   if (sideForTriggerRelation(skillSide, selector.relation) !== actualSide) return false;
   return selector.units === undefined || selector.units.includes(actualUnit);
 }
