@@ -1,0 +1,20 @@
+{
+  "test_id": "wos425_wip_nohero_control_nc",
+  "description": "WOS-425 control. minxxx attacks WIP, no heroes, Heroic troops only. Deterministic baseline for damage-taken-down stacking checks.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}

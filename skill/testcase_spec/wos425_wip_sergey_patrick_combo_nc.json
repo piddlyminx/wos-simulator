@@ -1,0 +1,23 @@
+{
+  "test_id": "wos425_wip_sergey_patrick_combo_nc",
+  "description": "WOS-425 damage-taken-down plus health-up fixture. minxxx attacks WIP; WIP defends with Sergey+Patrick. Heroic infantry only. Sergey is infantry class and Patrick is lancer class; current WIP kits are deterministic.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Patrick": {},
+      "Sergey": {}
+    },
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}
