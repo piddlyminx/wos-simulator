@@ -7,6 +7,7 @@ import type {
   BattleResult,
   BattleTrace,
   DamageJob,
+  FighterInput,
   ResolvedFighter,
   ResolvedSkill,
   SideId,
@@ -16,7 +17,7 @@ import type {
   TriggerDamageJobSelector,
   UnitType
 } from "./types.js";
-import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
+import { ALL_UNIT_MASK, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
 import { calculateDamageJob, createFastDamageScratch, type DamageScratch } from "./damage.js";
 import {
   activateEffect,
@@ -118,6 +119,8 @@ function runBattle(input: BattleInput, config: SimulatorConfig, options: Simulat
   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
 
   triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime);
+  addInputPassiveEffects(runtime, input.attacker.passive, "attacker");
+  addInputPassiveEffects(runtime, input.defender.passive, "defender");
   runtime.staticDamageProfile = buildStaticDamageProfile(fighters, runtime.activeEffects);
   removeStaticProfileBucketEffects(runtime.effectIndex);
 
@@ -340,6 +343,40 @@ function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
 function addActiveEffect(runtime: Runtime, effect: ActiveEffect): void {
   runtime.activeEffects.push(effect);
   indexEffect(runtime.effectIndex, effect);
+}
+
+function addInputPassiveEffects(runtime: Runtime, passive: FighterInput["passive"], side: SideId): void {
+  if (!passive) return;
+  for (const stat of ["attack", "defense", "lethality", "health"] as const) {
+    for (const direction of ["up", "down"] as const) {
+      const valuePct = Number(passive[stat]?.[direction] ?? 0);
+      if (!Number.isFinite(valuePct) || valuePct <= 0) continue;
+      const bucket = `passive.${stat}.${direction}`;
+      addActiveEffect(runtime, {
+        id: `${side}:input_stat:${bucket}`,
+        source: {
+          kind: "input_stat",
+          side,
+          effectId: `input:${bucket}`
+        },
+        intent: {
+          id: `input:${bucket}`,
+          type: bucket,
+          value: valuePct
+        },
+        ownerSide: side,
+        kind: "modifier",
+        valuePct,
+        appliesTo: { side, units: ALL_UNIT_MASK },
+        appliesVs: { side: oppositeSide(side), units: ALL_UNIT_MASK },
+        createdRound: 0,
+        startRound: 0,
+        duration: { type: "battle", value: 0 },
+        uses: 0,
+        sameEffectStacking: "add"
+      });
+    }
+  }
 }
 
 function triggerSkills(

@@ -54,6 +54,15 @@ export interface StatBlock {
   health: number;
 }
 
+export type MainStat = keyof StatBlock;
+
+export interface PassiveEffectBucket {
+  up?: number;
+  down?: number;
+}
+
+export type PassiveEffects = Partial<Record<MainStat, PassiveEffectBucket>>;
+
 export interface TroopStatsRecord {
   id: string;
   type: UnitType | string;
@@ -142,6 +151,7 @@ export interface FighterInput {
   name?: string;
   troops: Record<string, number>;
   stats?: Record<string, Partial<StatBlock>>;
+  passive?: PassiveEffects;
   heroes?: HeroInputCollection;
   joiner_heroes?: HeroInputCollection;
 }

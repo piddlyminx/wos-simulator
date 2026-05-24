@@ -559,6 +559,52 @@ test("requires_effect is ignored by native v3 effect activation", () => {
   assert.equal(report?.effectActivations, 2);
 });
 
+test("fighter passive effects are added to the static profile after battle_start effects", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { infantry_t1: 100 },
+        stats: { infantry: { attack: 0, lethality: 0, defense: 0, health: 0 } },
+        passive: {
+          attack: { up: 20, down: 5 }
+        },
+        heroes: { BattleStart: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        stats: { infantry: { attack: 0, lethality: 0, defense: 0, health: 0 } },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      BattleStart: {
+        name: "BattleStart",
+        skills: {
+          StartsFirst: {
+            trigger: { type: "battle_start" },
+            effects: {
+              skillBuff: {
+                type: "passive.attack.up",
+                value: 10
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const attack = result.attacks.find((entry) => entry.attackerSide === "attacker" && entry.attackerUnit === "infantry");
+  assert.equal(attack?.trace?.atomicBuckets["passive.attack.up"].totalPct, 30);
+  assert.equal(attack?.trace?.atomicBuckets["passive.attack.down"].totalPct, 5);
+  assert.deepEqual(
+    attack?.trace?.atomicBuckets["passive.attack.up"].contributors.map((contributor) => contributor.effectId).sort(),
+    ["input:passive.attack.up", "skillBuff"]
+  );
+});
+
 test("extra skill attacks with array trigger damage targets hit those defender unit types", () => {
   const result = simulateBattle(
     {

@@ -1,4 +1,4 @@
-import type { BattleInput, FighterInput, StatBlock, UnitType } from "@v3/types";
+import type { BattleInput, FighterInput, PassiveEffects, StatBlock, UnitType } from "@v3/types";
 import type { SimulateRequestPayload, SimulateSidePayload } from "@/lib/simulate-run";
 
 const CATEGORIES = ["infantry", "lancer", "marksman"] as const;
@@ -16,7 +16,8 @@ export function toBattleInput(request: SimulateRequestPayload, seed: string | nu
 function toFighterInput(side: SimulateSidePayload, opponent: SimulateSidePayload): FighterInput {
   return {
     troops: Object.fromEntries(CATEGORIES.map((cat) => [side.troop_types[cat], Math.max(0, Math.floor(side.troops[cat] ?? 0))])),
-    stats: toStats(side, opponent),
+    stats: toStats(side),
+    passive: toPassiveEffects(side, opponent),
     heroes: toHeroes(side),
     joiner_heroes: toJoinerHeroes(side),
   };
@@ -50,31 +51,40 @@ function skillMap(skills: readonly number[]): Record<string, number> {
   return out;
 }
 
-function toStats(side: SimulateSidePayload, opponent: SimulateSidePayload): Record<UnitType, Partial<StatBlock>> {
+function toStats(side: SimulateSidePayload): Record<UnitType, Partial<StatBlock>> {
   return {
-    infantry: tupleToStats(side.stats.inf, side, opponent),
-    lancer: tupleToStats(side.stats.lanc, side, opponent),
-    marksman: tupleToStats(side.stats.mark, side, opponent),
+    infantry: tupleToStats(side.stats.inf),
+    lancer: tupleToStats(side.stats.lanc),
+    marksman: tupleToStats(side.stats.mark),
   };
 }
 
-function tupleToStats(tuple: [number, number, number, number], side: SimulateSidePayload, opponent: SimulateSidePayload): StatBlock {
+function tupleToStats(tuple: [number, number, number, number]): StatBlock {
+  return {
+    attack: tuple[0],
+    defense: tuple[1],
+    lethality: tuple[2],
+    health: tuple[3],
+  };
+}
+
+function toPassiveEffects(side: SimulateSidePayload, opponent: SimulateSidePayload): PassiveEffects | undefined {
   const own = side.stat_modifiers ?? { attack: 0, defense: 0, lethality: 0, health: 0, enemy_attack: 0, enemy_defense: 0 };
   const opp = opponent.stat_modifiers ?? { attack: 0, defense: 0, lethality: 0, health: 0, enemy_attack: 0, enemy_defense: 0 };
-  const modifiers = {
-    attack: { up: own.attack ?? 0, down: Math.abs(Math.min(0, opp.enemy_attack ?? 0)) },
-    defense: { up: own.defense ?? 0, down: Math.abs(Math.min(0, opp.enemy_defense ?? 0)) },
-    lethality: { up: own.lethality ?? 0, down: 0 },
-    health: { up: own.health ?? 0, down: 0 },
-  };
-  return {
-    attack: applyStatBonusGroups(tuple[0], modifiers.attack.up, modifiers.attack.down),
-    defense: applyStatBonusGroups(tuple[1], modifiers.defense.up, modifiers.defense.down),
-    lethality: applyStatBonusGroups(tuple[2], modifiers.lethality.up, modifiers.lethality.down),
-    health: applyStatBonusGroups(tuple[3], modifiers.health.up, modifiers.health.down),
-  };
+  const passive: PassiveEffects = {};
+
+  addPassiveStat(passive, "attack", "up", own.attack);
+  addPassiveStat(passive, "defense", "up", own.defense);
+  addPassiveStat(passive, "lethality", "up", own.lethality);
+  addPassiveStat(passive, "health", "up", own.health);
+  addPassiveStat(passive, "attack", "down", Math.abs(Math.min(0, opp.enemy_attack ?? 0)));
+  addPassiveStat(passive, "defense", "down", Math.abs(Math.min(0, opp.enemy_defense ?? 0)));
+
+  return Object.keys(passive).length > 0 ? passive : undefined;
 }
 
-function applyStatBonusGroups(baseValue: number, upPercent: number, downPercent: number): number {
-  return ((100 + baseValue) * (1 + upPercent / 100)) / (1 + downPercent / 100) - 100;
+function addPassiveStat(passive: PassiveEffects, stat: keyof StatBlock, direction: "up" | "down", rawValue: unknown): void {
+  const value = Number(rawValue ?? 0);
+  if (!Number.isFinite(value) || value <= 0) return;
+  passive[stat] = { ...passive[stat], [direction]: value };
 }
