@@ -124,6 +124,19 @@ export async function POST(req: NextRequest) {
           return;
         }
 
+        const shouldSave =
+          !Object.prototype.hasOwnProperty.call(body as object, "trace_seed");
+        if (!shouldSave) {
+          controller.enqueue(
+            enc({
+              type: "result",
+              data: parsed,
+            }),
+          );
+          controller.close();
+          return;
+        }
+
         void saveSimulationRun("simulate", body as SimulateRequestPayload, parsed)
           .then((saved) => {
             controller.enqueue(

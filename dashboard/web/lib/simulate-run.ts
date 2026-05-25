@@ -56,12 +56,60 @@ export interface SimulateRequestPayload {
   defender: SimulateSidePayload;
   replicates: number;
   rally_mode: boolean;
+  trace_seed?: number;
 }
 
 export interface SimulateSkillSummary {
   name: string;
   avg_activations: number;
   avg_kills: number;
+}
+
+export interface SimulateOutcomeRun {
+  outcome: number;
+  seed: number;
+}
+
+export type SimulateTraceUnit = "inf" | "lanc" | "mark";
+
+export interface SimulateTraceEffect {
+  id: string;
+  hero: string;
+  skill_name: string;
+  effect_name: string;
+  effect_type: string;
+  benefit_on: string;
+  extra_attack: boolean;
+  used: boolean;
+  uses_count: number;
+  trigger_count: number;
+  value: number;
+  for_units: SimulateTraceUnit[];
+  vs_units: SimulateTraceUnit[];
+}
+
+export interface SimulateTraceSideRound {
+  troops: Record<SimulateTraceUnit, number>;
+  kills: Record<SimulateTraceUnit, Record<SimulateTraceUnit, number>>;
+  effects: SimulateTraceEffect[];
+}
+
+export interface SimulateTraceRound {
+  round: number;
+  attacker: SimulateTraceSideRound;
+  defender: SimulateTraceSideRound;
+}
+
+export interface SimulateTrace {
+  seed: number;
+  outcome: number;
+  rounds: SimulateTraceRound[];
+  skill_kills: Record<"attacker" | "defender", Record<string, Record<string, number>>>;
+  effect_usage: Record<"attacker" | "defender", Record<string, Record<string, number>>>;
+  total_kills: Record<
+    "attacker" | "defender",
+    Record<SimulateTraceUnit, Record<SimulateTraceUnit, number>>
+  >;
 }
 
 export interface SimulateApiResult {
@@ -80,6 +128,8 @@ export interface SimulateApiResult {
     avg_defender_kills: number;
   };
   outcomes: number[];
+  outcome_runs?: SimulateOutcomeRun[];
+  trace?: SimulateTrace;
   per_side_skills: {
     attacker: SimulateSkillSummary[];
     defender: SimulateSkillSummary[];

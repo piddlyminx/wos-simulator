@@ -171,7 +171,12 @@ def outcome_from_remaining(attacker_remaining: int, defender_remaining: int) -> 
     return int(attacker_remaining - defender_remaining)
 
 
-def run_fight(attacker_cfg: Dict[str, Any], defender_cfg: Dict[str, Any], rally_mode: bool):
+def run_fight(
+    attacker_cfg: Dict[str, Any],
+    defender_cfg: Dict[str, Any],
+    rally_mode: bool,
+    return_fight: bool = False,
+):
     attacker = build_fighter("attacker", attacker_cfg, rally_mode)
     defender = build_fighter("defender", defender_cfg, rally_mode)
     attacker.dashboard_manual_stat_modifiers = _combined_manual_stat_modifiers(
@@ -184,6 +189,8 @@ def run_fight(attacker_cfg: Dict[str, Any], defender_cfg: Dict[str, Any], rally_
     )
     fight = Fight(attacker, defender, max_round=1500, dont_save=True)
     attacker_remaining, defender_remaining = fight.battle()
+    if return_fight:
+        return attacker, defender, int(attacker_remaining), int(defender_remaining), fight
     return attacker, defender, int(attacker_remaining), int(defender_remaining)
 
 

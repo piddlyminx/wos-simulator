@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  Fragment,
   useMemo,
   useRef,
   useState,
@@ -62,9 +63,11 @@ import {
   SimulateSidePayload,
   SimulatePetModifiersPayload,
   SimulateStatModifiersPayload,
+  SimulateTrace,
+  SimulateTraceUnit,
 } from "@/lib/simulate-run";
 import type { PlayerStatPreset, StatPresetValues } from "@/lib/stat-presets";
-import { runWorkerOptimizeRatio, runWorkerSimulation } from "@/lib/v3-sim/worker-client";
+import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/v3-sim/worker-client";
 
 type Side = "attacker" | "defender";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
@@ -945,6 +948,11 @@ export default function SimulateClient({
   const [result, setResult] = useState<SimulateApiResult | SimulateApiResponse | null>(
     () => initialState.result,
   );
+  const [battleTrace, setBattleTrace] = useState<SimulateTrace | null>(
+    () => initialState.result?.trace ?? null,
+  );
+  const [traceLoadingSeed, setTraceLoadingSeed] = useState<number | null>(null);
+  const [traceError, setTraceError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
@@ -1137,6 +1145,7 @@ export default function SimulateClient({
         saved_kind: saved.kind,
         share_url: saved.share_url,
       });
+      setBattleTrace((saved.result as SimulateApiResponse).trace ?? null);
       setOptimizeResult(null);
     } else {
       const optimizeRequest = saved.request as OptimizeRatioRequestPayload;
@@ -1174,6 +1183,7 @@ export default function SimulateClient({
           : DEFAULT_OPTIMIZE_SIDE,
       );
       setResult(null);
+      setBattleTrace(null);
       setOptimizeResult({
         ...(saved.result as OptimizeRatioResult),
         saved_run_id: saved.id,
@@ -1528,6 +1538,8 @@ export default function SimulateClient({
   async function runSimulation() {
     setLoading(true);
     setError(null);
+    setTraceError(null);
+    setBattleTrace(null);
     setResult(null);
     setOptimizeError(null);
     setOptimizeResult(null);
@@ -1563,9 +1575,31 @@ export default function SimulateClient({
     }
   }
 
+  async function showBattleExample(seed: string | number) {
+    setTraceLoadingSeed(seed);
+    setTraceError(null);
+    try {
+      const payload = toApiPayload(
+        attacker,
+        defender,
+        1,
+        rallyMode,
+        loadedPresetNames,
+      );
+      const job = runWorkerSimulationTrace(payload, seed, () => undefined);
+      setBattleTrace(await job.promise);
+    } catch (err) {
+      setTraceError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setTraceLoadingSeed(null);
+    }
+  }
+
   async function runOptimizeRatio() {
     setOptimizeLoading(true);
     setError(null);
+    setTraceError(null);
+    setBattleTrace(null);
     setResult(null);
     setOptimizeError(null);
     setOptimizeResult(null);
@@ -2494,10 +2528,23 @@ export default function SimulateClient({
           </p>
           <SimulateOutcomeChart
             outcomes={result.outcomes}
+            outcomeRuns={result.outcome_runs}
             attackerArmy={attackerTotalTroops}
             defenderArmy={defenderTotalTroops}
             attackerOnLeft={!sidesSwapped}
+            onShowExample={showBattleExample}
           />
+          <div className="mt-2 min-h-5 text-xs">
+            {traceLoadingSeed !== null && (
+              <span className="font-mono opacity-70">
+                Loading full trace for seed {traceLoadingSeed}...
+              </span>
+            )}
+            {traceError && <span style={{ color: "#f38ba8" }}>{traceError}</span>}
+          </div>
+          {battleTrace && (
+            <BattleTraceDetails trace={battleTrace} attackerOnLeft={!sidesSwapped} />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <SkillUseTable
               title="Attacker skills"
@@ -3976,6 +4023,233 @@ function SkillUseTable({
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+const TRACE_UNITS: SimulateTraceUnit[] = ["inf", "lanc", "mark"];
+const TRACE_UNIT_LABELS: Record<SimulateTraceUnit, string> = {
+  inf: "Infantry",
+  lanc: "Lancers",
+  mark: "Marksmen",
+};
+
+function formatTraceNumber(value: number): string {
+  if (!Number.isFinite(value)) return "0";
+  return Math.round(value).toLocaleString();
+}
+
+function BattleTraceDetails({
+  trace,
+  attackerOnLeft,
+}: {
+  trace: SimulateTrace;
+  attackerOnLeft: boolean;
+}) {
+  const [expandedRound, setExpandedRound] = useState<number | null>(null);
+  const leftSide: Side = attackerOnLeft ? "attacker" : "defender";
+  const rightSide: Side = attackerOnLeft ? "defender" : "attacker";
+
+  return (
+    <div className="mt-4">
+      <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h4 className="text-xs uppercase tracking-wider opacity-60 font-bold">
+            Example battle trace
+          </h4>
+          <p className="text-xs opacity-60">
+            Seed {trace.seed}; outcome {signedSurvivors(trace.outcome)}.
+          </p>
+        </div>
+      </div>
+      <SkillKillSummary trace={trace} attackerOnLeft={attackerOnLeft} />
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full min-w-[760px] text-xs font-mono">
+          <thead>
+            <tr
+              className="text-right uppercase tracking-wider opacity-50"
+              style={{ borderBottom: "1px solid var(--border-color)" }}
+            >
+              {[...TRACE_UNITS].reverse().map((unit) => (
+                <th key={`${leftSide}-${unit}`} className="px-2 py-2">
+                  {TRACE_UNIT_LABELS[unit]}
+                </th>
+              ))}
+              <th className="px-2 py-2 text-center">Round #</th>
+              {TRACE_UNITS.map((unit) => (
+                <th key={`${rightSide}-${unit}`} className="px-2 py-2">
+                  {TRACE_UNIT_LABELS[unit]}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {trace.rounds.map((round) => {
+              const expanded = expandedRound === round.round;
+              return (
+                <Fragment key={round.round}>
+                  <tr
+                    onClick={() => setExpandedRound(expanded ? null : round.round)}
+                    className="cursor-pointer"
+                    style={{ borderBottom: "1px solid var(--border-color)" }}
+                  >
+                    {[...TRACE_UNITS].reverse().map((unit) => (
+                      <td key={`${round.round}-${leftSide}-${unit}`} className="px-2 py-2 text-right">
+                        {formatTraceNumber(round[leftSide].troops[unit] ?? 0)}
+                      </td>
+                    ))}
+                    <td className="px-2 py-2 text-center font-bold">
+                      {round.round}
+                    </td>
+                    {TRACE_UNITS.map((unit) => (
+                      <td key={`${round.round}-${rightSide}-${unit}`} className="px-2 py-2 text-right">
+                        {formatTraceNumber(round[rightSide].troops[unit] ?? 0)}
+                      </td>
+                    ))}
+                  </tr>
+                  {expanded && (
+                    <tr>
+                      <td colSpan={7} className="px-2 py-3">
+                        <RoundTraceDetails round={round} attackerOnLeft={attackerOnLeft} />
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <TraceTotals trace={trace} attackerOnLeft={attackerOnLeft} />
+    </div>
+  );
+}
+
+function SkillKillSummary({
+  trace,
+  attackerOnLeft,
+}: {
+  trace: SimulateTrace;
+  attackerOnLeft: boolean;
+}) {
+  const sides: Side[] = attackerOnLeft ? ["attacker", "defender"] : ["defender", "attacker"];
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {sides.map((side) => (
+        <div key={side} className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--main-bg)" }}>
+          <h5 className="mb-2 text-xs uppercase tracking-wider opacity-60 font-bold">
+            {SIDE_LABELS[side]} skill kills
+          </h5>
+          {Object.keys(trace.skill_kills[side] ?? {}).length === 0 ? (
+            <p className="text-xs opacity-50">No attributed skill kills.</p>
+          ) : (
+            Object.entries(trace.skill_kills[side]).map(([hero, skills]) => (
+              <div key={hero} className="mb-2 last:mb-0">
+                <div className="font-bold opacity-80">{hero}</div>
+                {Object.entries(skills).map(([skill, kills]) => (
+                  <div key={skill} className="flex justify-between gap-3 opacity-70">
+                    <span>{skill}</span>
+                    <span>{formatTraceNumber(kills)}</span>
+                  </div>
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RoundTraceDetails({
+  round,
+  attackerOnLeft,
+}: {
+  round: SimulateTrace["rounds"][number];
+  attackerOnLeft: boolean;
+}) {
+  const sides: Side[] = attackerOnLeft ? ["attacker", "defender"] : ["defender", "attacker"];
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {sides.map((side) => (
+        <div key={side}>
+          <h5 className="mb-1 text-xs uppercase tracking-wider opacity-60 font-bold">
+            {SIDE_LABELS[side]} active kills
+          </h5>
+          <div className="space-y-1">
+            {TRACE_UNITS.map((unit) => {
+              const kills = round[side].kills[unit] ?? {};
+              const parts = TRACE_UNITS.map((target) => `${TRACE_UNIT_LABELS[target]} ${formatTraceNumber(kills[target] ?? 0)}`);
+              return (
+                <div key={unit} className="opacity-75">
+                  <span className="font-bold">{TRACE_UNIT_LABELS[unit]}:</span>{" "}
+                  {parts.join(" / ")}
+                </div>
+              );
+            })}
+          </div>
+          <h5 className="mb-1 mt-3 text-xs uppercase tracking-wider opacity-60 font-bold">
+            Effects used this round
+          </h5>
+          {round[side].effects.filter((effect) => effect.used).length === 0 ? (
+            <p className="opacity-50">No used effects.</p>
+          ) : (
+            <div className="space-y-1">
+              {round[side].effects
+                .filter((effect) => effect.used)
+                .map((effect) => (
+                  <div key={effect.id} className="opacity-75">
+                    <span className="font-bold">{effect.hero}</span>{" "}
+                    {effect.skill_name} / {effect.effect_name} ({effect.effect_type})
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TraceTotals({
+  trace,
+  attackerOnLeft,
+}: {
+  trace: SimulateTrace;
+  attackerOnLeft: boolean;
+}) {
+  const sides: Side[] = attackerOnLeft ? ["attacker", "defender"] : ["defender", "attacker"];
+  return (
+    <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+      {sides.map((side) => (
+        <div key={side} className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--main-bg)" }}>
+          <h5 className="mb-2 text-xs uppercase tracking-wider opacity-60 font-bold">
+            {SIDE_LABELS[side]} totals
+          </h5>
+          {TRACE_UNITS.map((unit) => {
+            const kills = trace.total_kills[side]?.[unit] ?? {};
+            return (
+              <div key={unit} className="mb-1 opacity-75">
+                <span className="font-bold">{TRACE_UNIT_LABELS[unit]} kills:</span>{" "}
+                {TRACE_UNITS.map((target) => `${TRACE_UNIT_LABELS[target]} ${formatTraceNumber(kills[target] ?? 0)}`).join(" / ")}
+              </div>
+            );
+          })}
+          <div className="mt-3">
+            <h6 className="mb-1 text-xs uppercase tracking-wider opacity-50 font-bold">
+              Effect uses
+            </h6>
+            {Object.entries(trace.effect_usage[side] ?? {}).flatMap(([unit, effects]) =>
+              Object.entries(effects).map(([effect, uses]) => (
+                <div key={`${unit}-${effect}`} className="flex justify-between gap-3 opacity-70">
+                  <span>{TRACE_UNIT_LABELS[unit as SimulateTraceUnit] ?? unit}: {effect}</span>
+                  <span>{formatTraceNumber(uses)}</span>
+                </div>
+              )),
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

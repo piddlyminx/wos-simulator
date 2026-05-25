@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -10,13 +11,17 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import type { MouseEvent } from "react";
+import type { SimulateOutcomeRun } from "@/lib/simulate-run";
 
 interface Props {
   outcomes: number[];
+  outcomeRuns?: SimulateOutcomeRun[];
   attackerArmy: number;
   defenderArmy: number;
   attackerOnLeft: boolean;
   bins?: number;
+  onShowExample?: (seed: number) => void;
 }
 
 function compactNumber(v: number): string {
@@ -28,11 +33,17 @@ function compactNumber(v: number): string {
 
 export default function SimulateOutcomeChart({
   outcomes,
+  outcomeRuns,
   attackerArmy,
   defenderArmy,
   attackerOnLeft,
   bins = 30,
+  onShowExample,
 }: Props) {
+  const [activeExampleSeed, setActiveExampleSeed] = useState<number | null>(
+    null,
+  );
+
   if (outcomes.length === 0) {
     return <p className="text-sm opacity-50">No outcomes to plot.</p>;
   }
@@ -51,17 +62,39 @@ export default function SimulateOutcomeChart({
     requestedBinCount % 2 === 0 ? requestedBinCount + 1 : requestedBinCount;
   const binStart = -axisLimit;
   const binWidth = (axisLimit * 2) / binCount;
-  const counts = new Array(binCount).fill(0);
-  for (const v of outcomes) {
-    const idx = Math.min(binCount - 1, Math.floor((v - binStart) / binWidth));
-    counts[Math.max(0, idx)] += 1;
+  const runs =
+    outcomeRuns && outcomeRuns.length === outcomes.length
+      ? outcomeRuns
+      : outcomes.map((outcome, index) => ({ outcome, seed: index }));
+  const buckets: SimulateOutcomeRun[][] = Array.from(
+    { length: binCount },
+    () => [],
+  );
+  for (const run of runs) {
+    const idx = Math.min(
+      binCount - 1,
+      Math.floor((run.outcome - binStart) / binWidth),
+    );
+    buckets[Math.max(0, idx)].push(run);
   }
 
-  const data = counts.map((count, i) => {
+  function medianSeed(bucketRuns: SimulateOutcomeRun[]): number | null {
+    if (!bucketRuns.length) return null;
+    const sorted = [...bucketRuns].sort((a, b) => a.outcome - b.outcome);
+    return sorted[Math.floor((sorted.length - 1) / 2)]?.seed ?? null;
+  }
+
+  const data = buckets.map((bucketRuns, i) => {
     const low = binStart + i * binWidth;
     const high = low + binWidth;
     const mid = Math.round((low + high) / 2);
-    return { bucket: mid, low, high, count };
+    return {
+      bucket: mid,
+      low,
+      high,
+      count: bucketRuns.length,
+      seed: medianSeed(bucketRuns),
+    };
   });
   const peakBucket =
     data.reduce((best, point) => (point.count > best.count ? point : best), data[0])
@@ -77,10 +110,28 @@ export default function SimulateOutcomeChart({
       data-axis-limit={axisLimit}
       data-axis-reversed={attackerOnLeft}
       data-peak-bucket={peakBucket}
-      style={{ height: 260 }}
+      style={{ height: 260, position: "relative" }}
     >
+      {activeExampleSeed !== null && onShowExample && (
+        <div className="absolute right-2 top-2 z-10">
+          <ShowExampleButton
+            seed={activeExampleSeed}
+            onShowExample={onShowExample}
+          />
+        </div>
+      )}
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
+        <LineChart
+          data={data}
+          onMouseMove={(state) => {
+            const point = state?.activePayload?.[0]?.payload as
+              | { count: number; seed: number | null }
+              | undefined;
+            if (point && point.count > 0 && point.seed !== null) {
+              setActiveExampleSeed(point.seed);
+            }
+          }}
+        >
           <CartesianGrid stroke="var(--border-color)" strokeDasharray="2 2" />
           <XAxis
             dataKey="bucket"
@@ -134,14 +185,33 @@ export default function SimulateOutcomeChart({
             />
           )}
           <Tooltip
-            contentStyle={{
-              backgroundColor: "var(--sidebar-bg)",
-              border: "1px solid var(--border-color)",
-              borderRadius: 4,
-              fontSize: 12,
+            wrapperStyle={{ pointerEvents: "auto" }}
+            content={({ active, payload, label }) => {
+              const point = payload?.[0]?.payload as
+                | { count: number; seed: number | null }
+                | undefined;
+              if (!active || !point) return null;
+              return (
+                <div
+                  className="rounded p-2 text-xs shadow-lg"
+                  style={{
+                    backgroundColor: "var(--sidebar-bg)",
+                    border: "1px solid var(--border-color)",
+                    color: "var(--main-text)",
+                  }}
+                >
+                  <div className="font-mono">
+                    survivors ~= {compactNumber(Number(label))}
+                  </div>
+                  <div className="opacity-70">{point.count} runs</div>
+                  {point.seed !== null && onShowExample && (
+                    <div className="mt-2 font-bold" style={{ color: "var(--sidebar-active)" }}>
+                      Show example
+                    </div>
+                  )}
+                </div>
+              );
             }}
-            formatter={(v: number) => [`${v} runs`, "Count"]}
-            labelFormatter={(v: number) => `survivors \u2248 ${compactNumber(v)}`}
           />
           <Line
             type="monotone"
@@ -154,5 +224,35 @@ export default function SimulateOutcomeChart({
         </LineChart>
       </ResponsiveContainer>
     </div>
+  );
+}
+
+function ShowExampleButton({
+  seed,
+  onShowExample,
+}: {
+  seed: number;
+  onShowExample: (seed: number) => void;
+}) {
+  function show(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+    onShowExample(seed);
+  }
+
+  return (
+    <button
+      type="button"
+      className="mt-2 rounded px-2 py-1 text-xs font-bold"
+      style={{
+        border: "1px solid var(--sidebar-active)",
+        color: "var(--sidebar-active)",
+        backgroundColor: "transparent",
+      }}
+      onMouseDown={show}
+      onClick={show}
+    >
+      Show example
+    </button>
   );
 }
