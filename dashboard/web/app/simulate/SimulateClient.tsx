@@ -4146,15 +4146,15 @@ function SkillKillSummary({
             Object.entries(trace.skill_kills[side]).map(([hero, skills]) => (
               <div key={hero} className="mb-2 last:mb-0">
                 <div className="font-bold opacity-80">{hero}</div>
-                <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-x-3 gap-y-1 opacity-70">
+                <div className="grid grid-cols-[minmax(0,1fr)_5rem_5rem] gap-x-3 gap-y-1 opacity-70">
                   <span className="text-xs uppercase opacity-60">Skill</span>
                   <span className="text-right text-xs uppercase opacity-60">Triggers</span>
                   <span className="text-right text-xs uppercase opacity-60">Kills</span>
                   {Object.entries(skills).map(([skill, row]) => (
                     <Fragment key={skill}>
                       <span className="min-w-0 truncate">{skill}</span>
-                      <span className="text-right">{formatTraceNumber(row.triggers)}</span>
-                      <span className="text-right">{formatTraceNumber(row.kills)}</span>
+                      <span className="text-right tabular-nums">{formatTraceNumber(row.triggers)}</span>
+                      <span className="text-right tabular-nums">{formatTraceNumber(row.kills)}</span>
                     </Fragment>
                   ))}
                 </div>
