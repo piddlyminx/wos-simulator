@@ -33,7 +33,18 @@ test("/simulate uses browser worker for simulation and saves afterward", async (
   await page.goto("/simulate");
   await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
   await page.getByRole("button", { name: /^Simulate$/i }).click();
-  await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
+  const chart = page.getByTestId("simulate-outcome-chart");
+  await expect(chart).toBeVisible();
+  const outcomePoint = page.getByRole("button", { name: /pin outcome bucket/i }).first();
+  await expect(outcomePoint).toBeVisible();
+  await outcomePoint.click();
+  await expect(page.getByTestId("simulate-pinned-tooltip")).toBeVisible();
+  await chart.click({ position: { x: 20, y: 20 } });
+  await expect(page.getByTestId("simulate-pinned-tooltip")).toBeHidden();
+  await outcomePoint.click();
+  await expect(page.getByTestId("simulate-pinned-tooltip")).toBeVisible();
+  await page.getByRole("button", { name: /show example/i }).first().click();
+  await expect(page.getByText("Example battle trace")).toBeVisible();
   expect(forbidden).toEqual([]);
 });
 
