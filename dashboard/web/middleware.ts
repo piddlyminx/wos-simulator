@@ -8,7 +8,11 @@ function isAllowedPublicPath(pathname: string): boolean {
   if (pathname === "/healthz") return true;
   if (pathname === "/icon.svg") return true;
   if (pathname === "/api/ocr-report") return true;
-  if (pathname === "/api/simulate" || pathname.startsWith("/api/simulate/")) {
+  if (
+    pathname === "/api/simulate/runs" ||
+    pathname.startsWith("/api/simulate/runs/") ||
+    pathname === "/api/simulate/stat-presets"
+  ) {
     return true;
   }
   return false;

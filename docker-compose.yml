@@ -1,12 +1,12 @@
 # docker compose for the WOS simulator dashboard.
 #
 # Services:
-#   - app:         Next.js dev server (Turbopack) with live reload. The host's
+#   - app:         Next.js dev server with live reload. The host's
 #                  dashboard/web/ directory is bind-mounted into the container
 #                  so source edits are picked up without any image rebuild.
 #                  /app/node_modules and /app/.next are named-volume overlays
 #                  so the container-built native modules (better-sqlite3) and
-#                  Turbopack cache don't fight the host filesystem.
+#                  Next cache don't fight the host filesystem.
 #
 # See docker-compose.env.example for optional local settings.
 
@@ -24,22 +24,21 @@ services:
       DB_PATH: /data/test_results/dashboard.sqlite
       SIM_RUNS_DIR: /data/simulations
       STAT_PRESETS_FILE: /data/stat-presets/player-stat-presets.json
-      # Next 15.5+ Turbopack polling watcher. Needed on WSL2/SMB/NFS-backed
-      # mounts where native inotify can miss host-side edits.
+      # Watcher polling for WSL2/SMB/NFS-backed mounts where native inotify can
+      # miss host-side edits.
       NEXT_WATCH_POLL_INTERVAL_MS: ${NEXT_WATCH_POLL_INTERVAL_MS:-1000}
-      # Kept for webpack/chokidar fallback tools; Turbopack uses the option above.
       WATCHPACK_POLLING: ${WATCHPACK_POLLING:-true}
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING:-true}
     volumes:
-      # Live bind mount of the source tree. Edits on disk -> Turbopack hot
-      # reload in the container.
+      # Live bind mount of the source tree. Edits on disk -> Next dev reload in
+      # the container.
       - ./dashboard/web:/app
       # Browser-side v3 worker imports @v3/*, which resolves to /v3/src in the
       # container because the dashboard app is mounted at /app.
       - ./v3/src:/v3/src:ro
       - ./v3/config:/v3/config:ro
-      # Named-volume overlays: keep container-built node_modules and the
-      # Turbopack/Next cache out of the host tree.
+      # Named-volume overlays: keep container-built node_modules and the Next
+      # cache out of the host tree.
       - wos_node_modules:/app/node_modules
       - wos_next_cache:/app/.next
       # Host-backed simulation stores. Point these at an sshfs/shared mount in
@@ -55,10 +54,8 @@ services:
       # The parser delegates to the imported agent skill under /skill.
       - ./dashboard:/dashboard:ro
       - ./skill:/skill:ro
-      # Deprecated /api/simulate fallback routes still spawn Python helpers for
-      # one release. Browser-side v3 workers now handle normal simulate and
-      # optimise calculations, but keep these mounts until the fallback routes
-      # are removed.
+      # Python testcase/check utilities still need the simulator support trees.
+      # The browser simulate page does not call Python compute endpoints.
       - ./Base_classes:/Base_classes:ro
       - ./assets:/assets:ro
       # fighters_data is NOT mounted :ro because JsonUtil.load_fighters_data

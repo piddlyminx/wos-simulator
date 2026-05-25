@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+test("server compute routes are removed", async ({ request }) => {
+  await expect((await request.post("/api/simulate")).status()).toBe(404);
+  await expect((await request.post("/api/simulate/optimize-ratio")).status()).toBe(404);
+});
+
 test("/simulate uses browser worker for simulation and saves afterward", async ({ page }) => {
   const forbidden: string[] = [];
   await page.route("**/api/simulate", async (route) => {

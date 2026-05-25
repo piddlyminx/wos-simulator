@@ -8,26 +8,18 @@
 # build) and provide the dev command — everything under /app is expected to be
 # replaced by the host bind mount at runtime.
 #
-# The container uses Turbopack with Next's watchOptions.pollIntervalMs enabled
-# from docker-compose. Native inotify can miss host-side edits on WSL2/Windows-
-# backed bind mounts; polling keeps hot reload reliable in that setup.
-#
-# The dashboard spawns two Python CLIs inside the container:
-#   - skill/scripts/report_stats_parser.py  (Import report flow,
-#     RapidOCR, ONNX Runtime, and OpenCV)
-#   - dashboard/simulate_battle.py  (Simulate battle page; imports the
-#     Base_classes simulator package, which depends on tabulate)
+# The dashboard spawns the report-stats parser for the import flow. Battle
+# simulation and ratio optimisation run in the browser via the v3 TypeScript
+# web worker, so this image no longer hosts Python simulate endpoints.
 # compose mounts the host dashboard/, skill/, Base_classes/, assets/, and
-# fighters_data/ trees at the matching container paths so those scripts can
-# reach them. A dedicated /opt/sim-venv holds the Python deps for both flows
-# and SIMULATOR_PYTHON points the routes at that venv.
+# fighters_data/ trees at the matching container paths so scripts can reach
+# them. A dedicated /opt/sim-venv holds the Python deps for OCR/import helpers.
 
 FROM node:20-bookworm-slim
 WORKDIR /app
 
 # better-sqlite3 is a native module; node-gyp needs python + a C++ toolchain.
-# RapidOCR/ONNX Runtime/OpenCV are needed for the OCR flow. tabulate is imported
-# by Base_classes.Fight, which simulate_battle.py pulls in. A dedicated
+# RapidOCR/ONNX Runtime/OpenCV are needed for the OCR flow. A dedicated
 # /opt/sim-venv keeps those deps out of the system Python and avoids
 # --break-system-packages.
 RUN apt-get update \

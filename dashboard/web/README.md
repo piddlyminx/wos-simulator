@@ -34,6 +34,8 @@ The app runs at http://localhost:3000 and redirects to `/runs` by default.
 The Simulate and Optimise Ratio buttons do not call server compute routes. They
 run v3 TypeScript calculations in a browser worker, then POST completed results
 to `/api/simulate/runs` for share-link persistence.
+There is intentionally no `/api/simulate` or `/api/simulate/optimize-ratio`
+compute endpoint.
 
 For normal WSL development, prefer `npm run dev` directly. It is simpler,
 matches the local QA workflow, avoids bind-mount file watching edge cases, and
@@ -41,9 +43,10 @@ does not need a local container or tunnel.
 
 `docker-compose.yml` remains available as an optional dev container when you
 specifically want container parity for native dependencies or the bind-mounted
-simulator layout. It runs Turbopack with `NEXT_WATCH_POLL_INTERVAL_MS=1000` so
-bind-mounted source edits are picked up even when native file notifications are
-unreliable. Set the value to `0` in `.env` to disable polling on native Linux
+simulator layout. It enables watcher polling so bind-mounted source edits are
+picked up even when native file notifications are unreliable. Set
+`NEXT_WATCH_POLL_INTERVAL_MS=0`, `WATCHPACK_POLLING=false`, and
+`CHOKIDAR_USEPOLLING=false` in `.env` to disable polling on native Linux
 filesystems.
 
 The Docker dev app uses named volumes for `/app/node_modules` and `/app/.next`.
