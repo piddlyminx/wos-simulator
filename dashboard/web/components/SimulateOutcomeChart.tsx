@@ -284,13 +284,17 @@ export default function SimulateOutcomeChart({
             dataKey="count"
             stroke="var(--sidebar-active)"
             strokeWidth={2}
-            dot={(props) => (
-              <OutcomeDot
-                props={props}
-                pinnedBucket={pinnedPoint?.point.bucket ?? null}
-                onPin={pinPoint}
-              />
-            )}
+            dot={(props) => {
+              const point = (props as { payload?: ChartPoint }).payload;
+              return (
+                <OutcomeDot
+                  key={point ? `outcome-${point.bucket}` : "outcome-empty"}
+                  props={props}
+                  pinnedBucket={pinnedPoint?.point.bucket ?? null}
+                  onPin={pinPoint}
+                />
+              );
+            }}
             activeDot={{ r: 5, stroke: "var(--sidebar-active)", strokeWidth: 2 }}
           />
           {pinnedPoint && (
