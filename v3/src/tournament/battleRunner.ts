@@ -5,6 +5,16 @@ import { teamToBattleInput } from "./teamInput.js";
 import { TournamentWorkerPool } from "./workerPool.js";
 import type { BattleSummary, BattleTask } from "./types.js";
 
+export interface BattleTaskRunnerHandle {
+  run(tasks: BattleTask[], onProgress?: (completed: number, total: number) => void): Promise<BattleSummary[]>;
+  close(): Promise<void>;
+}
+
+export interface SingleBattleTaskRunner {
+  run(task: BattleTask): Promise<BattleSummary>;
+  close(): Promise<void>;
+}
+
 export function runSingleBattleDirect(task: BattleTask, config: SimulatorConfig): BattleSummary {
   if (task.reps < 1) throw new Error("reps must be at least 1");
   let totalAttackerLeft = 0;
@@ -27,31 +37,52 @@ export function totalRemaining(remaining: BattleResult["remaining"]["attacker"])
   return (remaining.infantry ?? 0) + (remaining.lancer ?? 0) + (remaining.marksman ?? 0);
 }
 
-export async function runBattleTasks(tasks: BattleTask[], jobs: number, onProgress?: (completed: number, total: number) => void): Promise<BattleSummary[]> {
-  const results: BattleSummary[] = [];
-  const total = tasks.length;
+export function createBattleTaskRunner(
+  jobs: number,
+  createWorkerPool: (size: number) => SingleBattleTaskRunner = (size) => new TournamentWorkerPool(size)
+): BattleTaskRunnerHandle {
   const workerCount = Math.max(1, Math.floor(jobs));
   if (workerCount <= 1) {
     const config = loadSimulatorConfig();
-    for (const task of tasks) {
-      results.push(runSingleBattleDirect(task, config));
-      onProgress?.(results.length, total);
-    }
-    return results;
+    return {
+      async run(tasks, onProgress) {
+        const results: BattleSummary[] = [];
+        for (const task of tasks) {
+          results.push(runSingleBattleDirect(task, config));
+          onProgress?.(results.length, tasks.length);
+        }
+        return results;
+      },
+      async close() {}
+    };
   }
-  const pool = new TournamentWorkerPool(workerCount);
+
+  const pool = createWorkerPool(workerCount);
+  return {
+    async run(tasks, onProgress) {
+      const results: BattleSummary[] = [];
+      let completed = 0;
+      await Promise.all(
+        tasks.map(async (task) => {
+          const result = await pool.run(task);
+          results.push(result);
+          completed += 1;
+          onProgress?.(completed, tasks.length);
+        })
+      );
+      return results;
+    },
+    async close() {
+      await pool.close();
+    }
+  };
+}
+
+export async function runBattleTasks(tasks: BattleTask[], jobs: number, onProgress?: (completed: number, total: number) => void): Promise<BattleSummary[]> {
+  const runner = createBattleTaskRunner(jobs);
   try {
-    let completed = 0;
-    await Promise.all(
-      tasks.map(async (task) => {
-        const result = await pool.run(task);
-        results.push(result);
-        completed += 1;
-        onProgress?.(completed, total);
-      })
-    );
-    return results;
+    return await runner.run(tasks, onProgress);
   } finally {
-    await pool.close();
+    await runner.close();
   }
 }

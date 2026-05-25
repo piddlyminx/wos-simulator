@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { runBattleTasks } from "./battleRunner.js";
-import type { BattleTask, Team } from "./types.js";
+import { createBattleTaskRunner, runBattleTasks } from "./battleRunner.js";
+import type { BattleSummary, BattleTask, Team } from "./types.js";
 
 function team(id: number): Team {
   return {
@@ -27,4 +27,39 @@ test("runBattleTasks handles worker execution", async () => {
   const results = await runBattleTasks(tasks, 2);
   assert.equal(results[0].attackerId, 1);
   assert.equal(results[0].defenderId, 2);
+});
+
+test("createBattleTaskRunner reuses one worker pool across batches", async () => {
+  const tasks: BattleTask[] = [
+    { attacker: team(1), defender: team(2), seed: 1, reps: 1 },
+    { attacker: team(3), defender: team(4), seed: 2, reps: 1 }
+  ];
+  let created = 0;
+  let closed = 0;
+  const runner = createBattleTaskRunner(2, (size) => {
+    created += 1;
+    assert.equal(size, 2);
+    return {
+      async run(task: BattleTask): Promise<BattleSummary> {
+        return {
+          attackerId: task.attacker.id,
+          defenderId: task.defender.id,
+          avgAttackerLeft: 1,
+          avgDefenderLeft: 0
+        };
+      },
+      async close(): Promise<void> {
+        closed += 1;
+      }
+    };
+  });
+
+  const first = await runner.run([tasks[0]]);
+  const second = await runner.run([tasks[1]]);
+  await runner.close();
+
+  assert.equal(created, 1);
+  assert.equal(closed, 1);
+  assert.deepEqual(first.map((result) => result.attackerId), [1]);
+  assert.deepEqual(second.map((result) => result.attackerId), [3]);
 });

@@ -3,8 +3,8 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { runBattleTasks } from "./battleRunner.js";
-import { runDualSwissTournament, runFinalsRoundRobin } from "./dualSwiss.js";
+import { createBattleTaskRunner } from "./battleRunner.js";
+import { runDualSwissTournament, runFinalsRoundRobin, type BattleTaskRunner } from "./dualSwiss.js";
 import { Pool } from "./pools.js";
 import { copyQualifierCsvs, deriveResultsLabel, loadAllRankedTeamsFromCsv, writeResultsCsv } from "./results.js";
 import { generateTeams, parseRatio, selectFinalsTeamsByMainLineup } from "./teamGeneration.js";
@@ -155,79 +155,96 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   let topAttackers: Team[] | undefined;
   let topDefenders: Team[] | undefined;
   let outDir: string;
+  let taskRunner: ReturnType<typeof createBattleTaskRunner> | undefined;
+  const runTasksWithPersistentPool: BattleTaskRunner = async (tasks, _jobs, onProgress) => {
+    taskRunner ??= createBattleTaskRunner(args.jobs);
+    return await taskRunner.run(tasks, onProgress);
+  };
 
-  if (args.finalsOnly) {
-    const offenseCsv = join(args.finalsOnly, "swiss_off.csv");
-    const defenseCsv = join(args.finalsOnly, "swiss_def.csv");
-    const attackCandidates = loadAllRankedTeamsFromCsv(offenseCsv, args.total);
-    const defenseCandidates = loadAllRankedTeamsFromCsv(defenseCsv, args.total);
-    if (attackCandidates.length < args.finalsTopM || defenseCandidates.length < args.finalsTopM) {
-      throw new Error(
-        `--finals-top-m=${args.finalsTopM} requested, but ${args.finalsOnly} has only ${attackCandidates.length} offense and ${defenseCandidates.length} defense candidates`
+  try {
+    if (args.finalsOnly) {
+      const offenseCsv = join(args.finalsOnly, "swiss_off.csv");
+      const defenseCsv = join(args.finalsOnly, "swiss_def.csv");
+      const attackCandidates = loadAllRankedTeamsFromCsv(offenseCsv, args.total);
+      const defenseCandidates = loadAllRankedTeamsFromCsv(defenseCsv, args.total);
+      if (attackCandidates.length < args.finalsTopM || defenseCandidates.length < args.finalsTopM) {
+        throw new Error(
+          `--finals-top-m=${args.finalsTopM} requested, but ${args.finalsOnly} has only ${attackCandidates.length} offense and ${defenseCandidates.length} defense candidates`
+        );
+      }
+      topAttackers = selectFinalsTeamsByMainLineup(attackCandidates, args.finalsTopM, args.finalsMaxSameHeroes);
+      topDefenders = selectFinalsTeamsByMainLineup(defenseCandidates, args.finalsTopM, args.finalsMaxSameHeroes);
+      outDir = join("tournament_results", `ds_${deriveResultsLabel(args.finalsOnly)}_${timestamp()}`);
+      copyQualifierCsvs(args.finalsOnly, outDir);
+      console.log(`Loaded finals qualifiers from ${args.finalsOnly}`);
+      console.log(`  - Top ${topAttackers.length} attackers from ${offenseCsv}`);
+      console.log(`  - Top ${topDefenders.length} defenders from ${defenseCsv}`);
+      console.log(`  - Writing fresh finals run to ${outDir}`);
+    } else {
+      const ratioList = args.ratios.map((ratio) => [ratio.replace(/,/g, "-"), parseRatio(ratio, args.total)] as [string, Team["troops"]]);
+      const teams = generateTeams(ratioList, args.repeatJoiners);
+      const label = ratioList.length === 1 ? ratioList[0][0] : "mixed";
+      outDir = join("tournament_results", `ds_${deriveResultsLabel(label)}_${timestamp()}`);
+      console.log(`Generated ${teams.length} teams across ${ratioList.length} ratio(s)`);
+      console.log(`Running dual-ranking Swiss tournament: ${args.rounds} rounds (${args.seedRounds} random + ${Math.max(0, args.rounds - args.seedRounds)} Swiss)`);
+      console.log(`  - Reps per battle: ${args.reps}`);
+      console.log(`  - Parallel workers: ${args.jobs}`);
+      console.log(`  - Output top ${args.topN} per category`);
+
+      const startedAt = Date.now();
+      const [attackPool, defensePool] = await runDualSwissTournament(
+        new Pool(teams),
+        new Pool(teams),
+        {
+          totalRounds: args.rounds,
+          seedRounds: args.seedRounds,
+          reps: args.reps,
+          jobs: args.jobs,
+          seed: args.seed,
+          timeLimitMins: args.timeLimit,
+          freezeRate: args.freezeRate,
+          freezeLossesGte: args.freezeLossesGte,
+          startFreezeRound: args.startFreezeRound,
+          minPoolSize: args.minPoolSize
+        },
+        runTasksWithPersistentPool,
+        printProgress
       );
+      const duration = (Date.now() - startedAt) / 1000;
+      console.log(`\nSwiss tournament complete in ${duration.toFixed(1)}s (${(duration / 60).toFixed(1)}m)`);
+      writeResultsCsv(join(outDir, "swiss"), attackPool, defensePool, args.topN);
+      console.log(`Results saved to ${outDir}`);
+
+      if (args.finalsTopM > 0) {
+        topAttackers = selectFinalsTeamsByMainLineup(
+          attackPool.finalScoresOrdered.map((score) => score.team),
+          args.finalsTopM,
+          args.finalsMaxSameHeroes
+        );
+        topDefenders = selectFinalsTeamsByMainLineup(
+          defensePool.finalScoresOrdered.map((score) => score.team),
+          args.finalsTopM,
+          args.finalsMaxSameHeroes
+        );
+      }
     }
-    topAttackers = selectFinalsTeamsByMainLineup(attackCandidates, args.finalsTopM, args.finalsMaxSameHeroes);
-    topDefenders = selectFinalsTeamsByMainLineup(defenseCandidates, args.finalsTopM, args.finalsMaxSameHeroes);
-    outDir = join("tournament_results", `ds_${deriveResultsLabel(args.finalsOnly)}_${timestamp()}`);
-    copyQualifierCsvs(args.finalsOnly, outDir);
-    console.log(`Loaded finals qualifiers from ${args.finalsOnly}`);
-    console.log(`  - Top ${topAttackers.length} attackers from ${offenseCsv}`);
-    console.log(`  - Top ${topDefenders.length} defenders from ${defenseCsv}`);
-    console.log(`  - Writing fresh finals run to ${outDir}`);
-  } else {
-    const ratioList = args.ratios.map((ratio) => [ratio.replace(/,/g, "-"), parseRatio(ratio, args.total)] as [string, Team["troops"]]);
-    const teams = generateTeams(ratioList, args.repeatJoiners);
-    const label = ratioList.length === 1 ? ratioList[0][0] : "mixed";
-    outDir = join("tournament_results", `ds_${deriveResultsLabel(label)}_${timestamp()}`);
-    console.log(`Generated ${teams.length} teams across ${ratioList.length} ratio(s)`);
-    console.log(`Running dual-ranking Swiss tournament: ${args.rounds} rounds (${args.seedRounds} random + ${Math.max(0, args.rounds - args.seedRounds)} Swiss)`);
-    console.log(`  - Reps per battle: ${args.reps}`);
-    console.log(`  - Parallel workers: ${args.jobs}`);
-    console.log(`  - Output top ${args.topN} per category`);
 
-    const startedAt = Date.now();
-    const [attackPool, defensePool] = await runDualSwissTournament(
-      new Pool(teams),
-      new Pool(teams),
-      {
-        totalRounds: args.rounds,
-        seedRounds: args.seedRounds,
-        reps: args.reps,
-        jobs: args.jobs,
-        seed: args.seed,
-        timeLimitMins: args.timeLimit,
-        freezeRate: args.freezeRate,
-        freezeLossesGte: args.freezeLossesGte,
-        startFreezeRound: args.startFreezeRound,
-        minPoolSize: args.minPoolSize
-      },
-      runBattleTasks,
-      printProgress
-    );
-    const duration = (Date.now() - startedAt) / 1000;
-    console.log(`\nSwiss tournament complete in ${duration.toFixed(1)}s (${(duration / 60).toFixed(1)}m)`);
-    writeResultsCsv(join(outDir, "swiss"), attackPool, defensePool, args.topN);
-    console.log(`Results saved to ${outDir}`);
-
-    if (args.finalsTopM > 0) {
-      topAttackers = selectFinalsTeamsByMainLineup(
-        attackPool.finalScoresOrdered.map((score) => score.team),
-        args.finalsTopM,
-        args.finalsMaxSameHeroes
+    if (topAttackers && topDefenders) {
+      console.log(`Running finals round-robin: ${topAttackers.length} attackers vs ${topDefenders.length} defenders`);
+      const [finalAttackPool, finalDefensePool] = await runFinalsRoundRobin(
+        topAttackers,
+        topDefenders,
+        finalsReps,
+        args.jobs,
+        args.seed,
+        runTasksWithPersistentPool,
+        printProgress
       );
-      topDefenders = selectFinalsTeamsByMainLineup(
-        defensePool.finalScoresOrdered.map((score) => score.team),
-        args.finalsTopM,
-        args.finalsMaxSameHeroes
-      );
+      writeResultsCsv(join(outDir, "finals"), finalAttackPool, finalDefensePool, args.finalsTopM, topAttackers, topDefenders);
+      console.log(`Finals results saved to ${outDir}`);
     }
-  }
-
-  if (topAttackers && topDefenders) {
-    console.log(`Running finals round-robin: ${topAttackers.length} attackers vs ${topDefenders.length} defenders`);
-    const [finalAttackPool, finalDefensePool] = await runFinalsRoundRobin(topAttackers, topDefenders, finalsReps, args.jobs, args.seed, runBattleTasks, printProgress);
-    writeResultsCsv(join(outDir, "finals"), finalAttackPool, finalDefensePool, args.finalsTopM, topAttackers, topDefenders);
-    console.log(`Finals results saved to ${outDir}`);
+  } finally {
+    await taskRunner?.close();
   }
 }
 
