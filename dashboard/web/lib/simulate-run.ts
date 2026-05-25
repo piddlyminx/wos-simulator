@@ -24,6 +24,7 @@ export interface SimulateSidePayload {
   joiners: SimulateJoinerPayload[];
   stat_profile_name?: string | null;
   stat_modifiers?: SimulateStatModifiersPayload;
+  pet_modifiers?: SimulatePetModifiersPayload;
   stats: {
     inf: [number, number, number, number];
     lanc: [number, number, number, number];
@@ -38,6 +39,16 @@ export interface SimulateStatModifiersPayload {
   health: number;
   enemy_attack: number;
   enemy_defense: number;
+}
+
+export interface SimulatePetModifiersPayload {
+  attack: number;
+  defense: number;
+  lethality: number;
+  health: number;
+  enemy_defense: number;
+  enemy_lethality: number;
+  enemy_health: number;
 }
 
 export interface SimulateRequestPayload {

@@ -58,6 +58,7 @@ import {
   SimulateApiResponse,
   SimulateRequestPayload,
   SimulateSidePayload,
+  SimulatePetModifiersPayload,
   SimulateStatModifiersPayload,
 } from "@/lib/simulate-run";
 import type { PlayerStatPreset, StatPresetValues } from "@/lib/stat-presets";
@@ -88,6 +89,33 @@ const STAT_MODIFIER_NAMES = [
 type StatModifierName = (typeof STAT_MODIFIER_NAMES)[number];
 type StatModifierState = Record<StatModifierName, number>;
 const STAT_MODIFIER_OPTIONS = [0, 10, 20] as const;
+const PET_MODIFIER_NAMES = [
+  "attack",
+  "defense",
+  "lethality",
+  "health",
+  "enemy_defense",
+  "enemy_lethality",
+  "enemy_health",
+] as const;
+type PetModifierName = (typeof PET_MODIFIER_NAMES)[number];
+type PetModifierState = Record<PetModifierName, number>;
+const PET_DEBUFF_NAMES: PetModifierName[] = [
+  "enemy_defense",
+  "enemy_lethality",
+  "enemy_health",
+];
+const PET_BUFF_MAX = 10;
+const PET_DEBUFF_MAX = 5;
+const PET_MODIFIER_LABELS: Record<PetModifierName, string> = {
+  attack: "Attack",
+  defense: "Defense",
+  lethality: "Lethality",
+  health: "Health",
+  enemy_defense: "Enemy Defense",
+  enemy_lethality: "Enemy Lethality",
+  enemy_health: "Enemy Health",
+};
 const STAT_MODIFIER_LABELS: Record<StatModifierName, string> = {
   attack: "Attack",
   defense: "Defense",
@@ -125,6 +153,7 @@ interface SideState {
   // stats: 3 unit categories x 4 stats, stored as percentage numbers
   stats: Record<TroopCategory, Record<string, number>>;
   statModifiers: StatModifierState;
+  petModifiers: PetModifierState;
 }
 
 interface SavedRunMeta {
@@ -181,6 +210,7 @@ function defaultSide(): SideState {
       marksman: { attack: 100, defense: 100, lethality: 100, health: 100 },
     },
     statModifiers: defaultStatModifiers(),
+    petModifiers: defaultPetModifiers(),
   };
 }
 
@@ -195,6 +225,18 @@ function defaultStatModifiers(): StatModifierState {
   };
 }
 
+function defaultPetModifiers(): PetModifierState {
+  return {
+    attack: 0,
+    defense: 0,
+    lethality: 0,
+    health: 0,
+    enemy_defense: 0,
+    enemy_lethality: 0,
+    enemy_health: 0,
+  };
+}
+
 function toStatModifiersPayload(
   modifiers: StatModifierState,
 ): SimulateStatModifiersPayload {
@@ -205,6 +247,20 @@ function toStatModifiersPayload(
     health: modifiers.health,
     enemy_attack: -modifiers.enemy_attack,
     enemy_defense: -modifiers.enemy_defense,
+  };
+}
+
+function toPetModifiersPayload(
+  modifiers: PetModifierState,
+): SimulatePetModifiersPayload {
+  return {
+    attack: modifiers.attack,
+    defense: modifiers.defense,
+    lethality: modifiers.lethality,
+    health: modifiers.health,
+    enemy_defense: -modifiers.enemy_defense,
+    enemy_lethality: -modifiers.enemy_lethality,
+    enemy_health: -modifiers.enemy_health,
   };
 }
 
@@ -240,6 +296,7 @@ function toApiPayload(
       : [],
     stat_profile_name: statProfileNames?.[side] ?? null,
     stat_modifiers: toStatModifiersPayload(s.statModifiers),
+    pet_modifiers: toPetModifiersPayload(s.petModifiers),
     stats: {
       inf: [
         s.stats.infantry.attack,
@@ -333,6 +390,39 @@ function parseStatModifiers(
   };
 }
 
+function parsePetModifiers(
+  value: SimulateSidePayload["pet_modifiers"] | undefined,
+): PetModifierState {
+  const defaults = defaultPetModifiers();
+  return {
+    attack: clampValue(value?.attack ?? defaults.attack, defaults.attack),
+    defense: clampValue(value?.defense ?? defaults.defense, defaults.defense),
+    lethality: clampValue(
+      value?.lethality ?? defaults.lethality,
+      defaults.lethality,
+    ),
+    health: clampValue(value?.health ?? defaults.health, defaults.health),
+    enemy_defense: Math.abs(
+      clampValue(
+        value?.enemy_defense ?? defaults.enemy_defense,
+        defaults.enemy_defense,
+      ),
+    ),
+    enemy_lethality: Math.abs(
+      clampValue(
+        value?.enemy_lethality ?? defaults.enemy_lethality,
+        defaults.enemy_lethality,
+      ),
+    ),
+    enemy_health: Math.abs(
+      clampValue(
+        value?.enemy_health ?? defaults.enemy_health,
+        defaults.enemy_health,
+      ),
+    ),
+  };
+}
+
 function sideFromPayload(side: SimulateSidePayload): SideState {
   return {
     troops: {
@@ -368,6 +458,7 @@ function sideFromPayload(side: SimulateSidePayload): SideState {
       marksman: parseStatTuple(side.stats?.mark),
     },
     statModifiers: parseStatModifiers(side.stat_modifiers),
+    petModifiers: parsePetModifiers(side.pet_modifiers),
   };
 }
 
@@ -513,6 +604,18 @@ function manualStatModifierPercent(
   return total;
 }
 
+function petStatModifierPercent(
+  ownModifiers: PetModifierState,
+  opponentModifiers: PetModifierState,
+  stat: StatName,
+): number {
+  let total = ownModifiers[stat] ?? 0;
+  if (stat === "defense") total -= opponentModifiers.enemy_defense;
+  if (stat === "lethality") total -= opponentModifiers.enemy_lethality;
+  if (stat === "health") total -= opponentModifiers.enemy_health;
+  return total;
+}
+
 function effectiveStatBonusPercent(
   side: SideState,
   opponent: SideState,
@@ -522,7 +625,8 @@ function effectiveStatBonusPercent(
 ): number {
   return (
     sideSkill4BonusPercent(side, which, stat as Skill4Stat, rallyMode) +
-    manualStatModifierPercent(side.statModifiers, opponent.statModifiers, stat)
+    manualStatModifierPercent(side.statModifiers, opponent.statModifiers, stat) +
+    petStatModifierPercent(side.petModifiers, opponent.petModifiers, stat)
   );
 }
 
@@ -3085,6 +3189,11 @@ function SidePanel({
                   opponent.statModifiers,
                   stat,
                 );
+                const petBonus = petStatModifierPercent(
+                  state.petModifiers,
+                  opponent.petModifiers,
+                  stat,
+                );
                 const bonus = effectiveStatBonusPercent(
                   state,
                   opponent,
@@ -3102,6 +3211,7 @@ function SidePanel({
                   manualBonus !== 0
                     ? `manual ${signedPercent(manualBonus)}`
                     : null,
+                  petBonus !== 0 ? `pet ${signedPercent(petBonus)}` : null,
                 ]
                   .filter(Boolean)
                   .join(", ");
@@ -3158,6 +3268,7 @@ function SidePanel({
       <StatModifierControls
         which={which}
         modifiers={state.statModifiers}
+        petModifiers={state.petModifiers}
         onChange={(name, value) => {
           setState((prev) => ({
             ...prev,
@@ -3165,6 +3276,40 @@ function SidePanel({
               ...prev.statModifiers,
               [name]: value,
             },
+          }));
+        }}
+        onPetChange={(name, value) => {
+          setState((prev) => ({
+            ...prev,
+            petModifiers: {
+              ...prev.petModifiers,
+              [name]: value,
+            },
+          }));
+        }}
+        onCityPreset={(value) => {
+          setState((prev) => ({
+            ...prev,
+            statModifiers: STAT_MODIFIER_NAMES.reduce(
+              (next, name) => ({ ...next, [name]: value }),
+              {} as StatModifierState,
+            ),
+          }));
+        }}
+        onPetPreset={(enabled) => {
+          setState((prev) => ({
+            ...prev,
+            petModifiers: enabled
+              ? {
+                  attack: PET_BUFF_MAX,
+                  defense: PET_BUFF_MAX,
+                  lethality: PET_BUFF_MAX,
+                  health: PET_BUFF_MAX,
+                  enemy_defense: PET_DEBUFF_MAX,
+                  enemy_lethality: PET_DEBUFF_MAX,
+                  enemy_health: PET_DEBUFF_MAX,
+                }
+              : defaultPetModifiers(),
           }));
         }}
       />
@@ -3175,12 +3320,24 @@ function SidePanel({
 function StatModifierControls({
   which,
   modifiers,
+  petModifiers,
   onChange,
+  onPetChange,
+  onCityPreset,
+  onPetPreset,
 }: {
   which: Side;
   modifiers: StatModifierState;
+  petModifiers: PetModifierState;
   onChange: (name: StatModifierName, value: number) => void;
+  onPetChange: (name: PetModifierName, value: number) => void;
+  onCityPreset: (value: 0 | 10 | 20) => void;
+  onPetPreset: (enabled: boolean) => void;
 }) {
+  const cityPreset = STAT_MODIFIER_OPTIONS.find((value) =>
+    STAT_MODIFIER_NAMES.every((name) => modifiers[name] === value),
+  );
+  const petEnabled = PET_MODIFIER_NAMES.some((name) => petModifiers[name] !== 0);
   return (
     <div
       className="mt-3 rounded border p-2.5"
@@ -3192,29 +3349,26 @@ function StatModifierControls({
       <h4 className="mb-2 text-xs font-bold uppercase tracking-wider opacity-60">
         Extra Buffs / Debuffs
       </h4>
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        {STAT_MODIFIER_NAMES.map((name) => (
-          <div
-            key={name}
-            className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2"
-          >
-            <span className="min-w-0 truncate text-[10px] uppercase tracking-wider opacity-60">
-              {STAT_MODIFIER_LABELS[name]}
+      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+        <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
+          <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+              City
             </span>
             <div
               className="inline-grid grid-cols-3 overflow-hidden rounded border"
               style={{ borderColor: "var(--border-color)" }}
             >
               {STAT_MODIFIER_OPTIONS.map((value) => {
-                const selected = modifiers[name] === value;
+                const selected = cityPreset === value;
                 return (
                   <button
                     key={value}
                     type="button"
-                    aria-label={`${which} ${STAT_MODIFIER_LABELS[name]} ${statModifierDescription(name, value)}`}
+                    aria-label={`${which} city buffs ${value}%`}
                     aria-pressed={selected}
-                    data-testid={`stat-modifier-${which}-${name}-${value}`}
-                    onClick={() => onChange(name, value)}
+                    data-testid={`city-modifier-${which}-${value}`}
+                    onClick={() => onCityPreset(value)}
                     className="min-h-[30px] px-2 text-[10px] font-bold"
                     style={{
                       backgroundColor: selected
@@ -3226,17 +3380,176 @@ function StatModifierControls({
                           ? "0"
                           : "1px solid var(--border-color)",
                     }}
-                    title={`${STAT_MODIFIER_LABELS[name]} ${statModifierDescription(name, value)}`}
+                    title={`Set all city buffs/debuffs to ${value}%`}
                   >
-                    {statModifierDescription(name, value)}
+                    {value}%
                   </button>
                 );
               })}
             </div>
           </div>
-        ))}
+          <details className="group" data-testid={`city-modifier-details-${which}`}>
+            <summary className="cursor-pointer select-none text-[10px] uppercase tracking-wider opacity-60">
+              Individual city buffs
+            </summary>
+            <div className="mt-2 grid grid-cols-1 gap-2">
+              {STAT_MODIFIER_NAMES.map((name) => (
+                <SegmentedCityModifier
+                  key={name}
+                  which={which}
+                  name={name}
+                  value={modifiers[name]}
+                  onChange={onChange}
+                />
+              ))}
+            </div>
+          </details>
+        </div>
+
+        <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
+          <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+              Pets
+            </span>
+            <button
+              type="button"
+              aria-label={`${which} pet buffs ${petEnabled ? "off" : "on"}`}
+              aria-pressed={petEnabled}
+              data-testid={`pet-modifier-${which}-toggle`}
+              onClick={() => onPetPreset(!petEnabled)}
+              className="min-h-[30px] rounded px-3 text-[10px] font-bold"
+              style={{
+                backgroundColor: petEnabled
+                  ? "var(--sidebar-active)"
+                  : "var(--sidebar-bg)",
+                border: "1px solid var(--border-color)",
+                color: petEnabled ? "#111827" : "var(--main-text)",
+              }}
+              title="Toggle pet buffs at max values and debuffs at strongest values."
+            >
+              {petEnabled ? "On" : "Off"}
+            </button>
+          </div>
+          <details data-testid={`pet-modifier-details-${which}`}>
+            <summary className="cursor-pointer select-none text-[10px] uppercase tracking-wider opacity-60">
+              Individual pet buffs
+            </summary>
+            <div className="mt-2 grid grid-cols-1 gap-2">
+              {PET_MODIFIER_NAMES.map((name) => (
+                <PetModifierInput
+                  key={name}
+                  which={which}
+                  name={name}
+                  value={petModifiers[name]}
+                  onChange={onPetChange}
+                />
+              ))}
+            </div>
+          </details>
+        </div>
       </div>
     </div>
+  );
+}
+
+function SegmentedCityModifier({
+  which,
+  name,
+  value,
+  onChange,
+}: {
+  which: Side;
+  name: StatModifierName;
+  value: number;
+  onChange: (name: StatModifierName, value: number) => void;
+}) {
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+      <span className="min-w-0 truncate text-[10px] uppercase tracking-wider opacity-60">
+        {STAT_MODIFIER_LABELS[name]}
+      </span>
+      <div
+        className="inline-grid grid-cols-3 overflow-hidden rounded border"
+        style={{ borderColor: "var(--border-color)" }}
+      >
+        {STAT_MODIFIER_OPTIONS.map((option) => {
+          const selected = value === option;
+          return (
+            <button
+              key={option}
+              type="button"
+              aria-label={`${which} ${STAT_MODIFIER_LABELS[name]} ${statModifierDescription(name, option)}`}
+              aria-pressed={selected}
+              data-testid={`stat-modifier-${which}-${name}-${option}`}
+              onClick={() => onChange(name, option)}
+              className="min-h-[30px] px-2 text-[10px] font-bold"
+              style={{
+                backgroundColor: selected
+                  ? "var(--sidebar-active)"
+                  : "var(--sidebar-bg)",
+                color: selected ? "#111827" : "var(--main-text)",
+                borderRight:
+                  option === 20 ? "0" : "1px solid var(--border-color)",
+              }}
+              title={`${STAT_MODIFIER_LABELS[name]} ${statModifierDescription(name, option)}`}
+            >
+              {statModifierDescription(name, option)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PetModifierInput({
+  which,
+  name,
+  value,
+  onChange,
+}: {
+  which: Side;
+  name: PetModifierName;
+  value: number;
+  onChange: (name: PetModifierName, value: number) => void;
+}) {
+  const isDebuff = PET_DEBUFF_NAMES.includes(name);
+  const max = isDebuff ? PET_DEBUFF_MAX : PET_BUFF_MAX;
+  const display = isDebuff && value > 0 ? `-${value.toFixed(1)}%` : `+${value.toFixed(1)}%`;
+  return (
+    <label className="grid grid-cols-[minmax(0,1fr)_5rem_3.25rem] items-center gap-2 text-[10px]">
+      <span className="min-w-0 truncate uppercase tracking-wider opacity-60">
+        {PET_MODIFIER_LABELS[name]}
+      </span>
+      <input
+        type="number"
+        min={0}
+        max={max}
+        step={0.5}
+        value={value}
+        onChange={(e) => {
+          const parsed = parseFloat(e.target.value);
+          const next = Number.isNaN(parsed)
+            ? 0
+            : Math.max(0, Math.min(max, Math.round(parsed * 2) / 2));
+          onChange(name, next);
+        }}
+        className="min-h-[30px] rounded px-2 text-right font-mono text-[10px] tabular-nums"
+        style={{
+          backgroundColor: "var(--sidebar-bg)",
+          border: "1px solid var(--border-color)",
+          color: "var(--main-text)",
+        }}
+        aria-label={`${which} pet ${PET_MODIFIER_LABELS[name]}`}
+        data-testid={`pet-modifier-${which}-${name}`}
+      />
+      <span
+        className="text-right font-mono tabular-nums"
+        style={{ color: isDebuff && value > 0 ? "#f38ba8" : "#a6e3a1" }}
+      >
+        {value === 0 ? "Off" : display}
+      </span>
+    </label>
   );
 }
 

@@ -759,6 +759,7 @@ test.describe("Dashboard smoke tests", () => {
       .locator('select[aria-label="marksman hero"]')
       .first()
       .selectOption("Alonso");
+    await page.locator('[data-testid="city-modifier-details-attacker"]').click();
     await page
       .locator('[data-testid="stat-modifier-attacker-lethality-10"]')
       .click();
@@ -773,6 +774,7 @@ test.describe("Dashboard smoke tests", () => {
     await page
       .locator('[data-testid="stat-modifier-attacker-attack-10"]')
       .click();
+    await page.locator('[data-testid="city-modifier-details-defender"]').click();
     await page
       .locator('[data-testid="stat-modifier-defender-enemy_attack-20"]')
       .click();
@@ -784,6 +786,35 @@ test.describe("Dashboard smoke tests", () => {
     );
     await expect(attackPreview).toContainText("[90]");
     await expect(attackPreview).toContainText("-10.0%");
+
+    expect(errors).toHaveLength(0);
+  });
+
+  test("/simulate — city presets and pet buffs update stat previews", async ({
+    page,
+  }) => {
+    const errors = await assertNoConsoleErrors(page);
+
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.locator('[data-testid="city-modifier-attacker-10"]').click();
+    await expect(
+      page.locator('[data-testid="stat-preview-attacker-infantry-attack"]'),
+    ).toContainText("+10.0%");
+
+    await page.locator('[data-testid="pet-modifier-defender-toggle"]').click();
+    await expect(
+      page.locator('[data-testid="stat-preview-attacker-infantry-defense"]'),
+    ).toContainText("+5.0%");
+
+    await page.locator('[data-testid="pet-modifier-details-defender"]').click();
+    await page
+      .locator('[data-testid="pet-modifier-defender-enemy_defense"]')
+      .fill("2.5");
+    await expect(
+      page.locator('[data-testid="stat-preview-attacker-infantry-defense"]'),
+    ).toContainText("+7.5%");
 
     expect(errors).toHaveLength(0);
   });

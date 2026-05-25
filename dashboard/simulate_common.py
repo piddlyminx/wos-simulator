@@ -19,6 +19,15 @@ from Base_classes.UnitType import UnitType
 
 
 STAT_MODIFIER_NAMES = ("attack", "defense", "lethality", "health")
+PET_MODIFIER_NAMES = (
+    "attack",
+    "defense",
+    "lethality",
+    "health",
+    "enemy_defense",
+    "enemy_lethality",
+    "enemy_health",
+)
 
 
 def _numeric(value: Any) -> float:
@@ -184,11 +193,30 @@ def _combined_manual_stat_modifiers(
 ) -> Dict[str, float]:
     own = own_cfg.get("stat_modifiers", {}) or {}
     opponent = opponent_cfg.get("stat_modifiers", {}) or {}
+    own_pet = own_cfg.get("pet_modifiers", {}) or {}
+    opponent_pet = opponent_cfg.get("pet_modifiers", {}) or {}
     return {
-        "attack": _numeric(own.get("attack")) + _numeric(opponent.get("enemy_attack")),
-        "defense": _numeric(own.get("defense")) + _numeric(opponent.get("enemy_defense")),
-        "lethality": _numeric(own.get("lethality")),
-        "health": _numeric(own.get("health")),
+        "attack": (
+            _numeric(own.get("attack"))
+            + _numeric(own_pet.get("attack"))
+            + _numeric(opponent.get("enemy_attack"))
+        ),
+        "defense": (
+            _numeric(own.get("defense"))
+            + _numeric(own_pet.get("defense"))
+            + _numeric(opponent.get("enemy_defense"))
+            + _numeric(opponent_pet.get("enemy_defense"))
+        ),
+        "lethality": (
+            _numeric(own.get("lethality"))
+            + _numeric(own_pet.get("lethality"))
+            + _numeric(opponent_pet.get("enemy_lethality"))
+        ),
+        "health": (
+            _numeric(own.get("health"))
+            + _numeric(own_pet.get("health"))
+            + _numeric(opponent_pet.get("enemy_health"))
+        ),
     }
 
 
