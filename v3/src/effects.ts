@@ -97,6 +97,7 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
       kind: skill.sourceKind,
       side: skill.side,
       heroName: skill.heroName,
+      heroInstanceId: skill.heroInstanceId,
       troopType: skill.troopType,
       skillId: skill.id,
       skillName: skill.name,

@@ -5,16 +5,11 @@ This document specifies a clean rewrite of the battle simulator core. It is
 intended to be readable by an implementation agent with no prior conversation
 context.
 
-The rewrite should not preserve the current TypeScript implementation structure
-by default. In particular, avoid copying the current broad event-response bus,
-the special-cased `stat_bonus` path, or effect types that directly encode damage
-formula bucket placement.
-
 The central design principle is:
 
 ```text
-mechanics propose effect intents;
-the battle core owns ordering, validation, bucketing, and damage math.
+mechanics declare typed effect activations;
+the battle core owns ordering, validation, applicability, aggregation, and damage math.
 ```
 
 ## Optional Background Reading
@@ -40,7 +35,6 @@ data.
 - Keep battle orchestration explicit and auditable.
 - Represent all damage-affecting inputs through one centralized damage equation.
 - Allow hero skills and future mechanics to create active runtime effects.
-- Keep damage bucket assignment centralized, not chosen by individual effects.
 - Produce detailed outcomes/traces when requested, while leaving room for a fast
   no-trace mode for high-volume simulation.
 - Provide a testcase runner that can execute every testcase under `v3/testcases`
@@ -51,8 +45,6 @@ data.
 
 - Do not implement a general public event bus unless there is a concrete
   external extension requirement.
-- Do not let skill/effect definitions directly choose numerator/denominator
-  buckets.
 - Do not prematurely optimize with dense matrix/vector internals unless the
   simple model is proven too slow. The conceptual model should remain compatible
   with later array/table optimization.
@@ -62,7 +54,7 @@ data.
 ### Skill
 
 A skill is static catalogue data owned by a hero or another mechanic source.
-It defines a trigger condition and one or more effect intents.
+It defines a trigger condition and one or more effects.
 
 ```ts
 interface SkillDefinition {
@@ -131,22 +123,31 @@ skills whose requirements are not satisfied never enter trigger matching.
 
 ### Effect Intent
 
-An effect intent records what the catalogue/source claims happened. It is input
-to centralized classification, not the final damage interpretation.
+An effect intent records what the catalogue/source wants to activate. In the
+current v3 implementation, `type` is a native canonical effect id, not a loose
+legacy label that must be reinterpreted from separate metadata.
 
-The intent may preserve source data such as a native catalogue label, a
-game-text-derived stat label, source family, or other metadata. These fields are
-evidence used by the classifier; they are not authority to choose a damage
-bucket.
+Supported damage-affecting `type` values either name an atomic bucket directly
+or name a special non-bucket behavior. For example,
+`active.hero.lethality.up` is the bucket identity used by the damage system;
+`extra_skill_attack`, `dodge`, `no_attack`, and `attack_order` are special
+runtime behaviors. The effect still does not decide how that bucket contributes
+to the final damage equation. Placement in the numerator or denominator,
+same-bucket aggregation, job-kind gates, and final multiplication/division are
+owned by the simulator.
+
+The config intentionally rejects legacy metadata fields such as `effect_op` and
+`effect_type`. If previous legacy information matters, it must already be
+encoded in the native `type` string and validated by the v3 loader.
 
 Examples:
 
 ```ts
-{ type: "catalogue_effect", label: "health_up", value: 25 }
-{ type: "catalogue_effect", label: "normal_damage_up", value: 20 }
+{ type: "active.hero.health.up", value: 25 }
+{ type: "type.normal.damage.up", value: 20 }
 { type: "extra_skill_attack", value: 200, trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }] }
-{ type: "attack_control", control: "dodge", pass: "normal" }
-{ type: "battle_order", order: ["marksman", "infantry", "lancer"] }
+{ type: "dodge", value: 100 }
+{ type: "attack_order", value: ["marksman", "infantry", "lancer"] }
 ```
 
 Effect intents may include scope and duration:
@@ -180,7 +181,7 @@ Config selector rules:
 - native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
   unrestricted usage gate.
 - trigger resolution converts config selectors into concrete ActiveEffect
-  scopes before runtime classification.
+  scopes before runtime applicability checks.
 
 ### Active Effect
 
@@ -203,6 +204,7 @@ interface ActiveEffect {
   duration: EffectDuration;
   uses: number;
   stackingKey?: string;
+  sameEffectStacking: "add" | "max";
 }
 ```
 
@@ -244,7 +246,9 @@ type TriggerResponse =
 ```
 
 Trigger responders must not decide damage buckets or canonical modifier classes.
-They return activation/control/order proposals only.
+They return effect activations only. For supported damage effects, the native
+effect `type` already identifies the atomic bucket; the responder still does
+not decide whether that bucket is a numerator or denominator factor.
 
 ## Battle Components
 
@@ -277,29 +281,31 @@ Responsibilities:
 - expire effects by duration
 - provide trace metadata for applied and rejected effects
 
-### Effect Classifier
+### Effect Type Policy
 
-Owns the mapping from active effect intents to canonical damage/control
-interpretation.
+Owns the supported native effect type list and the lightweight runtime
+classification needed to separate damage buckets from special behaviors.
 
 Responsibilities:
 
-- inspect effect source, native labels, source family, scope, pass, and
-  compatibility mode
-- decide whether an effect contributes to damage buckets, attack controls,
-  battle order, extra skill attack, or report-only metadata
-- choose the canonical atomic bucket and aggregation policy group for damage
-  contributors
-- reject or warn on unsupported/ambiguous intents
-- provide trace metadata explaining why an effect was routed to a bucket
+- validate that every native effect `type` is known or reported as unsupported
+- treat atomic bucket names as direct bucket ids for damage-affecting effects
+- identify special non-bucket effects:
+  - `extra_skill_attack`
+  - `dodge`
+  - `no_attack`
+  - `attack_order`
+- apply active-effect scope, side, unit, and job-kind gates before a damage
+  effect contributes to a job
+- reject or report unsupported effects without letting them affect damage
+- provide trace metadata for applied and rejected effects
 
-This is the layer that preserves source evidence, for example routing player
-health stats, passive `stat_bonus: health`, and active `health_up` into distinct
-atomic buckets before the aggregation policy decides how those buckets combine.
-
-The classifier may be configured by a mechanics/compatibility policy, but the
-policy is centralized. Individual skills and active effects do not choose their
-own buckets.
+The current implementation deliberately avoids a second source-evidence
+translation layer for native v3 config. Source family and direction are encoded
+in the `type` string, for example `active.hero.attack.up`,
+`active.troop.defense.down`, or `type.skill.damage.up`. Static base/player
+inputs and passive effects still use separate bucket families so traces retain
+where a factor came from before aggregation.
 
 ### Battle Order Resolver
 
@@ -326,19 +332,19 @@ even when infantry and lancers remain alive.
 
 ### Damage Calculator
 
-Owns the complete damage equation and all bucket routing.
+Owns the complete damage equation and all bucket aggregation.
 
 Responsibilities:
 
 - define all damage buckets
-- ask the effect classifier to route applicable active effects into buckets
+- collect applicable active effects whose native `type` is an atomic bucket
 - aggregate bucket values
 - calculate normal and skill damage
 - return detailed `AttackOutcome` records
 
-Effects may carry labels such as "health up" or "normal damage up"; the
-classifier/calculator decides whether those labels map to a bucket, which bucket
-they share, and how they stack.
+Effects carry native bucket ids such as `active.hero.health.up` or
+`type.normal.damage.up`. The calculator decides how those buckets stack, which
+job kinds they affect, and where their factors participate in the equation.
 
 ## Public API
 
@@ -365,7 +371,8 @@ The config loader must validate:
 
 - every hero definition is valid JSON
 - every referenced `hero_generation` exists
-- every effect `type` is known to the v3 classifier or explicitly unsupported
+- every effect `type` is known to the v3 effect type policy or explicitly
+  unsupported
 - no v3 config file contains legacy fields such as `legacy`, `effect_op`, or
   `effect_type`
 - `troop_skills.json` uses the same skill/effect schema as hero definitions
@@ -743,7 +750,7 @@ For each damage job, the damage calculator:
 
 - fills base factors from round-start troop counts and resolved fighter stats
 - asks the active effect registry for applicable effects
-- routes applicable effects into centralized buckets
+- accepts applicable effects whose native `type` is a supported bucket
 - aggregates same-bucket values
 - computes kills
 - returns an attack outcome
@@ -862,27 +869,31 @@ gated skills.
 
 ## Damage Buckets
 
-The calculator owns the bucket list. The following bucket policy is the
-authoritative initial v3 implementation policy. Do not infer buckets from hero
-text or from the current TypeScript implementation.
+The calculator owns the bucket list. The current v3 implementation uses native
+effect `type` strings as canonical atomic bucket ids for supported bucket
+effects. The authoritative bucket list is the combination of:
+
+- runtime atomic buckets defined by `v3/src/damageBuckets.ts`
+- static raw/player/passive buckets defined by `v3/src/staticDamageProfile.ts`
 
 The v3 catalogue files must be self-contained native data. They must not contain
 legacy metadata such as `legacy.effect_type` or `legacy.effect_op`. If a
 previous legacy op code matters to bucket routing, that information must already
-be represented in the native `type`, for example `lethality_up`, `attack_up`,
-`defense_up`, or `health_up`.
+be represented in the native `type`, for example
+`active.hero.lethality.up`, `active.troop.attack.up`,
+`type.normal.defense.up`, or `passive.health.up`.
 
 ### Bucket Model
 
 The damage calculator has two layers:
 
-- Atomic buckets preserve source evidence and scope.
-- Aggregation groups decide how atomic buckets combine into final factors.
+- Atomic buckets preserve source family, stat/damage kind, direction, and scope.
+- Aggregation groups decide how atomic buckets combine into final factors and
+  whether those factors sit in the numerator or denominator.
 
 Do not collapse catalogue evidence only because two effects currently appear
-equivalent. For example, keep hero-sourced lethality effects distinct from
-troop-sourced lethality effects in trace output even when a future aggregation
-policy adds them together.
+equivalent. Hero-sourced active effects and troop-sourced active effects remain
+separate bucket families even when they are both simple percentage factors.
 
 Atomic buckets are neutral with respect to enemy/self wording. Effect activation
 resolves the side and unit scope. During a damage job:
@@ -906,62 +917,67 @@ player.lethality
 player.health
 player.defense
 
-passive.attack
-passive.lethality
-passive.health
-passive.defense
+passive.attack.up
+passive.attack.down
+passive.lethality.up
+passive.lethality.down
+passive.health.up
+passive.health.down
+passive.defense.up
+passive.defense.down
 
-active.hero.attackUp
-active.hero.attackDown
-active.hero.lethalityUp
-active.hero.lethalityDown
-active.hero.healthUp
-active.hero.healthDown
-active.hero.defenseUp
-active.hero.defenseDown
+active.hero.attack.up
+active.hero.attack.down
+active.hero.lethality.up
+active.hero.lethality.down
+active.hero.health.up
+active.hero.health.down
+active.hero.defense.up
+active.hero.defense.down
 
-active.troop.attackUp
-active.troop.attackDown
-active.troop.lethalityUp
-active.troop.lethalityDown
-active.troop.healthUp
-active.troop.healthDown
-active.troop.defenseUp
-active.troop.defenseDown
+active.troop.attack.up
+active.troop.attack.down
+active.troop.lethality.up
+active.troop.lethality.down
+active.troop.health.up
+active.troop.health.down
+active.troop.defense.up
+active.troop.defense.down
 
-type.normalDamageUp
-type.normalDamageDown
-type.normalDefenseUp
-type.normalDefenseDown
-type.skillDamageUp
-type.skillDamageDown
-type.skillDefenseUp
-type.skillDefenseDown
+type.normal.damage.up
+type.normal.damage.down
+type.normal.defense.up
+type.normal.defense.down
+type.skill.damage.up
+type.skill.damage.down
+type.skill.defense.up
+type.skill.defense.down
 
 source.extraSkill
 ```
 
-`troops.*` and `source.extraSkill` are raw factors. All other listed buckets are
-percentage buckets unless a later mechanics policy explicitly says otherwise.
+`troops.count` and `source.extraSkill` are runtime raw factors. Static
+`troops.base*` buckets are raw factors in the static damage profile. All
+active, passive, type, and player buckets are percentage buckets.
 
 ### Base Input Routing
 
-Populate troop raw buckets for each damage job:
+Populate runtime raw buckets for each damage job:
 
 - current attacker troop count -> `troops.count`
+- extra skill damage multiplier -> `source.extraSkill` for skill jobs
+
+Populate the static damage profile before damage jobs are evaluated:
+
 - base troop attack from troop tier/FC -> `troops.baseAttack`
 - base troop lethality from troop tier/FC -> `troops.baseLethality`
 - base troop health from troop tier/FC -> `troops.baseHealth`
 - base troop defense from troop tier/FC -> `troops.baseDefense`
-
-Populate player stat percentage buckets from player stats:
-
-- player base attack stat -> `player.attack`
-- player base lethality stat -> `player.lethality`
-- player base health stat -> `player.health`
-- player base defense stat -> `player.defense`
-- optional hero stats -> same `player.*` buckets
-- optional hero gear stats -> same `player.*` buckets
+- player attack stat -> `player.attack`
+- player lethality stat -> `player.lethality`
+- player health stat -> `player.health`
+- player defense stat -> `player.defense`
+- static battle-start passives -> `passive.*.up` / `passive.*.down`
 
 Battle reports usually show final stat percentages after player base stats,
 hero stats, and gear stats have been multiplied by passive bonuses:
@@ -974,60 +990,40 @@ When the input only provides this final battle-report value, keep it as an
 already-combined `player.*` value and do not try to infer the hidden passive
 split. When the input provides widget, pet, town, appointment, city, or special
 event stat bonuses separately, route those separate values through `passive.*`
-and let the aggregation policy multiply `player.*` by `passive.*`.
+and let the static damage profile include them as separate contributors.
 
 ### Effect Routing
 
-For passive stat bonuses such as widgets, pets, town buffs, city buffs,
-appointments, and special event buffs, route to signed passive stat buckets:
+For bucket effects, `type` is the route. There is no separate conversion from
+labels such as `attack_up` or `normal_damage_up` in native v3 config.
 
-| Source evidence | Signed contribution |
-| --- | ---: |
-| `stat_bonus`, `stat: "attack"` | `passive.attack += value` |
-| `stat_bonus`, `stat: "lethality"` | `passive.lethality += value` |
-| `stat_bonus`, `stat: "health"` | `passive.health += value` |
-| `stat_bonus`, `stat: "defense"` | `passive.defense += value` |
-| passive `attack_up` | `passive.attack += value` |
-| passive `attack_down` | `passive.attack -= value` |
-| passive `lethality_up` | `passive.lethality += value` |
-| passive `lethality_down` | `passive.lethality -= value` |
-| passive `health_up` | `passive.health += value` |
-| passive `health_down` | `passive.health -= value` |
-| passive `defense_up` | `passive.defense += value` |
-| passive `defense_down` | `passive.defense -= value` |
+| Native `type` family | Role | Job-kind gate |
+| --- | --- | --- |
+| `active.hero.attack.*` | attacker | normal and skill |
+| `active.hero.lethality.*` | attacker | normal and skill |
+| `active.hero.health.*` | defender | normal and skill |
+| `active.hero.defense.*` | defender | normal and skill |
+| `active.troop.attack.*` | attacker | normal and skill |
+| `active.troop.lethality.*` | attacker | normal and skill |
+| `active.troop.health.*` | defender | normal and skill |
+| `active.troop.defense.*` | defender | normal and skill |
+| `type.normal.damage.*` | attacker | normal only |
+| `type.normal.defense.*` | defender | normal only |
+| `type.skill.damage.*` | attacker | skill only |
+| `type.skill.defense.*` | defender | skill only |
+| `passive.attack.*` | attacker | static battle-start profile |
+| `passive.lethality.*` | attacker | static battle-start profile |
+| `passive.health.*` | defender | static battle-start profile |
+| `passive.defense.*` | defender | static battle-start profile |
 
-For active battle effects, preserve both direction and source family as separate
-atomic buckets. Hero-sourced effects route through `active.hero.*`; troop-skill
-effects route through `active.troop.*`. The examples below use `{source} =
-hero | troop`:
-
-| Source evidence | Active bucket |
-| --- | --- |
-| `attack_up` | `active.{source}.attackUp` |
-| `attack_down` | `active.{source}.attackDown` |
-| `lethality_up` | `active.{source}.lethalityUp` |
-| `lethality_down` | `active.{source}.lethalityDown` |
-| `health_up` | `active.{source}.healthUp` |
-| `health_down` | `active.{source}.healthDown` |
-| `defense_up` | `active.{source}.defenseUp` |
-| `defense_down` | `active.{source}.defenseDown` |
-
-For pass-specific effects:
-
-| Source evidence | Type bucket |
-| --- | --- |
-| `normal_damage_up` | `type.normalDamageUp` |
-| `normal_damage_down` | `type.normalDamageDown` |
-| `normal_defense_up` | `type.normalDefenseUp` |
-| `normal_defense_down` | `type.normalDefenseDown` |
-| `skill_damage_up` | `type.skillDamageUp` |
-| `skill_damage_down` | `type.skillDamageDown` |
-| `skill_defense_up` | `type.skillDefenseUp` |
-| `skill_defense_down` | `type.skillDefenseDown` |
+The `up` / `down` suffix is directional identity, not a signed numeric value.
+Native bucket effect values must be finite non-negative numbers. The damage
+equation decides whether an `up` bucket contributes as a numerator factor or a
+denominator factor.
 
 For special non-bucket effects:
 
-| Source evidence | Classification |
+| Native `type` | Classification |
 | --- | --- |
 | `type: "extra_skill_attack"` | create ActiveEffect that can create skill damage jobs |
 | `type: "dodge"` | attack control |
@@ -1035,36 +1031,19 @@ For special non-bucket effects:
 | `type: "attack_order"` | battle order modifier |
 | unsupported record with `reason` only | report warning; do not affect damage |
 
-The classifier must trace both the source evidence and the selected route. For
-example:
-`Jessie/StandOfArms/1 type lethality_up -> active.hero.lethalityUp`.
-
-`crit_damage_up` is currently modeled as a 100% outgoing damage modifier after
-the crit chance trigger succeeds. Its first-pass bucket is
-`active.{source}.damageUp`. This is a testable policy: if game observations
-show crit multiplies separately from ordinary outgoing damage, move it behind a
-named mechanics policy with a separate bucket.
-
 ### Aggregation Config
 
-The final calculation must be driven by a configurable aggregation policy. The
-policy owns which atomic buckets add together and which factors multiply.
+The final calculation is driven by centralized aggregation terms in
+`v3/src/damage.ts`. The policy owns which atomic buckets add together and which
+factors multiply. Native effects only name buckets.
 
 Supported group modes:
 
 - `raw`: use a raw value as a factor.
 - `sum_pct`: sum percentage inputs, then use `1 + sumPct / 100`.
-- `signed_sum_pct`: sum signed percentage inputs, then use
-  `1 + netPct / 100`.
-- `multiply_pct`: convert each percentage input to `1 + pct / 100`, then
-  multiply the factors.
-
-`signed_sum_pct` groups must throw a runtime error when the resulting factor is
-non-positive. Do not clamp. A non-positive passive health or defense factor
-means the mechanics/config are invalid.
 
 ```ts
-type AggregationMode = "raw" | "sum_pct" | "signed_sum_pct" | "multiply_pct";
+type AggregationMode = "raw" | "sum_pct";
 
 interface DamageAggregationGroup {
   id: string;
@@ -1072,63 +1051,50 @@ interface DamageAggregationGroup {
   inputs: string[];
   placement: "numerator" | "denominator";
   appliesTo?: "normal" | "skill" | "all";
-  onNonPositiveFactor?: "throw";
-}
-
-interface DamageAggregationPolicy {
-  groups: DamageAggregationGroup[];
 }
 ```
 
-The initial policy should encode the following hypotheses:
+The current implementation stores runtime bucket values as resolved factors in a
+single per-job scratch array. The no-op value is `1`. Raw factor buckets assign
+their factor directly; percentage buckets add `value / 100` to the existing
+factor. Original percentage contributions are preserved in trace contributor
+metadata and rendered back as `totalPct` for diagnostics.
 
-- `player.*`, `passive.*`, and `active.*` are separate source layers.
-- player stat factors multiply with passive stat factors.
-- passive stat buffs and debuffs combine as signed sums by stat.
-- active hero-sourced effect groups and troop-sourced effect groups multiply
-  with each other.
-- within a source family, active stat effects are configurable.
-- active effects use stat buckets directly; catalogue damage-dealt effects map
-  to lethality, and damage-taken effects map to defense.
-
-Passive signed-stat examples:
-
-```text
-passive.attack contributions:
-  +20 attack buff
-  +15 attack buff
-  -10 attack debuff applied by opponent
-
-netPct = 25
-factor = 1.25
-```
-
-```text
-passive.health contributions:
-  -105 health debuffs
-
-factor = 1 + (-105 / 100) = -0.05
-result = throw DamageAggregationError
-```
-
-The default equation shape remains:
+The default runtime aggregation shape is:
 
 ```text
 damage =
   troops.count-derived army factor
-  * troops.baseAttack
-  * troops.baseLethality
-  * configured numerator aggregation group factors
   * source.extraSkill
-  / troops.baseHealth
-  / troops.baseDefense
+  * static attacker offense factor
+  * static defender defense factor
+  * configured numerator aggregation group factors
   / configured denominator aggregation group factors
   / 100
 ```
 
-For a normal damage job, only `appliesTo: "normal"` and `appliesTo: "all"`
-groups participate. For a skill damage job, only `appliesTo: "skill"` and
-`appliesTo: "all"` groups participate.
+The static attacker offense factor includes troop base attack/lethality,
+player attack/lethality, and applicable passive attack/lethality buckets. The
+static defender defense factor includes the reciprocal of troop base
+health/defense, player health/defense, and applicable passive health/defense
+buckets, with passive `.down` defender buckets participating as numerator
+factors.
+
+Runtime active and type buckets are aggregated by metadata on each bucket:
+
+- active attacker attack/lethality `.up` and defender health/defense `.down`
+  buckets multiply into the numerator
+- active attacker attack/lethality `.down` and defender health/defense `.up`
+  buckets multiply into the denominator
+- `type.normal.*` buckets participate only in normal damage jobs
+- `type.skill.*` buckets participate only in skill damage jobs
+- trace aggregation group ids use the bucket path directly, for example
+  `active.hero.lethality.up`
+
+For same-effect stacking, the default is additive. Effects with
+`same_effect_stacking: "max"` and the same stacking key contribute only the
+largest applicable value for that bucket; suppressed candidates are traceable in
+full detail mode.
 
 ### Aggregation Errors
 
@@ -1138,7 +1104,6 @@ calculator should throw a structured `DamageAggregationError` with at least:
 - aggregation group id
 - round
 - damage job id
-- side and unit
 - net percentage
 - resulting factor
 - contributing effect ids and source labels
@@ -1301,9 +1266,9 @@ Keep the design compatible with later optimization:
 - allow a future dense table implementation where each damage bucket is an
   array over damage cells
 
-The first implementation should prioritize a correct centralized equation and
-well-tested effect classification/bucket routing over vectorized-style
-calculation.
+The implementation should prioritize a correct centralized equation and
+well-tested effect type policy, applicability, and bucket aggregation over
+vectorized-style calculation.
 
 ## Suggested Implementation Order
 
@@ -1328,9 +1293,8 @@ tests before or alongside implementation.
    - file path variants
    - testcase id plus `idx`
    - duplicate-id regression fixture
-5. Implement `EffectClassifier` with tests for effect intent/source -> canonical
-   interpretation, bucket routing, pass-specific buckets, and target
-   applicability.
+5. Implement effect type policy/indexing with tests for native `type` support,
+   bucket role, pass-specific buckets, and target applicability.
 6. Implement `DamageCalculator` with no skills, using explicit damage jobs and
    base/chief/stat bucket inputs.
 7. Implement `ActiveEffectRegistry` applicability, target locks, seeded
@@ -1402,8 +1366,9 @@ Required focused regression tests:
 - Extra skill attack may increment cumulative attack counters.
 - Damage bucket assignment is centralized.
 - Atomic bucket traces preserve source evidence before aggregation.
-- Aggregation policy defines which bucket groups add, signed-add, or multiply.
-- Passive stat bonuses and debuffs use signed stat buckets by default.
+- Aggregation policy defines which bucket groups add and where resulting factors
+  multiply or divide.
+- Passive stat bonuses and debuffs use explicit `.up` / `.down` bucket ids.
 - `stat_bonus` is passive stat source evidence, not player base stat input.
 - Probability values are percentages, not fractions.
 - Engagement type skill requirements are inactive unless battle mechanics

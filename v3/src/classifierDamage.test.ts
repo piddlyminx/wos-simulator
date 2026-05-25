@@ -341,8 +341,8 @@ test("default aggregation multiplies hero and troop active damage buckets", () =
 
   assert.equal(combined.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 20);
   assert.equal(combined.trace?.atomicBuckets["active.troop.lethality.up"].totalPct, 10);
-  assert.equal(combined.trace?.aggregationGroups["active.hero.attacker.lethality.up"].factor, 1.2);
-  assert.equal(combined.trace?.aggregationGroups["active.troop.attacker.lethality.up"].factor, 1.1);
+  assert.equal(combined.trace?.aggregationGroups["active.hero.lethality.up"].factor, 1.2);
+  assert.equal(combined.trace?.aggregationGroups["active.troop.lethality.up"].factor, 1.1);
   assert.ok(Math.abs(combined.kills - baseline.kills * 1.2 * 1.1) < 1e-12);
 });
 
@@ -370,8 +370,8 @@ test("pass-specific buckets only apply to matching damage job kind", () => {
   });
 
   assert.equal(normalOutcome.trace?.atomicBuckets["type.normal.damage.up"].totalPct, 100);
-  assert.equal(normalOutcome.trace?.aggregationGroups["type.attacker.skill.damage.up"], undefined);
-  assert.equal(skillOutcome.trace?.aggregationGroups["type.attacker.normal.damage.up"], undefined);
+  assert.equal(normalOutcome.trace?.aggregationGroups["type.skill.damage.up"], undefined);
+  assert.equal(skillOutcome.trace?.aggregationGroups["type.normal.damage.up"], undefined);
   assert.equal(skillOutcome.trace?.atomicBuckets["type.skill.damage.up"].totalPct, 100);
 });
 

@@ -104,7 +104,7 @@ export interface SimulateTrace {
   seed: number;
   outcome: number;
   rounds: SimulateTraceRound[];
-  skill_kills: Record<"attacker" | "defender", Record<string, Record<string, number>>>;
+  skill_kills: Record<"attacker" | "defender", Record<string, Record<string, { triggers: number; kills: number }>>>;
   effect_usage: Record<"attacker" | "defender", Record<string, Record<string, number>>>;
   total_kills: Record<
     "attacker" | "defender",

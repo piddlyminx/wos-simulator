@@ -699,6 +699,116 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
   );
 });
 
+test("skill report attributes kills only to the skill damage source", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { Shooter: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: { Guard: { skill_1: 1 } }
+      }
+    },
+    minimalConfig({
+      Shooter: {
+        name: "Shooter",
+        skills: {
+          PowerShot: {
+            trigger: { type: "attack", source: "marksman" },
+            effects: {
+              shot: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      },
+      Guard: {
+        name: "Guard",
+        skills: {
+          CrystalShield: {
+            trigger: { type: "attack", source: "enemy.any", target: "self.infantry" },
+            effects: {
+              shield: {
+                type: "active.hero.defense.up",
+                value: 50,
+                units: { applies_to: "trigger.target", applies_vs: "trigger.source" },
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const powerShot = result.skillReport.attacker.find((entry) => entry.skillId === "PowerShot");
+  const crystalShield = result.skillReport.defender.find((entry) => entry.skillId === "CrystalShield");
+
+  assert.ok((powerShot?.skillKills ?? 0) > 0);
+  assert.equal(crystalShield?.skillKills, 0);
+});
+
+test("same-round outcomes are capped to available target troops before tracing skill kills", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 1000 },
+        heroes: { Blaster: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 10 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      Blaster: {
+        name: "Blaster",
+        skills: {
+          DoubleBlast: {
+            trigger: { type: "attack", source: "marksman" },
+            effects: {
+              first: {
+                type: "extra_skill_attack",
+                value: 500,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              },
+              second: {
+                type: "extra_skill_attack",
+                value: 500,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "attack", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const defenderLosses = result.attacks
+    .filter((attack) => attack.defenderSide === "defender" && attack.defenderUnit === "infantry")
+    .reduce((sum, attack) => sum + attack.kills, 0);
+  const doubleBlast = result.skillReport.attacker.find((entry) => entry.skillId === "DoubleBlast");
+
+  assert.equal(Number(defenderLosses.toFixed(6)), 10);
+  assert.ok((doubleBlast?.skillKills ?? 0) <= 10);
+  assert.equal(result.remaining.defender.infantry, 0);
+});
+
 test("extra skill trigger damage jobs reject missing runtime selectors", () => {
   assert.throws(
     () =>

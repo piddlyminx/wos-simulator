@@ -4141,17 +4141,23 @@ function SkillKillSummary({
             {SIDE_LABELS[side]} skill kills
           </h5>
           {Object.keys(trace.skill_kills[side] ?? {}).length === 0 ? (
-            <p className="text-xs opacity-50">No attributed skill kills.</p>
+            <p className="text-xs opacity-50">No triggered skills.</p>
           ) : (
             Object.entries(trace.skill_kills[side]).map(([hero, skills]) => (
               <div key={hero} className="mb-2 last:mb-0">
                 <div className="font-bold opacity-80">{hero}</div>
-                {Object.entries(skills).map(([skill, kills]) => (
-                  <div key={skill} className="flex justify-between gap-3 opacity-70">
-                    <span>{skill}</span>
-                    <span>{formatTraceNumber(kills)}</span>
-                  </div>
-                ))}
+                <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-x-3 gap-y-1 opacity-70">
+                  <span className="text-xs uppercase opacity-60">Skill</span>
+                  <span className="text-right text-xs uppercase opacity-60">Triggers</span>
+                  <span className="text-right text-xs uppercase opacity-60">Kills</span>
+                  {Object.entries(skills).map(([skill, row]) => (
+                    <Fragment key={skill}>
+                      <span className="min-w-0 truncate">{skill}</span>
+                      <span className="text-right">{formatTraceNumber(row.triggers)}</span>
+                      <span className="text-right">{formatTraceNumber(row.kills)}</span>
+                    </Fragment>
+                  ))}
+                </div>
               </div>
             ))
           )}
@@ -4197,8 +4203,8 @@ function RoundTraceDetails({
             <div className="space-y-1">
               {round[side].effects
                 .filter((effect) => effect.used)
-                .map((effect) => (
-                  <div key={effect.id} className="opacity-75">
+                .map((effect, index) => (
+                  <div key={`${effect.id}:${index}`} className="opacity-75">
                     <span className="font-bold">{effect.hero}</span>{" "}
                     {effect.skill_name} / {effect.effect_name} ({effect.effect_type})
                   </div>
@@ -4235,19 +4241,6 @@ function TraceTotals({
               </div>
             );
           })}
-          <div className="mt-3">
-            <h6 className="mb-1 text-xs uppercase tracking-wider opacity-50 font-bold">
-              Effect uses
-            </h6>
-            {Object.entries(trace.effect_usage[side] ?? {}).flatMap(([unit, effects]) =>
-              Object.entries(effects).map(([effect, uses]) => (
-                <div key={`${unit}-${effect}`} className="flex justify-between gap-3 opacity-70">
-                  <span>{TRACE_UNIT_LABELS[unit as SimulateTraceUnit] ?? unit}: {effect}</span>
-                  <span>{formatTraceNumber(uses)}</span>
-                </div>
-              )),
-            )}
-          </div>
         </div>
       ))}
     </div>

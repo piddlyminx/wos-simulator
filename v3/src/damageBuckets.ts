@@ -2,10 +2,14 @@ import type { DamageKind } from "./types";
 
 export type BucketRole = "attacker" | "defender";
 export type BucketValueType = "raw" | "pct";
+export type BucketUpdate = "assign_factor" | "add_pct_factor";
+export type BucketPlacement = "numerator" | "denominator";
 
 export interface BucketLeaf {
   role: BucketRole;
   valueType: BucketValueType;
+  update: BucketUpdate;
+  placement: BucketPlacement;
   appliesTo?: DamageKind;
 }
 
@@ -15,70 +19,70 @@ type BucketTree = {
 
 export const BUCKETS = {
   troops: {
-    count: { role: "attacker", valueType: "raw" }
+    count: { role: "attacker", valueType: "raw", update: "assign_factor", placement: "numerator" }
   },
   active: {
     hero: {
       attack: {
-        up: { role: "attacker", valueType: "pct" },
-        down: { role: "attacker", valueType: "pct" }
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
       },
       defense: {
-        up: { role: "defender", valueType: "pct" },
-        down: { role: "defender", valueType: "pct" }
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
       },
       lethality: {
-        up: { role: "attacker", valueType: "pct" },
-        down: { role: "attacker", valueType: "pct" }
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
       },
       health: {
-        up: { role: "defender", valueType: "pct" },
-        down: { role: "defender", valueType: "pct" }
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
       }
     },
     troop: {
       attack: {
-        up: { role: "attacker", valueType: "pct" },
-        down: { role: "attacker", valueType: "pct" }
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
       },
       defense: {
-        up: { role: "defender", valueType: "pct" },
-        down: { role: "defender", valueType: "pct" }
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
       },
       lethality: {
-        up: { role: "attacker", valueType: "pct" },
-        down: { role: "attacker", valueType: "pct" }
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
       },
       health: {
-        up: { role: "defender", valueType: "pct" },
-        down: { role: "defender", valueType: "pct" }
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
       }
     }
   },
   type: {
     normal: {
       damage: {
-        up: { role: "attacker", valueType: "pct", appliesTo: "normal" },
-        down: { role: "attacker", valueType: "pct", appliesTo: "normal" }
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "normal" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "normal" }
       },
       defense: {
-        up: { role: "defender", valueType: "pct", appliesTo: "normal" },
-        down: { role: "defender", valueType: "pct", appliesTo: "normal" }
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "normal" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "normal" }
       }
     },
     skill: {
       damage: {
-        up: { role: "attacker", valueType: "pct", appliesTo: "skill" },
-        down: { role: "attacker", valueType: "pct", appliesTo: "skill" }
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "skill" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "skill" }
       },
       defense: {
-        up: { role: "defender", valueType: "pct", appliesTo: "skill" },
-        down: { role: "defender", valueType: "pct", appliesTo: "skill" }
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "skill" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "skill" }
       }
     }
   },
   source: {
-    extraSkill: { role: "attacker", valueType: "raw", appliesTo: "skill" }
+    extraSkill: { role: "attacker", valueType: "raw", update: "assign_factor", placement: "numerator", appliesTo: "skill" }
   }
 } as const satisfies BucketTree;
 
@@ -111,5 +115,5 @@ function flattenBuckets(tree: BucketTree, prefix = ""): Record<string, BucketDef
 }
 
 function isBucketLeaf(value: BucketLeaf | BucketTree): value is BucketLeaf {
-  return "role" in value && "valueType" in value;
+  return "role" in value && "valueType" in value && "update" in value && "placement" in value;
 }

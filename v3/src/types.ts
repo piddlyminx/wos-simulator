@@ -221,6 +221,7 @@ export interface EffectSource {
   kind: "hero_skill" | "troop_skill" | "input_stat" | "unknown";
   side: SideId;
   heroName?: string;
+  heroInstanceId?: string;
   troopType?: UnitType;
   skillId?: string;
   skillName?: string;
@@ -273,6 +274,7 @@ export interface DamageJob {
   defenderSide: SideId;
   defenderUnit: UnitType;
   sourceEffectId?: string;
+  sourceSkillReportKey?: string;
   sourceMultiplier?: number;
   consumedEffectIds?: string[];
   consumedEffectUseKey?: string;
@@ -328,6 +330,8 @@ export interface AppliedEffectTrace {
 export interface AttackOutcome {
   jobId: string;
   kind: DamageKind;
+  sourceEffectId?: string;
+  sourceSkillReportKey?: string;
   attackerSide: SideId;
   attackerUnit: UnitType;
   defenderSide: SideId;
@@ -355,6 +359,7 @@ export interface SkillReportEntry {
   triggersSeen: number;
   skillActivations: number;
   effectActivations: number;
+  skillKills: number;
   unsupportedEffects: string[];
 }
 

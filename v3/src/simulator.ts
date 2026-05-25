@@ -7,6 +7,7 @@ import type {
   BattleResult,
   BattleTrace,
   DamageJob,
+  EffectSource,
   FighterInput,
   ResolvedFighter,
   ResolvedSkill,
@@ -170,6 +171,7 @@ function runBattle(input: BattleInput, config: SimulatorConfig, options: Simulat
       roundOutcomes.push(outcome);
       consumeEffects(runtime, outcome.consumedEffectIds, outcome.consumedEffectUseKey, outcome.consumedEffectUseId, outcome.consumedEffectUseIds);
     }
+    finalizeRoundOutcomes(roundOutcomes, roundStartTroops, runtime);
     if (detail === "full") attacks.push(...cancelled, ...roundOutcomes);
     commitOutcomes(cancelled, fighters, runtime);
     commitOutcomes(roundOutcomes, fighters, runtime);
@@ -302,6 +304,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
         triggersSeen: 0,
         skillActivations: 0,
         effectActivations: 0,
+        skillKills: 0,
         unsupportedEffects: []
       });
     }
@@ -527,6 +530,7 @@ function extraSkillJobs(
       const multiplier = multiplierForTriggerDamageJob(definition.multiplier, effect, round);
       if (multiplier <= 0) continue;
       const sourceEffectId = effect.source.effectId ?? effect.intent.id;
+      const sourceSkillReportKey = reportKeyForEffectSource(effect.source);
       for (const source of sources) {
         if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
         for (const target of targets) {
@@ -542,6 +546,7 @@ function extraSkillJobs(
             defenderSide: target.side,
             defenderUnit: target.unit,
             sourceEffectId,
+            sourceSkillReportKey,
             sourceMultiplier: multiplier,
             consumedEffectIds,
             consumedEffectUseKey,
@@ -663,6 +668,36 @@ function cancelledOutcome(intent: AttackIntent, effectId: string, reason: "dodge
     cancelledBy: effectId,
     cancelReason: reason
   };
+}
+
+function finalizeRoundOutcomes(outcomes: AttackOutcome[], roundStartTroops: DamageJob["roundStartTroops"], runtime: Runtime): void {
+  capRoundOutcomeKills(outcomes, roundStartTroops);
+  attributeSkillKills(outcomes, runtime);
+}
+
+function capRoundOutcomeKills(outcomes: AttackOutcome[], roundStartTroops: DamageJob["roundStartTroops"]): void {
+  for (const side of ["attacker", "defender"] as SideId[]) {
+    for (const unit of UNIT_TYPES) {
+      const matching = outcomes.filter((outcome) => outcome.defenderSide === side && outcome.defenderUnit === unit && outcome.kills > 0);
+      if (matching.length === 0) continue;
+      const available = Math.max(0, roundStartTroops[side][unit] ?? 0);
+      const totalKills = matching.reduce((sum, outcome) => sum + outcome.kills, 0);
+      if (totalKills <= available) continue;
+      const scale = available / totalKills;
+      for (const outcome of matching) {
+        outcome.kills *= scale;
+        if (outcome.trace) outcome.trace.finalKills = outcome.kills;
+      }
+    }
+  }
+}
+
+function attributeSkillKills(outcomes: AttackOutcome[], runtime: Runtime): void {
+  for (const outcome of outcomes) {
+    if (outcome.kind !== "skill" || !outcome.sourceSkillReportKey || outcome.kills <= 0) continue;
+    const report = runtime.skillReports[outcome.attackerSide].get(outcome.sourceSkillReportKey);
+    if (report) report.skillKills += outcome.kills;
+  }
 }
 
 function commitOutcomes(outcomes: AttackOutcome[], fighters: Record<SideId, ResolvedFighter>, runtime: Runtime): void {
@@ -787,7 +822,16 @@ function buildResolved(attacker: ResolvedFighter, defender: ResolvedFighter): Ba
 function reportKey(skill: ResolvedSkill): string {
   const cached = REPORT_KEY_CACHE.get(skill);
   if (cached) return cached;
-  const key = `${skill.sourceKind}:${skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? ""}:${skill.id}`;
+  const key = reportKeyFromParts(skill.sourceKind, skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? "", skill.id);
   REPORT_KEY_CACHE.set(skill, key);
   return key;
+}
+
+function reportKeyForEffectSource(source: EffectSource): string | undefined {
+  if ((source.kind !== "hero_skill" && source.kind !== "troop_skill") || !source.skillId) return undefined;
+  return reportKeyFromParts(source.kind, source.heroInstanceId ?? source.heroName ?? source.troopType ?? "", source.skillId);
+}
+
+function reportKeyFromParts(sourceKind: SkillReportEntry["sourceKind"], sourceKey: string, skillId: string): string {
+  return `${sourceKind}:${sourceKey}:${skillId}`;
 }

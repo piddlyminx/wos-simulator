@@ -12,7 +12,7 @@ import type {
 } from "./types";
 import { UNIT_TYPES } from "./types";
 import { classifyEffectForJob } from "./classifier";
-import { ATOMIC_BUCKETS, type AtomicBucket } from "./damageBuckets";
+import { ATOMIC_BUCKETS, BUCKET_DEFINITIONS, type AtomicBucket } from "./damageBuckets";
 import { currentEffectValuePct, isEffectActive } from "./effects";
 import { bucketCandidatesForJob, type EffectIndex } from "./effectIndex";
 import {
@@ -26,29 +26,12 @@ type AtomicBuckets = Record<string, DamageBucketTrace>;
 type GroupPlacement = "numerator" | "denominator";
 type DamageDetail = "full" | "fast";
 type NumericBucketId = number;
-type DamageTerm = RawDamageTerm | PctDamageTerm | ConstantDamageTerm;
-
-interface RawDamageTerm {
-  kind: "raw";
+interface DamageFactorTerm {
   id: string;
   bucket: NumericBucketId;
+  bucketName: AtomicBucket;
   placement: GroupPlacement;
-  inputBucket: AtomicBucket;
-}
-
-interface PctDamageTerm {
-  kind: "pct";
-  id: string;
-  inputs: NumericBucketId[];
-  placement: GroupPlacement;
-  inputBuckets: AtomicBucket[];
-  onNonPositiveFactor?: "throw";
   appliesTo?: DamageJob["kind"];
-}
-
-interface ConstantDamageTerm {
-  kind: "constant";
-  value: number;
 }
 
 interface BucketCandidate {
@@ -68,9 +51,7 @@ interface DamageExpressionResult {
 }
 
 interface NumericDamageBuckets {
-  raw: Float64Array;
-  pct: Float64Array;
-  rawSet: Uint8Array;
+  factors: Float64Array;
   contributors?: DamageBucketTrace["contributors"][];
 }
 
@@ -81,44 +62,13 @@ const EMPTY_AGGREGATION_GROUPS: Record<string, DamageAggregationGroupTrace> = {}
 const EMPTY_APPLIED_EFFECT_IDS: AttackOutcome["appliedEffectIds"] = [];
 const EMPTY_COUNTER_DELTAS: AttackOutcome["counterDeltas"] = [];
 const EMPTY_CONSUMED_EFFECT_IDS: AttackOutcome["consumedEffectIds"] = [];
-const TROOPS_COUNT_TERM = rawTerm("troops.count", "troops.count", "numerator");
-const SOURCE_EXTRA_SKILL_TERM = rawTerm("source.extraSkill", "source.extraSkill", "numerator");
-
-const DEFAULT_NUMERATOR_TERMS: DamageTerm[] = [
-  TROOPS_COUNT_TERM,
-  SOURCE_EXTRA_SKILL_TERM,
-  pctTerm("active.hero.attacker.attack.up", ["active.hero.attack.up"], "numerator"),
-  pctTerm("active.hero.defender.health.down", ["active.hero.health.down"], "numerator"),
-  pctTerm("active.hero.defender.defense.down", ["active.hero.defense.down"], "numerator"),
-  pctTerm("active.hero.attacker.lethality.up", ["active.hero.lethality.up"], "numerator"),
-  pctTerm("active.troop.attacker.attack.up", ["active.troop.attack.up"], "numerator"),
-  pctTerm("active.troop.defender.health.down", ["active.troop.health.down"], "numerator"),
-  pctTerm("active.troop.defender.defense.down", ["active.troop.defense.down"], "numerator"),
-  pctTerm("active.troop.attacker.lethality.up", ["active.troop.lethality.up"], "numerator"),
-  pctTerm("type.attacker.normal.damage.up", ["type.normal.damage.up"], "numerator", { appliesTo: "normal" }),
-  pctTerm("type.defender.normal.defense.down", ["type.normal.defense.down"], "numerator", { appliesTo: "normal" }),
-  pctTerm("type.attacker.skill.damage.up", ["type.skill.damage.up"], "numerator", { appliesTo: "skill" }),
-  pctTerm("type.defender.skill.defense.down", ["type.skill.defense.down"], "numerator", { appliesTo: "skill" })
-];
-
-const DEFAULT_DENOMINATOR_TERMS: DamageTerm[] = [
-  constantTerm(100),
-  pctTerm("active.hero.attacker.attack.down", ["active.hero.attack.down"], "denominator"),
-  pctTerm("active.hero.attacker.lethality.down", ["active.hero.lethality.down"], "denominator"),
-  pctTerm("active.hero.defender.health.up", ["active.hero.health.up"], "denominator"),
-  pctTerm("active.hero.defender.defense.up", ["active.hero.defense.up"], "denominator"),
-  pctTerm("active.troop.attacker.attack.down", ["active.troop.attack.down"], "denominator"),
-  pctTerm("active.troop.attacker.lethality.down", ["active.troop.lethality.down"], "denominator"),
-  pctTerm("active.troop.defender.health.up", ["active.troop.health.up"], "denominator"),
-  pctTerm("active.troop.defender.defense.up", ["active.troop.defense.up"], "denominator"),
-  pctTerm("type.attacker.normal.damage.down", ["type.normal.damage.down"], "denominator", { appliesTo: "normal" }),
-  pctTerm("type.defender.normal.defense.up", ["type.normal.defense.up"], "denominator", { appliesTo: "normal" }),
-  pctTerm("type.attacker.skill.damage.down", ["type.skill.damage.down"], "denominator", { appliesTo: "skill" }),
-  pctTerm("type.defender.skill.defense.up", ["type.skill.defense.up"], "denominator", { appliesTo: "skill" })
-];
-
-const PROFILED_NUMERATOR_TERMS = DEFAULT_NUMERATOR_TERMS.filter((term): term is PctDamageTerm => term.kind === "pct");
-const PROFILED_DENOMINATOR_TERMS = DEFAULT_DENOMINATOR_TERMS.filter((term): term is PctDamageTerm => term.kind === "pct");
+const TROOPS_COUNT_TERM = factorTerm("troops.count");
+const SOURCE_EXTRA_SKILL_TERM = factorTerm("source.extraSkill");
+const DEFAULT_FACTOR_TERMS = ATOMIC_BUCKETS.map((bucket) => factorTerm(bucket));
+const DEFAULT_NUMERATOR_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "numerator");
+const DEFAULT_DENOMINATOR_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "denominator");
+const PROFILED_NUMERATOR_TERMS = DEFAULT_NUMERATOR_TERMS.filter((term) => term.bucketName !== "troops.count" && term.bucketName !== "source.extraSkill");
+const PROFILED_DENOMINATOR_TERMS = DEFAULT_DENOMINATOR_TERMS;
 
 export class DamageAggregationError extends Error {
   readonly groupId: string;
@@ -165,8 +115,8 @@ export function calculateDamageJob(
   const armyTerm = Math.ceil(Math.sqrt(Math.max(0, attackerTroops)) * Math.sqrt(minInitialArmy));
   const needsTraceBuckets = traceEnabled;
   const buckets = needsTraceBuckets || !options.scratch ? createNumericDamageBuckets(needsTraceBuckets) : resetDamageScratch(options.scratch);
-  setRaw(buckets, "troops.count", armyTerm);
-  setRaw(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
+  applyBucketValue(buckets, "troops.count", armyTerm);
+  applyBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
 
   const appliedEffects: DamageEquationTrace["appliedEffects"] = detail === "full" ? [] : [];
   const rejectedEffects: DamageEquationTrace["rejectedEffects"] = detail === "full" ? [] : [];
@@ -179,7 +129,7 @@ export function calculateDamageJob(
     candidates.push({
       effect: candidate.effect,
       bucket: candidate.bucket,
-      valuePct: valueForBucket(candidate.bucket, currentEffectValuePct(candidate.effect, job.round))
+      valuePct: currentEffectValuePct(candidate.effect, job.round)
     });
   }
 
@@ -230,6 +180,8 @@ export function calculateDamageJob(
   return {
     jobId: job.id,
     kind: job.kind,
+    sourceEffectId: job.sourceEffectId,
+    sourceSkillReportKey: job.sourceSkillReportKey,
     attackerSide: job.attackerSide,
     attackerUnit: job.attackerUnit,
     defenderSide: job.defenderSide,
@@ -290,7 +242,7 @@ function applyBucketCandidateGroup(
   rejectedEffects: DamageEquationTrace["rejectedEffects"],
   consumedEffectIds: Set<string>
 ): void {
-  const appliedValuePct = addPercent(
+  const appliedValuePct = applyBucketValue(
     buckets,
     selected.bucket,
     selected.valuePct,
@@ -325,40 +277,22 @@ function applyBucketCandidateGroup(
   }
 }
 
-function valueForBucket(_bucket: AtomicBucket, valuePct: number): number {
-  return valuePct;
-}
-
-function rawTerm(id: string, bucket: AtomicBucket, placement: GroupPlacement): RawDamageTerm {
-  return { kind: "raw", id, bucket: BUCKET_IDS[bucket], placement, inputBucket: bucket };
-}
-
-function pctTerm(
-  id: string,
-  inputs: AtomicBucket[],
-  placement: GroupPlacement,
-  options: { onNonPositiveFactor?: "throw"; appliesTo?: DamageJob["kind"] } = {}
-): PctDamageTerm {
+function factorTerm(bucket: AtomicBucket): DamageFactorTerm {
+  const definition = BUCKET_DEFINITIONS[bucket];
   return {
-    kind: "pct",
-    id,
-    inputs: inputs.map((bucket) => BUCKET_IDS[bucket]),
-    placement,
-    inputBuckets: inputs,
-    onNonPositiveFactor: options.onNonPositiveFactor,
-    appliesTo: options.appliesTo
+    id: bucket,
+    bucket: BUCKET_IDS[bucket],
+    bucketName: bucket,
+    placement: definition.placement,
+    appliesTo: definition.appliesTo
   };
 }
 
-function constantTerm(value: number): ConstantDamageTerm {
-  return { kind: "constant", value };
-}
-
 function createNumericDamageBuckets(collectTrace: boolean): NumericDamageBuckets {
+  const factors = new Float64Array(ATOMIC_BUCKETS.length);
+  factors.fill(1);
   return {
-    raw: new Float64Array(ATOMIC_BUCKETS.length),
-    pct: new Float64Array(ATOMIC_BUCKETS.length),
-    rawSet: new Uint8Array(ATOMIC_BUCKETS.length),
+    factors,
     contributors: collectTrace ? Array.from({ length: ATOMIC_BUCKETS.length }, () => []) : undefined
   };
 }
@@ -368,16 +302,26 @@ export function createFastDamageScratch(): DamageScratch {
 }
 
 function resetDamageScratch(buckets: DamageScratch): DamageScratch {
-  buckets.raw.fill(0);
-  buckets.pct.fill(0);
-  buckets.rawSet.fill(0);
+  buckets.factors.fill(1);
   return buckets;
 }
 
-function setRaw(buckets: NumericDamageBuckets, bucket: AtomicBucket, raw: number): void {
-  const index = BUCKET_IDS[bucket];
-  buckets.raw[index] = raw;
-  buckets.rawSet[index] = 1;
+function applyBucketValue(
+  buckets: NumericDamageBuckets,
+  bucketName: AtomicBucket,
+  value: number,
+  effectId = "",
+  source = "",
+  traceBucketName = bucketName,
+  stackingKey?: string,
+  sameEffectStacking: SameEffectStacking = "add"
+): number {
+  const index = BUCKET_IDS[bucketName];
+  const definition = BUCKET_DEFINITIONS[bucketName];
+  if (definition.update === "assign_factor") buckets.factors[index] = Math.max(0, value);
+  else buckets.factors[index] += value / 100;
+  if (effectId) buckets.contributors?.[index].push({ effectId, source, valuePct: value, bucket: traceBucketName, stackingKey, sameEffectStacking });
+  return value;
 }
 
 function appendStaticProfileAppliedEffects(appliedEffects: DamageEquationTrace["appliedEffects"], entry: StaticDamageProfileEntry): void {
@@ -394,22 +338,6 @@ function appendStaticProfileAppliedEffects(appliedEffects: DamageEquationTrace["
       });
     }
   }
-}
-
-function addPercent(
-  buckets: NumericDamageBuckets,
-  bucketName: AtomicBucket,
-  valuePct: number,
-  effectId: string,
-  source: string,
-  traceBucketName: string,
-  stackingKey?: string,
-  sameEffectStacking: SameEffectStacking = "add"
-): number {
-  const index = BUCKET_IDS[bucketName];
-  buckets.pct[index] += valuePct;
-  buckets.contributors?.[index].push({ effectId, source, valuePct, bucket: traceBucketName, stackingKey, sameEffectStacking });
-  return valuePct;
 }
 
 function evaluateDefaultDamageExpression(job: DamageJob, buckets: NumericDamageBuckets, detail: DamageDetail, staticProfile?: StaticDamageProfile): DamageExpressionResult {
@@ -467,51 +395,36 @@ function validateProfiledPctFactor(job: DamageJob, groupId: string, entry: Stati
   });
 }
 
-function valueForTerm(term: DamageTerm, job: DamageJob, buckets: NumericDamageBuckets): number {
-  if (term.kind === "constant") return term.value;
-  if (term.kind === "raw") return Math.max(0, buckets.raw[term.bucket]);
+function valueForTerm(term: DamageFactorTerm, job: DamageJob, buckets: NumericDamageBuckets): number {
   if (term.appliesTo && term.appliesTo !== job.kind) return 1;
-  let totalPct = 0;
-  for (const bucket of term.inputs) totalPct += buckets.pct[bucket];
-  const factor = 1 + totalPct / 100;
-  if (factor <= 0 && term.onNonPositiveFactor === "throw") {
-    throw new DamageAggregationError({
-      groupId: term.id,
-      round: job.round,
-      jobId: job.id,
-      netPct: totalPct,
-      factor,
-      contributors: contributorsForTerm(term, buckets)
-    });
-  }
-  return factor;
+  return buckets.factors[term.bucket];
 }
 
 function buildAggregationGroups(job: DamageJob, buckets: NumericDamageBuckets, staticProfile?: StaticDamageProfile): Record<string, DamageAggregationGroupTrace> {
   const aggregationGroups: Record<string, DamageAggregationGroupTrace> = {};
   if (staticProfile) addStaticAggregationGroups(aggregationGroups, job, staticProfile);
   for (const term of [...DEFAULT_NUMERATOR_TERMS, ...DEFAULT_DENOMINATOR_TERMS]) {
-    if (term.kind === "constant") continue;
-    if (term.kind === "pct" && term.appliesTo && term.appliesTo !== job.kind) continue;
-    if (term.kind === "raw") {
+    if (term.appliesTo && term.appliesTo !== job.kind) continue;
+    const definition = BUCKET_DEFINITIONS[term.bucketName];
+    const factor = buckets.factors[term.bucket];
+    if (definition.valueType === "raw") {
       aggregationGroups[term.id] = {
         id: term.id,
         mode: "raw",
         placement: term.placement,
-        inputBuckets: [term.inputBucket],
-        factor: Math.max(0, buckets.raw[term.bucket]),
+        inputBuckets: [term.bucketName],
+        factor,
         contributors: contributorsForTerm(term, buckets)
       };
     } else {
-      let totalPct = 0;
-      for (const bucket of term.inputs) totalPct += buckets.pct[bucket];
+      const totalPct = pctFromFactor(factor);
       aggregationGroups[term.id] = {
         id: term.id,
         mode: "sum_pct",
         placement: term.placement,
-        inputBuckets: [...term.inputBuckets],
+        inputBuckets: [term.bucketName],
         totalPct,
-        factor: 1 + totalPct / 100,
+        factor,
         contributors: contributorsForTerm(term, buckets)
       };
     }
@@ -583,21 +496,21 @@ function addStaticPctGroup(
   };
 }
 
-function contributorsForTerm(term: RawDamageTerm | PctDamageTerm, buckets: NumericDamageBuckets): DamageBucketTrace["contributors"] {
+function contributorsForTerm(term: DamageFactorTerm, buckets: NumericDamageBuckets): DamageBucketTrace["contributors"] {
   if (!buckets.contributors) return [];
-  const indexes = term.kind === "raw" ? [term.bucket] : term.inputs;
-  return indexes.flatMap((index) => buckets.contributors?.[index] ?? []);
+  return buckets.contributors[term.bucket] ?? [];
 }
 
 function toTraceBuckets(buckets: NumericDamageBuckets, staticEntries: StaticDamageProfileEntry[] = []): AtomicBuckets {
   const traced = Object.fromEntries(
     ATOMIC_BUCKETS.map((bucket, index) => {
       const contributors = buckets.contributors?.[index] ?? [];
-      if (buckets.rawSet[index]) {
-        return [bucket, { raw: buckets.raw[index], factor: Math.max(0, buckets.raw[index]), contributors: [...contributors] }];
+      const definition = BUCKET_DEFINITIONS[bucket];
+      const factor = buckets.factors[index];
+      if (definition.valueType === "raw") {
+        return [bucket, { raw: factor, factor, contributors: [...contributors] }];
       }
-      const totalPct = buckets.pct[index];
-      return [bucket, { totalPct, factor: 1 + totalPct / 100, contributors: [...contributors] }];
+      return [bucket, { totalPct: pctFromFactor(factor), factor, contributors: [...contributors] }];
     })
   ) as AtomicBuckets;
   for (const entry of staticEntries) {
@@ -614,6 +527,10 @@ function toTraceBuckets(buckets: NumericDamageBuckets, staticEntries: StaticDama
 
 function totalTroops(troops: Record<UnitType, number>): number {
   return UNIT_TYPES.reduce((sum, unit) => sum + (troops[unit] ?? 0), 0);
+}
+
+function pctFromFactor(factor: number): number {
+  return Number(((factor - 1) * 100).toFixed(12));
 }
 
 function sourceLabel(effect: ActiveEffect): string {
