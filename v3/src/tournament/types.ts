@@ -43,4 +43,5 @@ export interface TournamentOptions {
   freezeRate: number;
   startFreezeRound: number;
   minPoolSize: number;
+  freezeLossesGte?: number;
 }

@@ -8,6 +8,10 @@ export function avgMargin(score: Score): number {
   return score.matches > 0 ? score.margin / score.matches : 0;
 }
 
+export function losses(score: Score): number {
+  return score.matches - score.wins;
+}
+
 export class Pool {
   readonly teams: Team[];
   readonly scoreById = new Map<number, Score>();
@@ -27,12 +31,42 @@ export class Pool {
 
   freezeBottomTeams(freezeRate: number): void {
     if (this.scoresActive.length === 0) return;
-    this.sortActive();
     const count = Math.min(this.scoresActive.length, Math.max(1, Math.floor(this.scoresActive.length * freezeRate)));
-    for (let index = 0; index < count; index += 1) {
+    this.freezeBottomCount(count);
+  }
+
+  freezeBottomCount(count: number): void {
+    if (this.scoresActive.length === 0 || count <= 0) return;
+    this.sortActive();
+    const freezeCount = Math.min(this.scoresActive.length, count);
+    for (let index = 0; index < freezeCount; index += 1) {
       const score = this.scoresActive.pop();
       if (score) this.scoresFinal.unshift(score);
     }
+  }
+
+  countActiveLossesAtLeast(minLosses: number): number {
+    return this.scoresActive.filter((score) => losses(score) >= minLosses).length;
+  }
+
+  freezeLossesAtLeast(minLosses: number, count: number): void {
+    if (this.scoresActive.length === 0 || count <= 0) return;
+    const sorted = this.sortActive();
+    const selected = new Set<Score>();
+    for (const score of sorted) {
+      if (losses(score) >= minLosses) selected.add(score);
+    }
+    for (let index = sorted.length - 1; selected.size < count && index >= 0; index -= 1) {
+      selected.add(sorted[index]);
+    }
+    const frozen: Score[] = [];
+    const active: Score[] = [];
+    for (const score of sorted) {
+      if (selected.has(score)) frozen.push(score);
+      else active.push(score);
+    }
+    this.scoresActive = active;
+    this.scoresFinal = [...frozen, ...this.scoresFinal];
   }
 
   get teamsActiveOrdered(): Team[] {

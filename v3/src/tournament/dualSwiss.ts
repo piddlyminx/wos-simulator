@@ -52,7 +52,7 @@ export async function runDualSwissTournament(
 ): Promise<[Pool, Pool]> {
   const startedAt = Date.now();
   let round = 1;
-  const freezeEnabled = options.freezeRate > 0;
+  const freezeEnabled = options.freezeRate > 0 || options.freezeLossesGte !== undefined;
   while (true) {
     const elapsedMins = (Date.now() - startedAt) / 60000;
     const activeAttackers = attackerPool.teamsActiveOrdered;
@@ -69,14 +69,28 @@ export async function runDualSwissTournament(
     const results = await runner(tasks, options.jobs, (completed, total) => onProgress?.(label, completed, total));
     aggregateBattleResults(attackerPool, defenderPool, results);
     if (freezeEnabled && round >= options.startFreezeRound) {
-      attackerPool.freezeBottomTeams(options.freezeRate);
-      defenderPool.freezeBottomTeams(options.freezeRate);
+      freezePools(attackerPool, defenderPool, options);
     }
     round += 1;
   }
   attackerPool.finalizeRemaining();
   defenderPool.finalizeRemaining();
   return [attackerPool, defenderPool];
+}
+
+function freezePools(attackerPool: Pool, defenderPool: Pool, options: TournamentOptions): void {
+  if (options.freezeLossesGte !== undefined) {
+    const count = Math.max(
+      attackerPool.countActiveLossesAtLeast(options.freezeLossesGte),
+      defenderPool.countActiveLossesAtLeast(options.freezeLossesGte)
+    );
+    attackerPool.freezeLossesAtLeast(options.freezeLossesGte, count);
+    defenderPool.freezeLossesAtLeast(options.freezeLossesGte, count);
+    return;
+  }
+
+  attackerPool.freezeBottomTeams(options.freezeRate);
+  defenderPool.freezeBottomTeams(options.freezeRate);
 }
 
 export async function runFinalsRoundRobin(

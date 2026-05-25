@@ -47,6 +47,41 @@ test("freezeBottomTeams inserts later better freezes before earlier worse freeze
   assert.deepEqual(pool.teamsFinalOrdered.map((item) => item.id), [3, 4]);
 });
 
+test("freezeBottomCount freezes the requested number of lowest active teams", () => {
+  const pool = new Pool([team(1), team(2), team(3), team(4)]);
+  pool.getScore(1).matches = 2;
+  pool.getScore(1).wins = 2;
+  pool.getScore(2).matches = 2;
+  pool.getScore(2).wins = 1;
+  pool.getScore(3).matches = 2;
+  pool.getScore(3).wins = 0;
+  pool.getScore(4).matches = 2;
+  pool.getScore(4).wins = 0;
+  pool.getScore(4).margin = -10;
+
+  pool.freezeBottomCount(2);
+
+  assert.deepEqual(pool.teamsActiveOrdered.map((item) => item.id), [1, 2]);
+  assert.deepEqual(pool.teamsFinalOrdered.map((item) => item.id), [3, 4]);
+});
+
+test("freezeLossesAtLeast freezes loss threshold matches plus any extra bottom-ranked teams", () => {
+  const pool = new Pool([team(1), team(2), team(3), team(4)]);
+  pool.getScore(1).matches = 5;
+  pool.getScore(1).wins = 3;
+  pool.getScore(2).matches = 4;
+  pool.getScore(2).wins = 1;
+  pool.getScore(3).matches = 6;
+  pool.getScore(3).wins = 1;
+  pool.getScore(4).matches = 3;
+  pool.getScore(4).wins = 3;
+
+  pool.freezeLossesAtLeast(3, 3);
+
+  assert.deepEqual(pool.teamsActiveOrdered.map((item) => item.id), [4]);
+  assert.deepEqual(pool.teamsFinalOrdered.map((item) => item.id), [1, 2, 3]);
+});
+
 test("finalizeRemaining preserves active teams above frozen teams", () => {
   const pool = new Pool([team(1), team(2), team(3)]);
   pool.getScore(1).matches = 1;

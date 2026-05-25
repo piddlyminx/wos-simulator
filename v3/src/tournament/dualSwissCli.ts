@@ -21,6 +21,7 @@ export interface CliOptions {
   jobs: number;
   seed: number;
   freezeRate: number;
+  freezeLossesGte?: number;
   startFreezeRound: number;
   minPoolSize: number;
   finalsTopM: number;
@@ -41,6 +42,7 @@ const VALUE_FLAGS = new Set([
   "--jobs",
   "--seed",
   "--freeze-rate",
+  "--freeze-losses-gte",
   "--start-freeze-round",
   "--min-pool-size",
   "--finals-top-m",
@@ -64,14 +66,18 @@ export function parseCliArgs(argv: string[]): CliOptions {
     minPoolSize: 200,
     finalsTopM: 200,
     finalsMaxSameHeroes: 10,
-    repeatJoiners: true
+    repeatJoiners: false
   };
 
   for (let index = 0; index < argv.length; index += 1) {
-    const arg = argv[index];
+    const rawArg = argv[index];
+    const equalsIndex = rawArg.startsWith("--") ? rawArg.indexOf("=") : -1;
+    const arg = equalsIndex > 0 ? rawArg.slice(0, equalsIndex) : rawArg;
+    const inlineValue = equalsIndex > 0 ? rawArg.slice(equalsIndex + 1) : undefined;
+    const readValue = () => nextValue(argv, inlineValue === undefined ? ++index : index, arg, inlineValue);
     switch (arg) {
       case "--ratios": {
-        const ratios: string[] = [];
+        const ratios: string[] = inlineValue === undefined ? [] : [inlineValue];
         while (index + 1 < argv.length && !argv[index + 1].startsWith("--")) {
           ratios.push(argv[index + 1]);
           index += 1;
@@ -81,49 +87,52 @@ export function parseCliArgs(argv: string[]): CliOptions {
         break;
       }
       case "--total":
-        options.total = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.total = parseInteger(readValue(), arg);
         break;
       case "--rounds":
-        options.rounds = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.rounds = parseInteger(readValue(), arg);
         break;
       case "--time-limit":
-        options.timeLimit = parseNumber(nextValue(argv, ++index, arg), arg);
+        options.timeLimit = parseNumber(readValue(), arg);
         break;
       case "--seed-rounds":
-        options.seedRounds = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.seedRounds = parseInteger(readValue(), arg);
         break;
       case "--reps":
-        options.reps = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.reps = parseInteger(readValue(), arg);
         break;
       case "--top-n":
-        options.topN = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.topN = parseInteger(readValue(), arg);
         break;
       case "--jobs":
-        options.jobs = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.jobs = parseInteger(readValue(), arg);
         break;
       case "--seed":
-        options.seed = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.seed = parseInteger(readValue(), arg);
         break;
       case "--freeze-rate":
-        options.freezeRate = parseNumber(nextValue(argv, ++index, arg), arg);
+        options.freezeRate = parseNumber(readValue(), arg);
+        break;
+      case "--freeze-losses-gte":
+        options.freezeLossesGte = parseInteger(readValue(), arg);
         break;
       case "--start-freeze-round":
-        options.startFreezeRound = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.startFreezeRound = parseInteger(readValue(), arg);
         break;
       case "--min-pool-size":
-        options.minPoolSize = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.minPoolSize = parseInteger(readValue(), arg);
         break;
       case "--finals-top-m":
-        options.finalsTopM = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.finalsTopM = parseInteger(readValue(), arg);
         break;
       case "--finals-reps":
-        options.finalsReps = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.finalsReps = parseInteger(readValue(), arg);
         break;
       case "--finals-only":
-        options.finalsOnly = nextValue(argv, ++index, arg);
+        options.finalsOnly = readValue();
         break;
       case "--finals-max-same-heroes":
-        options.finalsMaxSameHeroes = parseInteger(nextValue(argv, ++index, arg), arg);
+        options.finalsMaxSameHeroes = parseInteger(readValue(), arg);
         break;
       case "--repeat-joiners":
         options.repeatJoiners = true;
@@ -188,6 +197,7 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         seed: args.seed,
         timeLimitMins: args.timeLimit,
         freezeRate: args.freezeRate,
+        freezeLossesGte: args.freezeLossesGte,
         startFreezeRound: args.startFreezeRound,
         minPoolSize: args.minPoolSize
       },
@@ -221,7 +231,11 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   }
 }
 
-function nextValue(argv: string[], index: number, flag: string): string {
+function nextValue(argv: string[], index: number, flag: string, inlineValue?: string): string {
+  if (inlineValue !== undefined) {
+    if (inlineValue.length === 0) throw new Error(`${flag} requires a value`);
+    return inlineValue;
+  }
   const value = argv[index];
   if (value === undefined || (value.startsWith("--") && VALUE_FLAGS.has(value))) throw new Error(`${flag} requires a value`);
   return value;
@@ -251,6 +265,7 @@ function validateOptions(options: CliOptions): void {
   }
   if (options.jobs < 1) throw new Error("--jobs must be at least 1");
   if (options.freezeRate < 0 || options.freezeRate > 1) throw new Error("--freeze-rate must be between 0 and 1");
+  if (options.freezeLossesGte !== undefined && options.freezeLossesGte < 0) throw new Error("--freeze-losses-gte must be >= 0");
   if (options.seedRounds < 0) throw new Error("--seed-rounds must be >= 0");
   if (options.rounds < 0) throw new Error("--rounds must be >= 0");
   if (options.reps < 1) throw new Error("--reps must be >= 1");

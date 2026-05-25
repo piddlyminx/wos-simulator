@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { Pool } from "./pools.js";
-import { aggregateBattleResults, createDualRankingTasks, createRandomRoundTasks, runFinalsRoundRobin } from "./dualSwiss.js";
+import { aggregateBattleResults, createDualRankingTasks, createRandomRoundTasks, runDualSwissTournament, runFinalsRoundRobin } from "./dualSwiss.js";
 import type { BattleSummary, BattleTask, Team } from "./types.js";
 
 function team(id: number): Team {
@@ -54,6 +54,49 @@ test("createRandomRoundTasks is deterministic", () => {
     first.map((task) => [task.attacker.id, task.defender.id, task.seed]),
     second.map((task) => [task.attacker.id, task.defender.id, task.seed])
   );
+});
+
+test("runDualSwissTournament freezes equal pool counts by accumulated loss threshold", async () => {
+  const teams = [team(1), team(2), team(3), team(4)];
+  const taskCounts: number[] = [];
+  let round = 0;
+  const runner = async (tasks: BattleTask[]): Promise<BattleSummary[]> => {
+    round += 1;
+    taskCounts.push(tasks.length);
+    return tasks.map((task) => {
+      const attackerWins =
+        round === 1 ? task.attacker.id === 1 || task.attacker.id === 2 : task.attacker.id === 1 || task.attacker.id === 3;
+      return {
+        attackerId: task.attacker.id,
+        defenderId: task.defender.id,
+        avgAttackerLeft: attackerWins ? 10 : 0,
+        avgDefenderLeft: attackerWins ? 0 : 10
+      };
+    });
+  };
+
+  const [attackPool, defensePool] = await runDualSwissTournament(
+    new Pool(teams),
+    new Pool(teams),
+    {
+      totalRounds: 4,
+      seedRounds: 0,
+      reps: 1,
+      jobs: 1,
+      seed: 10,
+      freezeRate: 0,
+      startFreezeRound: 1,
+      minPoolSize: 1,
+      freezeLossesGte: 2
+    },
+    runner
+  );
+
+  assert.deepEqual(taskCounts, [4, 4, 3, 2]);
+  assert.equal(attackPool.scoresActive.length, 0);
+  assert.equal(defensePool.scoresActive.length, 0);
+  assert.deepEqual(attackPool.finalScoresOrdered.map((score) => score.team.id), [1, 3, 2, 4]);
+  assert.deepEqual(defensePool.finalScoresOrdered.map((score) => score.team.id), [4, 2, 3, 1]);
 });
 
 test("runFinalsRoundRobin scores from scratch", async () => {
