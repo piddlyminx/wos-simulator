@@ -122,7 +122,7 @@ test("round-start trigger source self.any rolls once then creates one target-loc
             trigger: { type: "turn", source: "self.any" },
             effects: {
               buff: {
-                type: "active.hero.damage.up",
+                type: "active.hero.lethality.up",
                 value: 100,
                 units: { applies_to: "trigger", applies_vs: "target" },
                 duration: { type: "turn", value: 1 }
@@ -161,7 +161,7 @@ test("attack trigger source and target selectors match relative to the skill own
             trigger: { type: "attack", source: "enemy.any", target: "self.infantry" },
             effects: {
               guard: {
-                type: "active.hero.damageTaken.down",
+                type: "active.hero.defense.up",
                 value: 100,
                 units: { applies_to: "target", applies_vs: "target" },
                 duration: { type: "attack", value: 1 }
@@ -281,7 +281,7 @@ test("array joiner heroes preserve duplicate skill instances", () => {
             trigger: { type: "battle_start" },
             effects: {
               boost: {
-                type: "active.hero.damage.up",
+                type: "active.hero.lethality.up",
                 value: 10,
                 units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
                 duration: { type: "battle", value: 1 },
@@ -428,16 +428,16 @@ test("cancelled normal attacks advance attack counters for later frequency check
 });
 
 test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
-  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.damage.up"));
-  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.damage.up"));
+  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.lethality.up"));
+  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.lethality.up"));
 
   const maxRoundTwo = maxResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
   const addRoundTwo = addResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
 
-  assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 100);
-  assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 1);
-  assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 200);
-  assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 2);
+  assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 100);
+  assert.equal(maxRoundTwo?.trace?.atomicBuckets["active.hero.lethality.up"].contributors.length, 1);
+  assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 200);
+  assert.equal(addRoundTwo?.trace?.atomicBuckets["active.hero.lethality.up"].contributors.length, 2);
 });
 
 test("same_effect_stacking max caps duplicate hero instances of the same skill effect", () => {
@@ -455,13 +455,13 @@ test("same_effect_stacking max caps duplicate hero instances of the same skill e
         heroes: {}
       }
     },
-    sameEffectStackingConfig("Repeat", "max", "active.hero.damage.up")
+    sameEffectStackingConfig("Repeat", "max", "active.hero.lethality.up")
   );
 
   const attack = result.attacks.find((entry) => entry.jobId.startsWith("r1:attacker:infantry") && entry.kind === "normal");
   assert.equal(result.skillReport.attacker.filter((entry) => entry.heroName === "Repeat" && entry.skillId === "Overlap").length, 2);
-  assert.equal(attack?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 100);
-  assert.equal(attack?.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 1);
+  assert.equal(attack?.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 100);
+  assert.equal(attack?.trace?.atomicBuckets["active.hero.lethality.up"].contributors.length, 1);
 });
 
 test("same_effect_stacking max caps overlapping extra skill attacks while add keeps all activations", () => {
@@ -1221,7 +1221,7 @@ test("attack-triggered source and target selectors resolve to concrete active sc
             trigger: { type: "attack", source: "infantry" },
             effects: {
               down: {
-                type: "active.hero.damage.down",
+                type: "active.hero.lethality.down",
                 value: 50,
                 units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
                 duration: { type: "turn", value: 1 }
@@ -1237,9 +1237,9 @@ test("attack-triggered source and target selectors resolve to concrete active sc
   const defenderLancerAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "lancer");
   const defenderMarksmanAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "marksman");
 
-  assert.equal(attackerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 50);
-  assert.equal(defenderLancerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
-  assert.equal(defenderMarksmanAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
+  assert.equal(attackerAttack?.trace?.atomicBuckets["active.hero.lethality.down"].totalPct, 50);
+  assert.equal(defenderLancerAttack?.trace?.atomicBuckets["active.hero.lethality.down"].totalPct, 0);
+  assert.equal(defenderMarksmanAttack?.trace?.atomicBuckets["active.hero.lethality.down"].totalPct, 0);
 });
 
 test('attack-triggered target selector with applies_vs "any" gates later opposing attacks', () => {
@@ -1264,7 +1264,7 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
             trigger: { type: "attack", source: "infantry" },
             effects: {
               down: {
-                type: "active.hero.damage.down",
+                type: "active.hero.lethality.down",
                 value: 50,
                 units: { applies_to: "trigger.target", applies_vs: "any" },
                 duration: { type: "turn", value: 1 }
@@ -1280,9 +1280,9 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
   const defenderLancerAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "lancer");
   const defenderMarksmanAttack = result.attacks.find((attack) => attack.attackerSide === "defender" && attack.attackerUnit === "marksman");
 
-  assert.equal(attackerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
-  assert.equal(defenderLancerAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 50);
-  assert.equal(defenderMarksmanAttack?.trace?.atomicBuckets["active.hero.damage.down"].totalPct, 0);
+  assert.equal(attackerAttack?.trace?.atomicBuckets["active.hero.lethality.down"].totalPct, 0);
+  assert.equal(defenderLancerAttack?.trace?.atomicBuckets["active.hero.lethality.down"].totalPct, 50);
+  assert.equal(defenderMarksmanAttack?.trace?.atomicBuckets["active.hero.lethality.down"].totalPct, 0);
 });
 
 test("engagement_type requirements decide whether hero skills resolve", () => {
@@ -1455,7 +1455,7 @@ test("fast simulation matches full semantic output without detailed attacks", ()
           heroes: {}
         }
       },
-      config: sameEffectStackingConfig("Repeat", "max", "active.hero.damage.up")
+      config: sameEffectStackingConfig("Repeat", "max", "active.hero.lethality.up")
     },
     {
       name: "controls and extra skill attacks",
@@ -1633,7 +1633,7 @@ function sameEffectStackingInput(heroName: string): BattleInput {
   };
 }
 
-function sameEffectStackingConfig(heroName: string, same_effect_stacking: "add" | "max", type: "active.hero.damage.up" | "extra_skill_attack"): SimulatorConfig {
+function sameEffectStackingConfig(heroName: string, same_effect_stacking: "add" | "max", type: "active.hero.lethality.up" | "extra_skill_attack"): SimulatorConfig {
   const effect: Omit<EffectIntentDefinition, "id"> =
     type === "extra_skill_attack"
       ? {

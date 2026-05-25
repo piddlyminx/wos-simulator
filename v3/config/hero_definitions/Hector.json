@@ -39,7 +39,7 @@
       },
       "effects": {
         "Rampant/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             100,
             125,
@@ -64,7 +64,7 @@
           }
         },
         "Rampant/2": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             20,
             40,

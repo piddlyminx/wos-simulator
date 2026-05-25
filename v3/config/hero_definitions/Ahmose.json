@@ -74,7 +74,7 @@
       },
       "effects": {
         "PrayerOfFlame/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             20,
             40,
@@ -98,7 +98,7 @@
       },
       "effects": {
         "BladeOfLight/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             12,
             24,

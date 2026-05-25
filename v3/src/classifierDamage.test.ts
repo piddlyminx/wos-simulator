@@ -30,7 +30,7 @@ test("resolved effect scope matches concrete side and unit masks", () => {
   const active: ActiveEffect = {
     id: "resolved-scope",
     source: { kind: "hero_skill", side: "attacker", heroName: "Example", skillId: "Scope", effectId: "scope/1" },
-    intent: { id: "scope/1", type: "active.hero.damage.up", value: 25 },
+    intent: { id: "scope/1", type: "active.hero.lethality.up", value: 25 },
     ownerSide: "attacker",
     kind: "modifier",
     valuePct: 25,
@@ -43,7 +43,7 @@ test("resolved effect scope matches concrete side and unit masks", () => {
     sameEffectStacking: "add"
   };
 
-  assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.damage.up");
+  assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.lethality.up");
   assert.equal(
     classifyEffectForJob(active, {
       ...job,
@@ -114,8 +114,8 @@ test("classifier routes up/down effects into neutral atomic buckets", () => {
 test("classifier keeps hero and troop active effects in separate atomic buckets", () => {
   assert.equal(classifyEffectForJob(effect("active.hero.lethality.up", "attacker", 20, "hero_skill"), job)?.bucket, "active.hero.lethality.up");
   assert.equal(classifyEffectForJob(effect("active.troop.lethality.up", "attacker", 20, "troop_skill"), job)?.bucket, "active.troop.lethality.up");
-  assert.equal(classifyEffectForJob(effect("active.hero.damage.up", "attacker", 10, "hero_skill"), job)?.bucket, "active.hero.damage.up");
-  assert.equal(classifyEffectForJob(effect("active.troop.damage.up", "attacker", 10, "troop_skill"), job)?.bucket, "active.troop.damage.up");
+  assert.equal(classifyEffectForJob(effect("active.hero.lethality.up", "attacker", 10, "hero_skill"), job)?.bucket, "active.hero.lethality.up");
+  assert.equal(classifyEffectForJob(effect("active.troop.lethality.up", "attacker", 10, "troop_skill"), job)?.bucket, "active.troop.lethality.up");
 });
 
 test("classifier routes the complete native bucket policy into atomic buckets", () => {
@@ -125,9 +125,9 @@ test("classifier routes the complete native bucket policy into atomic buckets", 
     ["active.hero.lethality.down", "active.hero.lethality.down"],
     ["active.hero.attack.up", "active.hero.attack.up"],
     ["active.hero.attack.down", "active.hero.attack.down"],
-    ["active.hero.damage.up", "active.hero.damage.up"],
-    ["active.hero.damage.down", "active.hero.damage.down"],
-    ["active.hero.damage.up", "active.hero.damage.up"],
+    ["active.hero.lethality.up", "active.hero.lethality.up"],
+    ["active.hero.lethality.down", "active.hero.lethality.down"],
+    ["active.hero.lethality.up", "active.hero.lethality.up"],
     ["type.normal.damage.up", "type.normal.damage.up"],
     ["type.normal.damage.down", "type.normal.damage.down"],
     ["type.skill.damage.up", "type.skill.damage.up"],
@@ -136,8 +136,8 @@ test("classifier routes the complete native bucket policy into atomic buckets", 
     ["active.hero.defense.down", "active.hero.defense.down"],
     ["active.hero.health.up", "active.hero.health.up"],
     ["active.hero.health.down", "active.hero.health.down"],
-    ["active.hero.damageTaken.down", "active.hero.damageTaken.down"],
-    ["active.hero.damageTaken.up", "active.hero.damageTaken.up"],
+    ["active.hero.defense.up", "active.hero.defense.up"],
+    ["active.hero.defense.down", "active.hero.defense.down"],
     ["type.normal.defense.up", "type.normal.defense.up"],
     ["type.normal.defense.down", "type.normal.defense.down"],
     ["type.skill.defense.up", "type.skill.defense.up"],
@@ -148,8 +148,8 @@ test("classifier routes the complete native bucket policy into atomic buckets", 
     "active.hero.defense.down",
     "active.hero.health.up",
     "active.hero.health.down",
-    "active.hero.damageTaken.down",
-    "active.hero.damageTaken.up",
+    "active.hero.defense.up",
+    "active.hero.defense.down",
     "type.normal.defense.up",
     "type.normal.defense.down",
     "type.skill.defense.up",
@@ -335,12 +335,12 @@ test("default aggregation multiplies hero and troop active damage buckets", () =
   const combined = calculateIndexedDamageJob(
     job,
     fighters,
-    [effect("active.hero.lethality.up", "attacker", 20, "hero_skill"), effect("active.troop.damage.up", "attacker", 10, "troop_skill")],
+    [effect("active.hero.lethality.up", "attacker", 20, "hero_skill"), effect("active.troop.lethality.up", "attacker", 10, "troop_skill")],
     { trace: true }
   );
 
   assert.equal(combined.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 20);
-  assert.equal(combined.trace?.atomicBuckets["active.troop.damage.up"].totalPct, 10);
+  assert.equal(combined.trace?.atomicBuckets["active.troop.lethality.up"].totalPct, 10);
   assert.equal(combined.trace?.aggregationGroups["active.hero.attacker.lethality.up"].factor, 1.2);
   assert.equal(combined.trace?.aggregationGroups["active.troop.attacker.lethality.up"].factor, 1.1);
   assert.ok(Math.abs(combined.kills - baseline.kills * 1.2 * 1.1) < 1e-12);
@@ -413,14 +413,14 @@ test("turn-duration bucket effects are visible on the attack outcome without bei
 
 test("attack-duration effects are only consumed when they participate in the calculation", () => {
   const defenderOutgoingBuff = {
-    ...effect("active.hero.damage.up", "defender", 100),
+    ...effect("active.hero.lethality.up", "defender", 100),
     id: "defender-outgoing-buff",
     duration: { type: "attack" as const, value: 1 }
   };
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [defenderOutgoingBuff], { trace: true });
 
-  assert.equal(outcome.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 0);
+  assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 0);
   assert.equal(outcome.consumedEffectIds.includes("defender-outgoing-buff"), false);
 });
 
@@ -470,18 +470,18 @@ test("pct turn value evolution starts decaying after the first active turn", () 
 
 test("max-stacked attack-duration effects consume the whole eligible group and output only the max current value", () => {
   const weaker = {
-    ...effect("active.hero.damage.up", "attacker", 50),
+    ...effect("active.hero.lethality.up", "attacker", 50),
     id: "max-weaker",
     duration: { type: "attack" as const, value: 3 },
     stackingKey: "same-max-group",
     sameEffectStacking: "max" as const
   };
   const strongerButDecayed = {
-    ...effect("active.hero.damage.up", "attacker", 100),
+    ...effect("active.hero.lethality.up", "attacker", 100),
     id: "max-stronger-decayed",
     intent: {
       id: "damage_up/decay",
-      type: "active.hero.damage.up",
+      type: "active.hero.lethality.up",
       value: 100,
       value_evolution: { type: "pct_decay", step: "attack", value: 50 }
     },
@@ -493,8 +493,8 @@ test("max-stacked attack-duration effects consume the whole eligible group and o
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [weaker, strongerButDecayed], { trace: true });
 
-  assert.equal(outcome.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 50);
-  assert.equal(outcome.trace?.atomicBuckets["active.hero.damage.up"].contributors.length, 1);
+  assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 50);
+  assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].contributors.length, 1);
   assert.deepEqual(new Set(outcome.consumedEffectIds), new Set(["max-weaker", "max-stronger-decayed"]));
 });
 
@@ -512,7 +512,7 @@ test('applies_vs "trigger.source" resolves to the trigger source when gating a c
     },
     {
       id: "targeted-defense",
-      type: "active.hero.damageTaken.down",
+      type: "active.hero.defense.up",
       value: 50,
       units: { applies_to: "trigger.target", applies_vs: "trigger.source" }
     },
@@ -535,7 +535,7 @@ test('applies_vs "trigger.source" resolves to the trigger source when gating a c
 
   assert.deepEqual(active.appliesTo, { side: "defender", units: unitMask("lancer") });
   assert.deepEqual(active.appliesVs, { side: "attacker", units: unitMask("infantry") });
-  assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.damageTaken.down");
+  assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.defense.up");
 });
 
 test('applies_vs "target" resolves to the trigger target', () => {
@@ -552,7 +552,7 @@ test('applies_vs "target" resolves to the trigger target', () => {
     },
     {
       id: "targeted-offense",
-      type: "active.hero.damage.up",
+      type: "active.hero.lethality.up",
       value: 50,
       units: { applies_to: "trigger.source", applies_vs: "target" }
     },
@@ -591,7 +591,7 @@ test('applies_vs "target" still resolves to the trigger target for defensive eff
     },
     {
       id: "targeted-defense",
-      type: "active.hero.damageTaken.down",
+      type: "active.hero.defense.up",
       value: 50,
       units: { applies_to: "trigger.target", applies_vs: "target" }
     },

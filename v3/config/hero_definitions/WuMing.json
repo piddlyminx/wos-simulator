@@ -47,7 +47,7 @@
       },
       "effects": {
         "CrescentUplift/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             4,
             8,

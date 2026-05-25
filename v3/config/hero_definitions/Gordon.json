@@ -37,7 +37,7 @@
           ]
         },
         "VenomInfusion/2": {
-          "type": "active.hero.damage.down",
+          "type": "active.hero.lethality.down",
           "value": [
             4,
             8,
@@ -85,7 +85,7 @@
           "same_effect_stacking": "max"
         },
         "ChemicalTerror/2": {
-          "type": "active.hero.damage.down",
+          "type": "active.hero.lethality.down",
           "value": [
             6,
             12,
@@ -131,7 +131,7 @@
           "same_effect_stacking": "max"
         },
         "ToxicRelease/2": {
-          "type": "active.hero.damage.down",
+          "type": "active.hero.lethality.down",
           "value": [
             6,
             12,

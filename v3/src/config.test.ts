@@ -20,13 +20,13 @@ test("loadSimulatorConfig loads native v3 catalogues and reports effect inventor
   assert.ok(config.troopSkills.skills.MasterBrawler);
   assert.equal(config.diagnostics.legacyFields.length, 0);
   assert.equal(config.diagnostics.ambiguousTurnTriggerSelectors.length, 0);
-  assert.ok(config.diagnostics.effectTypes["active.hero.damage.up"] > 0);
+  assert.ok(config.diagnostics.effectTypes["active.hero.lethality.up"] > 0);
   assert.ok(config.diagnostics.effectTypes.extra_skill_attack > 0);
 });
 
 test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-relative effect selectors", () => {
   const root = writeConfigWithTroopEffect({
-    type: "active.hero.damage.up",
+    type: "active.hero.lethality.up",
     value: 10,
     units: { applies_to: "trigger.source", applies_vs: "target" }
   });
@@ -77,7 +77,7 @@ test("loadSimulatorConfig rejects legacy fields in v3 config", () => {
 test("loadSimulatorConfig rejects legacy effect metadata fields without naming them in source", () => {
   const legacyEffectMetadataKey = ["effect", "op"].join("_");
   const root = writeConfigWithTroopEffect({
-    type: "active.hero.damage.up",
+    type: "active.hero.lethality.up",
     value: 10,
     units: { applies_to: "trigger.source", applies_vs: "target" },
     [legacyEffectMetadataKey]: 101
@@ -188,7 +188,7 @@ test("native v3 effects do not use units.side", () => {
 
 test("loadSimulatorConfig rejects legacy trigger units filters", () => {
   const root = writeConfigWithTroopEffect({
-    type: "active.hero.damage.up",
+    type: "active.hero.lethality.up",
     value: 10,
     units: { applies_to: "trigger.source", applies_vs: "target" }
   });
@@ -201,7 +201,7 @@ test("loadSimulatorConfig rejects legacy trigger units filters", () => {
 
 test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
   const root = writeConfigWithTroopEffect({
-    type: "active.hero.damage.up",
+    type: "active.hero.lethality.up",
     value: 10,
     units: { applies_to: "trigger.source", applies_vs: "all" }
   });
@@ -211,7 +211,7 @@ test('loadSimulatorConfig rejects native effect applies_vs "all"', () => {
 
 test("loadSimulatorConfig rejects native effect units.side", () => {
   const root = writeConfigWithTroopEffect({
-    type: "active.hero.damage.up",
+    type: "active.hero.lethality.up",
     value: 10,
     units: { side: "enemy", applies_to: "target" }
   });

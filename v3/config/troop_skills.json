@@ -16,7 +16,7 @@
       },
       "effects": {
         "MasterBrawler/1": {
-          "type": "active.troop.damage.up",
+          "type": "active.troop.lethality.up",
           "value": [
             10
           ],
@@ -87,7 +87,7 @@
       },
       "effects": {
         "CrystalShield/1": {
-          "type": "active.troop.damageTaken.down",
+          "type": "active.troop.defense.up",
           "value": [
             36,
             36
@@ -130,7 +130,7 @@
           }
         },
         "BodyOfLight/2": {
-          "type": "active.troop.damageTaken.down",
+          "type": "active.troop.defense.up",
           "value": [
             10
           ],
@@ -158,7 +158,7 @@
       },
       "effects": {
         "Charge/1": {
-          "type": "active.troop.damage.up",
+          "type": "active.troop.lethality.up",
           "value": [
             10
           ],
@@ -281,7 +281,7 @@
       },
       "effects": {
         "IncandescentField/1": {
-          "type": "active.troop.damageTaken.down",
+          "type": "active.troop.defense.up",
           "value": [
             50
           ],
@@ -311,7 +311,7 @@
       },
       "effects": {
         "RangedStrike/1": {
-          "type": "active.troop.damage.up",
+          "type": "active.troop.lethality.up",
           "value": [
             10
           ],

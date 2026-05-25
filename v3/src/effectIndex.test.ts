@@ -10,7 +10,7 @@ test("effect index returns bucket-tagged candidates from a direct job-shape look
   const effect: ActiveEffect = {
     id: "effect-1",
     source: { kind: "hero_skill", side: "attacker", effectId: "boost" },
-    intent: { id: "boost", type: "active.hero.damage.up", value: 25 },
+    intent: { id: "boost", type: "active.hero.lethality.up", value: 25 },
     ownerSide: "attacker",
     kind: "modifier",
     valuePct: 25,
@@ -40,19 +40,19 @@ test("effect index returns bucket-tagged candidates from a direct job-shape look
     defenderUnit: "lancer"
   };
 
-  assert.deepEqual(bucketCandidatesForJob(index, job), [{ effect, bucket: "active.hero.damage.up" }]);
+  assert.deepEqual(bucketCandidatesForJob(index, job), [{ effect, bucket: "active.hero.lethality.up" }]);
 });
 
 test("effect index can remove static-profile bucket effects after the static damage profile is built", () => {
   const index = createEffectIndex();
   const passive = effect("passive.attack.up");
-  const active = effect("active.hero.damage.up");
+  const active = effect("active.hero.lethality.up");
   indexEffect(index, passive);
   indexEffect(index, active);
 
   removeStaticProfileBucketEffects(index);
 
-  assert.deepEqual(bucketCandidatesForJob(index, job()), [{ effect: active, bucket: "active.hero.damage.up" }]);
+  assert.deepEqual(bucketCandidatesForJob(index, job()), [{ effect: active, bucket: "active.hero.lethality.up" }]);
   assert.deepEqual(index.all, [active]);
 });
 

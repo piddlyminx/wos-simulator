@@ -17,7 +17,7 @@
       },
       "effects": {
         "Onslaught/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             10,
             20,
@@ -50,7 +50,7 @@
       },
       "effects": {
         "IronStrength/1": {
-          "type": "active.hero.damage.down",
+          "type": "active.hero.lethality.down",
           "value": [
             10,
             20,

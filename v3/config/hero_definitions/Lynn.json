@@ -16,7 +16,7 @@
       },
       "effects": {
         "SongOfLion/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             10,
             20,
@@ -39,7 +39,7 @@
       },
       "effects": {
         "MelancholicBallad/1": {
-          "type": "active.hero.damage.down",
+          "type": "active.hero.lethality.down",
           "value": [
             4,
             8,

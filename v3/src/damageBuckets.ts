@@ -34,14 +34,6 @@ export const BUCKETS = {
       health: {
         up: { role: "defender", valueType: "pct" },
         down: { role: "defender", valueType: "pct" }
-      },
-      damage: {
-        up: { role: "attacker", valueType: "pct" },
-        down: { role: "attacker", valueType: "pct" }
-      },
-      damageTaken: {
-        up: { role: "defender", valueType: "pct" },
-        down: { role: "defender", valueType: "pct" }
       }
     },
     troop: {
@@ -58,14 +50,6 @@ export const BUCKETS = {
         down: { role: "attacker", valueType: "pct" }
       },
       health: {
-        up: { role: "defender", valueType: "pct" },
-        down: { role: "defender", valueType: "pct" }
-      },
-      damage: {
-        up: { role: "attacker", valueType: "pct" },
-        down: { role: "attacker", valueType: "pct" }
-      },
-      damageTaken: {
         up: { role: "defender", valueType: "pct" },
         down: { role: "defender", valueType: "pct" }
       }

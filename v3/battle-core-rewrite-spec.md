@@ -880,8 +880,8 @@ The damage calculator has two layers:
 - Aggregation groups decide how atomic buckets combine into final factors.
 
 Do not collapse catalogue evidence only because two effects currently appear
-equivalent. For example, keep `active.hero.damageUp` distinct from
-`active.hero.lethalityUp` in trace output even when the current aggregation
+equivalent. For example, keep hero-sourced lethality effects distinct from
+troop-sourced lethality effects in trace output even when a future aggregation
 policy adds them together.
 
 Atomic buckets are neutral with respect to enemy/self wording. Effect activation
@@ -919,10 +919,6 @@ active.hero.healthUp
 active.hero.healthDown
 active.hero.defenseUp
 active.hero.defenseDown
-active.hero.damageUp
-active.hero.damageDown
-active.hero.damageTakenUp
-active.hero.damageTakenDown
 
 active.troop.attackUp
 active.troop.attackDown
@@ -932,10 +928,6 @@ active.troop.healthUp
 active.troop.healthDown
 active.troop.defenseUp
 active.troop.defenseDown
-active.troop.damageUp
-active.troop.damageDown
-active.troop.damageTakenUp
-active.troop.damageTakenDown
 
 type.normalDamageUp
 type.normalDamageDown
@@ -1019,10 +1011,6 @@ hero | troop`:
 | `health_down` | `active.{source}.healthDown` |
 | `defense_up` | `active.{source}.defenseUp` |
 | `defense_down` | `active.{source}.defenseDown` |
-| `damage_up` | `active.{source}.damageUp` |
-| `damage_down` | `active.{source}.damageDown` |
-| `damage_taken_up` | `active.{source}.damageTakenUp` |
-| `damage_taken_down` | `active.{source}.damageTakenDown` |
 
 For pass-specific effects:
 
@@ -1100,12 +1088,8 @@ The initial policy should encode the following hypotheses:
 - active hero-sourced effect groups and troop-sourced effect groups multiply
   with each other.
 - within a source family, active stat effects are configurable.
-- `active.{source}.damageUp` and `active.{source}.damageDown` remain distinct
-  atomic buckets, but the initial hypothesis may aggregate them with active
-  lethality groups of the same source family.
-- `active.{source}.damageTakenUp` and `active.{source}.damageTakenDown` remain
-  distinct atomic buckets, but the initial hypothesis may aggregate them with
-  active health groups of the same source family.
+- active effects use stat buckets directly; catalogue damage-dealt effects map
+  to lethality, and damage-taken effects map to defense.
 
 Passive signed-stat examples:
 

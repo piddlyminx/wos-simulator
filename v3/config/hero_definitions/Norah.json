@@ -25,7 +25,7 @@
           }
         },
         "CombinedArms/2": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             3,
             6,
@@ -95,7 +95,7 @@
       },
       "effects": {
         "Momentum/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.lethality.up",
           "value": [
             5,
             10,
