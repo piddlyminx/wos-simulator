@@ -127,7 +127,7 @@ class WosctlErrorHandlingTests(unittest.TestCase):
     def test_cli_main_returns_json_for_unhandled_exception(self) -> None:
         stdout = io.StringIO()
         with patch.object(self.wosctl, "main", side_effect=RuntimeError("boom")), \
-                patch.object(self.wosctl.logger, "exception"), \
+                patch.object(self.wosctl.logger, "error") as log_error, \
                 patch.object(
                     self.wosctl,
                     "_exception_diagnostics_or_error",
@@ -142,6 +142,7 @@ class WosctlErrorHandlingTests(unittest.TestCase):
         self.assertEqual(payload["error_type"], "internal_error")
         self.assertEqual(payload["error"], "Unexpected error: boom")
         self.assertEqual(payload["diagnostic_path"], "/tmp/wosctl-test/exception.json")
+        self.assertTrue(log_error.called)
 
     def test_cli_main_returns_json_for_keyboard_interrupt(self) -> None:
         stdout = io.StringIO()
@@ -186,6 +187,48 @@ class WosctlErrorHandlingTests(unittest.TestCase):
             self.assertIn(str(screenshot_path), payload["saved_images"])
         finally:
             shutil.rmtree(debug_dir, ignore_errors=True)
+
+    def test_run_testcase_repeat_failure_includes_diagnostics(self) -> None:
+        @contextlib.contextmanager
+        def unlocked() -> object:
+            yield
+
+        fake_run_testcase = types.ModuleType("run_testcase")
+
+        def fail_run_testcase(*_args: object, **_kwargs: object) -> None:
+            raise RuntimeError("Deploy: template not found")
+
+        fake_run_testcase.run_testcase = fail_run_testcase
+        old_module = sys.modules.get("run_testcase")
+        sys.modules["run_testcase"] = fake_run_testcase
+        stdout = io.StringIO()
+
+        try:
+            with patch.object(self.wosctl, "testcase_instance_names", return_value=[]), \
+                    patch.object(self.wosctl, "lock_instances", return_value=unlocked()), \
+                    patch.object(
+                        self.wosctl,
+                        "_exception_diagnostics_or_error",
+                        return_value={"diagnostic_path": "/tmp/wosctl-test/repeat-exception.json"},
+                    ), \
+                    patch.object(self.wosctl.logger, "error") as log_error, \
+                    contextlib.redirect_stdout(stdout):
+                exit_code = self.wosctl.cmd_run_testcase("spec.json", repeat=3)
+        finally:
+            if old_module is None:
+                sys.modules.pop("run_testcase", None)
+            else:
+                sys.modules["run_testcase"] = old_module
+
+        self.assertEqual(exit_code, 1)
+        payload = json.loads(stdout.getvalue())
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["command"], "run-testcase")
+        self.assertEqual(payload["repeat"], 3)
+        self.assertEqual(payload["completed"], 0)
+        self.assertEqual(payload["error"], "Deploy: template not found")
+        self.assertEqual(payload["diagnostic_path"], "/tmp/wosctl-test/repeat-exception.json")
+        self.assertTrue(log_error.called)
 
 
 if __name__ == "__main__":
