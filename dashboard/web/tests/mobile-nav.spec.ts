@@ -124,7 +124,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
     await expect(preview).toBeVisible();
-    await expect(preview).toContainText("[115]");
+    await expect(preview).toContainText("[130]");
     await expect(preview).toContainText("+15.0%");
 
     await expect(page.getByTestId("optimize-options-toggle")).toBeVisible();
@@ -190,7 +190,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
     await expect(preview).toBeVisible();
-    await expect(preview).toContainText("[115]");
+    await expect(preview).toContainText("[130]");
     await expect(preview).toContainText("+15.0%");
 
     // Stat cells stay compact on desktop, keep the skill-4 preview stacked

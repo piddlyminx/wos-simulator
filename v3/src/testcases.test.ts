@@ -4,10 +4,10 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "./config.js";
-import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration.js";
-import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics.js";
-import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases.js";
+import { loadSimulatorConfig } from "./config";
+import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration";
+import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
+import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases";
 
 test("discoverTestcaseFiles follows v3/testcases symlink and skips disabled or stale files by default", () => {
   const files = discoverTestcaseFiles();

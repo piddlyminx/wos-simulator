@@ -1,4 +1,4 @@
-import type { DamageKind } from "./types.js";
+import type { DamageKind } from "./types";
 
 export type BucketRole = "attacker" | "defender";
 export type BucketValueType = "raw" | "pct";

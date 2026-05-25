@@ -1,5 +1,5 @@
-import type { BattleInput, FighterInput, SimulatorConfig, SkillFile, StatBlock, UnitType } from "../types.js";
-import type { Team } from "./types.js";
+import type { BattleInput, FighterInput, SimulatorConfig, SkillFile, StatBlock, UnitType } from "../types";
+import type { Team } from "./types";
 
 export function teamToBattleInput(
   attacker: Team,

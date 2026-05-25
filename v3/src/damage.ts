@@ -9,18 +9,18 @@ import type {
   SameEffectStacking,
   SideId,
   UnitType
-} from "./types.js";
-import { UNIT_TYPES } from "./types.js";
-import { classifyEffectForJob } from "./classifier.js";
-import { ATOMIC_BUCKETS, type AtomicBucket } from "./damageBuckets.js";
-import { currentEffectValuePct, isEffectActive } from "./effects.js";
-import { bucketCandidatesForJob, type EffectIndex } from "./effectIndex.js";
+} from "./types";
+import { UNIT_TYPES } from "./types";
+import { classifyEffectForJob } from "./classifier";
+import { ATOMIC_BUCKETS, type AtomicBucket } from "./damageBuckets";
+import { currentEffectValuePct, isEffectActive } from "./effects";
+import { bucketCandidatesForJob, type EffectIndex } from "./effectIndex";
 import {
   buildStaticDamageProfile,
   type StaticDamageBucket,
   type StaticDamageProfile,
   type StaticDamageProfileEntry
-} from "./staticDamageProfile.js";
+} from "./staticDamageProfile";
 
 type AtomicBuckets = Record<string, DamageBucketTrace>;
 type GroupPlacement = "numerator" | "denominator";

@@ -2,7 +2,7 @@ import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { cpus } from "node:os";
 import { createInterface } from "node:readline";
 
-import type { BattleSummary, BattleTask } from "./types.js";
+import type { BattleSummary, BattleTask } from "./types";
 
 interface WorkerResponse {
   id: number;

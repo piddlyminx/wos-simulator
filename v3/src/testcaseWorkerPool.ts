@@ -1,7 +1,7 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { createInterface } from "node:readline";
 
-import type { TestcaseExecutionJob, TestcaseExecutionResult } from "./testcases.js";
+import type { TestcaseExecutionJob, TestcaseExecutionResult } from "./testcases";
 
 interface WorkerResponse {
   id: number;

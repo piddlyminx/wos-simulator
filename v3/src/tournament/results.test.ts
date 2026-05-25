@@ -4,9 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
 
-import { Pool } from "./pools.js";
-import { deriveResultsLabel, loadAllRankedTeamsFromCsv, writeResultsCsv } from "./results.js";
-import type { Team } from "./types.js";
+import { Pool } from "./pools";
+import { deriveResultsLabel, loadAllRankedTeamsFromCsv, writeResultsCsv } from "./results";
+import type { Team } from "./types";
 
 function team(id: number): Team {
   return {

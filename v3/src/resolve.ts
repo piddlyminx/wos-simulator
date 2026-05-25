@@ -14,10 +14,10 @@ import type {
   SkillRequirement,
   StatBlock,
   UnitType
-} from "./types.js";
-import { UNIT_TYPES } from "./types.js";
-import { normalizeEngagementType } from "./effects.js";
-import { addStats, normalizeStatBlock, normalizeUnitType, valueAtLevel, zeroStats } from "./normalize.js";
+} from "./types";
+import { UNIT_TYPES } from "./types";
+import { normalizeEngagementType } from "./effects";
+import { addStats, normalizeStatBlock, normalizeUnitType, valueAtLevel, zeroStats } from "./normalize";
 
 export function resolveFighter(input: FighterInput, side: SideId, config: SimulatorConfig, mechanics?: BattleInput["mechanics"]): ResolvedFighter {
   const diagnostics: string[] = [];

@@ -5,10 +5,10 @@ import { test } from "node:test";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
-import { loadSimulatorConfig } from "./config.js";
-import { loadSimulatorConfigFromDir } from "./config-node.js";
-import { UNIT_TYPES } from "./types.js";
-import type { EffectIntentDefinition, SkillFile, TriggerDamageJobDefinition } from "./types.js";
+import { loadSimulatorConfig } from "./config";
+import { loadSimulatorConfigFromDir } from "./config-node";
+import { UNIT_TYPES } from "./types";
+import type { EffectIntentDefinition, SkillFile, TriggerDamageJobDefinition } from "./types";
 
 test("loadSimulatorConfig loads native v3 catalogues and reports effect inventory", () => {
   const config = loadSimulatorConfig();

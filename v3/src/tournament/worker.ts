@@ -1,9 +1,9 @@
 import { createInterface } from "node:readline";
 import { parentPort } from "node:worker_threads";
 
-import { loadSimulatorConfig } from "../config.js";
-import { runSingleBattleDirect } from "./battleRunner.js";
-import type { BattleTask } from "./types.js";
+import { loadSimulatorConfig } from "../config";
+import { runSingleBattleDirect } from "./battleRunner";
+import type { BattleTask } from "./types";
 
 interface WorkerRequest {
   id: number;

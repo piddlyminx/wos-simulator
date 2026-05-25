@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { normalizePlayerStatsProfile } from "./playerStats.js";
+import { normalizePlayerStatsProfile } from "./playerStats";
 
 test("normalizePlayerStatsProfile normalizes unit aliases and stat tuples", () => {
   const stats = normalizePlayerStatsProfile({

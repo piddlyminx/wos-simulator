@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { generateTeams, parseRatio, selectFinalsTeamsByMainLineup } from "./teamGeneration.js";
-import type { Team } from "./types.js";
+import { generateTeams, parseRatio, selectFinalsTeamsByMainLineup } from "./teamGeneration";
+import type { Team } from "./types";
 
 test("parseRatio normalizes percentages and assigns marksman remainder", () => {
   assert.deepEqual(parseRatio("50,20,30", 100001), {

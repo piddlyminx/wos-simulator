@@ -1,7 +1,7 @@
-import type { ActiveEffect, DamageBucketTrace, EffectIntentDefinition, ResolvedFighter, SideId, SkillFile, StatBlock, UnitType } from "./types.js";
-import { UNIT_TYPES, unitMaskHas } from "./types.js";
-import type { BucketRole } from "./damageBuckets.js";
-import { currentEffectValuePct } from "./effects.js";
+import type { ActiveEffect, DamageBucketTrace, EffectIntentDefinition, ResolvedFighter, SideId, SkillFile, StatBlock, UnitType } from "./types";
+import { UNIT_TYPES, unitMaskHas } from "./types";
+import type { BucketRole } from "./damageBuckets";
+import { currentEffectValuePct } from "./effects";
 
 export interface StaticDamageProfileTerm {
   raw?: number;

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "../config.js";
-import { runSingleBattleDirect, totalRemaining } from "./battleRunner.js";
-import type { Team } from "./types.js";
+import { loadSimulatorConfig } from "../config";
+import { runSingleBattleDirect, totalRemaining } from "./battleRunner";
+import type { Team } from "./types";
 
 const team: Team = {
   id: 1,

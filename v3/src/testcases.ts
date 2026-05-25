@@ -8,11 +8,11 @@ import {
   type CalibrationCaseComparison,
   type SampleStats,
   sampleStats
-} from "./calibration.js";
-import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics.js";
-import { simulateBattle } from "./simulator.js";
-import { DamageAggregationError } from "./damage.js";
-import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, UnitType } from "./types.js";
+} from "./calibration";
+import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
+import { simulateBattle } from "./simulator";
+import { DamageAggregationError } from "./damage";
+import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, UnitType } from "./types";
 
 export interface TestcaseRunOptions {
   testcaseRoot?: string;

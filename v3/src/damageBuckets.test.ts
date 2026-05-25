@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "./config.js";
-import { ATOMIC_BUCKETS } from "./damageBuckets.js";
+import { loadSimulatorConfig } from "./config";
+import { ATOMIC_BUCKETS } from "./damageBuckets";
 
 const REMOVED_ACTIVE_BUCKET_PATTERN = new RegExp(`^active\\.(${["hero", "troop"].join("|")})\\.(${["dam", "age"].join("")}|${["dam", "age", "Taken"].join("")})\\.`);
 

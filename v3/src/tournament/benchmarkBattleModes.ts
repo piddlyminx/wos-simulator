@@ -1,9 +1,9 @@
-import { loadSimulatorConfig } from "../config.js";
-import { simulateBattle, simulateBattleScore } from "../simulator.js";
-import type { BattleResult, SimulatorConfig } from "../types.js";
-import { generateTeams, parseRatio } from "./teamGeneration.js";
-import { teamToBattleInput } from "./teamInput.js";
-import type { BattleTask } from "./types.js";
+import { loadSimulatorConfig } from "../config";
+import { simulateBattle, simulateBattleScore } from "../simulator";
+import type { BattleResult, SimulatorConfig } from "../types";
+import { generateTeams, parseRatio } from "./teamGeneration";
+import { teamToBattleInput } from "./teamInput";
+import type { BattleTask } from "./types";
 
 interface BenchmarkSummary {
   battles: number;

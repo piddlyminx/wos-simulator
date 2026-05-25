@@ -4,22 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "scripts/next-cache-lock.sh dev --turbopack",
-    "dev-user": "npm --prefix ../../v3 run build && NEXT_DIST_DIR=.next-user NEXT_V3_DIST=1 scripts/next-cache-lock.sh dev --turbopack",
+    "dev-user": "NEXT_DIST_DIR=.next-user scripts/next-cache-lock.sh dev --turbopack",
     "dev:docker": "scripts/next-cache-lock.sh dev --turbopack",
     "build": "scripts/next-cache-lock.sh build",
     "start": "scripts/next-cache-lock.sh start",
     "test": "npx --yes tsx --test \"lib/**/*.test.ts\"",
-    "lint": "next lint",
+    "lint": "eslint .",
     "smoke": "scripts/next-cache-lock.sh build && playwright test"
   },
   "dependencies": {
     "@types/diff": "^7.0.2",
     "better-sqlite3": "^11.10.0",
     "diff": "^9.0.0",
-    "next": "15.5.15",
+    "next": "16.2.6",
     "proper-lockfile": "^4.1.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "recharts": "^2.15.3"
   },
   "devDependencies": {
@@ -29,11 +29,15 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/proper-lockfile": "^4.1.4",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "19.2.15",
+    "@types/react-dom": "19.2.3",
     "eslint": "^9",
-    "eslint-config-next": "15.5.15",
+    "eslint-config-next": "16.2.6",
     "tailwindcss": "^4.1.5",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "19.2.15",
+    "@types/react-dom": "19.2.3"
   }
 }

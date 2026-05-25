@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { seededShuffle } from "./rng.js";
+import { seededShuffle } from "./rng";
 
 test("seededShuffle is deterministic and does not mutate input", () => {
   const input = [1, 2, 3, 4, 5, 6];

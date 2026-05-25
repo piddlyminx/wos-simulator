@@ -16,9 +16,9 @@ import type {
   SkillReportEntry,
   TriggerDamageJobSelector,
   UnitType
-} from "./types.js";
-import { ALL_UNIT_MASK, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types.js";
-import { calculateDamageJob, createFastDamageScratch, type DamageScratch } from "./damage.js";
+} from "./types";
+import { ALL_UNIT_MASK, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types";
+import { calculateDamageJob, createFastDamageScratch, type DamageScratch } from "./damage";
 import {
   activateEffect,
   chancePasses,
@@ -30,12 +30,12 @@ import {
   sideForTriggerRelation,
   skillMatchesTrigger,
   type Rng
-} from "./effects.js";
-import { classifyEffectForJob } from "./classifier.js";
-import { createEffectIndex, indexEffect, pruneEffectIndex, removeStaticProfileBucketEffects, type EffectIndex } from "./effectIndex.js";
-import { normalizeUnitType } from "./normalize.js";
-import { emptyTroops, resolveFighter } from "./resolve.js";
-import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile.js";
+} from "./effects";
+import { classifyEffectForJob } from "./classifier";
+import { createEffectIndex, indexEffect, pruneEffectIndex, removeStaticProfileBucketEffects, type EffectIndex } from "./effectIndex";
+import { normalizeUnitType } from "./normalize";
+import { emptyTroops, resolveFighter } from "./resolve";
+import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile";
 
 const DEFAULT_MAX_ROUNDS = 1500;
 const REPORT_KEY_CACHE = new WeakMap<ResolvedSkill, string>();

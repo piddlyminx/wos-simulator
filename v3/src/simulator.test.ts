@@ -3,11 +3,11 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { loadSimulatorConfig } from "./config.js";
-import { createSeededRng, chancePasses } from "./effects.js";
-import { resolveFighter } from "./resolve.js";
-import { simulateBattle, simulateBattleScore } from "./simulator.js";
-import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types.js";
+import { loadSimulatorConfig } from "./config";
+import { createSeededRng, chancePasses } from "./effects";
+import { resolveFighter } from "./resolve";
+import { simulateBattle, simulateBattleScore } from "./simulator";
+import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types";
 
 test("simulateBattle returns structured result for a no-hero battle", () => {
   const config = loadSimulatorConfig();

@@ -1,7 +1,7 @@
-import type { ActiveEffect, DamageJob, SideId, UnitType } from "./types.js";
-import { unitMaskHas } from "./types.js";
-import { bucketDefinition, type BucketName } from "./damageBuckets.js";
-import { staticPassiveBucketRole, type StaticPassiveBucket } from "./staticDamageProfile.js";
+import type { ActiveEffect, DamageJob, SideId, UnitType } from "./types";
+import { unitMaskHas } from "./types";
+import { bucketDefinition, type BucketName } from "./damageBuckets";
+import { staticPassiveBucketRole, type StaticPassiveBucket } from "./staticDamageProfile";
 
 export interface Classification {
   kind: "bucket" | "control" | "extra_skill_attack" | "battle_order" | "report_only";

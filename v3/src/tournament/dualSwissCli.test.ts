@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { parseCliArgs } from "./dualSwissCli.js";
+import { parseCliArgs } from "./dualSwissCli";
 
 test("parseCliArgs parses multiple ratios and finals options", () => {
   const options = parseCliArgs([

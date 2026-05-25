@@ -1,4 +1,4 @@
-import type { MainHeroRole, Team } from "./types.js";
+import type { MainHeroRole, Team } from "./types";
 
 export const MAIN_POOL: Record<string, MainHeroRole> = {
   Hector: "inf",

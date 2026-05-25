@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { Pool } from "./pools.js";
-import { aggregateBattleResults, createDualRankingTasks, createRandomRoundTasks, runDualSwissTournament, runFinalsRoundRobin } from "./dualSwiss.js";
-import type { BattleSummary, BattleTask, Team } from "./types.js";
+import { Pool } from "./pools";
+import { aggregateBattleResults, createDualRankingTasks, createRandomRoundTasks, runDualSwissTournament, runFinalsRoundRobin } from "./dualSwiss";
+import type { BattleSummary, BattleTask, Team } from "./types";
 
 function team(id: number): Team {
   return {

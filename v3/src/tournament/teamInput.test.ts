@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "../config.js";
-import { simulateBattle } from "../simulator.js";
-import { teamToBattleInput, teamToFighterInput } from "./teamInput.js";
-import type { HeroInputEntry } from "../types.js";
-import type { Team } from "./types.js";
+import { loadSimulatorConfig } from "../config";
+import { simulateBattle } from "../simulator";
+import { teamToBattleInput, teamToFighterInput } from "./teamInput";
+import type { HeroInputEntry } from "../types";
+import type { Team } from "./types";
 
 const sampleTeam: Team = {
   id: 7,

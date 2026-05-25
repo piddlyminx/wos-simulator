@@ -18,7 +18,7 @@ function isAllowedPublicPath(pathname: string): boolean {
   return false;
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   if (PUBLIC_SURFACE !== "simulate") return NextResponse.next();
 
   const { pathname } = req.nextUrl;

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { createBattleTaskRunner, runBattleTasks } from "./battleRunner.js";
-import type { BattleSummary, BattleTask, Team } from "./types.js";
+import { createBattleTaskRunner, runBattleTasks } from "./battleRunner";
+import type { BattleSummary, BattleTask, Team } from "./types";
 
 function team(id: number): Team {
   return {

@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { bucketCandidatesForJob, createEffectIndex, indexEffect, removeStaticProfileBucketEffects } from "./effectIndex.js";
-import { unitMask } from "./types.js";
-import type { ActiveEffect, DamageJob } from "./types.js";
+import { bucketCandidatesForJob, createEffectIndex, indexEffect, removeStaticProfileBucketEffects } from "./effectIndex";
+import { unitMask } from "./types";
+import type { ActiveEffect, DamageJob } from "./types";
 
 test("effect index returns bucket-tagged candidates from a direct job-shape lookup", () => {
   const index = createEffectIndex();

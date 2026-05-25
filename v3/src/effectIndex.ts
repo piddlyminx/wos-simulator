@@ -1,7 +1,7 @@
-import type { ActiveEffect, DamageJob, DamageKind, SideId, UnitType } from "./types.js";
-import { unitsFromMask } from "./types.js";
-import { bucketDefinition, type AtomicBucket } from "./damageBuckets.js";
-import { isStaticProfileBucket } from "./staticDamageProfile.js";
+import type { ActiveEffect, DamageJob, DamageKind, SideId, UnitType } from "./types";
+import { unitsFromMask } from "./types";
+import { bucketDefinition, type AtomicBucket } from "./damageBuckets";
+import { isStaticProfileBucket } from "./staticDamageProfile";
 
 export type DamageEffectKey = `${DamageKind}:${SideId}:${UnitType}:${SideId}:${UnitType}:${AtomicBucket}`;
 export type DamageJobShapeKey = `${DamageKind}:${SideId}:${UnitType}:${SideId}:${UnitType}`;

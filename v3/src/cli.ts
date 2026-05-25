@@ -2,7 +2,7 @@ import { mkdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { loadSimulatorConfig } from "./config.js";
+import { loadSimulatorConfig } from "./config";
 import {
   assignDetailArtifactPaths,
   buildSummaryForOutput,
@@ -12,8 +12,8 @@ import {
   type TestcaseCaseReport,
   type TestcaseRunOptions,
   type TestcaseRunReport
-} from "./testcases.js";
-import { TestcaseWorkerPool } from "./testcaseWorkerPool.js";
+} from "./testcases";
+import { TestcaseWorkerPool } from "./testcaseWorkerPool";
 
 const options = parseArgs(process.argv.slice(2));
 

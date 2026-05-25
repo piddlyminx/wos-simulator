@@ -3,13 +3,13 @@ import { cpus } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { createBattleTaskRunner } from "./battleRunner.js";
-import { runDualSwissTournament, runFinalsRoundRobin, type BattleTaskRunner } from "./dualSwiss.js";
-import { Pool } from "./pools.js";
-import { loadPlayerStatsProfile } from "./playerStats.js";
-import { copyQualifierCsvs, deriveResultsLabel, loadAllRankedTeamsFromCsv, writeResultsCsv } from "./results.js";
-import { generateTeams, parseRatio, selectFinalsTeamsByMainLineup } from "./teamGeneration.js";
-import type { Team } from "./types.js";
+import { createBattleTaskRunner } from "./battleRunner";
+import { runDualSwissTournament, runFinalsRoundRobin, type BattleTaskRunner } from "./dualSwiss";
+import { Pool } from "./pools";
+import { loadPlayerStatsProfile } from "./playerStats";
+import { copyQualifierCsvs, deriveResultsLabel, loadAllRankedTeamsFromCsv, writeResultsCsv } from "./results";
+import { generateTeams, parseRatio, selectFinalsTeamsByMainLineup } from "./teamGeneration";
+import type { Team } from "./types";
 
 export interface CliOptions {
   ratios: string[];

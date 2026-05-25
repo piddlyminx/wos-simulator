@@ -1,9 +1,9 @@
-import { loadSimulatorConfig } from "../config.js";
-import { simulateBattleScore } from "../simulator.js";
-import type { BattleResult, SimulatorConfig } from "../types.js";
-import { teamToBattleInput } from "./teamInput.js";
-import { TournamentWorkerPool } from "./workerPool.js";
-import type { BattleSummary, BattleTask } from "./types.js";
+import { loadSimulatorConfig } from "../config";
+import { simulateBattleScore } from "../simulator";
+import type { BattleResult, SimulatorConfig } from "../types";
+import { teamToBattleInput } from "./teamInput";
+import { TournamentWorkerPool } from "./workerPool";
+import type { BattleSummary, BattleTask } from "./types";
 
 export interface BattleTaskRunnerHandle {
   run(tasks: BattleTask[], onProgress?: (completed: number, total: number) => void): Promise<BattleSummary[]>;

@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npx --yes --package typescript --package @types/node tsc -p tsconfig.json",
     "test": "npx --yes tsx --test \"src/**/*.test.ts\"",
     "typecheck": "npx --yes --package typescript --package @types/node tsc --noEmit",
     "testcases": "npx --yes tsx src/cli.ts",

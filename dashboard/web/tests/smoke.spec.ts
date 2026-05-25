@@ -334,16 +334,15 @@ test.describe("Dashboard smoke tests", () => {
 
     const tooltip = page.locator('[data-testid="testcase-drift-tooltip"]');
     await expect(tooltip).toBeVisible();
-    const activeRow = page.locator(
-      '[data-testid="testcase-drift-tooltip-row-active"]',
-    );
-    await expect(activeRow).toBeVisible();
     await expect(
       page.locator('[data-testid="testcase-drift-focus"]'),
-    ).toContainText("Focused series:");
+    ).toContainText("Pinned series:");
+    await expect(
+      page.locator('[data-testid="testcase-drift-tooltip-row"]'),
+    ).not.toHaveCount(0);
     await expect(
       page.locator('[data-testid="testcase-drift-tooltip-row-active"]'),
-    ).toHaveCount(1);
+    ).toHaveCount(0);
 
     expect(errors).toHaveLength(0);
   });
@@ -935,7 +934,7 @@ test.describe("Dashboard smoke tests", () => {
       page.locator('[data-testid="optimize-options-panel"]'),
     ).toBeVisible();
     await expect(page.locator("body")).toContainText(
-      "1,119 comps · 30/10/100 reps · 16,770 battles",
+      "1,119 comps · 30/10/100 reps · up to 16,770 battles",
     );
 
     await page.locator('input[aria-label="infantry troop count"]').first().fill("1");

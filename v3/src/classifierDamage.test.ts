@@ -1,14 +1,14 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { classifyEffectForJob } from "./classifier.js";
-import { calculateDamageJob } from "./damage.js";
-import { ATOMIC_BUCKETS } from "./damageBuckets.js";
-import { createEffectIndex, indexEffect, removeStaticProfileBucketEffects } from "./effectIndex.js";
-import { activateEffect } from "./effects.js";
-import { buildStaticDamageProfile, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile.js";
-import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types.js";
-import { ALL_UNIT_MASK, unitMask } from "./types.js";
+import { classifyEffectForJob } from "./classifier";
+import { calculateDamageJob } from "./damage";
+import { ATOMIC_BUCKETS } from "./damageBuckets";
+import { createEffectIndex, indexEffect, removeStaticProfileBucketEffects } from "./effectIndex";
+import { activateEffect } from "./effects";
+import { buildStaticDamageProfile, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile";
+import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types";
+import { ALL_UNIT_MASK, unitMask } from "./types";
 
 const job: DamageJob = {
   id: "job-1",

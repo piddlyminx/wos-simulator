@@ -3,5 +3,4 @@ testcase_results/*
 !testcase_results/v1_result_2026-05-21T04-46-47Z.json
 tournament_results/*
 node_modules
-dist
 .clinic

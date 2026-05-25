@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { runDualSwissTournament } from "./dualSwiss.js";
-import { Pool } from "./pools.js";
-import { parseRatio } from "./teamGeneration.js";
-import type { BattleSummary, BattleTask, Team } from "./types.js";
+import { runDualSwissTournament } from "./dualSwiss";
+import { Pool } from "./pools";
+import { parseRatio } from "./teamGeneration";
+import type { BattleSummary, BattleTask, Team } from "./types";
 
 function team(id: number): Team {
   return {

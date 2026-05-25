@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { normalizeStatBlock, normalizeUnitType, type StatBlockInput } from "../normalize.js";
-import { UNIT_TYPES, type StatBlock, type UnitType } from "../types.js";
+import { normalizeStatBlock, normalizeUnitType, type StatBlockInput } from "../normalize";
+import { UNIT_TYPES, type StatBlock, type UnitType } from "../types";
 
 export type PlayerStats = Record<UnitType, StatBlock>;
 

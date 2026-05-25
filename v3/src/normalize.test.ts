@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { normalizeStatBlock } from "./normalize.js";
+import { normalizeStatBlock } from "./normalize";
 
 test("normalizeStatBlock accepts stat tuples in attack defense lethality health order", () => {
   assert.deepEqual(normalizeStatBlock([1, 2, 3, 4]), {

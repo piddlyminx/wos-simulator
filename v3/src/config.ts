@@ -32,10 +32,10 @@ import Wayne from "../config/hero_definitions/Wayne.json" with { type: "json" };
 import WuMing from "../config/hero_definitions/WuMing.json" with { type: "json" };
 import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" };
 
-import { UNIT_TYPES } from "./types.js";
-import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types.js";
-import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets.js";
-import { assertStaticPassiveEffectDefinition, isPassiveBucket, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile.js";
+import { UNIT_TYPES } from "./types";
+import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types";
+import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets";
+import { assertStaticPassiveEffectDefinition, isPassiveBucket, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile";
 
 const KNOWN_EFFECT_TYPES = new Set([
   ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("type.")),

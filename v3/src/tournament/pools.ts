@@ -1,4 +1,4 @@
-import type { Score, Team } from "./types.js";
+import type { Score, Team } from "./types";
 
 export function winRate(score: Score): number {
   return score.matches > 0 ? score.wins / score.matches : 0;

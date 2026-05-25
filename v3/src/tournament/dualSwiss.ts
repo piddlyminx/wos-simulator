@@ -1,8 +1,8 @@
-import { runBattleTasks } from "./battleRunner.js";
-import { Pool } from "./pools.js";
-import { seededShuffle } from "./rng.js";
-import type { BattleSummary, BattleTask, Team, TournamentOptions } from "./types.js";
-import type { PlayerStats } from "./playerStats.js";
+import { runBattleTasks } from "./battleRunner";
+import { Pool } from "./pools";
+import { seededShuffle } from "./rng";
+import type { BattleSummary, BattleTask, Team, TournamentOptions } from "./types";
+import type { PlayerStats } from "./playerStats";
 
 export type BattleTaskRunner = (tasks: BattleTask[], jobs: number, onProgress?: (completed: number, total: number) => void) => Promise<BattleSummary[]>;
 

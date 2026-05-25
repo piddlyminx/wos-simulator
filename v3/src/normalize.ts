@@ -1,4 +1,4 @@
-import type { StatBlock, UnitType } from "./types.js";
+import type { StatBlock, UnitType } from "./types";
 
 export type StatBlockInput = Record<string, unknown> | readonly unknown[];
 

@@ -1,9 +1,9 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 
-import { avgMargin, Pool, winRate } from "./pools.js";
-import { parseRatio } from "./teamGeneration.js";
-import type { Score, Team } from "./types.js";
+import { avgMargin, Pool, winRate } from "./pools";
+import { parseRatio } from "./teamGeneration";
+import type { Score, Team } from "./types";
 
 const RESULTS_DIR_TIMESTAMP_RE = /^\d{8}-\d{6}$/;
 const CSV_FIELDS = ["rank", "win_rate", "avg_margin", "matches", "formation", "hero_1", "hero_2", "hero_3", "joiner_1", "joiner_2", "joiner_3", "joiner_4"];

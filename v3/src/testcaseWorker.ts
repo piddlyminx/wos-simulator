@@ -1,7 +1,7 @@
 import { createInterface } from "node:readline";
 
-import { loadSimulatorConfig } from "./config.js";
-import { executeTestcaseCase, type TestcaseExecutionJob } from "./testcases.js";
+import { loadSimulatorConfig } from "./config";
+import { executeTestcaseCase, type TestcaseExecutionJob } from "./testcases";
 
 interface WorkerRequest {
   id: number;
