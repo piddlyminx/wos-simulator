@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WOSCTL = ROOT / "skill" / "scripts" / "wosctl"
 
 
-def _install_wosctl_import_stubs() -> list[str]:
+def _install_wosctl_import_stubs() -> dict[str, types.ModuleType | None]:
     modules: dict[str, types.ModuleType] = {}
 
     logging_setup = types.ModuleType("logging_setup")
@@ -92,12 +92,11 @@ def _install_wosctl_import_stubs() -> list[str]:
     alliance.WosAllianceError = WosAllianceError
     modules["alliance"] = alliance
 
-    installed: list[str] = []
+    previous: dict[str, types.ModuleType | None] = {}
     for name, module in modules.items():
-        if name not in sys.modules:
-            sys.modules[name] = module
-            installed.append(name)
-    return installed
+        previous[name] = sys.modules.get(name)
+        sys.modules[name] = module
+    return previous
 
 
 class WosctlErrorHandlingTests(unittest.TestCase):
@@ -105,7 +104,7 @@ class WosctlErrorHandlingTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls._old_bootstrap = os.environ.get("WOSCTL_UV_BOOTSTRAPPED")
         os.environ["WOSCTL_UV_BOOTSTRAPPED"] = "1"
-        cls._installed_stubs = _install_wosctl_import_stubs()
+        cls._previous_stubbed_modules = _install_wosctl_import_stubs()
         loader = SourceFileLoader("wosctl_for_tests", str(WOSCTL))
         spec = importlib.util.spec_from_loader(loader.name, loader)
         if spec is None:
@@ -117,8 +116,11 @@ class WosctlErrorHandlingTests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        for name in cls._installed_stubs:
-            sys.modules.pop(name, None)
+        for name, module in cls._previous_stubbed_modules.items():
+            if module is None:
+                sys.modules.pop(name, None)
+            else:
+                sys.modules[name] = module
         if cls._old_bootstrap is None:
             os.environ.pop("WOSCTL_UV_BOOTSTRAPPED", None)
         else:

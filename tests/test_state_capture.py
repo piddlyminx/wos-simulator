@@ -32,8 +32,9 @@ def _make_repo(tmp: Path) -> Path:
     repo.mkdir()
     _git(repo, "init", "-q", "-b", "main")
     _git(repo, "config", "commit.gpgsign", "false")
-    (repo / "tracked.txt").write_text("original\n")
-    _git(repo, "add", "tracked.txt")
+    (repo / "testcases").mkdir()
+    (repo / "testcases" / "tracked.txt").write_text("original\n")
+    _git(repo, "add", "testcases/tracked.txt")
     _git(repo, "commit", "-q", "-m", "init")
     return repo
 
@@ -51,7 +52,7 @@ class CaptureDirtyStateTests(unittest.TestCase):
     def test_tracked_change_produces_patch_blob_only(self) -> None:
         with TemporaryDirectory() as tmp:
             repo = _make_repo(Path(tmp))
-            (repo / "tracked.txt").write_text("modified\n")
+            (repo / "testcases" / "tracked.txt").write_text("modified\n")
 
             out = capture_dirty_state(repo)
 
@@ -66,9 +67,9 @@ class CaptureDirtyStateTests(unittest.TestCase):
     def test_untracked_file_produces_untracked_blob_only(self) -> None:
         with TemporaryDirectory() as tmp:
             repo = _make_repo(Path(tmp))
-            (repo / "new.txt").write_bytes(b"hello\x00world")
-            (repo / "sub").mkdir()
-            (repo / "sub" / "nested.bin").write_bytes(bytes(range(256)))
+            (repo / "testcases" / "new.txt").write_bytes(b"hello\x00world")
+            (repo / "testcases" / "sub").mkdir()
+            (repo / "testcases" / "sub" / "nested.bin").write_bytes(bytes(range(256)))
 
             out = capture_dirty_state(repo)
 
@@ -78,9 +79,9 @@ class CaptureDirtyStateTests(unittest.TestCase):
 
             with tarfile.open(fileobj=io.BytesIO(out["untracked_content_gzip"]), mode="r:gz") as tar:
                 names = sorted(tar.getnames())
-                self.assertEqual(names, ["new.txt", "sub/nested.bin"])
-                self.assertEqual(tar.extractfile("new.txt").read(), b"hello\x00world")
-                self.assertEqual(tar.extractfile("sub/nested.bin").read(), bytes(range(256)))
+                self.assertEqual(names, ["testcases/new.txt", "testcases/sub/nested.bin"])
+                self.assertEqual(tar.extractfile("testcases/new.txt").read(), b"hello\x00world")
+                self.assertEqual(tar.extractfile("testcases/sub/nested.bin").read(), bytes(range(256)))
 
     def test_ignored_files_are_not_captured(self) -> None:
         with TemporaryDirectory() as tmp:
@@ -98,8 +99,8 @@ class CaptureDirtyStateTests(unittest.TestCase):
     def test_both_tracked_and_untracked(self) -> None:
         with TemporaryDirectory() as tmp:
             repo = _make_repo(Path(tmp))
-            (repo / "tracked.txt").write_text("changed\n")
-            (repo / "new.txt").write_text("fresh\n")
+            (repo / "testcases" / "tracked.txt").write_text("changed\n")
+            (repo / "testcases" / "new.txt").write_text("fresh\n")
 
             out = capture_dirty_state(repo)
             self.assertIsNotNone(out["patch_blob_id"])
@@ -110,7 +111,7 @@ class CaptureDirtyStateTests(unittest.TestCase):
         """Same file contents should yield the same blob id across captures."""
         with TemporaryDirectory() as tmp:
             repo = _make_repo(Path(tmp))
-            (repo / "new.txt").write_text("stable\n")
+            (repo / "testcases" / "new.txt").write_text("stable\n")
 
             first = capture_dirty_state(repo)
             second = capture_dirty_state(repo)

@@ -14,6 +14,7 @@ if str(SCRIPTS) not in sys.path:
 
 navigation = types.ModuleType("navigation")
 navigation.find_template = lambda *_args, **_kwargs: (False, (0, 0))
+navigation.goto_city = lambda *_args, **_kwargs: None
 navigation.goto_world_map = lambda *_args, **_kwargs: None
 navigation.goto_coord = lambda *_args, **_kwargs: None
 navigation.TEMPLATE_COORD_SEARCH_ICON = "world_coord_search_icon.png"

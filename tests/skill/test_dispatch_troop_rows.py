@@ -13,6 +13,7 @@ if str(SCRIPTS) not in sys.path:
 
 navigation = types.ModuleType("navigation")
 navigation.find_template = lambda *_args, **_kwargs: (False, (0, 0))
+navigation.goto_city = lambda *_args, **_kwargs: None
 navigation.goto_world_map = lambda *_args, **_kwargs: None
 navigation.WosNavigationError = RuntimeError
 sys.modules.setdefault("navigation", navigation)
