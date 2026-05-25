@@ -67,7 +67,7 @@ export interface SimulateSkillSummary {
 
 export interface SimulateOutcomeRun {
   outcome: number;
-  seed: number;
+  seed: string | number;
 }
 
 export type SimulateTraceUnit = "inf" | "lanc" | "mark";
@@ -101,7 +101,7 @@ export interface SimulateTraceRound {
 }
 
 export interface SimulateTrace {
-  seed: number;
+  seed: string | number;
   outcome: number;
   rounds: SimulateTraceRound[];
   skill_kills: Record<"attacker" | "defender", Record<string, Record<string, { triggers: number; kills: number }>>>;

@@ -1,13 +1,26 @@
-import type { OptimizeRatioRequestPayload, OptimizeRatioResult, SimulateApiResult, SimulateRequestPayload } from "@/lib/simulate-run";
+import type { OptimizeRatioRequestPayload, OptimizeRatioResult, SimulateApiResult, SimulateRequestPayload, SimulateTrace } from "@/lib/simulate-run";
 import type { V3WorkerRequest, V3WorkerResponse } from "./worker-protocol";
 
 let nextJobId = 1;
+
+type WorkerJobRequest =
+  | Omit<Extract<V3WorkerRequest, { type: "simulate" }>, "id">
+  | Omit<Extract<V3WorkerRequest, { type: "simulateTrace" }>, "id">
+  | Omit<Extract<V3WorkerRequest, { type: "optimizeRatio" }>, "id">;
 
 export function runWorkerSimulation(
   payload: SimulateRequestPayload,
   onProgress: (done: number, total: number) => void
 ): { promise: Promise<SimulateApiResult>; cancel: () => void } {
   return runWorkerJob<SimulateApiResult>({ type: "simulate", payload }, "simulateResult", onProgress);
+}
+
+export function runWorkerSimulationTrace(
+  payload: SimulateRequestPayload,
+  seed: string | number,
+  onProgress: (done: number, total: number) => void
+): { promise: Promise<SimulateTrace>; cancel: () => void } {
+  return runWorkerJob<SimulateTrace>({ type: "simulateTrace", payload, seed }, "simulateTraceResult", onProgress);
 }
 
 export function runWorkerOptimizeRatio(
@@ -18,7 +31,7 @@ export function runWorkerOptimizeRatio(
 }
 
 function runWorkerJob<T>(
-  request: Omit<Extract<V3WorkerRequest, { type: "simulate" | "optimizeRatio" }>, "id">,
+  request: WorkerJobRequest,
   resultType: V3WorkerResponse["type"],
   onProgress: (done: number, total: number) => void
 ): { promise: Promise<T>; cancel: () => void } {

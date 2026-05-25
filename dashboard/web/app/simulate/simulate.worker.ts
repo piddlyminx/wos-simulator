@@ -1,5 +1,5 @@
 import { runOptimizeRatioInV3 } from "@/lib/v3-sim/optimise";
-import { runSimulationInV3 } from "@/lib/v3-sim/simulate";
+import { runSimulationInV3, runSimulationTraceInV3 } from "@/lib/v3-sim/simulate";
 import type { V3WorkerRequest, V3WorkerResponse } from "@/lib/v3-sim/worker-protocol";
 
 let activeJobId: number | null = null;
@@ -18,6 +18,11 @@ self.onmessage = (event: MessageEvent<V3WorkerRequest>) => {
         onProgress: (done, total) => postIfActive(request.id, { id: request.id, type: "progress", done, total }),
       });
       postIfActive(request.id, { id: request.id, type: "simulateResult", data });
+    } else if (request.type === "simulateTrace") {
+      const data = runSimulationTraceInV3(request.payload, request.seed, {
+        onProgress: (done, total) => postIfActive(request.id, { id: request.id, type: "progress", done, total }),
+      });
+      postIfActive(request.id, { id: request.id, type: "simulateTraceResult", data });
     } else {
       const data = runOptimizeRatioInV3(request.payload, {
         seedBase: `optimize:${request.id}`,

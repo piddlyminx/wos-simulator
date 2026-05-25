@@ -951,7 +951,7 @@ export default function SimulateClient({
   const [battleTrace, setBattleTrace] = useState<SimulateTrace | null>(
     () => initialState.result?.trace ?? null,
   );
-  const [traceLoadingSeed, setTraceLoadingSeed] = useState<number | null>(null);
+  const [traceLoadingSeed, setTraceLoadingSeed] = useState<string | number | null>(null);
   const [traceError, setTraceError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
