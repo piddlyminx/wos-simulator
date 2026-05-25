@@ -29,6 +29,7 @@ import logging
 import math
 import re
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
@@ -121,6 +122,7 @@ _HERO_SWIPE_DUR_MS  = 750   # slower = less momentum/overshoot
 _HERO_PICKER_AREA   = (0, 560, 720, 380)  # x, y, w, h: scrollable hero-grid area
 _HERO_PICKER_UNCHANGED_MEAN_THRESHOLD = 1.5
 _HERO_PICKER_DIAG_DIR = Path("/tmp/wosctl_hero_picker_diag")
+_TEMPLATE_MISS_DIAG_DIR = _SKILL_DIR / "tmp" / "wosctl_template_misses"
 
 # Hero slot tap positions (on deploy screen, blank preset)
 _HERO_SLOTS = [(165, 420), (360, 420), (555, 420)]
@@ -165,15 +167,57 @@ class WosPresetTroopShortageError(WosTroopAvailabilityError):
 
 
 # ─── Internal helpers ──────────────────────────────────────────────────────────
-def _find_and_tap(emulator: WosEmulator, template_path: str, label: str, threshold: float = 0.85) -> tuple[int, int]:
+def _template_miss_path(label: str, template_path: str) -> Path:
+    safe_label = re.sub(r"[^a-zA-Z0-9_.-]+", "_", label).strip("._") or "template"
+    template_stem = Path(template_path).stem
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S.%fZ")
+    return _TEMPLATE_MISS_DIAG_DIR / f"{timestamp}_{safe_label}_{template_stem}.png"
+
+
+def _find_and_tap(
+    emulator: WosEmulator,
+    template_path: str,
+    label: str,
+    threshold: float = 0.85,
+    attempts: int = 3,
+    retry_delay: float = 0.6,
+) -> tuple[int, int]:
     """Screencap, find template, tap it. Raises WosDispatchError if not found."""
-    img = emulator.screencap_bgr()
-    found, (cx, cy) = find_template(img, template_path, threshold=threshold)
-    if not found:
-        raise WosDispatchError(f"{label}: template not found ({template_path})")
-    logger.info("%s: tapping (%d,%d)", label, cx, cy)
-    emulator.tap(cx, cy)
-    return cx, cy
+    last_img: np.ndarray | None = None
+    for attempt in range(1, max(1, attempts) + 1):
+        img = emulator.screencap_bgr()
+        last_img = img
+        found, (cx, cy) = find_template(img, template_path, threshold=threshold)
+        if found:
+            logger.info("%s: tapping (%d,%d)", label, cx, cy)
+            emulator.tap(cx, cy)
+            return cx, cy
+        if attempt < attempts:
+            logger.warning(
+                "%s: template not found on attempt %d/%d (%s); retrying",
+                label,
+                attempt,
+                attempts,
+                template_path,
+            )
+            time.sleep(retry_delay)
+
+    screenshot_path = _template_miss_path(label, template_path)
+    score = 0.0
+    if last_img is not None:
+        try:
+            _TEMPLATE_MISS_DIAG_DIR.mkdir(parents=True, exist_ok=True)
+            cv2.imwrite(str(screenshot_path), last_img)
+        except Exception as exc:
+            logger.warning("%s: could not save template-miss screenshot: %s", label, exc)
+        try:
+            score = _template_score(last_img, template_path)
+        except Exception as exc:
+            logger.warning("%s: could not score missed template %s: %s", label, template_path, exc)
+    raise WosDispatchError(
+        f"{label}: template not found after {attempts} attempts "
+        f"({template_path}; score={score:.3f}; threshold={threshold:.3f}; screenshot={screenshot_path})"
+    )
 
 
 def _template_score(screenshot_bgr: np.ndarray, template_path: str) -> float:

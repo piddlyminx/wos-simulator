@@ -232,6 +232,50 @@ class WosctlErrorHandlingTests(unittest.TestCase):
         self.assertEqual(payload["diagnostic_path"], "/tmp/wosctl-test/repeat-exception.json")
         self.assertTrue(log_error.called)
 
+    def test_run_testcase_repeat_uses_save_then_load_presets(self) -> None:
+        @contextlib.contextmanager
+        def unlocked() -> object:
+            yield
+
+        fake_run_testcase = types.ModuleType("run_testcase")
+        preset_modes: list[str | None] = []
+
+        def fake_run_testcase_func(
+            spec: str,
+            dry_run: bool = False,
+            debug: bool = False,
+            preset_mode: str | None = None,
+        ) -> dict:
+            preset_modes.append(preset_mode)
+            return {"ok": True, "spec": spec, "dry_run": dry_run, "debug": debug}
+
+        fake_run_testcase.run_testcase = fake_run_testcase_func
+        old_module = sys.modules.get("run_testcase")
+        sys.modules["run_testcase"] = fake_run_testcase
+        stdout = io.StringIO()
+
+        try:
+            with patch.object(self.wosctl, "testcase_instance_names", return_value=["WIP", "minxxx"]), \
+                    patch.object(self.wosctl, "lock_instances", return_value=unlocked()) as lock_instances, \
+                    contextlib.redirect_stdout(stdout):
+                exit_code = self.wosctl.cmd_run_testcase("spec.json", dry_run=True, repeat=3, debug=True)
+        finally:
+            if old_module is None:
+                sys.modules.pop("run_testcase", None)
+            else:
+                sys.modules["run_testcase"] = old_module
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(preset_modes, ["save", "load", "load"])
+        lock_instances.assert_called_once()
+        self.assertEqual(lock_instances.call_args.args[0], ["WIP", "minxxx"])
+
+        payload = json.loads(stdout.getvalue())
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["repeat"], 3)
+        self.assertEqual(payload["completed"], 3)
+        self.assertEqual([result["run_number"] for result in payload["results"]], [1, 2, 3])
+
 
 if __name__ == "__main__":
     unittest.main()
