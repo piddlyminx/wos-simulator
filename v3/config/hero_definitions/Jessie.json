@@ -16,10 +16,7 @@
             15,
             20,
             25
-          ],
-          "units": {
-            "applies_to": "trigger"
-          }
+          ]
         }
       }
     },
@@ -37,10 +34,7 @@
             12,
             16,
             20
-          ],
-          "units": {
-            "applies_to": "trigger"
-          }
+          ]
         }
       }
     }

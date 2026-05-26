@@ -170,6 +170,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       const type = String((effect as { type?: unknown }).type ?? "");
       diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
       collectAmbiguousTurnTriggerSelectorDiagnostics(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId, diagnostics);
+      validateBattleStartEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
       assertStaticPassiveEffectDefinition(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
@@ -217,6 +218,23 @@ function validateTriggerDefinition(trigger: SkillFile["skills"][string]["trigger
 
 function isTriggerRelativeUnitSelector(selector: unknown): selector is string {
   return selector === "trigger" || selector === "trigger.source" || selector === "target" || selector === "trigger.target";
+}
+
+function validateBattleStartEffectSelectors(
+  trigger: SkillFile["skills"][string]["trigger"],
+  effect: EffectIntentDefinition,
+  file: string,
+  skillId: string,
+  effectId: string
+): void {
+  if (trigger.type !== "battle_start") return;
+  for (const field of ["applies_to", "applies_vs"] as const) {
+    const selector = effect.units?.[field];
+    if (!isTriggerRelativeUnitSelector(selector)) continue;
+    throw new Error(
+      `battle_start effect cannot use trigger-relative units.${field} selector ${JSON.stringify(selector)} at ${file}:${skillId}.${effectId}; use a concrete selector such as self.any`
+    );
+  }
 }
 
 function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {

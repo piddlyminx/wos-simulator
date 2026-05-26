@@ -16,10 +16,7 @@
             6,
             8,
             10
-          ],
-          "units": {
-            "applies_to": "trigger"
-          }
+          ]
         },
         "Implacable/2": {
           "type": "active.hero.health.up",
@@ -29,10 +26,7 @@
             6,
             8,
             10
-          ],
-          "units": {
-            "applies_to": "trigger"
-          }
+          ]
         }
       }
     },
@@ -57,11 +51,7 @@
             15,
             20,
             25
-          ],
-          "units": {
-            "applies_to": "trigger",
-            "applies_vs": "any"
-          }
+          ]
         }
       }
     },

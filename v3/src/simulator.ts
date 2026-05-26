@@ -683,9 +683,10 @@ function capRoundOutcomeKills(outcomes: AttackOutcome[], roundStartTroops: Damag
       const available = Math.max(0, roundStartTroops[side][unit] ?? 0);
       const totalKills = matching.reduce((sum, outcome) => sum + outcome.kills, 0);
       if (totalKills <= available) continue;
-      const scale = available / totalKills;
+      let remaining = available;
       for (const outcome of matching) {
-        outcome.kills *= scale;
+        outcome.kills = Math.min(outcome.kills, remaining);
+        remaining -= outcome.kills;
         if (outcome.trace) outcome.trace.finalKills = outcome.kills;
       }
     }

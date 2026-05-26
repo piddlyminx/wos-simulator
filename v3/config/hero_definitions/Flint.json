@@ -40,11 +40,7 @@
             15,
             20,
             25
-          ],
-          "units": {
-            "applies_to": "trigger",
-            "applies_vs": "any"
-          }
+          ]
         }
       }
     },
@@ -62,11 +58,7 @@
             15,
             20,
             25
-          ],
-          "units": {
-            "applies_to": "trigger",
-            "applies_vs": "any"
-          }
+          ]
         }
       }
     },

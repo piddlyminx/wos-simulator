@@ -219,6 +219,19 @@ test("loadSimulatorConfig rejects native effect units.side", () => {
   assert.throws(() => loadSimulatorConfigFromDir(root), /units\.side/i);
 });
 
+test("loadSimulatorConfig rejects trigger-relative effect selectors on battle_start triggers", () => {
+  const root = writeConfigWithTroopEffect(
+    {
+      type: "active.hero.lethality.up",
+      value: 10,
+      units: { applies_to: "trigger" }
+    },
+    { type: "battle_start" }
+  );
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /battle_start.*trigger-relative.*applies_to.*trigger/i);
+});
+
 test("loadSimulatorConfig rejects negative native bucket effect values", () => {
   const root = writeConfigWithTroopEffect({
     type: "active.hero.attack.down",

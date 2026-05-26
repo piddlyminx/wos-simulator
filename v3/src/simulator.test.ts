@@ -809,6 +809,20 @@ test("same-round outcomes are capped to available target troops before tracing s
   assert.equal(result.remaining.defender.infantry, 0);
 });
 
+test("same-round cap does not leave exhausted units targetable through floating point residue", () => {
+  const config = loadSimulatorConfig();
+  const fixturePath = fileURLToPath(new URL("../testcases/emulator_verified/sergey_solo_nc.json", import.meta.url));
+  const testcases = JSON.parse(readFileSync(fixturePath, "utf8")) as Array<BattleInput & { test_id: string }>;
+  const input = testcases.find((testcase) => testcase.test_id === "sergey_solo");
+  if (!input) throw new Error("missing sergey_solo fixture");
+
+  const result = simulateBattle(input, config);
+
+  assert.equal(result.winner, "attacker");
+  assert.equal(result.remaining.attacker.marksman, 1349);
+  assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
+});
+
 test("extra skill trigger damage jobs reject missing runtime selectors", () => {
   assert.throws(
     () =>

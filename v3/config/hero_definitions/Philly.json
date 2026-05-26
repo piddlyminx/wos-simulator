@@ -16,11 +16,7 @@
             9,
             12,
             15
-          ],
-          "units": {
-            "applies_to": "trigger",
-            "applies_vs": "any"
-          }
+          ]
         },
         "VigorTactics/2": {
           "type": "active.hero.defense.up",
@@ -30,10 +26,7 @@
             6,
             8,
             10
-          ],
-          "units": {
-            "applies_to": "trigger"
-          }
+          ]
         }
       }
     },
