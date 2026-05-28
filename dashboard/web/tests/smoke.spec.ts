@@ -961,7 +961,7 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
-  test("/simulate — optimise ratio renders results and applies the best mix", async ({
+  test("/simulate — optimise ratio renders compact selectable results and applies the selected mix", async ({
     page,
   }) => {
     const errors: string[] = [];
@@ -1006,12 +1006,29 @@ test.describe("Dashboard smoke tests", () => {
     await expect(page.locator("body")).not.toContainText("Avg optimized survivors");
     await expect(page.locator("body")).toContainText("30%–70%");
 
-    await page.getByRole("button", { name: /Use best attacker ratio/i }).click();
+    const ratioTable = page.locator("table").filter({ hasText: "Winrate" });
+    await expect(ratioTable.locator("thead th")).toHaveText([
+      "#",
+      "Winrate",
+      "Margin",
+      "Ratio",
+      "Troops",
+    ]);
+
+    const selectedRow = ratioTable.locator("tbody tr").nth(1);
+    await selectedRow.click();
+    await expect(selectedRow).toHaveAttribute("aria-selected", "true");
+    const selectedCounts = (await selectedRow.locator("td").nth(4).innerText())
+      .split("/")
+      .map(Number);
+
+    await page.getByRole("button", { name: /Use selected attacker ratio/i }).click();
     const appliedCounts = await Promise.all([
       page.locator('input[aria-label="infantry troop count"]').first().inputValue(),
       page.locator('input[aria-label="lancer troop count"]').first().inputValue(),
       page.locator('input[aria-label="marksman troop count"]').first().inputValue(),
     ]);
+    expect(appliedCounts.map(Number)).toEqual(selectedCounts);
     expect(appliedCounts.map(Number).reduce((sum, value) => sum + value, 0)).toBe(3);
 
     expect(errors).toHaveLength(0);

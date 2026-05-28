@@ -43,6 +43,7 @@ import {
   MAX_OPTIMIZE_BATTLES,
   MAX_OPTIMIZE_COMPOSITIONS,
   OptimizeRatioResult,
+  OptimizeRatioPoint,
   OptimizeSearchMode,
   OptimizeSide,
   recommendedOptimizeStep,
@@ -507,6 +508,36 @@ function compactNumber(v: number): string {
   return String(Math.round(v));
 }
 
+function compactTroopCount(v: number): string {
+  const formatted = compactNumber(v);
+  return formatted.replace(/\.0([kM])$/, "$1");
+}
+
+function formatCompactRatio(point: OptimizeRatioPoint): string {
+  return [point.infantry_pct, point.lancer_pct, point.marksman_pct]
+    .map((v) => Number(v.toFixed(1)).toString())
+    .join("/");
+}
+
+function formatCompactCounts(point: OptimizeRatioPoint): string {
+  return [
+    point.infantry_count,
+    point.lancer_count,
+    point.marksman_count,
+  ]
+    .map(compactTroopCount)
+    .join("/");
+}
+
+function optimizeRowKey(point: OptimizeRatioPoint): string {
+  return [
+    point.rank ?? "unranked",
+    point.infantry_count,
+    point.lancer_count,
+    point.marksman_count,
+  ].join(":");
+}
+
 function signedSurvivors(value: number): string {
   if (value === 0) return "0 (draw)";
   const who = value > 0 ? "attacker" : "defender";
@@ -967,6 +998,9 @@ export default function SimulateClient({
     useState<OptimizeRatioResult | OptimizeRatioApiResponse | null>(
       () => initialState.optimizeResult,
     );
+  const [selectedOptimizeRowKey, setSelectedOptimizeRowKey] = useState<string | null>(
+    null,
+  );
   const [optimizePanelOpen, setOptimizePanelOpen] = useState(false);
   const [optimizeReplicates, setOptimizeReplicates] = useState<number>(
     () => initialState.optimizeReplicates,
@@ -1184,6 +1218,7 @@ export default function SimulateClient({
       );
       setResult(null);
       setBattleTrace(null);
+      setSelectedOptimizeRowKey(null);
       setOptimizeResult({
         ...(saved.result as OptimizeRatioResult),
         saved_run_id: saved.id,
@@ -1543,6 +1578,7 @@ export default function SimulateClient({
     setResult(null);
     setOptimizeError(null);
     setOptimizeResult(null);
+    setSelectedOptimizeRowKey(null);
     setSavedRunError(null);
     setSimulateProgress({ done: 0, total: replicates });
     try {
@@ -1603,6 +1639,7 @@ export default function SimulateClient({
     setResult(null);
     setOptimizeError(null);
     setOptimizeResult(null);
+    setSelectedOptimizeRowKey(null);
     setSavedRunError(null);
     setOptimizeProgress({ done: 0, total: estimatedOptimizeCompositions });
     try {
@@ -1627,6 +1664,7 @@ export default function SimulateClient({
         setOptimizeProgress({ done, total }),
       );
       const computed = await job.promise;
+      setSelectedOptimizeRowKey(null);
       setOptimizeResult(computed);
       try {
         const saveMeta = await saveComputedRun("optimize_ratio", payload, computed);
@@ -1645,8 +1683,9 @@ export default function SimulateClient({
     }
   }
 
-  function applyBestOptimizeRatio() {
+  function applySelectedOptimizeRatio() {
     if (!optimizeResult) return;
+    const selectedRow = selectedOptimizeRow ?? optimizeResult.best;
     const setter =
       (optimizeResult.optimized_side ?? optimizeSide) === "defender"
         ? setDefender
@@ -1655,12 +1694,20 @@ export default function SimulateClient({
       ...prev,
       troops: {
         ...prev.troops,
-        infantry: optimizeResult.best.infantry_count,
-        lancer: optimizeResult.best.lancer_count,
-        marksman: optimizeResult.best.marksman_count,
+        infantry: selectedRow.infantry_count,
+        lancer: selectedRow.lancer_count,
+        marksman: selectedRow.marksman_count,
       },
     }));
   }
+
+  const selectedOptimizeRow = optimizeResult
+    ? selectedOptimizeRowKey
+      ? optimizeResult.top_results.find(
+          (row) => optimizeRowKey(row) === selectedOptimizeRowKey,
+        ) ?? optimizeResult.best
+      : optimizeResult.best
+    : null;
 
   const summaryCards = useMemo(() => {
     if (!result) return null;
@@ -2589,7 +2636,7 @@ export default function SimulateClient({
             </div>
             <button
               type="button"
-              onClick={applyBestOptimizeRatio}
+              onClick={applySelectedOptimizeRatio}
               className="rounded px-3 py-2 text-xs font-bold"
               style={{
                 border: "1px solid var(--sidebar-active)",
@@ -2597,7 +2644,7 @@ export default function SimulateClient({
                 backgroundColor: "transparent",
               }}
             >
-              Use best{" "}
+              Use selected{" "}
               {(optimizeResult.optimized_side ?? optimizeSide) === "defender"
                 ? "defender"
                 : "attacker"}{" "}
@@ -2618,7 +2665,7 @@ export default function SimulateClient({
               label="Best counts"
               value={formatCounts(optimizeResult.best)}
             />
-              <ResultCard
+            <ResultCard
               label="Avg optimized margin"
               value={compactNumber(optimizeResult.best.avg_margin)}
             />
@@ -2652,48 +2699,65 @@ export default function SimulateClient({
               <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
                 Top 10 ratios
               </h4>
-              <div className="overflow-x-auto">
-                <table className="min-w-[36rem] w-full text-xs font-mono">
+              <div className="overflow-x-auto sm:overflow-visible">
+                <table className="w-full table-auto text-[11px] font-mono sm:text-xs">
                   <thead>
                     <tr
                       className="text-left uppercase tracking-wider opacity-50"
                       style={{ borderBottom: "1px solid var(--border-color)" }}
                     >
-                      <th className="pb-1 pr-2">#</th>
-                      <th className="pb-1 pr-2">Mix %</th>
-                      <th className="pb-1 pr-2">Counts</th>
-                      <th className="pb-1 pr-2 text-right">Win</th>
-                      <th className="pb-1 pr-2 text-right">Margin</th>
+                      <th className="w-8 pb-1 pr-1">#</th>
+                      <th className="pb-1 pr-1 text-right">Winrate</th>
+                      <th className="pb-1 pr-1 text-right">Margin</th>
+                      <th className="pb-1 pr-1 text-right">Ratio</th>
+                      <th className="pb-1 text-right">Troops</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {optimizeResult.top_results.map((row) => (
-                      <tr
-                        key={`${row.rank}-${row.infantry_count}-${row.lancer_count}-${row.marksman_count}`}
-                        style={{
-                          borderTop: "1px solid rgba(255,255,255,0.04)",
-                          backgroundColor: row.is_best
-                            ? "rgba(166, 227, 161, 0.08)"
-                            : "transparent",
-                        }}
-                      >
-                        <td className="py-1 pr-2 font-bold whitespace-nowrap">
-                          {row.rank}
-                        </td>
-                        <td className="py-1 pr-2 whitespace-nowrap">
-                          {formatComposition(row)}
-                        </td>
-                        <td className="py-1 pr-2 whitespace-nowrap">
-                          {formatCounts(row)}
-                        </td>
-                        <td className="py-1 pr-2 text-right whitespace-nowrap">
-                          {row.win_rate_pct.toFixed(1)}%
-                        </td>
-                        <td className="py-1 pr-2 text-right whitespace-nowrap">
-                          {compactNumber(row.avg_margin)}
-                        </td>
-                      </tr>
-                    ))}
+                    {optimizeResult.top_results.map((row) => {
+                      const selected =
+                        selectedOptimizeRow != null &&
+                        optimizeRowKey(selectedOptimizeRow) === optimizeRowKey(row);
+                      return (
+                        <tr
+                          key={`${row.rank}-${row.infantry_count}-${row.lancer_count}-${row.marksman_count}`}
+                          tabIndex={0}
+                          aria-selected={selected}
+                          className="cursor-pointer outline-none transition-colors hover:bg-white/[0.06] focus-visible:bg-white/[0.08]"
+                          onClick={() => setSelectedOptimizeRowKey(optimizeRowKey(row))}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              setSelectedOptimizeRowKey(optimizeRowKey(row));
+                            }
+                          }}
+                          style={{
+                            borderTop: "1px solid rgba(255,255,255,0.04)",
+                            backgroundColor: selected
+                              ? "rgba(137, 180, 250, 0.14)"
+                              : row.is_best
+                                ? "rgba(166, 227, 161, 0.08)"
+                                : "transparent",
+                          }}
+                        >
+                          <td className="py-1.5 pr-1 font-bold whitespace-nowrap">
+                            {row.rank}
+                          </td>
+                          <td className="py-1.5 pr-1 text-right whitespace-nowrap">
+                            {row.win_rate_pct.toFixed(1)}%
+                          </td>
+                          <td className="py-1.5 pr-1 text-right whitespace-nowrap">
+                            {compactNumber(row.avg_margin)}
+                          </td>
+                          <td className="py-1.5 pr-1 text-right whitespace-nowrap">
+                            {formatCompactRatio(row)}
+                          </td>
+                          <td className="py-1.5 text-right whitespace-nowrap">
+                            {formatCompactCounts(row)}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
