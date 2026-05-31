@@ -10,9 +10,13 @@
   remains runnable and still backs the dashboard's "Check now" calibration flow.
   The shared Python toolchain (`pyproject.toml`, `uv.lock`) stays at the repo
   root because the same venv powers the OCR/import helpers and the skill.
-- **Extracted shared game data to `shared/`** (`assets/`, `fighters_data/`).
-  `testcases/` deliberately stays at the repo root — its path string is a stable
-  logical id baked into the calibration DB, waivers, and parity normalization.
+- **Separated simulator data by schema.** The v1 and v3 simulators use
+  incompatible config schemas, so their data is not shared: the legacy-schema
+  game assets moved to `archived/v1/assets/` (with the v1 engine), while v3 keeps
+  its own `simulator/config/`. Only `shared/fighters_data/` (plain stat profiles
+  read by both the v1 sim and the v3 tournament) lives in `shared/`. `testcases/`
+  deliberately stays at the repo root — its path string is a stable logical id
+  baked into the calibration DB, waivers, and parity normalization.
 - **Three primary components:** `simulator/`, `dashboard/`, `skill/`. The agent
   skill is kept self-contained (all runtime resources live under `skill/`).
 - Legacy Python code is now cwd-independent (data resolved from file location;

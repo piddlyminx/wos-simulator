@@ -30,7 +30,7 @@ GEN_MAP = {
 def seed_heroes(conn: sqlite3.Connection, repo_root: Optional[Path] = None) -> None:
     """Idempotently seed heroes and hero_skills tables."""
     root = Path(repo_root) if repo_root else Path(__file__).parent.parent
-    hero_skills_dir = root / "shared" / "assets" / "hero_skills"
+    hero_skills_dir = root / "archived" / "v1" / "assets" / "hero_skills"
 
     with conn:
         for json_file in sorted(hero_skills_dir.glob("*.json")):
@@ -43,7 +43,7 @@ def seed_heroes(conn: sqlite3.Connection, repo_root: Optional[Path] = None) -> N
             ))
             classes_json = json.dumps(troop_types)
             generation = GEN_MAP.get(hero_name)
-            json_path = f"shared/assets/hero_skills/{json_file.name}"
+            json_path = f"archived/v1/assets/hero_skills/{json_file.name}"
 
             conn.execute(
                 "INSERT OR REPLACE INTO heroes (name, classes, generation) VALUES (?, ?, ?)",

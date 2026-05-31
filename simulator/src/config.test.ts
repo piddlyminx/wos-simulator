@@ -26,7 +26,7 @@ test("loadSimulatorConfig loads native v3 catalogues and reports effect inventor
 
 test("T11 fire crystal troop stats use expected FC5+ base values", () => {
   const config = loadSimulatorConfig();
-  const dashboardTroopStats = JSON.parse(readFileSync(fileURLToPath(new URL("../../shared/assets/troop_stats.json", import.meta.url)), "utf8")) as typeof config.troopStats;
+  const dashboardTroopStats = JSON.parse(readFileSync(fileURLToPath(new URL("../../archived/v1/assets/troop_stats.json", import.meta.url)), "utf8")) as typeof config.troopStats;
   const expected = {
     5: {
       infantry: { Attack: 658, Defense: 10, Lethality: 10, Health: 1973 },

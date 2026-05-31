@@ -58,7 +58,7 @@ services:
       # Python testcase/check utilities still need the simulator support trees.
       # The browser simulate page does not call Python compute endpoints.
       - ./archived/v1/Base_classes:/archived/v1/Base_classes:ro
-      - ./shared/assets:/shared/assets:ro
+      - ./archived/v1/assets:/archived/v1/assets:ro
       # fighters_data is NOT mounted :ro because JsonUtil.load_fighters_data
       # opens these files with 'r+' (it only reads, but the fd demands write
       # access). The simulator does not actually write here, so the host

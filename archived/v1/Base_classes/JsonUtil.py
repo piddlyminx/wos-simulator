@@ -3,11 +3,12 @@ import os
 from pathlib import Path
 
 # This file lives at <repo>/archived/v1/Base_classes/JsonUtil.py.
-# Shared game data was moved to <repo>/shared/ during the monorepo reorg, so
-# resolve it from this file's location rather than the process cwd (the legacy
-# code assumed it ran from the repo root).
+# Resolve data from this file's location rather than the process cwd (the legacy
+# code assumed it ran from the repo root). The v1 game assets use the legacy
+# schema and live alongside this engine under archived/v1/assets/; fighter stat
+# profiles are shared with the v3 tournament runner and live under shared/.
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-_ASSET_DIR = _REPO_ROOT / "shared" / "assets"
+_ASSET_DIR = _REPO_ROOT / "archived" / "v1" / "assets"
 _FIGHTERS_DIR = _REPO_ROOT / "shared" / "fighters_data"
 
 def _normalize_json_values(value):

@@ -19,9 +19,9 @@ from typing import Optional
 
 
 def _load_hero_skills(repo_root: Path) -> list[tuple[str, int, str]]:
-    """Return list of (hero, skill_num, skill_name) from shared/assets/hero_skills/*.json."""
+    """Return list of (hero, skill_num, skill_name) from archived/v1/assets/hero_skills/*.json."""
     skills: list[tuple[str, int, str]] = []
-    hero_skills_dir = repo_root / "shared" / "assets" / "hero_skills"
+    hero_skills_dir = repo_root / "archived" / "v1" / "assets" / "hero_skills"
     for path in sorted(hero_skills_dir.glob("*.json")):
         entries = json.loads(path.read_text())
         for entry in entries:

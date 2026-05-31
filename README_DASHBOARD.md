@@ -218,7 +218,7 @@ docker compose rm -sf app
 - The container bind-mounts `dashboard/web`, so source edits on the host are
   picked up live.
 - The container also mounts `dashboard/`, `archived/v1/Base_classes/`,
-  `shared/assets/`, and `shared/fighters_data/` so the "Check now" and OCR
+  `archived/v1/assets/`, and `shared/fighters_data/` so the "Check now" and OCR
   routes can call back into the legacy Python simulator code.
 - Saved `/simulate` runs are written to the named Docker volume
   `wos_simulate_runs`, not to the git-tracked repo tree.

@@ -29,7 +29,7 @@ services:
       - ./dashboard:/dashboard:ro
       - ./skill:/skill:ro
       - ./archived/v1/Base_classes:/archived/v1/Base_classes:ro
-      - ./shared/assets:/shared/assets:ro
+      - ./archived/v1/assets:/archived/v1/assets:ro
       - ./shared/fighters_data:/shared/fighters_data
       - ./archived/v1/check_testcases.py:/archived/v1/check_testcases.py:ro
       - ./testcases:/testcases:ro

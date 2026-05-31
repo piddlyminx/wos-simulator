@@ -15,14 +15,14 @@ from __future__ import annotations
 
 from pathlib import PurePosixPath
 
-# Paths reflect the monorepo layout: the legacy Python simulator engine lives
-# under archived/v1/Base_classes and shared game data under shared/. The
-# ground-truth testcase corpus stays at the repo root (its path is a stable
-# logical id). Scratch tooling (archived/v1/util) and tests are intentionally
-# excluded — they cannot move a testcase result.
+# Paths reflect the monorepo layout: the legacy Python simulator engine and its
+# (legacy-schema) game assets live under archived/v1/; fighter stat profiles
+# shared with the v3 tournament live under shared/. The ground-truth testcase
+# corpus stays at the repo root (its path is a stable logical id). Scratch
+# tooling (archived/v1/util) and tests are intentionally excluded.
 SIMULATOR_PATH_PREFIXES: tuple[str, ...] = (
     "archived/v1/Base_classes/",
-    "shared/assets/",
+    "archived/v1/assets/",
     "shared/fighters_data/",
     "testcases/",
 )

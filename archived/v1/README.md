@@ -11,10 +11,10 @@
 ## Running
 
 All commands run from the **monorepo root** (the scripts resolve their data —
-`shared/assets`, `shared/fighters_data`, `testcases/`, `test_results/` — from
-their own location, but `check_testcases.py` writes run snapshots and testcase
-ids relative to the repo root, so run it from there). The shared Python venv
-lives at the repo root.
+`archived/v1/assets`, `shared/fighters_data`, `testcases/`, `test_results/` —
+from their own location, but `check_testcases.py` writes run snapshots and
+testcase ids relative to the repo root, so run it from there). The shared Python
+venv lives at the repo root.
 
 ```bash
 uv sync                                   # provision the shared venv (repo root)
@@ -33,13 +33,15 @@ output against the captured `game_report_result` values, writing a snapshot to
 | Data | Location |
 | --- | --- |
 | Engine (`Base_classes/`) | `archived/v1/Base_classes/` |
-| Troop/hero stats & skills | `shared/assets/` |
-| Fighter profiles | `shared/fighters_data/` |
+| Troop/hero stats & skills (v1 schema) | `archived/v1/assets/` |
+| Fighter profiles (shared with v3 tournament) | `shared/fighters_data/` |
 | Calibration corpus | `testcases/` (repo root) |
 | Run snapshots / baseline / DB | `test_results/` (repo root) |
 
-`Base_classes/JsonUtil.py` resolves `shared/` data from its own file location,
-so imports work regardless of the current working directory.
+`Base_classes/JsonUtil.py` resolves these paths from its own file location, so
+imports work regardless of the current working directory. The v1 game assets use
+a different schema from the v3 simulator's `simulator/config/` and are not
+interchangeable.
 
 ---
 
@@ -47,7 +49,7 @@ so imports work regardless of the current working directory.
 
 1. Edit `shared/fighters_data/fighters_stats.json` to add your account's bonus
    stats from a battle report.
-2. Max hero base stats live in `shared/assets/hero_base_stats.json`;
+2. Max hero base stats live in `archived/v1/assets/hero_base_stats.json`;
    fighter-specific hero skill levels live in
    `shared/fighters_data/fighters_heroes.json`.
 3. Edit fighter names, troops, heroes, and joiner heroes in `battle_main.py`.

@@ -20,11 +20,11 @@ from pathlib import Path
 from typing import Any
 
 # Developer analysis tool (not part of the runtime skill surface the agent
-# harness invokes). It reads the shared hero/troop skill corpus that lives at
-# the monorepo root under shared/assets/.
+# harness invokes). It reads the legacy-schema hero/troop skill corpus that
+# lives with the archived v1 simulator under archived/v1/assets/.
 _REPO_ROOT = Path(__file__).resolve().parents[2]  # skill/scripts -> skill -> repo root
-HERO_DIR = _REPO_ROOT / "shared" / "assets" / "hero_skills"
-TROOP_FILE = _REPO_ROOT / "shared" / "assets" / "troop_skills.json"
+HERO_DIR = _REPO_ROOT / "archived" / "v1" / "assets" / "hero_skills"
+TROOP_FILE = _REPO_ROOT / "archived" / "v1" / "assets" / "troop_skills.json"
 
 # === Field domains accepted by the new schema ===
 # (See skill/references/skill-schema-mece.md for the authoritative spec.)

@@ -9,10 +9,10 @@ legacy implementation.
 ├── simulator/     # PRIMARY: the v3 TypeScript battle simulator (source of truth)
 ├── dashboard/     # Next.js web dashboard + Python ingestion/calibration backend
 ├── skill/         # Self-contained agent skill ("wos") for driving the game via ADB
-├── shared/        # Shared game data: hero/troop stats & skills, fighter profiles
+├── shared/        # Data shared across components (fighter stat profiles)
 ├── testcases/     # Ground-truth calibration corpus (game-observed battle results)
 ├── archived/
-│   └── v1/        # Legacy Python simulator (superseded by simulator/)
+│   └── v1/        # Legacy Python simulator + its (legacy-schema) game assets
 ├── docs/          # Design docs, plans, and specs
 └── test_results/  # Calibration DB (dashboard.sqlite) + baseline
 ```
@@ -63,14 +63,27 @@ runtime (OCR model, templates, data, knowledge) lives inside `skill/`. The one
 intentional outward write is `run-testcase`, which appends captured fixtures to
 the root `testcases/` corpus. See [`skill/SKILL.md`](skill/SKILL.md).
 
-## Shared data
+## Data layout
 
-- **`shared/assets/`** — troop stats, troop skills, hero skills, hero base
-  stats. Consumed by the legacy Python simulator and the dashboard backend; the
-  TypeScript simulator keeps its own authoritative copy under
-  `simulator/config/` and a drift-check test guards the two against divergence.
-- **`shared/fighters_data/`** — saved fighter stat/hero profiles, read by the
-  legacy simulator and the TypeScript tournament runner.
+The two simulators use **incompatible, independently-maintained config
+schemas**, so their game data is *not* shared:
+
+- **`simulator/config/`** — the v3 schema (hero definitions, troop stats/skills,
+  hero generation stats). Authoritative for the current simulator.
+- **`archived/v1/assets/`** — the legacy v1 schema (per-skill hero_skills, hero
+  base stats, troop stats/skills). Consumed by the archived Python simulator and
+  by the dashboard's v1-calibration backend (coverage/hero seeding). The v3
+  simulator does **not** read it; one drift-check test compares the numeric
+  `troop_stats.json` table across the two to catch divergence.
+
+Genuinely shared data lives in `shared/`:
+
+- **`shared/fighters_data/`** — fighter stat profiles (plain numeric stat
+  tables), read by both the legacy simulator (`JsonUtil`) and the v3 tournament
+  runner (`playerStats`).
+
+And the calibration corpus stays at the repo root:
+
 - **`testcases/`** — the ground-truth calibration corpus. It intentionally lives
   at the repo root rather than under `shared/`: its path string is a stable
   logical id baked into the calibration DB, waivers, and parity-report

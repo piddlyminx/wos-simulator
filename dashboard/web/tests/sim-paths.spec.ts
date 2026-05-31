@@ -4,12 +4,12 @@ import { isSimulatorPath } from "../lib/sim-paths";
 import { parsePatch } from "diff";
 
 // Acceptance criterion from WOS-188: "A fixture patch containing both
-// shared/assets/heroes/foo.json and dashboard/web/app/page.tsx round-trips
+// archived/v1/assets/heroes/foo.json and dashboard/web/app/page.tsx round-trips
 // through the filter with only the assets file remaining."
-const FIXTURE_PATCH = `diff --git a/shared/assets/heroes/foo.json b/shared/assets/heroes/foo.json
+const FIXTURE_PATCH = `diff --git a/archived/v1/assets/heroes/foo.json b/archived/v1/assets/heroes/foo.json
 index 1111111..2222222 100644
---- a/shared/assets/heroes/foo.json
-+++ b/shared/assets/heroes/foo.json
+--- a/archived/v1/assets/heroes/foo.json
++++ b/archived/v1/assets/heroes/foo.json
 @@ -1,3 +1,3 @@
  {
 -  "power": 100
@@ -53,7 +53,7 @@ test.describe("WOS-188 simulator path filter", () => {
   test("isSimulatorPath classifies the allowlist correctly", () => {
     // Positive cases
     expect(isSimulatorPath("archived/v1/Base_classes/Fight.py")).toBe(true);
-    expect(isSimulatorPath("shared/assets/heroes/foo.json")).toBe(true);
+    expect(isSimulatorPath("archived/v1/assets/heroes/foo.json")).toBe(true);
     expect(isSimulatorPath("testcases/emulator_verified/x.json")).toBe(true);
     expect(isSimulatorPath("shared/fighters_data/sharp.json")).toBe(true);
     expect(isSimulatorPath("pyproject.toml")).toBe(true);
@@ -78,7 +78,7 @@ test.describe("WOS-188 simulator path filter", () => {
     expect(isSimulatorPath("")).toBe(false);
     expect(isSimulatorPath(null)).toBe(false);
     expect(isSimulatorPath(undefined)).toBe(false);
-    expect(isSimulatorPath("a/shared/assets/heroes/foo.json")).toBe(true); // git a/ prefix
+    expect(isSimulatorPath("a/archived/v1/assets/heroes/foo.json")).toBe(true); // git a/ prefix
     expect(isSimulatorPath("b/dashboard/web/x.tsx")).toBe(false);
   });
 
@@ -92,7 +92,7 @@ test.describe("WOS-188 simulator path filter", () => {
     const names = filtered.map(
       (p) => (p.newFileName ?? p.oldFileName ?? "").replace(/^[ab]\//, ""),
     );
-    expect(names).toContain("shared/assets/heroes/foo.json");
+    expect(names).toContain("archived/v1/assets/heroes/foo.json");
     expect(names).toContain("testcases/emulator_verified/x.json");
     expect(names).not.toContain("dashboard/web/app/page.tsx");
     expect(names).not.toContain("sim_custom.py");
@@ -102,7 +102,7 @@ test.describe("WOS-188 simulator path filter", () => {
   test("filterPatchText round-trips through parse/format and keeps only sim paths", () => {
     const out = filterPatchText(FIXTURE_PATCH);
     expect(out).not.toBe("");
-    expect(out).toContain("shared/assets/heroes/foo.json");
+    expect(out).toContain("archived/v1/assets/heroes/foo.json");
     expect(out).toContain("testcases/emulator_verified/x.json");
     expect(out).not.toContain("dashboard/web/app/page.tsx");
     expect(out).not.toContain("sim_custom.py");
