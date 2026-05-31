@@ -6,8 +6,9 @@ control its behavior in the simulator, groups them into three orthogonal axes
 collapse to identical battle behavior, and proposes a MECE schema that covers
 every observed case without overlap.
 
-Sources: `Base_classes/Skill.py`, `Base_classes/BattleRound.py`, `Base_classes/Fighter.py`,
-`assets/troop_skills.json`, every file under `assets/hero_skills/`.
+Sources: `archived/v1/Base_classes/Skill.py`, `archived/v1/Base_classes/BattleRound.py`,
+`archived/v1/Base_classes/Fighter.py`, `shared/assets/troop_skills.json`, every file under
+`shared/assets/hero_skills/`.
 
 ## 1. Field inventory (raw)
 

@@ -6,7 +6,7 @@ axes, groups by effective-behavior signature, and reports any field that
 does not fit the proposed buckets.
 
 Run:
-    python util/classify_skill_schema.py [--report skill/references/skill-schema-classification.md]
+    python skill/scripts/classify_skill_schema.py [--report skill/references/skill-schema-classification.md]
 """
 
 from __future__ import annotations
@@ -19,9 +19,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
-HERO_DIR = ROOT / "assets" / "hero_skills"
-TROOP_FILE = ROOT / "assets" / "troop_skills.json"
+# Developer analysis tool (not part of the runtime skill surface the agent
+# harness invokes). It reads the shared hero/troop skill corpus that lives at
+# the monorepo root under shared/assets/.
+_REPO_ROOT = Path(__file__).resolve().parents[2]  # skill/scripts -> skill -> repo root
+HERO_DIR = _REPO_ROOT / "shared" / "assets" / "hero_skills"
+TROOP_FILE = _REPO_ROOT / "shared" / "assets" / "troop_skills.json"
 
 # === Field domains accepted by the new schema ===
 # (See skill/references/skill-schema-mece.md for the authoritative spec.)

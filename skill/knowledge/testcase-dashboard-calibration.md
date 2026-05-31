@@ -4,7 +4,7 @@
 
 Read this before changing:
 
-- `check_testcases.py`
+- `archived/v1/check_testcases.py` (legacy Python parity checker)
 - testcase result storage
 - dashboard metrics
 - regression history
@@ -18,7 +18,7 @@ Read this before changing:
 
 It must not run the simulator, update simulator comparison fields, or write `sim_result` into testcase JSON. This keeps captured fixture data separate from analysis output.
 
-For RNG-heavy battles, run the same testcase spec with `run-testcase --repeat N` until `game_report_result` has enough observations to estimate the game mean and spread. After collection, run `../check_testcases.py` from the simulator repository root to compare simulator output against the captured observations.
+For RNG-heavy battles, run the same testcase spec with `run-testcase --repeat N` until `game_report_result` has enough observations to estimate the game mean and spread. After collection, run the parity checker (`archived/v1/check_testcases.py`, from the monorepo root) to compare simulator output against the captured observations.
 
 ## Dashboard purpose
 
