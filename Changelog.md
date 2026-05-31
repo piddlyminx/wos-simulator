@@ -1,5 +1,24 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## Monorepo Reorganization
+
+- **Promoted the TypeScript simulator to the primary source of truth.** `v3/`
+  is now `simulator/`; the `@v3/*` alias name is retained but resolves to
+  `simulator/src`.
+- **Archived the legacy Python simulator** under `archived/v1/` (engine,
+  `check_testcases.py`, `battle_main.py`, `compare_results.py`, and tests). It
+  remains runnable and still backs the dashboard's "Check now" calibration flow.
+  The shared Python toolchain (`pyproject.toml`, `uv.lock`) stays at the repo
+  root because the same venv powers the OCR/import helpers and the skill.
+- **Extracted shared game data to `shared/`** (`assets/`, `fighters_data/`).
+  `testcases/` deliberately stays at the repo root — its path string is a stable
+  logical id baked into the calibration DB, waivers, and parity normalization.
+- **Three primary components:** `simulator/`, `dashboard/`, `skill/`. The agent
+  skill is kept self-contained (all runtime resources live under `skill/`).
+- Legacy Python code is now cwd-independent (data resolved from file location;
+  `sys.path` bootstraps for `Base_classes`/`check_testcases`). All suites pass:
+  simulator (159), dashboard unit + build + specs, Python (28), skill (65).
+
 ## ✅ Completed Fixes & Improvements
 
 ### Core Mechanics Fixes

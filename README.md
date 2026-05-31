@@ -1,87 +1,109 @@
-# Ryo's WOS Battle simulator
+# WOS Battle Simulator — Monorepo
 
----
+A monorepo for simulating and calibrating Whiteout Survival (WOS) battles. It
+is organized around three primary components plus shared data and an archived
+legacy implementation.
 
-This is still a work in progress.
-The simulator does not support FC troops yet. FC troops skills will be added soon.
-Only the heroes and attributes in green in [Fitz Hero Skill Spreadsheet](https://docs.google.com/spreadsheets/d/1q-i8auhNUcwU6-eUGvqGdJ4Xf2yswV6oo6z-KG1RJMQ) have been tested (limited testing for now).
-Feel free to test and give feedback.
+```
+.
+├── simulator/     # PRIMARY: the v3 TypeScript battle simulator (source of truth)
+├── dashboard/     # Next.js web dashboard + Python ingestion/calibration backend
+├── skill/         # Self-contained agent skill ("wos") for driving the game via ADB
+├── shared/        # Shared game data: hero/troop stats & skills, fighter profiles
+├── testcases/     # Ground-truth calibration corpus (game-observed battle results)
+├── archived/
+│   └── v1/        # Legacy Python simulator (superseded by simulator/)
+├── docs/          # Design docs, plans, and specs
+└── test_results/  # Calibration DB (dashboard.sqlite) + baseline
+```
 
-# HOW TO USE
+## Components
 
-1. Edit `fighters_data\fighter_stats.json` to add your accounts bonus stats from a battle report
-2. Max hero base stats live in `assets\hero_base_stats.json`; fighter-specific hero skill levels live in `fighters_data\fighters_heroes.json`
-3. Edit fighters names, troops, heroes and joiner_heroes in `main.py`
-4. You can change `BattleRound.DEBUG` and `show_rounds_freq` in `main.py` to show rounds and more details
-5. run `main.py`
-6. You can print the round report using `f.format_report()`
-7. You can save a testcase using `f.save_testcase(testcase_file_path, result)`, by specifying the result from the actual game reports.
+### `simulator/` — the primary simulator
 
-# Stats
+The current, authoritative battle engine. Written in TypeScript and run with
+`tsx` (no build step required for dev). It powers in-browser simulation in the
+dashboard and the parity/tournament tooling.
 
-Add your accounts stats to `fighters_data\fighter_stats.json`.
-You can add stats from a battle report (A report from a beast attack without heroes works). BUT, for more precision (since battle report only show 1 digit) it's better if you calculate them from Bonus Overview Section (click the Power next to your PFP). For example, for infantry Attack, sum the following :
+```bash
+cd simulator
+npm test                    # unit + testcase parity suite
+npm run typecheck
+npm run testcases           # run the testcase parity CLI
+npm run tournament:dual-swiss
+```
 
--   Troops Attack (from Bonus Overview section)
--   Infantry Attack (from Bonus Overview section)
-    Also, you need to add:
--   Natalia's special bonus for Attack/defense (for example: +10% at 5 stars) ;
--   Jeronimo's special bonus for Lethality/Health (for example: +15% at 5 stars) ;
+Config (troop/hero stats, hero definitions) lives in `simulator/config/`. The
+dashboard imports the engine through the `@v3/*` path alias, which resolves to
+`simulator/src/*` (alias name kept for continuity).
 
-Max hero base stats are shared in `assets\hero_base_stats.json`. Fighter-specific hero stats and skill levels can still be added to `fighters_data\fighters_heroes.json` for non-max profiles.
-When using heroes, you then can simply specify the heroes names and the simulator will calculate the total bonus stats by adding fighters stats and heroes stats.
-Be careful when you're saving testcases, make sure your stats didn't change (Buffs, Facilities, Research, Hero upgrades, etc). If they changed, you need to update them in `fighters_data`.
+### `dashboard/`
 
-# Troops
+A Next.js app (`dashboard/web/`) plus a Python backend (`dashboard/*.py`) that
+ingests calibration runs into `test_results/dashboard.sqlite` and serves the
+parity, coverage, heroes, and simulate pages. In-browser simulation runs the
+TypeScript engine in a web worker; the "Check now", OCR-import, and coverage
+flows shell out to the Python tooling.
 
-You can specify the troops in the format `infantry_t7_fc2` (FC skills not yet supported but will be soon).
+```bash
+cd dashboard/web
+npm ci
+npm run dev                 # http://localhost:3000
+npm run build && npm test
+```
 
-# Heroes and Joiner heroes
+See [`README_DASHBOARD.md`](README_DASHBOARD.md) and
+[`dashboard/README.md`](dashboard/README.md).
 
-Heroes and Joiner_heroes could be specified in one of the two following formats:
+### `skill/`
 
-1. `{'Jessie': { 'skill_1_level': 1, 'skill_2_level': 0 } }`
-   If level specified is 0, the skill is skipped.
+The self-contained `wos` agent skill that automates the game on MuMuPlayer
+emulators via ADB (`skill/scripts/wosctl`). Everything the skill needs at
+runtime (OCR model, templates, data, knowledge) lives inside `skill/`. The one
+intentional outward write is `run-testcase`, which appends captured fixtures to
+the root `testcases/` corpus. See [`skill/SKILL.md`](skill/SKILL.md).
 
-2. OR `['Jessie', 'Jasser', 'molly']`
-   If this format is used, skill levels will be fetched in `fighters_data\fighters_heroes.json`. If not found, they will be considered at level 5 (only first skill for hero_joiners).
+## Shared data
 
-You can use `attacker.add_heroes_stats()` to add the specified heroes bonus stats (if they are not included already in `fighters_data\fighter_stats.json`).
+- **`shared/assets/`** — troop stats, troop skills, hero skills, hero base
+  stats. Consumed by the legacy Python simulator and the dashboard backend; the
+  TypeScript simulator keeps its own authoritative copy under
+  `simulator/config/` and a drift-check test guards the two against divergence.
+- **`shared/fighters_data/`** — saved fighter stat/hero profiles, read by the
+  legacy simulator and the TypeScript tournament runner.
+- **`testcases/`** — the ground-truth calibration corpus. It intentionally lives
+  at the repo root rather than under `shared/`: its path string is a stable
+  logical id baked into the calibration DB, waivers, and parity-report
+  normalization, so moving it would churn historical identities. `simulator/`
+  reaches it through a `simulator/testcases -> ../testcases` symlink.
 
-# Skills
+## `archived/v1/` — legacy Python simulator
 
-Improving the simulator accuracy means finding the correct attributes for the different hero and troop skills.
+The original Python battle simulator, superseded by `simulator/`. It is kept
+runnable for parity comparison and is still invoked by the dashboard's
+"Check now" calibration flow. See [`archived/v1/README.md`](archived/v1/README.md).
+The shared Python toolchain (`pyproject.toml`, `uv.lock`) stays at the repo root
+because the same virtualenv also powers the dashboard's OCR/import helpers and
+the skill.
 
--   All hero skills attributes are summarized in one spreadsheet called 'Fitz_hero_skills.csv'.
--   Access the latest update of skills registery here: [Fitz Hero Skill Spreadsheet](https://docs.google.com/spreadsheets/d/1q-i8auhNUcwU6-eUGvqGdJ4Xf2yswV6oo6z-KG1RJMQ)
--   Save the spreadsheet in csv format in the `skills` folder.
--   run `skills/export_hero_skills_dicts.py` to export hero dicts from the csv file to assets folder.
--   Feel free to modify the hero skills attributes for testing, and share feedback with us.
+## Development
 
-# Testcases
+```bash
+# Python (shared venv at repo root)
+uv sync
+uv run pytest                      # runs archived/v1, dashboard, and skill tests
 
-It's recommended to save the testcases reports by specifying the actual result from the game report of the battle using `f.save_testcase(testcase_file_path, result)` in `main.py`.
-If you run `check_testcases.py`, it will re-run all battles in the specified files in `testcases` folder, and check the difference to actual game report results.
-This is helpful if you intend to make changes to the skills data or the simulator logic. It allows you to make sure the simulator still works for previous testcases.
+# TypeScript
+cd simulator && npm test
+cd dashboard/web && npm ci && npm test
+```
 
-For testcases with chance skills, it's recommended to run multiple battles in the game with the same squads, and the different results in the testcase list `game_report_result`.
+Docker dev/prod compose files at the repo root bind-mount the component trees
+into the container; see `docker-compose.yml` / `docker-compose.prod.yml`.
 
-When using `check_testcases.py`:
+## Credits
 
--   You can specify the path to the testcases file or set it to 'all' to check all files in `testcases` folder
--   You can run simulations multiple times for each testcase by specifying `repeat`. This is recommeneded for chance skills. The simulation will not be repeated for files ending with `_nc` (not chance).
--   If a testcase dict contains a list of results in `game_report_result`, the average of these results will be considered for comparing against the simulations.
--   When repeating, if `combine_repeats = True` then the average result of the repeated simulation will be printed for each testcase, otherwise it will print individual repeated simulation result up to `max_show`.
-
-# CREDITS
-
-This is being made with the help of:
-
--   Expert nerds from [WOS Nerds Discord server](https://discord.gg/BW288dNExX)
--   Members from [HIT Alliance in State 1589](https://discord.gg/X6wpn7j3cC)
--   [SOS Simulator](https://github.com/request-laurent/sos.battle) by Request-Laurent
-
-Programming is not my profession, so the code for this simulator might look ugly to some people lol
-But I'm hoping that, with your help, we can at least make it an accuate and reliable simulator
-
-[1589] HIT-Ryo
+Built on the original simulator by **[1589] HIT-Ryo** with help from the
+[WOS Nerds Discord](https://discord.gg/BW288dNExX), the
+[HIT Alliance in State 1589](https://discord.gg/X6wpn7j3cC), and
+[SOS Simulator](https://github.com/request-laurent/sos.battle) by Request-Laurent.

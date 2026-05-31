@@ -1,8 +1,10 @@
 # Dashboard SQLite Schema
 
-The ingestion pipeline writes every `check_testcases.py` run into
+The ingestion pipeline writes every `archived/v1/check_testcases.py` run into
 `test_results/dashboard.sqlite` so the Next.js dashboard can query
-historical accuracy data without re-parsing JSON snapshots.
+historical accuracy data without re-parsing JSON snapshots. (References to
+`check_testcases.py` below are the same legacy Python checker, now under
+`archived/v1/`.)
 
 ---
 

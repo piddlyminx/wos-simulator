@@ -20,7 +20,7 @@ Use this guide for three common setups:
   `tmp/simulate-runs/`; Docker mounts a named volume at `/data/simulations`.
 - Saved `/simulate` share links, recent runs, stat presets, and OCR upload
   remain server-backed.
-- The `/api/ocr-report` route spawns `dashboard/ocr_report.py`.
+- The `/api/ocr-report` route spawns `skill/scripts/report_stats_parser.py`.
 
 That means:
 
@@ -45,7 +45,7 @@ or keep it updated by running your usual testcase command, for example:
 
 ```bash
 cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-.venv/bin/python check_testcases.py --glob all
+.venv/bin/python archived/v1/check_testcases.py --glob all
 ```
 
 ## Run Without Docker
@@ -217,9 +217,9 @@ docker compose rm -sf app
 
 - The container bind-mounts `dashboard/web`, so source edits on the host are
   picked up live.
-- The container also mounts `dashboard/`, `Base_classes/`, `assets/`, and
-  `fighters_data/` so the simulate and OCR routes can call back into the
-  simulator code.
+- The container also mounts `dashboard/`, `archived/v1/Base_classes/`,
+  `shared/assets/`, and `shared/fighters_data/` so the "Check now" and OCR
+  routes can call back into the legacy Python simulator code.
 - Saved `/simulate` runs are written to the named Docker volume
   `wos_simulate_runs`, not to the git-tracked repo tree.
 - The Docker image installs Python, `tabulate`, `Pillow`, `pytesseract`, and
