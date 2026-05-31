@@ -24,6 +24,56 @@ test("loadSimulatorConfig loads native v3 catalogues and reports effect inventor
   assert.ok(config.diagnostics.effectTypes.extra_skill_attack > 0);
 });
 
+test("T11 fire crystal troop stats use expected FC5+ base values", () => {
+  const config = loadSimulatorConfig();
+  const dashboardTroopStats = JSON.parse(readFileSync(fileURLToPath(new URL("../../assets/troop_stats.json", import.meta.url)), "utf8")) as typeof config.troopStats;
+  const expected = {
+    5: {
+      infantry: { Attack: 658, Defense: 10, Lethality: 10, Health: 1973 },
+      lancer: { Attack: 1973, Defense: 10, Lethality: 10, Health: 658 },
+      marksman: { Attack: 2632, Defense: 10, Lethality: 10, Health: 494 }
+    },
+    6: {
+      infantry: { Attack: 691, Defense: 10, Lethality: 10, Health: 2072 },
+      lancer: { Attack: 2072, Defense: 10, Lethality: 10, Health: 691 },
+      marksman: { Attack: 2764, Defense: 10, Lethality: 10, Health: 519 }
+    },
+    7: {
+      infantry: { Attack: 726, Defense: 10, Lethality: 10, Health: 2176 },
+      lancer: { Attack: 2176, Defense: 10, Lethality: 10, Health: 726 },
+      marksman: { Attack: 2902, Defense: 10, Lethality: 10, Health: 545 }
+    },
+    8: {
+      infantry: { Attack: 762, Defense: 10, Lethality: 10, Health: 2285 },
+      lancer: { Attack: 2285, Defense: 10, Lethality: 10, Health: 762 },
+      marksman: { Attack: 3047, Defense: 10, Lethality: 10, Health: 572 }
+    }
+  } as const;
+  const idFor = (unit: keyof (typeof expected)[5], fc: number) => `${unit}_t11_fc${fc}`;
+
+  for (const [fcKey, byUnit] of Object.entries(expected)) {
+    const fc = Number(fcKey);
+    for (const [unit, stats] of Object.entries(byUnit) as Array<[keyof typeof byUnit, (typeof byUnit)[keyof typeof byUnit]]>) {
+      const id = idFor(unit, fc);
+
+      assert.deepEqual(config.troopStats[id]?.stats, stats);
+      assert.deepEqual(dashboardTroopStats[id], config.troopStats[id]);
+    }
+
+    assert.equal(byUnit.infantry.Attack, byUnit.lancer.Health);
+    assert.equal(byUnit.infantry.Health, byUnit.lancer.Attack);
+    assert.ok(Math.abs(byUnit.marksman.Attack - (byUnit.lancer.Attack * 4) / 3) <= 2);
+    assert.ok(Math.abs(byUnit.marksman.Health - (byUnit.lancer.Health * 3) / 4) <= 1);
+
+    if (fc > 5) {
+      const previous = expected[(fc - 1) as keyof typeof expected];
+      assert.ok(byUnit.infantry.Attack > previous.infantry.Attack);
+      assert.ok(byUnit.lancer.Attack > previous.lancer.Attack);
+      assert.ok(byUnit.marksman.Attack > previous.marksman.Attack);
+    }
+  }
+});
+
 test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-relative effect selectors", () => {
   const root = writeConfigWithTroopEffect({
     type: "active.hero.lethality.up",
