@@ -1,14 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'path';
 
 // Use a non-standard port so the smoke harness never collides with other
 // local Next.js / Node apps (e.g. Hermes Workspace on :3000).
 const PORT = process.env.PORT ?? '3947';
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
-process.env.STAT_PRESETS_FILE ??= path.resolve(
-  process.cwd(),
-  'tmp/playwright/player-stat-presets.json',
-);
 
 export default defineConfig({
   testDir: './tests',

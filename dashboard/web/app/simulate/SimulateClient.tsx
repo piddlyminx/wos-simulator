@@ -67,7 +67,15 @@ import {
   SimulateTrace,
   SimulateTraceUnit,
 } from "@/lib/simulate-run";
-import type { PlayerStatPreset, StatPresetValues } from "@/lib/stat-presets";
+import {
+  cleanStatPresetName,
+  MAX_STAT_PRESETS,
+  normalizePlayerStatPreset,
+  normalizeStatPresetStats,
+  sortPlayerStatPresets,
+  type PlayerStatPreset,
+  type StatPresetValues,
+} from "@/lib/stat-presets";
 import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/v3-sim/worker-client";
 
 type Side = "attacker" | "defender";
@@ -190,6 +198,7 @@ function formatSavedRunTimestamp(iso: string): string {
 }
 
 const DEFAULT_PAGE_TITLE = "Simulate Battle - WOS Simulator Dashboard";
+const STAT_PRESETS_STORAGE_KEY = "wos-simulator.player-stat-presets.v1";
 
 const selectFocusedInputText: FocusEventHandler<HTMLDivElement> = (event) => {
   const target = event.target;
@@ -201,6 +210,34 @@ const selectFocusedInputText: FocusEventHandler<HTMLDivElement> = (event) => {
   }
   requestAnimationFrame(() => target.select());
 };
+
+function newStatPresetId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `preset-${Date.now().toString(36)}-${Math.random()
+    .toString(36)
+    .slice(2, 10)}`;
+}
+
+function loadLocalStatPresets(): PlayerStatPreset[] {
+  if (typeof window === "undefined") return [];
+  const raw = window.localStorage.getItem(STAT_PRESETS_STORAGE_KEY);
+  if (!raw) return [];
+  const parsed = JSON.parse(raw) as unknown;
+  if (!Array.isArray(parsed)) {
+    throw new Error("Preset store must be an array");
+  }
+  return sortPlayerStatPresets(parsed.map(normalizePlayerStatPreset));
+}
+
+function saveLocalStatPresets(presets: PlayerStatPreset[]): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(
+    STAT_PRESETS_STORAGE_KEY,
+    JSON.stringify(sortPlayerStatPresets(presets)),
+  );
+}
 
 function defaultSide(): SideState {
   return {
@@ -1030,7 +1067,7 @@ export default function SimulateClient({
   );
   const [loadingSavedRun, setLoadingSavedRun] = useState(false);
   const [statPresets, setStatPresets] = useState<PlayerStatPreset[]>([]);
-  const [loadingPresets, setLoadingPresets] = useState(false);
+  const [loadingPresets, setLoadingPresets] = useState(true);
   const [loadedPresetIds, setLoadedPresetIds] = useState<Record<Side, string | null>>({
     attacker: null,
     defender: null,
@@ -1082,21 +1119,10 @@ export default function SimulateClient({
 
   useEffect(() => {
     let cancelled = false;
-    setLoadingPresets(true);
-    void (async () => {
+    queueMicrotask(() => {
       try {
-        const res = await fetch("/api/simulate/stat-presets", {
-          cache: "no-store",
-        });
-        const data = (await res.json()) as {
-          presets?: PlayerStatPreset[];
-          error?: string;
-        };
-        if (!res.ok) {
-          throw new Error(data.error || `Preset request failed with ${res.status}`);
-        }
-        if (cancelled) return;
-        setStatPresets(data.presets ?? []);
+        const presets = loadLocalStatPresets();
+        if (!cancelled) setStatPresets(presets);
       } catch (err) {
         if (!cancelled) {
           setPresetStatus({
@@ -1108,7 +1134,7 @@ export default function SimulateClient({
       } finally {
         if (!cancelled) setLoadingPresets(false);
       }
-    })();
+    });
     return () => {
       cancelled = true;
     };
@@ -1435,18 +1461,6 @@ export default function SimulateClient({
     ? loadedPresetIds[presetModalSide] ?? ""
     : "";
 
-  function upsertPreset(preset: PlayerStatPreset, side: Side) {
-    setStatPresets((prev) => {
-      const filtered = prev.filter((p) => p.id !== preset.id);
-      return [preset, ...filtered].sort((a, b) =>
-        b.updated_at.localeCompare(a.updated_at),
-      );
-    });
-    setLoadedPresetIds((prev) => ({ ...prev, [side]: preset.id }));
-    setLoadedPresetNames((prev) => ({ ...prev, [side]: preset.name }));
-    setPresetDraftName(preset.name);
-  }
-
   function openStatPresetModal(side: Side) {
     const loadedPreset = statPresets.find((p) => p.id === loadedPresetIds[side]);
     setPresetModalSide(side);
@@ -1463,34 +1477,36 @@ export default function SimulateClient({
     setPresetStatus(null);
   }
 
-  async function createStatPresetFromSide() {
+  function createStatPresetFromSide() {
     if (!presetModalSide) return;
     setPresetStatus(null);
     const source = presetModalSide === "attacker" ? attacker : defender;
-    const body: {
-      name: string;
-      stats: StatPresetValues;
-    } = {
-      name: presetDraftName.trim(),
-      stats: heroAdjustedStats(source, "subtract"),
-    };
     try {
-      const res = await fetch("/api/simulate/stat-presets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = (await res.json()) as {
-        preset?: PlayerStatPreset;
-        error?: string;
-      };
-      if (!res.ok || !data.preset) {
-        throw new Error(data.error || `Preset save failed with ${res.status}`);
+      if (statPresets.length >= MAX_STAT_PRESETS) {
+        throw new Error(`Preset limit reached (${MAX_STAT_PRESETS})`);
       }
-      upsertPreset(data.preset, presetModalSide);
+      const timestamp = new Date().toISOString();
+      const preset: PlayerStatPreset = {
+        id: newStatPresetId(),
+        name:
+          cleanStatPresetName(presetDraftName) ||
+          `Preset ${statPresets.length + 1}`,
+        created_at: timestamp,
+        updated_at: timestamp,
+        stats: normalizeStatPresetStats(heroAdjustedStats(source, "subtract")),
+      };
+      const nextPresets = sortPlayerStatPresets([
+        preset,
+        ...statPresets.filter((p) => p.id !== preset.id),
+      ]);
+      saveLocalStatPresets(nextPresets);
+      setStatPresets(nextPresets);
+      setLoadedPresetIds((prev) => ({ ...prev, [presetModalSide]: preset.id }));
+      setLoadedPresetNames((prev) => ({ ...prev, [presetModalSide]: preset.name }));
+      setPresetDraftName(preset.name);
       setPresetStatus({
         kind: "ok",
-        message: `Created ${data.preset.name} from ${SIDE_LABELS[presetModalSide].toLowerCase()} stats.`,
+        message: `Created ${preset.name} from ${SIDE_LABELS[presetModalSide].toLowerCase()} stats.`,
       });
     } catch (err) {
       setPresetStatus({
@@ -2041,7 +2057,7 @@ export default function SimulateClient({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              void createStatPresetFromSide();
+              createStatPresetFromSide();
             }}
             className="w-full max-w-md rounded p-4 shadow-xl"
             style={{

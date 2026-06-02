@@ -50,12 +50,12 @@ picked up even when native file notifications are unreliable. Set
 filesystems.
 
 The Docker dev app uses named volumes for `/app/node_modules` and `/app/.next`.
-Saved simulation runs and stat presets are host bind mounts, configured by
-`SIM_RUNS_DIR` and `STAT_PRESETS_DIR` in the ignored repo-root `.env`. Point
-those paths at a trusted shared mount when Docker dev and host dev should use
-the same stores. If the shared mount is FUSE-backed, Docker must be allowed to
-read it from the daemon side; for sshfs that usually means mounting with
-`allow_other` on a host where `/etc/fuse.conf` enables `user_allow_other`.
+Saved simulation runs are host bind mounts, configured by `SIM_RUNS_DIR` in the
+ignored repo-root `.env`. Point that path at a trusted shared mount when Docker
+dev and host dev should use the same saved-run store. If the shared mount is
+FUSE-backed, Docker must be allowed to read it from the daemon side; for sshfs
+that usually means mounting with `allow_other` on a host where `/etc/fuse.conf`
+enables `user_allow_other`.
 
 Do not run a second `docker compose run app ...` container while the live app
 is up, because two Next dev servers sharing the same `.next` volume can corrupt
@@ -76,7 +76,7 @@ docker volume rm wos-simulator_wos_next_cache
 docker compose up -d app
 ```
 
-This preserves `wos_node_modules` and the host-backed saved-run/preset stores.
+This preserves `wos_node_modules` and the host-backed saved-run store.
 
 When the Docker dev app is already running, verify dashboard source/UI changes
 directly at `http://localhost:3000`. The bind mount plus polling watcher should
@@ -117,17 +117,9 @@ The saved-run directory is protected with `proper-lockfile`, so it can also be
 pointed at a shared filesystem mount when another trusted app instance writes
 the same store.
 
-Saved player stat presets are also stored outside git. By default host mode
-uses `../../tmp/player-stat-presets.json`. When `SIM_RUNS_DIR` is set, presets
-default to `$SIM_RUNS_DIR/player-stat-presets.json` so Docker stores them in the
-same persistent volume as saved simulation runs. Override with
-`STAT_PRESETS_FILE` when needed:
-
-```bash
-STAT_PRESETS_FILE=/absolute/path/to/player-stat-presets.json npm run dev
-```
-
-The preset file uses the same lock mechanism around read-modify-write updates.
+Saved player stat presets are private browser data. The `/simulate` page stores
+them in `localStorage` under `wos-simulator.player-stat-presets.v1`; there is no
+server preset store or preset API.
 
 **The DB does not need to exist for the app to start.** If missing, `/healthz` returns `{ runs: 0, warning: "DB not found" }` and all pages show an empty state.
 

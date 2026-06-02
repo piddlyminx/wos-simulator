@@ -550,41 +550,38 @@ test.describe("Dashboard smoke tests", () => {
     });
     page.on("pageerror", (err) => errors.push(err.message));
 
-    await page.route("**/api/simulate/stat-presets", async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          presets: [
-            {
-              id: "attacker-profile",
-              name: "Attacker saved profile",
-              created_at: "2026-04-23T08:00:00.000Z",
-              updated_at: "2026-04-23T08:00:00.000Z",
-              stats: {
-                infantry: {
-                  attack: 201,
-                  defense: 202,
-                  lethality: 203,
-                  health: 204,
-                },
-                lancer: {
-                  attack: 211,
-                  defense: 212,
-                  lethality: 213,
-                  health: 214,
-                },
-                marksman: {
-                  attack: 221,
-                  defense: 222,
-                  lethality: 223,
-                  health: 224,
-                },
+    await page.addInitScript(() => {
+      window.localStorage.setItem(
+        "wos-simulator.player-stat-presets.v1",
+        JSON.stringify([
+          {
+            id: "attacker-profile",
+            name: "Attacker saved profile",
+            created_at: "2026-04-23T08:00:00.000Z",
+            updated_at: "2026-04-23T08:00:00.000Z",
+            stats: {
+              infantry: {
+                attack: 201,
+                defense: 202,
+                lethality: 203,
+                health: 204,
+              },
+              lancer: {
+                attack: 211,
+                defense: 212,
+                lethality: 213,
+                health: 214,
+              },
+              marksman: {
+                attack: 221,
+                defense: 222,
+                lethality: 223,
+                health: 224,
               },
             },
-          ],
-        }),
-      });
+          },
+        ]),
+      );
     });
 
     await page.route("**/api/simulate/runs", async (route) => {
@@ -623,6 +620,55 @@ test.describe("Dashboard smoke tests", () => {
     await page.getByRole("button", { name: /^Simulate$/i }).click();
     await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
 
+    expect(errors).toHaveLength(0);
+  });
+
+  test("/simulate — stat profiles persist in localStorage without server preset API", async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    let presetApiRequested = false;
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(err.message));
+    await page.route("**/api/simulate/stat-presets", async (route) => {
+      presetApiRequested = true;
+      await route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "preset API should not be used" }),
+      });
+    });
+
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.getByLabel("attacker player profile").click();
+    const dialog = page.getByTestId("stat-profile-modal");
+    await expect(dialog).toBeVisible();
+    await dialog.getByLabel("attacker new profile name").fill("Local attacker");
+    await dialog.getByRole("button", { name: "Create from current stats" }).click();
+    await expect(dialog).toContainText("Created Local attacker");
+
+    const storedNames = await page.evaluate(() => {
+      const raw = window.localStorage.getItem(
+        "wos-simulator.player-stat-presets.v1",
+      );
+      return raw ? JSON.parse(raw).map((preset: { name: string }) => preset.name) : [];
+    });
+    expect(storedNames).toContain("Local attacker");
+
+    await page.reload();
+    await page.getByLabel("attacker player profile").click();
+    await expect(page.getByTestId("stat-profile-modal")).toBeVisible();
+    await expect(
+      page
+        .getByTestId("stat-profile-modal")
+        .getByLabel("attacker stat profile"),
+    ).toContainText("Local attacker");
+
+    expect(presetApiRequested).toBe(false);
     expect(errors).toHaveLength(0);
   });
 

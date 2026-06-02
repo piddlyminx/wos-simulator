@@ -10,8 +10,7 @@ function isAllowedPublicPath(pathname: string): boolean {
   if (pathname === "/api/ocr-report") return true;
   if (
     pathname === "/api/simulate/runs" ||
-    pathname.startsWith("/api/simulate/runs/") ||
-    pathname === "/api/simulate/stat-presets"
+    pathname.startsWith("/api/simulate/runs/")
   ) {
     return true;
   }
