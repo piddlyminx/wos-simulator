@@ -1,4 +1,11 @@
 # Battle Core Rewrite Spec
+
+> Status: preserved design rationale. This document records the intent behind
+> the TypeScript battle-core rewrite and remains useful for future simulator
+> work. Operational paths and commands below have been updated for the promoted
+> monorepo layout, where `simulator/` is the primary simulator package and root
+> `scripts/` contains runnable tools.
+
 ## Purpose
 
 This document specifies a clean rewrite of the battle simulator core. It is
@@ -25,9 +32,8 @@ conversation history or on unstated behavior from those documents:
 - `skill/knowledge/effect-sensitivity-tracing.md`
 
 Do not inspect or copy previous simulator implementations unless the task
-explicitly allows it. In particular, a clean v3 implementation should be
-possible from this file plus the v3 config, testcase, and calibration-result
-data.
+explicitly allows it. In particular, a clean implementation should be possible
+from this file plus the simulator config, testcase, and calibration-result data.
 
 ## Goals
 
@@ -37,8 +43,9 @@ data.
 - Allow hero skills and future mechanics to create active runtime effects.
 - Produce detailed outcomes/traces when requested, while leaving room for a fast
   no-trace mode for high-volume simulation.
-- Provide a testcase runner that can execute every testcase under `v3/testcases`
-  and compare summarized output against `v3/testcase_results/*.json`
+- Provide a testcase runner that can execute every testcase under
+  `simulator/testcases` and compare summarized output against
+  `simulator/testcase_results/*.json`
   calibration reports.
 
 ## Non-Goals
@@ -96,7 +103,7 @@ means `enemy.any`. Unqualified unit selectors use the field default, so
 
 For turn triggers, omitted `source` means one global turn activation. An explicit
 `source` creates one synthetic per-unit activation intent for each matching
-living source unit. Native v3 trigger definitions must not use the old
+living source unit. Native simulator trigger definitions must not use the old
 `trigger.units.for`, `trigger.units.by`, `trigger.units.applies_vs`, or
 `trigger.units.side` shape.
 
@@ -124,7 +131,7 @@ skills whose requirements are not satisfied never enter trigger matching.
 ### Effect Intent
 
 An effect intent records what the catalogue/source wants to activate. In the
-current v3 implementation, `type` is a native canonical effect id, not a loose
+current simulator implementation, `type` is a native canonical effect id, not a loose
 legacy label that must be reinterpreted from separate metadata.
 
 Supported damage-affecting `type` values either name an atomic bucket directly
@@ -138,7 +145,7 @@ owned by the simulator.
 
 The config intentionally rejects legacy metadata fields such as `effect_op` and
 `effect_type`. If previous legacy information matters, it must already be
-encoded in the native `type` string and validated by the v3 loader.
+encoded in the native `type` string and validated by the simulator loader.
 
 Examples:
 
@@ -178,7 +185,7 @@ Config selector rules:
   selectors.
 - `"target"` always means the trigger target. Use `"trigger.source"` for an
   effect that should be gated against the unit that caused the trigger.
-- native v3 `applies_vs` does not accept `"all"`; use `"any"` for an
+- native simulator `applies_vs` does not accept `"all"`; use `"any"` for an
   unrestricted usage gate.
 - trigger resolution converts config selectors into concrete ActiveEffect
   scopes before runtime applicability checks.
@@ -301,7 +308,7 @@ Responsibilities:
 - provide trace metadata for applied and rejected effects
 
 The current implementation deliberately avoids a second source-evidence
-translation layer for native v3 config. Source family and direction are encoded
+translation layer for native simulator config. Source family and direction are encoded
 in the `type` string, for example `active.hero.attack.up`,
 `active.troop.defense.down`, or `type.skill.damage.up`. Static base/player
 inputs and passive effects still use separate bucket families so traces retain
@@ -348,7 +355,7 @@ job kinds they affect, and where their factors participate in the equation.
 
 ## Public API
 
-The v3 implementation should expose a small library API plus a CLI runner. The
+The simulator implementation should expose a small library API plus a CLI runner. The
 API should separate configuration loading, testcase adaptation, simulation, and
 comparison.
 
@@ -363,7 +370,7 @@ interface SimulatorConfig {
 }
 
 function loadSimulatorConfig(options?: {
-  configDir?: string; // default: v3/config
+  configDir?: string; // default: simulator/config
 }): SimulatorConfig;
 ```
 
@@ -371,9 +378,9 @@ The config loader must validate:
 
 - every hero definition is valid JSON
 - every referenced `hero_generation` exists
-- every effect `type` is known to the v3 effect type policy or explicitly
+- every effect `type` is known to the simulator effect type policy or explicitly
   unsupported
-- no v3 config file contains legacy fields such as `legacy`, `effect_op`, or
+- no simulator config file contains legacy fields such as `legacy`, `effect_op`, or
   `effect_type`
 - `troop_skills.json` uses the same skill/effect schema as hero definitions
 
@@ -425,8 +432,8 @@ The simulator result should expose enough information for acceptance checks:
 
 ```ts
 interface TestcaseRunOptions {
-  testcaseRoot?: string; // default: v3/testcases
-  calibrationReportPath?: string; // default: latest v3/testcase_results/*.json
+  testcaseRoot?: string; // default: simulator/testcases
+  calibrationReportPath?: string; // default: latest simulator/testcase_results/*.json
   matching?: string;
   includeDisabled?: boolean;
   repeat?: number; // maximum samples for non-deterministic cases
@@ -453,7 +460,7 @@ that skill's active level. Deterministic cases should run once even when
 samples with stable per-sample seeds.
 
 The runner should adapt the existing testcase JSON shape into `BattleInput`.
-It must tolerate inaccurate v3 mechanics during early development; the first
+It must tolerate inaccurate simulator mechanics during early development; the first
 acceptance target is successful execution and useful diagnostics, not parity.
 
 Testcase adaptation requirements:
@@ -465,14 +472,14 @@ Testcase adaptation requirements:
 - if a testcase entry contains `mechanics`, `engagement_type`, or
   `engagementType`, pass that through to `BattleInput.mechanics`
 - preserve `game_report_result` or equivalent report data in the testcase case
-  report so v3 output can be compared beside the observed game result
+  report so simulator output can be compared beside the observed game result
 - keep adaptation errors per case; one bad case should not prevent later files
   from being parsed and reported
 
 Testcase discovery requirements:
 
-- default root is `v3/testcases`
-- follow the `v3/testcases` symlink if it is a symlink
+- default root is `simulator/testcases`
+- follow the `simulator/testcases` symlink if it is a symlink
 - by default include only files ending exactly in `.json`
 - by default exclude files ending in `.json.disabled` and
   `.json.stale_troops`
@@ -487,13 +494,13 @@ Testcase discovery requirements:
 Calibration comparison requirements:
 
 - default calibration report is the latest JSON file under
-  `v3/testcase_results`
+  `simulator/testcase_results`
 - if no calibration report is present, report `calibrationAvailable: false` and
   still run all selected cases
 - case lookup must match by testcase file path, testcase id, and testcase entry
   index/`idx`
-- testcase path matching must handle both symlinked v3 paths and source paths,
-  for example `v3/testcases/emulator_verified/simple_001_nc.json` and
+- testcase path matching must handle both symlinked simulator paths and source paths,
+  for example `simulator/testcases/emulator_verified/simple_001_nc.json` and
   `testcases/emulator_verified/simple_001_nc.json`
 - duplicate `(file, test_id)` groups are expected; `idx` is required to avoid
   assigning the same calibration result to multiple entries
@@ -502,21 +509,21 @@ Calibration comparison requirements:
 
 ## Acceptance Criteria
 
-Initial v3 acceptance is operational rather than accuracy-gated.
+Initial simulator acceptance is operational rather than accuracy-gated.
 
 ### A. Config Loads
 
 - `loadSimulatorConfig()` loads:
-  - `v3/config/troop_stats.json`
-  - `v3/config/hero_generation_stats.json`
-  - every file under `v3/config/hero_definitions`
-  - `v3/config/troop_skills.json`
-- The loader reports zero legacy fields in v3 config.
+  - `simulator/config/troop_stats.json`
+  - `simulator/config/hero_generation_stats.json`
+  - every file under `simulator/config/hero_definitions`
+  - `simulator/config/troop_skills.json`
+- The loader reports zero legacy fields in simulator config.
 - The loader reports every known effect type and any unsupported records.
 
 ### B. Testcases Are Discoverable
 
-- The runner follows the `v3/testcases` symlink.
+- The runner follows the `simulator/testcases` symlink.
 - It discovers every `.json` testcase file under that tree.
 - It skips disabled/stale files by default:
   - `*.disabled`
@@ -529,9 +536,9 @@ For every selected testcase:
 
 - The runner can parse the file.
 - Every testcase entry can be adapted into a `BattleInput`.
-- Every referenced hero is either loaded from v3 config or reported as a clear
+- Every referenced hero is either loaded from simulator config or reported as a clear
   unsupported/missing hero diagnostic.
-- Troops are resolved from testcase troop ids and `v3/config/troop_stats.json`.
+- Troops are resolved from testcase troop ids and `simulator/config/troop_stats.json`.
 - Fighter stat bonuses from testcase `stats` blocks are applied to the correct
   attack/lethality/health/defense buckets.
 - Troop skills are resolved from troop tier/Fire Crystal requirements.
@@ -556,20 +563,20 @@ expected heroes, troops, and skills are present and firing.
 
 ### E. Calibration Comparison
 
-The runner should read `v3/testcase_results/*.json` when present.
+The runner should read `simulator/testcase_results/*.json` when present.
 
 Minimum comparison support:
 
 - identify the latest calibration report by `finished_at` or file mtime
 - identify calibration rows for each testcase file, testcase id, and testcase
   entry index/`idx` where possible
-- support both symlinked v3 testcase paths and source testcase paths when
+- support both symlinked simulator testcase paths and source testcase paths when
   matching calibration records
-- report v3 result beside:
+- report simulator result beside:
   - game result from testcase JSON
   - calibration summary metrics for the same file/case, if present
-  - v1 simulator output (`mu_sim`) and observed game output (`mu_game`)
-  - v3 delta versus observed game output
+  - baseline snapshot output (`mu_sim`) and observed game output (`mu_game`)
+  - simulator delta versus observed game output
 
 The initial comparison output is JSON and should include a parity comparison
 table suitable for sorting by divergence.
@@ -583,7 +590,7 @@ calibration records by `idx`.
 Provide a CLI equivalent to:
 
 ```bash
-npm --prefix v3 run testcases -- --repeat 1
+npx tsx scripts/run_testcases.ts --repeat 1
 ```
 
 The command should print a structured JSON report and exit:
@@ -842,8 +849,8 @@ means a 20% activation chance, `1` means 1%, `0.5` means 0.5%, `100` means
 always, and `0` means never.
 
 The simulator uses a deterministic seeded pseudo-random generator for trigger
-chance rolls. `BattleInput.seed` selects the sequence; when omitted, v3 uses the
-stable default seed `"v3-default"`. Re-running the same battle with the same
+chance rolls. `BattleInput.seed` selects the sequence; when omitted, the simulator uses the
+stable default seed `"simulator-default"`. Re-running the same battle with the same
 seed and config must produce the same skill activations and result.
 
 Resolved skills with chance trigger probabilities strictly between `0` and
@@ -869,14 +876,14 @@ gated skills.
 
 ## Damage Buckets
 
-The calculator owns the bucket list. The current v3 implementation uses native
+The calculator owns the bucket list. The current simulator implementation uses native
 effect `type` strings as canonical atomic bucket ids for supported bucket
 effects. The authoritative bucket list is the combination of:
 
-- runtime atomic buckets defined by `v3/src/damageBuckets.ts`
-- static raw/player/passive buckets defined by `v3/src/staticDamageProfile.ts`
+- runtime atomic buckets defined by `simulator/src/damageBuckets.ts`
+- static raw/player/passive buckets defined by `simulator/src/staticDamageProfile.ts`
 
-The v3 catalogue files must be self-contained native data. They must not contain
+The simulator catalogue files must be self-contained native data. They must not contain
 legacy metadata such as `legacy.effect_type` or `legacy.effect_op`. If a
 previous legacy op code matters to bucket routing, that information must already
 be represented in the native `type`, for example
@@ -995,7 +1002,7 @@ and let the static damage profile include them as separate contributors.
 ### Effect Routing
 
 For bucket effects, `type` is the route. There is no separate conversion from
-labels such as `attack_up` or `normal_damage_up` in native v3 config.
+labels such as `attack_up` or `normal_damage_up` in native simulator config.
 
 | Native `type` family | Role | Job-kind gate |
 | --- | --- | --- |
@@ -1034,7 +1041,7 @@ For special non-bucket effects:
 ### Aggregation Config
 
 The final calculation is driven by centralized aggregation terms in
-`v3/src/damage.ts`. The policy owns which atomic buckets add together and which
+`simulator/src/damage.ts`. The policy owns which atomic buckets add together and which
 factors multiply. Native effects only name buckets.
 
 Supported group modes:
@@ -1202,15 +1209,16 @@ effects; extra skill attack source effects consume according to their own
 declared mode.
 ```
 
-The current v3 pass implements attack-duration consumption for applicable
+The current simulator pass implements attack-duration consumption for applicable
 active effects by active-effect id, not by catalogue effect id. Applicable
 one-attack effects are consumed when their normal damage job is evaluated, and
 they are also consumed when that normal attack intent is cancelled by dodge or
 no-attack control. This prevents same-named effects from different activations
 being expired together.
 
-If parity requires legacy-compatible behavior, implement it behind a named
-compatibility mode rather than making it the default architecture.
+If parity with game observations is poor, prefer explicit native mechanics and
+new fixture evidence. Do not reintroduce compatibility modes for retired
+simulator behavior.
 
 ## Attack Controls
 
@@ -1279,7 +1287,7 @@ tests before or alongside implementation.
    damage jobs, outcomes, buckets, testcase reports, and calibration comparison
    records.
 2. Implement config loading and validation:
-   - native v3 JSON only
+   - native simulator JSON only
    - no legacy fields
    - hero alias index
    - troop skill requirement resolution
@@ -1315,7 +1323,7 @@ tests before or alongside implementation.
 Implementation tasks derived from this spec should use focused validation for
 the affected surface before broad regression runs. At minimum:
 
-- typecheck and unit-test the changed v3 modules
+- typecheck and unit-test the changed simulator modules
 - run no-hero controls when damage equation, targeting, or orchestration changes
 - run relevant hero parity fixtures when skill activation, duration, chance,
   extra attack, or controls change
@@ -1325,9 +1333,9 @@ the affected surface before broad regression runs. At minimum:
 Baseline validation commands:
 
 ```bash
-npm --prefix v3 test
-npm --prefix v3 run typecheck
-npm --silent --prefix v3 run testcases -- --repeat 1
+cd simulator && npm test
+cd simulator && npm run typecheck
+npx tsx scripts/run_testcases.ts --repeat 1
 ```
 
 The testcase command should report:
@@ -1340,7 +1348,7 @@ The testcase command should report:
 - resolved troop skill ids
 - deterministic/non-deterministic classification and sample count
 - nonzero skill/effect activation counts for cases containing active skills
-- calibration comparison rows when `v3/testcase_results/*.json` is present
+- calibration comparison rows when `simulator/testcase_results/*.json` is present
 
 Required focused regression tests:
 
@@ -1356,7 +1364,7 @@ Required focused regression tests:
 - deterministic testcase classification is based on resolved skills with chance
   triggers, and deterministic cases run once even when `repeat` is larger
 - duplicate testcase ids in one file match calibration records by `idx`
-- no-hero base cases expose game, calibration, and v3 result fields side by side
+- no-hero base cases expose game, calibration, and simulator result fields side by side
 
 ## Key Invariants
 

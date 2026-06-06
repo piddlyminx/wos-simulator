@@ -1,14 +1,11 @@
 {
-  "name": "wos-simulator-v3",
+  "name": "wos-simulator",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "npx --yes tsx --test \"src/**/*.test.ts\"",
-    "typecheck": "npx --yes --package typescript --package @types/node tsc --noEmit",
-    "testcases": "npx --yes tsx src/cli.ts",
-    "tournament:dual-swiss": "npx --yes tsx src/tournament/dualSwissCli.ts",
-    "benchmark:tournament-battle-modes": "npx --yes tsx src/tournament/benchmarkBattleModes.ts"
+    "typecheck": "npx --yes --package typescript --package @types/node tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

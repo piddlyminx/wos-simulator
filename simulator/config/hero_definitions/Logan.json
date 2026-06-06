@@ -1,6 +1,7 @@
 {
   "name": "Logan",
   "hero_generation": "S3",
+  "troop_type": "infantry",
   "skills": {
     "LionStrike": {
       "description": "Reducing all enemy Troops' Attack by X%",

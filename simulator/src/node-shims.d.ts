@@ -1,31 +1,10 @@
 declare const process: {
-  argv: string[];
   cwd(): string;
-  exitCode?: number;
-  stdin: any;
-  stdout: { write(data: string): void };
 };
 
 declare module "node:assert/strict" {
   const assert: any;
   export default assert;
-}
-
-declare module "node:child_process" {
-  interface ChildProcessWithoutNullStreams {
-    stdin: { write(data: string): void; end(): void };
-    stdout: any;
-    stderr: { on(event: "data", listener: (chunk: unknown) => void): void };
-    on(event: "close", listener: (code: number | null) => void): void;
-    once(event: "close", listener: (code: number | null) => void): void;
-  }
-  export function spawn(command: string, args?: string[], options?: Record<string, unknown>): ChildProcessWithoutNullStreams;
-  export function spawnSync(command: string, args?: string[], options?: Record<string, unknown>): { status: number | null; stdout: string; stderr: string };
-  export type { ChildProcessWithoutNullStreams };
-}
-
-declare module "node:readline" {
-  export function createInterface(options: Record<string, unknown>): { on(event: "line", listener: (line: string) => void): void };
 }
 
 declare module "node:fs" {
@@ -60,13 +39,4 @@ declare module "node:test" {
 declare module "node:url" {
   export function fileURLToPath(url: string | URL): string;
   export function pathToFileURL(path: string): URL;
-}
-
-declare module "node:worker_threads" {
-  export const parentPort:
-    | {
-        on(event: "message", listener: (message: unknown) => void): void;
-        postMessage(message: unknown): void;
-      }
-    | null;
 }

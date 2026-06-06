@@ -9,9 +9,9 @@ type SortKey =
   | "testcaseId"
   | "gameStat"
   | "gameBiasPct"
-  | "v1Stat"
-  | "v1BiasPct"
-  | "v3Mu";
+  | "baselineStat"
+  | "baselineBiasPct"
+  | "simulatorMu";
 
 function fmt(value: number | null | undefined, digits = 2): string {
   return Number.isFinite(value) ? value!.toFixed(digits) : "-";
@@ -48,19 +48,19 @@ function groupStyle(options: { left?: boolean; right?: boolean }) {
 }
 
 function candidate(row: ParityComparisonRow): ParityMetric | null {
-  return row.game ?? row.v1;
+  return row.game ?? row.baseline;
 }
 
 function defaultRank(row: ParityComparisonRow): number {
   const gameFail = row.game?.passes === false ? 1_000_000 : 0;
-  const v1Fail = row.v1?.passes === false ? 100_000 : 0;
+  const baselineFail = row.baseline?.passes === false ? 100_000 : 0;
   return (
     gameFail +
-    v1Fail +
+    baselineFail +
     Math.abs(row.game?.stat ?? 0) * 100 +
     Math.abs(row.game?.bias_pct ?? 0) +
-    Math.abs(row.v1?.stat ?? 0) * 10 +
-    Math.abs(row.v1?.bias_pct ?? 0)
+    Math.abs(row.baseline?.stat ?? 0) * 10 +
+    Math.abs(row.baseline?.bias_pct ?? 0)
   );
 }
 
@@ -68,9 +68,9 @@ function sortValue(row: ParityComparisonRow, sortKey: SortKey): number {
   if (sortKey === "rank") return defaultRank(row);
   if (sortKey === "gameStat") return Math.abs(row.game?.stat ?? 0);
   if (sortKey === "gameBiasPct") return Math.abs(row.game?.bias_pct ?? 0);
-  if (sortKey === "v1Stat") return Math.abs(row.v1?.stat ?? 0);
-  if (sortKey === "v1BiasPct") return Math.abs(row.v1?.bias_pct ?? 0);
-  if (sortKey === "v3Mu") return Math.abs(candidate(row)?.mu_candidate ?? 0);
+  if (sortKey === "baselineStat") return Math.abs(row.baseline?.stat ?? 0);
+  if (sortKey === "baselineBiasPct") return Math.abs(row.baseline?.bias_pct ?? 0);
+  if (sortKey === "simulatorMu") return Math.abs(candidate(row)?.mu_candidate ?? 0);
   return 0;
 }
 
@@ -102,7 +102,7 @@ export default function ParityReportTable({
         if (
           onlyFailures &&
           row.game?.passes !== false &&
-          row.v1?.passes !== false
+          row.baseline?.passes !== false
         ) {
           return false;
         }
@@ -150,7 +150,7 @@ export default function ParityReportTable({
             checked={onlyFailures}
             onChange={(event) => setOnlyFailures(event.target.checked)}
           />
-          Only failing compatibility checks
+          Only failing accuracy checks
         </label>
         <span className="ml-auto text-xs opacity-50">
           {filtered.length} / {rows.length}
@@ -170,31 +170,31 @@ export default function ParityReportTable({
               </th>
               <th className="pb-2 pr-3">Idx</th>
               <th className="pb-2 pl-3 pr-3" style={groupStyle({ left: true })}>gameMu</th>
-              <th className="pb-2 pr-3">v1Mu</th>
+              <th className="pb-2 pr-3">baselineMu</th>
               <th className="pb-2 pr-3" style={groupStyle({ right: true })}>
-                <button type="button" onClick={() => setSort("v3Mu")}>
-                  v3Mu
+                <button type="button" onClick={() => setSort("simulatorMu")}>
+                  simulatorMu
                 </button>
               </th>
               <th className="pb-2 pl-3 pr-3">gameSd</th>
-              <th className="pb-2 pr-3">v1Sd</th>
-              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>v3Sd</th>
-              <th className="pb-2 pl-3 pr-3">v1N</th>
-              <th className="pb-2 pr-3">v3N</th>
-              <th className="pb-2 pr-3">v1Raw</th>
+              <th className="pb-2 pr-3">baselineSd</th>
+              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>simulatorSd</th>
+              <th className="pb-2 pl-3 pr-3">baselineN</th>
+              <th className="pb-2 pr-3">simulatorN</th>
+              <th className="pb-2 pr-3">baselineRaw</th>
               <th className="pb-2 pr-3">
-                <button type="button" onClick={() => setSort("v1BiasPct")}>
-                  v1%
+                <button type="button" onClick={() => setSort("baselineBiasPct")}>
+                  baseline%
                 </button>
               </th>
               <th className="pb-2 pr-3">
-                <button type="button" onClick={() => setSort("v1Stat")}>
-                  v1Stat
+                <button type="button" onClick={() => setSort("baselineStat")}>
+                  baselineStat
                 </button>
               </th>
-              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>v1Pass</th>
+              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>baselinePass</th>
               <th className="pb-2 pl-3 pr-3">gameN</th>
-              <th className="pb-2 pr-3">v3N</th>
+              <th className="pb-2 pr-3">simulatorN</th>
               <th className="pb-2 pr-3">gameRaw</th>
               <th className="pb-2 pr-3">
                 <button type="button" onClick={() => setSort("gameBiasPct")}>
@@ -211,7 +211,7 @@ export default function ParityReportTable({
           </thead>
           <tbody>
             {filtered.map((row) => {
-              const v3 = candidate(row);
+              const simulator = candidate(row);
               return (
                 <tr
                   key={`${row.file}:${row.testcaseId}:${row.idx}`}
@@ -234,29 +234,29 @@ export default function ParityReportTable({
                     {fmt(row.game?.mu_reference)}
                   </td>
                   <td className="py-1.5 pr-3">
-                    {fmt(row.v1?.mu_reference)}
+                    {fmt(row.baseline?.mu_reference)}
                   </td>
                   <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
-                    {fmt(v3?.mu_candidate)}
+                    {fmt(simulator?.mu_candidate)}
                   </td>
                   <td className="py-1.5 pl-3 pr-3">
                     {fmt(row.game?.sigma_reference)}
                   </td>
                   <td className="py-1.5 pr-3">
-                    {fmt(row.v1?.sigma_reference)}
+                    {fmt(row.baseline?.sigma_reference)}
                   </td>
                   <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
-                    {fmt(v3?.sigma_candidate)}
+                    {fmt(simulator?.sigma_candidate)}
                   </td>
                   <td className="py-1.5 pl-3 pr-3">
-                    {row.v1?.n_reference ?? "-"}
+                    {row.baseline?.n_reference ?? "-"}
                   </td>
-                  <td className="py-1.5 pr-3">{row.v1?.n_candidate ?? "-"}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.v1?.bias_raw)}</td>
-                  <td className="py-1.5 pr-3">{fmtPct(row.v1?.bias_pct)}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.v1?.stat)}</td>
+                  <td className="py-1.5 pr-3">{row.baseline?.n_candidate ?? "-"}</td>
+                  <td className="py-1.5 pr-3">{fmt(row.baseline?.bias_raw)}</td>
+                  <td className="py-1.5 pr-3">{fmtPct(row.baseline?.bias_pct)}</td>
+                  <td className="py-1.5 pr-3">{fmt(row.baseline?.stat)}</td>
                   <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
-                    {pass(row.v1?.passes)}
+                    {pass(row.baseline?.passes)}
                   </td>
                   <td className="py-1.5 pl-3 pr-3">
                     {row.game?.n_reference ?? "-"}

@@ -1,6 +1,7 @@
 {
   "name": "Wayne",
   "hero_generation": "S6",
+  "troop_type": "marksman",
   "skills": {
     "ThunderStrike": {
       "description": "Wayne's brilliant battle planning allows all troops to launch an extra attack every 4 turns, dealing X% damage.",

@@ -1,6 +1,7 @@
 {
   "name": "Mia",
   "hero_generation": "S3",
+  "troop_type": "lancer",
   "skills": {
     "BadLuckStreak": {
       "description": "Grants all troops attack a 50% chance of cursing the target, increasing their damage taken by X%",

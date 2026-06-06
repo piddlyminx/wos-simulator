@@ -21,7 +21,7 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).parent.parent
 _RUNS_DIR = _REPO_ROOT / "test_results" / "runs"
 
-# Ensure repo root is on the Python path so that check_testcases imports work.
+# Ensure repo root is on the Python path so dashboard imports work.
 sys.path.insert(0, str(_REPO_ROOT))
 
 from dashboard.ingest import open_db, record_run  # noqa: E402

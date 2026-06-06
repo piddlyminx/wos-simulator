@@ -1,6 +1,7 @@
 {
   "name": "Jeronimo",
   "hero_generation": "S1_jeronimo",
+  "troop_type": "infantry",
   "skills": {
     "BattleManifesto": {
       "description": "Increasing damage dealt by X% for all troops",

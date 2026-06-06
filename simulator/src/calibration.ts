@@ -55,25 +55,25 @@ export interface CalibrationComparisonRow extends CalibrationCaseComparison {
   matched: boolean;
   referencePasses?: boolean;
   referenceBiasPct?: number;
-  v3ScoreDelta?: number;
-  v3?: SampleStats;
-  v3VsV1?: DistributionCompatibility;
-  v3VsGame?: DistributionCompatibility;
-  v3VsGameRaw?: number;
-  v3VsGamePct?: number;
-  v3Passes?: boolean;
-  v3N?: number;
-  v3Mu?: number;
-  v3Sigma?: number;
-  v3Sem?: number;
-  v3VsV1BiasRaw?: number;
-  v3VsV1BiasPct?: number;
-  v3VsV1Z?: number;
-  v3VsV1Passes?: boolean;
-  v3VsGameBiasRaw?: number;
-  v3VsGameBiasPct?: number;
-  v3VsGameZ?: number;
-  v3VsGamePasses?: boolean;
+  simulatorScoreDelta?: number;
+  simulator?: SampleStats;
+  simulatorVsBaseline?: DistributionCompatibility;
+  simulatorVsGame?: DistributionCompatibility;
+  simulatorVsGameRaw?: number;
+  simulatorVsGamePct?: number;
+  simulatorPasses?: boolean;
+  simulatorN?: number;
+  simulatorMu?: number;
+  simulatorSigma?: number;
+  simulatorSem?: number;
+  simulatorVsBaselineBiasRaw?: number;
+  simulatorVsBaselineBiasPct?: number;
+  simulatorVsBaselineZ?: number;
+  simulatorVsBaselinePasses?: boolean;
+  simulatorVsGameBiasRaw?: number;
+  simulatorVsGameBiasPct?: number;
+  simulatorVsGameZ?: number;
+  simulatorVsGamePasses?: boolean;
 }
 
 export function defaultCalibrationDir(): string {
@@ -120,9 +120,9 @@ export function readCalibrationCase(
 export function testcaseFileLookupVariants(path: string): string[] {
   const normalized = normalizePath(path);
   const variants = new Set<string>([normalized]);
-  // Historical parity reports embed "v3/testcases/"; current ones embed
-  // "simulator/testcases/". Both normalize to the canonical "testcases/" id.
-  for (const prefix of ["v3/testcases/", "simulator/testcases/"]) {
+  // Current parity reports may embed "simulator/testcases/"; both that form and
+  // the root "testcases/" form normalize to the canonical testcase id.
+  for (const prefix of ["simulator/testcases/"]) {
     const idx = normalized.indexOf(prefix);
     if (idx >= 0) variants.add(`testcases/${normalized.slice(idx + prefix.length)}`);
   }
@@ -130,7 +130,6 @@ export function testcaseFileLookupVariants(path: string): string[] {
   if (testcaseIndex >= 0) {
     const testcasePath = normalized.slice(testcaseIndex);
     variants.add(testcasePath);
-    variants.add(`v3/${testcasePath}`);
     variants.add(`simulator/${testcasePath}`);
   }
   return [...variants];
@@ -142,17 +141,17 @@ export function addCalibrationTableRow(
     file: string;
     testcaseId: string;
     index: number;
-    v3ScoreDelta?: number;
-    v3Stats?: SampleStats;
+    simulatorScoreDelta?: number;
+    simulatorStats?: SampleStats;
     calibration?: CalibrationCaseComparison;
   }
 ): CalibrationComparisonRow {
   const calibration = caseReport.calibration;
-  const v3 = caseReport.v3Stats;
-  const v3VsV1 = compareDistributions(v3, calibration?.muSim, calibration?.sigmaSim, calibration?.nSim, comparison.thresholds, calibration?.statType);
-  const v3VsGame = compareDistributions(v3, calibration?.muGame, calibration?.sigmaGame, calibration?.nGame, comparison.thresholds, calibration?.statType);
-  const v3VsGameRaw = v3VsGame.biasRaw;
-  const v3VsGamePct = v3VsGame.biasPct;
+  const simulator = caseReport.simulatorStats;
+  const simulatorVsBaseline = compareDistributions(simulator, calibration?.muSim, calibration?.sigmaSim, calibration?.nSim, comparison.thresholds, calibration?.statType);
+  const simulatorVsGame = compareDistributions(simulator, calibration?.muGame, calibration?.sigmaGame, calibration?.nGame, comparison.thresholds, calibration?.statType);
+  const simulatorVsGameRaw = simulatorVsGame.biasRaw;
+  const simulatorVsGamePct = simulatorVsGame.biasPct;
   const row: CalibrationComparisonRow = {
     file: relativeDisplayPath(caseReport.file),
     testcaseId: caseReport.testcaseId,
@@ -173,25 +172,25 @@ export function addCalibrationTableRow(
     sem: calibration?.sem,
     p: calibration?.p,
     q: calibration?.q,
-    v3ScoreDelta: caseReport.v3ScoreDelta,
-    v3,
-    v3VsV1,
-    v3VsGame,
-    v3VsGameRaw,
-    v3VsGamePct,
-    v3Passes: v3VsGame.passes,
-    v3N: v3?.n,
-    v3Mu: v3?.mu,
-    v3Sigma: v3?.sigma,
-    v3Sem: v3?.sem,
-    v3VsV1BiasRaw: v3VsV1.biasRaw,
-    v3VsV1BiasPct: v3VsV1.biasPct,
-    v3VsV1Z: v3VsV1.z,
-    v3VsV1Passes: v3VsV1.passes,
-    v3VsGameBiasRaw: v3VsGame.biasRaw,
-    v3VsGameBiasPct: v3VsGame.biasPct,
-    v3VsGameZ: v3VsGame.z,
-    v3VsGamePasses: v3VsGame.passes
+    simulatorScoreDelta: caseReport.simulatorScoreDelta,
+    simulator,
+    simulatorVsBaseline,
+    simulatorVsGame,
+    simulatorVsGameRaw,
+    simulatorVsGamePct,
+    simulatorPasses: simulatorVsGame.passes,
+    simulatorN: simulator?.n,
+    simulatorMu: simulator?.mu,
+    simulatorSigma: simulator?.sigma,
+    simulatorSem: simulator?.sem,
+    simulatorVsBaselineBiasRaw: simulatorVsBaseline.biasRaw,
+    simulatorVsBaselineBiasPct: simulatorVsBaseline.biasPct,
+    simulatorVsBaselineZ: simulatorVsBaseline.z,
+    simulatorVsBaselinePasses: simulatorVsBaseline.passes,
+    simulatorVsGameBiasRaw: simulatorVsGame.biasRaw,
+    simulatorVsGameBiasPct: simulatorVsGame.biasPct,
+    simulatorVsGameZ: simulatorVsGame.z,
+    simulatorVsGamePasses: simulatorVsGame.passes
   };
   comparison.table.push(row);
   return row;
@@ -295,18 +294,18 @@ function normalizeThresholds(value: unknown): Record<string, number> | undefined
 }
 
 function compareDistributions(
-  v3: SampleStats | undefined,
+  simulator: SampleStats | undefined,
   referenceMu: number | undefined,
   referenceSigma: number | undefined,
   referenceN: number | undefined,
   thresholds?: Record<string, number>,
   referenceStatType?: string
 ): DistributionCompatibility {
-  if (!v3 || referenceMu === undefined || referenceSigma === undefined || referenceN === undefined) return { statType: "unmatched" };
-  const biasRaw = v3.mu - referenceMu;
+  if (!simulator || referenceMu === undefined || referenceSigma === undefined || referenceN === undefined) return { statType: "unmatched" };
+  const biasRaw = simulator.mu - referenceMu;
   const biasPct = percentDelta(biasRaw, referenceMu);
-  const combinedSem = Math.sqrt((v3.sigma ** 2) / Math.max(1, v3.n) + (referenceSigma ** 2) / Math.max(1, referenceN));
-  const deterministic = referenceStatType === "deterministic" || (v3.sigma === 0 && referenceSigma === 0);
+  const combinedSem = Math.sqrt((simulator.sigma ** 2) / Math.max(1, simulator.n) + (referenceSigma ** 2) / Math.max(1, referenceN));
+  const deterministic = referenceStatType === "deterministic" || (simulator.sigma === 0 && referenceSigma === 0);
   if (deterministic || combinedSem === 0) {
     return {
       biasRaw,

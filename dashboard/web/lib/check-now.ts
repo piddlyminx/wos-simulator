@@ -13,6 +13,12 @@ export interface LatestRunSummary {
   bh_sig_count: number | null;
 }
 
+export interface LatestParityReportSummary {
+  path: string;
+  created_at?: string | null;
+  counts?: Record<string, unknown> | null;
+}
+
 export interface CheckNowStatus {
   state: CheckNowState;
   started_at?: string;
@@ -25,6 +31,7 @@ export interface CheckNowStatus {
   stdout_tail?: string;
   stderr_tail?: string;
   latest_run?: LatestRunSummary | null;
+  latest_report?: LatestParityReportSummary | null;
   command?: string[];
 }
 

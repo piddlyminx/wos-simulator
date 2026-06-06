@@ -1,7 +1,7 @@
 [
   {
     "test_id": "wos427_wip_sergey_philly_840",
-    "description": "WOS-427 high-signal damage-taken-down plus defense-up fixture. minxxx attacks WIP; WIP defends with Sergey+Philly and 840 heroic infantry to separate additive defense stacking from multiplicative defense stacking in v3.",
+    "description": "WOS-427 high-signal damage-taken-down plus defense-up fixture. minxxx attacks WIP; WIP defends with Sergey+Philly and 840 heroic infantry to separate additive defense stacking from multiplicative defense stacking in simulator.",
     "attacker": {
       "name": "[ARK]Piddlyminxx",
       "heroes": {},

@@ -283,7 +283,7 @@
         "IncandescentField/1": {
           "type": "active.troop.defense.up",
           "value": [
-            50
+            100
           ],
           "units": {
             "applies_to": "trigger.target",

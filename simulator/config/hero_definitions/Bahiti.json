@@ -1,6 +1,7 @@
 {
   "name": "Bahiti",
   "hero_generation": "SR",
+  "troop_type": "marksman",
   "skills": {
     "SixthSense": {
       "description": "Reducing damage taken by X% for all troops",

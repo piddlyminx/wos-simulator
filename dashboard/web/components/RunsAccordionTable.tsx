@@ -3,19 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { RunWithDelta } from "@/types/dashboard";
+import { formatDashboardDateTime } from "@/lib/date-format";
 
 interface Props {
   runs: RunWithDelta[];
   defaultOpen?: boolean;
-}
-
-function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  try {
-    return new Date(iso).toLocaleString();
-  } catch {
-    return iso;
-  }
 }
 
 function PassBadge({ passes }: { passes: boolean }) {
@@ -131,7 +123,7 @@ export default function RunsAccordionTable({ runs, defaultOpen = false }: Props)
                         style={{ color: "var(--sidebar-active)" }}
                         className="hover:underline"
                       >
-                        {formatDate(run.started_at)}
+                        {formatDashboardDateTime(run.started_at)}
                       </Link>
                       {" "}
                       <Link

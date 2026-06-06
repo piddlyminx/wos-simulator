@@ -1,10 +1,9 @@
 # Dashboard SQLite Schema
 
-The ingestion pipeline writes every `archived/v1/check_testcases.py` run into
-`test_results/dashboard.sqlite` so the Next.js dashboard can query
-historical accuracy data without re-parsing JSON snapshots. (References to
-`check_testcases.py` below are the same legacy Python checker, now under
-`archived/v1/`.)
+The dashboard reads historical accuracy rows from `test_results/dashboard.sqlite`
+and current TypeScript simulator parity reports from `simulator/testcase_results/`.
+The SQLite schema remains documented here because older runs and trend pages use
+it, while new Check Now runs write simulator parity report JSON.
 
 ---
 
@@ -23,8 +22,8 @@ Internal migration-tracking table. Each applied `.sql` file gets one row.
 
 ### `blobs`
 
-Content-addressed storage for dirty working-tree captures.  Only present when
-`check_testcases.py` runs on a dirty git tree.
+Content-addressed storage for dirty working-tree captures. Only present for
+ingested historical runs captured on a dirty git tree.
 
 | Column | Type | Notes |
 |---|---|---|
@@ -40,7 +39,7 @@ untracked (non-ignored) file in the repo at run time.
 
 ### `runs`
 
-One row per `check_testcases.py` invocation.
+One row per ingested historical testcase invocation.
 
 | Column | Type | Notes |
 |---|---|---|
@@ -190,8 +189,7 @@ To populate historical runs:
 Captured patches and untracked tars are scoped to **simulator-relevant paths
 only** — the source allowlist lives in `dashboard/sim_paths.py` (mirrored for
 the web UI as `dashboard/web/lib/sim-paths.ts`). Changes to dashboard code,
-scratch scripts (`sim_custom.py`, `find_rng_*.py`, `troop_grid_search.py`,
-`test_*.py`), or documentation cannot move a testcase outcome, so they are
-stripped from both the stored blob (at capture time) and the rendered diff
-(at display time, for the benefit of legacy blobs). Amend the allowlist in
-both files when adding a new simulator input directory or root-level module.
+root-level scripts, generated parity reports, or documentation cannot move a
+testcase outcome, so they are stripped from both the stored blob and rendered
+diffs. Amend the allowlist in both files when adding a new simulator input
+directory or root-level module.

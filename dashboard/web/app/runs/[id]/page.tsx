@@ -18,17 +18,9 @@ import TestcaseTable from "@/components/TestcaseTable";
 import DiffViewer from "@/components/DiffViewer";
 import MetricCard from "@/components/MetricCard";
 import { testcaseDetailHref } from "@/lib/testcase-file";
+import { formatDashboardDateTime } from "@/lib/date-format";
 
 export const dynamic = "force-dynamic";
-
-function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  try {
-    return new Date(iso).toLocaleString();
-  } catch {
-    return iso;
-  }
-}
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -157,7 +149,7 @@ export default async function RunDetailPage({ params }: PageProps) {
       <div className="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="Started"
-          value={formatDate(run.started_at)}
+          value={formatDashboardDateTime(run.started_at)}
           valueClassName="text-base sm:text-lg"
         />
         <MetricCard

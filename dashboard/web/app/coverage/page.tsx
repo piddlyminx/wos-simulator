@@ -41,16 +41,15 @@ export default function CoveragePage() {
             DB misconfiguration: missing tables:{" "}
             <strong>{missingTables.join(", ")}</strong>. Run{" "}
             <code>python dashboard/seed_heroes.py</code> to seed the hero
-            catalogue (one-time setup, separate from{" "}
-            <code>check_testcases.py</code>).
+            catalogue.
           </div>
         )}
         <div
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No coverage data found. The database may not exist yet — run{" "}
-          <code className="font-mono">check_testcases.py</code> to populate it.
+          No coverage data found. The database may not exist yet; backfill
+          historical runs to populate it.
         </div>
       </div>
     );
@@ -152,8 +151,7 @@ export default function CoveragePage() {
           DB misconfiguration: missing tables:{" "}
           <strong>{missingTables.join(", ")}</strong>. Run{" "}
           <code>python dashboard/seed_heroes.py</code> to seed the hero
-          catalogue (one-time setup, separate from{" "}
-          <code>check_testcases.py</code>).
+          catalogue.
         </div>
       )}
 
@@ -177,8 +175,7 @@ export default function CoveragePage() {
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No coverage data found. Run{" "}
-          <code className="font-mono">check_testcases.py</code> to populate it.
+          No coverage data found. Backfill historical runs to populate it.
         </div>
       ) : (
         <>

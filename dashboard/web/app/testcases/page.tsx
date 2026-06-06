@@ -35,9 +35,8 @@ export default function TestcasesIndexPage() {
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No testcase history recorded. Run{" "}
-          <code className="font-mono">check_testcases.py</code> with the
-          dashboard ingestion enabled to populate the DB.
+          No testcase history recorded. Backfill historical runs to populate
+          the DB, or use the parity report view for current simulator runner output.
         </div>
       ) : (
         <TestcaseFileIndexTable rows={rows} />

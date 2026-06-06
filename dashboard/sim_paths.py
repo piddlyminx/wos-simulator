@@ -15,24 +15,22 @@ from __future__ import annotations
 
 from pathlib import PurePosixPath
 
-# Paths reflect the monorepo layout: the legacy Python simulator engine and its
-# (legacy-schema) game assets live under archived/v1/; fighter stat profiles
-# shared with the v3 tournament live under shared/. The ground-truth testcase
-# corpus stays at the repo root (its path is a stable logical id). Scratch
-# tooling (archived/v1/util) and tests are intentionally excluded.
+# Paths reflect the monorepo layout: the TypeScript simulator engine and native
+# config live under simulator/. Fighter stat profiles shared with scripts live
+# under shared/. The ground-truth testcase corpus stays at the repo root because
+# its path is a stable logical id.
 SIMULATOR_PATH_PREFIXES: tuple[str, ...] = (
-    "archived/v1/Base_classes/",
-    "archived/v1/assets/",
+    "simulator/config/",
+    "simulator/src/",
     "shared/fighters_data/",
     "testcases/",
 )
 
 SIMULATOR_ROOT_FILES: frozenset[str] = frozenset(
     {
-        "pyproject.toml",
-        "archived/v1/check_testcases.py",
-        "archived/v1/battle_main.py",
-        "archived/v1/compare_results.py",
+        "simulator/package.json",
+        "simulator/package-lock.json",
+        "simulator/tsconfig.json",
     }
 )
 

@@ -131,7 +131,7 @@ export function buildSimulatorConfig(raw: RawSimulatorConfig): SimulatorConfig {
 
   if (diagnostics.legacyFields.length > 0) {
     const first = diagnostics.legacyFields[0];
-    throw new Error(`Legacy field found in v3 config: ${first.field} at ${first.file}:${first.path}`);
+    throw new Error(`Legacy field found in simulator config: ${first.field} at ${first.file}:${first.path}`);
   }
 
   return {
@@ -181,7 +181,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
           skillId,
           effectId,
           type,
-          reason: "Effect type is not in the initial v3 classifier policy"
+          reason: "Effect type is not in the initial simulator classifier policy"
         });
       }
     }

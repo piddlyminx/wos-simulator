@@ -58,8 +58,7 @@ export default async function HeroDetailPage({ params }: PageProps) {
             DB misconfiguration: missing tables:{" "}
             <strong>{missingTables.join(", ")}</strong>. Run{" "}
             <code>python dashboard/seed_heroes.py</code> to seed the hero
-            catalogue (one-time setup, separate from{" "}
-            <code>check_testcases.py</code>).
+            catalogue.
           </div>
         ) : (
           <div
@@ -68,7 +67,7 @@ export default async function HeroDetailPage({ params }: PageProps) {
           >
             Hero <code className="font-mono">{heroName}</code> not found in the
             heroes table. Check that the name matches a hero in{" "}
-            <code className="font-mono">assets/hero_skills/</code>.
+            <code className="font-mono">simulator/config/hero_definitions/</code>.
           </div>
         )}
       </div>

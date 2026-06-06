@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error:
-          err instanceof Error ? err.message : "Failed to start check_testcases.py",
+          err instanceof Error ? err.message : "Failed to start simulator testcase runner",
       },
       { status: 500 },
     );

@@ -63,7 +63,7 @@ Read [commands.md](references/commands.md) when you need exact command forms, re
 - Use `--repeat N` to collect a sensible observation count for the same spec, especially for battles with chance effects or other RNG.
 - `run-testcase` appends captured game observations under `game_report_result`.
 - Testcase JSON files must not include `sim_result`; simulator output belongs in later analysis, not in captured fixture data.
-- After collecting enough observations, run the simulator-side testcase checker — the legacy Python checker at `archived/v1/check_testcases.py` (run from the monorepo root) or the TypeScript `simulator/` testcase runner — to compare against the captured data.
+- After collecting enough observations, run the TypeScript simulator testcase runner from the monorepo root with `npx tsx scripts/run_testcases.ts --matching <pattern>` to compare against the captured data.
 
 ## Report Handling
 

@@ -1,6 +1,7 @@
 {
   "name": "Hector",
   "hero_generation": "S5",
+  "troop_type": "infantry",
   "skills": {
     "SurvivalInstincts": {
       "description": "Hector's presence grants a 40% chance of reducing damage taken by X% for all troops",

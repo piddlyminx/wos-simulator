@@ -17,20 +17,12 @@ import {
 import DiffViewer from "@/components/DiffViewer";
 import CompareTable from "@/components/CompareTable";
 import MetricCard from "@/components/MetricCard";
+import { formatDashboardDateTime } from "@/lib/date-format";
 
 export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ a: string; b: string }>;
-}
-
-function formatDate(iso: string | null | undefined): string {
-  if (!iso) return "—";
-  try {
-    return new Date(iso).toLocaleString();
-  } catch {
-    return iso;
-  }
 }
 
 interface CommitLogEntry {
@@ -166,7 +158,7 @@ export default async function ComparePage({ params }: PageProps) {
             </Link>
             <span className="opacity-50">{shaA?.slice(0, 8) ?? "—"}</span>
             <span className="w-full break-words opacity-50 sm:w-auto">
-              {formatDate(runA.started_at)}
+              {formatDashboardDateTime(runA.started_at)}
             </span>
           </div>
         </div>
@@ -190,7 +182,7 @@ export default async function ComparePage({ params }: PageProps) {
             </Link>
             <span className="opacity-50">{shaB?.slice(0, 8) ?? "—"}</span>
             <span className="w-full break-words opacity-50 sm:w-auto">
-              {formatDate(runB.started_at)}
+              {formatDashboardDateTime(runB.started_at)}
             </span>
           </div>
         </div>
@@ -306,7 +298,7 @@ export default async function ComparePage({ params }: PageProps) {
                     )}
                     {c.commit_date && (
                       <span className="opacity-40">
-                        {formatDate(c.commit_date)}
+                        {formatDashboardDateTime(c.commit_date)}
                       </span>
                     )}
                   </div>

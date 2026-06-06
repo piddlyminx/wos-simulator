@@ -1,6 +1,7 @@
 {
   "name": "Patrick",
   "hero_generation": "SR",
+  "troop_type": "lancer",
   "skills": {
     "SuperNutrients": {
       "description": "Increasing Health by X% for all troop",

@@ -32,10 +32,10 @@ export interface ParitySummary {
   executedCases: number;
   warnings: number;
   errors: number;
-  comparedToV1: number;
+  comparedToBaseline: number;
   comparedToGame: number;
-  v3VsV1Failures: number;
-  v3VsGameFailures: number;
+  simulatorVsBaselineFailures: number;
+  simulatorVsGameFailures: number;
 
   // Compatibility fields for pre-Task 5 components.
   selectedCases: number;
@@ -55,7 +55,7 @@ export interface ParityComparisonRow {
   deterministic?: boolean;
   sampleCount?: number;
   game: ParityMetric | null;
-  v1: ParityMetric | null;
+  baseline: ParityMetric | null;
 
   // Compatibility fields for pre-Task 5 components.
   matched?: boolean;
@@ -67,19 +67,19 @@ export interface ParityComparisonRow {
   sigmaGame?: number;
   referencePasses?: boolean;
   referenceBiasPct?: number;
-  v3N?: number;
-  v3Mu?: number;
-  v3Sigma?: number;
-  v3Sem?: number;
-  v3ScoreDelta?: number;
-  v3VsV1Passes?: boolean;
-  v3VsV1BiasRaw?: number;
-  v3VsV1BiasPct?: number;
-  v3VsV1Z?: number;
-  v3VsGamePasses?: boolean;
-  v3VsGameBiasRaw?: number;
-  v3VsGameBiasPct?: number;
-  v3VsGameZ?: number;
+  simulatorN?: number;
+  simulatorMu?: number;
+  simulatorSigma?: number;
+  simulatorSem?: number;
+  simulatorScoreDelta?: number;
+  simulatorVsBaselinePasses?: boolean;
+  simulatorVsBaselineBiasRaw?: number;
+  simulatorVsBaselineBiasPct?: number;
+  simulatorVsBaselineZ?: number;
+  simulatorVsGamePasses?: boolean;
+  simulatorVsGameBiasRaw?: number;
+  simulatorVsGameBiasPct?: number;
+  simulatorVsGameZ?: number;
 }
 
 export interface ParityCaseReport {
@@ -91,8 +91,8 @@ export interface ParityCaseReport {
   error?: string;
   deterministic?: boolean;
   sampleCount?: number;
-  v3Stats?: { n: number; mu: number; sigma: number; sem: number };
-  v3ScoreDelta?: number;
+  simulatorStats?: { n: number; mu: number; sigma: number; sem: number };
+  simulatorScoreDelta?: number;
   visibility?: Record<string, unknown>;
   result?: {
     winner?: string;
@@ -111,7 +111,7 @@ interface ParityReportTestcase {
   deterministic?: boolean;
   sampleCount?: number;
   game?: ParityMetric | null;
-  v1?: ParityMetric | null;
+  baseline?: ParityMetric | null;
 }
 
 interface ParityReportCounts {
@@ -121,7 +121,7 @@ interface ParityReportCounts {
   warnings: number;
   errors: number;
   comparedToGame: number;
-  comparedToV1: number;
+  comparedToBaseline: number;
 }
 
 export interface ParityReportJson {
@@ -144,8 +144,8 @@ export interface LoadedParityReport extends ParityReportDescriptor {
 }
 
 export function defaultParityReportDir(): string {
-  return process.env.V3_PARITY_REPORT_DIR
-    ? path.resolve(process.env.V3_PARITY_REPORT_DIR)
+  return process.env.SIMULATOR_PARITY_REPORT_DIR
+    ? path.resolve(process.env.SIMULATOR_PARITY_REPORT_DIR)
     : path.join(resolveSimulatorRoot(), "simulator", "testcase_results");
 }
 
@@ -226,8 +226,8 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
   const errors = Number(
     counts.errors ?? (Array.isArray(report.errors) ? report.errors.length : 0),
   );
-  const comparedToV1 = Number(
-    counts.comparedToV1 ?? rows.filter((row) => row.v1 !== null).length,
+  const comparedToBaseline = Number(
+    counts.comparedToBaseline ?? rows.filter((row) => row.baseline !== null).length,
   );
   const comparedToGame = Number(
     counts.comparedToGame ?? rows.filter((row) => row.game !== null).length,
@@ -239,17 +239,17 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
     executedCases: Number(counts.executed ?? counts.executedCases ?? rows.length),
     warnings,
     errors,
-    comparedToV1,
+    comparedToBaseline,
     comparedToGame,
-    v3VsV1Failures: rows.filter((row) => row.v1?.passes === false).length,
-    v3VsGameFailures: rows.filter((row) => row.game?.passes === false).length,
+    simulatorVsBaselineFailures: rows.filter((row) => row.baseline?.passes === false).length,
+    simulatorVsGameFailures: rows.filter((row) => row.game?.passes === false).length,
 
     selectedCases: Number(counts.testcasesFound ?? rows.length),
     parseErrors: 0,
     unexpectedErrors: errors,
     diagnostics: warnings,
-    matchedRows: rows.filter((row) => row.v1 !== null || row.game !== null).length,
-    unmatchedRows: rows.filter((row) => row.v1 === null && row.game === null).length,
+    matchedRows: rows.filter((row) => row.baseline !== null || row.game !== null).length,
+    unmatchedRows: rows.filter((row) => row.baseline === null && row.game === null).length,
   };
 }
 
@@ -277,8 +277,8 @@ function rowFromTestcase(
   testcase: ParityReportTestcase,
 ): ParityComparisonRow {
   const game = testcase.game ?? null;
-  const v1 = testcase.v1 ?? null;
-  const candidate = v1 ?? game;
+  const baseline = testcase.baseline ?? null;
+  const candidate = baseline ?? game;
   const file = testcase.file ?? key.split("#", 1)[0] ?? "";
   const testcaseId = testcase.testcase_id ?? testcase.testcaseId ?? "";
   const idx = Number(testcase.idx ?? key.match(/#(\d+)$/)?.[1] ?? 0);
@@ -292,29 +292,29 @@ function rowFromTestcase(
     deterministic: testcase.deterministic,
     sampleCount: testcase.sampleCount,
     game,
-    v1,
+    baseline,
 
-    matched: v1 !== null || game !== null,
-    nSim: v1?.n_reference,
-    muSim: v1?.mu_reference,
-    sigmaSim: v1?.sigma_reference,
+    matched: baseline !== null || game !== null,
+    nSim: baseline?.n_reference,
+    muSim: baseline?.mu_reference,
+    sigmaSim: baseline?.sigma_reference,
     nGame: game?.n_reference,
     muGame: game?.mu_reference,
     sigmaGame: game?.sigma_reference,
     referencePasses: game?.passes,
     referenceBiasPct: game?.bias_pct,
-    v3N: candidate?.n_candidate,
-    v3Mu: candidate?.mu_candidate,
-    v3Sigma: candidate?.sigma_candidate,
-    v3Sem: candidate?.sem,
-    v3VsV1Passes: v1?.passes,
-    v3VsV1BiasRaw: v1?.bias_raw,
-    v3VsV1BiasPct: v1?.bias_pct,
-    v3VsV1Z: v1?.stat ?? undefined,
-    v3VsGamePasses: game?.passes,
-    v3VsGameBiasRaw: game?.bias_raw,
-    v3VsGameBiasPct: game?.bias_pct,
-    v3VsGameZ: game?.stat ?? undefined,
+    simulatorN: candidate?.n_candidate,
+    simulatorMu: candidate?.mu_candidate,
+    simulatorSigma: candidate?.sigma_candidate,
+    simulatorSem: candidate?.sem,
+    simulatorVsBaselinePasses: baseline?.passes,
+    simulatorVsBaselineBiasRaw: baseline?.bias_raw,
+    simulatorVsBaselineBiasPct: baseline?.bias_pct,
+    simulatorVsBaselineZ: baseline?.stat ?? undefined,
+    simulatorVsGamePasses: game?.passes,
+    simulatorVsGameBiasRaw: game?.bias_raw,
+    simulatorVsGameBiasPct: game?.bias_pct,
+    simulatorVsGameZ: game?.stat ?? undefined,
   };
 }
 
@@ -342,7 +342,7 @@ function isParityReportJson(value: unknown): value is ParityReportJson & {
   if (!value || typeof value !== "object") return false;
   const report = value as ParityReportJson;
   return (
-    report.reportKind === "v3-parity-summary" &&
+    report.reportKind === "simulator-parity-summary" &&
     !!report.testcases &&
     typeof report.testcases === "object" &&
     !Array.isArray(report.testcases)
@@ -353,7 +353,7 @@ function isParityCaseDetail(value: unknown): value is ParityCaseReport {
   if (!value || typeof value !== "object") return false;
   const detail = value as ParityCaseReport;
   return (
-    detail.reportKind === "v3-parity-case-detail" &&
+    detail.reportKind === "simulator-parity-case-detail" &&
     typeof detail.file === "string" &&
     typeof detail.testcaseId === "string" &&
     typeof detail.index === "number"
@@ -377,7 +377,6 @@ function isSubpath(root: string, candidate: string): boolean {
 }
 
 function normalizePath(value: string): string {
-  // Reports embed either ".../v3/testcases/" (historical) or
-  // ".../simulator/testcases/" (current); both map to the canonical id.
-  return value.replaceAll("\\", "/").replace(/^.*\/(?:v3|simulator)\/testcases\//, "testcases/");
+  // Reports may embed ".../simulator/testcases/"; map that to the canonical id.
+  return value.replaceAll("\\", "/").replace(/^.*\/simulator\/testcases\//, "testcases/");
 }

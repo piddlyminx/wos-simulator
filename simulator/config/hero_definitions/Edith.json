@@ -1,6 +1,7 @@
 {
   "name": "Edith",
   "hero_generation": "S7",
+  "troop_type": "infantry",
   "skills": {
     "StrategicBalance": {
       "description": "Mr. Tin's colossal presence automatically shields friendly ranged units, reducing damage taken by X% for Marksmen, and suppresses the enemy, increasing damage dealt by Y% for Lancers.",

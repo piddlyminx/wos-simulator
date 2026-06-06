@@ -21,20 +21,20 @@ export default function ParityReportSummary({
         value={String(summary.errors)}
         color={summary.errors > 0 ? "#f38ba8" : undefined}
       />
-      <MetricCard label="Compared V1" value={String(summary.comparedToV1)} />
+      <MetricCard label="Compared Baseline" value={String(summary.comparedToBaseline)} />
       <MetricCard
         label="Compared Game"
         value={String(summary.comparedToGame)}
       />
       <MetricCard
-        label="V3 vs V1 Fail"
-        value={String(summary.v3VsV1Failures)}
-        color={summary.v3VsV1Failures > 0 ? "#f38ba8" : "#a6e3a1"}
+        label="Simulator vs Baseline Fail"
+        value={String(summary.simulatorVsBaselineFailures)}
+        color={summary.simulatorVsBaselineFailures > 0 ? "#f38ba8" : "#a6e3a1"}
       />
       <MetricCard
-        label="V3 vs Game Fail"
-        value={String(summary.v3VsGameFailures)}
-        color={summary.v3VsGameFailures > 0 ? "#f38ba8" : "#a6e3a1"}
+        label="Simulator vs Game Fail"
+        value={String(summary.simulatorVsGameFailures)}
+        color={summary.simulatorVsGameFailures > 0 ? "#f38ba8" : "#a6e3a1"}
       />
     </div>
   );

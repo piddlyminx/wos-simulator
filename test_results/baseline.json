@@ -1625,9 +1625,9 @@
       "q": 0.435644,
       "passes": true
     },
-    "testcases/emulator_verified/reina_logan_combo_v3.json#0": {
-      "file": "testcases/emulator_verified/reina_logan_combo_v3.json",
-      "testcase_id": "reina_logan_combo_v3",
+    "testcases/emulator_verified/reina_logan_combo_simulator.json#0": {
+      "file": "testcases/emulator_verified/reina_logan_combo_simulator.json",
+      "testcase_id": "reina_logan_combo_simulator",
       "idx": 0,
       "n_sim": 100,
       "mu_sim": -547.65,

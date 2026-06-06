@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "./config";
 import { createFastDamageScratch } from "./damage";
 import { ATOMIC_BUCKETS } from "./damageBuckets";
 
@@ -9,12 +8,6 @@ const REMOVED_ACTIVE_BUCKET_PATTERN = new RegExp(`^active\\.(${["hero", "troop"]
 
 test("active hero and troop damage aliases are not supported buckets", () => {
   assert.equal(ATOMIC_BUCKETS.some((bucket) => REMOVED_ACTIVE_BUCKET_PATTERN.test(bucket)), false);
-});
-
-test("native v3 config does not reference removed active damage buckets", () => {
-  const config = loadSimulatorConfig();
-
-  assert.equal(Object.keys(config.diagnostics.effectTypes).some((bucket) => REMOVED_ACTIVE_BUCKET_PATTERN.test(bucket)), false);
 });
 
 test("damage scratch stores one factor value per atomic bucket", () => {

@@ -1,6 +1,7 @@
 {
   "name": "Sergey",
   "hero_generation": "SR",
+  "troop_type": "infantry",
   "skills": {
     "DefendersEdge": {
       "description": "Reduces damage taken by X% for all troops",

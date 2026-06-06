@@ -1,6 +1,7 @@
 {
   "name": "Seo-yoon",
   "hero_generation": "SR",
+  "troop_type": "marksman",
   "skills": {
     "RallyingBeat": {
       "description": "Increasing all Troops Attack by X%",

@@ -1,6 +1,7 @@
 {
   "name": "Reina",
   "hero_generation": "S4",
+  "troop_type": "lancer",
   "skills": {
     "AssassinsInstinct": {
       "description": "Increasing normal attack damage by X% for all troops",

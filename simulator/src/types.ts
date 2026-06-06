@@ -119,6 +119,7 @@ export interface SkillRequirement {
 export interface SkillFile {
   name: string;
   hero_generation?: string;
+  troop_type?: UnitType | string;
   skills: Record<string, Omit<SkillDefinition, "id" | "name">>;
 }
 
@@ -294,7 +295,7 @@ export interface DamageBucketTrace {
   totalPct?: number;
   factor: number;
   raw?: number;
-  contributors: Array<{ effectId: string; source: string; valuePct: number; bucket: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
+  contributors: Array<{ effectId: string; source: string; sourceSide?: SideId; valuePct: number; bucket: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
 }
 
 export interface DamageAggregationGroupTrace {
@@ -323,6 +324,7 @@ export interface AppliedEffectTrace {
   bucket: string;
   valuePct: number;
   source: string;
+  sourceSide?: SideId;
   stackingKey?: string;
   sameEffectStacking?: SameEffectStacking;
 }

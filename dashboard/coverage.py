@@ -19,13 +19,22 @@ from typing import Optional
 
 
 def _load_hero_skills(repo_root: Path) -> list[tuple[str, int, str]]:
-    """Return list of (hero, skill_num, skill_name) from archived/v1/assets/hero_skills/*.json."""
+    """Return list of (hero, skill_num, skill_name) from simulator hero definitions."""
     skills: list[tuple[str, int, str]] = []
-    hero_skills_dir = repo_root / "archived" / "v1" / "assets" / "hero_skills"
-    for path in sorted(hero_skills_dir.glob("*.json")):
-        entries = json.loads(path.read_text())
-        for entry in entries:
-            skills.append((entry["skill_hero"], entry["skill_num"], entry["skill_name"]))
+    hero_definitions_dir = repo_root / "simulator" / "config" / "hero_definitions"
+    for path in sorted(hero_definitions_dir.glob("*.json")):
+        definition = json.loads(path.read_text())
+        hero = path.stem
+        for skill_num, (skill_id, raw_skill) in enumerate(
+            definition.get("skills", {}).items(),
+            start=1,
+        ):
+            skill_name = (
+                raw_skill.get("name")
+                if isinstance(raw_skill, dict) and isinstance(raw_skill.get("name"), str)
+                else skill_id
+            )
+            skills.append((hero, skill_num, skill_name))
     return skills
 
 

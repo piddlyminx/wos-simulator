@@ -140,9 +140,8 @@ export default function HomePage() {
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No runs found. Run{" "}
-          <code className="font-mono">check_testcases.py</code> to populate the
-          database.
+          No historical runs found. Use Check now to generate a current simulator
+          parity report, or backfill the database for older run history.
         </div>
       </div>
     );

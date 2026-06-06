@@ -1,6 +1,7 @@
 {
   "name": "Alonso",
   "hero_generation": "S2",
+  "troop_type": "marksman",
   "skills": {
     "Onslaught": {
       "description": "Granting a 40% chance of increasing all troop's Lethality by X%",

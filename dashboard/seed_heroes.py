@@ -1,64 +1,74 @@
-"""Seed heroes and hero_skills tables from assets/hero_skills/*.json — WOS-173."""
+"""Seed heroes and hero_skills tables from simulator config."""
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 from pathlib import Path
 from typing import Optional
 
-GEN_MAP = {
-    # Gen 7
-    "Edith": "Gen 7", "Gordon": "Gen 7", "Bradley": "Gen 7", "Ling": "Gen 7",
-    # Gen 6
-    "WuMing": "Gen 6", "Renee": "Gen 6", "Wayne": "Gen 6",
-    # Gen 5
-    "Hector": "Gen 5", "Norah": "Gen 5", "Gwen": "Gen 5",
-    # Gen 4
-    "Ahmose": "Gen 4", "Reina": "Gen 4", "Lynn": "Gen 4",
-    # Gen 3
-    "Logan": "Gen 3", "Mia": "Gen 3", "Greg": "Gen 3",
-    # Gen 2
-    "Flint": "Gen 2", "Philly": "Gen 2", "Alonso": "Gen 2",
-    # Gen 1
-    "Jeronimo": "Gen 1", "Natalia": "Gen 1", "Zinman": "Gen 1", "Molly": "Gen 1",
-    # SR
-    "Patrick": "SR", "Seo-yoon": "SR", "Jasser": "SR", "Jessie": "SR",
-    "Lumak": "SR", "Bahiti": "SR", "Sergey": "SR",
-}
+
+def _dashboard_generation(raw_generation: Optional[str]) -> Optional[str]:
+    """Convert simulator generation keys to dashboard display values."""
+    if raw_generation is None:
+        return None
+    if raw_generation == "SR":
+        return "SR"
+    match = re.match(r"^S(\d+)", raw_generation)
+    if match:
+        return f"Gen {match.group(1)}"
+    return raw_generation
+
+
+def _normalise_troop_type(raw_troop_type: object) -> Optional[str]:
+    if not isinstance(raw_troop_type, str) or not raw_troop_type:
+        return None
+    if raw_troop_type == "marksmen":
+        return "marksman"
+    return raw_troop_type
+
+
+def _skill_name(skill_id: str, skill: dict) -> str:
+    raw_name = skill.get("name")
+    if isinstance(raw_name, str) and raw_name:
+        return raw_name
+    return skill_id
+
+
+def _hero_definitions_dir(root: Path) -> Path:
+    return root / "simulator" / "config" / "hero_definitions"
 
 
 def seed_heroes(conn: sqlite3.Connection, repo_root: Optional[Path] = None) -> None:
     """Idempotently seed heroes and hero_skills tables."""
     root = Path(repo_root) if repo_root else Path(__file__).parent.parent
-    hero_skills_dir = root / "archived" / "v1" / "assets" / "hero_skills"
+    hero_definitions_dir = _hero_definitions_dir(root)
 
     with conn:
-        for json_file in sorted(hero_skills_dir.glob("*.json")):
+        conn.execute("DELETE FROM hero_skills")
+        for json_file in sorted(hero_definitions_dir.glob("*.json")):
             hero_name = json_file.stem
-            entries = json.loads(json_file.read_text())
-
-            # Collect unique troop types for this hero
-            troop_types = list(dict.fromkeys(
-                e["skill_troop_type"] for e in entries if e.get("skill_troop_type")
-            ))
+            definition = json.loads(json_file.read_text())
+            skills = definition.get("skills", {})
+            troop_type = _normalise_troop_type(definition.get("troop_type"))
+            troop_types = [troop_type] if troop_type else []
             classes_json = json.dumps(troop_types)
-            generation = GEN_MAP.get(hero_name)
-            json_path = f"archived/v1/assets/hero_skills/{json_file.name}"
+            generation = _dashboard_generation(definition.get("hero_generation"))
+            json_path = f"simulator/config/hero_definitions/{json_file.name}"
 
             conn.execute(
                 "INSERT OR REPLACE INTO heroes (name, classes, generation) VALUES (?, ?, ?)",
                 (hero_name, classes_json, generation),
             )
 
-            for entry in entries:
-                skill_id = str(entry["skill_num"])
-                skill_name = entry.get("skill_name", "")
+            for skill_num, (skill_id, skill) in enumerate(skills.items(), start=1):
+                skill_name = _skill_name(skill_id, skill if isinstance(skill, dict) else {})
                 conn.execute(
                     """
                     INSERT OR IGNORE INTO hero_skills (hero, skill_id, name, json_path)
                     VALUES (?, ?, ?, ?)
                     """,
-                    (hero_name, skill_id, skill_name, json_path),
+                    (hero_name, str(skill_num), skill_name, json_path),
                 )
 
 

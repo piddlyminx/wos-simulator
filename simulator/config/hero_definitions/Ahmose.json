@@ -1,6 +1,7 @@
 {
   "name": "Ahmose",
   "hero_generation": "S4",
+  "troop_type": "infantry",
   "skills": {
     "ViperFormation": {
       "description": "His infantry pauses the attack once every 4 times reducing damage taken by Lancers and Marksmen by X% and Infantry by X% for 2 turns",

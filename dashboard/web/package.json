@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "scripts/next-cache-lock.sh dev --turbopack",
-    "dev-user": "NEXT_DIST_DIR=.next-user scripts/next-cache-lock.sh dev --turbopack",
+    "dev": "scripts/dev-startup.sh dev --turbopack",
+    "dev-user": "NEXT_DIST_DIR=.next-user scripts/dev-startup.sh dev --turbopack",
     "dev:docker": "scripts/next-cache-lock.sh dev --turbopack",
     "build": "scripts/next-cache-lock.sh build",
     "start": "scripts/next-cache-lock.sh start",

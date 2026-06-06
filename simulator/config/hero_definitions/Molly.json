@@ -1,6 +1,7 @@
 {
   "name": "Molly",
   "hero_generation": "S1",
+  "troop_type": "lancer",
   "skills": {
     "CallingOfTheStorm": {
       "description": "granting a 40% chance of reducing all troops' Damage taken by X%",

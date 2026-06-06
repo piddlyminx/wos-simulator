@@ -6,7 +6,7 @@ import path from "path";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-const REPO_ROOT = path.resolve(process.cwd(), "../..");
+const REPO_ROOT = path.join(/*turbopackIgnore: true*/ process.cwd(), "../..");
 const CLI_PATH = path.join(REPO_ROOT, "skill", "scripts", "report_stats_parser.py");
 const OCR_TIMEOUT_MS = 55_000;
 const OCR_MAX_IMAGE_BYTES = parsePositiveInt(

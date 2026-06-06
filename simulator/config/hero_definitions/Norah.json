@@ -1,6 +1,7 @@
 {
   "name": "Norah",
   "hero_generation": "S5",
+  "troop_type": "lancer",
   "skills": {
     "CombinedArms": {
       "description": "Decreasing damage taken by X% and boosting damage dealt by X% for infantry and marksmen",

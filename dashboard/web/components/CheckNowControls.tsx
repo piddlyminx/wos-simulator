@@ -4,17 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CheckNowStatus } from "@/lib/check-now";
+import { formatDashboardDateTime } from "@/lib/date-format";
 
 const POLL_INTERVAL_MS = 3000;
-
-function formatTimestamp(iso: string | undefined): string {
-  if (!iso) return "—";
-  try {
-    return new Date(iso).toLocaleString();
-  } catch {
-    return iso;
-  }
-}
 
 function formatDuration(durationMs: number | undefined): string {
   if (!durationMs || durationMs < 1000) return "under 1s";
@@ -73,11 +65,11 @@ function StatusPanel({ status }: { status: CheckNowStatus }) {
           Filter: <span className="font-mono">{filterLabel(status.matching)}</span>
         </span>
         <span className="opacity-60">
-          Started: <span className="font-mono">{formatTimestamp(status.started_at)}</span>
+          Started: <span className="font-mono">{formatDashboardDateTime(status.started_at)}</span>
         </span>
         {status.finished_at && (
           <span className="opacity-60">
-            Finished: <span className="font-mono">{formatTimestamp(status.finished_at)}</span>
+            Finished: <span className="font-mono">{formatDashboardDateTime(status.finished_at)}</span>
           </span>
         )}
         {status.duration_ms != null && (
@@ -89,9 +81,20 @@ function StatusPanel({ status }: { status: CheckNowStatus }) {
 
       {status.state === "running" && (
         <p className="opacity-80">
-          `check_testcases.py` is running in the background. The Runs page will refresh
-          when the new result lands.
+          The TypeScript simulator testcase runner is running in the background.
+          The parity report page will show the new result when it lands.
         </p>
+      )}
+
+      {status.state === "succeeded" && status.latest_report?.path && (
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="opacity-80">
+            Latest report: <span className="font-mono">{status.latest_report.path}</span>
+          </span>
+          <Link href="/parity" className="underline" style={{ color: "#a6e3a1" }}>
+            View parity reports
+          </Link>
+        </div>
       )}
 
       {status.state === "succeeded" && status.latest_run?.id && (
@@ -206,7 +209,7 @@ export default function CheckNowControls() {
         setStatus({
           state: "failed",
           finished_at: new Date().toISOString(),
-          error: nextStatus.error ?? "Failed to start check_testcases.py.",
+          error: nextStatus.error ?? "Failed to start simulator testcase runner.",
         });
         return;
       }
@@ -215,7 +218,7 @@ export default function CheckNowControls() {
       setStatus({
         state: "failed",
         finished_at: new Date().toISOString(),
-        error: err instanceof Error ? err.message : "Failed to start check_testcases.py.",
+        error: err instanceof Error ? err.message : "Failed to start simulator testcase runner.",
       });
     } finally {
       setStarting(false);
@@ -240,8 +243,8 @@ export default function CheckNowControls() {
             Check now
           </h3>
           <p className="text-xs opacity-65">
-            Launch `check_testcases.py` from the dashboard and let the normal ingest
-            pipeline write the next run into SQLite.
+            Launch the TypeScript simulator testcase runner from the dashboard and
+            write a parity report under <code>simulator/testcase_results</code>.
           </p>
         </div>
 

@@ -15,7 +15,7 @@ Use this guide for three common setups:
 - The web app lives in `dashboard/web`.
 - The default SQLite DB lives at `test_results/dashboard.sqlite`.
 - The `/simulate` page runs battle simulation and ratio optimisation in a
-  browser Web Worker using the v3 TypeScript simulator.
+  browser Web Worker using the TypeScript simulator.
 - Saved `/simulate` share links live outside git. Host mode defaults to
   `tmp/simulate-runs/`; Docker mounts a named volume at `/data/simulations`.
 - Saved `/simulate` share links, recent runs, stat presets, and OCR upload
@@ -45,24 +45,25 @@ or keep it updated by running your usual testcase command, for example:
 
 ```bash
 cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-.venv/bin/python archived/v1/check_testcases.py --glob all
+npx tsx scripts/run_testcases.ts --output-dir simulator/testcase_results
 ```
 
 ## Run Without Docker
 
 These steps run everything directly on the host.
 
-### 1. Install Python dependencies
+### 1. Ensure uv is installed
 
 From the repo root:
 
 ```bash
 cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-uv sync
+uv --version
 ```
 
-`pyproject.toml` installs the Python pieces used by the dashboard helper
-scripts:
+`npm run dev` runs `uv sync` from the repo root before starting Next.js, so the
+shared `.venv` stays provisioned for dashboard helper scripts. `pyproject.toml`
+installs:
 
 - `tabulate` for the simulator-backed routes
 - `rapidocr`, ONNX Runtime, OpenCV, NumPy, and Pillow for OCR
@@ -217,9 +218,9 @@ docker compose rm -sf app
 
 - The container bind-mounts `dashboard/web`, so source edits on the host are
   picked up live.
-- The container also mounts `dashboard/`, `archived/v1/Base_classes/`,
-  `archived/v1/assets/`, and `shared/fighters_data/` so the "Check now" and OCR
-  routes can call back into the legacy Python simulator code.
+- The container also mounts `dashboard/`, `simulator/`, `skill/`, and
+  `shared/fighters_data/` so Check Now can run the TypeScript testcase runner
+  and OCR routes can call the skill parser.
 - Saved `/simulate` runs are written to the named Docker volume
   `wos_simulate_runs`, not to the git-tracked repo tree.
 - The Docker image installs Python, `tabulate`, `Pillow`, `pytesseract`, and

@@ -26,7 +26,7 @@ export default async function ParityPage({
           className="text-lg font-bold"
           style={{ color: "var(--sidebar-active)" }}
         >
-          V3 Parity Reports
+          Simulator Parity Reports
         </h2>
         {reports.length > 0 && (
           <form>
@@ -58,9 +58,9 @@ export default async function ParityPage({
       </div>
 
       <p className="mb-6 max-w-3xl text-sm opacity-60">
-        Raw v3 parity runner reports, separate from the SQLite-backed historical
-        runs. Save a v3 runner JSON report here to inspect v3-vs-v1 and
-        v3-vs-game compatibility.
+        Raw simulator parity runner reports, separate from the SQLite-backed historical
+        runs. Save a simulator runner JSON report here to inspect simulator-vs-baseline and
+        simulator-vs-game accuracy.
       </p>
 
       {!report ? (
@@ -69,7 +69,7 @@ export default async function ParityPage({
           style={{ border: "1px solid var(--border-color)" }}
         >
           <p className="mb-3 opacity-70">
-            No compatible v3 parity reports found in:
+            No compatible simulator parity reports found in:
           </p>
           <code
             className="block break-all rounded p-3 text-xs"
@@ -82,7 +82,7 @@ export default async function ParityPage({
             className="mt-2 block overflow-x-auto rounded p-3 text-xs"
             style={{ backgroundColor: "var(--sidebar-bg)" }}
           >
-            npm --silent --prefix v3 run testcases -- --repeat 100
+            npx tsx scripts/run_testcases.ts --repeat 100
           </code>
         </div>
       ) : (

@@ -30,9 +30,11 @@ npm run dev
 ```
 
 The app runs at http://localhost:3000 and redirects to `/runs` by default.
+The host dev command runs `uv sync` from the repo root before starting Next.js,
+so the shared Python `.venv` is available for OCR/import and check-now helpers.
 
 The Simulate and Optimise Ratio buttons do not call server compute routes. They
-run v3 TypeScript calculations in a browser worker, then POST completed results
+run TypeScript calculations in a browser worker, then POST completed results
 to `/api/simulate/runs` for share-link persistence.
 There is intentionally no `/api/simulate` or `/api/simulate/optimize-ratio`
 compute endpoint.
@@ -123,14 +125,19 @@ server preset store or preset API.
 
 **The DB does not need to exist for the app to start.** If missing, `/healthz` returns `{ runs: 0, warning: "DB not found" }` and all pages show an empty state.
 
-## How the DB gets populated
+## How accuracy data gets populated
 
-The DB is created and updated by `check_testcases.py` (repo root), which calls `dashboard/ingest.py` after each test run. Run it as usual:
+Current Check Now runs use the TypeScript simulator testcase runner and write
+parity reports under `simulator/testcase_results/`:
 
 ```bash
 cd <repo-root>
-python check_testcases.py
+npx tsx scripts/run_testcases.ts --output-dir simulator/testcase_results
 ```
+
+The SQLite DB remains the source for historical run/trend pages and can be
+backfilled with `python dashboard/backfill.py` when historical snapshots need to
+be imported.
 
 ## Schema
 

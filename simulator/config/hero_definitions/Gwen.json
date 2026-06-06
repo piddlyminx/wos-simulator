@@ -1,6 +1,7 @@
 {
   "name": "Gwen",
   "hero_generation": "S5",
+  "troop_type": "marksman",
   "skills": {
     "EagleVision": {
       "description": "Increasing target's damage taken by X%",

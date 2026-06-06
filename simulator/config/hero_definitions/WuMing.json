@@ -1,6 +1,7 @@
 {
   "name": "Wu Ming",
   "hero_generation": "S6",
+  "troop_type": "infantry",
   "skills": {
     "ShadowsEvasion": {
       "description": "Reducing troops' damage taken from normal attacks by X% and from skill attacks by Y%",

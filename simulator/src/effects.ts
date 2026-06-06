@@ -67,7 +67,7 @@ export function chancePasses(skill: ResolvedSkill, rng: Rng): boolean {
   return rng() < threshold;
 }
 
-export function createSeededRng(seed: string | number = "v3-default"): Rng {
+export function createSeededRng(seed: string | number = "simulator-default"): Rng {
   let state = hashSeed(String(seed));
   return () => {
     state = (Math.imul(state, 1664525) + 1013904223) >>> 0;

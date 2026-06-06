@@ -1,6 +1,7 @@
 {
   "name": "Jasser",
   "hero_generation": "SR",
+  "troop_type": "marksman",
   "skills": {
     "TacticalGenius": {
       "description": "Increasing damage dealt by X% for all troops",

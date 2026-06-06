@@ -1,6 +1,7 @@
 {
   "name": "Jessie",
   "hero_generation": "SR",
+  "troop_type": "lancer",
   "skills": {
     "StandOfArms": {
       "description": "Increasing damage dealt by X% for all troops",

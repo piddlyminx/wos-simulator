@@ -1,6 +1,7 @@
 {
   "name": "Flint",
   "hero_generation": "S2",
+  "troop_type": "infantry",
   "skills": {
     "Pyromaniac": {
       "description": "increases his Infantry's Damage Dealt by X%",

@@ -1,6 +1,7 @@
 {
   "name": "Natalia",
   "hero_generation": "S1_natalia",
+  "troop_type": "infantry",
   "skills": {
     "WildlingRoar": {
       "description": "granting a 40% chance of reducing all troops' Damage taken by X%",

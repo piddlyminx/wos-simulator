@@ -11,10 +11,9 @@
 # The dashboard spawns the report-stats parser for the import flow. Battle
 # simulation and ratio optimisation run in the browser via the TypeScript
 # web worker (simulator/), so this image no longer hosts Python simulate
-# endpoints. compose mounts the host dashboard/, skill/, archived/v1/ (legacy
-# Python simulator), and shared/ (assets, fighters_data) trees at the matching
-# container paths so scripts can reach them. A dedicated /opt/sim-venv holds the
-# Python deps for OCR/import helpers.
+# endpoints. compose mounts the host dashboard/, simulator/, skill/, and shared/
+# trees at the matching container paths so scripts can reach them. A dedicated
+# /opt/sim-venv holds the Python deps for OCR/import helpers.
 
 FROM node:20-bookworm-slim
 WORKDIR /app

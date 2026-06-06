@@ -31,8 +31,8 @@ export default function RunsPage() {
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No runs found. Use the button above, or run{" "}
-          <code className="font-mono">check_testcases.py</code>, to populate it.
+          No historical runs found. Use the button above to generate a current
+          simulator parity report, or backfill the database for older run history.
         </div>
       ) : (
         <RunsAccordionTable runs={runs} defaultOpen={true} />

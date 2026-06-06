@@ -2,9 +2,9 @@
 """
 Background runner for the dashboard "Check now" action.
 
-This wrapper executes check_testcases.py with optional --matching filters and
-persists status to a JSON file so the Next.js UI can poll progress without
-holding an HTTP request open.
+This wrapper executes the TypeScript simulator testcase runner with an optional
+--matching filter and persists status to a JSON file so the Next.js UI can poll
+progress without holding an HTTP request open.
 """
 
 from __future__ import annotations
@@ -15,14 +15,12 @@ import json
 import os
 import sqlite3
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-# The legacy Python simulator moved to archived/v1/ during the monorepo reorg.
-# It is still spawned (with cwd=REPO_ROOT) for the dashboard "Check now" flow.
-CHECK_TESTCASES_PATH = REPO_ROOT / "archived" / "v1" / "check_testcases.py"
+SIMULATOR_DIR = REPO_ROOT / "simulator"
+SIMULATOR_REPORT_DIR = SIMULATOR_DIR / "testcase_results"
 DB_PATH = REPO_ROOT / "test_results" / "dashboard.sqlite"
 
 
@@ -79,10 +77,38 @@ def latest_run() -> dict[str, Any] | None:
     }
 
 
+def latest_parity_report() -> dict[str, Any] | None:
+    reports = sorted(
+        SIMULATOR_REPORT_DIR.glob("simulator_parity_*.json"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    if not reports:
+        return None
+    report = reports[0]
+    try:
+        payload = json.loads(report.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        payload = {}
+    counts = payload.get("counts") if isinstance(payload, dict) else None
+    return {
+        "path": str(report.relative_to(REPO_ROOT)),
+        "created_at": payload.get("createdAt") if isinstance(payload, dict) else None,
+        "counts": counts if isinstance(counts, dict) else None,
+    }
+
+
 def build_command(matching: list[str]) -> list[str]:
-    command = [sys.executable, str(CHECK_TESTCASES_PATH)]
+    command = [
+        "npx",
+        "--yes",
+        "tsx",
+        "scripts/run_testcases.ts",
+        "--output-dir",
+        str(SIMULATOR_REPORT_DIR),
+    ]
     if matching:
-        command.extend(["--matching", *matching])
+        command.extend(["--matching", " ".join(matching)])
     return command
 
 
@@ -105,7 +131,7 @@ def main() -> int:
     }
     write_status(status_path, running_status)
 
-    if not CHECK_TESTCASES_PATH.exists():
+    if not SIMULATOR_DIR.exists():
         finished_at = now_iso()
         write_status(
             status_path,
@@ -114,7 +140,7 @@ def main() -> int:
                 "state": "failed",
                 "finished_at": finished_at,
                 "duration_ms": 0,
-                "error": f"Missing check_testcases.py at {CHECK_TESTCASES_PATH}",
+                "error": f"Missing simulator package at {SIMULATOR_DIR}",
             },
         )
         return 1
@@ -144,7 +170,7 @@ def main() -> int:
                 "state": "failed",
                 "finished_at": finished_at,
                 "duration_ms": duration_ms,
-                "error": f"Failed to launch check_testcases.py: {exc}",
+                "error": f"Failed to launch TypeScript simulator testcase runner: {exc}",
             },
         )
         return 1
@@ -153,6 +179,7 @@ def main() -> int:
     duration_ms = int(
         (dt.datetime.now(dt.timezone.utc) - started_monotonic).total_seconds() * 1000
     )
+    latest_report = latest_parity_report() if completed.returncode == 0 else None
     latest = latest_run() if completed.returncode == 0 else None
     final_status: dict[str, Any] = {
         **running_status,
@@ -163,10 +190,11 @@ def main() -> int:
         "stdout_tail": tail(completed.stdout or ""),
         "stderr_tail": tail(completed.stderr or ""),
         "latest_run": latest,
+        "latest_report": latest_report,
     }
     if completed.returncode != 0:
         final_status["error"] = (
-            f"check_testcases.py exited with code {completed.returncode}"
+            f"TypeScript simulator testcase runner exited with code {completed.returncode}"
         )
     write_status(status_path, final_status)
     return completed.returncode

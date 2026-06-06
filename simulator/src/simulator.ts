@@ -112,7 +112,7 @@ function runBattle(input: BattleInput, config: SimulatorConfig, options: Simulat
   const attacker = resolveFighter(input.attacker, "attacker", config, input.mechanics);
   const defender = resolveFighter(input.defender, "defender", config, input.mechanics);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
-  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "v3-default"));
+  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"));
   const detail = options.detail ?? "full";
   const traceEnabled = detail === "full" && input.trace;
   const trace: BattleTrace | undefined = traceEnabled ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;

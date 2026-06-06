@@ -21,11 +21,24 @@ import uuid
 from pathlib import Path
 from typing import Optional
 
-try:
-    from check_testcases import waiver_for
-except ImportError:
-    def waiver_for(file_path: str, testcase_id: str):  # type: ignore[misc]
-        return None
+KNOWN_ISSUE_WAIVERS = {
+    "testcases/heroes_unittests/Alonso_tc.json::daut_viper_1": {
+        "issue": "WOS-136",
+        "expected_bias_pct": -1.67,
+        "tolerance_pct": 0.75,
+        "note": "Structural Alonso level-branching; no fix without schema extension (WOS-144).",
+    },
+    "testcases/heroes_unittests/Alonso_tc.json::daut_viper_2": {
+        "issue": "WOS-136",
+        "expected_bias_pct": 0.88,
+        "tolerance_pct": 0.75,
+        "note": "Structural Alonso level-branching; no fix without schema extension (WOS-144).",
+    },
+}
+
+
+def waiver_for(file_path: str, testcase_id: str):
+    return KNOWN_ISSUE_WAIVERS.get(f"{file_path}::{testcase_id}")
 
 try:
     from dashboard.coverage import snapshot_coverage as _snapshot_coverage
@@ -124,7 +137,7 @@ def record_run(
     Parameters
     ----------
     run_doc:
-        The JSON document as produced by ``check_testcases.py``.
+        The JSON document for one simulator accuracy run.
     repo_root:
         Absolute path to the repository root, used to resolve testcase file
         paths for SHA-256 hashing.

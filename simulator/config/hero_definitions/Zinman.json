@@ -1,6 +1,7 @@
 {
   "name": "Zinman",
   "hero_generation": "S1",
+  "troop_type": "marksman",
   "skills": {
     "Implacable": {
       "description": "Increasing all troops' Defense by X% and Health by X%",

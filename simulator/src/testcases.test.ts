@@ -31,7 +31,7 @@ test("runTestcases returns compact summary entries and full detail entries separ
   const summary = report.testcases[key];
   const detail = report.details[0];
 
-  assert.equal(report.reportKind, "v3-parity-summary");
+  assert.equal(report.reportKind, "simulator-parity-summary");
   assert.equal(report.counts.filesFound, 1);
   assert.equal(report.counts.testcasesFound, 1);
   assert.equal(report.counts.executed, 1);
@@ -40,30 +40,42 @@ test("runTestcases returns compact summary entries and full detail entries separ
   assert.equal(summary?.deterministic, false);
   assert.equal(summary?.sampleCount, 5);
   assert.equal(typeof summary?.game?.mu_candidate, "number");
-  assert.equal(typeof summary?.v1?.mu_candidate, "number");
-  assert.deepEqual(Object.keys(summary?.game ?? {}), Object.keys(summary?.v1 ?? {}));
+  assert.equal(typeof summary?.baseline?.mu_candidate, "number");
+  assert.deepEqual(Object.keys(summary?.game ?? {}), Object.keys(summary?.baseline ?? {}));
   assert.equal("result" in (summary as object), false);
   assert.ok(detail?.result);
-  assert.equal(detail?.v3Stats?.n, 5);
+  assert.equal(detail?.simulatorStats?.n, 5);
   assert.ok(detail?.visibility.attacker.troops.lancer);
+});
+
+test("runTestcases defaults stochastic cases to 100 samples", () => {
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ matching: "simple_001" }, config);
+  const summary = Object.values(report.testcases)[0];
+  const detail = report.details[0];
+
+  assert.equal(report.options.repeat, 100);
+  assert.equal(summary?.deterministic, false);
+  assert.equal(summary?.sampleCount, 100);
+  assert.equal(detail?.simulatorStats?.n, 100);
 });
 
 test("assignDetailArtifactPaths assigns deterministic compact detail paths", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
 
-  assignDetailArtifactPaths(report, "v3_parity_test");
+  assignDetailArtifactPaths(report, "simulator_parity_test");
 
-  assert.equal(report.artifactRoot, "v3_parity_test");
+  assert.equal(report.artifactRoot, "simulator_parity_test");
   const keys = Object.keys(report.testcases);
   assert.deepEqual(keys, [...keys].sort());
-  assert.equal(report.testcases[keys[0]!]?.detailArtifact, "v3_parity_test/cases/000001.json");
+  assert.equal(report.testcases[keys[0]!]?.detailArtifact, "simulator_parity_test/cases/000001.json");
 });
 
 test("buildSummaryForOutput excludes full detail artifacts from compact output", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
-  assignDetailArtifactPaths(report, "v3_parity_test");
+  assignDetailArtifactPaths(report, "simulator_parity_test");
 
   const summary = buildSummaryForOutput(report);
   const json = JSON.stringify(summary);
@@ -71,11 +83,11 @@ test("buildSummaryForOutput excludes full detail artifacts from compact output",
   assert.equal("details" in summary, false);
   assert.equal(json.includes("\"result\""), false);
   assert.equal(json.includes("\"attacks\""), false);
-  assert.equal(Object.values(summary.testcases)[0]?.detailArtifact, "v3_parity_test/cases/000001.json");
+  assert.equal(Object.values(summary.testcases)[0]?.detailArtifact, "simulator_parity_test/cases/000001.json");
 });
 
 test("assignDetailArtifactPaths exposes failed testcase diagnostics through errors", () => {
-  const testcaseRoot = tempDir("v3-invalid-testcases");
+  const testcaseRoot = tempDir("simulator-invalid-testcases");
   writeFileSync(
     resolve(testcaseRoot, "invalid.json"),
     JSON.stringify([{ test_id: "bad_case", attacker: { troops: { infantry_t1: 1 } } }]),
@@ -83,17 +95,17 @@ test("assignDetailArtifactPaths exposes failed testcase diagnostics through erro
   const config = loadSimulatorConfig();
   const report = runTestcases({ testcaseRoot, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
 
-  assignDetailArtifactPaths(report, "v3_parity_failed");
+  assignDetailArtifactPaths(report, "simulator_parity_failed");
 
   assert.equal(report.counts.errors, 1);
-  assert.equal(report.details[0]?.detailArtifact, "v3_parity_failed/cases/000001.json");
-  assert.equal(report.errors[0]?.detailArtifact, "v3_parity_failed/cases/000001.json");
+  assert.equal(report.details[0]?.detailArtifact, "simulator_parity_failed/cases/000001.json");
+  assert.equal(report.errors[0]?.detailArtifact, "simulator_parity_failed/cases/000001.json");
   assert.equal(report.errors[0]?.stage, "adapt");
   assert.equal(Object.keys(report.testcases).length, 0);
 });
 
 test("runTestcases logs structured damage aggregation errors and continues", () => {
-  const testcaseRoot = tempDir("v3-aggregation-error-testcases");
+  const testcaseRoot = tempDir("simulator-aggregation-error-testcases");
   writeFileSync(
     resolve(testcaseRoot, "bad-aggregation.json"),
     JSON.stringify([
@@ -133,23 +145,23 @@ test("runTestcases logs structured damage aggregation errors and continues", () 
   assert.equal(Object.values(report.testcases)[0]?.testcase_id, "next_case_runs");
 });
 
-test("runTestcases keeps executed testcase and warns when v1 snapshot row is missing", () => {
+test("runTestcases keeps executed testcase and warns when baseline snapshot row is missing", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
   const summary = Object.values(report.testcases)[0];
 
   assert.equal(report.counts.executed, 1);
   assert.equal(summary?.game?.n_candidate, 1);
-  assert.equal(summary?.v1, null);
-  assert.equal(report.warnings[0]?.stage, "v1_comparison");
+  assert.equal(summary?.baseline, null);
+  assert.equal(report.warnings[0]?.stage, "baseline_comparison");
 });
 
-test("applyComparisonQValues keeps game and v1 correction families separate", () => {
+test("applyComparisonQValues keeps game and baseline correction families separate", () => {
   const firstGame = comparisonMetric(0.01);
   const secondGame = comparisonMetric(0.02);
-  const onlyV1 = comparisonMetric(0.04);
+  const onlyBaseline = comparisonMetric(0.04);
   const testcases: Record<string, TestcaseSummaryEntry> = {
-    "testcases/a.json#0": summaryEntry("a", 0, firstGame, onlyV1),
+    "testcases/a.json#0": summaryEntry("a", 0, firstGame, onlyBaseline),
     "testcases/b.json#0": summaryEntry("b", 0, secondGame, null)
   };
 
@@ -157,22 +169,14 @@ test("applyComparisonQValues keeps game and v1 correction families separate", ()
 
   assert.equal(firstGame.q, 0.02);
   assert.equal(secondGame.q, 0.02);
-  assert.equal(onlyV1.q, 0.04);
+  assert.equal(onlyBaseline.q, 0.04);
 });
 
 test("calibration lookup supports simulator symlink and source testcase path variants", () => {
   assert.deepEqual(testcaseFileLookupVariants("simulator/testcases/emulator_verified/simple_001_nc.json"), [
     "simulator/testcases/emulator_verified/simple_001_nc.json",
-    "testcases/emulator_verified/simple_001_nc.json",
-    "v3/testcases/emulator_verified/simple_001_nc.json"
+    "testcases/emulator_verified/simple_001_nc.json"
   ]);
-
-  // Legacy parity reports embed v3/testcases/ paths and must still resolve.
-  assert.ok(
-    testcaseFileLookupVariants("v3/testcases/emulator_verified/simple_001_nc.json").includes(
-      "testcases/emulator_verified/simple_001_nc.json",
-    ),
-  );
 
   const comparison = loadCalibrationComparison();
   const sourceRow = readCalibrationCase(comparison, "testcases/emulator_verified/simple_001_nc.json", "simple_001");
@@ -211,7 +215,7 @@ test("no-hero simple testcase loads, runs, compares to calibration, and exposes 
   assert.equal(report.counts.testcasesFound, 1);
   assert.equal(summary?.testcase_id, "simple_001");
   assert.equal(summary?.game?.n_reference, 1);
-  assert.equal(summary?.v1?.n_reference, 100);
+  assert.equal(summary?.baseline?.n_reference, 100);
   assert.equal(entry?.visibility.attacker.heroes.length, 0);
   assert.equal(entry?.visibility.defender.heroes.length, 0);
   assert.equal(entry?.calibration?.muGame, -186);
@@ -234,25 +238,25 @@ test("runTestcases reports a parity summary from calibration JSON", () => {
   const row = Object.values(report.testcases)[0];
   const detail = report.details[0];
 
-  assert.ok(report.calibrationReportPath?.endsWith("v1_result_2026-05-21T04-46-47Z.json"));
+  assert.ok(report.calibrationReportPath?.endsWith("baseline_result_2026-05-21T04-46-47Z.json"));
   assert.equal(row?.testcase_id, "simple_001");
   assert.equal(row?.idx, 0);
   assert.equal(row?.game?.mu_reference, -186);
-  assert.equal(row?.v1?.mu_reference, -186);
-  assert.equal(row?.v1?.bias_raw, 0);
-  assert.equal(row?.v1?.sem, 0);
-  assert.equal(row?.v1?.p, null);
-  assert.equal(row?.v1?.q, null);
-  assert.equal(typeof detail?.v3ScoreDelta, "number");
+  assert.equal(row?.baseline?.mu_reference, -186);
+  assert.equal(row?.baseline?.bias_raw, 0);
+  assert.equal(row?.baseline?.sem, 0);
+  assert.equal(row?.baseline?.p, null);
+  assert.equal(row?.baseline?.q, null);
+  assert.equal(typeof detail?.simulatorScoreDelta, "number");
   assert.equal(typeof row?.game?.bias_raw, "number");
   assert.equal(row?.game?.n_candidate, 1);
   assert.equal(typeof row?.game?.mu_candidate, "number");
-  assert.equal(typeof row?.v1?.bias_raw, "number");
+  assert.equal(typeof row?.baseline?.bias_raw, "number");
   assert.equal(typeof row?.game?.bias_raw, "number");
-  assert.equal(typeof row?.v1?.passes, "boolean");
+  assert.equal(typeof row?.baseline?.passes, "boolean");
   assert.equal(typeof row?.game?.passes, "boolean");
   assert.equal(report.counts.comparedToGame, 1);
-  assert.equal(report.counts.comparedToV1, 1);
+  assert.equal(report.counts.comparedToBaseline, 1);
 });
 
 test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into BattleInput", () => {
@@ -267,7 +271,7 @@ test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into B
   assert.deepEqual(input.mechanics, { weather: "clear", engagement_type: "rally" });
 });
 
-test("compareOutcomeDistribution matches check_testcases deterministic zero-bias shape", () => {
+test("compareOutcomeDistribution matches deterministic zero-bias shape", () => {
   const metrics = compareOutcomeDistribution({
     candidate: { n: 1, mu: -186, sigma: 0 },
     reference: { n: 1, mu: -186, sigma: 0 },
@@ -323,7 +327,7 @@ test("applyBenjaminiHochberg fills q values on p-valued comparisons", () => {
   assert.equal(rows[2].q, null);
 });
 
-test("calibration lookup exposes full v1 snapshot metrics", () => {
+test("calibration lookup exposes full baseline snapshot metrics", () => {
   const comparison = loadCalibrationComparison();
   const row = readCalibrationCase(comparison, "testcases/emulator_verified/simple_001_nc.json", "simple_001");
 
@@ -358,7 +362,7 @@ function comparisonMetric(p: number): ParityComparisonMetrics {
   };
 }
 
-function summaryEntry(testcaseId: string, idx: number, game: ParityComparisonMetrics | null, v1: ParityComparisonMetrics | null): TestcaseSummaryEntry {
+function summaryEntry(testcaseId: string, idx: number, game: ParityComparisonMetrics | null, baseline: ParityComparisonMetrics | null): TestcaseSummaryEntry {
   return {
     file: `testcases/${testcaseId}.json`,
     testcase_id: testcaseId,
@@ -366,6 +370,6 @@ function summaryEntry(testcaseId: string, idx: number, game: ParityComparisonMet
     deterministic: false,
     sampleCount: 2,
     game,
-    v1
+    baseline
   };
 }

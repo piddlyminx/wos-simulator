@@ -176,6 +176,7 @@ function addPassiveCandidate(entry: StaticDamageProfileEntry, candidate: Passive
   addPct(entry.buckets, candidate.bucket, candidate.valuePct, {
     effectId: candidate.effect.source.effectId ?? candidate.effect.id,
     source: sourceLabel(candidate.effect),
+    sourceSide: candidate.effect.ownerSide,
     valuePct: candidate.valuePct,
     bucket: candidate.bucket,
     stackingKey: candidate.effect.stackingKey,

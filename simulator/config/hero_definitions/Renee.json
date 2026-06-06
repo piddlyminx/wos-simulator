@@ -1,6 +1,7 @@
 {
   "name": "Renee",
   "hero_generation": "S6",
+  "troop_type": "lancer",
   "skills": {
     "NightmareTrace": {
       "description": "Troops place Dream Marks on targets every two turns, dealing extra Lancer damage once next turn",

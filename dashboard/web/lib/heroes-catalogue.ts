@@ -1,36 +1,8 @@
-import ahmoseSkills from "../assets/hero_skills/Ahmose.json";
-import alonsoSkills from "../assets/hero_skills/Alonso.json";
-import bahitiSkills from "../assets/hero_skills/Bahiti.json";
-import bradleySkills from "../assets/hero_skills/Bradley.json";
-import edithSkills from "../assets/hero_skills/Edith.json";
-import flintSkills from "../assets/hero_skills/Flint.json";
-import gordonSkills from "../assets/hero_skills/Gordon.json";
-import gregSkills from "../assets/hero_skills/Greg.json";
-import gwenSkills from "../assets/hero_skills/Gwen.json";
-import hectorSkills from "../assets/hero_skills/Hector.json";
-import jasserSkills from "../assets/hero_skills/Jasser.json";
-import jeronimoSkills from "../assets/hero_skills/Jeronimo.json";
-import jessieSkills from "../assets/hero_skills/Jessie.json";
-import lingSkills from "../assets/hero_skills/Ling.json";
-import loganSkills from "../assets/hero_skills/Logan.json";
-import lumakSkills from "../assets/hero_skills/Lumak.json";
-import lynnSkills from "../assets/hero_skills/Lynn.json";
-import miaSkills from "../assets/hero_skills/Mia.json";
-import mollySkills from "../assets/hero_skills/Molly.json";
-import nataliaSkills from "../assets/hero_skills/Natalia.json";
-import norahSkills from "../assets/hero_skills/Norah.json";
-import patrickSkills from "../assets/hero_skills/Patrick.json";
-import phillySkills from "../assets/hero_skills/Philly.json";
-import reinaSkills from "../assets/hero_skills/Reina.json";
-import reneeSkills from "../assets/hero_skills/Renee.json";
-import seoyoonSkills from "../assets/hero_skills/Seo-yoon.json";
-import sergeySkills from "../assets/hero_skills/Sergey.json";
-import wayneSkills from "../assets/hero_skills/Wayne.json";
-import wumingSkills from "../assets/hero_skills/WuMing.json";
-import zinmanSkills from "../assets/hero_skills/Zinman.json";
+import { loadSimulatorConfig } from "@simulator/config";
+import type { SkillRequirement } from "@simulator/types";
 
 export type TroopCategory = "infantry" | "lancer" | "marksman";
-export type Skill4Role = "attack" | "defense" | "rally";
+export type Skill4Role = "garrison" | "rally";
 export type Skill4Stat = "attack" | "defense" | "lethality" | "health";
 
 export interface Skill4Info {
@@ -46,15 +18,15 @@ export interface HeroEntry {
   skill4?: Skill4Info;
 }
 
-interface HeroSkillEffect {
-  effect_type?: string;
-  effect_values?: Record<string, number | string>;
-  special?: Record<string, unknown>;
+interface HeroSkillDefinition {
+  skillNum: number;
+  requirements?: SkillRequirement[];
+  effects?: Record<string, SimulatorSkillEffect>;
 }
 
-interface HeroSkillDefinition {
-  skill_num?: number;
-  skill_effects?: HeroSkillEffect[];
+interface SimulatorSkillEffect {
+  type?: string;
+  value?: unknown;
 }
 
 interface HeroSpec {
@@ -63,74 +35,32 @@ interface HeroSpec {
   skills: readonly HeroSkillDefinition[];
 }
 
-const HERO_SKILL_DATA = {
-  Ahmose: ahmoseSkills,
-  Alonso: alonsoSkills,
-  Bahiti: bahitiSkills,
-  Bradley: bradleySkills,
-  Edith: edithSkills,
-  Flint: flintSkills,
-  Gordon: gordonSkills,
-  Greg: gregSkills,
-  Gwen: gwenSkills,
-  Hector: hectorSkills,
-  Jasser: jasserSkills,
-  Jeronimo: jeronimoSkills,
-  Jessie: jessieSkills,
-  Ling: lingSkills,
-  Logan: loganSkills,
-  Lumak: lumakSkills,
-  Lynn: lynnSkills,
-  Mia: miaSkills,
-  Molly: mollySkills,
-  Natalia: nataliaSkills,
-  Norah: norahSkills,
-  Patrick: patrickSkills,
-  Philly: phillySkills,
-  Reina: reinaSkills,
-  Renee: reneeSkills,
-  "Seo-yoon": seoyoonSkills,
-  Sergey: sergeySkills,
-  Wayne: wayneSkills,
-  WuMing: wumingSkills,
-  Zinman: zinmanSkills,
-} satisfies Record<string, readonly HeroSkillDefinition[]>;
+const SIMULATOR_CONFIG = loadSimulatorConfig();
 
-const HERO_SPECS: HeroSpec[] = [
-  { name: "Ahmose", categories: ["infantry"], skills: HERO_SKILL_DATA.Ahmose },
-  { name: "Alonso", categories: ["marksman"], skills: HERO_SKILL_DATA.Alonso },
-  { name: "Bahiti", categories: ["marksman"], skills: HERO_SKILL_DATA.Bahiti },
-  { name: "Bradley", categories: ["marksman"], skills: HERO_SKILL_DATA.Bradley },
-  { name: "Edith", categories: ["infantry"], skills: HERO_SKILL_DATA.Edith },
-  { name: "Flint", categories: ["infantry"], skills: HERO_SKILL_DATA.Flint },
-  { name: "Gordon", categories: ["lancer"], skills: HERO_SKILL_DATA.Gordon },
-  { name: "Greg", categories: ["marksman"], skills: HERO_SKILL_DATA.Greg },
-  { name: "Gwen", categories: ["marksman"], skills: HERO_SKILL_DATA.Gwen },
-  { name: "Hector", categories: ["infantry"], skills: HERO_SKILL_DATA.Hector },
-  { name: "Jasser", categories: ["marksman"], skills: HERO_SKILL_DATA.Jasser },
-  { name: "Jeronimo", categories: ["infantry"], skills: HERO_SKILL_DATA.Jeronimo },
-  { name: "Jessie", categories: ["lancer"], skills: HERO_SKILL_DATA.Jessie },
-  { name: "Ling", categories: ["lancer"], skills: HERO_SKILL_DATA.Ling },
-  { name: "Logan", categories: ["infantry"], skills: HERO_SKILL_DATA.Logan },
-  { name: "Lumak", categories: ["lancer"], skills: HERO_SKILL_DATA.Lumak },
-  { name: "Lynn", categories: ["marksman"], skills: HERO_SKILL_DATA.Lynn },
-  { name: "Mia", categories: ["lancer"], skills: HERO_SKILL_DATA.Mia },
-  { name: "Molly", categories: ["lancer", "marksman"], skills: HERO_SKILL_DATA.Molly },
-  { name: "Natalia", categories: ["infantry"], skills: HERO_SKILL_DATA.Natalia },
-  { name: "Norah", categories: ["lancer"], skills: HERO_SKILL_DATA.Norah },
-  { name: "Patrick", categories: ["lancer"], skills: HERO_SKILL_DATA.Patrick },
-  { name: "Philly", categories: ["lancer"], skills: HERO_SKILL_DATA.Philly },
-  { name: "Reina", categories: ["lancer"], skills: HERO_SKILL_DATA.Reina },
-  { name: "Renee", categories: ["lancer"], skills: HERO_SKILL_DATA.Renee },
-  { name: "Seo-yoon", categories: ["marksman"], skills: HERO_SKILL_DATA["Seo-yoon"] },
-  { name: "Sergey", categories: ["infantry"], skills: HERO_SKILL_DATA.Sergey },
-  { name: "Wayne", categories: ["marksman"], skills: HERO_SKILL_DATA.Wayne },
-  { name: "WuMing", categories: ["infantry"], skills: HERO_SKILL_DATA.WuMing },
-  { name: "Zinman", categories: ["marksman"], skills: HERO_SKILL_DATA.Zinman },
-];
+function isTroopCategory(value: string | undefined): value is TroopCategory {
+  return value === "infantry" || value === "lancer" || value === "marksman";
+}
+
+function normaliseTroopCategory(value: string | undefined): TroopCategory | undefined {
+  if (value === "marksmen") return "marksman";
+  return isTroopCategory(value) ? value : undefined;
+}
+
+const HERO_SPECS: HeroSpec[] = Object.entries(SIMULATOR_CONFIG.heroDefinitions)
+  .map(([name, definition]) => {
+    const skills = Object.values(definition.skills ?? {}).map((skill, index) => ({
+      skillNum: index + 1,
+      requirements: skill.requirements,
+      effects: skill.effects,
+    }));
+    const category = normaliseTroopCategory(definition.troop_type);
+    const categories = category ? [category] : [];
+    return { name, categories, skills };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 function isSkill4Role(value: string | undefined): value is Skill4Role {
-  return value === "attack" || value === "defense" || value === "rally";
+  return value === "garrison" || value === "rally";
 }
 
 function isSkill4Stat(value: string | undefined): value is Skill4Stat {
@@ -145,36 +75,41 @@ function isSkill4Stat(value: string | undefined): value is Skill4Stat {
 function skill4FromDefinitions(
   skills: readonly HeroSkillDefinition[],
 ): Skill4Info | undefined {
-  const skill4 = skills.find((skill) => skill.skill_num === 4);
-  const statBonus = skill4?.skill_effects?.find(
-    (effect) => effect.effect_type === "StatBonus",
+  const skill4 = skills.find((skill) => skill.skillNum === 4);
+  const statBonus = Object.values(skill4?.effects ?? {}).find(
+    (effect) => effect.type?.startsWith("passive.") && effect.type.endsWith(".up"),
+  );
+  const requirement = skill4?.requirements?.find(
+    (entry) => entry.type === "engagement_type",
   );
   const role =
-    typeof statBonus?.special?.role === "string"
-      ? statBonus.special.role
-      : undefined;
-  const stat =
-    typeof statBonus?.special?.stat === "string"
-      ? statBonus.special.stat
-      : undefined;
+    typeof requirement?.value === "string" ? requirement.value : undefined;
+  const stat = statBonus?.type?.split(".")[1];
   if (!isSkill4Role(role) || !isSkill4Stat(stat)) return undefined;
   return { role, stat };
+}
+
+function valuesFromEffect(effect: SimulatorSkillEffect | undefined): readonly number[] {
+  const rawValues = Array.isArray(effect?.value) ? effect.value : [];
+  return [0, 1, 2, 3, 4, 5].map((level) => {
+    if (level === 0) return 0;
+    const raw = rawValues[level - 1];
+    const value = typeof raw === "number" ? raw : Number(raw);
+    return Number.isFinite(value) ? value : 0;
+  });
 }
 
 function skill4ValuesFromDefinitions(
   specs: readonly HeroSpec[],
 ): readonly number[] {
-  const values = specs
+  const skill4Effect = specs
     .flatMap((spec) => spec.skills)
-    .find((skill) => skill.skill_num === 4)
-    ?.skill_effects?.find((effect) => effect.effect_type === "StatBonus")
-    ?.effect_values;
-  return [0, 1, 2, 3, 4, 5].map((level) => {
-    if (level === 0) return 0;
-    const raw = values?.[String(level)];
-    const value = typeof raw === "number" ? raw : Number(raw);
-    return Number.isFinite(value) ? value : 0;
-  });
+    .find((skill) => skill.skillNum === 4)
+    ?.effects;
+  const statBonus = Object.values(skill4Effect ?? {}).find(
+    (effect) => effect.type?.startsWith("passive.") && effect.type.endsWith(".up"),
+  );
+  return valuesFromEffect(statBonus);
 }
 
 export const SKILL4_VALUES: readonly number[] =
@@ -182,8 +117,7 @@ export const SKILL4_VALUES: readonly number[] =
 
 export const HEROES: HeroEntry[] = HERO_SPECS.map((spec) => {
   const skillNums = spec.skills
-    .map((skill) => skill.skill_num)
-    .filter((num): num is number => typeof num === "number")
+    .map((skill) => skill.skillNum)
     .sort((a, b) => a - b);
   return {
     name: spec.name,
@@ -196,10 +130,8 @@ export const HEROES: HeroEntry[] = HERO_SPECS.map((spec) => {
 
 /**
  * Whether a hero's skill_4 (if present) is active for a given side in rally mode.
- * - Attacker (rally leader): role "attack" skills active.
- * - Rally-role widgets are also active on the attacking side; this mirrors the
- *   dashboard simulator patch for skills whose source data says role "rally".
- * - Defender: only "defense" is active.
+ * - Attacker (rally leader): "rally" skills active.
+ * - Defender (garrison): "garrison" skills active.
  * Heroes without a skill_4 always return false.
  */
 export function skill4ActiveForSide(
@@ -208,8 +140,8 @@ export function skill4ActiveForSide(
 ): boolean {
   if (!hero?.skill4) return false;
   const role = hero.skill4.role;
-  if (side === "attacker") return role === "attack" || role === "rally";
-  return role === "defense";
+  if (side === "attacker") return role === "rally";
+  return role === "garrison";
 }
 
 /** Percent value for a hero's skill_4 at a given level (0..5). */

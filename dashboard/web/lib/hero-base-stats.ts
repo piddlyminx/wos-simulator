@@ -1,9 +1,11 @@
 import { HEROES } from "./heroes-catalogue";
-import heroBaseStatsData from "../assets/hero_base_stats.json";
+import { loadSimulatorConfig } from "@simulator/config";
 
 export type HeroStatCategory =
   | "SR"
   | "S1"
+  | "S1_jeronimo"
+  | "S1_natalia"
   | "S2"
   | "S3"
   | "S4"
@@ -25,29 +27,18 @@ export const ZERO_STATS: HeroBaseStats = {
   health: 0,
 };
 
-interface FighterHeroDefinition {
-  stats?: Partial<Record<keyof HeroBaseStats, number>>;
-}
-
-interface HeroBaseStatsCategory {
-  heroes: string[];
-  stats: Partial<Record<keyof HeroBaseStats, number>>;
-}
-
-interface HeroBaseStatsData {
-  categories: Record<HeroStatCategory, HeroBaseStatsCategory>;
-  hero_overrides?: Record<string, FighterHeroDefinition>;
-}
-
-const SHARED_HERO_BASE_STATS =
-  heroBaseStatsData as HeroBaseStatsData;
+const SIMULATOR_CONFIG = loadSimulatorConfig();
 
 export const HERO_STAT_CATEGORY_MEMBERS: Record<HeroStatCategory, string[]> =
-  Object.fromEntries(
-    Object.entries(SHARED_HERO_BASE_STATS.categories).map(
-      ([category, value]) => [category, value.heroes],
-    ),
-  ) as Record<HeroStatCategory, string[]>;
+  Object.entries(SIMULATOR_CONFIG.heroDefinitions).reduce(
+    (acc, [name, definition]) => {
+      const category = definition.hero_generation as HeroStatCategory | undefined;
+      if (!category) return acc;
+      acc[category] = [...(acc[category] ?? []), name];
+      return acc;
+    },
+    {} as Record<HeroStatCategory, string[]>,
+  );
 
 export const HERO_STAT_CATEGORY_BY_HERO: Record<string, HeroStatCategory> =
   Object.fromEntries(
@@ -55,10 +46,6 @@ export const HERO_STAT_CATEGORY_BY_HERO: Record<string, HeroStatCategory> =
       heroes.map((hero) => [hero, category]),
     ),
   ) as Record<string, HeroStatCategory>;
-
-function normalizeHeroName(name: string): string {
-  return name.replace(/\s+/g, "");
-}
 
 function fillStats(
   stats: Partial<Record<keyof HeroBaseStats, number>>,
@@ -72,19 +59,11 @@ function fillStats(
 }
 
 function buildHeroBaseStats(): Record<string, HeroBaseStats> {
-  const overrides = SHARED_HERO_BASE_STATS.hero_overrides ?? {};
-  const overridesByNormalizedName = new Map<string, FighterHeroDefinition>();
-  for (const [name, definition] of Object.entries(overrides)) {
-    overridesByNormalizedName.set(normalizeHeroName(name), definition);
-  }
-
   const out: Record<string, HeroBaseStats> = {};
-  for (const category of Object.values(SHARED_HERO_BASE_STATS.categories)) {
-    for (const hero of category.heroes) {
-      const override =
-        overridesByNormalizedName.get(normalizeHeroName(hero))?.stats ?? {};
-      out[hero] = fillStats({ ...category.stats, ...override });
-    }
+  for (const [hero, definition] of Object.entries(SIMULATOR_CONFIG.heroDefinitions)) {
+    const category = definition.hero_generation;
+    const stats = category ? SIMULATOR_CONFIG.heroGenerationStats[category] : {};
+    out[hero] = fillStats(stats ?? {});
   }
   return out;
 }

@@ -31,8 +31,7 @@ export default function HeroesPage() {
           DB misconfiguration: missing tables:{" "}
           <strong>{missingTables.join(", ")}</strong>. Run{" "}
           <code>python dashboard/seed_heroes.py</code> to seed the hero
-          catalogue (one-time setup, separate from{" "}
-          <code>check_testcases.py</code>).
+          catalogue.
         </div>
       )}
 
@@ -43,7 +42,7 @@ export default function HeroesPage() {
         >
           {missingTables.length > 0
             ? "Heroes table is missing — see the error above."
-            : "No heroes found. Run python dashboard/seed_heroes.py to seed the hero catalogue (one-time setup, separate from check_testcases.py)."}
+            : "No heroes found. Run python dashboard/seed_heroes.py to seed the hero catalogue."}
         </div>
       ) : (
         <div className="overflow-x-auto">

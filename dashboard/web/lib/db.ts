@@ -36,7 +36,7 @@ function getDb(): Database.Database | null {
   if (!fs.existsSync(DB_PATH)) {
     console.warn(
       `[wos-dashboard] DB not found at ${DB_PATH}. ` +
-        "Run check_testcases.py to generate it."
+        "Backfill historical runs to generate it."
     );
     _db = null;
     return null;

@@ -248,6 +248,7 @@ function applyBucketCandidateGroup(
     selected.valuePct,
     detail === "full" ? selected.effect.source.effectId ?? selected.effect.id : "",
     detail === "full" ? sourceLabel(selected.effect) : "",
+    detail === "full" ? selected.effect.ownerSide : undefined,
     selected.bucket,
     selected.effect.stackingKey,
     selected.effect.sameEffectStacking
@@ -259,6 +260,7 @@ function applyBucketCandidateGroup(
         bucket: selected.bucket,
         valuePct: appliedValuePct,
         source: sourceLabel(selected.effect),
+        sourceSide: selected.effect.ownerSide,
         sameEffectStacking: selected.effect.sameEffectStacking
       };
       if (selected.effect.stackingKey !== undefined) appliedEffect.stackingKey = selected.effect.stackingKey;
@@ -312,6 +314,7 @@ function applyBucketValue(
   value: number,
   effectId = "",
   source = "",
+  sourceSide: SideId | undefined = undefined,
   traceBucketName = bucketName,
   stackingKey?: string,
   sameEffectStacking: SameEffectStacking = "add"
@@ -320,7 +323,7 @@ function applyBucketValue(
   const definition = BUCKET_DEFINITIONS[bucketName];
   if (definition.update === "assign_factor") buckets.factors[index] = Math.max(0, value);
   else buckets.factors[index] += value / 100;
-  if (effectId) buckets.contributors?.[index].push({ effectId, source, valuePct: value, bucket: traceBucketName, stackingKey, sameEffectStacking });
+  if (effectId) buckets.contributors?.[index].push({ effectId, source, sourceSide, valuePct: value, bucket: traceBucketName, stackingKey, sameEffectStacking });
   return value;
 }
 
@@ -333,6 +336,7 @@ function appendStaticProfileAppliedEffects(appliedEffects: DamageEquationTrace["
         bucket,
         valuePct: contributor.valuePct,
         source: contributor.source,
+        sourceSide: contributor.sourceSide,
         stackingKey: contributor.stackingKey,
         sameEffectStacking: contributor.sameEffectStacking
       });

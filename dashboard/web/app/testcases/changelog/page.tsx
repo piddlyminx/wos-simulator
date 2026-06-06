@@ -26,9 +26,7 @@ export default function TestcasesChangelogPage() {
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          No testcase file history recorded. Run{" "}
-          <code className="font-mono">check_testcases.py</code> with the
-          dashboard ingestion enabled to populate{" "}
+          No testcase file history recorded. Backfill historical runs to populate{" "}
           <code className="font-mono">run_testcase_files</code>.
         </div>
       ) : (

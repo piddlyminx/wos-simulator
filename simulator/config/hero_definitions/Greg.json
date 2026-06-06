@@ -1,6 +1,7 @@
 {
   "name": "Greg",
   "hero_generation": "S3",
+  "troop_type": "marksman",
   "skills": {
     "SwordOfJustice": {
       "description": "Granting a 20% chance of increasing damage dealt by X% for all troops for 3 turns",

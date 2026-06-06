@@ -1,6 +1,7 @@
 {
   "name": "Ling",
   "hero_generation": "SR",
+  "troop_type": "lancer",
   "skills": {
     "FearsomeAura": {
       "description": "Reducing all enemy Troops' Attack by X%",

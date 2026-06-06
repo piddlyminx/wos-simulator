@@ -4,7 +4,7 @@
 
 Read this before changing:
 
-- `archived/v1/check_testcases.py` (legacy Python parity checker)
+- the TypeScript testcase runner in `simulator/src/testcases.ts` and `scripts/run_testcases.ts`
 - testcase result storage
 - dashboard metrics
 - regression history
@@ -18,7 +18,7 @@ Read this before changing:
 
 It must not run the simulator, update simulator comparison fields, or write `sim_result` into testcase JSON. This keeps captured fixture data separate from analysis output.
 
-For RNG-heavy battles, run the same testcase spec with `run-testcase --repeat N` until `game_report_result` has enough observations to estimate the game mean and spread. After collection, run the parity checker (`archived/v1/check_testcases.py`, from the monorepo root) to compare simulator output against the captured observations.
+For RNG-heavy battles, run the same testcase spec with `run-testcase --repeat N` until `game_report_result` has enough observations to estimate the game mean and spread. After collection, run the TypeScript simulator testcase runner from the monorepo root, for example `npx tsx scripts/run_testcases.ts --matching <pattern>`, to compare simulator output against the captured observations.
 
 ## Dashboard purpose
 

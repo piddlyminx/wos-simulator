@@ -41,14 +41,14 @@ function metric(overrides: Record<string, unknown> = {}) {
 
 function detail(name: string) {
   return {
-    reportKind: "v3-parity-case-detail",
-    file: `/repo/v3/testcases/${name}.json`,
+    reportKind: "simulator-parity-case-detail",
+    file: `/repo/simulator/testcases/${name}.json`,
     testcaseId: name,
     index: 0,
     deterministic: true,
     sampleCount: 1,
-    v3Stats: { n: 1, mu: 10, sigma: 0, sem: 0 },
-    v3ScoreDelta: 10,
+    simulatorStats: { n: 1, mu: 10, sigma: 0, sem: 0 },
+    simulatorScoreDelta: 10,
     visibility: {
       attacker: {
         heroes: ["Alonso"],
@@ -82,7 +82,7 @@ function writeDetail(dir: string, name: string, value = detail(name)) {
 
 function summary(name: string, overrides: Record<string, unknown> = {}) {
   return {
-    reportKind: "v3-parity-summary",
+    reportKind: "simulator-parity-summary",
     schemaVersion: 1,
     createdAt: "2026-05-19T12:00:00.000Z",
     options: { samples: 1 },
@@ -93,7 +93,7 @@ function summary(name: string, overrides: Record<string, unknown> = {}) {
       executed: 1,
       warnings: 0,
       errors: 0,
-      comparedToV1: 1,
+      comparedToBaseline: 1,
       comparedToGame: 1,
     },
     warnings: [],
@@ -107,7 +107,7 @@ function summary(name: string, overrides: Record<string, unknown> = {}) {
         deterministic: true,
         sampleCount: 1,
         game: metric({ bias_raw: 1, bias_pct: 11.1, stat: 4, passes: false }),
-        v1: metric({ bias_raw: 2, bias_pct: 25, stat: 1, passes: true }),
+        baseline: metric({ bias_raw: 2, bias_pct: 25, stat: 1, passes: true }),
       },
     },
     ...overrides,
@@ -130,10 +130,10 @@ function oldInlineReport(name: string) {
   };
 }
 
-test.describe("v3 parity report helpers", () => {
-  test("findParityReports ignores v1 and old inline reports and picks latest compatible summary", () => {
+test.describe("simulator parity report helpers", () => {
+  test("findParityReports ignores baseline and old inline reports and picks latest compatible summary", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "parity-reports-"));
-    writeJson(dir, "v1_result.json", { testcases: {} }, 1000);
+    writeJson(dir, "baseline-result.json", { testcases: {} }, 1000);
     writeJson(dir, "old-inline.json", oldInlineReport("old_inline"), 2000);
     writeJson(dir, "older.json", summary("older"), 3000);
     writeJson(dir, "newer.json", summary("newer"), 4000);
@@ -164,7 +164,7 @@ test.describe("v3 parity report helpers", () => {
         deterministic: true,
         sampleCount: 1,
         game: expect.objectContaining({ passes: false, bias_pct: 11.1 }),
-        v1: expect.objectContaining({ passes: true, bias_pct: 25 }),
+        baseline: expect.objectContaining({ passes: true, bias_pct: 25 }),
       }),
     ]);
     expect(loaded?.summary).toEqual(
@@ -173,9 +173,9 @@ test.describe("v3 parity report helpers", () => {
         testcasesFound: 1,
         executedCases: 1,
         comparedToGame: 1,
-        comparedToV1: 1,
-        v3VsGameFailures: 1,
-        v3VsV1Failures: 0,
+        comparedToBaseline: 1,
+        simulatorVsGameFailures: 1,
+        simulatorVsBaselineFailures: 0,
       }),
     );
   });
@@ -206,7 +206,7 @@ test.describe("v3 parity report helpers", () => {
         executed: 1,
         warnings: 3,
         errors: 4,
-        comparedToV1: 5,
+        comparedToBaseline: 5,
         comparedToGame: 6,
       },
       warnings: ["missing game comparison"],
@@ -217,14 +217,14 @@ test.describe("v3 parity report helpers", () => {
           testcase_id: "case_c",
           idx: 0,
           game: metric({ passes: false }),
-          v1: metric({ passes: false }),
+          baseline: metric({ passes: false }),
         },
         "testcases/missing.json#0": {
           file: "testcases/missing.json",
           testcase_id: "missing",
           idx: 0,
           game: null,
-          v1: null,
+          baseline: null,
         },
       },
     });
@@ -236,10 +236,10 @@ test.describe("v3 parity report helpers", () => {
     expect(result.executedCases).toBe(1);
     expect(result.warnings).toBe(3);
     expect(result.errors).toBe(4);
-    expect(result.comparedToV1).toBe(5);
+    expect(result.comparedToBaseline).toBe(5);
     expect(result.comparedToGame).toBe(6);
-    expect(result.v3VsV1Failures).toBe(1);
-    expect(result.v3VsGameFailures).toBe(1);
+    expect(result.simulatorVsBaselineFailures).toBe(1);
+    expect(result.simulatorVsGameFailures).toBe(1);
   });
 
   test("missing or malformed detail artifact is returned as an empty case without crash", () => {

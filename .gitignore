@@ -9,6 +9,7 @@ battle_specs_manual
 tmp
 test_results/runs/
 util
+tournament_results/
 
 # SQLite WAL/SHM sidecars — only the main .sqlite file is versioned
 test_results/*.sqlite-shm

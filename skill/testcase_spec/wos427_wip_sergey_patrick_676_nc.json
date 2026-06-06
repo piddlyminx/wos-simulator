@@ -1,6 +1,6 @@
 {
   "test_id": "wos427_wip_sergey_patrick_676_nc",
-  "description": "WOS-427 high-signal damage-taken-down plus health-up fixture. minxxx attacks WIP; WIP defends with Sergey+Patrick and 676 heroic infantry to separate health-up 1.28 from 1.296 by more than 10 troops in v3.",
+  "description": "WOS-427 high-signal damage-taken-down plus health-up fixture. minxxx attacks WIP; WIP defends with Sergey+Patrick and 676 heroic infantry to separate health-up 1.28 from 1.296 by more than 10 troops in the simulator.",
   "emulator": {
     "attacker": { "instance": "minxxx" },
     "defender": { "instance": "WIP" }

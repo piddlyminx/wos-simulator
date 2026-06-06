@@ -1,6 +1,7 @@
 {
   "name": "Philly",
   "hero_generation": "S2",
+  "troop_type": "lancer",
   "skills": {
     "VigorTactics": {
       "description": "Increasing Attack by X% and Defense by X% for all troops",

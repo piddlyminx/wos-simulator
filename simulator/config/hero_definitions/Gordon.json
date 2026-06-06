@@ -1,6 +1,7 @@
 {
   "name": "Gordon",
   "hero_generation": "S7",
+  "troop_type": "lancer",
   "skills": {
     "VenomInfusion": {
       "description": "Every 2 attacks, Lancers deal X% extra damage and apply poison to the target for 1 turn. Poisoned enemies deal Y% less damage.",

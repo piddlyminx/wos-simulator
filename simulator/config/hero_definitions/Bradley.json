@@ -1,6 +1,7 @@
 {
   "name": "Bradley",
   "hero_generation": "S7",
+  "troop_type": "marksman",
   "skills": {
     "VeteransMight": {
       "description": "Bradley's years of combat experience enables him to destroy enemies efficiently, increasing Attack by X% for all troops.",

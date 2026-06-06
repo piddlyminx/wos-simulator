@@ -1,6 +1,7 @@
 {
   "name": "Lumak",
   "hero_generation": "SR",
+  "troop_type": "lancer",
   "skills": {
     "TacticalDeception": {
       "description": "All enemy troops' damage dealt is reduced by X%",

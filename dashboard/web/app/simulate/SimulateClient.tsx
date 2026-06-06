@@ -76,7 +76,7 @@ import {
   type PlayerStatPreset,
   type StatPresetValues,
 } from "@/lib/stat-presets";
-import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/v3-sim/worker-client";
+import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/simulator/worker-client";
 
 type Side = "attacker" | "defender";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];

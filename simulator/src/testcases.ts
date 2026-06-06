@@ -14,6 +14,8 @@ import { simulateBattle } from "./simulator";
 import { DamageAggregationError } from "./damage";
 import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, UnitType } from "./types";
 
+const DEFAULT_STOCHASTIC_REPEAT = 100;
+
 export interface TestcaseRunOptions {
   testcaseRoot?: string;
   calibrationReportPath?: string;
@@ -34,8 +36,8 @@ export interface TestcaseCaseReport {
   gameResult?: unknown;
   calibration?: CalibrationCaseComparison;
   result?: BattleResult;
-  v3ScoreDelta?: number;
-  v3Stats?: SampleStats;
+  simulatorScoreDelta?: number;
+  simulatorStats?: SampleStats;
   deterministic?: boolean;
   sampleCount?: number;
   visibility: {
@@ -50,7 +52,7 @@ export interface TestcaseRunWarning {
   file: string;
   testcase_id: string;
   idx: number;
-  stage: "parse" | "adapt" | "execute" | "game_comparison" | "v1_comparison" | "artifact";
+  stage: "parse" | "adapt" | "execute" | "game_comparison" | "baseline_comparison" | "artifact";
   reason: string;
   detailArtifact?: string;
 }
@@ -63,11 +65,11 @@ export interface TestcaseSummaryEntry {
   deterministic: boolean;
   sampleCount: number;
   game: ParityComparisonMetrics | null;
-  v1: ParityComparisonMetrics | null;
+  baseline: ParityComparisonMetrics | null;
 }
 
 export interface TestcaseRunReport {
-  reportKind: "v3-parity-summary";
+  reportKind: "simulator-parity-summary";
   schemaVersion: 1;
   createdAt: string;
   options: TestcaseRunOptions;
@@ -80,7 +82,7 @@ export interface TestcaseRunReport {
     warnings: number;
     errors: number;
     comparedToGame: number;
-    comparedToV1: number;
+    comparedToBaseline: number;
   };
   warnings: TestcaseRunWarning[];
   errors: TestcaseRunWarning[];
@@ -130,8 +132,8 @@ export interface TestcaseExecutionResult {
   result?: BattleResult;
   deterministic?: boolean;
   sampleCount?: number;
-  v3Stats?: SampleStats;
-  v3ScoreDelta?: number;
+  simulatorStats?: SampleStats;
+  simulatorScoreDelta?: number;
   diagnostics: string[];
   error?: string;
   errorDetails?: TestcaseErrorDetails;
@@ -198,14 +200,14 @@ export function runPreparedTestcases(
   execute: (job: TestcaseExecutionJob, config: SimulatorConfig) => TestcaseExecutionResult
 ): TestcaseRunReport {
   const comparison = loadCalibrationComparison(options.calibrationReportPath);
-  const repeat = Math.max(1, options.repeat ?? 1);
+  const repeat = normalizeRepeat(options.repeat);
   const report: TestcaseRunReport = {
-    reportKind: "v3-parity-summary",
+    reportKind: "simulator-parity-summary",
     schemaVersion: 1,
     createdAt: new Date().toISOString(),
-    options: { ...options },
+    options: { ...options, repeat },
     calibrationReportPath: comparison.reportPath,
-    counts: { filesFound: prepared.filesFound, testcasesFound: prepared.cases.length, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToV1: 0 },
+    counts: { filesFound: prepared.filesFound, testcasesFound: prepared.cases.length, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToBaseline: 0 },
     warnings: [],
     errors: [...prepared.parseErrors],
     testcases: {},
@@ -241,14 +243,14 @@ export async function runPreparedTestcasesAsync(
   execute: (job: TestcaseExecutionJob) => Promise<TestcaseExecutionResult>
 ): Promise<TestcaseRunReport> {
   const comparison = loadCalibrationComparison(options.calibrationReportPath);
-  const repeat = Math.max(1, options.repeat ?? 1);
+  const repeat = normalizeRepeat(options.repeat);
   const report: TestcaseRunReport = {
-    reportKind: "v3-parity-summary",
+    reportKind: "simulator-parity-summary",
     schemaVersion: 1,
     createdAt: new Date().toISOString(),
-    options: { ...options },
+    options: { ...options, repeat },
     calibrationReportPath: comparison.reportPath,
-    counts: { filesFound: prepared.filesFound, testcasesFound: prepared.cases.length, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToV1: 0 },
+    counts: { filesFound: prepared.filesFound, testcasesFound: prepared.cases.length, executed: 0, warnings: 0, errors: 0, comparedToGame: 0, comparedToBaseline: 0 },
     warnings: [],
     errors: [...prepared.parseErrors],
     testcases: {},
@@ -310,7 +312,7 @@ function applyExecutionResult(
     return;
   }
   const result = execution.result;
-  if (!result || !execution.v3Stats || execution.deterministic === undefined || execution.sampleCount === undefined) {
+  if (!result || !execution.simulatorStats || execution.deterministic === undefined || execution.sampleCount === undefined) {
     const reason = "Worker returned incomplete testcase execution result";
     detail.error = reason;
     detail.errorDetails = { type: "IncompleteExecutionResult" };
@@ -318,24 +320,24 @@ function applyExecutionResult(
     report.errors.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "execute", reason });
     return;
   }
-  const stats = execution.v3Stats;
+  const stats = execution.simulatorStats;
   const gameResult = (entry as { game_report_result?: unknown }).game_report_result;
   const calibration = readCalibrationCase(comparison, reportFile, testcaseId, { index });
   const initialTroops = totalInputTroops(preparedCase.input!.attacker) + totalInputTroops(preparedCase.input!.defender);
-  const v3Distribution = { n: stats.n, mu: stats.mu, sigma: stats.sigma };
+  const simulatorDistribution = { n: stats.n, mu: stats.mu, sigma: stats.sigma };
   const gameDistribution = distributionFromGameResult(gameResult);
   const game = gameDistribution
     ? compareOutcomeDistribution({
-        candidate: v3Distribution,
+        candidate: simulatorDistribution,
         reference: gameDistribution,
         initialTroops,
         deterministic: result.randomness.deterministic,
         thresholds: comparison.thresholds
       })
     : null;
-  const v1 = calibration?.nSim !== undefined && calibration.muSim !== undefined && calibration.sigmaSim !== undefined
+  const baseline = calibration?.nSim !== undefined && calibration.muSim !== undefined && calibration.sigmaSim !== undefined
     ? compareOutcomeDistribution({
-        candidate: v3Distribution,
+        candidate: simulatorDistribution,
         reference: { n: calibration.nSim, mu: calibration.muSim, sigma: calibration.sigmaSim },
         initialTroops,
         deterministic: result.randomness.deterministic,
@@ -346,8 +348,8 @@ function applyExecutionResult(
   detail.result = result;
   detail.deterministic = execution.deterministic;
   detail.sampleCount = execution.sampleCount;
-  detail.v3Stats = stats;
-  detail.v3ScoreDelta = execution.v3ScoreDelta;
+  detail.simulatorStats = stats;
+  detail.simulatorScoreDelta = execution.simulatorScoreDelta;
   detail.gameResult = gameResult;
   detail.calibration = calibration;
   detail.visibility = visibilityFromResult(result);
@@ -355,8 +357,8 @@ function applyExecutionResult(
   if (!game) {
     report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "game_comparison", reason: "Missing game_report_result" });
   }
-  if (!v1) {
-    report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "v1_comparison", reason: "No matching v1 snapshot row" });
+  if (!baseline) {
+    report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "baseline_comparison", reason: "No matching baseline snapshot row" });
   }
   report.counts.executed += 1;
   report.testcases[preparedCase.key!] = {
@@ -366,7 +368,7 @@ function applyExecutionResult(
     deterministic: execution.deterministic,
     sampleCount: execution.sampleCount,
     game,
-    v1
+    baseline
   };
 }
 
@@ -375,7 +377,11 @@ function finalizeReport(report: TestcaseRunReport): void {
   report.counts.warnings = report.warnings.length;
   report.counts.errors = report.errors.length;
   report.counts.comparedToGame = Object.values(report.testcases).filter((entry) => entry.game).length;
-  report.counts.comparedToV1 = Object.values(report.testcases).filter((entry) => entry.v1).length;
+  report.counts.comparedToBaseline = Object.values(report.testcases).filter((entry) => entry.baseline).length;
+}
+
+function normalizeRepeat(repeat: number | undefined): number {
+  return Math.max(1, repeat ?? DEFAULT_STOCHASTIC_REPEAT);
 }
 
 export function executeTestcaseCase(job: TestcaseExecutionJob, config: SimulatorConfig): TestcaseExecutionResult {
@@ -396,8 +402,8 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
       result,
       deterministic: result.randomness.deterministic,
       sampleCount,
-      v3Stats: sampleStats(samples),
-      v3ScoreDelta: battleScoreDelta(result),
+      simulatorStats: sampleStats(samples),
+      simulatorScoreDelta: battleScoreDelta(result),
       diagnostics: [...result.resolved.attacker.diagnostics, ...result.resolved.defender.diagnostics]
     };
   } catch (error) {
@@ -413,7 +419,7 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
 
 export function applyComparisonQValues(report: Pick<TestcaseRunReport, "testcases">): void {
   applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.game).filter((value): value is ParityComparisonMetrics => !!value));
-  applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.v1).filter((value): value is ParityComparisonMetrics => !!value));
+  applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.baseline).filter((value): value is ParityComparisonMetrics => !!value));
 }
 
 export function assignDetailArtifactPaths(report: TestcaseRunReport, artifactRoot: string): void {
@@ -575,7 +581,7 @@ function totalSide(troops: Record<UnitType, number>): number {
 }
 
 function sampleSeed(baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): string {
-  return `${baseSeed ?? "v3-default"}:${relative(process.cwd(), file)}:${testcaseId}:${index}:${iteration}`;
+  return `${baseSeed ?? "simulator-default"}:${relative(process.cwd(), file)}:${testcaseId}:${index}:${iteration}`;
 }
 
 function sampleInput(input: BattleInput, baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): BattleInput {

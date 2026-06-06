@@ -211,7 +211,7 @@ test("simulateBattle reports resolved heroes, troop skills, activations, control
   assert.ok(result.attackControlCounts.no_attack >= 0);
 });
 
-test("display-name hero aliases resolve to v3 hero definitions", () => {
+test("display-name hero aliases resolve to simulator hero definitions", () => {
   const config = loadSimulatorConfig();
   const fighter = resolveFighter(
     {
@@ -519,7 +519,7 @@ test("same_effect_stacking max consumes overlapping attack-duration extra skill 
   assert.equal(roundTwoSkillOutcome!.consumedEffectIds.length, 2);
 });
 
-test("requires_effect is ignored by native v3 effect activation", () => {
+test("requires_effect is ignored by native simulator effect activation", () => {
   const result = simulateBattle(
     {
       maxRounds: 0,

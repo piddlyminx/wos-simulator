@@ -8,18 +8,18 @@ surface is the simulator page only:
 
 - Public: `/simulate`, saved run sharing, stat presets, and report upload/OCR.
 - Private/local: regression dashboard routes, coverage/history views, and
-  `check_testcases.py` controls.
+  TypeScript testcase-runner controls.
 - Saved simulation run JSON files sync bidirectionally between the local dev
   machine and the VPS.
 - Player stat presets do not need bidirectional sync in this phase.
 
 The VPS deployment still runs production Next (`next build` / `next start`)
-behind the existing Traefik v3 TLS setup.
+behind the existing Traefik simulator TLS setup.
 
 The production container runs as the host deploy UID/GID exported by
 `scripts/wos-prod-deploy.sh` (`WOS_SIM_UID` / `WOS_SIM_GID`). This keeps
-bind-mounted simulator files writable enough for legacy simulator helpers that
-open `fighters_data` files with `r+`.
+bind-mounted saved-run and preset files writable without requiring root-owned
+artifacts on the host.
 
 ## Relevant Files
 
@@ -60,7 +60,7 @@ Default/local mode must keep the full dashboard unchanged. In
 - `/` redirects to `/simulate`.
 - `/simulate` renders normally.
 - Public simulate APIs are limited to saved-run persistence/loading, stat
-  presets, and OCR upload. Browser-side v3 workers handle battle and ratio
+  presets, and OCR upload. Browser-side simulator workers handle battle and ratio
   calculations.
 - Public API routes are limited to:
   - `/api/simulate/runs`
@@ -77,8 +77,8 @@ Default/local mode must keep the full dashboard unchanged. In
 - Navigation in public mode must not advertise private QA dashboard routes.
 - `/healthz` remains available for Traefik/container health checks.
 
-Keep `check_testcases.py` as a development/regression workflow. It must not run
-synchronously from public request handlers.
+Keep testcase-runner controls as a private development/regression workflow.
+They must not run synchronously from public request handlers.
 
 ## OCR Public Safeguards
 

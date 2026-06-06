@@ -406,6 +406,7 @@ test("turn-duration bucket effects are visible on the attack outcome without bei
       bucket: "active.hero.defense.down",
       valuePct: 30,
       source: "Example/Skill/BadLuckStreak/1",
+      sourceSide: "defender",
       sameEffectStacking: "add"
     }
   ]);
