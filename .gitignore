@@ -2,6 +2,8 @@ myvenv
 temp
 misq
 __pycache__
+.pytest_cache/
+.venv/
 .history
 battle_specs_manual
 tmp

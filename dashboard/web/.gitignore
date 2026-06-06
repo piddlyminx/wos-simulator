@@ -1,5 +1,6 @@
 node_modules/
 .next/
+.next-*
 .next-user/
 .next-turbo-test/
 .next_old/
