@@ -717,11 +717,6 @@ function HeroPickerPanel({
         <h5 className="mb-1 text-[10px] font-bold uppercase tracking-wider opacity-60">
           Active buffs in screenshot
         </h5>
-        <p className="mb-2 text-[11px] leading-relaxed opacity-65">
-          Select only buffs/debuffs that were already active when the screenshot
-          was taken. The importer removes them from parsed stats before filling
-          the main army inputs.
-        </p>
         <div className="grid grid-cols-1 gap-2">
           <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">

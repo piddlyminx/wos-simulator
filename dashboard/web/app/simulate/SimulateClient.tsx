@@ -3070,7 +3070,7 @@ function StatBonusInput({
           onValueChange(parsed);
         }
       }}
-      className="simulate-stat-input w-full min-w-0 rounded px-1 py-1.5 font-mono text-[11px] text-center tabular-nums min-h-[34px]"
+      className="simulate-stat-input h-9 w-full min-w-0 rounded px-1.5 py-1 font-mono text-xs text-center tabular-nums"
       style={{
         backgroundColor: "var(--sidebar-bg)",
         border: "1px solid var(--border-color)",
@@ -3174,7 +3174,7 @@ function SidePanel({
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 mb-4 sm:mb-5">
+      <div className="mb-4 grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 lg:grid-cols-3 sm:mb-5">
         {CATEGORIES.map((cat) => (
           <TroopColumn
             key={cat}
@@ -3237,17 +3237,17 @@ function SidePanel({
       <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
         Stat Bonuses (%)
       </h4>
-      <div className="flex flex-wrap gap-3">
+      <div className="grid grid-cols-1 gap-2 min-[380px]:grid-cols-2 lg:grid-cols-3">
         {CATEGORIES.map((cat) => (
           <div
             key={cat}
-            className="min-w-[8.75rem] flex-1 rounded border p-2.5"
+            className="min-w-0 rounded border p-2"
             style={{
               borderColor: "var(--border-color)",
               backgroundColor: "var(--main-bg)",
             }}
           >
-            <span className="mb-1.5 block text-[11px] uppercase tracking-wider opacity-60">
+            <span className="mb-1.5 block text-[10px] uppercase tracking-wider opacity-60">
               {troopCategoryLabel(cat)}
             </span>
             <div className="grid grid-cols-2 gap-x-1.5 gap-y-1.5">
@@ -3350,7 +3350,7 @@ function SidePanel({
                     />
                     {previewValue ? (
                       <span
-                        className="flex flex-col items-center justify-start text-center font-mono text-[9px] leading-tight sm:text-[10px]"
+                        className="min-h-[2rem] text-center font-mono text-[9px] leading-tight sm:text-[10px]"
                         style={{
                           color: previewNumber >= baseValue ? "#a6e3a1" : "#f38ba8",
                         }}
@@ -3359,8 +3359,8 @@ function SidePanel({
                           title={`${sourceText || "Manual modifiers"} apply before battle, for an effective stat of ${previewValue}.`}
                           data-testid={`stat-preview-${which}-${cat}-${stat}`}
                         >
-                          <span>[{previewValue}]</span>
-                          <span>{modifierSummary}</span>
+                          <span className="block truncate">[{previewValue}]</span>
+                          <span className="block truncate">{modifierSummary}</span>
                         </span>
                       </span>
                     ) : null}
@@ -3712,16 +3712,16 @@ function TroopColumn({
 
   return (
     <div
-      className="flex min-w-0 flex-col gap-2 rounded border p-2.5"
+      className="flex min-w-0 flex-col gap-2 rounded border p-2"
       style={{
         borderColor: "var(--border-color)",
         backgroundColor: "var(--main-bg)",
       }}
     >
-      <span className="text-[11px] uppercase tracking-wider opacity-70 font-mono truncate">
+      <span className="text-[10px] uppercase tracking-wider opacity-70 font-mono truncate">
         {troopCategoryLabel(cat)}
       </span>
-      <div className="grid grid-cols-[minmax(0,1fr)_4.75rem] gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_minmax(4.25rem,0.45fr)] gap-1.5">
         <label className="flex min-w-0 flex-col gap-1">
           <span className="text-[10px] uppercase tracking-wider opacity-50">
             Troops
@@ -3743,7 +3743,7 @@ function TroopColumn({
                 },
               }));
             }}
-            className="w-full min-w-0 rounded px-2 py-2 font-mono text-sm text-right tabular-nums min-h-[36px]"
+            className="h-[34px] w-full min-w-0 rounded px-2 py-1 font-mono text-xs text-right tabular-nums"
             style={{
               backgroundColor: "var(--sidebar-bg)",
               border: "1px solid var(--border-color)",
@@ -3765,7 +3765,7 @@ function TroopColumn({
                 tiers: { ...prev.tiers, [cat]: v },
               }));
             }}
-            className="w-full min-w-0 rounded px-2 py-2 font-mono text-xs min-h-[36px]"
+            className="h-[34px] w-full min-w-0 rounded px-1.5 py-1 font-mono text-xs"
             style={{
               backgroundColor: "var(--sidebar-bg)",
               border: "1px solid var(--border-color)",
@@ -3856,7 +3856,7 @@ function TroopColumn({
               });
             }
           }}
-          className="w-full min-w-0 rounded px-2 py-2 font-mono text-xs min-h-[36px]"
+          className="h-[34px] w-full min-w-0 rounded px-2 py-1 font-mono text-xs"
           style={{
             backgroundColor: "var(--sidebar-bg)",
             border: "1px solid var(--border-color)",
@@ -3877,7 +3877,7 @@ function TroopColumn({
         <span className="text-[10px] uppercase tracking-wider opacity-50">
           Skills
         </span>
-        <div className="grid grid-cols-4 gap-1.5">
+        <div className="grid grid-cols-4 gap-1">
           {[1, 2, 3, 4].map((slot) => {
             const enabled = skillSlotEnabled(
               hero,
@@ -3887,7 +3887,7 @@ function TroopColumn({
             return (
               <label
                 key={slot}
-                className="flex min-w-0 flex-col gap-1 text-[11px]"
+                className="flex min-w-0 flex-col gap-0.5 text-[10px]"
               >
                 <span className="text-center font-mono opacity-60">{slot}</span>
                 <select
@@ -3912,7 +3912,7 @@ function TroopColumn({
                       };
                     });
                   }}
-                  className="w-full rounded px-1 py-1.5 font-mono text-[11px] min-h-[32px]"
+                  className="h-8 w-full rounded px-1 py-1 font-mono text-[11px]"
                   style={{
                     backgroundColor: "var(--sidebar-bg)",
                     border: "1px solid var(--border-color)",
