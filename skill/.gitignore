@@ -4,6 +4,7 @@ tmp/**
 !tmp/.gitkeep
 config.json
 data/player_hero_skills.json
+tessdata/
 captures/
 testcases/**
 !testcases/.gitkeep
