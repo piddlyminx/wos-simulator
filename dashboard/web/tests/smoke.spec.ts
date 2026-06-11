@@ -882,7 +882,7 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
-  test("/simulate — stat bonus inputs accept typed decimals", async ({
+  test("/simulate — stat bonus inputs accept typed dot and comma decimals", async ({
     page,
   }) => {
     const errors = await assertNoConsoleErrors(page);
@@ -900,6 +900,13 @@ test.describe("Dashboard smoke tests", () => {
 
     await input.blur();
     await expect(input).toHaveValue("100.5");
+
+    await input.fill("");
+    await input.pressSequentially("123,4");
+    await expect(input).toHaveValue("123,4");
+
+    await input.blur();
+    await expect(input).toHaveValue("123.4");
     expect(errors).toHaveLength(0);
   });
 

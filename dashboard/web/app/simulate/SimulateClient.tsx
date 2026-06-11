@@ -3049,23 +3049,23 @@ function StatBonusInput({
     <input
       type="text"
       inputMode="decimal"
-      pattern="[0-9]*[.]?[0-9]*"
+      pattern="[0-9]*[.,]?[0-9]*"
       value={draft}
       onFocus={() => {
         focusedRef.current = true;
       }}
       onBlur={() => {
         focusedRef.current = false;
-        const parsed = parseFloat(draft);
+        const parsed = parseStatBonusDraft(draft);
         const normalized = Number.isNaN(parsed) ? 0 : parsed;
         onValueChange(normalized);
         setDraft(String(normalized));
       }}
       onChange={(e) => {
         const next = e.target.value;
-        if (!/^\d*\.?\d*$/.test(next)) return;
+        if (!/^\d*[.,]?\d*$/.test(next)) return;
         setDraft(next);
-        const parsed = parseFloat(next);
+        const parsed = parseStatBonusDraft(next);
         if (!Number.isNaN(parsed)) {
           onValueChange(parsed);
         }
@@ -3079,6 +3079,10 @@ function StatBonusInput({
       aria-label={ariaLabel}
     />
   );
+}
+
+function parseStatBonusDraft(value: string): number {
+  return parseFloat(value.replace(",", "."));
 }
 
 function SidePanel({
