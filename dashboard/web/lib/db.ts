@@ -16,6 +16,7 @@ import fs from "fs";
 import path from "path";
 import zlib from "zlib";
 import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseFileHistoryRow, TestcaseFileIndexRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
+import { biasErrorDelta } from "./run-delta";
 
 /**
  * Absolute path to the SQLite database file.
@@ -830,8 +831,7 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
         status = "unchanged";
       }
 
-      const delta =
-        r.bias_a != null && r.bias_b != null ? r.bias_b - r.bias_a : null;
+      const delta = biasErrorDelta(r.bias_a, r.bias_b);
 
       return {
         file: r.file,

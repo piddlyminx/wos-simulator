@@ -53,6 +53,7 @@ interface Runtime {
   extraSkillAttackJobsByEffect: Record<string, number>;
   attackControlCounts: { dodge: number; no_attack: number };
   consumedEffectUseKeys: Set<string>;
+  carryAttackDurationEffectsToTriggeredExtraSkillDamage: boolean;
   counters: {
     attacks: Record<SideId, Record<UnitType, number>>;
     received: Record<SideId, Record<UnitType, number>>;
@@ -112,7 +113,7 @@ function runBattle(input: BattleInput, config: SimulatorConfig, options: Simulat
   const attacker = resolveFighter(input.attacker, "attacker", config, input.mechanics);
   const defender = resolveFighter(input.defender, "defender", config, input.mechanics);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
-  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"));
+  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"), input.mechanics);
   const detail = options.detail ?? "full";
   const traceEnabled = detail === "full" && input.trace;
   const trace: BattleTrace | undefined = traceEnabled ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;
@@ -289,7 +290,7 @@ function hasChanceTrigger(skill: ResolvedSkill): boolean {
   return Number.isFinite(value) && value > 0 && value < 100;
 }
 
-function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
+function createRuntime(fighters: ResolvedFighter[], rng: Rng, mechanics?: BattleInput["mechanics"]): Runtime {
   const reports: Record<SideId, Map<string, SkillReportEntry>> = { attacker: new Map(), defender: new Map() };
   const skills = buildRuntimeSkills(fighters);
   for (const fighter of fighters) {
@@ -321,6 +322,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
     extraSkillAttackJobsByEffect: {},
     attackControlCounts: { dodge: 0, no_attack: 0 },
     consumedEffectUseKeys: new Set(),
+    carryAttackDurationEffectsToTriggeredExtraSkillDamage: mechanics?.carryAttackDurationEffectsToTriggeredExtraSkillDamage === true,
     counters: {
       attacks: { attacker: emptyTroops(), defender: emptyTroops() },
       received: { attacker: emptyTroops(), defender: emptyTroops() }
@@ -513,6 +515,9 @@ function extraSkillJobs(
   roundStartTroops: DamageJob["roundStartTroops"]
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
+  const carriedAttackDurationEffectIds = runtime.carryAttackDurationEffectsToTriggeredExtraSkillDamage
+    ? attackDurationBucketEffectIdsForJob(normalAttack, round, runtime.activeEffects)
+    : undefined;
   const effectGroups = selectStackedExtraAttackEffectGroups(
     runtime.effectIndex.extraAttacks.filter((effect) => isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
     round
@@ -548,6 +553,7 @@ function extraSkillJobs(
             sourceEffectId,
             sourceSkillReportKey,
             sourceMultiplier: multiplier,
+            carriedAttackDurationEffectIds,
             consumedEffectIds,
             consumedEffectUseKey,
             consumedEffectUseId: effect.id,
@@ -683,10 +689,14 @@ function capRoundOutcomeKills(outcomes: AttackOutcome[], roundStartTroops: Damag
       const available = Math.max(0, roundStartTroops[side][unit] ?? 0);
       const totalKills = matching.reduce((sum, outcome) => sum + outcome.kills, 0);
       if (totalKills <= available) continue;
-      let remaining = available;
+      let appliedKills = 0;
+      let rawRemaining = available;
       for (const outcome of matching) {
-        outcome.kills = Math.min(outcome.kills, remaining);
-        remaining -= outcome.kills;
+        const rawKills = outcome.kills;
+        outcome.kills = Math.min(rawKills, Math.max(0, available - appliedKills));
+        appliedKills += outcome.kills;
+        rawRemaining = Math.max(0, rawRemaining - rawKills);
+        if (rawRemaining === 0) appliedKills = available;
         if (outcome.trace) outcome.trace.finalKills = outcome.kills;
       }
     }
@@ -741,6 +751,16 @@ function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: A
       if (effect.kind === "extra_attack" || effect.duration.type !== "attack" || !isEffectActive(effect, round)) return false;
       const classification = classifyEffectForJob(effect, job);
       return classification?.kind === "bucket" || classification?.kind === "control";
+    })
+    .map((effect) => effect.id);
+}
+
+function attackDurationBucketEffectIdsForJob(job: DamageJob, round: number, effects: ActiveEffect[]): string[] {
+  return effects
+    .filter((effect) => {
+      if (effect.kind === "extra_attack" || effect.duration.type !== "attack" || !isEffectActive(effect, round)) return false;
+      const classification = classifyEffectForJob(effect, job);
+      return classification?.kind === "bucket";
     })
     .map((effect) => effect.id);
 }

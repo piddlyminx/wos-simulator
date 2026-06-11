@@ -823,6 +823,36 @@ test("same-round cap does not leave exhausted units targetable through floating 
   assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
 });
 
+test("committed losses clamp exhausted floating point residue before next-round target selection", () => {
+  const config = loadSimulatorConfig();
+  const fixturePath = fileURLToPath(new URL("../testcases/emulator_verified/renee_solo_nc.json", import.meta.url));
+  const testcases = JSON.parse(readFileSync(fixturePath, "utf8")) as Array<BattleInput & { test_id: string }>;
+  const input = testcases.find((testcase) => testcase.test_id === "renee_solo_nc");
+  if (!input) throw new Error("missing renee_solo_nc fixture");
+
+  const adjusted = structuredClone(input);
+  for (const [fighter, adjustment] of [
+    [adjusted.attacker, 0.05],
+    [adjusted.defender, -0.05]
+  ] as const) {
+    for (const stats of Object.values(fighter.stats ?? {})) {
+      for (const key of ["attack", "defense", "lethality", "health"] as const) {
+        if (stats[key] !== undefined) stats[key] = Number((Number(stats[key]) + adjustment).toFixed(3));
+      }
+    }
+  }
+  adjusted.trace = true;
+
+  const result = simulateBattle(adjusted, config);
+  const roundSix = result.trace?.rounds.find((round) => round.round === 6);
+  const defenderTargets = roundSix?.intents
+    .filter((intent) => intent.attackerSide === "defender")
+    .map((intent) => intent.defenderUnit);
+
+  assert.equal(roundSix?.roundStartTroops.attacker.infantry, 0);
+  assert.deepEqual(defenderTargets, ["lancer", "lancer", "lancer"]);
+});
+
 test("extra skill trigger damage jobs reject missing runtime selectors", () => {
   assert.throws(
     () =>
@@ -1323,6 +1353,87 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 4 });
 });
 
+test("attack-duration normal damage effects do not carry to triggered extra skill damage by default", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100 },
+        heroes: {}
+      }
+    },
+    attackDurationCarryConfig()
+  );
+
+  const normalBoosts = result.attacks
+    .filter((attack) => attack.kind === "normal" && attack.attackerSide === "attacker")
+    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0);
+  const skillBoosts = result.attacks
+    .filter((attack) => attack.kind === "skill")
+    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0);
+  assert.deepEqual(normalBoosts, [100]);
+  assert.deepEqual(skillBoosts, [0]);
+});
+
+test("mechanics flag carries consumed attack-duration effects to matching triggered extra skill damage only", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      mechanics: { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true },
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    attackDurationCarryConfig({ buffAppliesVs: "infantry", extraTargets: "enemy.living" })
+  );
+
+  const normalBoosts = result.attacks
+    .filter((attack) => attack.kind === "normal" && attack.attackerSide === "attacker")
+    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0);
+  const skillBoostsByTarget = result.attacks
+    .filter((attack) => attack.kind === "skill")
+    .map((attack) => `${attack.defenderUnit}:${attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0}`)
+    .sort();
+  assert.deepEqual(normalBoosts, [100]);
+  assert.deepEqual(skillBoostsByTarget, ["infantry:100", "lancer:0", "marksman:0"]);
+});
+
+test("mechanics flag carries consumed attack-duration effects with any target scope to all matching triggered extra skill damage", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      trace: true,
+      mechanics: { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true },
+      attacker: {
+        troops: { marksman_t1: 100 },
+        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
+        heroes: {}
+      }
+    },
+    attackDurationCarryConfig({ buffAppliesVs: "any", extraTargets: "enemy.living" })
+  );
+
+  const skillBoosts = result.attacks
+    .filter((attack) => attack.kind === "skill")
+    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0)
+    .sort((left, right) => left - right);
+  assert.deepEqual(skillBoosts, [100, 100, 100]);
+});
+
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {
   const result = simulateBattle(
     {
@@ -1800,4 +1911,41 @@ function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): Simulat
     troopSkills: { name: "troop skills", skills: {} },
     diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [], ambiguousTurnTriggerSelectors: [] }
   };
+}
+
+function attackDurationCarryConfig(
+  options: { buffAppliesVs?: "any" | "infantry"; extraTargets?: "use.target" | "enemy.living" } = {}
+): SimulatorConfig {
+  const buffAppliesVs = options.buffAppliesVs ?? "any";
+  const extraTargets = options.extraTargets ?? "use.target";
+  return minimalConfig({
+    FollowUp: {
+      name: "FollowUp",
+      skills: {
+        OneUseNormalBoost: {
+          trigger: { type: "battle_start" },
+          effects: {
+            boost: {
+              type: "active.hero.attack.up",
+              value: 100,
+              units: { applies_to: "marksman", applies_vs: buffAppliesVs },
+              duration: { type: "attack", value: 1 }
+            }
+          }
+        },
+        TriggeredExtraDamage: {
+          trigger: { type: "attack", probability: 100, source: "marksman" },
+          effects: {
+            extra: {
+              type: "extra_skill_attack",
+              value: 100,
+              units: { applies_to: "trigger.source", applies_vs: "any" },
+              trigger_damage_jobs: [{ source: "use.source", target: extraTargets }],
+              duration: { type: "attack", value: 1 }
+            }
+          }
+        }
+      }
+    }
+  });
 }

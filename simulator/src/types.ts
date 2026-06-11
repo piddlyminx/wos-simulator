@@ -277,6 +277,7 @@ export interface DamageJob {
   sourceEffectId?: string;
   sourceSkillReportKey?: string;
   sourceMultiplier?: number;
+  carriedAttackDurationEffectIds?: string[];
   consumedEffectIds?: string[];
   consumedEffectUseKey?: string;
   consumedEffectUseId?: string;

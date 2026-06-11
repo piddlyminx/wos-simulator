@@ -27,6 +27,7 @@ export interface TestcaseRunOptions {
   seed?: string | number;
   trace?: boolean;
   workers?: number;
+  mechanics?: Record<string, unknown>;
 }
 
 export interface TestcaseCaseReport {
@@ -207,7 +208,7 @@ export function prepareTestcaseCases(options: TestcaseRunOptions): { filesFound:
       const detail = emptyCaseReport(reportFile, testcaseId, index, diagnostics);
       const preparedCase: PreparedTestcaseCase = { file, reportFile, entry, testcaseId, index, detail };
       try {
-        preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed, trace: options.trace }, diagnostics);
+        preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed, trace: options.trace, mechanics: options.mechanics }, diagnostics);
         preparedCase.key = snapshotKey(reportFile, index);
       } catch (error) {
         detail.error = errorMessage(error);
@@ -613,7 +614,11 @@ export function buildSummaryForOutput(report: TestcaseRunReport): TestcaseSummar
   return summary;
 }
 
-export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | number; trace?: boolean } = {}, diagnostics: string[] = []): BattleInput {
+export function adaptTestcaseEntry(
+  entry: unknown,
+  options: { seed?: string | number; trace?: boolean; mechanics?: Record<string, unknown> } = {},
+  diagnostics: string[] = []
+): BattleInput {
   const object = entry as {
     attacker?: FighterInput;
     defender?: FighterInput;
@@ -626,7 +631,7 @@ export function adaptTestcaseEntry(entry: unknown, options: { seed?: string | nu
   };
   if (!object.attacker || !object.defender) throw new Error(`Testcase ${object.test_id ?? "(unknown)"} is missing attacker or defender`);
   diagnostics.push(...diagnoseFighterShape("attacker", object.attacker), ...diagnoseFighterShape("defender", object.defender));
-  const mechanics = testcaseMechanics(object);
+  const mechanics = testcaseMechanics(object, options.mechanics);
   const maxRounds = optionalNumber(object.maxRounds ?? object.max_rounds);
   return {
     attacker: object.attacker,
@@ -702,8 +707,12 @@ function diagnoseFighterShape(side: string, fighter: FighterInput): string[] {
   return diagnostics;
 }
 
-function testcaseMechanics(entry: { mechanics?: Record<string, unknown>; engagement_type?: unknown; engagementType?: unknown }): Record<string, unknown> | undefined {
+function testcaseMechanics(
+  entry: { mechanics?: Record<string, unknown>; engagement_type?: unknown; engagementType?: unknown },
+  optionMechanics?: Record<string, unknown>
+): Record<string, unknown> | undefined {
   const mechanics = entry.mechanics && typeof entry.mechanics === "object" ? { ...entry.mechanics } : {};
+  if (optionMechanics && typeof optionMechanics === "object") Object.assign(mechanics, optionMechanics);
   if (entry.engagement_type !== undefined) mechanics.engagement_type = entry.engagement_type;
   if (entry.engagementType !== undefined) mechanics.engagementType = entry.engagementType;
   return Object.keys(mechanics).length > 0 ? mechanics : undefined;

@@ -78,6 +78,12 @@ function parseArgs(args: string[]): CliOptions {
     else if (arg === "--trace") testcaseOptions.trace = true;
     else if (arg === "--seed") testcaseOptions.seed = args[++index];
     else if (arg === "--workers") testcaseOptions.workers = Math.max(1, Number(args[++index]) || 1);
+    else if (arg === "--carry-attack-duration-effects-to-triggered-extra-skill-damage") {
+      testcaseOptions.mechanics = {
+        ...(testcaseOptions.mechanics ?? {}),
+        carryAttackDurationEffectsToTriggeredExtraSkillDamage: true
+      };
+    }
     else if (arg === "--output-dir") options.outputDir = resolve(args[++index]);
     else if (arg === "--no-run-snapshot") options.noRunSnapshot = true;
     else if (arg === "--human") options.human = true;

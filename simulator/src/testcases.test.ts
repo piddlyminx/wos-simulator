@@ -285,6 +285,25 @@ test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into B
   assert.deepEqual(input.mechanics, { weather: "clear", engagement_type: "rally" });
 });
 
+test("adaptTestcaseEntry merges option mechanics without replacing testcase mechanics", () => {
+  const input = adaptTestcaseEntry(
+    {
+      test_id: "mechanics_case",
+      engagement_type: "rally",
+      mechanics: { weather: "clear" },
+      attacker: { troops: { infantry_t1: 1 } },
+      defender: { troops: { infantry_t1: 1 } }
+    },
+    { mechanics: { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true } }
+  );
+
+  assert.deepEqual(input.mechanics, {
+    weather: "clear",
+    carryAttackDurationEffectsToTriggeredExtraSkillDamage: true,
+    engagement_type: "rally"
+  });
+});
+
 test("compareOutcomeDistribution matches deterministic zero-bias shape", () => {
   const metrics = compareOutcomeDistribution({
     candidate: { n: 1, mu: -186, sigma: 0 },
