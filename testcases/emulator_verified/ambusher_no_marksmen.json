@@ -1,0 +1,61 @@
+[
+  {
+    "test_id": "ambusher_no_marksmen",
+    "description": "Field battle (direct attack, not a rally) , battle 2026-06-07 21:33:44. Pins Ambusher target-order fallback: attacker t10fc8 lancers have Ambusher (tier 7+) and the game report shows it triggering, but the defender fields ZERO marksmen. Game ground truth (defender per-type table): lancers 0 losses / 0 injured / 0 lightly injured, survivors 81,191 of 81,191; ALL defender damage fell on infantry (-3,085 injured, 7,198 lightly injured, 24,495 of 34,778 survivors). Proves ambush order falls back to infantry before lancers when marksmen are absent, i.e. order marksman -> infantry -> lancer, matching config troop_skills.json Ambusher. All hero skills level 5 (skills 1-3 only, widget skill 4 not relevant, no rally/garrison engagement). Survivor totals from Battle Overview Survivors row; per-skill triggers from Battle Details: defender Edith 1/1/1(+31), Renee 10/1/1 (2,373 skill kills), Wayne 10/-/8 (7,266 + 6,333 skill kills); attacker Edith 1/1/1(+25), Renee 10/1/1 (225 skill kills), Lynn 8/1/2 (146 skill kills).",
+    "attacker": {
+      "name": "[PWR]Longlive _Anata",
+      "heroes": {
+        "Edith": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+        "Renee": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+        "Lynn": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+      },
+      "troops": {
+        "infantry_t11_fc8": 94385,
+        "lancer_t10_fc8": 37754,
+        "marksman_t10_fc8": 56632
+      },
+      "stats": {
+        "inf": { "attack": 1214.6, "defense": 1298.7, "lethality": 640.4, "health": 490.2 },
+        "lanc": { "attack": 1220.3, "defense": 1320.2, "lethality": 659.6, "health": 517.7 },
+        "mark": { "attack": 1134.9, "defense": 1177.3, "lethality": 739.1, "health": 565.4 }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminx",
+      "heroes": {
+        "Edith": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+        "Renee": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+        "Wayne": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+      },
+      "troops": {
+        "infantry_t11_fc8": 34778,
+        "lancer_t11_fc8": 81191
+      },
+      "stats": {
+        "inf": { "attack": 1890.1, "defense": 1873.8, "lethality": 1595.0, "health": 1824.8 },
+        "lanc": { "attack": 1710.0, "defense": 1669.8, "lethality": 1183.3, "health": 1081.2 },
+        "mark": { "attack": 1810.0, "defense": 1766.9, "lethality": 1926.7, "health": 1667.3 }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "timestamp": "2026-06-07 21:33",
+        "attacker": 0,
+        "defender": 105686
+      }
+    ],
+    "game_report_detail": {
+      "source": "read-only manual capture of open report, Piddlyminx instance, mail_id 2734682983265503",
+      "battle_overview": {
+        "attacker": { "troops": 188771, "losses": 0, "injured": 56633, "lightly_injured": 132138, "survivors": 0 },
+        "defender": { "troops": 115969, "losses": 0, "injured": 3085, "lightly_injured": 7198, "survivors": 105686 }
+      },
+      "defender_by_type": {
+        "infantry": { "kills": 7132, "losses": 0, "injured": 3085, "lightly_injured": 7198, "survivors": 24495 },
+        "lancer": { "kills": 49501, "losses": 0, "injured": 0, "lightly_injured": 0, "survivors": 81191 }
+      }
+    }
+  }
+]
