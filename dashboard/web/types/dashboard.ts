@@ -46,6 +46,9 @@ export interface RunTestcase {
   passes: number; // 0 | 1
   stat_type: string;
   waived_bool: number; // 0 | 1
+  stat_adjustment_value: number | null;
+  stat_adjustment_mode: string | null;
+  stat_adjustment_unadjusted_json: string | null;
 }
 
 export interface RunTestcaseFile {
@@ -120,6 +123,8 @@ export interface TestcaseDeltaRow {
   delta: number | null;
   passes_a: number | null;
   passes_b: number | null;
+  stat_adjustment_value: number | null;
+  stat_adjustment_mode: string | null;
   status: "improved" | "regressed" | "unchanged" | "added" | "retired" | "skipped";
 }
 
@@ -197,6 +202,9 @@ export interface TestcaseFileHistoryRow {
   passes: number;
   stat_type: string;
   waived_bool: number;
+  stat_adjustment_value: number | null;
+  stat_adjustment_mode: string | null;
+  stat_adjustment_unadjusted_json: string | null;
 }
 
 /**

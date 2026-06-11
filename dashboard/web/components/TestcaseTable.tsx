@@ -4,6 +4,11 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { RunTestcase } from "@/types/dashboard";
 import { testcaseDetailHref } from "@/lib/testcase-href";
+import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
+
+const stickyTh =
+  "sticky top-0 z-10 bg-[var(--sidebar-bg)] px-1.5 py-1 text-left";
+const compactTd = "px-1.5 py-1";
 
 interface TestcaseTableProps {
   testcases: RunTestcase[];
@@ -13,6 +18,7 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
   const [fileFilter, setFileFilter] = useState<string>("__all__");
   const [onlyFailing, setOnlyFailing] = useState(false);
   const [onlyBhSig, setOnlyBhSig] = useState(false);
+  const [onlyAdjusted, setOnlyAdjusted] = useState(false);
   const [showWaived, setShowWaived] = useState(true);
 
   const distinctFiles = useMemo(() => {
@@ -25,10 +31,11 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
       if (fileFilter !== "__all__" && t.file !== fileFilter) return false;
       if (onlyFailing && t.passes !== 0) return false;
       if (onlyBhSig && !((t.q ?? 1) <= 0.05)) return false;
+      if (onlyAdjusted && t.stat_adjustment_value == null) return false;
       if (!showWaived && t.waived_bool === 1) return false;
       return true;
     });
-  }, [testcases, fileFilter, onlyFailing, onlyBhSig, showWaived]);
+  }, [testcases, fileFilter, onlyFailing, onlyBhSig, onlyAdjusted, showWaived]);
 
   if (testcases.length === 0) {
     return (
@@ -86,6 +93,16 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
+            checked={onlyAdjusted}
+            onChange={(e) => setOnlyAdjusted(e.target.checked)}
+            className="rounded"
+          />
+          <span className="text-xs">Only stat-adjusted</span>
+        </label>
+
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
             checked={showWaived}
             onChange={(e) => setShowWaived(e.target.checked)}
             className="rounded"
@@ -101,26 +118,27 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
       {/* Table */}
       <div className="overflow-x-auto">
         <table
-          className="w-full text-xs border-collapse font-mono"
+          className="w-full border-collapse font-mono text-[11px] leading-tight"
           style={{ borderColor: "var(--border-color)" }}
         >
           <thead>
             <tr
-              className="text-left uppercase tracking-wider opacity-50"
+              className="text-left uppercase tracking-wider"
               style={{ borderBottom: "1px solid var(--border-color)" }}
             >
-              <th className="pb-2 pr-3">File</th>
-              <th className="pb-2 pr-3">Testcase</th>
-              <th className="pb-2 pr-3">Idx</th>
-              <th className="pb-2 pr-3">n_sim</th>
-              <th className="pb-2 pr-3">n_game</th>
-              <th className="pb-2 pr-3">mu_sim</th>
-              <th className="pb-2 pr-3">mu_game</th>
-              <th className="pb-2 pr-3">bias%</th>
-              <th className="pb-2 pr-3">t</th>
-              <th className="pb-2 pr-3">q</th>
-              <th className="pb-2 pr-3">Pass</th>
-              <th className="pb-2">Waived</th>
+              <th className={stickyTh}>File</th>
+              <th className={stickyTh}>Case</th>
+              <th className={stickyTh}>#</th>
+              <th className={stickyTh}>Adj</th>
+              <th className={stickyTh}>S n</th>
+              <th className={stickyTh}>G n</th>
+              <th className={stickyTh}>S μ</th>
+              <th className={stickyTh}>G μ</th>
+              <th className={stickyTh}>Bias%</th>
+              <th className={stickyTh}>t</th>
+              <th className={stickyTh}>q</th>
+              <th className={stickyTh}>P</th>
+              <th className={stickyTh}>W</th>
             </tr>
           </thead>
           <tbody>
@@ -138,7 +156,7 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
                       : "transparent",
                   }}
                 >
-                  <td className="py-1.5 pr-3 max-w-40 truncate" title={tc.file}>
+                  <td className={`${compactTd} max-w-32 truncate`} title={tc.file}>
                     <Link
                       href={`${testcaseDetailHref(tc.file)}?tc=${tc.idx}`}
                       className="underline hover:opacity-80"
@@ -147,14 +165,23 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
                       {tc.file}
                     </Link>
                   </td>
-                  <td className="py-1.5 pr-3">{tc.testcase_id}</td>
-                  <td className="py-1.5 pr-3">{tc.idx}</td>
-                  <td className="py-1.5 pr-3">{tc.n_sim}</td>
-                  <td className="py-1.5 pr-3">{tc.n_game}</td>
-                  <td className="py-1.5 pr-3">{tc.mu_sim?.toFixed(4)}</td>
-                  <td className="py-1.5 pr-3">{tc.mu_game?.toFixed(4)}</td>
+                  <td className={`${compactTd} max-w-36 truncate`} title={tc.testcase_id}>{tc.testcase_id}</td>
+                  <td className={compactTd}>{tc.idx}</td>
                   <td
-                    className="py-1.5 pr-3"
+                    className={compactTd}
+                    title={statAdjustmentTitle(
+                      tc.stat_adjustment_value,
+                      tc.stat_adjustment_mode,
+                    )}
+                  >
+                    {formatStatAdjustment(tc.stat_adjustment_value)}
+                  </td>
+                  <td className={compactTd}>{tc.n_sim}</td>
+                  <td className={compactTd}>{tc.n_game}</td>
+                  <td className={compactTd}>{tc.mu_sim?.toFixed(1)}</td>
+                  <td className={compactTd}>{tc.mu_game?.toFixed(1)}</td>
+                  <td
+                    className={compactTd}
                     style={{
                       color:
                         Math.abs(tc.bias_pct ?? 0) > 5 ? "#f38ba8" : "inherit",
@@ -162,16 +189,16 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
                   >
                     {tc.bias_pct?.toFixed(2)}%
                   </td>
-                  <td className="py-1.5 pr-3">{tc.t?.toFixed(3)}</td>
+                  <td className={compactTd}>{tc.t?.toFixed(2)}</td>
                   <td
-                    className="py-1.5 pr-3"
+                    className={compactTd}
                     style={{
                       color: (tc.q ?? 1) <= 0.05 ? "#f38ba8" : "inherit",
                     }}
                   >
-                    {tc.q?.toFixed(4)}
+                    {tc.q?.toPrecision(2)}
                   </td>
-                  <td className="py-1.5 pr-3">
+                  <td className={compactTd}>
                     <span
                       className="inline-block px-1.5 py-0.5 rounded text-xs font-bold"
                       style={{
@@ -183,7 +210,7 @@ export default function TestcaseTable({ testcases }: TestcaseTableProps) {
                       {tc.passes === 1 ? "P" : "F"}
                     </span>
                   </td>
-                  <td className="py-1.5">
+                  <td className={compactTd}>
                     {isWaived ? (
                       <span className="opacity-60 text-xs">W</span>
                     ) : (

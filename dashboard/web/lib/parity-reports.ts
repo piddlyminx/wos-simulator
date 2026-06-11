@@ -56,6 +56,7 @@ export interface ParityComparisonRow {
   sampleCount?: number;
   game: ParityMetric | null;
   baseline: ParityMetric | null;
+  gameStatAdjustment?: ParityStatAdjustment;
 
   // Compatibility fields for pre-Task 5 components.
   matched?: boolean;
@@ -80,6 +81,12 @@ export interface ParityComparisonRow {
   simulatorVsGameBiasRaw?: number;
   simulatorVsGameBiasPct?: number;
   simulatorVsGameZ?: number;
+}
+
+export interface ParityStatAdjustment {
+  value?: number;
+  mode?: string;
+  unadjusted?: ParityMetric;
 }
 
 export interface ParityCaseReport {
@@ -112,6 +119,7 @@ interface ParityReportTestcase {
   sampleCount?: number;
   game?: ParityMetric | null;
   baseline?: ParityMetric | null;
+  gameStatAdjustment?: ParityStatAdjustment;
 }
 
 interface ParityReportCounts {
@@ -293,6 +301,7 @@ function rowFromTestcase(
     sampleCount: testcase.sampleCount,
     game,
     baseline,
+    gameStatAdjustment: testcase.gameStatAdjustment,
 
     matched: baseline !== null || game !== null,
     nSim: baseline?.n_reference,

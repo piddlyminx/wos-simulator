@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { TestcaseDeltaRow } from "@/types/dashboard";
 import { testcaseDetailHref } from "@/lib/testcase-href";
+import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
 
 type FilterMode = "all" | "changed" | "flips" | "added-retired" | "skipped";
 
@@ -27,6 +28,10 @@ const ROW_BG: Record<TestcaseDeltaRow["status"], string> = {
   skipped:   "rgba(249,226,175,0.03)",
   unchanged: "transparent",
 };
+
+const stickyTh =
+  "sticky top-0 z-10 bg-[var(--sidebar-bg)] px-1.5 py-1 text-left";
+const compactTd = "px-1.5 py-1";
 
 interface Props {
   rows: TestcaseDeltaRow[];
@@ -82,21 +87,22 @@ export default function CompareTable({ rows }: Props) {
 
       <div className="overflow-x-auto">
         <table
-          className="w-full text-xs border-collapse font-mono"
+          className="w-full border-collapse font-mono text-[11px] leading-tight"
           style={{ borderColor: "var(--border-color)" }}
         >
           <thead>
             <tr
-              className="text-left uppercase tracking-wider opacity-50"
+              className="text-left uppercase tracking-wider"
               style={{ borderBottom: "1px solid var(--border-color)" }}
             >
-              <th className="pb-2 pr-3">File</th>
-              <th className="pb-2 pr-3">Testcase</th>
-              <th className="pb-2 pr-3">Idx</th>
-              <th className="pb-2 pr-3">Bias A</th>
-              <th className="pb-2 pr-3">Bias B</th>
-              <th className="pb-2 pr-3">Delta</th>
-              <th className="pb-2">Status</th>
+              <th className={stickyTh}>File</th>
+              <th className={stickyTh}>Case</th>
+              <th className={stickyTh}>#</th>
+              <th className={stickyTh}>Adj</th>
+              <th className={stickyTh}>A%</th>
+              <th className={stickyTh}>B%</th>
+              <th className={stickyTh}>Δ%</th>
+              <th className={stickyTh}>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -119,7 +125,7 @@ export default function CompareTable({ rows }: Props) {
                   }}
                 >
                   <td
-                    className="py-1.5 pr-3 max-w-36 truncate"
+                    className={`${compactTd} max-w-28 truncate`}
                     title={row.file}
                   >
                     <Link
@@ -130,22 +136,31 @@ export default function CompareTable({ rows }: Props) {
                       {row.file}
                     </Link>
                   </td>
-                  <td className="py-1.5 pr-3">{row.testcase_id}</td>
-                  <td className="py-1.5 pr-3">{row.idx}</td>
-                  <td className="py-1.5 pr-3">
+                  <td className={`${compactTd} max-w-36 truncate`} title={row.testcase_id}>{row.testcase_id}</td>
+                  <td className={compactTd}>{row.idx}</td>
+                  <td
+                    className={compactTd}
+                    title={statAdjustmentTitle(
+                      row.stat_adjustment_value,
+                      row.stat_adjustment_mode,
+                    )}
+                  >
+                    {formatStatAdjustment(row.stat_adjustment_value)}
+                  </td>
+                  <td className={compactTd}>
                     {row.bias_a != null ? `${row.bias_a.toFixed(2)}%` : "—"}
                   </td>
-                  <td className="py-1.5 pr-3">
+                  <td className={compactTd}>
                     {row.bias_b != null ? `${row.bias_b.toFixed(2)}%` : "—"}
                   </td>
-                  <td className="py-1.5 pr-3" style={{ color: deltaColor }}>
+                  <td className={compactTd} style={{ color: deltaColor }}>
                     {row.delta != null
                       ? `${row.delta > 0 ? "+" : ""}${row.delta.toFixed(2)}%`
                       : "—"}
                   </td>
-                  <td className="py-1.5">
+                  <td className={compactTd}>
                     <span
-                      className="inline-block px-1.5 py-0.5 rounded text-xs"
+                      className="inline-block rounded px-1 py-0.5 text-[10px]"
                       style={{
                         backgroundColor: badge.bg,
                         color: badge.color,

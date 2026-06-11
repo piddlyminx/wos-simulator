@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import type { ParityComparisonRow, ParityMetric } from "@/lib/parity-reports";
+import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
 
 type SortKey =
   | "rank"
@@ -39,6 +40,9 @@ function pass(value: boolean | null | undefined) {
 }
 
 const groupBorderColor = "color-mix(in srgb, var(--border-color) 75%, transparent)";
+const stickyTh =
+  "sticky top-0 z-10 bg-[var(--sidebar-bg)] px-1.5 py-1 text-left";
+const compactTd = "px-1.5 py-1";
 
 function groupStyle(options: { left?: boolean; right?: boolean }) {
   return {
@@ -157,56 +161,57 @@ export default function ParityReportTable({
         </span>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse font-mono text-xs">
+        <table className="w-full border-collapse font-mono text-[11px] leading-tight">
           <thead>
             <tr
-              className="text-left uppercase tracking-wider opacity-50"
+              className="text-left uppercase tracking-wider"
               style={{ borderBottom: "1px solid var(--border-color)" }}
             >
-              <th className="pb-2 pr-3">
+              <th className={stickyTh}>
                 <button type="button" onClick={() => setSort("testcaseId")}>
-                  Testcase
+                  Case
                 </button>
               </th>
-              <th className="pb-2 pr-3">Idx</th>
-              <th className="pb-2 pl-3 pr-3" style={groupStyle({ left: true })}>gameMu</th>
-              <th className="pb-2 pr-3">baselineMu</th>
-              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>
+              <th className={stickyTh}>#</th>
+              <th className={stickyTh}>Adj</th>
+              <th className={stickyTh} style={groupStyle({ left: true })}>G μ</th>
+              <th className={stickyTh}>B μ</th>
+              <th className={stickyTh} style={groupStyle({ right: true })}>
                 <button type="button" onClick={() => setSort("simulatorMu")}>
-                  simulatorMu
+                  S μ
                 </button>
               </th>
-              <th className="pb-2 pl-3 pr-3">gameSd</th>
-              <th className="pb-2 pr-3">baselineSd</th>
-              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>simulatorSd</th>
-              <th className="pb-2 pl-3 pr-3">baselineN</th>
-              <th className="pb-2 pr-3">simulatorN</th>
-              <th className="pb-2 pr-3">baselineRaw</th>
-              <th className="pb-2 pr-3">
+              <th className={stickyTh}>G σ</th>
+              <th className={stickyTh}>B σ</th>
+              <th className={stickyTh} style={groupStyle({ right: true })}>S σ</th>
+              <th className={stickyTh}>B n</th>
+              <th className={stickyTh}>S n</th>
+              <th className={stickyTh}>B raw</th>
+              <th className={stickyTh}>
                 <button type="button" onClick={() => setSort("baselineBiasPct")}>
-                  baseline%
+                  B%
                 </button>
               </th>
-              <th className="pb-2 pr-3">
+              <th className={stickyTh}>
                 <button type="button" onClick={() => setSort("baselineStat")}>
-                  baselineStat
+                  B stat
                 </button>
               </th>
-              <th className="pb-2 pr-3" style={groupStyle({ right: true })}>baselinePass</th>
-              <th className="pb-2 pl-3 pr-3">gameN</th>
-              <th className="pb-2 pr-3">simulatorN</th>
-              <th className="pb-2 pr-3">gameRaw</th>
-              <th className="pb-2 pr-3">
+              <th className={stickyTh} style={groupStyle({ right: true })}>BP</th>
+              <th className={stickyTh}>G n</th>
+              <th className={stickyTh}>S n</th>
+              <th className={stickyTh}>G raw</th>
+              <th className={stickyTh}>
                 <button type="button" onClick={() => setSort("gameBiasPct")}>
-                  game%
+                  G%
                 </button>
               </th>
-              <th className="pb-2">
+              <th className={stickyTh}>
                 <button type="button" onClick={() => setSort("gameStat")}>
-                  gameStat
+                  G stat
                 </button>
               </th>
-              <th className="pb-2 pl-3" style={groupStyle({ right: true })}>gamePass</th>
+              <th className={stickyTh} style={groupStyle({ right: true })}>GP</th>
             </tr>
           </thead>
           <tbody>
@@ -218,7 +223,7 @@ export default function ParityReportTable({
                   style={{ borderBottom: "1px solid var(--border-color)" }}
                 >
                   <td
-                    className="max-w-64 truncate py-1.5 pr-3"
+                    className={`${compactTd} max-w-44 truncate`}
                     title={row.file}
                   >
                     <Link
@@ -229,43 +234,52 @@ export default function ParityReportTable({
                       {row.testcaseId}
                     </Link>
                   </td>
-                  <td className="py-1.5 pr-3">{row.idx}</td>
-                  <td className="py-1.5 pl-3 pr-3" style={groupStyle({ left: true })}>
-                    {fmt(row.game?.mu_reference)}
+                  <td className={compactTd}>{row.idx}</td>
+                  <td
+                    className={compactTd}
+                    title={statAdjustmentTitle(
+                      row.gameStatAdjustment?.value,
+                      row.gameStatAdjustment?.mode,
+                    )}
+                  >
+                    {formatStatAdjustment(row.gameStatAdjustment?.value)}
                   </td>
-                  <td className="py-1.5 pr-3">
-                    {fmt(row.baseline?.mu_reference)}
+                  <td className={compactTd} style={groupStyle({ left: true })}>
+                    {fmt(row.game?.mu_reference, 1)}
                   </td>
-                  <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
-                    {fmt(simulator?.mu_candidate)}
+                  <td className={compactTd}>
+                    {fmt(row.baseline?.mu_reference, 1)}
                   </td>
-                  <td className="py-1.5 pl-3 pr-3">
-                    {fmt(row.game?.sigma_reference)}
+                  <td className={compactTd} style={groupStyle({ right: true })}>
+                    {fmt(simulator?.mu_candidate, 1)}
                   </td>
-                  <td className="py-1.5 pr-3">
-                    {fmt(row.baseline?.sigma_reference)}
+                  <td className={compactTd}>
+                    {fmt(row.game?.sigma_reference, 1)}
                   </td>
-                  <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
-                    {fmt(simulator?.sigma_candidate)}
+                  <td className={compactTd}>
+                    {fmt(row.baseline?.sigma_reference, 1)}
                   </td>
-                  <td className="py-1.5 pl-3 pr-3">
+                  <td className={compactTd} style={groupStyle({ right: true })}>
+                    {fmt(simulator?.sigma_candidate, 1)}
+                  </td>
+                  <td className={compactTd}>
                     {row.baseline?.n_reference ?? "-"}
                   </td>
-                  <td className="py-1.5 pr-3">{row.baseline?.n_candidate ?? "-"}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.baseline?.bias_raw)}</td>
-                  <td className="py-1.5 pr-3">{fmtPct(row.baseline?.bias_pct)}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.baseline?.stat)}</td>
-                  <td className="py-1.5 pr-3" style={groupStyle({ right: true })}>
+                  <td className={compactTd}>{row.baseline?.n_candidate ?? "-"}</td>
+                  <td className={compactTd}>{fmt(row.baseline?.bias_raw, 1)}</td>
+                  <td className={compactTd}>{fmtPct(row.baseline?.bias_pct)}</td>
+                  <td className={compactTd}>{fmt(row.baseline?.stat)}</td>
+                  <td className={compactTd} style={groupStyle({ right: true })}>
                     {pass(row.baseline?.passes)}
                   </td>
-                  <td className="py-1.5 pl-3 pr-3">
+                  <td className={compactTd}>
                     {row.game?.n_reference ?? "-"}
                   </td>
-                  <td className="py-1.5 pr-3">{row.game?.n_candidate ?? "-"}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.game?.bias_raw)}</td>
-                  <td className="py-1.5 pr-3">{fmtPct(row.game?.bias_pct)}</td>
-                  <td className="py-1.5 pr-3">{fmt(row.game?.stat)}</td>
-                  <td className="py-1.5 pl-3" style={groupStyle({ right: true })}>
+                  <td className={compactTd}>{row.game?.n_candidate ?? "-"}</td>
+                  <td className={compactTd}>{fmt(row.game?.bias_raw, 1)}</td>
+                  <td className={compactTd}>{fmtPct(row.game?.bias_pct)}</td>
+                  <td className={compactTd}>{fmt(row.game?.stat)}</td>
+                  <td className={compactTd} style={groupStyle({ right: true })}>
                     {pass(row.game?.passes)}
                   </td>
                 </tr>

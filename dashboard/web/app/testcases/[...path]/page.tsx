@@ -8,9 +8,14 @@ import {
   type TestcaseArmy,
   type TestcaseBattleResult,
 } from "@/lib/testcase-file";
+import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
 import type { TestcaseFileHistoryRow } from "@/types/dashboard";
 import TestcaseHistoryChart from "@/components/TestcaseHistoryChart";
 import MetricCard from "@/components/MetricCard";
+
+const stickyTh =
+  "sticky top-0 z-10 bg-[var(--sidebar-bg)] px-1.5 py-1 text-left";
+const compactTd = "px-1.5 py-1";
 
 export const dynamic = "force-dynamic";
 
@@ -552,25 +557,26 @@ export default async function TestcaseDetailPage({
       ) : (
         <div className="overflow-x-auto">
           <table
-            className="w-full text-xs border-collapse font-mono"
+            className="w-full border-collapse font-mono text-[11px] leading-tight"
             style={{ borderColor: "var(--border-color)" }}
           >
             <thead>
               <tr
-                className="text-left uppercase tracking-wider opacity-50"
+                className="text-left uppercase tracking-wider"
                 style={{ borderBottom: "1px solid var(--border-color)" }}
               >
-                <th className="pb-2 pr-3">Run</th>
-                <th className="pb-2 pr-3">Started</th>
-                <th className="pb-2 pr-3">n_sim</th>
-                <th className="pb-2 pr-3">n_game</th>
-                <th className="pb-2 pr-3">μ sim</th>
-                <th className="pb-2 pr-3">μ game</th>
-                <th className="pb-2 pr-3">bias%</th>
-                <th className="pb-2 pr-3">t</th>
-                <th className="pb-2 pr-3">q</th>
-                <th className="pb-2 pr-3">Pass</th>
-                <th className="pb-2">Waived</th>
+                <th className={stickyTh}>Run</th>
+                <th className={stickyTh}>Start</th>
+                <th className={stickyTh}>Adj</th>
+                <th className={stickyTh}>S n</th>
+                <th className={stickyTh}>G n</th>
+                <th className={stickyTh}>S μ</th>
+                <th className={stickyTh}>G μ</th>
+                <th className={stickyTh}>Bias%</th>
+                <th className={stickyTh}>t</th>
+                <th className={stickyTh}>q</th>
+                <th className={stickyTh}>P</th>
+                <th className={stickyTh}>W</th>
               </tr>
             </thead>
             <tbody>
@@ -588,7 +594,7 @@ export default async function TestcaseDetailPage({
                         : "transparent",
                     }}
                   >
-                    <td className="py-1.5 pr-3">
+                    <td className={compactTd}>
                       <Link
                         href={`/runs/${h.run_id}`}
                         className="underline hover:opacity-80"
@@ -597,15 +603,24 @@ export default async function TestcaseDetailPage({
                         {h.run_id.slice(0, 8)}
                       </Link>
                     </td>
-                    <td className="py-1.5 pr-3 opacity-60">
+                    <td className={`${compactTd} opacity-60`}>
                       {shortDate(h.started_at)}
                     </td>
-                    <td className="py-1.5 pr-3">{h.n_sim}</td>
-                    <td className="py-1.5 pr-3">{h.n_game}</td>
-                    <td className="py-1.5 pr-3">{h.mu_sim?.toFixed(4) ?? "—"}</td>
-                    <td className="py-1.5 pr-3">{h.mu_game?.toFixed(4) ?? "—"}</td>
                     <td
-                      className="py-1.5 pr-3"
+                      className={compactTd}
+                      title={statAdjustmentTitle(
+                        h.stat_adjustment_value,
+                        h.stat_adjustment_mode,
+                      )}
+                    >
+                      {formatStatAdjustment(h.stat_adjustment_value)}
+                    </td>
+                    <td className={compactTd}>{h.n_sim}</td>
+                    <td className={compactTd}>{h.n_game}</td>
+                    <td className={compactTd}>{h.mu_sim?.toFixed(1) ?? "—"}</td>
+                    <td className={compactTd}>{h.mu_game?.toFixed(1) ?? "—"}</td>
+                    <td
+                      className={compactTd}
                       style={{
                         color:
                           Math.abs(h.bias_pct ?? 0) > 5 ? "#f38ba8" : "inherit",
@@ -613,16 +628,16 @@ export default async function TestcaseDetailPage({
                     >
                       {h.bias_pct?.toFixed(2) ?? "—"}%
                     </td>
-                    <td className="py-1.5 pr-3">{h.t?.toFixed(3) ?? "—"}</td>
+                    <td className={compactTd}>{h.t?.toFixed(2) ?? "—"}</td>
                     <td
-                      className="py-1.5 pr-3"
+                      className={compactTd}
                       style={{
                         color: (h.q ?? 1) <= 0.05 ? "#f38ba8" : "inherit",
                       }}
                     >
-                      {h.q?.toFixed(4) ?? "—"}
+                      {h.q?.toPrecision(2) ?? "—"}
                     </td>
-                    <td className="py-1.5 pr-3">
+                    <td className={compactTd}>
                       <span
                         className="inline-block px-1.5 py-0.5 rounded text-xs font-bold"
                         style={{
@@ -634,7 +649,7 @@ export default async function TestcaseDetailPage({
                         {h.passes === 1 ? "P" : "F"}
                       </span>
                     </td>
-                    <td className="py-1.5">
+                    <td className={compactTd}>
                       {isWaived ? (
                         <span className="opacity-60 text-xs">W</span>
                       ) : (

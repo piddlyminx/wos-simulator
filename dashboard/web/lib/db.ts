@@ -741,7 +741,9 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
            SELECT file, testcase_id, idx, bias_pct, passes FROM run_testcases WHERE run_id = :A
          ),
          curr_rows AS (
-           SELECT file, testcase_id, idx, bias_pct, passes FROM run_testcases WHERE run_id = :B
+           SELECT file, testcase_id, idx, bias_pct, passes,
+                  stat_adjustment_value, stat_adjustment_mode
+           FROM run_testcases WHERE run_id = :B
          ),
          all_exec AS (
            SELECT file, testcase_id, idx FROM prev_rows
@@ -756,6 +758,8 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
            c.bias_pct AS bias_b,
            p.passes AS passes_a,
            c.passes AS passes_b,
+           c.stat_adjustment_value AS stat_adjustment_value,
+           c.stat_adjustment_mode AS stat_adjustment_mode,
            cf.included AS curr_included,
            pf.included AS prev_included,
            CASE WHEN cf.file_path IS NOT NULL THEN 1 ELSE 0 END AS in_curr_files,
@@ -777,6 +781,8 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
         bias_b: number | null;
         passes_a: number | null;
         passes_b: number | null;
+        stat_adjustment_value: number | null;
+        stat_adjustment_mode: string | null;
         curr_included: number | null;
         prev_included: number | null;
         in_curr_files: number;
@@ -835,6 +841,8 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
         bias_b: r.bias_b,
         passes_a: r.passes_a,
         passes_b: r.passes_b,
+        stat_adjustment_value: r.stat_adjustment_value,
+        stat_adjustment_mode: r.stat_adjustment_mode,
         delta,
         status,
       };
@@ -1191,7 +1199,9 @@ export function getTestcaseFileHistory(file: string): TestcaseFileHistoryRow[] {
         `SELECT r.id as run_id, r.started_at,
                 rt.testcase_id, rt.idx,
                 rt.n_sim, rt.n_game, rt.mu_sim, rt.mu_game,
-                rt.bias_pct, rt.t, rt.q, rt.passes, rt.stat_type, rt.waived_bool
+                rt.bias_pct, rt.t, rt.q, rt.passes, rt.stat_type, rt.waived_bool,
+                rt.stat_adjustment_value, rt.stat_adjustment_mode,
+                rt.stat_adjustment_unadjusted_json
          FROM run_testcases rt
          JOIN runs r ON rt.run_id = r.id
          WHERE rt.file = ?

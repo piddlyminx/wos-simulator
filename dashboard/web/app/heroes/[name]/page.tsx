@@ -13,6 +13,11 @@ import HeroTrendChart from "@/components/HeroTrendChart";
 import HeroCoverageTimelineChart from "@/components/HeroCoverageTimelineChart";
 import MetricCard from "@/components/MetricCard";
 import { testcaseDetailHref } from "@/lib/testcase-file";
+import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
+
+const stickyTh =
+  "sticky top-0 z-10 bg-[var(--sidebar-bg)] px-1.5 py-1 text-left";
+const compactTd = "px-1.5 py-1";
 
 export const dynamic = "force-dynamic";
 
@@ -303,21 +308,22 @@ export default async function HeroDetailPage({ params }: PageProps) {
         ) : (
           <div className="overflow-x-auto">
             <table
-              className="w-full text-xs border-collapse font-mono"
+              className="w-full border-collapse font-mono text-[11px] leading-tight"
               style={{ borderColor: "var(--border-color)" }}
             >
               <thead>
                 <tr
-                  className="text-left uppercase tracking-wider opacity-50"
+                  className="text-left uppercase tracking-wider"
                   style={{ borderBottom: "1px solid var(--border-color)" }}
                 >
-                  <th className="pb-2 pr-3">File</th>
-                  <th className="pb-2 pr-3">Testcase</th>
-                  <th className="pb-2 pr-3">Idx</th>
-                  <th className="pb-2 pr-3">bias%</th>
-                  <th className="pb-2 pr-3">q</th>
-                  <th className="pb-2 pr-3">Pass</th>
-                  <th className="pb-2">Waived</th>
+                  <th className={stickyTh}>File</th>
+                  <th className={stickyTh}>Case</th>
+                  <th className={stickyTh}>#</th>
+                  <th className={stickyTh}>Adj</th>
+                  <th className={stickyTh}>Bias%</th>
+                  <th className={stickyTh}>q</th>
+                  <th className={stickyTh}>P</th>
+                  <th className={stickyTh}>W</th>
                 </tr>
               </thead>
               <tbody>
@@ -336,7 +342,7 @@ export default async function HeroDetailPage({ params }: PageProps) {
                       }}
                     >
                       <td
-                        className="py-1.5 pr-3 max-w-40 truncate"
+                        className={`${compactTd} max-w-32 truncate`}
                         title={tc.file}
                       >
                         <Link
@@ -347,10 +353,19 @@ export default async function HeroDetailPage({ params }: PageProps) {
                           {tc.file}
                         </Link>
                       </td>
-                      <td className="py-1.5 pr-3">{tc.testcase_id}</td>
-                      <td className="py-1.5 pr-3">{tc.idx}</td>
+                      <td className={`${compactTd} max-w-36 truncate`} title={tc.testcase_id}>{tc.testcase_id}</td>
+                      <td className={compactTd}>{tc.idx}</td>
                       <td
-                        className="py-1.5 pr-3"
+                        className={compactTd}
+                        title={statAdjustmentTitle(
+                          tc.stat_adjustment_value,
+                          tc.stat_adjustment_mode,
+                        )}
+                      >
+                        {formatStatAdjustment(tc.stat_adjustment_value)}
+                      </td>
+                      <td
+                        className={compactTd}
                         style={{
                           color:
                             Math.abs(tc.bias_pct ?? 0) > 5 ? "#f38ba8" : "inherit",
@@ -359,12 +374,12 @@ export default async function HeroDetailPage({ params }: PageProps) {
                         {tc.bias_pct?.toFixed(2)}%
                       </td>
                       <td
-                        className="py-1.5 pr-3"
+                        className={compactTd}
                         style={{ color: (tc.q ?? 1) <= 0.05 ? "#f38ba8" : "inherit" }}
                       >
-                        {tc.q?.toFixed(4)}
+                        {tc.q?.toPrecision(2)}
                       </td>
-                      <td className="py-1.5 pr-3">
+                      <td className={compactTd}>
                         <span
                           className="inline-block px-1.5 py-0.5 rounded text-xs font-bold"
                           style={{
@@ -376,7 +391,7 @@ export default async function HeroDetailPage({ params }: PageProps) {
                           {tc.passes === 1 ? "P" : "F"}
                         </span>
                       </td>
-                      <td className="py-1.5">
+                      <td className={compactTd}>
                         {isWaived ? (
                           <span className="opacity-60 text-xs">W</span>
                         ) : (

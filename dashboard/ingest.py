@@ -126,6 +126,36 @@ def _sha256_file(path: Path) -> Optional[str]:
     return hashlib.sha256(data).hexdigest()
 
 
+def _run_started_at(run_doc: dict) -> Optional[str]:
+    return run_doc.get("started_at") or run_doc.get("createdAt")
+
+
+def _run_finished_at(run_doc: dict) -> Optional[str]:
+    return run_doc.get("finished_at") or run_doc.get("createdAt")
+
+
+def _run_cli_args(run_doc: dict) -> dict:
+    cli_args = run_doc.get("cli_args")
+    if isinstance(cli_args, dict):
+        return cli_args
+    options = run_doc.get("options")
+    return options if isinstance(options, dict) else {}
+
+
+def _game_metric(tc: dict) -> dict:
+    game = tc.get("game")
+    return game if isinstance(game, dict) else tc
+
+
+def _metric_value(metric: dict, new_key: str, old_key: str, default=None):
+    return metric.get(old_key, metric.get(new_key, default))
+
+
+def _stat_adjustment(tc: dict) -> dict | None:
+    adjustment = tc.get("gameStatAdjustment")
+    return adjustment if isinstance(adjustment, dict) else None
+
+
 def record_run(
     run_doc: dict,
     repo_root: Path | str,
@@ -158,7 +188,7 @@ def record_run(
         conn = open_db()
 
     try:
-        finished_at = run_doc.get("finished_at")
+        finished_at = _run_finished_at(run_doc)
         if not finished_at:
             raise ValueError("run_doc missing 'finished_at'")
 
@@ -181,12 +211,13 @@ def record_run(
         waived_flags: dict[str, bool] = {}
 
         for key, tc in testcases.items():
-            bias_pct = tc.get("bias_pct")
+            metric = _game_metric(tc)
+            bias_pct = metric.get("bias_pct")
             if bias_pct is not None:
                 abs_bias_sum += abs(bias_pct)
                 abs_bias_count += 1
 
-            q = tc.get("q")
+            q = metric.get("q")
             if q is not None and q <= 0.05:
                 bh_sig_count += 1
 
@@ -202,7 +233,7 @@ def record_run(
 
             if is_waived:
                 waived += 1
-            elif tc.get("passes"):
+            elif metric.get("passes"):
                 passing += 1
             else:
                 failing += 1
@@ -271,12 +302,12 @@ def record_run(
                 """,
                 (
                     run_id,
-                    run_doc.get("started_at"),
+                    _run_started_at(run_doc),
                     finished_at,
                     run_doc.get("git_sha") or "",
                     1 if run_doc.get("dirty") else 0,
                     run_doc.get("baseline_git_sha"),
-                    json.dumps(run_doc.get("cli_args", {})),
+                    json.dumps(_run_cli_args(run_doc)),
                     json.dumps(run_doc.get("thresholds", {})),
                     overall_avg_error_pct,
                     bh_sig_count,
@@ -291,29 +322,36 @@ def record_run(
             )
 
             for key, tc in testcases.items():
+                metric = _game_metric(tc)
+                adjustment = _stat_adjustment(tc)
                 conn.execute(
                     """
                     INSERT INTO run_testcases (
                         run_id, file, testcase_id, idx,
                         n_sim, n_game, mu_sim, mu_game, bias_pct,
-                        t, q, passes, stat_type, waived_bool
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        t, q, passes, stat_type, waived_bool,
+                        stat_adjustment_value, stat_adjustment_mode,
+                        stat_adjustment_unadjusted_json
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         run_id,
                         tc.get("file", ""),
                         tc.get("testcase_id", ""),
                         tc.get("idx", 0),
-                        tc.get("n_sim", 0),
-                        tc.get("n_game", 0),
-                        tc.get("mu_sim"),
-                        tc.get("mu_game"),
-                        tc.get("bias_pct"),
-                        tc.get("stat"),
-                        tc.get("q"),
-                        1 if tc.get("passes") else 0,
-                        tc.get("stat_type", ""),
+                        _metric_value(metric, "n_candidate", "n_sim", 0),
+                        _metric_value(metric, "n_reference", "n_game", 0),
+                        _metric_value(metric, "mu_candidate", "mu_sim"),
+                        _metric_value(metric, "mu_reference", "mu_game"),
+                        metric.get("bias_pct"),
+                        _metric_value(metric, "stat", "t"),
+                        metric.get("q"),
+                        1 if metric.get("passes") else 0,
+                        metric.get("stat_type", ""),
                         1 if waived_flags.get(key) else 0,
+                        adjustment.get("value") if adjustment else None,
+                        adjustment.get("mode") if adjustment else None,
+                        json.dumps(adjustment.get("unadjusted")) if adjustment else None,
                     ),
                 )
 

@@ -15,6 +15,7 @@ import json
 import os
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -22,6 +23,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SIMULATOR_DIR = REPO_ROOT / "simulator"
 SIMULATOR_REPORT_DIR = SIMULATOR_DIR / "testcase_results"
 DB_PATH = REPO_ROOT / "test_results" / "dashboard.sqlite"
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from dashboard.ingest import open_db, record_run  # noqa: E402
+from dashboard.state_capture import capture_dirty_state  # noqa: E402
 
 
 def now_iso() -> str:
@@ -92,9 +98,85 @@ def latest_parity_report() -> dict[str, Any] | None:
         payload = {}
     counts = payload.get("counts") if isinstance(payload, dict) else None
     return {
+        "absolute_path": str(report),
         "path": str(report.relative_to(REPO_ROOT)),
         "created_at": payload.get("createdAt") if isinstance(payload, dict) else None,
         "counts": counts if isinstance(counts, dict) else None,
+    }
+
+
+def git_sha() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=REPO_ROOT,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return ""
+
+
+def git_dirty() -> bool:
+    try:
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain"],
+            cwd=REPO_ROOT,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+    return bool(status.strip())
+
+
+def ingest_report(report_path: Path, repo_root: Path = REPO_ROOT) -> dict[str, Any] | None:
+    payload = json.loads(report_path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Report at {report_path} is not a JSON object")
+    payload.setdefault("git_sha", git_sha())
+    payload.setdefault("dirty", git_dirty())
+
+    try:
+        dirty_state = capture_dirty_state(repo_root)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        dirty_state = None
+
+    conn = open_db(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    try:
+        run_id = record_run(
+            payload,
+            repo_root,
+            dirty_state=dirty_state,
+            conn=conn,
+        )
+        if run_id is None:
+            return latest_run()
+        row = conn.execute(
+            """
+            SELECT id, started_at, finished_at, overall_avg_error_pct,
+                   bh_sig_count, summary_json
+            FROM runs
+            WHERE id = ?
+            """,
+            (run_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+    if row is None:
+        return None
+    summary = json.loads(row["summary_json"] or "{}")
+    return {
+        "id": row["id"],
+        "started_at": row["started_at"],
+        "finished_at": row["finished_at"],
+        "overall_avg_error_pct": row["overall_avg_error_pct"],
+        "bh_sig_count": row["bh_sig_count"],
+        "total": summary.get("total"),
+        "passing": summary.get("passing"),
+        "failing": summary.get("failing"),
     }
 
 
@@ -106,6 +188,8 @@ def build_command(matching: list[str]) -> list[str]:
         "scripts/run_testcases.ts",
         "--output-dir",
         str(SIMULATOR_REPORT_DIR),
+        "--workers",
+        str(max(os.cpu_count() // 2, 1)),
     ]
     if matching:
         command.extend(["--matching", " ".join(matching)])
@@ -180,7 +264,9 @@ def main() -> int:
         (dt.datetime.now(dt.timezone.utc) - started_monotonic).total_seconds() * 1000
     )
     latest_report = latest_parity_report() if completed.returncode == 0 else None
-    latest = latest_run() if completed.returncode == 0 else None
+    latest = None
+    if latest_report is not None:
+        latest = ingest_report(Path(latest_report["absolute_path"]))
     final_status: dict[str, Any] = {
         **running_status,
         "state": "succeeded" if completed.returncode == 0 else "failed",
