@@ -1,6 +1,6 @@
 import type { ActiveEffect, DamageBucketTrace, EffectIntentDefinition, ResolvedFighter, SideId, SkillFile, StatBlock, UnitType } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import type { BucketRole } from "./damageBuckets";
+import { BUCKET_DEFINITIONS, bucketDefinition, STATIC_BUCKETS, type BucketPlacement, type BucketRole, type BucketValueType } from "./damageBuckets";
 import { currentEffectValuePct } from "./effects";
 
 export interface StaticDamageProfileTerm {
@@ -49,16 +49,10 @@ export type StaticPlayerBucket = (typeof STATIC_PLAYER_BUCKETS)[number];
 export type StaticPassiveBucket = (typeof STATIC_PASSIVE_BUCKETS)[number];
 export type StaticDamageBucket = StaticRawBucket | StaticPlayerBucket | StaticPassiveBucket;
 
-const STATIC_PASSIVE_BUCKET_ROLES: Record<StaticPassiveBucket, BucketRole> = {
-  "passive.attack.up": "attacker",
-  "passive.attack.down": "attacker",
-  "passive.lethality.up": "attacker",
-  "passive.lethality.down": "attacker",
-  "passive.health.up": "defender",
-  "passive.health.down": "defender",
-  "passive.defense.up": "defender",
-  "passive.defense.down": "defender"
-};
+// Roles are owned by the BUCKETS tree (single source of truth); derive, do not redeclare.
+const STATIC_PASSIVE_BUCKET_ROLES = Object.fromEntries(
+  STATIC_PASSIVE_BUCKETS.map((bucket) => [bucket, bucketDefinition(bucket)!.role])
+) as Record<StaticPassiveBucket, BucketRole>;
 
 export function buildStaticDamageProfile(fighters: Record<SideId, ResolvedFighter>, activeEffects: ActiveEffect[]): StaticDamageProfile {
   const profile: StaticDamageProfile = {
@@ -193,35 +187,51 @@ function recomputeFactors(profile: StaticDamageProfile): void {
   }
 }
 
+interface StaticFactorTerm {
+  bucket: StaticDamageBucket;
+  valueType: BucketValueType;
+  placement: BucketPlacement;
+}
+
+// The closed-pool aggregation is driven entirely by BUCKETS-tree metadata (role/valueType/
+// placement); there is no second hand-written damage equation. Iteration follows tree
+// insertion order, which fixes the numerator/denominator float association — do not reorder
+// the static families in the tree without re-validating the parity gate.
+const STATIC_FACTOR_TERMS_BY_ROLE: Record<BucketRole, StaticFactorTerm[]> = { attacker: [], defender: [] };
+for (const path of Object.keys(BUCKET_DEFINITIONS)) {
+  const definition = BUCKET_DEFINITIONS[path];
+  if (definition.phase !== "static") continue;
+  STATIC_FACTOR_TERMS_BY_ROLE[definition.role].push({
+    bucket: path as StaticDamageBucket,
+    valueType: definition.valueType,
+    placement: definition.placement
+  });
+}
+
+function roleFactor(entry: StaticDamageProfileEntry, terms: StaticFactorTerm[]): number {
+  let numerator = 1;
+  let denominator = 1;
+  for (const term of terms) {
+    const value = term.valueType === "raw" ? raw(entry, term.bucket) : pct(entry, term.bucket);
+    if (term.placement === "numerator") numerator *= value;
+    else denominator *= value;
+  }
+  return numerator / denominator;
+}
+
 function offenseFactor(entry: StaticDamageProfileEntry): number {
-  return (
-    raw(entry, "troops.baseAttack") *
-    raw(entry, "troops.baseLethality") *
-    pct(entry, "player.attack") *
-    pct(entry, "player.lethality") *
-    pct(entry, "passive.attack.up") *
-    pct(entry, "passive.lethality.up") /
-    (pct(entry, "passive.attack.down") * pct(entry, "passive.lethality.down"))
-  );
+  return roleFactor(entry, STATIC_FACTOR_TERMS_BY_ROLE.attacker);
 }
 
 function defenseFactor(entry: StaticDamageProfileEntry): number {
-  return (
-    (pct(entry, "passive.health.down") * pct(entry, "passive.defense.down")) /
-    (raw(entry, "troops.baseHealth") *
-      raw(entry, "troops.baseDefense") *
-      pct(entry, "player.health") *
-      pct(entry, "player.defense") *
-      pct(entry, "passive.health.up") *
-      pct(entry, "passive.defense.up"))
-  );
+  return roleFactor(entry, STATIC_FACTOR_TERMS_BY_ROLE.defender);
 }
 
-function raw(entry: StaticDamageProfileEntry, bucket: StaticRawBucket): number {
+function raw(entry: StaticDamageProfileEntry, bucket: StaticDamageBucket): number {
   return Math.max(0, entry.buckets[bucket]?.raw ?? 0);
 }
 
-function pct(entry: StaticDamageProfileEntry, bucket: StaticPlayerBucket | StaticPassiveBucket): number {
+function pct(entry: StaticDamageProfileEntry, bucket: StaticDamageBucket): number {
   return 1 + (entry.buckets[bucket]?.totalPct ?? 0) / 100;
 }
 
@@ -262,3 +272,13 @@ function sourceLabel(effect: ActiveEffect): string {
 
 const STATIC_BUCKET_SET = new Set<string>([...STATIC_RAW_BUCKETS, ...STATIC_PLAYER_BUCKETS, ...STATIC_PASSIVE_BUCKETS]);
 const STATIC_PASSIVE_BUCKET_SET = new Set<string>(STATIC_PASSIVE_BUCKETS);
+
+// The typed manifest above is a convenience for literal types; the BUCKETS tree is the
+// authority for which buckets are static. Fail loudly if the two ever drift.
+{
+  const manifest = [...STATIC_BUCKET_SET].sort().join(",");
+  const tree = [...STATIC_BUCKETS].sort().join(",");
+  if (manifest !== tree) {
+    throw new Error(`static bucket manifest drifted from BUCKETS tree:\n  manifest=[${manifest}]\n  tree=[${tree}]`);
+  }
+}

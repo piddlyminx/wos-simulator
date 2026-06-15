@@ -47,7 +47,9 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
   }
 
   const definition = bucketDefinition(effect.intent.type);
-  if (!definition || definition.valueType !== "pct") return;
+  // Static-phase buckets (passive.*) are aggregated by the static damage profile, not the
+  // per-job runtime path, so they must not enter the damage job-shape index.
+  if (!definition || definition.valueType !== "pct" || definition.phase === "static") return;
 
   const jobKinds: DamageKind[] = definition.appliesTo ? [definition.appliesTo] : ["normal", "skill"];
   const appliesToUnits = unitsFromMask(effect.appliesTo.units);
