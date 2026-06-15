@@ -25,7 +25,7 @@
             32,
             40
           ],
-          "same_effect_stacking": "add",
+          "same_effect_stacking": "max",
           "units": {
             "applies_to": "all",
             "applies_vs": "any"

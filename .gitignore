@@ -5,6 +5,7 @@ __pycache__
 .pytest_cache/
 .venv/
 .history
+.vscode/
 battle_specs_manual
 tmp
 test_results/runs/
