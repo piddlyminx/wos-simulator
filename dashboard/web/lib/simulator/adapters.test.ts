@@ -36,7 +36,7 @@ const request: SimulateRequestPayload = {
 test("toBattleInput maps dashboard payload to simulator BattleInput", () => {
   const input = toBattleInput(request, "seed-a");
   assert.equal(input.seed, "seed-a");
-  assert.equal(input.mechanics?.engagement_type, "rally");
+  assert.equal(input.engagement_type, "rally");
   assert.deepEqual(input.attacker.troops, { infantry_t6: 100, lancer_t6: 50, marksman_t6: 25 });
   const heroes = input.attacker.heroes as Record<string, Record<string, number>>;
   const joiners = input.attacker.joiner_heroes as Record<string, Record<string, number>>;

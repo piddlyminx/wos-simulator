@@ -1,4 +1,5 @@
 import type { BattleInput, FighterInput, SimulatorConfig, SkillFile, StatBlock, UnitType } from "../../simulator/src/types";
+import { BattleInputBuilder } from "../../simulator/src/battleInputBuilder";
 import type { Team } from "./types";
 
 export function teamToBattleInput(
@@ -8,13 +9,14 @@ export function teamToBattleInput(
   config: SimulatorConfig,
   playerStats?: Record<UnitType, StatBlock>
 ): BattleInput {
-  return {
-    attacker: teamToFighterInput(attacker, config, playerStats),
-    defender: teamToFighterInput(defender, config, playerStats),
-    seed,
-    maxRounds: 600,
-    mechanics: { hero_generation_stats: true, engagement_type: "rally" }
-  };
+  return new BattleInputBuilder(config)
+    .fighter("attacker", teamToFighterInput(attacker, config, playerStats))
+    .fighter("defender", teamToFighterInput(defender, config, playerStats))
+    .seed(seed)
+    .maxRounds(600)
+    .engagement("rally")
+    .addHeroGenerationStats()
+    .build();
 }
 
 export function teamToFighterInput(team: Team, config: SimulatorConfig, playerStats?: Record<UnitType, StatBlock>): FighterInput {

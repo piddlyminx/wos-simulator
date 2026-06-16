@@ -26,7 +26,6 @@ export interface TestcaseRunOptions {
   repeat?: number;
   seed?: string | number;
   workers?: number;
-  mechanics?: Record<string, unknown>;
 }
 
 export interface TestcaseCaseReport {
@@ -207,7 +206,7 @@ export function prepareTestcaseCases(options: TestcaseRunOptions): { filesFound:
       const detail = emptyCaseReport(reportFile, testcaseId, index, diagnostics);
       const preparedCase: PreparedTestcaseCase = { file, reportFile, entry, testcaseId, index, detail };
       try {
-        preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed, mechanics: options.mechanics }, diagnostics);
+        preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed }, diagnostics);
         preparedCase.key = snapshotKey(reportFile, index);
       } catch (error) {
         detail.error = errorMessage(error);
@@ -615,14 +614,14 @@ export function buildSummaryForOutput(report: TestcaseRunReport): TestcaseSummar
 
 export function adaptTestcaseEntry(
   entry: unknown,
-  options: { seed?: string | number; mechanics?: Record<string, unknown> } = {},
+  options: { seed?: string | number } = {},
   diagnostics: string[] = []
 ): BattleInput {
   const object = entry as {
     attacker?: FighterInput;
     defender?: FighterInput;
     test_id?: string;
-    mechanics?: Record<string, unknown>;
+    mechanics?: { engagement_type?: unknown; engagementType?: unknown };
     engagement_type?: unknown;
     engagementType?: unknown;
     maxRounds?: unknown;
@@ -630,14 +629,14 @@ export function adaptTestcaseEntry(
   };
   if (!object.attacker || !object.defender) throw new Error(`Testcase ${object.test_id ?? "(unknown)"} is missing attacker or defender`);
   diagnostics.push(...diagnoseFighterShape("attacker", object.attacker), ...diagnoseFighterShape("defender", object.defender));
-  const mechanics = testcaseMechanics(object, options.mechanics);
+  const engagementType = engagementTypeFromEntry(object);
   const maxRounds = optionalNumber(object.maxRounds ?? object.max_rounds);
   return {
     attacker: object.attacker,
     defender: object.defender,
     seed: options.seed,
     ...(maxRounds !== undefined ? { maxRounds } : {}),
-    ...(mechanics ? { mechanics } : {})
+    ...(engagementType !== undefined ? { engagement_type: engagementType } : {})
   };
 }
 
@@ -705,15 +704,14 @@ function diagnoseFighterShape(side: string, fighter: FighterInput): string[] {
   return diagnostics;
 }
 
-function testcaseMechanics(
-  entry: { mechanics?: Record<string, unknown>; engagement_type?: unknown; engagementType?: unknown },
-  optionMechanics?: Record<string, unknown>
-): Record<string, unknown> | undefined {
-  const mechanics = entry.mechanics && typeof entry.mechanics === "object" ? { ...entry.mechanics } : {};
-  if (optionMechanics && typeof optionMechanics === "object") Object.assign(mechanics, optionMechanics);
-  if (entry.engagement_type !== undefined) mechanics.engagement_type = entry.engagement_type;
-  if (entry.engagementType !== undefined) mechanics.engagementType = entry.engagementType;
-  return Object.keys(mechanics).length > 0 ? mechanics : undefined;
+function engagementTypeFromEntry(entry: {
+  mechanics?: { engagement_type?: unknown; engagementType?: unknown };
+  engagement_type?: unknown;
+  engagementType?: unknown;
+}): string | undefined {
+  const value =
+    entry.engagement_type ?? entry.engagementType ?? entry.mechanics?.engagement_type ?? entry.mechanics?.engagementType;
+  return value === undefined ? undefined : String(value);
 }
 
 function visibilityFromResult(result: BattleResult | undefined): TestcaseCaseReport["visibility"] {

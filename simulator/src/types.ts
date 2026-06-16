@@ -162,7 +162,8 @@ export interface BattleInput {
   defender: FighterInput;
   seed?: string | number;
   maxRounds?: number;
-  mechanics?: Record<string, unknown>;
+  // The type of battle (e.g. "rally", "garrison"); gates engagement-specific hero skills.
+  engagement_type?: string;
 }
 
 // fast: signed-score only (no per-attack outcomes); standard: attack-by-attack
@@ -199,7 +200,6 @@ export interface ResolvedSkill {
 export interface ResolvedHero {
   name: string;
   heroGeneration?: string;
-  generationStats: StatBlock;
   skillIds: string[];
   instanceId?: string;
   role?: "main" | "joiner";

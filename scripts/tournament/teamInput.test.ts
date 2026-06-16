@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { loadSimulatorConfig } from "../../simulator/src/config";
 import { simulateBattle } from "../../simulator/src/simulator";
+import { applyHeroGenerationStats } from "../../simulator/src/resolve";
 import { teamToBattleInput, teamToFighterInput } from "./teamInput";
 import type { HeroInputEntry } from "../../simulator/src/types";
 import type { Team } from "./types";
@@ -30,23 +31,28 @@ test("teamToFighterInput maps mains and repeated joiners to array hero inputs", 
   );
 });
 
-test("teamToBattleInput sets max rounds, seed, and hero generation mechanics", () => {
-  const input = teamToBattleInput(sampleTeam, sampleTeam, 123, loadSimulatorConfig());
+test("teamToBattleInput sets max rounds, seed, engagement type, and bakes hero generation stats", () => {
+  const config = loadSimulatorConfig();
+  const input = teamToBattleInput(sampleTeam, sampleTeam, 123, config);
   assert.equal(input.maxRounds, 600);
   assert.equal(input.seed, 123);
-  assert.deepEqual(input.mechanics, { hero_generation_stats: true, engagement_type: "rally" });
+  assert.equal(input.engagement_type, "rally");
+  // No player stats supplied, so the fighter's stats come entirely from baked hero generation stats.
+  assert.deepEqual(input.attacker.stats, applyHeroGenerationStats(teamToFighterInput(sampleTeam, config), config).stats);
 });
 
-test("teamToBattleInput applies supplied player stats to both fighters", () => {
+test("teamToBattleInput applies supplied player stats (plus baked generation stats) to both fighters", () => {
+  const config = loadSimulatorConfig();
   const playerStats = {
     infantry: { attack: 1, defense: 2, lethality: 3, health: 4 },
     lancer: { attack: 5, defense: 6, lethality: 7, health: 8 },
     marksman: { attack: 9, defense: 10, lethality: 11, health: 12 }
   };
-  const input = teamToBattleInput(sampleTeam, sampleTeam, 123, loadSimulatorConfig(), playerStats);
+  const input = teamToBattleInput(sampleTeam, sampleTeam, 123, config, playerStats);
+  const expected = applyHeroGenerationStats(teamToFighterInput(sampleTeam, config, playerStats), config).stats;
 
-  assert.deepEqual(input.attacker.stats, playerStats);
-  assert.deepEqual(input.defender.stats, playerStats);
+  assert.deepEqual(input.attacker.stats, expected);
+  assert.deepEqual(input.defender.stats, expected);
 });
 
 test("teamToBattleInput activates rally attacker and garrison defender widgets", () => {

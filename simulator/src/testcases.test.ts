@@ -273,35 +273,26 @@ test("runTestcases reports a parity summary from calibration JSON", () => {
   assert.equal(report.counts.comparedToBaseline, 1);
 });
 
-test("adaptTestcaseEntry passes testcase mechanics and engagement aliases into BattleInput", () => {
+test("adaptTestcaseEntry promotes engagement_type to a top-level BattleInput key", () => {
   const input = adaptTestcaseEntry({
-    test_id: "mechanics_case",
+    test_id: "engagement_case",
     engagement_type: "rally",
-    mechanics: { weather: "clear" },
     attacker: { troops: { infantry_t1: 1 } },
     defender: { troops: { infantry_t1: 1 } }
   });
 
-  assert.deepEqual(input.mechanics, { weather: "clear", engagement_type: "rally" });
+  assert.equal(input.engagement_type, "rally");
 });
 
-test("adaptTestcaseEntry merges option mechanics without replacing testcase mechanics", () => {
-  const input = adaptTestcaseEntry(
-    {
-      test_id: "mechanics_case",
-      engagement_type: "rally",
-      mechanics: { weather: "clear" },
-      attacker: { troops: { infantry_t1: 1 } },
-      defender: { troops: { infantry_t1: 1 } }
-    },
-    { mechanics: { option_override: true } }
-  );
-
-  assert.deepEqual(input.mechanics, {
-    weather: "clear",
-    option_override: true,
-    engagement_type: "rally"
+test("adaptTestcaseEntry reads engagement_type nested under a legacy mechanics object", () => {
+  const input = adaptTestcaseEntry({
+    test_id: "nested_engagement_case",
+    mechanics: { engagement_type: "garrison" },
+    attacker: { troops: { infantry_t1: 1 } },
+    defender: { troops: { infantry_t1: 1 } }
   });
+
+  assert.equal(input.engagement_type, "garrison");
 });
 
 test("compareOutcomeDistribution matches deterministic zero-bias shape", () => {

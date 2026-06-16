@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
-import { resolveFighter } from "./resolve";
+import { applyHeroGenerationStats, resolveFighter } from "./resolve";
 import { simulateBattle, signedRemainingScore } from "./simulator";
 import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types";
 
@@ -234,7 +234,7 @@ test("display-name hero aliases resolve to simulator hero definitions", () => {
   assert.equal(fighter.diagnostics.some((line) => line.includes("Missing hero definition")), false);
 });
 
-test("hero generation stats are opt-in because testcase stats are authoritative", () => {
+test("applyHeroGenerationStats bakes main hero generation stats into authoritative input stats", () => {
   const config = minimalConfig({
     Example: {
       name: "Example",
@@ -250,10 +250,10 @@ test("hero generation stats are opt-in because testcase stats are authoritative"
   };
 
   const defaultFighter = resolveFighter(input, "attacker", config);
-  const optInFighter = resolveFighter(input, "attacker", config, { hero_generation_stats: true });
+  const bakedFighter = resolveFighter(applyHeroGenerationStats(input, config), "attacker", config);
 
   assert.deepEqual(defaultFighter.statBonuses.infantry, { attack: 1, defense: 2, lethality: 3, health: 4 });
-  assert.deepEqual(optInFighter.statBonuses.infantry, { attack: 51, defense: 42, lethality: 33, health: 24 });
+  assert.deepEqual(bakedFighter.statBonuses.infantry, { attack: 51, defense: 42, lethality: 33, health: 24 });
 });
 
 test("array joiner heroes preserve duplicate skill instances", () => {
@@ -324,15 +324,17 @@ test("joiner hero generation stats are not applied when main hero stats are enab
   config.heroGenerationStats.S2 = { attack: 100, defense: 200, lethality: 300, health: 400 };
 
   const fighter = resolveFighter(
-    {
-      troops: { infantry_t1: 10 },
-      stats: { inf: { attack: 1, defense: 2, lethality: 3, health: 4 } },
-      heroes: [{ name: "Main", levels: {} }],
-      joiner_heroes: [{ name: "Joiner", levels: { skill_1: 1 } }]
-    },
+    applyHeroGenerationStats(
+      {
+        troops: { infantry_t1: 10 },
+        stats: { inf: { attack: 1, defense: 2, lethality: 3, health: 4 } },
+        heroes: [{ name: "Main", levels: {} }],
+        joiner_heroes: [{ name: "Joiner", levels: { skill_1: 1 } }]
+      },
+      config
+    ),
     "attacker",
-    config,
-    { hero_generation_stats: true }
+    config
   );
 
   assert.deepEqual(fighter.statBonuses.infantry, { attack: 11, defense: 22, lethality: 33, health: 44 });
@@ -1468,8 +1470,8 @@ test("engagement_type requirements decide whether hero skills resolve", () => {
   };
 
   const defaultResult = simulateBattle(input, config);
-  const rallyResult = simulateBattle({ ...input, mechanics: { engagement_type: "rally" } }, config);
-  const garrisonResult = simulateBattle({ ...input, mechanics: { engagement_type: "garrison" } }, config);
+  const rallyResult = simulateBattle({ ...input, engagement_type: "rally" }, config);
+  const garrisonResult = simulateBattle({ ...input, engagement_type: "garrison" }, config);
 
   assert.equal(skillActivations(defaultResult, "RallyOnly"), 0);
   assert.equal(skillActivations(defaultResult, "GarrisonOnly"), 0);
@@ -1503,7 +1505,7 @@ test("rally engagement resolves hero widget roles by owning side", () => {
   });
   const input = {
     maxRounds: 0,
-    mechanics: { engagement_type: "rally" },
+    engagement_type: "rally",
     attacker: {
       troops: { infantry_t1: 10 },
       heroes: { Gated: { skill_1: 1, skill_2: 1 } }
@@ -1663,7 +1665,7 @@ test("fast simulation matches full semantic output without detailed attacks", ()
       input: {
         maxRounds: 8,
         seed: "fast-real-heroes",
-        mechanics: { hero_generation_stats: true, engagement_type: "rally" },
+        engagement_type: "rally",
         attacker: {
           troops: { infantry_t10: 500, lancer_t10: 200, marksman_t10: 300 },
           heroes: { "Wu Ming": { skill_1: 5, skill_2: 5, skill_3: 5 }, Mia: { skill_1: 5, skill_2: 5, skill_3: 5 } },
@@ -1694,7 +1696,7 @@ test("signedRemainingScore returns signed remaining troops from a fast-mode resu
   const input: BattleInput = {
     maxRounds: 8,
     seed: "score-real-heroes",
-    mechanics: { hero_generation_stats: true, engagement_type: "rally" },
+    engagement_type: "rally",
     attacker: {
       troops: { infantry_t10: 500, lancer_t10: 200, marksman_t10: 300 },
       heroes: { "Wu Ming": { skill_1: 5, skill_2: 5, skill_3: 5 }, Mia: { skill_1: 5, skill_2: 5, skill_3: 5 } },

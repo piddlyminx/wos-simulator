@@ -9,7 +9,7 @@ export function toBattleInput(request: SimulateRequestPayload, seed: string | nu
     defender: toFighterInput(request.defender, request.attacker),
     seed,
     maxRounds: 1500,
-    mechanics: request.rally_mode ? { engagement_type: "rally" } : undefined,
+    ...(request.rally_mode ? { engagement_type: "rally" } : {}),
   };
 }
 

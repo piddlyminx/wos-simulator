@@ -104,8 +104,8 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig, opti
 }
 
 function runBattle(input: BattleInput, config: SimulatorConfig, options: SimulationOptions): BattleRun {
-  const attacker = resolveFighter(input.attacker, "attacker", config, input.mechanics);
-  const defender = resolveFighter(input.defender, "defender", config, input.mechanics);
+  const attacker = resolveFighter(input.attacker, "attacker", config, input.engagement_type);
+  const defender = resolveFighter(input.defender, "defender", config, input.engagement_type);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
   const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"));
   const mode = options.mode ?? "standard";

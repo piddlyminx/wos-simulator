@@ -2,7 +2,6 @@ import type {
   EffectIntentDefinition,
   FighterInput,
   HeroInputCollection,
-  BattleInput,
   ResolvedFighter,
   ResolvedHero,
   ResolvedSkill,
@@ -19,7 +18,7 @@ import { UNIT_TYPES } from "./types";
 import { normalizeEngagementType } from "./effects";
 import { addStats, normalizeStatBlock, normalizeUnitType, valueAtLevel, zeroStats } from "./normalize";
 
-export function resolveFighter(input: FighterInput, side: SideId, config: SimulatorConfig, mechanics?: BattleInput["mechanics"]): ResolvedFighter {
+export function resolveFighter(input: FighterInput, side: SideId, config: SimulatorConfig, engagementType?: string): ResolvedFighter {
   const diagnostics: string[] = [];
   const troops = emptyTroops();
   const initialTroops = emptyTroops();
@@ -75,9 +74,9 @@ export function resolveFighter(input: FighterInput, side: SideId, config: Simula
   }
 
   const statBonuses = resolveInputStatBonuses(input.stats);
-  const heroes = resolveHeroes(input, side, config, statBonuses, diagnostics, mechanics);
-  const heroSkills = resolveHeroSkills(input, side, config, diagnostics, mechanics);
-  const troopSkills = resolveTroopSkills(side, troopDetails, config, mechanics);
+  const heroes = resolveHeroes(input, side, config, diagnostics, engagementType);
+  const heroSkills = resolveHeroSkills(input, side, config, diagnostics, engagementType);
+  const troopSkills = resolveTroopSkills(side, troopDetails, config, engagementType);
 
   return {
     side,
@@ -111,6 +110,25 @@ function resolveInputStatBonuses(stats: FighterInput["stats"]): Record<UnitType,
     }
   }
   return byUnit;
+}
+
+// Build-time scaffolding: fold the summed generation-stat block of all MAIN heroes into
+// each unit's stat block, so the simulator can treat FighterInput.stats as authoritative.
+// Equivalent to the former in-resolver hero_generation_stats fold, but materialised into the
+// input rather than applied during resolution.
+export function applyHeroGenerationStats(input: FighterInput, config: SimulatorConfig): FighterInput {
+  let bonus = zeroStats();
+  for (const instance of heroInputInstances(input)) {
+    if (instance.role !== "main") continue;
+    const resolvedHeroName = resolveHeroDefinitionKey(instance.name, config);
+    const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
+    if (!definition) continue;
+    bonus = addStats(bonus, normalizeStatBlock(config.heroGenerationStats[definition.hero_generation ?? ""] as Record<string, unknown>));
+  }
+  const byUnit = resolveInputStatBonuses(input.stats);
+  const stats: Record<string, StatBlock> = {};
+  for (const unit of UNIT_TYPES) stats[unit] = addStats(byUnit[unit], bonus);
+  return { ...input, stats };
 }
 
 interface HeroInputInstance {
@@ -147,9 +165,8 @@ function resolveHeroes(
   input: FighterInput,
   side: SideId,
   config: SimulatorConfig,
-  statBonuses: Record<UnitType, StatBlock>,
   diagnostics: string[],
-  mechanics?: BattleInput["mechanics"]
+  engagementType?: string
 ): ResolvedHero[] {
   const heroes: ResolvedHero[] = [];
   for (const instance of heroInputInstances(input)) {
@@ -159,7 +176,6 @@ function resolveHeroes(
       diagnostics.push(`Missing hero definition for ${instance.name}`);
       heroes.push({
         name: instance.name,
-        generationStats: zeroStats(),
         skillIds: [],
         instanceId: instance.instanceId,
         role: instance.role,
@@ -167,17 +183,10 @@ function resolveHeroes(
       });
       continue;
     }
-    const generationStats = normalizeStatBlock(config.heroGenerationStats[definition.hero_generation ?? ""] as Record<string, unknown>);
-    if (instance.role === "main" && shouldApplyHeroGenerationStats(mechanics)) {
-      for (const unit of UNIT_TYPES) {
-        statBonuses[unit] = addStats(statBonuses[unit], generationStats);
-      }
-    }
     heroes.push({
       name: definition.name ?? instance.name,
       heroGeneration: definition.hero_generation,
-      generationStats,
-      skillIds: resolveHeroSkillIds(definition, instance.levels, side, mechanics),
+      skillIds: resolveHeroSkillIds(definition, instance.levels, side, engagementType),
       instanceId: instance.instanceId,
       role: instance.role
     });
@@ -191,7 +200,7 @@ function resolveHeroSkills(
   side: SideId,
   config: SimulatorConfig,
   diagnostics: string[],
-  mechanics?: BattleInput["mechanics"]
+  engagementType?: string
 ): ResolvedSkill[] {
   const skills: ResolvedSkill[] = [];
   for (const instance of heroInputInstances(input)) {
@@ -203,7 +212,7 @@ function resolveHeroSkills(
       index += 1;
       const level = Number(instance.levels[`skill_${index}`] ?? instance.levels[skillId] ?? 0);
       if (level <= 0) continue;
-      if (!heroRequirementsSatisfied(rawSkill.requirements, level, side, mechanics)) continue;
+      if (!heroRequirementsSatisfied(rawSkill.requirements, level, side, engagementType)) continue;
       skills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", definition.name ?? resolvedHeroName, undefined, instance.instanceId, instance.role));
     }
   }
@@ -211,13 +220,13 @@ function resolveHeroSkills(
   return skills;
 }
 
-function resolveHeroSkillIds(definition: SkillFile, levelMap: Record<string, number>, side: SideId, mechanics?: BattleInput["mechanics"]): string[] {
+function resolveHeroSkillIds(definition: SkillFile, levelMap: Record<string, number>, side: SideId, engagementType?: string): string[] {
   const ids: string[] = [];
   let index = 0;
   for (const [skillId, rawSkill] of Object.entries(definition.skills ?? {})) {
     index += 1;
     const level = Number(levelMap[`skill_${index}`] ?? levelMap[skillId] ?? 0);
-    if (level > 0 && heroRequirementsSatisfied(rawSkill.requirements, level, side, mechanics)) ids.push(skillId);
+    if (level > 0 && heroRequirementsSatisfied(rawSkill.requirements, level, side, engagementType)) ids.push(skillId);
   }
   return ids;
 }
@@ -226,7 +235,7 @@ function resolveTroopSkills(
   side: SideId,
   troopDetails: Partial<Record<UnitType, ResolvedTroopLine>>,
   config: SimulatorConfig,
-  mechanics?: BattleInput["mechanics"]
+  engagementType?: string
 ): ResolvedSkill[] {
   const skills: ResolvedSkill[] = [];
   for (const [skillId, rawSkill] of Object.entries(config.troopSkills.skills ?? {})) {
@@ -244,46 +253,38 @@ function resolveTroopSkills(
       .filter((req) => (req.type === "tier" ? troop.tier >= Number(req.value) : req.type === "fc" ? troop.fc >= Number(req.value) : false))
       .sort((a, b) => b.level - a.level)[0];
     if (!satisfied) continue;
-    if (!battleRequirementsSatisfied(requirements, satisfied.level, mechanics)) continue;
+    if (!battleRequirementsSatisfied(requirements, satisfied.level, engagementType)) continue;
     skills.push(hydrateSkill(skillId, rawSkill, side, satisfied.level, "troop_skill", undefined, troopType));
   }
   return skills;
 }
 
-function heroRequirementsSatisfied(requirements: SkillRequirement[] | undefined, level: number, side: SideId, mechanics?: BattleInput["mechanics"]): boolean {
+function heroRequirementsSatisfied(requirements: SkillRequirement[] | undefined, level: number, side: SideId, engagementType?: string): boolean {
   return (requirements ?? []).every((requirement) => {
-    if (requirement.type !== "engagement_type") return battleRequirementsSatisfied([requirement], level, mechanics);
+    if (requirement.type !== "engagement_type") return battleRequirementsSatisfied([requirement], level, engagementType);
     if (level < Number(requirement.level ?? 1)) return true;
-    return heroEngagementRequirementSatisfied(requirement, side, mechanics);
+    return heroEngagementRequirementSatisfied(requirement, side, engagementType);
   });
 }
 
-function battleRequirementsSatisfied(requirements: SkillRequirement[], level: number, mechanics?: BattleInput["mechanics"]): boolean {
+function battleRequirementsSatisfied(requirements: SkillRequirement[], level: number, engagementType?: string): boolean {
   return requirements.every((requirement) => {
     if ((requirement.type === "tier" || requirement.type === "fc") && level < Number(requirement.level ?? 1)) return true;
     if (requirement.type !== "engagement_type") return true;
     if (level < Number(requirement.level ?? 1)) return true;
-    return normalizeEngagementType(requirement.value) === currentEngagementType(mechanics);
+    return normalizeEngagementType(requirement.value) === normalizeEngagementType(engagementType);
   });
 }
 
-function heroEngagementRequirementSatisfied(requirement: SkillRequirement, side: SideId, mechanics?: BattleInput["mechanics"]): boolean {
+function heroEngagementRequirementSatisfied(requirement: SkillRequirement, side: SideId, engagementType?: string): boolean {
   const required = normalizeEngagementType(requirement.value);
-  const current = currentEngagementType(mechanics);
+  const current = normalizeEngagementType(engagementType);
   if (required === current) {
     if (current !== "rally") return true;
     return side === "attacker";
   }
   if (required === "garrison" && current === "rally") return side === "defender";
   return false;
-}
-
-function currentEngagementType(mechanics?: BattleInput["mechanics"]): string | undefined {
-  return normalizeEngagementType(mechanics?.engagement_type ?? mechanics?.engagementType);
-}
-
-function shouldApplyHeroGenerationStats(mechanics?: BattleInput["mechanics"]): boolean {
-  return mechanics?.hero_generation_stats === true || mechanics?.heroGenerationStats === true;
 }
 
 function hydrateSkill(

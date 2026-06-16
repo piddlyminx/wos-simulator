@@ -1,5 +1,6 @@
 import { loadSimulatorConfig } from "@simulator/config";
 import { simulateBattle, signedRemainingScore } from "@simulator/simulator";
+import { BattleInputBuilder } from "@simulator/battleInputBuilder";
 import type { BattleInput, FighterInput, SimulatorConfig, SkillFile } from "@simulator/types";
 
 export type MainHeroRole = "inf" | "lanc" | "mark";
@@ -478,13 +479,14 @@ export async function runBattleTasksDirect(
 }
 
 function teamToBattleInput(attacker: Team, defender: Team, seed: number, config: SimulatorConfig): BattleInput {
-  return {
-    attacker: teamToFighterInput(attacker, config),
-    defender: teamToFighterInput(defender, config),
-    seed,
-    maxRounds: 600,
-    mechanics: { hero_generation_stats: true, engagement_type: "rally" },
-  };
+  return new BattleInputBuilder(config)
+    .fighter("attacker", teamToFighterInput(attacker, config))
+    .fighter("defender", teamToFighterInput(defender, config))
+    .seed(seed)
+    .maxRounds(600)
+    .engagement("rally")
+    .addHeroGenerationStats()
+    .build();
 }
 
 function teamToFighterInput(team: Team, config: SimulatorConfig): FighterInput {
