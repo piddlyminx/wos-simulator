@@ -294,12 +294,12 @@ test("adaptTestcaseEntry merges option mechanics without replacing testcase mech
       attacker: { troops: { infantry_t1: 1 } },
       defender: { troops: { infantry_t1: 1 } }
     },
-    { mechanics: { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true } }
+    { mechanics: { option_override: true } }
   );
 
   assert.deepEqual(input.mechanics, {
     weather: "clear",
-    carryAttackDurationEffectsToTriggeredExtraSkillDamage: true,
+    option_override: true,
     engagement_type: "rally"
   });
 });

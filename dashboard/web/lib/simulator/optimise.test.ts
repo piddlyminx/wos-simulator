@@ -42,7 +42,7 @@ test("runOptimizeRatio evaluates candidate battles in fast simulator mode", () =
 
   assert.equal(result.best.infantry_count, 10);
   assert.ok(calls.length > 0);
-  assert.deepEqual(calls.map((options) => options.detail), calls.map(() => "fast"));
+  assert.deepEqual(calls.map((options) => options.mode), calls.map(() => "fast"));
 });
 
 function sampleOptimizePayload(): OptimizeRatioRequestPayload {

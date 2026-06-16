@@ -41,7 +41,7 @@ export function runSimulationTrace(
   options: RunSimulationOptions = {},
 ): SimulateTrace {
   const config = options.config ?? loadSimulatorConfig();
-  const result = simulateBattle({ ...toBattleInput(request, seed), trace: true }, config, { detail: "full" });
+  const result = simulateBattle(toBattleInput(request, seed), config, { mode: "trace" });
   options.onProgress?.(1, 1);
   return battleResultToTrace(result, seed, troopHeroGroupLabels(request));
 }

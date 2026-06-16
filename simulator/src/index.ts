@@ -1,6 +1,6 @@
 export { buildSimulatorConfig, loadSimulatorConfig } from "./config";
 export type { RawSimulatorConfig } from "./config";
-export { simulateBattle } from "./simulator";
+export { simulateBattle, signedRemainingScore } from "./simulator";
 export { discoverTestcaseFiles, runTestcases, adaptTestcaseEntry } from "./testcases";
 export { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration";
 export { classifyEffectForJob } from "./classifier";

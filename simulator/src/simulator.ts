@@ -53,7 +53,6 @@ interface Runtime {
   extraSkillAttackJobsByEffect: Record<string, number>;
   attackControlCounts: { dodge: number; no_attack: number };
   consumedEffectUseKeys: Set<string>;
-  carryAttackDurationEffectsToTriggeredExtraSkillDamage: boolean;
   counters: {
     attacks: Record<SideId, Record<UnitType, number>>;
     received: Record<SideId, Record<UnitType, number>>;
@@ -104,18 +103,14 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig, opti
   };
 }
 
-export function simulateBattleScore(input: BattleInput, config: SimulatorConfig): number {
-  const run = runBattle(input, config, { detail: "fast" });
-  return signedRemainingScore(run.winner, run.fighters);
-}
-
 function runBattle(input: BattleInput, config: SimulatorConfig, options: SimulationOptions): BattleRun {
   const attacker = resolveFighter(input.attacker, "attacker", config, input.mechanics);
   const defender = resolveFighter(input.defender, "defender", config, input.mechanics);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
-  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"), input.mechanics);
-  const detail = options.detail ?? "full";
-  const traceEnabled = detail === "full" && input.trace;
+  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"));
+  const mode = options.mode ?? "standard";
+  const detail = mode === "fast" ? "fast" : "full";
+  const traceEnabled = mode === "trace";
   const trace: BattleTrace | undefined = traceEnabled ? { resolved: buildResolved(attacker, defender), rounds: [] } : undefined;
   const attacks: AttackOutcome[] = [];
   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
@@ -290,7 +285,7 @@ function hasChanceTrigger(skill: ResolvedSkill): boolean {
   return Number.isFinite(value) && value > 0 && value < 100;
 }
 
-function createRuntime(fighters: ResolvedFighter[], rng: Rng, mechanics?: BattleInput["mechanics"]): Runtime {
+function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
   const reports: Record<SideId, Map<string, SkillReportEntry>> = { attacker: new Map(), defender: new Map() };
   const skills = buildRuntimeSkills(fighters);
   for (const fighter of fighters) {
@@ -322,7 +317,6 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng, mechanics?: Battle
     extraSkillAttackJobsByEffect: {},
     attackControlCounts: { dodge: 0, no_attack: 0 },
     consumedEffectUseKeys: new Set(),
-    carryAttackDurationEffectsToTriggeredExtraSkillDamage: mechanics?.carryAttackDurationEffectsToTriggeredExtraSkillDamage === true,
     counters: {
       attacks: { attacker: emptyTroops(), defender: emptyTroops() },
       received: { attacker: emptyTroops(), defender: emptyTroops() }
@@ -515,9 +509,6 @@ function extraSkillJobs(
   roundStartTroops: DamageJob["roundStartTroops"]
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
-  const carriedAttackDurationEffectIds = runtime.carryAttackDurationEffectsToTriggeredExtraSkillDamage
-    ? attackDurationBucketEffectIdsForJob(normalAttack, round, runtime.activeEffects)
-    : undefined;
   const effectGroups = selectStackedExtraAttackEffectGroups(
     runtime.effectIndex.extraAttacks.filter((effect) => isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
     round
@@ -553,7 +544,6 @@ function extraSkillJobs(
             sourceEffectId,
             sourceSkillReportKey,
             sourceMultiplier: multiplier,
-            carriedAttackDurationEffectIds,
             consumedEffectIds,
             consumedEffectUseKey,
             consumedEffectUseId: effect.id,
@@ -755,16 +745,6 @@ function attackDurationEffectIdsForJob(job: DamageJob, round: number, effects: A
     .map((effect) => effect.id);
 }
 
-function attackDurationBucketEffectIdsForJob(job: DamageJob, round: number, effects: ActiveEffect[]): string[] {
-  return effects
-    .filter((effect) => {
-      if (effect.kind === "extra_attack" || effect.duration.type !== "attack" || !isEffectActive(effect, round)) return false;
-      const classification = classifyEffectForJob(effect, job);
-      return classification?.kind === "bucket";
-    })
-    .map((effect) => effect.id);
-}
-
 function consumeEffects(
   runtime: Runtime,
   consumedEffectIds: string[],
@@ -802,9 +782,11 @@ function winnerFor(fighters: Record<SideId, ResolvedFighter>): SideId | undefine
   return undefined;
 }
 
-function signedRemainingScore(winner: SideId | "draw", fighters: Record<SideId, ResolvedFighter>): number {
-  if (winner === "attacker") return total(ceilTroops(fighters.attacker.troops));
-  if (winner === "defender") return -total(ceilTroops(fighters.defender.troops));
+// Signed battle outcome: positive = attacker survivors, negative = defender survivors, 0 = draw.
+// Replaces the former simulateBattleScore entry point; call with a "fast"-mode result.
+export function signedRemainingScore(result: BattleResult): number {
+  if (result.winner === "attacker") return total(result.remaining.attacker);
+  if (result.winner === "defender") return -total(result.remaining.defender);
   return 0;
 }
 

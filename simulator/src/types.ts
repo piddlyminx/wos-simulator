@@ -162,14 +162,15 @@ export interface BattleInput {
   defender: FighterInput;
   seed?: string | number;
   maxRounds?: number;
-  trace?: boolean;
   mechanics?: Record<string, unknown>;
 }
 
-export type SimulationDetail = "full" | "fast";
+// fast: signed-score only (no per-attack outcomes); standard: attack-by-attack
+// outcomes without per-attack damage traces; trace: full per-attack equation traces.
+export type SimulationMode = "fast" | "standard" | "trace";
 
 export interface SimulationOptions {
-  detail?: SimulationDetail;
+  mode?: SimulationMode;
 }
 
 export interface ResolvedTroopLine {
@@ -277,7 +278,6 @@ export interface DamageJob {
   sourceEffectId?: string;
   sourceSkillReportKey?: string;
   sourceMultiplier?: number;
-  carriedAttackDurationEffectIds?: string[];
   consumedEffectIds?: string[];
   consumedEffectUseKey?: string;
   consumedEffectUseId?: string;

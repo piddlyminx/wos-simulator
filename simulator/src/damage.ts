@@ -38,7 +38,6 @@ interface BucketCandidate {
   effect: ActiveEffect;
   bucket: AtomicBucket;
   valuePct: number;
-  carriedInactive?: boolean;
 }
 
 interface MaxBucketCandidateGroup {
@@ -124,17 +123,13 @@ export function calculateDamageJob(
   const consumedEffectIds = new Set<string>();
   const candidates: BucketCandidate[] = [];
   const handledCandidateEffectIds = traceEnabled ? new Set<string>() : undefined;
-  const carriedAttackDurationEffectIds = job.carriedAttackDurationEffectIds ? new Set(job.carriedAttackDurationEffectIds) : undefined;
   for (const candidate of bucketCandidatesForJob(options.effectIndex, job)) {
-    const active = isEffectActive(candidate.effect, job.round);
-    const carriedInactive = !active && carriedAttackDurationEffectIds?.has(candidate.effect.id) === true;
-    if (!active && !carriedInactive) continue;
+    if (!isEffectActive(candidate.effect, job.round)) continue;
     handledCandidateEffectIds?.add(candidate.effect.id);
     candidates.push({
       effect: candidate.effect,
       bucket: candidate.bucket,
-      valuePct: currentEffectValuePct(candidate.effect, job.round),
-      carriedInactive
+      valuePct: currentEffectValuePct(candidate.effect, job.round)
     });
   }
 
@@ -272,7 +267,7 @@ function applyBucketCandidateGroup(
       appliedEffects.push(appliedEffect);
     }
     for (const candidate of candidates) {
-      if (candidate.effect.duration.type === "attack" && !candidate.carriedInactive) consumedEffectIds.add(candidate.effect.id);
+      if (candidate.effect.duration.type === "attack") consumedEffectIds.add(candidate.effect.id);
       if (detail === "full" && candidate !== selected) {
         rejectedEffects.push({ effectId: candidate.effect.source.effectId ?? candidate.effect.id, reason: "same_effect_max_suppressed" });
       }

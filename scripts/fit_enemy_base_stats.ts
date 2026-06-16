@@ -5,7 +5,7 @@ import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfigFromDir } from "../simulator/src/config-node";
-import { simulateBattleScore } from "../simulator/src/simulator";
+import { simulateBattle, signedRemainingScore } from "../simulator/src/simulator";
 import { UNIT_TYPES } from "../simulator/src/types";
 import type { BattleInput, FighterInput, SimulatorConfig, StatBlock, TroopStatsCatalogue, UnitType } from "../simulator/src/types";
 
@@ -346,7 +346,7 @@ function simulateCandidate(baseConfig: SimulatorConfig, enemySide: EnemySide, re
     }
     let total = 0;
     for (let index = 0; index < replicates; index += 1) {
-      total += simulateBattleScore(buildBattleInput(report, enemySide, `${basename(report.file)}:${index}`), lastConfig);
+      total += signedRemainingScore(simulateBattle(buildBattleInput(report, enemySide, `${basename(report.file)}:${index}`), lastConfig, { mode: "fast" }));
     }
     return total / replicates;
   };

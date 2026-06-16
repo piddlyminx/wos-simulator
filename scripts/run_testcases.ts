@@ -1,6 +1,7 @@
 #!/usr/bin/env tsx
 import { mkdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { cpus } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { loadSimulatorConfig } from "../simulator/src/config";
@@ -58,6 +59,7 @@ interface CliOptions {
   outputDir: string;
   noRunSnapshot: boolean;
   human: boolean;
+  workers: number;
 }
 
 function parseArgs(args: string[]): CliOptions {
@@ -66,7 +68,8 @@ function parseArgs(args: string[]): CliOptions {
     testcaseOptions,
     outputDir: defaultOutputDir(),
     noRunSnapshot: false,
-    human: false
+    human: false,
+    workers: Math.max(1, cpus().length/2)
   };
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -75,15 +78,8 @@ function parseArgs(args: string[]): CliOptions {
     else if (arg === "--testcase-root") testcaseOptions.testcaseRoot = args[++index];
     else if (arg === "--calibration-report") testcaseOptions.calibrationReportPath = args[++index];
     else if (arg === "--include-disabled") testcaseOptions.includeDisabled = true;
-    else if (arg === "--trace") testcaseOptions.trace = true;
     else if (arg === "--seed") testcaseOptions.seed = args[++index];
     else if (arg === "--workers") testcaseOptions.workers = Math.max(1, Number(args[++index]) || 1);
-    else if (arg === "--carry-attack-duration-effects-to-triggered-extra-skill-damage") {
-      testcaseOptions.mechanics = {
-        ...(testcaseOptions.mechanics ?? {}),
-        carryAttackDurationEffectsToTriggeredExtraSkillDamage: true
-      };
-    }
     else if (arg === "--output-dir") options.outputDir = resolve(args[++index]);
     else if (arg === "--no-run-snapshot") options.noRunSnapshot = true;
     else if (arg === "--human") options.human = true;

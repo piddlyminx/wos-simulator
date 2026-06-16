@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
 import { resolveFighter } from "./resolve";
-import { simulateBattle, simulateBattleScore } from "./simulator";
+import { simulateBattle, signedRemainingScore } from "./simulator";
 import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types";
 
 test("simulateBattle returns structured result for a no-hero battle", () => {
@@ -14,7 +14,6 @@ test("simulateBattle returns structured result for a no-hero battle", () => {
   const result = simulateBattle(
     {
       maxRounds: 3,
-      trace: true,
       attacker: {
         name: "A",
         troops: { infantry_t6: 8000 },
@@ -28,7 +27,8 @@ test("simulateBattle returns structured result for a no-hero battle", () => {
         heroes: {}
       }
     },
-    config
+    config,
+    { mode: "trace" }
   );
 
   assert.match(result.winner, /attacker|defender|draw/);
@@ -44,7 +44,6 @@ test("simulateBattle calculates all same-round damage from the round-start troop
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         name: "A",
         troops: { infantry_t1: 1 },
@@ -58,7 +57,8 @@ test("simulateBattle calculates all same-round damage from the round-start troop
         heroes: {}
       }
     },
-    config
+    config,
+    { mode: "trace" }
   );
 
   const normalAttacks = result.attacks.filter((attack) => attack.kind === "normal");
@@ -81,7 +81,7 @@ test("simulateBattle carries fractional casualties between rounds and ceils fina
   const input = testcases.find((testcase) => testcase.test_id === "simple_001");
   assert.notEqual(input, undefined);
 
-  const result = simulateBattle({ ...input!, trace: true }, config);
+  const result = simulateBattle(input!, config, { mode: "trace" });
 
   assert.equal(totalRemaining(result.remaining.attacker) - totalRemaining(result.remaining.defender), -186);
   assert.equal(result.remaining.defender.lancer, 186);
@@ -428,8 +428,8 @@ test("cancelled normal attacks advance attack counters for later frequency check
 });
 
 test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
-  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.lethality.up"));
-  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.lethality.up"));
+  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.lethality.up"), { mode: "trace" });
+  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.lethality.up"), { mode: "trace" });
 
   const maxRoundTwo = maxResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
   const addRoundTwo = addResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
@@ -444,7 +444,6 @@ test("same_effect_stacking max caps duplicate hero instances of the same skill e
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { infantry_t1: 100 },
         heroes: [{ name: "Repeat", levels: { skill_1: 1 } }],
@@ -455,7 +454,8 @@ test("same_effect_stacking max caps duplicate hero instances of the same skill e
         heroes: {}
       }
     },
-    sameEffectStackingConfig("Repeat", "max", "active.hero.lethality.up")
+    sameEffectStackingConfig("Repeat", "max", "active.hero.lethality.up"),
+    { mode: "trace" }
   );
 
   const attack = result.attacks.find((entry) => entry.jobId.startsWith("r1:attacker:infantry") && entry.kind === "normal");
@@ -465,8 +465,8 @@ test("same_effect_stacking max caps duplicate hero instances of the same skill e
 });
 
 test("same_effect_stacking max caps overlapping extra skill attacks while add keeps all activations", () => {
-  const maxResult = simulateBattle(sameEffectStackingInput("MaxExtra"), sameEffectStackingConfig("MaxExtra", "max", "extra_skill_attack"));
-  const addResult = simulateBattle(sameEffectStackingInput("AddExtra"), sameEffectStackingConfig("AddExtra", "add", "extra_skill_attack"));
+  const maxResult = simulateBattle(sameEffectStackingInput("MaxExtra"), sameEffectStackingConfig("MaxExtra", "max", "extra_skill_attack"), { mode: "trace" });
+  const addResult = simulateBattle(sameEffectStackingInput("AddExtra"), sameEffectStackingConfig("AddExtra", "add", "extra_skill_attack"), { mode: "trace" });
 
   const maxRoundTwoSkillJobs = maxResult.trace?.rounds[1]?.jobs.filter((job) => job.kind === "skill") ?? [];
   const addRoundTwoSkillJobs = addResult.trace?.rounds[1]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -481,7 +481,6 @@ test("same_effect_stacking max consumes overlapping attack-duration extra skill 
   const result = simulateBattle(
     {
       maxRounds: 2,
-      trace: true,
       attacker: {
         troops: { infantry_t1: 10000 },
         heroes: { MaxExtraAttackDuration: { skill_1: 1 } }
@@ -510,7 +509,8 @@ test("same_effect_stacking max consumes overlapping attack-duration extra skill 
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const roundTwoSkillOutcome = result.attacks.find((attack) => attack.kind === "skill" && attack.jobId.startsWith("r2:attacker:infantry"));
@@ -563,7 +563,6 @@ test("fighter passive effects are added to the static profile after battle_start
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { infantry_t1: 100 },
         stats: { infantry: { attack: 0, lethality: 0, defense: 0, health: 0 } },
@@ -593,7 +592,8 @@ test("fighter passive effects are added to the static profile after battle_start
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const attack = result.attacks.find((entry) => entry.attackerSide === "attacker" && entry.attackerUnit === "infantry");
@@ -609,7 +609,6 @@ test("extra skill attacks with array trigger damage targets hit those defender u
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { Router: { skill_1: 1 } }
@@ -644,7 +643,8 @@ test("extra skill attacks with array trigger damage targets hit those defender u
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -661,7 +661,6 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { Router: { skill_1: 1 } }
@@ -689,7 +688,8 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -703,7 +703,6 @@ test("skill report attributes kills only to the skill damage source", () => {
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { Shooter: { skill_1: 1 } }
@@ -747,7 +746,8 @@ test("skill report attributes kills only to the skill damage source", () => {
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const powerShot = result.skillReport.attacker.find((entry) => entry.skillId === "PowerShot");
@@ -761,7 +761,6 @@ test("same-round outcomes are capped to available target troops before tracing s
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 1000 },
         heroes: { Blaster: { skill_1: 1 } }
@@ -796,7 +795,8 @@ test("same-round outcomes are capped to available target troops before tracing s
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const defenderLosses = result.attacks
@@ -841,9 +841,7 @@ test("committed losses clamp exhausted floating point residue before next-round 
       }
     }
   }
-  adjusted.trace = true;
-
-  const result = simulateBattle(adjusted, config);
+  const result = simulateBattle(adjusted, config, { mode: "trace" });
   const roundSix = result.trace?.rounds.find((round) => round.round === 6);
   const defenderTargets = roundSix?.intents
     .filter((intent) => intent.attackerSide === "defender")
@@ -859,7 +857,6 @@ test("extra skill trigger damage jobs reject missing runtime selectors", () => {
       simulateBattle(
         {
           maxRounds: 1,
-          trace: true,
           attacker: {
             troops: { marksman_t1: 100 },
             heroes: { Malformed: { skill_1: 1 } }
@@ -887,7 +884,8 @@ test("extra skill trigger damage jobs reject missing runtime selectors", () => {
               }
             }
           }
-        })
+        }),
+        { mode: "trace" }
       ),
     /target selector is required/i
   );
@@ -935,7 +933,6 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { FollowUp: { skill_1: 1 } }
@@ -963,7 +960,8 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const jobs = result.trace?.rounds[0]?.jobs ?? [];
@@ -982,7 +980,6 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
   const result = simulateBattle(
     {
       maxRounds: 2,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { FollowUp: { skill_1: 1 } }
@@ -1026,7 +1023,8 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const cancelled = result.attacks.find((attack) => attack.cancelReason === "no_attack");
@@ -1042,7 +1040,6 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { FollowUp: { skill_1: 1 } }
@@ -1070,7 +1067,8 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -1085,7 +1083,6 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { MultiTarget: { skill_1: 1, skill_2: 1 } }
@@ -1125,7 +1122,8 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -1141,7 +1139,6 @@ test("extra skill attack consumes one use regardless of multiple generated targe
   const result = simulateBattle(
     {
       maxRounds: 2,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { MultiTarget: { skill_1: 1 } }
@@ -1169,7 +1166,8 @@ test("extra skill attack consumes one use regardless of multiple generated targe
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
@@ -1219,7 +1217,6 @@ test("extra skill attack consumes one use when multiple same-round normal attack
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { infantry_t1: 100, marksman_t1: 100 },
         heroes: { FollowUp: { skill_1: 1 } }
@@ -1247,7 +1244,8 @@ test("extra skill attack consumes one use when multiple same-round normal attack
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobs = result.trace?.rounds[0]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -1259,7 +1257,6 @@ test("extra skill attack applies_vs must match the current normal attack target"
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { FollowUp: { skill_1: 1 } }
@@ -1287,7 +1284,8 @@ test("extra skill attack applies_vs must match the current normal attack target"
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const jobs = result.trace?.rounds[0]?.jobs ?? [];
@@ -1302,7 +1300,6 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
   const result = simulateBattle(
     {
       maxRounds: 2,
-      trace: true,
       attacker: {
         troops: { marksman_t1: 100 },
         heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
@@ -1341,7 +1338,8 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
@@ -1353,92 +1351,10 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitLiving: 4 });
 });
 
-test("attack-duration normal damage effects do not carry to triggered extra skill damage by default", () => {
-  const result = simulateBattle(
-    {
-      maxRounds: 1,
-      trace: true,
-      attacker: {
-        troops: { marksman_t1: 100 },
-        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
-      },
-      defender: {
-        troops: { infantry_t1: 100 },
-        heroes: {}
-      }
-    },
-    attackDurationCarryConfig()
-  );
-
-  const normalBoosts = result.attacks
-    .filter((attack) => attack.kind === "normal" && attack.attackerSide === "attacker")
-    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0);
-  const skillBoosts = result.attacks
-    .filter((attack) => attack.kind === "skill")
-    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0);
-  assert.deepEqual(normalBoosts, [100]);
-  assert.deepEqual(skillBoosts, [0]);
-});
-
-test("mechanics flag carries consumed attack-duration effects to matching triggered extra skill damage only", () => {
-  const result = simulateBattle(
-    {
-      maxRounds: 1,
-      trace: true,
-      mechanics: { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true },
-      attacker: {
-        troops: { marksman_t1: 100 },
-        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
-      },
-      defender: {
-        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
-        heroes: {}
-      }
-    },
-    attackDurationCarryConfig({ buffAppliesVs: "infantry", extraTargets: "enemy.living" })
-  );
-
-  const normalBoosts = result.attacks
-    .filter((attack) => attack.kind === "normal" && attack.attackerSide === "attacker")
-    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0);
-  const skillBoostsByTarget = result.attacks
-    .filter((attack) => attack.kind === "skill")
-    .map((attack) => `${attack.defenderUnit}:${attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0}`)
-    .sort();
-  assert.deepEqual(normalBoosts, [100]);
-  assert.deepEqual(skillBoostsByTarget, ["infantry:100", "lancer:0", "marksman:0"]);
-});
-
-test("mechanics flag carries consumed attack-duration effects with any target scope to all matching triggered extra skill damage", () => {
-  const result = simulateBattle(
-    {
-      maxRounds: 1,
-      trace: true,
-      mechanics: { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true },
-      attacker: {
-        troops: { marksman_t1: 100 },
-        heroes: { FollowUp: { skill_1: 1, skill_2: 1 } }
-      },
-      defender: {
-        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
-        heroes: {}
-      }
-    },
-    attackDurationCarryConfig({ buffAppliesVs: "any", extraTargets: "enemy.living" })
-  );
-
-  const skillBoosts = result.attacks
-    .filter((attack) => attack.kind === "skill")
-    .map((attack) => attack.trace?.atomicBuckets["active.hero.attack.up"].totalPct ?? 0)
-    .sort((left, right) => left - right);
-  assert.deepEqual(skillBoosts, [100, 100, 100]);
-});
-
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { infantry_t1: 100 },
         heroes: { Debuffer: { skill_1: 1 } }
@@ -1465,7 +1381,8 @@ test("attack-triggered source and target selectors resolve to concrete active sc
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const attackerAttack = result.attacks.find((attack) => attack.attackerSide === "attacker" && attack.attackerUnit === "infantry");
@@ -1481,7 +1398,6 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
   const result = simulateBattle(
     {
       maxRounds: 1,
-      trace: true,
       attacker: {
         troops: { infantry_t1: 100 },
         heroes: { Debuffer: { skill_1: 1 } }
@@ -1508,7 +1424,8 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const attackerAttack = result.attacks.find((attack) => attack.attackerSide === "attacker" && attack.attackerUnit === "infantry");
@@ -1763,8 +1680,8 @@ test("fast simulation matches full semantic output without detailed attacks", ()
   ];
 
   for (const { name, input, config } of cases) {
-    const full = simulateBattle({ ...input, trace: true }, config);
-    const fast = simulateBattle({ ...input, trace: true }, config, { detail: "fast" });
+    const full = simulateBattle(input, config);
+    const fast = simulateBattle(input, config, { mode: "fast" });
 
     assert.deepEqual(semanticBattleSummary(fast), semanticBattleSummary(full), name);
     assert.deepEqual(fast.attacks, [], name);
@@ -1772,7 +1689,7 @@ test("fast simulation matches full semantic output without detailed attacks", ()
   }
 });
 
-test("simulateBattleScore returns signed remaining troops from the same battle semantics", () => {
+test("signedRemainingScore returns signed remaining troops from a fast-mode result", () => {
   const config = loadSimulatorConfig();
   const input: BattleInput = {
     maxRounds: 8,
@@ -1790,10 +1707,17 @@ test("simulateBattleScore returns signed remaining troops from the same battle s
     }
   };
 
-  const result = simulateBattle(input, config, { detail: "fast" });
-  const score = simulateBattleScore(input, config);
+  const result = simulateBattle(input, config, { mode: "fast" });
+  const score = signedRemainingScore(result);
 
-  assert.equal(score, signedRemainingScore(result));
+  const expected =
+    result.winner === "attacker"
+      ? totalRemaining(result.remaining.attacker)
+      : result.winner === "defender"
+        ? -totalRemaining(result.remaining.defender)
+        : 0;
+
+  assert.equal(score, expected);
 });
 
 test("seeded probability rolls are deterministic and compare percentage thresholds", () => {
@@ -1833,12 +1757,6 @@ function totalRemaining(troops: Record<UnitType, number>): number {
   return Object.values(troops).reduce((sum, count) => sum + count, 0);
 }
 
-function signedRemainingScore(result: ReturnType<typeof simulateBattle>): number {
-  if (result.winner === "attacker") return totalRemaining(result.remaining.attacker);
-  if (result.winner === "defender") return -totalRemaining(result.remaining.defender);
-  return 0;
-}
-
 function semanticBattleSummary(result: ReturnType<typeof simulateBattle>): Pick<
   ReturnType<typeof simulateBattle>,
   "winner" | "rounds" | "remaining" | "effectActivationCounts" | "extraSkillAttackJobsByEffect" | "attackControlCounts"
@@ -1856,7 +1774,6 @@ function semanticBattleSummary(result: ReturnType<typeof simulateBattle>): Pick<
 function sameEffectStackingInput(heroName: string): BattleInput {
   return {
     maxRounds: 2,
-    trace: true,
     attacker: {
       troops: { infantry_t1: 10000 },
       heroes: { [heroName]: { skill_1: 1 } }
@@ -1913,39 +1830,3 @@ function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): Simulat
   };
 }
 
-function attackDurationCarryConfig(
-  options: { buffAppliesVs?: "any" | "infantry"; extraTargets?: "use.target" | "enemy.living" } = {}
-): SimulatorConfig {
-  const buffAppliesVs = options.buffAppliesVs ?? "any";
-  const extraTargets = options.extraTargets ?? "use.target";
-  return minimalConfig({
-    FollowUp: {
-      name: "FollowUp",
-      skills: {
-        OneUseNormalBoost: {
-          trigger: { type: "battle_start" },
-          effects: {
-            boost: {
-              type: "active.hero.attack.up",
-              value: 100,
-              units: { applies_to: "marksman", applies_vs: buffAppliesVs },
-              duration: { type: "attack", value: 1 }
-            }
-          }
-        },
-        TriggeredExtraDamage: {
-          trigger: { type: "attack", probability: 100, source: "marksman" },
-          effects: {
-            extra: {
-              type: "extra_skill_attack",
-              value: 100,
-              units: { applies_to: "trigger.source", applies_vs: "any" },
-              trigger_damage_jobs: [{ source: "use.source", target: extraTargets }],
-              duration: { type: "attack", value: 1 }
-            }
-          }
-        }
-      }
-    }
-  });
-}

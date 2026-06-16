@@ -255,7 +255,7 @@ function evaluateComposition(
   let totalAttackerLeft = 0;
   let totalDefenderLeft = 0;
   for (let index = 0; index < phaseReplicates; index += 1) {
-    const result = battleSimulator(toBattleInput(candidate, `${seedBase}:${composition.join("-")}:${index}`), config, { detail: "fast" });
+    const result = battleSimulator(toBattleInput(candidate, `${seedBase}:${composition.join("-")}:${index}`), config, { mode: "fast" });
     const attackerLeft = totalSide(result.remaining.attacker);
     const defenderLeft = totalSide(result.remaining.defender);
     const margin = optimizeSide === "attacker" ? attackerLeft - defenderLeft : defenderLeft - attackerLeft;

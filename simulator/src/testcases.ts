@@ -25,7 +25,6 @@ export interface TestcaseRunOptions {
   includeDisabled?: boolean;
   repeat?: number;
   seed?: string | number;
-  trace?: boolean;
   workers?: number;
   mechanics?: Record<string, unknown>;
 }
@@ -208,7 +207,7 @@ export function prepareTestcaseCases(options: TestcaseRunOptions): { filesFound:
       const detail = emptyCaseReport(reportFile, testcaseId, index, diagnostics);
       const preparedCase: PreparedTestcaseCase = { file, reportFile, entry, testcaseId, index, detail };
       try {
-        preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed, trace: options.trace, mechanics: options.mechanics }, diagnostics);
+        preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed, mechanics: options.mechanics }, diagnostics);
         preparedCase.key = snapshotKey(reportFile, index);
       } catch (error) {
         detail.error = errorMessage(error);
@@ -475,7 +474,7 @@ function statAdjustmentCandidates(direction: number): number[] {
 function simulateAdjustedDistribution(input: BattleInput, job: TestcaseExecutionJob, config: SimulatorConfig): SampleStats {
   const samples: number[] = [];
   for (let iteration = 0; iteration < job.repeat; iteration += 1) {
-    const result = simulateBattle(sampleInput(input, job.seed, job.file, job.testcaseId, job.index, iteration), config, { detail: "fast" });
+    const result = simulateBattle(sampleInput(input, job.seed, job.file, job.testcaseId, job.index, iteration), config, { mode: "fast" });
     const score = battleScoreDelta(result);
     if (score !== undefined) samples.push(score);
   }
@@ -616,7 +615,7 @@ export function buildSummaryForOutput(report: TestcaseRunReport): TestcaseSummar
 
 export function adaptTestcaseEntry(
   entry: unknown,
-  options: { seed?: string | number; trace?: boolean; mechanics?: Record<string, unknown> } = {},
+  options: { seed?: string | number; mechanics?: Record<string, unknown> } = {},
   diagnostics: string[] = []
 ): BattleInput {
   const object = entry as {
@@ -637,7 +636,6 @@ export function adaptTestcaseEntry(
     attacker: object.attacker,
     defender: object.defender,
     seed: options.seed,
-    trace: options.trace,
     ...(maxRounds !== undefined ? { maxRounds } : {}),
     ...(mechanics ? { mechanics } : {})
   };

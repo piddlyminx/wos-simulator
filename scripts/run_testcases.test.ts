@@ -127,32 +127,6 @@ test("cli --workers runs testcase cases through worker pool", () => {
   assert.deepEqual(readdirSync(outputDir), []);
 });
 
-test("cli enables attack-duration carry mechanic globally", () => {
-  const outputDir = tempDir("simulator-parity-carry-mechanic");
-
-  const result = spawnSync(
-    "npx",
-    [
-      "--yes",
-      "tsx",
-      "scripts/run_testcases.ts",
-      "--matching",
-      "simple_001",
-      "--repeat",
-      "1",
-      "--carry-attack-duration-effects-to-triggered-extra-skill-damage",
-      "--output-dir",
-      outputDir,
-      "--no-run-snapshot",
-    ],
-    { cwd: repoRoot, encoding: "utf8" },
-  );
-
-  assert.equal(result.status, 0, result.stderr);
-  const report = JSON.parse(result.stdout);
-  assert.deepEqual(report.options.mechanics, { carryAttackDurationEffectsToTriggeredExtraSkillDamage: true });
-});
-
 test("cli --human writes a readable testcase summary table", () => {
   const outputDir = tempDir("simulator-parity-human");
 

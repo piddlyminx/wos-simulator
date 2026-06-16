@@ -1,5 +1,5 @@
 import { loadSimulatorConfig } from "@simulator/config";
-import { simulateBattleScore } from "@simulator/simulator";
+import { simulateBattle, signedRemainingScore } from "@simulator/simulator";
 import type { BattleInput, FighterInput, SimulatorConfig, SkillFile } from "@simulator/types";
 
 export type MainHeroRole = "inf" | "lanc" | "mark";
@@ -456,7 +456,7 @@ export function runSingleBattleDirect(
   let totalDefenderLeft = 0;
   for (let rep = 0; rep < task.reps; rep += 1) {
     const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-    const score = simulateBattleScore(input, config);
+    const score = signedRemainingScore(simulateBattle(input, config, { mode: "fast" }));
     if (score > 0) totalAttackerLeft += score;
     else if (score < 0) totalDefenderLeft += -score;
   }
