@@ -6,8 +6,7 @@ import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfigFromDir } from "./config-node";
-import { UNIT_TYPES } from "./types";
-import type { SkillFile, TriggerDamageJobDefinition } from "./types";
+import type { SkillFile } from "./types";
 
 test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-relative effect selectors", () => {
   const root = writeConfigWithTroopEffect({
@@ -252,20 +251,6 @@ test("loadSimulatorConfig rejects effect.applies_vs jobs without concrete applie
   assert.throws(() => loadSimulatorConfigFromDir(omittedRoot), /effect\.applies_vs.*concrete applies_vs/i);
   assert.throws(() => loadSimulatorConfigFromDir(allRoot), /applies_vs.*all/i);
 });
-
-function isAllowedTriggerDamageJobSelector(selector: TriggerDamageJobDefinition["source"]): boolean {
-  const supported = new Set(["use.source", "use.target", "effect.applies_to", "effect.applies_vs", "enemy.living", "self.living"]);
-  if (typeof selector === "string") return supported.has(selector) || (UNIT_TYPES as string[]).includes(selector);
-  if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
-  return false;
-}
-
-function isEffectAppliesVsConcrete(selector: unknown): boolean {
-  if (selector === "trigger.target" || selector === "target") return true;
-  if (typeof selector === "string") return (UNIT_TYPES as string[]).includes(selector);
-  if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
-  return false;
-}
 
 function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "turn" }): string {
   const root = join(tmpdir(), `wos-simulator-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);

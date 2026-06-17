@@ -10,7 +10,7 @@ import type {
   SideId,
   UnitType
 } from "./types";
-import { ALL_UNIT_MASK, UNIT_TYPES, unitMask } from "./types";
+import { ALL_UNIT_MASK, unitMask } from "./types";
 import { normalizeUnitType } from "./normalize";
 
 export type Rng = () => number;

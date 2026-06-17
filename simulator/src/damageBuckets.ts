@@ -151,14 +151,6 @@ export function bucketDefinition(path: string): BucketDefinition | undefined {
   return BUCKET_DEFINITIONS[path];
 }
 
-export function isAtomicBucket(path: string): path is AtomicBucket {
-  return path in BUCKET_DEFINITIONS;
-}
-
-export function isStaticPhaseBucket(path: string): boolean {
-  return BUCKET_DEFINITIONS[path]?.phase === "static";
-}
-
 function flattenBuckets(tree: BucketTree, prefix = ""): Record<string, BucketDefinition> {
   const buckets: Record<string, BucketDefinition> = {};
   for (const [key, value] of Object.entries(tree)) {

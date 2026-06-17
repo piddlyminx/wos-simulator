@@ -242,7 +242,7 @@ export function runPreparedTestcases(
   };
 
   for (const preparedCase of prepared.cases) {
-    const { file, reportFile, entry, testcaseId, index, detail } = preparedCase;
+    const { file, reportFile, testcaseId, index, detail } = preparedCase;
     if (!preparedCase.input || !preparedCase.key) {
       if (preparedCase.adaptError) report.errors.push(preparedCase.adaptError);
       report.details.push(detail);
@@ -486,7 +486,7 @@ function evaluateStatAdjustment(options: {
   });
   return {
     value: roundStatAdjustment(value),
-    mode: adjustmentMode(options.game, adjusted, options.deterministic),
+    mode: adjustmentMode(adjusted, options.deterministic),
     unadjusted: options.game,
     adjusted: adjustedForRoundingRules(adjusted, options.deterministic)
   };
@@ -532,7 +532,7 @@ function adjustFighterStats(fighter: FighterInput, value: number): void {
   }
 }
 
-function adjustmentMode(original: ParityComparisonMetrics, adjusted: ParityComparisonMetrics, deterministic: boolean): TestcaseStatAdjustment["mode"] {
+function adjustmentMode(adjusted: ParityComparisonMetrics, deterministic: boolean): TestcaseStatAdjustment["mode"] {
   if (deterministic) {
     if (adjusted.bias_raw === 0) return "deterministic_exact";
     if (Math.abs(adjusted.bias_raw) <= 1) return "deterministic_within_one";

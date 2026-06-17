@@ -125,9 +125,9 @@ function runBattle(input: BattleInput, config: SimulatorConfig, options: Simulat
     rounds = round;
     const roundStartTroops = snapshotTroops(fighters);
     expireInactive(runtime, round);
-    triggerRoundStartSkills(round, fighters, runtime, roundStartTroops);
+    triggerRoundStartSkills(round, runtime, roundStartTroops);
 
-    const intents = resolveAttackIntents(round, fighters, runtime, roundStartTroops);
+    const intents = resolveAttackIntents(round, runtime, roundStartTroops);
     const jobs: DamageJob[] = [];
     const cancelled: CancelledAttack[] = [];
 
@@ -192,7 +192,6 @@ interface DamageJobResult {
 
 function triggerRoundStartSkills(
   round: number,
-  fighters: Record<SideId, ResolvedFighter>,
   runtime: Runtime,
   roundStartTroops: DamageJob["roundStartTroops"]
 ): ActiveEffect[] {
@@ -410,7 +409,6 @@ function triggerSkills(
 
 function resolveAttackIntents(
   round: number,
-  fighters: Record<SideId, ResolvedFighter>,
   runtime: Runtime,
   roundStartTroops: DamageJob["roundStartTroops"]
 ): AttackIntent[] {

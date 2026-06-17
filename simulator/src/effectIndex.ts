@@ -3,9 +3,6 @@ import { unitsFromMask } from "./types";
 import { bucketDefinition, type AtomicBucket } from "./damageBuckets";
 import { isStaticProfileBucket } from "./staticDamageProfile";
 
-export type DamageEffectKey = `${DamageKind}:${SideId}:${UnitType}:${SideId}:${UnitType}:${AtomicBucket}`;
-export type DamageJobShapeKey = `${DamageKind}:${SideId}:${UnitType}:${SideId}:${UnitType}`;
-
 export interface IndexedBucketEffect {
   effect: ActiveEffect;
   bucket: AtomicBucket;
@@ -88,38 +85,13 @@ export function removeStaticProfileBucketEffects(index: EffectIndex): void {
   for (let slot = 0; slot < index.damageByJobShape.length; slot += 1) {
     const candidates = index.damageByJobShape[slot];
     if (!candidates) continue;
-    compactCandidates(candidates, (effect, candidate) => !isStaticProfileBucket(candidate.bucket));
+    compactCandidates(candidates, (_effect, candidate) => !isStaticProfileBucket(candidate.bucket));
     if (candidates.length === 0) index.damageByJobShape[slot] = undefined;
   }
 }
 
 export function bucketCandidatesForJob(index: EffectIndex, job: DamageJob): IndexedBucketEffect[] {
   return index.damageByJobShape[damageJobShapeSlot(job.kind, job.attackerSide, job.attackerUnit, job.defenderSide, job.defenderUnit)] ?? [];
-}
-
-export function bucketEffectsForJob(index: EffectIndex, job: DamageJob): ActiveEffect[] {
-  return bucketCandidatesForJob(index, job).map((candidate) => candidate.effect);
-}
-
-export function damageJobShapeKey(
-  jobKind: DamageKind,
-  attackerSide: SideId,
-  attackerUnit: UnitType,
-  defenderSide: SideId,
-  defenderUnit: UnitType
-): DamageJobShapeKey {
-  return `${jobKind}:${attackerSide}:${attackerUnit}:${defenderSide}:${defenderUnit}`;
-}
-
-export function damageEffectKey(
-  jobKind: DamageKind,
-  attackerSide: SideId,
-  attackerUnit: UnitType,
-  defenderSide: SideId,
-  defenderUnit: UnitType,
-  bucket: AtomicBucket
-): DamageEffectKey {
-  return `${jobKind}:${attackerSide}:${attackerUnit}:${defenderSide}:${defenderUnit}:${bucket}`;
 }
 
 function damageJobShapeSlot(

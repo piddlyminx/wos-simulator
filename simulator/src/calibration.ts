@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export interface CalibrationCaseComparison {
@@ -135,67 +135,6 @@ export function testcaseFileLookupVariants(path: string): string[] {
   return [...variants];
 }
 
-export function addCalibrationTableRow(
-  comparison: CalibrationComparison,
-  caseReport: {
-    file: string;
-    testcaseId: string;
-    index: number;
-    simulatorScoreDelta?: number;
-    simulatorStats?: SampleStats;
-    calibration?: CalibrationCaseComparison;
-  }
-): CalibrationComparisonRow {
-  const calibration = caseReport.calibration;
-  const simulator = caseReport.simulatorStats;
-  const simulatorVsBaseline = compareDistributions(simulator, calibration?.muSim, calibration?.sigmaSim, calibration?.nSim, comparison.thresholds, calibration?.statType);
-  const simulatorVsGame = compareDistributions(simulator, calibration?.muGame, calibration?.sigmaGame, calibration?.nGame, comparison.thresholds, calibration?.statType);
-  const simulatorVsGameRaw = simulatorVsGame.biasRaw;
-  const simulatorVsGamePct = simulatorVsGame.biasPct;
-  const row: CalibrationComparisonRow = {
-    file: relativeDisplayPath(caseReport.file),
-    testcaseId: caseReport.testcaseId,
-    idx: caseReport.index,
-    matched: !!calibration,
-    nSim: calibration?.nSim,
-    muSim: calibration?.muSim,
-    sigmaSim: calibration?.sigmaSim,
-    nGame: calibration?.nGame,
-    muGame: calibration?.muGame,
-    sigmaGame: calibration?.sigmaGame,
-    statType: calibration?.statType,
-    referenceBiasPct: calibration?.biasPct,
-    referencePasses: calibration?.passes,
-    passes: calibration?.passes,
-    biasRaw: calibration?.biasRaw,
-    biasPct: calibration?.biasPct,
-    sem: calibration?.sem,
-    p: calibration?.p,
-    q: calibration?.q,
-    simulatorScoreDelta: caseReport.simulatorScoreDelta,
-    simulator,
-    simulatorVsBaseline,
-    simulatorVsGame,
-    simulatorVsGameRaw,
-    simulatorVsGamePct,
-    simulatorPasses: simulatorVsGame.passes,
-    simulatorN: simulator?.n,
-    simulatorMu: simulator?.mu,
-    simulatorSigma: simulator?.sigma,
-    simulatorSem: simulator?.sem,
-    simulatorVsBaselineBiasRaw: simulatorVsBaseline.biasRaw,
-    simulatorVsBaselineBiasPct: simulatorVsBaseline.biasPct,
-    simulatorVsBaselineZ: simulatorVsBaseline.z,
-    simulatorVsBaselinePasses: simulatorVsBaseline.passes,
-    simulatorVsGameBiasRaw: simulatorVsGame.biasRaw,
-    simulatorVsGameBiasPct: simulatorVsGame.biasPct,
-    simulatorVsGameZ: simulatorVsGame.z,
-    simulatorVsGamePasses: simulatorVsGame.passes
-  };
-  comparison.table.push(row);
-  return row;
-}
-
 export function sampleStats(samples: number[], options: { includeSamples?: boolean } = {}): SampleStats {
   const n = samples.length;
   const mu = n > 0 ? samples.reduce((sum, value) => sum + value, 0) / n : 0;
@@ -291,62 +230,6 @@ function normalizeThresholds(value: unknown): Record<string, number> | undefined
     .map(([key, raw]) => [key, numberOrUndefined(raw)] as const)
     .filter((entry): entry is readonly [string, number] => entry[1] !== undefined);
   return entries.length > 0 ? Object.fromEntries(entries) : undefined;
-}
-
-function compareDistributions(
-  simulator: SampleStats | undefined,
-  referenceMu: number | undefined,
-  referenceSigma: number | undefined,
-  referenceN: number | undefined,
-  thresholds?: Record<string, number>,
-  referenceStatType?: string
-): DistributionCompatibility {
-  if (!simulator || referenceMu === undefined || referenceSigma === undefined || referenceN === undefined) return { statType: "unmatched" };
-  const biasRaw = simulator.mu - referenceMu;
-  const biasPct = percentDelta(biasRaw, referenceMu);
-  const combinedSem = Math.sqrt((simulator.sigma ** 2) / Math.max(1, simulator.n) + (referenceSigma ** 2) / Math.max(1, referenceN));
-  const deterministic = referenceStatType === "deterministic" || (simulator.sigma === 0 && referenceSigma === 0);
-  if (deterministic || combinedSem === 0) {
-    return {
-      biasRaw,
-      biasPct,
-      statType: "deterministic",
-      passes: deterministicPasses(biasRaw, biasPct, thresholds)
-    };
-  }
-  const z = biasRaw / combinedSem;
-  return {
-    biasRaw,
-    biasPct,
-    z,
-    statType: "distribution",
-    passes: distributionPasses(z, biasPct, thresholds)
-  };
-}
-
-function deterministicPasses(raw: number, pct: number | undefined, thresholds?: Record<string, number>): boolean {
-  if (pct === undefined) return raw === 0;
-  const maxDiffRatio = thresholds?.max_diff_ratio_deterministic ?? thresholds?.max_diff_ratio ?? 0.01;
-  return Math.abs(pct) <= maxDiffRatio * 100;
-}
-
-function distributionPasses(z: number, pct: number | undefined, thresholds?: Record<string, number>): boolean {
-  const minBiasPct = thresholds?.min_bias_pct ?? 0.5;
-  if (pct !== undefined && Math.abs(pct) < minBiasPct) return true;
-  const zThreshold = thresholds?.z_threshold ?? 2;
-  return Math.abs(z) <= zThreshold;
-}
-
-function percentDelta(rawDelta: number, expected: number): number | undefined {
-  if (expected === 0) return rawDelta === 0 ? 0 : undefined;
-  return (rawDelta / Math.abs(expected)) * 100;
-}
-
-function relativeDisplayPath(path: string): string {
-  const normalized = normalizePath(path);
-  const cwdRelative = normalizePath(relative(process.cwd(), path));
-  if (!cwdRelative.startsWith("..")) return cwdRelative;
-  return normalized;
 }
 
 function normalizePath(path: string): string {
