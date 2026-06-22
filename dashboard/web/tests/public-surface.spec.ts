@@ -13,11 +13,20 @@ test.describe("public simulate surface", () => {
     expect(response?.status()).toBeLessThan(400);
     await expect(page).toHaveURL(/\/simulate$/);
     await expect(page.getByRole("link", { name: "Simulate" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Bear Sim" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Runs" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Coverage" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Heroes" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Testcases" })).toHaveCount(0);
     await expect(page.getByText("Accuracy Dashboard")).toHaveCount(0);
+  });
+
+  test("/bear remains public", async ({ page }) => {
+    const response = await page.goto("/bear");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { name: "Bear Sim", exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Bear Sim" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Runs" })).toHaveCount(0);
   });
 
   test("private QA routes and check-testcases API are blocked", async ({
