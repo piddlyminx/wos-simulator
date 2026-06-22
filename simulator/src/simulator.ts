@@ -42,7 +42,7 @@ import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDama
 
 const DEFAULT_MAX_ROUNDS = 1500;
 const BEAR_ROUNDS = 10;
-const BEAR_DEFENSE = 100;
+const BEAR_DEFENSE = 36;
 const BEAR_TROOP_ID = "bear_infantry";
 const REPORT_KEY_CACHE = new WeakMap<ResolvedSkill, string>();
 
