@@ -1,7 +1,7 @@
 [
   {
-    "test_id": "determinism_test_normal",
-    "description": "Determinism test: WIP attacks minxxx. No heroes. WIP 1700 infantry_t6 vs minxxx 300 infantry_t6. Expect ~47% attacker casualties.",
+    "test_id": "hector_renee_wayne",
+    "description": "WIP attacks minxxx with attacker heroes Hector 2/3/2, Renee 3/3/3, and Wayne 2/2/2. Attacker fields 1700 infantry_t6 only; defender has no heroes and fields 300 infantry_t6 only. Game report result: attacker 1597 survivors, defender wiped.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {

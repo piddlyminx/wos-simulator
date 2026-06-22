@@ -4,9 +4,11 @@ import path from "path";
 import { expect, test } from "@playwright/test";
 import {
   findParityReports,
+  findRunReportForRun,
   getParityReport,
   getParityReportCase,
   parityReportDetailHref,
+  runReportDetailHref,
   summarizeParityReport,
 } from "../lib/parity-reports";
 
@@ -198,6 +200,57 @@ test.describe("simulator parity report helpers", () => {
     );
   });
 
+  test("findRunReportForRun resolves stored report filename before timestamp fallback", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "run-report-"));
+    writeJson(dir, "older.json", summary("older"), 3000);
+    writeJson(
+      dir,
+      "stored.json",
+      summary("stored", { createdAt: "2026-05-20T12:00:00.000Z" }),
+      2000,
+    );
+
+    const resolved = findRunReportForRun(
+      {
+        id: "run-1",
+        started_at: "2026-05-19T12:00:00.000Z",
+        finished_at: "2026-05-19T12:00:00.000Z",
+        report_file: "stored.json",
+      },
+      dir,
+    );
+
+    expect(resolved?.fileName).toBe("stored.json");
+  });
+
+  test("findRunReportForRun falls back to createdAt matching for legacy runs", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "run-report-legacy-"));
+    writeJson(dir, "matching.json", summary("matching"), 3000);
+
+    const resolved = findRunReportForRun(
+      {
+        id: "run-legacy",
+        started_at: "2026-05-19T12:00:00.000Z",
+        finished_at: "2026-05-19T12:00:00.000Z",
+      },
+      dir,
+    );
+
+    expect(resolved?.fileName).toBe("matching.json");
+  });
+
+  test("runReportDetailHref points case drilldown at the run route", () => {
+    const loaded = getParityReport(undefined, (() => {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), "run-report-href-"));
+      writeJson(dir, "run.json", summary("href_case"), 3000);
+      return dir;
+    })());
+
+    expect(runReportDetailHref("run-123", loaded!.rows[0]!)).toBe(
+      "/runs/run-123/case?file=testcases%2Fhref_case.json&testcaseId=href_case&idx=0",
+    );
+  });
+
   test("summarizeParityReport counts missing and failing rows", () => {
     const value = summary("case_c", {
       counts: {
@@ -234,12 +287,42 @@ test.describe("simulator parity report helpers", () => {
     expect(result.filesFound).toBe(2);
     expect(result.testcasesFound).toBe(2);
     expect(result.executedCases).toBe(1);
-    expect(result.warnings).toBe(3);
+    expect(result.warnings).toBe(1);
     expect(result.errors).toBe(4);
     expect(result.comparedToBaseline).toBe(5);
     expect(result.comparedToGame).toBe(6);
     expect(result.simulatorVsBaselineFailures).toBe(1);
     expect(result.simulatorVsGameFailures).toBe(1);
+  });
+
+  test("summarizeParityReport ignores missing legacy baseline warnings in headline count", () => {
+    const value = summary("case_d", {
+      counts: {
+        filesFound: 1,
+        testcasesFound: 1,
+        executed: 1,
+        warnings: 3,
+        errors: 0,
+        comparedToBaseline: 0,
+        comparedToGame: 1,
+      },
+      warnings: [
+        {
+          stage: "baseline_comparison",
+          reason: "No matching baseline snapshot row",
+        },
+        {
+          stage: "baseline_comparison",
+          reason: "No matching baseline snapshot row",
+        },
+        {
+          stage: "game_comparison",
+          reason: "Missing game_report_result",
+        },
+      ],
+    });
+
+    expect(summarizeParityReport(value).warnings).toBe(1);
   });
 
   test("missing or malformed detail artifact is returned as an empty case without crash", () => {

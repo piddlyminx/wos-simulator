@@ -87,15 +87,28 @@ function detailHref(reportId: string, row: ParityComparisonRow): string {
   return `/parity/${encodeURIComponent(reportId)}/case?${params.toString()}`;
 }
 
+function runDetailHref(runId: string, row: ParityComparisonRow): string {
+  const params = new URLSearchParams({
+    file: row.file,
+    testcaseId: row.testcaseId,
+    idx: String(row.idx),
+  });
+  return `/runs/${encodeURIComponent(runId)}/case?${params.toString()}`;
+}
+
 export default function ParityReportTable({
   reportId,
   rows,
+  runId,
+  defaultOnlyFailures = true,
 }: {
   reportId: string;
   rows: ParityComparisonRow[];
+  runId?: string;
+  defaultOnlyFailures?: boolean;
 }) {
   const [query, setQuery] = useState("");
-  const [onlyFailures, setOnlyFailures] = useState(true);
+  const [onlyFailures, setOnlyFailures] = useState(defaultOnlyFailures);
   const [sortKey, setSortKey] = useState<SortKey>("rank");
   const [descending, setDescending] = useState(true);
 
@@ -227,7 +240,11 @@ export default function ParityReportTable({
                     title={row.file}
                   >
                     <Link
-                      href={detailHref(reportId, row)}
+                      href={
+                        runId
+                          ? runDetailHref(runId, row)
+                          : detailHref(reportId, row)
+                      }
                       className="underline hover:opacity-80"
                       style={{ color: "var(--sidebar-active)" }}
                     >

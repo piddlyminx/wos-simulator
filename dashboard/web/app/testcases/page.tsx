@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getTestcaseFileIndex } from "@/lib/db";
+import { getTestcaseIndex } from "@/lib/db";
 import TestcaseFileIndexTable from "@/components/TestcaseFileIndexTable";
 
 export const dynamic = "force-dynamic";
 
 export default function TestcasesIndexPage() {
-  const rows = getTestcaseFileIndex();
+  const rows = getTestcaseIndex();
 
   return (
     <div>
@@ -25,7 +25,7 @@ export default function TestcasesIndexPage() {
         </Link>
       </div>
       <p className="text-sm opacity-60 mb-6 max-w-3xl">
-        Every testcase file the simulator has executed. Click a row to see
+        Every testcase the simulator has executed. Click a row to see
         army composition, expected battle reports, historical accuracy, and
         statistical test details for that testcase.
       </p>
@@ -36,7 +36,7 @@ export default function TestcasesIndexPage() {
           style={{ border: "1px solid var(--border-color)" }}
         >
           No testcase history recorded. Backfill historical runs to populate
-          the DB, or use the parity report view for current simulator runner output.
+          the DB, or use the run report artifact view for current simulator runner output.
         </div>
       ) : (
         <TestcaseFileIndexTable rows={rows} />

@@ -144,11 +144,24 @@ export interface ParityReportJson {
   testcases?: Record<string, ParityReportTestcase>;
 }
 
+interface ParityReportWarning {
+  stage?: string;
+  reason?: string;
+}
+
 export interface LoadedParityReport extends ParityReportDescriptor {
   data: ParityReportJson;
   rows: ParityComparisonRow[];
   cases: ParityCaseReport[];
   summary: ParitySummary;
+}
+
+export interface RunReportLookup {
+  id: string;
+  started_at?: string | null;
+  finished_at?: string | null;
+  report_file?: string | null;
+  report_path?: string | null;
 }
 
 export function defaultParityReportDir(): string {
@@ -206,6 +219,32 @@ export function getParityReport(
   };
 }
 
+export function findRunReportForRun(
+  run: RunReportLookup,
+  dir = defaultParityReportDir(),
+): LoadedParityReport | undefined {
+  const explicitReport = run.report_file ?? path.basename(run.report_path ?? "");
+  if (explicitReport) {
+    const byStoredFile = getParityReport(explicitReport, dir);
+    if (byStoredFile) return byStoredFile;
+  }
+
+  const runTimes = new Set(
+    [run.started_at, run.finished_at].filter(
+      (value): value is string => typeof value === "string" && value.length > 0,
+    ),
+  );
+  if (runTimes.size === 0) return undefined;
+
+  for (const descriptor of findParityReports(dir)) {
+    const report = getParityReport(descriptor.id, dir);
+    if (report && report.data.createdAt && runTimes.has(report.data.createdAt)) {
+      return report;
+    }
+  }
+  return undefined;
+}
+
 export function getParityReportCase(
   reportId: string,
   key: { file: string; testcaseId: string; idx: number },
@@ -228,9 +267,7 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
   const counts = (report.counts ?? {}) as Partial<ParityReportCounts> & {
     executedCases?: number;
   };
-  const warnings = Number(
-    counts.warnings ?? (Array.isArray(report.warnings) ? report.warnings.length : 0),
-  );
+  const warnings = countHeadlineWarnings(report);
   const errors = Number(
     counts.errors ?? (Array.isArray(report.errors) ? report.errors.length : 0),
   );
@@ -261,6 +298,22 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
   };
 }
 
+function countHeadlineWarnings(report: ParityReportJson): number {
+  if (!Array.isArray(report.warnings)) {
+    return Number(report.counts?.warnings ?? 0);
+  }
+  return report.warnings.filter((warning) => !isLegacyMissingBaselineWarning(warning)).length;
+}
+
+function isLegacyMissingBaselineWarning(warning: unknown): boolean {
+  if (!warning || typeof warning !== "object") return false;
+  const typed = warning as ParityReportWarning;
+  return (
+    typed.stage === "baseline_comparison" &&
+    typed.reason === "No matching baseline snapshot row"
+  );
+}
+
 export function parityReportDetailHref(
   reportId: string,
   row: ParityComparisonRow,
@@ -271,6 +324,18 @@ export function parityReportDetailHref(
     idx: String(row.idx),
   });
   return `/parity/${encodeURIComponent(reportId)}/case?${params.toString()}`;
+}
+
+export function runReportDetailHref(
+  runId: string,
+  row: ParityComparisonRow,
+): string {
+  const params = new URLSearchParams({
+    file: row.file,
+    testcaseId: row.testcaseId,
+    idx: String(row.idx),
+  });
+  return `/runs/${encodeURIComponent(runId)}/case?${params.toString()}`;
 }
 
 function rowsFromReport(report: ParityReportJson): ParityComparisonRow[] {

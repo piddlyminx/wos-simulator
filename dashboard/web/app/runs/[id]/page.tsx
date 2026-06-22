@@ -15,10 +15,12 @@ import {
 } from "@/lib/db";
 import { getRunSnapshot } from "@/lib/snapshots";
 import TestcaseTable from "@/components/TestcaseTable";
+import ParityReportTable from "@/components/ParityReportTable";
 import DiffViewer from "@/components/DiffViewer";
 import MetricCard from "@/components/MetricCard";
 import { testcaseDetailHref } from "@/lib/testcase-file";
 import { formatDashboardDateTime } from "@/lib/date-format";
+import { findRunReportForRun } from "@/lib/parity-reports";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +53,7 @@ export default async function RunDetailPage({ params }: PageProps) {
   }
 
   const testcases = getRunTestcases(id);
+  const runReport = findRunReportForRun(run);
   const totalTestcases = testcases.length;
   const passingTestcases = testcases.filter((t) => t.passes === 1).length;
 
@@ -174,6 +177,11 @@ export default async function RunDetailPage({ params }: PageProps) {
         />
         <MetricCard label="Total Cases" value={String(totalTestcases)} />
         <MetricCard label="Passing" value={String(passingTestcases)} />
+        <MetricCard
+          label="Run Report"
+          value={runReport ? runReport.fileName : "—"}
+          valueClassName="text-sm"
+        />
       </div>
 
       {/* Testcase set diff vs previous run */}
@@ -302,9 +310,18 @@ export default async function RunDetailPage({ params }: PageProps) {
           className="font-bold mb-4 text-sm"
           style={{ color: "var(--sidebar-active)" }}
         >
-          Testcases
+          Accuracy Results
         </h3>
-        <TestcaseTable testcases={testcases} />
+        {runReport ? (
+          <ParityReportTable
+            reportId={runReport.id}
+            rows={runReport.rows}
+            defaultOnlyFailures={false}
+            runId={run.id}
+          />
+        ) : (
+          <TestcaseTable testcases={testcases} />
+        )}
       </div>
     </div>
   );

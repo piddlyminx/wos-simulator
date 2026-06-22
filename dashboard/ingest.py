@@ -297,8 +297,9 @@ def record_run(
                     baseline_git_sha, cli_args_json, thresholds_json,
                     overall_avg_error_pct, bh_sig_count, summary_json,
                     patch_blob_id, untracked_blob_id, snapshot_blob_id,
-                    commit_subject, commit_author, commit_date
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    commit_subject, commit_author, commit_date,
+                    report_file, report_path
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     run_id,
@@ -318,6 +319,8 @@ def record_run(
                     commit_subject,
                     commit_author,
                     commit_date,
+                    run_doc.get("report_file"),
+                    run_doc.get("report_path"),
                 ),
             )
 

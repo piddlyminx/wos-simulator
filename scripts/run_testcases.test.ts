@@ -127,6 +127,68 @@ test("cli --workers runs testcase cases through worker pool", () => {
   assert.deepEqual(readdirSync(outputDir), []);
 });
 
+test("cli rejects unknown arguments", () => {
+  const result = spawnSync(
+    "npx",
+    [
+      "--yes",
+      "tsx",
+      "scripts/run_testcases.ts",
+      "---repeat",
+      "1000",
+      "--matching",
+      "renee",
+      "--no-run-snapshot",
+    ],
+    { cwd: repoRoot, encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.deepEqual(JSON.parse(result.stderr), { error: "Unknown argument: ---repeat" });
+});
+
+test("cli rejects missing option values", () => {
+  const result = spawnSync(
+    "npx",
+    [
+      "--yes",
+      "tsx",
+      "scripts/run_testcases.ts",
+      "--repeat",
+      "--matching",
+      "renee",
+      "--no-run-snapshot",
+    ],
+    { cwd: repoRoot, encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.deepEqual(JSON.parse(result.stderr), { error: "Missing value for --repeat" });
+});
+
+test("cli rejects invalid numeric option values", () => {
+  const result = spawnSync(
+    "npx",
+    [
+      "--yes",
+      "tsx",
+      "scripts/run_testcases.ts",
+      "--repeat",
+      "banana",
+      "--matching",
+      "renee",
+      "--no-run-snapshot",
+    ],
+    { cwd: repoRoot, encoding: "utf8" },
+  );
+
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.deepEqual(JSON.parse(result.stderr), { error: "Invalid value for --repeat: banana" });
+});
+
 test("cli --human writes a readable testcase summary table", () => {
   const outputDir = tempDir("simulator-parity-human");
 
@@ -238,6 +300,63 @@ test("human summary shows ten individual runs for failing repeated stochastic te
   assert.match(text, /#1\s+Molly,Bahiti i:1000 l:200 m:30\s+Sergey i:900 l:100 m:20\s+i:80 l:20 m:0 \(100\)\s+i:40 l:10 m:0 \(50\)\s+50\s+-50\s+2\s+4\.50\s+<1e-12/);
   assert.match(text, /#10\s+Molly,Bahiti i:1000 l:200 m:30\s+Sergey i:900 l:100 m:20\s+i:89 l:20 m:0 \(109\)\s+i:49 l:10 m:0 \(59\)\s+50/);
   assert.doesNotMatch(text, /#11\s+Molly/);
+});
+
+test("human summary does not count missing legacy baseline rows as warnings", () => {
+  const text = formatHumanSummary({
+    reportKind: "simulator-parity-summary",
+    schemaVersion: 1,
+    createdAt: "2026-01-02T03:04:05.000Z",
+    options: { repeat: 1 },
+    counts: {
+      filesFound: 1,
+      testcasesFound: 1,
+      executed: 1,
+      warnings: 1,
+      errors: 0,
+      comparedToGame: 1,
+      comparedToBaseline: 0,
+    },
+    warnings: [
+      {
+        file: "testcases/new_case.json",
+        testcase_id: "new_case",
+        idx: 0,
+        stage: "baseline_comparison",
+        reason: "No matching baseline snapshot row",
+      },
+    ],
+    errors: [],
+    testcases: {
+      "testcases/new_case.json#0": {
+        file: "testcases/new_case.json",
+        testcase_id: "new_case",
+        idx: 0,
+        deterministic: true,
+        sampleCount: 1,
+        game: {
+          n_candidate: 1,
+          mu_candidate: 10,
+          sigma_candidate: 0,
+          n_reference: 1,
+          mu_reference: 10,
+          sigma_reference: 0,
+          bias_raw: 0,
+          bias_pct: 0,
+          sem: 0,
+          stat_type: "deterministic",
+          stat: null,
+          p: null,
+          q: null,
+          passes: true,
+        },
+        baseline: null,
+      },
+    },
+    details: [],
+  });
+
+  assert.match(text, /Warnings: 0/);
 });
 
 test("cli snapshot paths are unique when timestamps collide", () => {

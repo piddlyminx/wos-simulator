@@ -2,20 +2,21 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import type { TestcaseFileIndexRow } from "@/types/dashboard";
+import type { TestcaseIndexRow } from "@/types/dashboard";
 import { testcaseDetailHref } from "@/lib/testcase-href";
 
 type SortKey =
   | "file_path"
-  | "latest_testcase_count"
-  | "latest_pass_count"
+  | "testcase_id"
+  | "idx"
+  | "latest_passes"
   | "latest_bias_pct"
   | "run_count"
   | "retired";
 type SortDir = "asc" | "desc";
 
 interface Props {
-  rows: TestcaseFileIndexRow[];
+  rows: TestcaseIndexRow[];
 }
 
 function fileBasename(p: string): string {
@@ -36,16 +37,13 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
     const needle = pathFilter.trim().toLowerCase();
     return rows.filter((r) => {
       if (hideRetired && r.retired === 1) return false;
-      if (onlyBhSig && r.latest_any_bh_sig !== 1) return false;
+      if (onlyBhSig && !((r.latest_q ?? 1) <= 0.05 && r.latest_passes === 0)) return false;
+      if (onlyFailing && r.latest_passes !== 0) return false;
       if (
-        onlyFailing &&
-        !(
-          r.latest_testcase_count > 0 &&
-          r.latest_pass_count < r.latest_testcase_count
-        )
+        needle &&
+        !`${r.file_path} ${r.testcase_id}`.toLowerCase().includes(needle)
       )
         return false;
-      if (needle && !r.file_path.toLowerCase().includes(needle)) return false;
       return true;
     });
   }, [rows, pathFilter, hideRetired, onlyFailing, onlyBhSig]);
@@ -70,7 +68,7 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
       setSortDir(sortDir === "asc" ? "desc" : "asc");
     } else {
       setSortKey(key);
-      setSortDir(key === "file_path" ? "asc" : "desc");
+      setSortDir(key === "file_path" || key === "testcase_id" ? "asc" : "desc");
     }
   }
 
@@ -118,7 +116,7 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
             onChange={(e) => setOnlyFailing(e.target.checked)}
             className="rounded"
           />
-          <span className="text-xs">Only with failing cases (latest run)</span>
+          <span className="text-xs">Only failing (latest run)</span>
         </label>
 
         <label className="flex items-center gap-2 cursor-pointer">
@@ -152,12 +150,16 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
                 onClick={() => toggleSort("file_path")}
               />
               <SortableTh
-                label={`Testcases${sortIndicator("latest_testcase_count")}`}
-                onClick={() => toggleSort("latest_testcase_count")}
+                label={`Case${sortIndicator("testcase_id")}`}
+                onClick={() => toggleSort("testcase_id")}
               />
               <SortableTh
-                label={`Pass/Total${sortIndicator("latest_pass_count")}`}
-                onClick={() => toggleSort("latest_pass_count")}
+                label={`#${sortIndicator("idx")}`}
+                onClick={() => toggleSort("idx")}
+              />
+              <SortableTh
+                label={`Pass${sortIndicator("latest_passes")}`}
+                onClick={() => toggleSort("latest_passes")}
               />
               <SortableTh
                 label={`|Bias%|${sortIndicator("latest_bias_pct")}`}
@@ -175,13 +177,11 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
           </thead>
           <tbody>
             {sorted.map((r) => {
-              const passAll =
-                r.latest_testcase_count > 0 &&
-                r.latest_pass_count === r.latest_testcase_count;
-              const passNone = r.latest_testcase_count === 0;
+              const latestMissing = r.latest_passes == null;
+              const isBhSig = (r.latest_q ?? 1) <= 0.05 && r.latest_passes === 0;
               return (
                 <tr
-                  key={r.file_path}
+                  key={`${r.file_path}:${r.testcase_id}:${r.idx}`}
                   style={{
                     borderBottom: "1px solid var(--border-color)",
                     opacity: r.retired ? 0.6 : 1,
@@ -192,16 +192,16 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
                     title={r.file_path}
                   >
                     <Link
-                      href={testcaseDetailHref(r.file_path)}
+                      href={`${testcaseDetailHref(r.file_path)}?tc=${r.idx}`}
                       className="underline hover:opacity-80"
                       style={{ color: "var(--sidebar-active)" }}
                     >
                       {fileBasename(r.file_path)}
                     </Link>
-                    {r.latest_any_waived === 1 && (
+                    {r.latest_waived_bool === 1 && (
                       <span className="ml-2 opacity-60 text-xs">W</span>
                     )}
-                    {r.latest_any_bh_sig === 1 && (
+                    {isBhSig && (
                       <span
                         className="ml-2 text-xs font-bold"
                         style={{ color: "#f38ba8" }}
@@ -210,17 +210,29 @@ export default function TestcaseFileIndexTable({ rows }: Props) {
                       </span>
                     )}
                   </td>
-                  <td className="py-1.5 pr-3">{r.latest_testcase_count}</td>
+                  <td
+                    className="py-1.5 pr-3 max-w-[18rem] truncate"
+                    title={r.testcase_id}
+                  >
+                    <Link
+                      href={`${testcaseDetailHref(r.file_path)}?tc=${r.idx}`}
+                      className="underline hover:opacity-80"
+                      style={{ color: "var(--sidebar-active)" }}
+                    >
+                      {r.testcase_id || "(no id)"}
+                    </Link>
+                  </td>
+                  <td className="py-1.5 pr-3">{r.idx}</td>
                   <td className="py-1.5 pr-3">
-                    {passNone ? (
+                    {latestMissing ? (
                       <span className="opacity-40">—</span>
                     ) : (
                       <span
                         style={{
-                          color: passAll ? "#a6e3a1" : "#f38ba8",
+                          color: r.latest_passes === 1 ? "#a6e3a1" : "#f38ba8",
                         }}
                       >
-                        {r.latest_pass_count}/{r.latest_testcase_count}
+                        {r.latest_passes === 1 ? "P" : "F"}
                       </span>
                     )}
                   </td>

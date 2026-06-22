@@ -8,7 +8,7 @@ import type { PublicSurface } from "@/lib/public-surface";
 const DASHBOARD_LINKS: { href: string; label: string }[] = [
   { href: "/", label: "Dashboard" },
   { href: "/runs", label: "Runs" },
-  { href: "/parity", label: "Parity" },
+  { href: "/parity", label: "Run Reports" },
   { href: "/coverage", label: "Coverage" },
   { href: "/heroes", label: "Heroes" },
   { href: "/testcases", label: "Testcases" },

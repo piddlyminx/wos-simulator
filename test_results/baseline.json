@@ -981,7 +981,7 @@
     },
     "testcases/emulator_verified/hector_renee_wayne.json#0": {
       "file": "testcases/emulator_verified/hector_renee_wayne.json",
-      "testcase_id": "determinism_test_normal",
+      "testcase_id": "hector_renee_wayne",
       "idx": 0,
       "n_sim": 100,
       "mu_sim": 1611.51,

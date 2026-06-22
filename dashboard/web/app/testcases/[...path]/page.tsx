@@ -596,7 +596,11 @@ export default async function TestcaseDetailPage({
                   >
                     <td className={compactTd}>
                       <Link
-                        href={`/runs/${h.run_id}`}
+                        href={`/runs/${h.run_id}/case?${new URLSearchParams({
+                          file,
+                          testcaseId: active.testcase_id,
+                          idx: String(active.idx),
+                        }).toString()}`}
                         className="underline hover:opacity-80"
                         style={{ color: "var(--sidebar-active)" }}
                       >

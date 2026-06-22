@@ -31,7 +31,7 @@ export default async function ParityCasePage({
           className="rounded p-6 text-sm opacity-70"
           style={{ border: "1px solid var(--border-color)" }}
         >
-          Parity testcase row not found.
+          Run report testcase row not found.
         </div>
       </div>
     );
@@ -61,7 +61,7 @@ function Back({ reportId }: { reportId: string }) {
       className="mb-4 inline-block text-xs opacity-60 hover:opacity-100"
       style={{ color: "var(--sidebar-active)" }}
     >
-      &larr; Back to Parity
+      &larr; Back to Run Reports
     </Link>
   );
 }

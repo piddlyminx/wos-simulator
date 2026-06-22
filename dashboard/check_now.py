@@ -136,6 +136,11 @@ def ingest_report(report_path: Path, repo_root: Path = REPO_ROOT) -> dict[str, A
         raise ValueError(f"Report at {report_path} is not a JSON object")
     payload.setdefault("git_sha", git_sha())
     payload.setdefault("dirty", git_dirty())
+    payload.setdefault("report_file", report_path.name)
+    try:
+        payload.setdefault("report_path", str(report_path.relative_to(repo_root)))
+    except ValueError:
+        payload.setdefault("report_path", str(report_path))
 
     try:
         dirty_state = capture_dirty_state(repo_root)
@@ -156,7 +161,7 @@ def ingest_report(report_path: Path, repo_root: Path = REPO_ROOT) -> dict[str, A
         row = conn.execute(
             """
             SELECT id, started_at, finished_at, overall_avg_error_pct,
-                   bh_sig_count, summary_json
+                   bh_sig_count, summary_json, report_file, report_path
             FROM runs
             WHERE id = ?
             """,
@@ -177,6 +182,8 @@ def ingest_report(report_path: Path, repo_root: Path = REPO_ROOT) -> dict[str, A
         "total": summary.get("total"),
         "passing": summary.get("passing"),
         "failing": summary.get("failing"),
+        "report_file": row["report_file"],
+        "report_path": row["report_path"],
     }
 
 

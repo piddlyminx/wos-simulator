@@ -54,14 +54,16 @@ class TestCheckNow(unittest.TestCase):
             self.assertIsNotNone(run)
             self.assertEqual(run["started_at"], "2026-06-10T01:00:00.000Z")
             self.assertEqual(run["passing"], 1)
+            self.assertEqual(run["report_file"], "simulator_parity_current.json")
 
             conn = open_db(db_path)
             try:
-                count = conn.execute("SELECT COUNT(*) FROM runs").fetchone()[0]
+                row = conn.execute("SELECT COUNT(*), report_file FROM runs").fetchone()
             finally:
                 conn.close()
 
-            self.assertEqual(count, 1)
+            self.assertEqual(row[0], 1)
+            self.assertEqual(row[1], "simulator_parity_current.json")
 
 
 if __name__ == "__main__":

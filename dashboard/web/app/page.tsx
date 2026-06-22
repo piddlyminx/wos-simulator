@@ -141,7 +141,7 @@ export default function HomePage() {
           style={{ border: "1px solid var(--border-color)" }}
         >
           No historical runs found. Use Check now to generate a current simulator
-          parity report, or backfill the database for older run history.
+          run report, or backfill the database for older run history.
         </div>
       </div>
     );

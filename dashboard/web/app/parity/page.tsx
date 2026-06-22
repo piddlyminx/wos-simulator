@@ -26,7 +26,7 @@ export default async function ParityPage({
           className="text-lg font-bold"
           style={{ color: "var(--sidebar-active)" }}
         >
-          Simulator Parity Reports
+          Run Report Artifacts
         </h2>
         {reports.length > 0 && (
           <form>
@@ -58,9 +58,9 @@ export default async function ParityPage({
       </div>
 
       <p className="mb-6 max-w-3xl text-sm opacity-60">
-        Raw simulator parity runner reports, separate from the SQLite-backed historical
-        runs. Save a simulator runner JSON report here to inspect simulator-vs-baseline and
-        simulator-vs-game accuracy.
+        Raw simulator testcase run reports. Runs are the primary dashboard
+        concept; these artifacts provide deeper per-case detail and legacy
+        simulator-vs-Python baseline comparison fields when available.
       </p>
 
       {!report ? (
@@ -69,7 +69,7 @@ export default async function ParityPage({
           style={{ border: "1px solid var(--border-color)" }}
         >
           <p className="mb-3 opacity-70">
-            No compatible simulator parity reports found in:
+            No compatible simulator run reports found in:
           </p>
           <code
             className="block break-all rounded p-3 text-xs"

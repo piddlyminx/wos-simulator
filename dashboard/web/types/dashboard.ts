@@ -28,6 +28,8 @@ export interface Run {
   commit_subject: string | null;
   commit_author: string | null;
   commit_date: string | null;
+  report_file?: string | null;
+  report_path?: string | null;
 }
 
 export interface RunTestcase {
@@ -223,4 +225,22 @@ export interface TestcaseFileIndexRow {
   latest_bias_pct: number | null; // mean |bias_pct| across testcases in latest run
   latest_any_waived: number; // 0 | 1
   latest_any_bh_sig: number; // 0 | 1 (q <= 0.05 AND passes = 0)
+}
+
+/**
+ * Per-testcase row shown on the /testcases index page.
+ * Derived from historical `run_testcases` rows and enriched with latest-run stats.
+ */
+export interface TestcaseIndexRow {
+  file_path: string;
+  testcase_id: string;
+  idx: number;
+  first_seen_at: string | null;
+  last_seen_at: string | null;
+  run_count: number;
+  retired: number; // 0 | 1
+  latest_passes: number | null; // 0 | 1, NULL if absent from latest run
+  latest_bias_pct: number | null;
+  latest_q: number | null;
+  latest_waived_bool: number;
 }

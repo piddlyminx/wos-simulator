@@ -5,6 +5,7 @@ import { test } from "node:test";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 
+import { loadSimulatorConfig } from "./config";
 import { loadSimulatorConfigFromDir } from "./config-node";
 import type { SkillFile } from "./types";
 

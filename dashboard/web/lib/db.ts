@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseFileHistoryRow, TestcaseFileIndexRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
+import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseFileHistoryRow, TestcaseFileIndexRow, TestcaseIndexRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
 import { biasErrorDelta } from "./run-delta";
 
 /**
@@ -1297,6 +1297,77 @@ export function getTestcaseFileIndex(): TestcaseFileIndexRow[] {
     });
   } catch (err) {
     console.error("[wos-dashboard] getTestcaseFileIndex failed:", err);
+    return [];
+  }
+}
+
+/**
+ * Return one row per testcase across all runs, enriched with that testcase's
+ * latest-run result when present. Used by the /testcases index page.
+ */
+export function getTestcaseIndex(): TestcaseIndexRow[] {
+  const database = getDb();
+  if (!database) return [];
+  try {
+    return database
+      .prepare(
+        `WITH latest_run AS (
+           SELECT id FROM runs WHERE started_at IS NOT NULL
+           ORDER BY started_at DESC LIMIT 1
+         ),
+         case_runs AS (
+           SELECT rt.file AS file_path, rt.testcase_id, rt.idx, rt.run_id,
+                  r.started_at, rt.passes, rt.bias_pct, rt.q, rt.waived_bool
+           FROM run_testcases rt
+           JOIN runs r ON rt.run_id = r.id
+           WHERE r.started_at IS NOT NULL
+         ),
+         agg AS (
+           SELECT file_path, testcase_id, idx,
+                  COUNT(DISTINCT run_id) AS run_count,
+                  MIN(started_at) AS first_seen_at,
+                  MAX(started_at) AS last_seen_at
+           FROM case_runs
+           GROUP BY file_path, testcase_id, idx
+         ),
+         last_run AS (
+           SELECT cr.file_path, cr.testcase_id, cr.idx, cr.run_id
+           FROM case_runs cr
+           JOIN agg a ON cr.file_path = a.file_path
+                     AND cr.testcase_id = a.testcase_id
+                     AND cr.idx = a.idx
+                     AND cr.started_at = a.last_seen_at
+         ),
+         latest_case AS (
+           SELECT cr.file_path, cr.testcase_id, cr.idx, cr.passes,
+                  cr.bias_pct, cr.q, cr.waived_bool
+           FROM case_runs cr
+           WHERE cr.run_id = (SELECT id FROM latest_run)
+         )
+         SELECT a.file_path,
+                a.testcase_id,
+                a.idx,
+                a.first_seen_at,
+                a.last_seen_at,
+                a.run_count,
+                CASE WHEN lr.run_id != (SELECT id FROM latest_run)
+                     THEN 1 ELSE 0 END AS retired,
+                lc.passes AS latest_passes,
+                lc.bias_pct AS latest_bias_pct,
+                lc.q AS latest_q,
+                COALESCE(lc.waived_bool, 0) AS latest_waived_bool
+         FROM agg a
+         JOIN last_run lr ON a.file_path = lr.file_path
+                         AND a.testcase_id = lr.testcase_id
+                         AND a.idx = lr.idx
+         LEFT JOIN latest_case lc ON a.file_path = lc.file_path
+                                  AND a.testcase_id = lc.testcase_id
+                                  AND a.idx = lc.idx
+         ORDER BY a.file_path, a.idx`
+      )
+      .all() as TestcaseIndexRow[];
+  } catch (err) {
+    console.error("[wos-dashboard] getTestcaseIndex failed:", err);
     return [];
   }
 }

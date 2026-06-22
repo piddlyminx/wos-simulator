@@ -82,7 +82,7 @@ function StatusPanel({ status }: { status: CheckNowStatus }) {
       {status.state === "running" && (
         <p className="opacity-80">
           The TypeScript simulator testcase runner is running in the background.
-          The parity report page will show the new result when it lands.
+          The run report page will show the new result when it lands.
         </p>
       )}
 
@@ -92,7 +92,7 @@ function StatusPanel({ status }: { status: CheckNowStatus }) {
             Latest report: <span className="font-mono">{status.latest_report.path}</span>
           </span>
           <Link href="/parity" className="underline" style={{ color: "#a6e3a1" }}>
-            View parity reports
+            View run reports
           </Link>
         </div>
       )}
@@ -244,7 +244,7 @@ export default function CheckNowControls() {
           </h3>
           <p className="text-xs opacity-65">
             Launch the TypeScript simulator testcase runner from the dashboard and
-            write a parity report under <code>simulator/testcase_results</code>.
+            write a run report under <code>simulator/testcase_results</code>.
           </p>
         </div>
 

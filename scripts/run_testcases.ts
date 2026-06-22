@@ -19,8 +19,8 @@ import {
 import { TestcaseWorkerPool } from "./testcase_worker_pool";
 
 export async function main(argv = process.argv.slice(2)): Promise<void> {
-  const options = parseArgs(argv);
   try {
+    const options = parseArgs(argv);
     const config = loadSimulatorConfig();
     const report = await runCliTestcases(options, config);
     const stdout = options.human ? formatHumanSummary(report) : JSON.stringify(buildSummaryForOutput(report), null, 2);
@@ -73,18 +73,36 @@ function parseArgs(args: string[]): CliOptions {
   };
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
-    if (arg === "--matching") testcaseOptions.matching = args[++index];
-    else if (arg === "--repeat") testcaseOptions.repeat = Number(args[++index]) || 1;
-    else if (arg === "--testcase-root") testcaseOptions.testcaseRoot = args[++index];
-    else if (arg === "--calibration-report") testcaseOptions.calibrationReportPath = args[++index];
+    if (arg === "--matching") testcaseOptions.matching = readOptionValue(args, ++index, arg);
+    else if (arg === "--repeat") testcaseOptions.repeat = readPositiveIntegerOption(args, ++index, arg);
+    else if (arg === "--testcase-root") testcaseOptions.testcaseRoot = readOptionValue(args, ++index, arg);
+    else if (arg === "--calibration-report") testcaseOptions.calibrationReportPath = readOptionValue(args, ++index, arg);
     else if (arg === "--include-disabled") testcaseOptions.includeDisabled = true;
-    else if (arg === "--seed") testcaseOptions.seed = args[++index];
-    else if (arg === "--workers") testcaseOptions.workers = Math.max(1, Number(args[++index]) || 1);
-    else if (arg === "--output-dir") options.outputDir = resolve(args[++index]);
+    else if (arg === "--seed") testcaseOptions.seed = readOptionValue(args, ++index, arg);
+    else if (arg === "--workers") testcaseOptions.workers = readPositiveIntegerOption(args, ++index, arg);
+    else if (arg === "--output-dir") options.outputDir = resolve(readOptionValue(args, ++index, arg));
     else if (arg === "--no-run-snapshot") options.noRunSnapshot = true;
     else if (arg === "--human") options.human = true;
+    else throw new Error(`Unknown argument: ${arg ?? ""}`);
   }
   return options;
+}
+
+function readOptionValue(args: string[], index: number, option: string): string {
+  const value = args[index];
+  if (!value || value.startsWith("--")) {
+    throw new Error(`Missing value for ${option}`);
+  }
+  return value;
+}
+
+function readPositiveIntegerOption(args: string[], index: number, option: string): number {
+  const value = readOptionValue(args, index, option);
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1) {
+    throw new Error(`Invalid value for ${option}: ${value}`);
+  }
+  return parsed;
 }
 
 export function formatHumanSummary(report: TestcaseRunReport): string {
@@ -96,7 +114,7 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
   const lines: string[] = [
     "Testcase summary",
     `Created: ${report.createdAt}`,
-    `Files: ${report.counts.filesFound}  Cases: ${report.counts.testcasesFound}  Executed: ${report.counts.executed}  Errors: ${report.counts.errors}  Warnings: ${report.counts.warnings}`,
+    `Files: ${report.counts.filesFound}  Cases: ${report.counts.testcasesFound}  Executed: ${report.counts.executed}  Errors: ${report.counts.errors}  Warnings: ${headlineWarningCount(report)}`,
     ""
   ];
 
@@ -159,6 +177,17 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
   }
 
   return `${lines.join("\n")}\n`;
+}
+
+function headlineWarningCount(report: TestcaseRunReport): number {
+  return report.warnings.filter((warning) => !isLegacyMissingBaselineWarning(warning)).length;
+}
+
+function isLegacyMissingBaselineWarning(warning: TestcaseRunReport["warnings"][number]): boolean {
+  return (
+    warning.stage === "baseline_comparison" &&
+    warning.reason === "No matching baseline snapshot row"
+  );
 }
 
 function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | undefined): Record<string, string> {

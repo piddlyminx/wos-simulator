@@ -32,7 +32,7 @@ export default function RunsPage() {
           style={{ border: "1px solid var(--border-color)" }}
         >
           No historical runs found. Use the button above to generate a current
-          simulator parity report, or backfill the database for older run history.
+          simulator run report, or backfill the database for older run history.
         </div>
       ) : (
         <RunsAccordionTable runs={runs} defaultOpen={true} />
