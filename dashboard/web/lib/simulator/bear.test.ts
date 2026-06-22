@@ -3,7 +3,7 @@ import { test } from "node:test";
 
 import type { BearBattleResult } from "@simulator/types";
 import type { BearSimRequestPayload } from "@/lib/simulate-run";
-import { aggregateBearResults, toBearBattlePlayerInput } from "./bear";
+import { aggregateBearResults, runBearOptimizeRatio, toBearBattlePlayerInput } from "./bear";
 
 const request: BearSimRequestPayload = {
   player: {
@@ -125,4 +125,25 @@ test("aggregateBearResults summarizes bear scores and per-seed runs", () => {
   assert.deepEqual(result.skills, [
     { name: "S1", avg_activations: 1, avg_kills: 7.5 }
   ]);
+});
+
+test("runBearOptimizeRatio ranks troop mixes by average bear score", () => {
+  const result = runBearOptimizeRatio(
+    {
+      ...request,
+      grid_step: 25,
+      search_replicates: 1,
+      infantry_min_pct: 0,
+      infantry_max_pct: 100,
+      top_n: 3,
+      search_mode: "grid",
+    },
+    {
+      scoreCandidate: (candidate) => candidate.marksman_count,
+    },
+  );
+
+  assert.equal(result.best.marksman_count, 175);
+  assert.equal(result.best.avg_score, 175);
+  assert.equal(result.top_results[0].avg_score, 175);
 });

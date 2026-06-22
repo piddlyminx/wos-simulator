@@ -163,6 +163,47 @@ export interface BearSimResult {
   skills: SimulateSkillSummary[];
 }
 
+export interface BearOptimizeRatioPoint {
+  infantry_count: number;
+  lancer_count: number;
+  marksman_count: number;
+  infantry_pct: number;
+  lancer_pct: number;
+  marksman_pct: number;
+  avg_score: number;
+  score_std?: number;
+  rank?: number;
+  is_best?: boolean;
+  search_phase?: "coarse" | "local" | "finalist" | "grid";
+  phase_replicates?: number;
+}
+
+export interface BearOptimizeRatioResult {
+  total_troops: number;
+  search_mode?: OptimizeSearchMode;
+  grid_step: number;
+  compositions_tested: number;
+  projected_battles: number;
+  replicates_per_ratio: number;
+  infantry_min_pct: number;
+  infantry_max_pct: number;
+  phase_counts?: Partial<
+    Record<"phase1" | "phase2" | "finalists" | "grid", number>
+  >;
+  best: BearOptimizeRatioPoint;
+  top_results: BearOptimizeRatioPoint[];
+  points: BearOptimizeRatioPoint[];
+}
+
+export interface BearOptimizeRatioRequestPayload extends BearSimRequestPayload {
+  grid_step: number;
+  search_replicates: number;
+  infantry_min_pct: number;
+  infantry_max_pct: number;
+  top_n: number;
+  search_mode?: OptimizeSearchMode;
+}
+
 export interface OptimizeRatioRequestPayload extends SimulateRequestPayload {
   grid_step: number;
   search_replicates: number;

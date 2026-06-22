@@ -1,4 +1,4 @@
-import type { BearSimRequestPayload, BearSimResult, OptimizeRatioRequestPayload, OptimizeRatioResult, SimulateApiResult, SimulateRequestPayload, SimulateTrace } from "@/lib/simulate-run";
+import type { BearOptimizeRatioRequestPayload, BearOptimizeRatioResult, BearSimRequestPayload, BearSimResult, OptimizeRatioRequestPayload, OptimizeRatioResult, SimulateApiResult, SimulateRequestPayload, SimulateTrace } from "@/lib/simulate-run";
 import type { TournamentRequestPayload, TournamentResult } from "@/lib/tournament";
 import { createProgressThrottle } from "./progress-throttle";
 import type { SimulatorWorkerRequest, SimulatorWorkerResponse } from "./worker-protocol";
@@ -10,6 +10,7 @@ type WorkerJobRequest =
   | Omit<Extract<SimulatorWorkerRequest, { type: "simulateTrace" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "bearSim" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "bearTrace" }>, "id">
+  | Omit<Extract<SimulatorWorkerRequest, { type: "bearOptimize" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "optimizeRatio" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "tournament" }>, "id">;
 
@@ -41,6 +42,13 @@ export function runWorkerBearSimulationTrace(
   onProgress: (done: number, total: number) => void
 ): { promise: Promise<SimulateTrace>; cancel: () => void } {
   return runWorkerJob<SimulateTrace>({ type: "bearTrace", payload, seed }, "bearTraceResult", onProgress);
+}
+
+export function runWorkerBearOptimizeRatio(
+  payload: BearOptimizeRatioRequestPayload,
+  onProgress: (done: number, total: number) => void
+): { promise: Promise<BearOptimizeRatioResult>; cancel: () => void } {
+  return runWorkerJob<BearOptimizeRatioResult>({ type: "bearOptimize", payload }, "bearOptimizeResult", onProgress);
 }
 
 export function runWorkerOptimizeRatio(

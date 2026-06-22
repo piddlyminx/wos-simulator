@@ -1,4 +1,4 @@
-import type { BearSimRequestPayload, BearSimResult, OptimizeRatioRequestPayload, OptimizeRatioResult, SimulateApiResult, SimulateRequestPayload, SimulateTrace } from "@/lib/simulate-run";
+import type { BearOptimizeRatioRequestPayload, BearOptimizeRatioResult, BearSimRequestPayload, BearSimResult, OptimizeRatioRequestPayload, OptimizeRatioResult, SimulateApiResult, SimulateRequestPayload, SimulateTrace } from "@/lib/simulate-run";
 import type { TournamentRequestPayload, TournamentResult } from "@/lib/tournament";
 
 export type SimulatorWorkerRequest =
@@ -6,6 +6,7 @@ export type SimulatorWorkerRequest =
   | { id: number; type: "simulateTrace"; payload: SimulateRequestPayload; seed: string | number }
   | { id: number; type: "bearSim"; payload: BearSimRequestPayload }
   | { id: number; type: "bearTrace"; payload: BearSimRequestPayload; seed: string | number }
+  | { id: number; type: "bearOptimize"; payload: BearOptimizeRatioRequestPayload }
   | { id: number; type: "optimizeRatio"; payload: OptimizeRatioRequestPayload }
   | { id: number; type: "tournament"; payload: TournamentRequestPayload }
   | { id: number; type: "cancel" };
@@ -16,6 +17,7 @@ export type SimulatorWorkerResponse =
   | { id: number; type: "simulateTraceResult"; data: SimulateTrace }
   | { id: number; type: "bearResult"; data: BearSimResult }
   | { id: number; type: "bearTraceResult"; data: SimulateTrace }
+  | { id: number; type: "bearOptimizeResult"; data: BearOptimizeRatioResult }
   | { id: number; type: "optimizeResult"; data: OptimizeRatioResult }
   | { id: number; type: "tournamentResult"; data: TournamentResult }
   | { id: number; type: "error"; message: string };
