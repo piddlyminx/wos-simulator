@@ -110,6 +110,67 @@ test("simulateBearBattle always resolves the player army as a rally attacker", (
   assert.ok(result.skillReport.attacker.some((row) => row.skillName === "Overlap"));
 });
 
+test("simulateBearBattle scores uncapped per-attack damage", () => {
+  const config = minimalConfig({
+    Main: {
+      name: "Main",
+      skills: {
+        MainBuff: {
+          trigger: { type: "battle_start" },
+          effects: { buff: { type: "active.hero.lethality.up", value: 100 } }
+        }
+      }
+    },
+    DefensiveJoiner: {
+      name: "DefensiveJoiner",
+      skills: {
+        DefensiveBuff: {
+          trigger: { type: "battle_start" },
+          effects: { buff: { type: "active.hero.defense.up", value: 100 } }
+        }
+      }
+    },
+    DamageJoiner: {
+      name: "DamageJoiner",
+      skills: {
+        DamageBuff: {
+          trigger: { type: "battle_start" },
+          effects: { buff: { type: "active.hero.lethality.up", value: 100 } }
+        }
+      }
+    }
+  });
+  const player: FighterInput = {
+    name: "Player",
+    troops: { infantry_t1: 10000 },
+    stats: {
+      infantry: {
+        attack: 1000,
+        defense: 100,
+        lethality: 1000,
+        health: 100
+      }
+    },
+    heroes: { Main: { skill_1: 1 } }
+  };
+
+  const defensive = simulateBearBattle(
+    { ...player, joiner_heroes: { DefensiveJoiner: { skill_1: 1 } } },
+    config,
+    "bear-uncapped-defensive",
+    { mode: "trace" }
+  );
+  const damage = simulateBearBattle(
+    { ...player, joiner_heroes: { DamageJoiner: { skill_1: 1 } } },
+    config,
+    "bear-uncapped-damage",
+    { mode: "trace" }
+  );
+
+  assert.ok(defensive.attacks.some((attack) => attack.kills > 5000));
+  assert.ok(damage.score > defensive.score);
+});
+
 test("simulateBattle calculates all same-round damage from the round-start troop snapshot", () => {
   const config = loadSimulatorConfig();
   const result = simulateBattle(

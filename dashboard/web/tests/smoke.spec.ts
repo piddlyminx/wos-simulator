@@ -492,6 +492,26 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
+  test("/bear — renders bear sim controls", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(err.message));
+
+    const response = await page.goto("/bear");
+    expect(response?.status()).toBe(200);
+
+    await expect(page.getByRole("heading", { name: "Bear Sim", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Player Army" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Bear Sim" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Upload report" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Optimise ratio" })).toBeVisible();
+    await expect(page.locator('nav a[href="/bear"]').first()).toBeVisible();
+
+    expect(errors).toHaveLength(0);
+  });
+
   test("/simulate — successful runs update the URL to the saved share link", async ({
     page,
   }) => {

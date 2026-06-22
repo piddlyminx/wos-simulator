@@ -97,11 +97,29 @@ test("toBearBattlePlayerInput maps one dashboard side to simulator fighter input
   });
   assert.equal(fighter.stats?.infantry?.defense, 101);
   assert.deepEqual(fighter.heroes, { Greg: { skill_1: 5 } });
-  assert.deepEqual(fighter.joiner_heroes, { Jessie: { skill_1: 5 } });
+  assert.deepEqual(fighter.joiner_heroes, [{ name: "Jessie", levels: { skill_1: 5 } }]);
   assert.deepEqual(fighter.passive, {
     attack: { up: 10 },
     lethality: { up: 5 }
   });
+});
+
+test("toBearBattlePlayerInput preserves duplicate joiner heroes", () => {
+  const fighter = toBearBattlePlayerInput({
+    ...request,
+    player: {
+      ...request.player,
+      joiners: [
+        { name: "Jasser", skill_1: 5 },
+        { name: "Jasser", skill_1: 5 }
+      ]
+    }
+  });
+
+  assert.deepEqual(fighter.joiner_heroes, [
+    { name: "Jasser", levels: { skill_1: 5 } },
+    { name: "Jasser", levels: { skill_1: 5 } }
+  ]);
 });
 
 test("aggregateBearResults summarizes bear scores and per-seed runs", () => {

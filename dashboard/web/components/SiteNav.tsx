@@ -14,11 +14,13 @@ const DASHBOARD_LINKS: { href: string; label: string }[] = [
   { href: "/testcases", label: "Testcases" },
   { href: "/testcases/changelog", label: "Changelog" },
   { href: "/simulate", label: "Simulate" },
+  { href: "/bear", label: "Bear Sim" },
   { href: "/tournament", label: "Tournament" },
 ];
 
 const SIMULATE_LINKS: { href: string; label: string }[] = [
   { href: "/simulate", label: "Simulate" },
+  { href: "/bear", label: "Bear Sim" },
 ];
 
 function isActive(pathname: string, href: string): boolean {

@@ -39,10 +39,9 @@ test("toBattleInput maps dashboard payload to simulator BattleInput", () => {
   assert.equal(input.engagement_type, "rally");
   assert.deepEqual(input.attacker.troops, { infantry_t6: 100, lancer_t6: 50, marksman_t6: 25 });
   const heroes = input.attacker.heroes as Record<string, Record<string, number>>;
-  const joiners = input.attacker.joiner_heroes as Record<string, Record<string, number>>;
   assert.deepEqual(heroes.Greg, { skill_1: 5, skill_2: 4, skill_3: 3, skill_4: 2 });
   assert.deepEqual(heroes.Mia, { skill_1: 1, skill_2: 2, skill_3: 3, skill_4: 4 });
-  assert.deepEqual(joiners.Jessie, { skill_1: 5 });
+  assert.deepEqual(input.attacker.joiner_heroes, [{ name: "Jessie", levels: { skill_1: 5 } }]);
   assert.ok(Math.abs((input.attacker.stats?.infantry?.attack ?? 0) - 100) < 1e-9);
   assert.ok(Math.abs((input.attacker.stats?.infantry?.defense ?? 0) - 101) < 1e-9);
   assert.ok(Math.abs((input.attacker.stats?.infantry?.lethality ?? 0) - 102) < 1e-9);
@@ -57,4 +56,25 @@ test("toBattleInput maps dashboard payload to simulator BattleInput", () => {
     attack: { down: 20 },
     defense: { down: 10 },
   });
+});
+
+test("toBattleInput preserves duplicate rally joiner heroes", () => {
+  const input = toBattleInput(
+    {
+      ...request,
+      attacker: {
+        ...request.attacker,
+        joiners: [
+          { name: "Jasser", skill_1: 5 },
+          { name: "Jasser", skill_1: 5 }
+        ]
+      }
+    },
+    "seed-duplicates"
+  );
+
+  assert.deepEqual(input.attacker.joiner_heroes, [
+    { name: "Jasser", levels: { skill_1: 5 } },
+    { name: "Jasser", levels: { skill_1: 5 } }
+  ]);
 });

@@ -90,6 +90,7 @@ interface BattleRun {
 
 interface RunLoopOptions {
   capRoundKills: boolean;
+  capJobKills: boolean;
   commitLosses: boolean;
   scoreSide?: {
     attackerSide: SideId;
@@ -128,6 +129,7 @@ export function simulateBearBattle(
   };
   const run = runBattle(input, configWithBearTroop(config), options, undefined, {
     capRoundKills: false,
+    capJobKills: false,
     commitLosses: false,
     scoreSide: { attackerSide: "attacker", defenderSide: "defender" }
   });
@@ -265,7 +267,7 @@ function runBattle(
   config: SimulatorConfig,
   options: SimulationOptions,
   prepared?: CompiledBattle,
-  loopOptions: RunLoopOptions = { capRoundKills: true, commitLosses: true }
+  loopOptions: RunLoopOptions = { capRoundKills: true, capJobKills: true, commitLosses: true }
 ): BattleRun {
   if (prepared?.template) {
     const fighters: Record<SideId, ResolvedFighter> = {
@@ -328,7 +330,8 @@ function runLoop(
         trace: recorder.capturesTrace,
         effectIndex: runtime.effectIndex,
         staticDamageProfile: runtime.staticDamageProfile,
-        scratch: recorder.capturesTrace ? undefined : runtime.damageScratch
+        scratch: recorder.capturesTrace ? undefined : runtime.damageScratch,
+        capToDefenderTroops: loopOptions.capJobKills
       });
       results.push({ job, result });
       if (

@@ -112,7 +112,7 @@ export function calculateDamageJob(
   job: DamageJob,
   fighters: Record<SideId, ResolvedFighter>,
   activeEffects: ActiveEffect[],
-  options: { trace?: boolean; effectIndex: EffectIndex; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch }
+  options: { trace?: boolean; effectIndex: EffectIndex; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch; capToDefenderTroops?: boolean }
 ): DamageResult {
   if (!options?.effectIndex) throw new Error("calculateDamageJob requires an effectIndex");
   // The damage math is one path; `trace` only decides whether we also capture the (expensive)
@@ -169,7 +169,8 @@ export function calculateDamageJob(
   const traceBuckets = needsTraceBuckets ? toTraceBuckets(buckets, staticTraceEntries) : undefined;
   const expressionDetail = traceEnabled ? "full" : "fast";
   const { rawDamage, aggregationGroups } = evaluateDefaultDamageExpression(job, buckets, expressionDetail, staticProfile);
-  const kills = Math.min(defenderTroops, Math.max(0, rawDamage));
+  const uncappedKills = Math.max(0, rawDamage);
+  const kills = options.capToDefenderTroops === false ? uncappedKills : Math.min(defenderTroops, uncappedKills);
   const trace = traceEnabled
     ? {
         roundStartTroops: {

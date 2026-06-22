@@ -34,10 +34,13 @@ function toHeroes(side: SimulateSidePayload): FighterInput["heroes"] {
 }
 
 function toJoinerHeroes(side: SimulateSidePayload): FighterInput["joiner_heroes"] {
-  const out: NonNullable<FighterInput["joiner_heroes"]> = {};
+  const out: Extract<NonNullable<FighterInput["joiner_heroes"]>, unknown[]> = [];
   for (const joiner of side.joiners ?? []) {
     if (!joiner.name) continue;
-    out[joiner.name] = { skill_1: Math.max(0, Math.floor(joiner.skill_1 ?? 0)) };
+    out.push({
+      name: joiner.name,
+      levels: { skill_1: Math.max(0, Math.floor(joiner.skill_1 ?? 0)) }
+    });
   }
   return out;
 }
