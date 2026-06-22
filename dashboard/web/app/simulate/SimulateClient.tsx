@@ -79,7 +79,7 @@ import {
 } from "@/lib/stat-presets";
 import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/simulator/worker-client";
 
-type Side = "attacker" | "defender";
+export type Side = "attacker" | "defender";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
 const STAT_NAMES: ("attack" | "defense" | "lethality" | "health")[] = [
   "attack",
@@ -153,16 +153,16 @@ const SAVED_RUN_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
   hour12: false,
 });
 
-interface HeroSlotState {
+export interface HeroSlotState {
   name: string | null;
   skills: [number, number, number, number];
 }
 
-interface JoinerSlotState {
+export interface JoinerSlotState {
   name: string | null;
 }
 
-interface SideState {
+export interface SideState {
   troops: Record<TroopCategory, number>;
   tiers: Record<TroopCategory, string>;
   heroes: Record<TroopCategory, HeroSlotState>;
@@ -212,7 +212,7 @@ const selectFocusedInputText: FocusEventHandler<HTMLDivElement> = (event) => {
   requestAnimationFrame(() => target.select());
 };
 
-function newStatPresetId(): string {
+export function newStatPresetId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
   }
@@ -221,7 +221,7 @@ function newStatPresetId(): string {
     .slice(2, 10)}`;
 }
 
-function loadLocalStatPresets(): PlayerStatPreset[] {
+export function loadLocalStatPresets(): PlayerStatPreset[] {
   if (typeof window === "undefined") return [];
   const raw = window.localStorage.getItem(STAT_PRESETS_STORAGE_KEY);
   if (!raw) return [];
@@ -232,7 +232,7 @@ function loadLocalStatPresets(): PlayerStatPreset[] {
   return sortPlayerStatPresets(parsed.map(normalizePlayerStatPreset));
 }
 
-function saveLocalStatPresets(presets: PlayerStatPreset[]): void {
+export function saveLocalStatPresets(presets: PlayerStatPreset[]): void {
   if (typeof window === "undefined") return;
   window.localStorage.setItem(
     STAT_PRESETS_STORAGE_KEY,
@@ -240,7 +240,7 @@ function saveLocalStatPresets(presets: PlayerStatPreset[]): void {
   );
 }
 
-function defaultSide(): SideState {
+export function defaultSide(): SideState {
   return {
     troops: { infantry: 1000, lancer: 1000, marksman: 1000 },
     tiers: { infantry: "t6", lancer: "t6", marksman: "t6" },
@@ -310,7 +310,7 @@ function toPetModifiersPayload(
   };
 }
 
-function toApiPayload(
+export function toApiPayload(
   attacker: SideState,
   defender: SideState,
   replicates: number,
@@ -469,7 +469,7 @@ function parsePetModifiers(
   };
 }
 
-function sideFromPayload(side: SimulateSidePayload): SideState {
+export function sideFromPayload(side: SimulateSidePayload): SideState {
   return {
     troops: {
       infantry: clampValue(side.troops?.infantry ?? 0, 0),
@@ -508,7 +508,7 @@ function sideFromPayload(side: SimulateSidePayload): SideState {
   };
 }
 
-function heroAdjustedStats(
+export function heroAdjustedStats(
   side: SideState,
   mode: "subtract" | "add",
 ): StatPresetValues {
@@ -528,7 +528,7 @@ function heroAdjustedStats(
   return out;
 }
 
-function sideWithPresetStats(
+export function sideWithPresetStats(
   side: SideState,
   preset: PlayerStatPreset,
 ): SideState {
@@ -539,7 +539,7 @@ function sideWithPresetStats(
   };
 }
 
-function compactNumber(v: number): string {
+export function compactNumber(v: number): string {
   const abs = Math.abs(v);
   if (abs >= 1_000_000) return `${(v / 1_000_000).toFixed(2)}M`;
   if (abs >= 1_000) return `${(v / 1_000).toFixed(1)}k`;
@@ -576,7 +576,7 @@ function optimizeRowKey(point: OptimizeRatioPoint): string {
   ].join(":");
 }
 
-function signedSurvivors(value: number): string {
+export function signedSurvivors(value: number): string {
   if (value === 0) return "0 (draw)";
   const who = value > 0 ? "attacker" : "defender";
   return `${compactNumber(Math.abs(value))} (${who})`;
@@ -738,7 +738,7 @@ function statModifierDescription(name: StatModifierName, value: number): string 
  * active buffs and debuffs are also inverted, because the screenshot has already
  * incorporated them and the main form needs the unbuffed player stat bonus.
  */
-function mergeSideFromOcr(
+export function mergeSideFromOcr(
   prev: SideState,
   ocrSide: {
     troops: Record<TroopCategory, number | null>;
@@ -2929,7 +2929,7 @@ function RecentRunsModal({
   );
 }
 
-function ProgressBar({
+export function ProgressBar({
   active,
   done,
   total,
@@ -2996,7 +2996,7 @@ function ProgressBar({
   );
 }
 
-function ResultCard({ label, value }: { label: string; value: string }) {
+export function ResultCard({ label, value }: { label: string; value: string }) {
   return (
     <div
       className="rounded px-3 py-2 flex flex-col gap-0.5"
@@ -3085,7 +3085,7 @@ function parseStatBonusDraft(value: string): number {
   return parseFloat(value.replace(",", "."));
 }
 
-function SidePanel({
+export function SidePanel({
   title,
   which,
   state,
@@ -4086,7 +4086,7 @@ function StatSyncToastBanner({
   );
 }
 
-function SkillUseTable({
+export function SkillUseTable({
   title,
   entries,
 }: {
@@ -4150,7 +4150,7 @@ function formatTraceNumber(value: number): string {
   return Math.round(value).toLocaleString();
 }
 
-function BattleTraceDetails({
+export function BattleTraceDetails({
   trace,
   attackerOnLeft,
 }: {
