@@ -58,12 +58,12 @@ const VALUE_FLAGS = new Set([
 export function parseCliArgs(argv: string[]): CliOptions {
   const options: CliOptions = {
     ratios: ["50,20,30"],
-    total: 100000,
+    total: 1500000,
     rounds: 30,
     seedRounds: 2,
     reps: 1,
     topN: 500,
-    jobs: cpus().length || 4,
+    jobs: cpus().length/2 || 4,
     seed: 1234,
     freezeRate: 0.2,
     startFreezeRound: 8,

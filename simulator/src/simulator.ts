@@ -84,7 +84,41 @@ interface BattleRun {
 }
 
 export function simulateBattle(input: BattleInput, config: SimulatorConfig, options: SimulationOptions = {}): BattleResult {
-  const run = runBattle(input, config, options);
+  return buildBattleResult(runBattle(input, config, options));
+}
+
+/**
+ * A resolved battle ready to run many times with different seeds. When battle-start is deterministic,
+ * the entire pre-loop runtime (`template`) is seed-independent and built once; each run clones its
+ * mutable state and reuses the skills + static profile by reference. For stochastic battle-start the
+ * template is absent and runs reuse only the resolved fighters.
+ */
+export interface CompiledBattle {
+  input: BattleInput;
+  config: SimulatorConfig;
+  fighters: Record<SideId, ResolvedFighter>;
+  template?: Runtime;
+  deterministicBattleStart: boolean;
+}
+
+export function prepareBattle(input: BattleInput, config: SimulatorConfig): CompiledBattle {
+  const attacker = resolveFighter(input.attacker, "attacker", config, input.engagement_type);
+  const defender = resolveFighter(input.defender, "defender", config, input.engagement_type);
+  const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
+  const deterministicBattleStart = !buildRuntimeSkills([attacker, defender]).battleStart.some(hasChanceTrigger);
+  // Deterministic battle-start => the entire pre-loop runtime is seed-independent; build it once.
+  const template = deterministicBattleStart ? setupRuntime(fighters, input, "simulator-prepare") : undefined;
+  return { input, config, fighters, template, deterministicBattleStart };
+}
+
+export function runPrepared(compiled: CompiledBattle, seed?: string | number, options: SimulationOptions = {}): BattleResult {
+  // Only override the compiled input's seed when a seed is explicitly supplied; spreading an
+  // undefined seed would otherwise clobber compiled.input.seed and silently lose reproducibility.
+  const runInput = seed === undefined ? compiled.input : { ...compiled.input, seed };
+  return buildBattleResult(runBattle(runInput, compiled.config, options, compiled));
+}
+
+function buildBattleResult(run: BattleRun): BattleResult {
   const { fighters, runtime } = run;
   return {
     winner: run.winner,
@@ -104,20 +138,78 @@ export function simulateBattle(input: BattleInput, config: SimulatorConfig, opti
   };
 }
 
-function runBattle(input: BattleInput, config: SimulatorConfig, options: SimulationOptions): BattleRun {
-  const attacker = resolveFighter(input.attacker, "attacker", config, input.engagement_type);
-  const defender = resolveFighter(input.defender, "defender", config, input.engagement_type);
-  const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
-  const runtime = createRuntime([attacker, defender], createSeededRng(input.seed ?? "simulator-default"));
-  const mode = options.mode ?? "standard";
-  const recorder = createRecorder(mode, runtime.skillReports, () => buildResolved(attacker, defender));
-  const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
+// Reuse a prepared fighter's immutable resolution; only the troop counts mutate during a run.
+function cloneFighterForRun(fighter: ResolvedFighter): ResolvedFighter {
+  return { ...fighter, troops: { ...fighter.initialTroops } };
+}
 
+// Build the full pre-loop runtime: fire battle_start, apply input passives, compile the static damage
+// profile, and drop static-profile effects from the per-job index.
+function setupRuntime(fighters: Record<SideId, ResolvedFighter>, input: BattleInput, seed: string | number): Runtime {
+  const runtime = createRuntime([fighters.attacker, fighters.defender], createSeededRng(seed));
   triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime);
   addInputPassiveEffects(runtime, input.attacker.passive, "attacker");
   addInputPassiveEffects(runtime, input.defender.passive, "defender");
   runtime.staticDamageProfile = buildStaticDamageProfile(fighters, runtime.activeEffects);
   removeStaticProfileBucketEffects(runtime.effectIndex);
+  return runtime;
+}
+
+// Clone a prepared template's mutable per-run state. Effects are shallow-cloned (only `uses` mutates)
+// and the index rebuilt from the clones; skills and the static profile are shared by reference.
+function cloneRuntime(template: Runtime, rng: Rng): Runtime {
+  const activeEffects = template.activeEffects.map((effect) => ({ ...effect }));
+  const effectIndex = createEffectIndex();
+  for (const effect of activeEffects) indexEffect(effectIndex, effect);
+  removeStaticProfileBucketEffects(effectIndex);
+  return {
+    activeEffects,
+    effectIndex,
+    staticDamageProfile: template.staticDamageProfile,
+    damageScratch: createFastDamageScratch(),
+    rng,
+    skills: template.skills,
+    skillReports: cloneSkillReports(template.skillReports),
+    effectActivationCounts: { ...template.effectActivationCounts },
+    extraSkillAttackJobsByEffect: { ...template.extraSkillAttackJobsByEffect },
+    attackControlCounts: { ...template.attackControlCounts },
+    consumedEffectUseKeys: new Set(),
+    counters: {
+      attacks: { attacker: { ...template.counters.attacks.attacker }, defender: { ...template.counters.attacks.defender } },
+      received: { attacker: { ...template.counters.received.attacker }, defender: { ...template.counters.received.defender } }
+    }
+  };
+}
+
+function cloneSkillReports(reports: Record<SideId, Map<string, SkillReportEntry>>): Record<SideId, Map<string, SkillReportEntry>> {
+  const cloneSide = (side: Map<string, SkillReportEntry>): Map<string, SkillReportEntry> => {
+    const out = new Map<string, SkillReportEntry>();
+    for (const [key, entry] of side) out.set(key, { ...entry, unsupportedEffects: [...entry.unsupportedEffects] });
+    return out;
+  };
+  return { attacker: cloneSide(reports.attacker), defender: cloneSide(reports.defender) };
+}
+
+function runBattle(input: BattleInput, config: SimulatorConfig, options: SimulationOptions, prepared?: CompiledBattle): BattleRun {
+  if (prepared?.template) {
+    const fighters: Record<SideId, ResolvedFighter> = {
+      attacker: cloneFighterForRun(prepared.fighters.attacker),
+      defender: cloneFighterForRun(prepared.fighters.defender)
+    };
+    const runtime = cloneRuntime(prepared.template, createSeededRng(input.seed ?? "simulator-default"));
+    return runLoop(input, fighters, runtime, options);
+  }
+  const attacker = prepared ? cloneFighterForRun(prepared.fighters.attacker) : resolveFighter(input.attacker, "attacker", config, input.engagement_type);
+  const defender = prepared ? cloneFighterForRun(prepared.fighters.defender) : resolveFighter(input.defender, "defender", config, input.engagement_type);
+  const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
+  const runtime = setupRuntime(fighters, input, input.seed ?? "simulator-default");
+  return runLoop(input, fighters, runtime, options);
+}
+
+function runLoop(input: BattleInput, fighters: Record<SideId, ResolvedFighter>, runtime: Runtime, options: SimulationOptions): BattleRun {
+  const mode = options.mode ?? "standard";
+  const recorder = createRecorder(mode, runtime.skillReports, () => buildResolved(fighters.attacker, fighters.defender));
+  const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
 
   let rounds = 0;
   for (let round = 1; round <= maxRounds; round += 1) {

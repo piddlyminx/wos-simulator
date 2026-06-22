@@ -19,12 +19,13 @@ const battleCount = parseBattleCount(process.argv[2] ?? "60");
 const config = loadSimulatorConfig();
 const tasks = buildTasks(battleCount);
 
-const full = benchmarkFull(tasks, config);
-const fast = benchmarkFastScore(tasks, config);
+for (let i = 0; i < 5; i += 1) {
+  const full = benchmarkFull(tasks, config);
+  const fast = benchmarkFastScore(tasks, config);
 
-printSummary("full", full);
-printSummary("fast", fast);
-
+  printSummary("full", full);
+  printSummary("fast", fast);
+}
 function benchmarkFull(tasks: BattleTask[], config: SimulatorConfig): BenchmarkSummary {
   let totalRounds = 0;
   let totalAttackOutcomes = 0;

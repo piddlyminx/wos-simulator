@@ -6,8 +6,31 @@ import { fileURLToPath } from "node:url";
 import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./resolve";
-import { simulateBattle, signedRemainingScore } from "./simulator";
+import { prepareBattle, runPrepared, simulateBattle, signedRemainingScore } from "./simulator";
 import type { BattleInput, EffectIntentDefinition, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types";
+
+test("runPrepared reuses the compiled input seed when no override is supplied", () => {
+  const config = loadSimulatorConfig();
+  const stats = {
+    inf: { attack: 200, defense: 200, lethality: 150, health: 150 },
+    lanc: { attack: 200, defense: 200, lethality: 150, health: 150 },
+    mark: { attack: 200, defense: 200, lethality: 150, health: 150 }
+  };
+  const input: BattleInput = {
+    seed: "runprepared-seed-regression",
+    attacker: { troops: { infantry_t6: 5000, lancer_t6: 3000, marksman_t6: 4000 }, stats, heroes: { Mia: { skill_1: 5, skill_2: 5, skill_3: 5 } } },
+    defender: { troops: { infantry_t6: 5000, lancer_t6: 3000, marksman_t6: 4000 }, stats, heroes: { Greg: { skill_1: 5, skill_2: 5 } } }
+  };
+  const direct = simulateBattle(input, config);
+  // Only meaningful if chance triggers make the round loop seed-sensitive.
+  assert.equal(direct.randomness.deterministic, false, "expected a stochastic battle");
+  // runPrepared with no seed override must reproduce simulateBattle using the compiled input seed,
+  // not silently fall back to the default seed.
+  const prepared = runPrepared(prepareBattle(input, config));
+  assert.equal(prepared.winner, direct.winner);
+  assert.equal(prepared.rounds, direct.rounds);
+  assert.deepEqual(prepared.remaining, direct.remaining);
+});
 
 test("simulateBattle returns structured result for a no-hero battle", () => {
   const config = loadSimulatorConfig();

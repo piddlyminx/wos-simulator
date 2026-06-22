@@ -2,7 +2,7 @@ import type { DamageKind } from "./types";
 
 export type BucketRole = "attacker" | "defender";
 export type BucketValueType = "raw" | "pct";
-export type BucketUpdate = "assign_factor" | "add_pct_factor";
+export type BucketUpdate = "assign_factor" | "add_pct_factor" | "multiply_pct_factor";
 export type BucketPlacement = "numerator" | "denominator";
 // "static" pools are closed at compile time (base/player/passive): every contributor is
 // known at battle start, so they are aggregated once by the static damage profile.
@@ -71,6 +71,14 @@ export const BUCKETS = {
       health: {
         up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
         down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
+      },
+      damage: {
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
+      },
+      damageTaken: {
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
       }
     },
     troop: {
@@ -89,10 +97,24 @@ export const BUCKETS = {
       health: {
         up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
         down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
+      },
+      damage: {
+        up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
+      },
+      damageTaken: {
+        up: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
+        down: { role: "defender", valueType: "pct", update: "add_pct_factor", placement: "denominator" }
       }
     }
   },
   type: {
+    all: {
+      damage: {
+        up: { role: "attacker", valueType: "pct", update: "multiply_pct_factor", placement: "numerator" },
+        down: { role: "attacker", valueType: "pct", update: "multiply_pct_factor", placement: "denominator" }
+      }
+    },
     normal: {
       damage: {
         up: { role: "attacker", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "normal" },

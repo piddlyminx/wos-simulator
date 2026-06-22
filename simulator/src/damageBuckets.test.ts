@@ -2,12 +2,35 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { createFastDamageScratch } from "./damage";
-import { ATOMIC_BUCKETS } from "./damageBuckets";
+import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets";
 
-const REMOVED_ACTIVE_BUCKET_PATTERN = new RegExp(`^active\\.(${["hero", "troop"].join("|")})\\.(${["dam", "age"].join("")}|${["dam", "age", "Taken"].join("")})\\.`);
+test("active hero and troop damage aliases are supported all-damage buckets", () => {
+  for (const bucket of [
+    "active.hero.damage.up",
+    "active.hero.damage.down",
+    "active.hero.damageTaken.up",
+    "active.hero.damageTaken.down",
+    "active.troop.damage.up",
+    "active.troop.damage.down",
+    "active.troop.damageTaken.up",
+    "active.troop.damageTaken.down"
+  ]) {
+    assert.equal(ATOMIC_BUCKETS.includes(bucket), true, bucket);
+    assert.equal(bucketDefinition(bucket)?.appliesTo, undefined, bucket);
+  }
+  assert.equal(bucketDefinition("active.hero.damage.up")?.placement, "numerator");
+  assert.equal(bucketDefinition("active.hero.damage.down")?.placement, "denominator");
+  assert.equal(bucketDefinition("active.hero.damageTaken.up")?.placement, "numerator");
+  assert.equal(bucketDefinition("active.hero.damageTaken.down")?.placement, "denominator");
+});
 
-test("active hero and troop damage aliases are not supported buckets", () => {
-  assert.equal(ATOMIC_BUCKETS.some((bucket) => REMOVED_ACTIVE_BUCKET_PATTERN.test(bucket)), false);
+test("type all damage buckets multiply percentage factors", () => {
+  assert.equal(bucketDefinition("type.all.damage.up")?.update, "multiply_pct_factor");
+  assert.equal(bucketDefinition("type.all.damage.up")?.placement, "numerator");
+  assert.equal(bucketDefinition("type.all.damage.up")?.appliesTo, undefined);
+  assert.equal(bucketDefinition("type.all.damage.down")?.update, "multiply_pct_factor");
+  assert.equal(bucketDefinition("type.all.damage.down")?.placement, "denominator");
+  assert.equal(bucketDefinition("type.all.damage.down")?.appliesTo, undefined);
 });
 
 test("damage scratch stores one factor value per atomic bucket", () => {

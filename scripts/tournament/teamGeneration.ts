@@ -7,9 +7,9 @@ export const MAIN_POOL: Record<string, MainHeroRole> = {
   Gordon: "lanc",
   Mia: "lanc",
   Philly: "lanc",
-  Alonso: "mark",
+  // Alonso: "mark",
   Bradley: "mark",
-  Greg: "mark",
+  // Greg: "mark",
   Wayne: "mark"
 };
 
@@ -30,7 +30,7 @@ export const JOINER_POOL = [
 ] as const;
 
 export function parseRatio(text: string, total: number): Team["troops"] {
-  const parts = text.split(",").map((part) => part.trim()).filter(Boolean);
+  const parts = text.split(/[,\-]/).map((part) => part.trim()).filter(Boolean);
   if (parts.length !== 3) throw new Error("ratio must be 'inf,lanc,mark'");
   const values = parts.map((part) => Number(part));
   if (values.some((value) => !Number.isFinite(value))) throw new Error("ratio components must be numeric");

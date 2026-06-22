@@ -1,6 +1,7 @@
 export { buildSimulatorConfig, loadSimulatorConfig } from "./config";
 export type { RawSimulatorConfig } from "./config";
-export { simulateBattle, signedRemainingScore } from "./simulator";
+export { simulateBattle, prepareBattle, runPrepared, signedRemainingScore } from "./simulator";
+export type { CompiledBattle } from "./simulator";
 export { BattleInputBuilder } from "./battleInputBuilder";
 export { applyHeroGenerationStats } from "./resolve";
 export { discoverTestcaseFiles, runTestcases, adaptTestcaseEntry } from "./testcases";

@@ -127,17 +127,24 @@ test("classifier routes the complete native bucket policy into atomic buckets", 
     ["active.hero.attack.down", "active.hero.attack.down"],
     ["active.hero.lethality.up", "active.hero.lethality.up"],
     ["active.hero.lethality.down", "active.hero.lethality.down"],
-    ["active.hero.lethality.up", "active.hero.lethality.up"],
+    ["active.hero.damage.up", "active.hero.damage.up"],
+    ["active.hero.damage.down", "active.hero.damage.down"],
+    ["active.troop.damage.up", "active.troop.damage.up"],
+    ["active.troop.damage.down", "active.troop.damage.down"],
     ["type.normal.damage.up", "type.normal.damage.up"],
     ["type.normal.damage.down", "type.normal.damage.down"],
     ["type.skill.damage.up", "type.skill.damage.up"],
     ["type.skill.damage.down", "type.skill.damage.down"],
+    ["type.all.damage.up", "type.all.damage.up"],
+    ["type.all.damage.down", "type.all.damage.down"],
     ["active.hero.defense.up", "active.hero.defense.up"],
     ["active.hero.defense.down", "active.hero.defense.down"],
     ["active.hero.health.up", "active.hero.health.up"],
     ["active.hero.health.down", "active.hero.health.down"],
-    ["active.hero.defense.up", "active.hero.defense.up"],
-    ["active.hero.defense.down", "active.hero.defense.down"],
+    ["active.hero.damageTaken.up", "active.hero.damageTaken.up"],
+    ["active.hero.damageTaken.down", "active.hero.damageTaken.down"],
+    ["active.troop.damageTaken.up", "active.troop.damageTaken.up"],
+    ["active.troop.damageTaken.down", "active.troop.damageTaken.down"],
     ["type.normal.defense.up", "type.normal.defense.up"],
     ["type.normal.defense.down", "type.normal.defense.down"],
     ["type.skill.defense.up", "type.skill.defense.up"],
@@ -148,8 +155,10 @@ test("classifier routes the complete native bucket policy into atomic buckets", 
     "active.hero.defense.down",
     "active.hero.health.up",
     "active.hero.health.down",
-    "active.hero.defense.up",
-    "active.hero.defense.down",
+    "active.hero.damageTaken.up",
+    "active.hero.damageTaken.down",
+    "active.troop.damageTaken.up",
+    "active.troop.damageTaken.down",
     "type.normal.defense.up",
     "type.normal.defense.down",
     "type.skill.defense.up",
@@ -344,6 +353,34 @@ test("default aggregation multiplies hero and troop active damage buckets", () =
   assert.equal(combined.trace?.aggregationGroups["active.hero.lethality.up"].factor, 1.2);
   assert.equal(combined.trace?.aggregationGroups["active.troop.lethality.up"].factor, 1.1);
   assert.ok(Math.abs(combined.kills - baseline.kills * 1.2 * 1.1) < 1e-12);
+});
+
+test("multiplicative all-damage buckets compound instead of adding", () => {
+  const fighters = simpleFighters();
+  const baseline = calculateIndexedDamageJob(job, fighters, [], { trace: true });
+  const combined = calculateIndexedDamageJob(
+    job,
+    fighters,
+    [effect("type.all.damage.up", "attacker", 20), effect("type.all.damage.up", "attacker", 25)],
+    { trace: true }
+  );
+
+  assert.equal(combined.trace?.atomicBuckets["type.all.damage.up"].totalPct, 50);
+  assert.equal(combined.trace?.atomicBuckets["type.all.damage.up"].contributors.length, 2);
+  assert.equal(combined.trace?.aggregationGroups["type.all.damage.up"].factor, 1.5);
+  assert.ok(Math.abs(combined.kills - baseline.kills * 1.2 * 1.25) < 1e-12);
+});
+
+test("damage-taken buckets use the expected damage direction", () => {
+  const fighters = simpleFighters();
+  const baseline = calculateIndexedDamageJob(job, fighters, [], { trace: true });
+  const damageTakenUp = calculateIndexedDamageJob(job, fighters, [effect("active.hero.damageTaken.up", "defender", 25)], { trace: true });
+  const damageTakenDown = calculateIndexedDamageJob(job, fighters, [effect("active.hero.damageTaken.down", "defender", 25)], { trace: true });
+
+  assert.equal(damageTakenUp.trace?.aggregationGroups["active.hero.damageTaken.up"].placement, "numerator");
+  assert.equal(damageTakenDown.trace?.aggregationGroups["active.hero.damageTaken.down"].placement, "denominator");
+  assert.ok(Math.abs(damageTakenUp.kills - baseline.kills * 1.25) < 1e-12);
+  assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
 });
 
 test("negative passive stat bonuses route to down buckets with positive factors", () => {

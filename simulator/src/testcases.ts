@@ -10,7 +10,7 @@ import {
   sampleStats
 } from "./calibration";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
-import { simulateBattle } from "./simulator";
+import { simulateBattle, prepareBattle, runPrepared } from "./simulator";
 import { DamageAggregationError } from "./damage";
 import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, StatBlock, UnitType } from "./types";
 
@@ -435,7 +435,10 @@ function findGameStatAdjustment(options: {
   deterministic: boolean;
   thresholds?: Record<string, number>;
 }): InternalStatAdjustment | undefined {
-  if (!options.deterministic || options.game.bias_raw === 0) return undefined;
+  // Deterministic cases correct any nonzero bias; stochastic cases correct only outright misses.
+  // Either way a nonzero bias is needed to pick a search direction.
+  const shouldCorrect = options.deterministic ? options.game.bias_raw !== 0 : !options.game.passes;
+  if (!shouldCorrect || options.game.bias_raw === 0) return undefined;
   const direction = -Math.sign(options.game.bias_raw);
   const maxCandidate = evaluateStatAdjustment(options, direction * STAT_ROUNDING_MAX_ADJUSTMENT);
   let best = maxCandidate;
@@ -581,7 +584,11 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
     const samples: number[] = [];
     const sampleOutcomes: TestcaseSampleOutcome[] = [];
     const sampleDeltas: number[] = [];
-    let result = simulateBattle(sampleInput(job.input, job.seed, job.file, job.testcaseId, job.index, 0), config);
+    // Resolve the battle once and reuse it across every seeded sample of this case.
+    const compiled = prepareBattle(job.input, config);
+    const baseSeed = job.seed ?? job.input.seed;
+    const sample = (iteration: number) => runPrepared(compiled, sampleSeed(baseSeed, job.file, job.testcaseId, job.index, iteration));
+    let result = sample(0);
     const firstScore = battleScoreDelta(result);
     if (firstScore !== undefined) {
       samples.push(firstScore);
@@ -590,7 +597,7 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
     }
     const sampleCount = result.randomness.deterministic ? 1 : job.repeat;
     for (let iteration = 1; iteration < sampleCount; iteration += 1) {
-      result = simulateBattle(sampleInput(job.input, job.seed, job.file, job.testcaseId, job.index, iteration), config);
+      result = sample(iteration);
       const score = battleScoreDelta(result);
       if (score !== undefined) {
         samples.push(score);

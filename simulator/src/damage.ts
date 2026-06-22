@@ -350,6 +350,7 @@ function applyBucketValue(
   const index = BUCKET_IDS[bucketName];
   const definition = BUCKET_DEFINITIONS[bucketName];
   if (definition.update === "assign_factor") buckets.factors[index] = Math.max(0, value);
+  else if (definition.update === "multiply_pct_factor") buckets.factors[index] *= 1 + value / 100;
   else buckets.factors[index] += value / 100;
   if (effectId) buckets.contributors?.[index].push({ effectId, source, sourceSide, valuePct: value, bucket: traceBucketName, stackingKey, sameEffectStacking });
   return value;
