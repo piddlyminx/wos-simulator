@@ -958,30 +958,37 @@ test("same-round cap does not leave exhausted units targetable through floating 
 });
 
 test("committed losses clamp exhausted floating point residue before next-round target selection", () => {
-  const config = loadSimulatorConfig();
-  const fixturePath = fileURLToPath(new URL("../testcases/emulator_verified/renee_solo_nc.json", import.meta.url));
-  const testcases = JSON.parse(readFileSync(fixturePath, "utf8")) as Array<BattleInput & { test_id: string }>;
-  const input = testcases.find((testcase) => testcase.test_id === "renee_solo_nc");
-  if (!input) throw new Error("missing renee_solo_nc fixture");
-
-  const adjusted = structuredClone(input);
-  for (const [fighter, adjustment] of [
-    [adjusted.attacker, 0.05],
-    [adjusted.defender, -0.05]
-  ] as const) {
-    for (const stats of Object.values(fighter.stats ?? {})) {
-      for (const key of ["attack", "defense", "lethality", "health"] as const) {
-        if (stats[key] !== undefined) stats[key] = Number((Number(stats[key]) + adjustment).toFixed(3));
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { infantry_t1: 10, lancer_t1: 100 },
+        heroes: {}
+      },
+      defender: {
+        troops: { infantry_t1: 1000, lancer_t1: 1000, marksman_t1: 1000 },
+        stats: {
+          infantry: { attack: 1, lethality: 1 },
+          lancer: { attack: 1, lethality: 1 },
+          marksman: { attack: 1, lethality: 1 }
+        },
+        heroes: {}
       }
-    }
-  }
-  const result = simulateBattle(adjusted, config, { mode: "trace" });
-  const roundSix = result.trace?.rounds.find((round) => round.round === 6);
-  const defenderTargets = roundSix?.intents
+    },
+    minimalConfig(),
+    { mode: "trace" }
+  );
+  const roundOneInfantryLosses = result.attacks
+    .filter((attack) => attack.jobId.startsWith("r1:") && attack.defenderSide === "attacker" && attack.defenderUnit === "infantry")
+    .map((attack) => attack.kills);
+  const roundTwo = result.trace?.rounds.find((round) => round.round === 2);
+  const defenderTargets = roundTwo?.intents
     .filter((intent) => intent.attackerSide === "defender")
     .map((intent) => intent.defenderUnit);
 
-  assert.equal(roundSix?.roundStartTroops.attacker.infantry, 0);
+  assert.ok(roundOneInfantryLosses.every((kills) => !Number.isInteger(kills)));
+  assert.equal(roundOneInfantryLosses.reduce((sum, kills) => sum + kills, 0), 10);
+  assert.equal(roundTwo?.roundStartTroops.attacker.infantry, 0);
   assert.deepEqual(defenderTargets, ["lancer", "lancer", "lancer"]);
 });
 

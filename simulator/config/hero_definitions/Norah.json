@@ -10,7 +10,7 @@
       },
       "effects": {
         "CombinedArms/1": {
-          "type": "active.hero.defense.up",
+          "type": "active.hero.damageTaken.down",
           "value": [
             3,
             6,
@@ -114,7 +114,7 @@
           }
         },
         "Momentum/2": {
-          "type": "active.hero.defense.up",
+          "type": "active.hero.damageTaken.down",
           "value": [
             5,
             10,

@@ -10,7 +10,7 @@
       },
       "effects": {
         "TacticalDeception/1": {
-          "type": "active.hero.lethality.down",
+          "type": "active.hero.damage.down",
           "value": [
             4,
             8,

@@ -65,7 +65,7 @@
           }
         },
         "Rampant/2": {
-          "type": "active.hero.lethality.up",
+          "type": "active.hero.damage.up",
           "value": [
             20,
             40,
