@@ -469,85 +469,30 @@ def _assign_hero(emulator: WosEmulator, hero_name: str, max_scrolls: int = 10) -
 
 def _assign_heroes(emulator: WosEmulator, hero_names: list[str], max_scrolls: int = 10) -> None:
     """
-    Assign requested heroes from the open picker.
+    Assign requested heroes from the open picker in spec order.
 
-    Inspect all remaining requested templates on each visible picker screen
-    before scrolling again, so nearby requested heroes can be assigned in one
-    traversal. This same scan/assign/scroll path is used for both one-hero and
-    multi-hero specs.
+    Probe fixtures depend on the target hero landing in the intended slot. Do
+    not opportunistically assign another requested hero just because it is
+    visible first; that can leave the picker scrolled away from an earlier,
+    higher-priority hero.
     """
     if not hero_names:
         return
 
-    remaining = list(hero_names)
-    assigned_count = 0
-
-    def _assign_visible_until_none(phase: str) -> bool:
-        nonlocal assigned_count
-        assigned_any = False
-        while remaining:
-            match = _find_visible_requested_hero(emulator, remaining)
-            if not match:
-                return assigned_any
-            hero_name, coords = match
-            logger.info(
-                "assign_heroes: %s found requested hero '%s' (%d remaining before assign)",
-                phase,
-                hero_name,
-                len(remaining),
-            )
-            _tap_assign_for_visible_hero(emulator, hero_name, coords)
-            remaining.remove(hero_name)
-            assigned_count += 1
-            assigned_any = True
-            if remaining:
-                _focus_hero_slot(emulator, assigned_count)
-        return assigned_any
-
-    max_swipes = max_scrolls * 3
-    direction = "down"
-    stalled_directions: set[str] = set()
-
-    for swipe_num in range(max_swipes + 1):
-        _assign_visible_until_none(f"scroll {direction}")
-        if not remaining:
-            return
-        if swipe_num >= max_swipes:
-            break
+    for slot_idx, hero_name in enumerate(hero_names):
+        if slot_idx > 0:
+            _focus_hero_slot(emulator, slot_idx)
         logger.info(
-            "assign_heroes: %d hero(s) not visible (swipe %d/%d %s), scrolling %s: %s",
-            len(remaining),
-            swipe_num + 1,
-            max_swipes,
-            direction,
-            direction,
-            remaining,
+            "assign_heroes: assigning requested hero %d/%d in spec order: %s",
+            slot_idx + 1,
+            len(hero_names),
+            hero_name,
         )
-        changed = _scroll_hero_list(emulator, direction=direction)
-        if not changed:
-            stalled_directions.add(direction)
-            direction = "up" if direction == "down" else "down"
-            logger.info("assign_heroes: reversing hero picker scroll direction to %s", direction)
-            if len(stalled_directions) >= 2:
-                _write_hero_picker_diagnostics(
-                    emulator,
-                    remaining,
-                    f"stalled_slot_{assigned_count + 1}",
-                )
-                logger.info(
-                    "assign_heroes: both scroll directions stalled; refocusing hero slot %d",
-                    assigned_count + 1,
-                )
-                _focus_hero_slot(emulator, assigned_count)
-                stalled_directions.clear()
-                direction = "down"
-        else:
-            stalled_directions.clear()
-
-    _write_hero_picker_diagnostics(emulator, remaining, "not_found")
-    raise WosDispatchError(
-        f"Hero(s) not found after {max_swipes} swipes: {remaining}"
-    )
+        try:
+            _assign_hero(emulator, hero_name, max_scrolls=max_scrolls)
+        except WosDispatchError:
+            _write_hero_picker_diagnostics(emulator, [hero_name], f"not_found_slot_{slot_idx + 1}")
+            raise
 
 
 def _normalize_troop_text(text: str) -> str:
