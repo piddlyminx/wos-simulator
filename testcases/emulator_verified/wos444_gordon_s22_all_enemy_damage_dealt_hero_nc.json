@@ -1,0 +1,85 @@
+[
+  {
+    "test_id": "wos444_gordon_s22_all_enemy_damage_dealt_hero_nc",
+    "description": "WOS-444 Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends Gordon+Sergey+Lynn with 2560 T6 lancer. Candidate signed remaining scores: damage.down +558, attack.down +593, lethality.down -143.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 2700,
+        "lancer_t6": 2700,
+        "marksman_t6": 2700
+      },
+      "stats": {
+        "inf": {
+          "attack": 221.4,
+          "defense": 221.7,
+          "lethality": 147.3,
+          "health": 155.7
+        },
+        "lanc": {
+          "attack": 194.7,
+          "defense": 193.0,
+          "lethality": 157.3,
+          "health": 148.4
+        },
+        "mark": {
+          "attack": 194.7,
+          "defense": 192.0,
+          "lethality": 148.6,
+          "health": 149.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxx",
+      "heroes": {
+        "Sergey": {
+          "skill_1": 4,
+          "skill_2": 4
+        },
+        "Gordon": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 1
+        },
+        "Lynn": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "lancer_t6": 2560
+      },
+      "stats": {
+        "inf": {
+          "attack": 389.8,
+          "defense": 378.5,
+          "lethality": 215.3,
+          "health": 216.5
+        },
+        "lanc": {
+          "attack": 485.5,
+          "defense": 480.8,
+          "lethality": 199.7,
+          "health": 201.0
+        },
+        "mark": {
+          "attack": 460.2,
+          "defense": 457.2,
+          "lethality": 275.7,
+          "health": 266.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 5274,
+        "defender": 0
+      }
+    ]
+  }
+]

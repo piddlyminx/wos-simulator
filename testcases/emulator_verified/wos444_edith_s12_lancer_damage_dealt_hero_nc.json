@@ -1,0 +1,82 @@
+[
+  {
+    "test_id": "wos444_edith_s12_lancer_damage_dealt_hero_nc",
+    "description": "WOS-444 Edith S1/2 lancer damage-dealt bucket probe. WIP attacks 2520 T6 infantry; minxxx defends Edith+Patrick+Jasser with 390 T6 lancer. Candidate signed remaining scores: damage.up +916, attack.up +937, lethality.up +954.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 2520
+      },
+      "stats": {
+        "inf": {
+          "attack": 221.4,
+          "defense": 221.7,
+          "lethality": 147.3,
+          "health": 155.7
+        },
+        "lanc": {
+          "attack": 194.7,
+          "defense": 193.0,
+          "lethality": 157.3,
+          "health": 148.4
+        },
+        "mark": {
+          "attack": 194.7,
+          "defense": 192.0,
+          "lethality": 148.6,
+          "health": 149.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxx",
+      "heroes": {
+        "Edith": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Patrick": {
+          "skill_1": 3,
+          "skill_2": 2
+        },
+        "Jasser": {
+          "skill_1": 4,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 390
+      },
+      "stats": {
+        "inf": {
+          "attack": 493.0,
+          "defense": 481.8,
+          "lethality": 273.9,
+          "health": 296.7
+        },
+        "lanc": {
+          "attack": 382.3,
+          "defense": 377.5,
+          "lethality": 199.7,
+          "health": 201.0
+        },
+        "mark": {
+          "attack": 351.0,
+          "defense": 348.0,
+          "lethality": 221.8,
+          "health": 216.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1909,
+        "defender": 0
+      }
+    ]
+  }
+]
