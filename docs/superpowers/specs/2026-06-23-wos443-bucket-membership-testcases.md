@@ -37,6 +37,8 @@ WOS443_PLAYER_HERO_SKILLS=skill/data/player_hero_skills.json npx --yes tsx scrip
 
 The generator enforces `max_t6_per_type: 2999` while tuning each fixture, per the review request to keep any single T6 troop type under 3000.
 
+The table below was regenerated after commit `02cd97a` updated hero-skill definitions, including Sergey.
+
 Current captured levels used for the table below:
 
 - minxxx: Edith 3/3/3, Gordon 2/2/0, Bradley 4/3/3
@@ -48,9 +50,9 @@ Outcome is signed remaining score: positive means attacker survivors, negative m
 
 | Target skill | Runnable now? | Troop shape | Candidate outcomes | Minimum gap | Use |
 |---|---:|---|---|---:|---|
-| Edith S1/1 marksman damage taken down (`StrategicBalance/1`) | yes | WIP attacks 2880 marksman; minxxx defends Edith+Sergey+Patrick with 400 marksman | `damageTaken.down` = +434; `defense.up` = +498; `health.up` = +539 | 41 | Battle Runner-ready after exact no-hero control |
+| Edith S1/1 marksman damage taken down (`StrategicBalance/1`) | yes | WIP attacks 2880 marksman; minxxx defends Edith+Sergey+Patrick with 400 marksman | `damageTaken.down` = +498; `defense.up` = +434; `health.up` = +539 | 41 | Battle Runner-ready after exact no-hero control |
 | Edith S1/2 lancer damage dealt up (`StrategicBalance/2`) | yes | WIP attacks 2520 infantry; minxxx defends Edith+Patrick+Jasser with 390 lancer | `damage.up` = +916; `attack.up` = +937; `lethality.up` = +954 | 17 | Below 20-troop discriminator threshold; do not assign without a stronger design |
-| Edith S2 infantry damage taken down (`Ironclad/1`) | yes | WIP attacks 2880 infantry; minxxx defends Edith+Sergey+Patrick with 900 infantry | `damageTaken.down` = -450; `defense.up` = -445; `health.up` = -440 | 5 | Not acceptable as a bucket discriminator under the troop cap |
+| Edith S2 infantry damage taken down (`Ironclad/1`) | yes | WIP attacks 2880 infantry; minxxx defends Edith+Sergey+Patrick with 900 infantry | `damageTaken.down` = -445; `defense.up` = -450; `health.up` = -440 | 5 | Not acceptable as a bucket discriminator under the troop cap |
 | Gordon S1/1 lancer damage dealt up (`VenomInfusion/1`) | yes | minxxx attacks Gordon+Patrick+Jasser with 200 lancer; WIP defends 1440 infantry | `damage.up` = -512; `attack.up` = -496; `lethality.up` = -513 | 1 | Not acceptable as a bucket discriminator under the troop cap |
 | Gordon S1/2 target damage dealt down (`VenomInfusion/2`) | yes | WIP attacks 2100 lancer; minxxx defends Gordon+Sergey+Lynn with 240 lancer | `damage.down` = +855; `attack.down` = +856; `lethality.down` = +849 | 1 | Not acceptable as a bucket discriminator under the troop cap |
 | Gordon S2/1 lancer damage dealt up (`ChemicalTerror/1`) | yes | minxxx attacks Gordon+Patrick+Jasser with 200 lancer; WIP defends 1440 infantry | `damage.up` = -512; `attack.up` = -496; `lethality.up` = -513 | 1 | Not acceptable as a bucket discriminator under the troop cap |
