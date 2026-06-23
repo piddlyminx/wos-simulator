@@ -1,19 +1,18 @@
 {
   "test_id": "wos444_bradley_s3_all_troops_damage_hero_nc",
-  "description": "WOS-444 Bradley S3 all-troops damage-up bucket probe. WIP attacks Bradley+Jasser with 2520 each T6 mixed; minxxx defends 900 each T6 mixed. Candidate signed remaining scores: damage.up +1395, attack.up +479, lethality.up -93.",
+  "description": "WOS-444 Bradley S3 all-troops damage-up bucket probe. WIP attacks class-valid Bradley-only with 2880 each T6 mixed; minxxx defends 900 each T6 mixed. Candidate signed remaining scores: damage.up +4196, attack.up +3861, lethality.up +3673.",
   "emulator": {
     "attacker": { "instance": "WIP" },
     "defender": { "instance": "minxxx" }
   },
   "attacker": {
     "heroes": {
-      "Bradley": {},
-      "Jasser": {}
+      "Bradley": {}
     },
     "troops": {
-      "infantry_t6": 2520,
-      "lancer_t6": 2520,
-      "marksman_t6": 2520
+      "infantry_t6": 2880,
+      "lancer_t6": 2880,
+      "marksman_t6": 2880
     }
   },
   "defender": {

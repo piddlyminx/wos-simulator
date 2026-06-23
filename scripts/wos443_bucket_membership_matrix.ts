@@ -56,11 +56,11 @@ const experiments: Experiment[] = [
     target: { hero: "Edith", effectId: "StrategicBalance/1", label: "StrategicBalance/1", candidates: DAMAGE_TAKEN_DOWN },
     side: "defender",
     account: "minxxx",
-    attackerTroops: { marksman_t6: 1600 },
+    attackerTroops: { marksman_t6: 1280 },
     defenderTroops: { marksman_t6: 500 },
     attackerHeroes: [],
-    defenderHeroes: ["Edith", "Sergey", "Patrick"],
-    notes: "Sergey supplies active.hero.defense.up reference; Patrick supplies active.hero.health.up reference; damageTaken.down remains the separate-bucket candidate."
+    defenderHeroes: ["Edith", "Zinman"],
+    notes: "Class-valid defender lineup: Edith infantry, Zinman marksman. Zinman supplies active.hero.defense.up and active.hero.health.up references; damageTaken.down remains the separate-bucket candidate."
   },
   {
     id: "edith_s1_lancer_damage_dealt_up",
@@ -190,9 +190,9 @@ const experiments: Experiment[] = [
     account: "WIP",
     attackerTroops: { infantry_t6: 600, lancer_t6: 600, marksman_t6: 600 },
     defenderTroops: { infantry_t6: 900, lancer_t6: 900, marksman_t6: 900 },
-    attackerHeroes: ["Bradley", "Jasser"],
+    attackerHeroes: ["Bradley"],
     defenderHeroes: [],
-    notes: "Mixed long fight lets the every-4-turn all-troop effect fire more than once."
+    notes: "Class-valid attacker lineup uses Bradley only. Bradley S1/S2 already supply attack-up and lethality-up references while S3 remains the patched candidate; mixed long fight lets the every-4-turn all-troop effect fire more than once."
   }
 ];
 
@@ -234,7 +234,7 @@ function runExperiment(experiment: Experiment) {
 
 function tuneTroops(experiment: Experiment): { experiment: Experiment; gap: number } {
   let best = { experiment, gap: -1 };
-  for (let attackerStep = 20; attackerStep <= 500; attackerStep += 40) {
+  for (let attackerStep = 20; attackerStep <= 500; attackerStep += 20) {
     for (let defenderStep = 20; defenderStep <= 500; defenderStep += 20) {
       const candidate = {
         ...experiment,
