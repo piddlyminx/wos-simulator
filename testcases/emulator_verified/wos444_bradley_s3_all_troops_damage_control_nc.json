@@ -138,5 +138,75 @@
         "defender": 0
       }
     ]
+  },
+  {
+    "test_id": "wos444_bradley_s3_all_troops_damage_control_nc",
+    "description": "WOS-444 exact no-hero control for revised Bradley S3 all-troops damage-up bucket probe. WIP attacks 2880 each T6 mixed; minxxx defends 900 each T6 mixed. Same accounts, roles, troop counts, and report path as the paired hero fixture.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 2880,
+        "lancer_t6": 2880,
+        "marksman_t6": 2880
+      },
+      "stats": {
+        "inf": {
+          "attack": 221.4,
+          "defense": 221.7,
+          "lethality": 147.3,
+          "health": 155.7
+        },
+        "lanc": {
+          "attack": 194.7,
+          "defense": 193.0,
+          "lethality": 157.3,
+          "health": 148.4
+        },
+        "mark": {
+          "attack": 194.7,
+          "defense": 192.0,
+          "lethality": 148.6,
+          "health": 149.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 900,
+        "lancer_t6": 900,
+        "marksman_t6": 900
+      },
+      "stats": {
+        "inf": {
+          "attack": 286.3,
+          "defense": 275.1,
+          "lethality": 215.3,
+          "health": 216.5
+        },
+        "lanc": {
+          "attack": 278.8,
+          "defense": 274.1,
+          "lethality": 199.7,
+          "health": 201.0
+        },
+        "mark": {
+          "attack": 284.6,
+          "defense": 281.6,
+          "lethality": 221.8,
+          "health": 216.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 7010,
+        "defender": 0
+      }
+    ]
   }
 ]

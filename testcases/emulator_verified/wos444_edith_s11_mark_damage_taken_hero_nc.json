@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "wos444_edith_s11_mark_damage_taken_hero_nc",
+    "description": "WOS-444 Edith S1/1 marksman damage-taken bucket probe. WIP attacks 2560 T6 marksman; minxxx defends class-valid Edith+Zinman with 500 T6 marksman. Candidate signed remaining scores: damageTaken.down +234, defense.up +245, health.up +308.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 2560
+      },
+      "stats": {
+        "inf": {
+          "attack": 221.4,
+          "defense": 221.7,
+          "lethality": 147.3,
+          "health": 155.7
+        },
+        "lanc": {
+          "attack": 194.7,
+          "defense": 193.0,
+          "lethality": 157.3,
+          "health": 148.4
+        },
+        "mark": {
+          "attack": 194.7,
+          "defense": 192.0,
+          "lethality": 148.6,
+          "health": 149.5
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxx",
+      "heroes": {
+        "Edith": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Zinman": {
+          "skill_1": 1,
+          "skill_2": 0,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "marksman_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 493.0,
+          "defense": 481.8,
+          "lethality": 273.9,
+          "health": 296.7
+        },
+        "lanc": {
+          "attack": 278.8,
+          "defense": 274.1,
+          "lethality": 199.7,
+          "health": 201.0
+        },
+        "mark": {
+          "attack": 309.8,
+          "defense": 306.8,
+          "lethality": 221.8,
+          "health": 216.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1863,
+        "defender": 0
+      }
+    ]
+  }
+]

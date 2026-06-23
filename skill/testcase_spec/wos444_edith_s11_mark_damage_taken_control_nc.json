@@ -1,6 +1,6 @@
 {
   "test_id": "wos444_edith_s11_mark_damage_taken_control_nc",
-  "description": "WOS-444 exact no-hero control for Edith S1/1 marksman damage-taken bucket probe. WIP attacks 2880 T6 marksman; minxxx defends 400 T6 marksman. Same accounts, roles, troop counts, and report path as the paired hero fixture.",
+  "description": "WOS-444 exact no-hero control for revised Edith S1/1 marksman damage-taken bucket probe. WIP attacks 2560 T6 marksman; minxxx defends 500 T6 marksman. Same accounts, roles, troop counts, and report path as the paired hero fixture.",
   "emulator": {
     "attacker": { "instance": "WIP" },
     "defender": { "instance": "minxxx" }
@@ -8,13 +8,13 @@
   "attacker": {
     "heroes": {},
     "troops": {
-      "marksman_t6": 2880
+      "marksman_t6": 2560
     }
   },
   "defender": {
     "heroes": {},
     "troops": {
-      "marksman_t6": 400
+      "marksman_t6": 500
     }
   }
 }
