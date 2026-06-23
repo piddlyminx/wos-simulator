@@ -1,0 +1,26 @@
+{
+  "test_id": "wos443_defender_wuming_pass_buckets_nc",
+  "description": "WOS-443 pass-specific bucket membership fixture. WIP attacks minxxx; minxxx defends with Wu Ming full current kit. Shadows Evasion should route type.normal.defense.up and type.skill.defense.up separately, Elemental Resonance should route type.skill.damage.up, and Iron Bastion should route passive.defense.up. Deterministic current config; pair with wos443_control_wip_attacks_minxxx_mixed_nc in the same fresh stats batch.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Wu Ming": {}
+    },
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

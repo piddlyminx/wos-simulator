@@ -1,0 +1,20 @@
+{
+  "test_id": "wos443_control_minxxx_attacks_wip_infantry_nc",
+  "description": "WOS-443 bucket-membership control A. minxxx attacks WIP, no heroes, infantry-only Heroic troops. Pair this with WIP defender bucket fixtures to prove residuals are skill-bucket effects rather than stats, troop data, target order, or parser drift. Deterministic; one fresh observation is sufficient if stats and hero skills were captured in the same batch.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}

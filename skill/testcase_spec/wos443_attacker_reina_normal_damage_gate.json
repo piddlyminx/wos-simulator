@@ -1,0 +1,22 @@
+{
+  "test_id": "wos443_attacker_reina_normal_damage_gate",
+  "description": "WOS-443 type.normal.damage.up membership fixture. WIP attacks minxxx with Reina full current kit, infantry-only, against no defending heroes. Infantry-only keeps Shadow Blade's lancer extra-skill effect ineligible, so Assassin's Instinct should affect normal damage jobs without proving extra-skill buckets. Swift Jive dodge is stochastic if unlocked; collect at least 8 observations unless fresh captured skills show dodge is locked. Pair with wos443_control_wip_attacks_minxxx_reina_infantry_nc.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Reina": {}
+    },
+    "troops": {
+      "infantry_t6": 300
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 900
+    }
+  }
+}

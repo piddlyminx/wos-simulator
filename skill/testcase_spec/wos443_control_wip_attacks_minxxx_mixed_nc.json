@@ -1,0 +1,24 @@
+{
+  "test_id": "wos443_control_wip_attacks_minxxx_mixed_nc",
+  "description": "WOS-443 bucket-membership control B. WIP attacks minxxx, no heroes, mixed Heroic troops. Pair this with minxxx defender and WIP attacker bucket fixtures to prove residuals are skill-bucket effects rather than mixed-target, target-order, stats, or parser drift. Deterministic; one fresh observation is sufficient if stats and hero skills were captured in the same batch.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 600,
+      "lancer_t6": 600,
+      "marksman_t6": 600
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 200,
+      "lancer_t6": 200,
+      "marksman_t6": 200
+    }
+  }
+}

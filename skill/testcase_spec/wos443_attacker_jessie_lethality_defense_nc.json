@@ -1,0 +1,22 @@
+{
+  "test_id": "wos443_attacker_jessie_lethality_defense_nc",
+  "description": "WOS-443 attacker active.hero.lethality.up membership fixture. minxxx attacks WIP with Jessie full current kit against no defending heroes. Jessie's Stand of Arms should route as active.hero.lethality.up for attack jobs, while Bulwarks provides a same-owner active.hero.defense.up counterattack-side check. Deterministic current config; pair with wos443_control_minxxx_attacks_wip_infantry_nc in the same fresh stats batch.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {
+      "Jessie": {}
+    },
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}

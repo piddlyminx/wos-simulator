@@ -1,0 +1,22 @@
+{
+  "test_id": "wos443_defender_sergey_defense_attackdown_nc",
+  "description": "WOS-443 defender active.hero.defense.up and active.hero.attack.down membership fixture. minxxx attacks WIP; WIP defends with Sergey full current kit and infantry-only Heroic troops. Defenders Edge should route to the defender denominator bucket and Weaken should route enemy attack down as an attacker-side denominator factor. Deterministic; run with wos443_control_minxxx_attacks_wip_infantry_nc in the same stats batch.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Sergey": {}
+    },
+    "troops": {
+      "infantry_t6": 200
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "test_id": "wos443_control_wip_attacks_minxxx_reina_infantry_nc",
+  "description": "WOS-443 Reina infantry-only no-hero control. WIP attacks minxxx, no heroes, infantry-only troops. Pair this with wos443_attacker_reina_normal_damage_gate so the lancer-gated extra-skill effect remains ineligible while type.normal.damage.up is tested. Deterministic; run in the same fresh stats batch as the Reina fixture.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 300
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 900
+    }
+  }
+}
