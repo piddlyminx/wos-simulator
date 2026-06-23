@@ -150,17 +150,19 @@ class DispatchHeroAssignmentTests(unittest.TestCase):
             [{"direction": "down"}, {"direction": "up"}, {"direction": "down"}],
         )
 
-    def test_multi_hero_assigns_all_visible_requested_heroes_before_scrolling(self) -> None:
+    def test_multi_hero_assigns_requested_heroes_in_spec_order(self) -> None:
         emulator = object()
         queried: list[tuple[str, ...]] = []
         assigned: list[str] = []
 
         def fake_find_visible(_emulator, hero_names):
             queried.append(tuple(hero_names))
-            if "Bahiti" in hero_names:
+            if tuple(hero_names) == ("Philly", "Bahiti"):
                 return "Bahiti", (101, 201)
-            if "Philly" in hero_names:
+            if tuple(hero_names) == ("Philly",):
                 return "Philly", (102, 202)
+            if tuple(hero_names) == ("Bahiti",):
+                return "Bahiti", (101, 201)
             return None
 
         def fake_tap_assign(_emulator, hero_name, _coords):
@@ -172,12 +174,12 @@ class DispatchHeroAssignmentTests(unittest.TestCase):
                 patch.object(dispatch, "_scroll_hero_list") as scroll:
             dispatch._assign_heroes(emulator, ["Philly", "Bahiti"], max_scrolls=3)
 
-        self.assertEqual(assigned, ["Bahiti", "Philly"])
-        self.assertEqual(queried, [("Philly", "Bahiti"), ("Philly",)])
+        self.assertEqual(assigned, ["Philly", "Bahiti"])
+        self.assertEqual(queried, [("Philly",), ("Bahiti",)])
         focus_slot.assert_called_once_with(emulator, 1)
         scroll.assert_not_called()
 
-    def test_multi_hero_scrolls_once_after_checking_all_remaining_templates(self) -> None:
+    def test_multi_hero_scrolls_current_slot_before_next_requested_hero(self) -> None:
         emulator = object()
         queried: list[tuple[str, ...]] = []
         assigned: list[str] = []
@@ -198,7 +200,7 @@ class DispatchHeroAssignmentTests(unittest.TestCase):
             dispatch._assign_heroes(emulator, ["Philly", "Bahiti"], max_scrolls=3)
 
         self.assertEqual(assigned, ["Philly", "Bahiti"])
-        self.assertEqual(queried, [("Philly", "Bahiti"), ("Philly", "Bahiti"), ("Bahiti",)])
+        self.assertEqual(queried, [("Philly",), ("Philly",), ("Bahiti",)])
         focus_slot.assert_called_once_with(emulator, 1)
         scroll.assert_called_once_with(emulator, direction="down")
 
