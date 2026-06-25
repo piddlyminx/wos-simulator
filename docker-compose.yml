@@ -36,8 +36,8 @@ services:
       # Browser-side worker imports @v3/*, which resolves to /simulator/src in
       # the container because the dashboard app is mounted at /app (the @v3
       # alias target is ../../simulator/src).
-      - ./simulator/src:/simulator/src:ro
-      - ./simulator/config:/simulator/config:ro
+      - ./simulator/src:/app/.simulator/src:ro
+      - ./simulator/config:/app/.simulator/config:ro
       # Named-volume overlays: keep container-built node_modules and the Next
       # cache out of the host tree.
       - wos_node_modules:/app/node_modules
