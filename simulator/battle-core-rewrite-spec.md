@@ -137,7 +137,7 @@ legacy label that must be reinterpreted from separate metadata.
 Supported damage-affecting `type` values either name an atomic bucket directly
 or name a special non-bucket behavior. For example,
 `active.hero.lethality.up` is the bucket identity used by the damage system;
-`extra_skill_attack`, `dodge`, `no_attack`, and `attack_order` are special
+`extra_skill_attack`, `dodge`, `mark, `no_attack`, and `attack_order` are special
 runtime behaviors. The effect still does not decide how that bucket contributes
 to the final damage equation. Placement in the numerator or denominator,
 same-bucket aggregation, job-kind gates, and final multiplication/division are
@@ -155,6 +155,7 @@ Examples:
 { type: "extra_skill_attack", value: 200, trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }] }
 { type: "dodge", value: 100 }
 { type: "attack_order", value: ["marksman", "infantry", "lancer"] }
+{ type: "mark" }
 ```
 
 Effect intents may include scope and duration:
@@ -163,7 +164,7 @@ Effect intents may include scope and duration:
 interface EffectUnits {
   side?: "self" | "enemy";
   applies_to?: UnitSelector | "trigger" | "target" | "friendly" | "all";
-  applies_vs?: UnitSelector | "any" | "target" | "trigger.source" | "trigger.target";
+  applies_vs?: UnitSelector | "any" | "target" | "trigger.source" | "trigger.target" | "marked";
 }
 
 interface EffectDuration {
@@ -187,6 +188,8 @@ Config selector rules:
   effect that should be gated against the unit that caused the trigger.
 - native simulator `applies_vs` does not accept `"all"`; use `"any"` for an
   unrestricted usage gate.
+- `"marked"` gates the effect to enemy units that was previously marked, such
+  as by Renee's Dream Mark.
 - trigger resolution converts config selectors into concrete ActiveEffect
   scopes before runtime applicability checks.
 

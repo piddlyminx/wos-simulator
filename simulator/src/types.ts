@@ -2,7 +2,7 @@ export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
 export type DamageKind = "normal" | "skill";
 export type UnitMask = number;
-export type ActiveEffectKind = "modifier" | "extra_attack" | "control" | "battle_order";
+export type ActiveEffectKind = "modifier" | "extra_attack" | "control" | "battle_order" | "mark";
 export type SameEffectStacking = "add" | "max";
 
 export const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
@@ -237,10 +237,13 @@ export interface ActiveEffect {
   ownerSide: SideId;
   kind: ActiveEffectKind;
   valuePct?: number;
-  // Resolved ActiveEffect usage gates. Native applies_vs config accepts "any",
+  // Resolved ActiveEffect usage gates. Native applies_vs config accepts "any", "marked",
   // trigger-relative selectors, or concrete unit selectors; it does not accept "all".
   appliesTo: ResolvedUnitScope;
   appliesVs: ResolvedUnitScope;
+  // Captured target unit mask for "mark" effects (the enemy unit types the marking side
+  // attacked on the marking turn). Undefined until captured after attack-intent resolution.
+  markedMask?: UnitMask;
   triggerDamageJobs?: TriggerDamageJobDefinition[];
   createdRound: number;
   startRound: number;

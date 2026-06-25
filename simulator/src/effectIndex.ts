@@ -1,6 +1,7 @@
 import type { ActiveEffect, DamageJob, DamageKind, SideId, UnitType } from "./types";
-import { unitsFromMask } from "./types";
+import { unitMaskHas, unitsFromMask } from "./types";
 import { bucketDefinition, type AtomicBucket } from "./damageBuckets";
+import { isEffectActive, oppositeSide } from "./effects";
 import { isStaticProfileBucket } from "./staticDamageProfile";
 
 export interface IndexedBucketEffect {
@@ -14,6 +15,7 @@ export interface EffectIndex {
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
   battleOrder: ActiveEffect[];
+  marks: ActiveEffect[];
 }
 
 const DAMAGE_JOB_SHAPE_SLOTS = 2 * 2 * 3 * 2 * 3;
@@ -24,7 +26,8 @@ export function createEffectIndex(): EffectIndex {
     damageByJobShape: Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }),
     controls: [],
     extraAttacks: [],
-    battleOrder: []
+    battleOrder: [],
+    marks: []
   };
 }
 
@@ -40,6 +43,10 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
   }
   if (effect.kind === "battle_order") {
     index.battleOrder.push(effect);
+    return;
+  }
+  if (effect.kind === "mark") {
+    index.marks.push(effect);
     return;
   }
 
@@ -72,6 +79,7 @@ export function pruneEffectIndex(index: EffectIndex, isActive: (effect: ActiveEf
   compactEffects(index.controls, isActive);
   compactEffects(index.extraAttacks, isActive);
   compactEffects(index.battleOrder, isActive);
+  compactEffects(index.marks, isActive);
   for (let slot = 0; slot < index.damageByJobShape.length; slot += 1) {
     const candidates = index.damageByJobShape[slot];
     if (!candidates) continue;
@@ -92,6 +100,19 @@ export function removeStaticProfileBucketEffects(index: EffectIndex): void {
 
 export function bucketCandidatesForJob(index: EffectIndex, job: DamageJob): IndexedBucketEffect[] {
   return index.damageByJobShape[damageJobShapeSlot(job.kind, job.attackerSide, job.attackerUnit, job.defenderSide, job.defenderUnit)] ?? [];
+}
+
+export function markGatePasses(effect: ActiveEffect, job: DamageJob, index: EffectIndex): boolean {
+  if (effect.intent.units?.applies_vs !== "marked") return true;
+  const gatedSide = oppositeSide(effect.ownerSide);
+  const gatedUnit = gatedSide === job.attackerSide ? job.attackerUnit : gatedSide === job.defenderSide ? job.defenderUnit : undefined;
+  if (!gatedUnit) return false;
+  for (const mark of index.marks) {
+    if (mark.ownerSide !== effect.ownerSide || mark.markedMask === undefined) continue;
+    if (!isEffectActive(mark, job.round)) continue;
+    if (unitMaskHas(mark.markedMask, gatedUnit)) return true;
+  }
+  return false;
 }
 
 function damageJobShapeSlot(

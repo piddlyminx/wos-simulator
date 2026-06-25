@@ -43,7 +43,8 @@ const KNOWN_EFFECT_TYPES = new Set([
   "extra_skill_attack",
   "dodge",
   "no_attack",
-  "attack_order"
+  "attack_order",
+  "mark"
 ]);
 
 const DEFAULT_HERO_DEFINITIONS = {

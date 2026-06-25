@@ -1890,6 +1890,122 @@ test("seeded probability rolls are deterministic and compare percentage threshol
   assert.equal(chancePasses({ ...skill, trigger: { type: "battle_start", probability: [100] } }, createSeededRng("x")), true);
 });
 
+test('marked-gated effects only apply against currently-marked enemies', () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 5,
+      attacker: {
+        troops: { infantry_t1: 100, lancer_t1: 100, marksman_t1: 100 },
+        stats: {
+          inf: { attack: 500, health: 100_000 },
+          lanc: { attack: 500, health: 100_000 },
+          mark: { attack: 500, health: 100_000 }
+        },
+        heroes: { Dreamer: { skill_1: 1, skill_2: 1, skill_3: 1, skill_4: 1, skill_5: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1_000, lancer_t1: 1_000, marksman_t1: 1_000 },
+      }
+    },
+    minimalConfig({
+      Dreamer: {
+        name: "Dreamer",
+        skills: {
+          FocusMarksman: {
+            trigger: { type: "battle_start" },
+            effects: {
+              order: {
+                type: "attack_order",
+                value: ["marksman", "infantry", "lancer"],
+                units: { applies_to: ["marksman", "lancer"], applies_vs: "any" },
+                duration: { type: "battle", value: 1 }
+              }
+            }
+          },
+          InfantryMark: {
+            trigger: { type: "turn" },
+            effects: { mark: { type: "mark", units: { applies_to: ["infantry"] } } }
+          },
+          MarksmanMark: {
+            trigger: { type: "turn", every: 2 },
+            effects: { mark: { type: "mark", units: { applies_to: ["marksman"] } } }
+          },
+          LancerBoon: {
+            trigger: { type: "turn", every: 3 },
+            effects: {
+              buff: {
+                type: "active.hero.damage.up",
+                value: 100,
+                units: { applies_to: ["lancer"], applies_vs: "marked" },
+                duration: { type: "turn", value: 2 }
+              }
+            }
+          },
+          InfantryStrike: {
+            trigger: { type: "turn", every: 3 },
+            effects: {
+              followUp: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: ["infantry"], applies_vs: "marked" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { type: "turn", value: 1 }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const attack = (round: number, unit: UnitType) =>
+    result.attacks.find((entry) => entry.kind === "normal" && entry.jobId.startsWith(`r${round}:attacker:${unit}`));
+  const skillAttack = (round: number, unit: UnitType) =>
+    result.attacks.find((entry) => entry.kind === "skill" && entry.jobId.startsWith(`r${round}:attacker:${unit}`));
+  const damageUp = (round: number, unit: UnitType) => attack(round, unit)?.trace?.atomicBuckets["active.hero.damage.up"].totalPct;
+
+  // Confirm modified attack targeting
+  assert.equal(attack(1, "infantry")?.defenderUnit, "infantry");
+  assert.equal(attack(1, "lancer")?.defenderUnit, "marksman");
+  assert.equal(attack(1, "marksman")?.defenderUnit, "marksman");
+
+  const baseKills = {
+    "infantry": attack(1, "infantry")?.kills ?? 0,
+    "lancer": attack(1, "lancer")?.kills ?? 0,
+    "marksman": attack(1, "marksman")?.kills ?? 0
+  };
+
+  for (const round of [1, 2, 3, 4, 5]) {
+    for (const [unit, kills] of Object.entries(baseKills)) {
+      assert.ok(kills > 0);
+      // Round 2 applies the mark and round 3 the lancer ability triggers.
+      // No other round fulfills both conditions to apply the damage up.
+      if (unit === "lancer" && round === 3) {
+        assert.equal(damageUp(round, unit as UnitType), 100);
+        assert.equal(attack(round, unit as UnitType)?.kills, kills * 2);
+      } else {
+        assert.equal(damageUp(round, unit as UnitType), 0);
+        assert.equal(attack(round, unit as UnitType)?.kills, kills);
+      }
+    }
+
+    assert.equal(skillAttack(round, "lancer"), undefined);
+    assert.equal(skillAttack(round, "marksman"), undefined);
+    // InfantryStrike also only fires on round 3 (every 3 turns)
+    if (round === 3) {
+      const infantryStrike = skillAttack(round, "infantry");
+      assert.notEqual(infantryStrike, undefined);
+      assert.equal(infantryStrike?.defenderUnit, "infantry");
+      assert.ok((infantryStrike?.kills ?? 0) > 0);
+    } else {
+      assert.equal(skillAttack(round, "infantry"), undefined);
+    }
+  }
+
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, { followUp: 1 });
+});
+
 function skillActivations(result: ReturnType<typeof simulateBattle>, skillId: string): number {
   return result.skillReport.attacker.find((entry) => entry.skillId === skillId)?.skillActivations ?? 0;
 }

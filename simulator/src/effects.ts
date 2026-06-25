@@ -84,9 +84,12 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
   const ownerSide = skill.side;
   const appliesTo = resolveUnitScope(units.applies_to, ownerSide, "applies_to", attackIntent, ownerSide);
   const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent, ownerSide);
-  const duration = normalizeDuration(intent.duration);
-  const delay = duration.delay ?? 0;
   const effectKind = kindForIntent(intent);
+  if (effectKind === "mark" && intent.duration) {
+    throw new Error(`mark effect ${intent.id} cannot customize duration`);
+  }
+  const duration = effectKind === "mark" ? { type: "round" as const, value: 1, delay: 1 } : normalizeDuration(intent.duration);
+  const delay = duration.delay ?? 0;
   if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
     throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
   }
@@ -195,6 +198,12 @@ function resolveUnitScope(
   if (role === "applies_vs" && value === "all") {
     throw new Error('effect units.applies_vs cannot be "all"; use "any" for an unrestricted usage gate');
   }
+  if (role === "applies_to" && value === "marked") {
+    throw new Error('effect units.applies_to cannot be "marked"; "marked" is an applies_vs-only gate');
+  }
+  if (value === "marked" && ownerSide) {
+    return { side: oppositeSide(ownerSide), units: ALL_UNIT_MASK };
+  }
   if ((value === "trigger.source" || value === "trigger") && attackIntent) {
     return { side: attackIntent.attackerSide, units: unitMask(attackIntent.attackerUnit) };
   }
@@ -212,7 +221,7 @@ function resolveUnitScope(
 
 function normalizeUnitList(value: unknown): UnitType[] | undefined {
   if (Array.isArray(value)) return value.map((entry) => normalizeUnitType(String(entry)));
-  if (typeof value === "string" && !["any", "target", "all", "trigger", "trigger.source", "trigger.target", "friendly"].includes(value)) return [normalizeUnitType(value)];
+  if (typeof value === "string" && !["any", "target", "all", "trigger", "trigger.source", "trigger.target", "friendly", "marked"].includes(value)) return [normalizeUnitType(value)];
   return undefined;
 }
 
@@ -224,6 +233,7 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
   if (intent.type === "extra_skill_attack") return "extra_attack";
   if (intent.type === "dodge" || intent.type === "no_attack") return "control";
   if (intent.type === "attack_order") return "battle_order";
+  if (intent.type === "mark") return "mark";
   return "modifier";
 }
 

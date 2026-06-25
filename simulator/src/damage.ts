@@ -13,7 +13,7 @@ import { UNIT_TYPES } from "./types";
 import { classifyEffectForJob } from "./classifier";
 import { ATOMIC_BUCKETS, BUCKET_DEFINITIONS, type AtomicBucket } from "./damageBuckets";
 import { currentEffectValuePct, isEffectActive } from "./effects";
-import { bucketCandidatesForJob, type EffectIndex } from "./effectIndex";
+import { bucketCandidatesForJob, markGatePasses, type EffectIndex } from "./effectIndex";
 import {
   buildStaticDamageProfile,
   type StaticDamageBucket,
@@ -138,6 +138,7 @@ export function calculateDamageJob(
   const handledCandidateEffectIds = traceEnabled ? new Set<string>() : undefined;
   for (const candidate of bucketCandidatesForJob(options.effectIndex, job)) {
     if (!isEffectActive(candidate.effect, job.round)) continue;
+    if (!markGatePasses(candidate.effect, job, options.effectIndex)) continue;
     handledCandidateEffectIds?.add(candidate.effect.id);
     candidates.push({
       effect: candidate.effect,
@@ -151,6 +152,10 @@ export function calculateDamageJob(
       if (handledCandidateEffectIds?.has(effect.id)) continue;
       if (!isEffectActive(effect, job.round)) {
         rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "not_active_this_round" });
+        continue;
+      }
+      if (!markGatePasses(effect, job, options.effectIndex)) {
+        rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "not_marked" });
         continue;
       }
       const classification = classifyEffectForJob(effect, job);

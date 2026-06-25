@@ -19,7 +19,7 @@ import type {
   TriggerDamageJobSelector,
   UnitType
 } from "./types";
-import { ALL_UNIT_MASK, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types";
+import { ALL_UNIT_MASK, UNIT_BITS, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types";
 import { calculateDamageJob, createFastDamageScratch, type DamageResult, type DamageScratch } from "./damage";
 import { createRecorder } from "./recorder";
 import {
@@ -35,7 +35,7 @@ import {
   type Rng
 } from "./effects";
 import { classifyEffectForJob } from "./classifier";
-import { createEffectIndex, indexEffect, pruneEffectIndex, removeStaticProfileBucketEffects, type EffectIndex } from "./effectIndex";
+import { createEffectIndex, indexEffect, markGatePasses, pruneEffectIndex, removeStaticProfileBucketEffects, type EffectIndex } from "./effectIndex";
 import { normalizeUnitType } from "./normalize";
 import { emptyTroops, resolveFighter } from "./resolve";
 import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile";
@@ -305,6 +305,7 @@ function runLoop(
     triggerRoundStartSkills(round, runtime, roundStartTroops);
 
     const intents = resolveAttackIntents(round, runtime, roundStartTroops);
+    captureMarks(round, runtime, intents);
     const jobs: DamageJob[] = [];
     const cancelled: CancelledAttack[] = [];
 
@@ -629,6 +630,19 @@ function resolveAttackIntents(
   return intents;
 }
 
+function captureMarks(round: number, runtime: Runtime, intents: AttackIntent[]): void {
+  for (const mark of runtime.effectIndex.marks) {
+    if (mark.createdRound !== round || mark.markedMask !== undefined) continue;
+    let mask = 0;
+    for (const intent of intents) {
+      if (intent.attackerSide !== mark.ownerSide) continue;
+      if (!unitMaskHas(mark.appliesTo.units, intent.attackerUnit)) continue;
+      mask |= UNIT_BITS[intent.defenderUnit];
+    }
+    mark.markedMask = mask;
+  }
+}
+
 function chooseDefenderUnit(
   attackerUnit: UnitType,
   attackerSide: SideId,
@@ -700,7 +714,9 @@ function extraSkillJobs(
 ): DamageJob[] {
   const jobs: DamageJob[] = [];
   const effectGroups = selectStackedExtraAttackEffectGroups(
-    runtime.effectIndex.extraAttacks.filter((effect) => isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
+    runtime.effectIndex.extraAttacks.filter(
+      (effect) => isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && markGatePasses(effect, normalAttack, runtime.effectIndex)
+    ),
     round
   );
   for (const effectGroup of effectGroups) {
