@@ -1,0 +1,594 @@
+<style>
+  :root {
+    --bg: #11131c;
+    --panel: #1b1d2a;
+    --panel-2: #242736;
+    --line: rgba(205, 214, 244, 0.16);
+    --text: #cdd6f4;
+    --muted: #9399b2;
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --yellow: #f9e2af;
+    --red: #f38ba8;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .page {
+    padding: 22px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  h1 {
+    color: var(--blue);
+    font-size: 22px;
+    margin: 0 0 8px;
+  }
+  .subtitle {
+    max-width: 880px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 18px;
+  }
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 1100px) {
+    .split {
+      grid-template-columns: 1fr;
+    }
+  }
+  .mock {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .mock-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+  }
+  .mock-head h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .tag {
+    border: 1px solid rgba(137, 180, 250, 0.35);
+    border-radius: 999px;
+    color: var(--blue);
+    font-size: 10px;
+    padding: 4px 8px;
+    white-space: nowrap;
+  }
+  .mock-body {
+    padding: 12px;
+  }
+  .device {
+    border: 1px solid var(--line);
+    background: #0f111a;
+    border-radius: 22px;
+    min-height: 640px;
+    overflow: hidden;
+  }
+  .desktop-device {
+    border-radius: 8px;
+  }
+  .topbar {
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .hamburger {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+  }
+  .phone-content {
+    padding: 12px;
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .metric-grid.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .metric {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    padding: 9px;
+    min-height: 58px;
+  }
+  .metric strong {
+    display: block;
+    color: var(--blue);
+    font-size: 16px;
+    line-height: 1.1;
+  }
+  .metric span {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 5px;
+  }
+  .metric.good strong {
+    color: var(--green);
+  }
+  .metric.warn strong {
+    color: var(--yellow);
+  }
+  .metric.bad strong {
+    color: var(--red);
+  }
+  .section {
+    margin-top: 12px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    padding: 10px;
+  }
+  .label {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    margin-bottom: 8px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    padding: 7px 0;
+    border-top: 1px solid rgba(205, 214, 244, 0.08);
+    font-size: 11px;
+  }
+  .row:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .status {
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--muted);
+    font-size: 10px;
+    padding: 4px 7px;
+  }
+  .status.good {
+    color: var(--green);
+  }
+  .status.bad {
+    color: var(--red);
+  }
+  .primary {
+    margin-top: 12px;
+    border-radius: 7px;
+    background: var(--blue);
+    color: #11131c;
+    min-height: 44px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+    font-size: 12px;
+  }
+  .drawer {
+    border-right: 1px solid var(--line);
+    background: var(--panel);
+    padding: 14px 10px;
+  }
+  .drawer h3 {
+    margin: 0 0 14px;
+    color: var(--blue);
+    font-size: 13px;
+  }
+  .nav-group {
+    margin-bottom: 18px;
+  }
+  .nav-title {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 7px;
+  }
+  .nav-item {
+    border-radius: 6px;
+    padding: 8px 9px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .nav-item.active {
+    background: rgba(137, 180, 250, 0.16);
+    color: var(--blue);
+  }
+  .desktop-layout {
+    min-height: 640px;
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .desktop-main {
+    padding: 18px;
+  }
+  .dash-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .dash-header h3 {
+    margin: 0;
+    color: var(--blue);
+    font-size: 16px;
+  }
+  .button-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .button {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--text);
+    padding: 8px 10px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .button.hot {
+    border-color: var(--blue);
+    background: var(--blue);
+    color: #11131c;
+  }
+  .tabs {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 10px;
+  }
+  .tabs.three {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .tabs.four {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .tab {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--muted);
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .tab.active {
+    background: var(--blue);
+    color: #11131c;
+    border-color: var(--blue);
+  }
+  .setup-card {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 10px;
+    background: var(--panel);
+    margin-bottom: 9px;
+  }
+  .troop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .field {
+    border-radius: 6px;
+    background: var(--panel-2);
+    min-height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+  }
+  .field b {
+    color: var(--text);
+    font-size: 11px;
+  }
+  .field span {
+    color: var(--muted);
+    font-size: 9px;
+    margin-top: 3px;
+  }
+  .sheet {
+    border: 1px solid rgba(137, 180, 250, 0.28);
+    border-radius: 10px 10px 0 0;
+    background: #202332;
+    padding: 10px;
+    margin-top: 12px;
+  }
+  .sheet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .save-action {
+    border-radius: 7px;
+    background: var(--panel-2);
+    min-height: 42px;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .compare {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+  }
+  @media (max-width: 900px) {
+    .compare {
+      grid-template-columns: 1fr;
+    }
+  }
+  .choice {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 12px;
+    cursor: pointer;
+  }
+  .choice.selected {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+  .choice h3 {
+    margin: 0 0 7px;
+    color: var(--blue);
+    font-size: 14px;
+  }
+  .choice p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.45;
+    font-size: 12px;
+  }
+</style>
+
+<div class="page">
+  <h1>Refined Direction: Health Dashboard + Tabbed Simulator</h1>
+  <p class="subtitle">
+    Based on your feedback: the home page remains a health dashboard, navigation groups quality metrics separately from simulation running, and mobile simulation becomes a focused tab flow.
+  </p>
+
+  <div class="split">
+    <section class="mock">
+      <div class="mock-head">
+        <h2>Health Dashboard + Grouped Navigation</h2>
+        <span class="tag">Landing page</span>
+      </div>
+      <div class="mock-body">
+        <div class="desktop-layout desktop-device">
+          <aside class="drawer">
+            <h3>WOS Sim</h3>
+            <div class="nav-group">
+              <div class="nav-title">Quality Metrics</div>
+              <div class="nav-item active">Health Dashboard</div>
+              <div class="nav-item">Runs</div>
+              <div class="nav-item">Run Reports</div>
+              <div class="nav-item">Coverage</div>
+              <div class="nav-item">Regressions</div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-title">Simulation Running</div>
+              <div class="nav-item">Battle Sim</div>
+              <div class="nav-item">Bear Sim</div>
+              <div class="nav-item">Tournament</div>
+              <div class="nav-item">Recent Sim Runs</div>
+            </div>
+            <div class="nav-group">
+              <div class="nav-title">Library</div>
+              <div class="nav-item">Heroes</div>
+              <div class="nav-item">Testcases</div>
+              <div class="nav-item">Changelog</div>
+            </div>
+          </aside>
+          <main class="desktop-main">
+            <div class="dash-header">
+              <div>
+                <h3>Health Dashboard</h3>
+                <p class="subtitle" style="margin:5px 0 0">Can I trust the simulator today?</p>
+              </div>
+              <div class="button-row">
+                <div class="button hot">Run Simulation</div>
+                <div class="button">Check Now</div>
+              </div>
+            </div>
+            <div class="metric-grid three">
+              <div class="metric good"><strong>2.14%</strong><span>avg error</span></div>
+              <div class="metric bad"><strong>4</strong><span>recent regressions</span></div>
+              <div class="metric warn"><strong>87%</strong><span>hero coverage</span></div>
+            </div>
+            <div class="section">
+              <div class="label">Needs attention</div>
+              <div class="row"><span>Bradley S3 all damage bucket drift</span><span class="status bad">regressed</span></div>
+              <div class="row"><span>Gordon S21 lancer control</span><span class="status good">stable</span></div>
+              <div class="row"><span>Gen 7 coverage gap</span><span class="status">needs cases</span></div>
+            </div>
+            <div class="section">
+              <div class="label">Recent activity</div>
+              <div class="row"><span>Latest run completed 12m ago</span><span class="status good">saved</span></div>
+              <div class="row"><span>7 testcase files changed this week</span><span class="status">review</span></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock">
+      <div class="mock-head">
+        <h2>Mobile Dashboard</h2>
+        <span class="tag">Drawer closed by default</span>
+      </div>
+      <div class="mock-body">
+        <div class="device">
+          <div class="topbar">
+            <span>Health</span>
+            <div class="hamburger">☰</div>
+          </div>
+          <div class="phone-content">
+            <div class="metric-grid">
+              <div class="metric good"><strong>2.14%</strong><span>avg error</span></div>
+              <div class="metric bad"><strong>4</strong><span>regressions</span></div>
+              <div class="metric warn"><strong>87%</strong><span>coverage</span></div>
+              <div class="metric"><strong>12m</strong><span>latest run</span></div>
+            </div>
+            <div class="primary">Start Battle Simulation</div>
+            <div class="section">
+              <div class="label">Quality metrics</div>
+              <div class="row"><span>Latest run</span><span class="status good">view</span></div>
+              <div class="row"><span>Run reports</span><span class="status">open</span></div>
+              <div class="row"><span>Coverage</span><span class="status">open</span></div>
+            </div>
+            <div class="section">
+              <div class="label">Simulation running</div>
+              <div class="row"><span>Battle Sim</span><span class="status good">primary</span></div>
+              <div class="row"><span>Bear Sim</span><span class="status">open</span></div>
+              <div class="row"><span>Tournament</span><span class="status">open</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="compare cards">
+    <section class="choice card" data-choice="three-tabs-plus-sheet" onclick="toggleSelect(this)">
+      <h3>Simulator Variant A: 3 Tabs + Manage Sheet</h3>
+      <p>Attacker, Defender, Results stay as the primary mobile tabs. Import, load, save, recent runs, mode, and presets live behind a small top-right Manage button or bottom sheet.</p>
+      <div class="device" style="margin-top:12px;min-height:560px">
+        <div class="topbar">
+          <span>Battle Sim</span>
+          <div class="hamburger">⋯</div>
+        </div>
+        <div class="phone-content">
+          <div class="tabs three">
+            <div class="tab active">Attacker</div>
+            <div class="tab">Defender</div>
+            <div class="tab">Results</div>
+          </div>
+          <div class="setup-card">
+            <div class="label">Attacker summary</div>
+            <div class="troop-grid">
+              <div class="field"><b>1,000</b><span>Inf T6</span></div>
+              <div class="field"><b>1,000</b><span>Lancer T6</span></div>
+              <div class="field"><b>1,000</b><span>Marks T6</span></div>
+            </div>
+          </div>
+          <div class="setup-card">
+            <div class="label">Heroes</div>
+            <div class="troop-grid">
+              <div class="field"><b>Flint</b><span>5/5/5</span></div>
+              <div class="field"><b>Mia</b><span>5/5/5</span></div>
+              <div class="field"><b>Bahiti</b><span>5/5/5</span></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="label">Collapsed advanced groups</div>
+            <div class="row"><span>Stat bonuses</span><span class="status">edit</span></div>
+            <div class="row"><span>City and pet buffs</span><span class="status">off</span></div>
+            <div class="row"><span>Joiners</span><span class="status">solo</span></div>
+          </div>
+          <div class="sheet">
+            <div class="label">Manage sheet</div>
+            <div class="sheet-grid">
+              <div class="save-action">Upload report</div>
+              <div class="save-action">Recent runs</div>
+              <div class="save-action">Save/share</div>
+              <div class="save-action">Profiles</div>
+            </div>
+          </div>
+          <div class="primary">Continue to Defender</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="choice card" data-choice="four-tabs-manage" onclick="toggleSelect(this)">
+      <h3>Simulator Variant B: 4 Tabs With Manage</h3>
+      <p>Attacker, Defender, Manage, Results makes import/load/save highly discoverable. It costs one extra tab, but avoids hiding important workflows behind an overflow button.</p>
+      <div class="device" style="margin-top:12px;min-height:560px">
+        <div class="topbar">
+          <span>Battle Sim</span>
+          <div class="hamburger">☰</div>
+        </div>
+        <div class="phone-content">
+          <div class="tabs four">
+            <div class="tab active">Attacker</div>
+            <div class="tab">Defender</div>
+            <div class="tab">Manage</div>
+            <div class="tab">Results</div>
+          </div>
+          <div class="setup-card">
+            <div class="label">Attacker summary</div>
+            <div class="troop-grid">
+              <div class="field"><b>1,000</b><span>Inf T6</span></div>
+              <div class="field"><b>1,000</b><span>Lancer T6</span></div>
+              <div class="field"><b>1,000</b><span>Marks T6</span></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="label">Manage tab contents</div>
+            <div class="row"><span>Import from report screenshot</span><span class="status good">primary</span></div>
+            <div class="row"><span>Load recent run</span><span class="status">open</span></div>
+            <div class="row"><span>Save/share current setup</span><span class="status">copy</span></div>
+            <div class="row"><span>Player stat profiles</span><span class="status">edit</span></div>
+            <div class="row"><span>Rally mode and hero stat sync</span><span class="status">toggles</span></div>
+          </div>
+          <div class="section">
+            <div class="label">Run controls stay global</div>
+            <div class="row"><span>Replicates</span><span class="status">1000</span></div>
+            <div class="row"><span>Optimize ratio</span><span class="status">after setup</span></div>
+          </div>
+          <div class="primary">Simulate</div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+  function toggleSelect(el) {
+    const container = el.closest(".cards");
+    if (container) {
+      container.querySelectorAll(".card").forEach((node) => {
+        node.classList.remove("selected");
+      });
+    }
+    el.classList.add("selected");
+  }
+</script>

@@ -1,0 +1,518 @@
+<style>
+  .wos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+  }
+  @media (max-width: 1100px) {
+    .wos-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .wos-card {
+    border: 1px solid rgba(137, 180, 250, 0.28);
+    border-radius: 8px;
+    background: #181825;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .wos-card:hover {
+    border-color: rgba(137, 180, 250, 0.7);
+  }
+  .wos-card.selected {
+    outline: 2px solid #89b4fa;
+    outline-offset: 2px;
+  }
+  .wos-top {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .wos-title {
+    margin: 0;
+    font-size: 14px;
+    color: #cdd6f4;
+  }
+  .wos-tag {
+    border: 1px solid rgba(137, 180, 250, 0.35);
+    border-radius: 999px;
+    color: #89b4fa;
+    font-size: 10px;
+    padding: 3px 7px;
+    white-space: nowrap;
+  }
+  .wos-body {
+    padding: 12px;
+  }
+  .device-row {
+    display: grid;
+    grid-template-columns: 0.72fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+  }
+  @media (max-width: 720px) {
+    .device-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .phone {
+    min-height: 330px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 22px;
+    padding: 9px;
+    background: #0f111a;
+  }
+  .desktop {
+    min-height: 330px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 9px;
+    background: #0f111a;
+  }
+  .mini-bar {
+    height: 28px;
+    border-radius: 6px;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    font-size: 9px;
+    margin-bottom: 8px;
+  }
+  .mini-section {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 7px;
+    background: #181825;
+    padding: 8px;
+    margin-bottom: 8px;
+  }
+  .mini-label {
+    color: #89b4fa;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+  }
+  .pill-row {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 4px 6px;
+    font-size: 9px;
+    color: #cdd6f4;
+    background: #313244;
+  }
+  .pill.hot {
+    background: #89b4fa;
+    color: #11111b;
+    border-color: #89b4fa;
+  }
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .field {
+    height: 28px;
+    border-radius: 5px;
+    background: #313244;
+    color: #cdd6f4;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .metric {
+    border-radius: 6px;
+    background: #313244;
+    padding: 7px;
+    min-height: 40px;
+  }
+  .metric b {
+    color: #89b4fa;
+    display: block;
+    font-size: 12px;
+  }
+  .metric span {
+    color: #bac2de;
+    font-size: 8px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 6px;
+    align-items: start;
+    margin-bottom: 7px;
+  }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: #89b4fa;
+    color: #11111b;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .step-title {
+    color: #cdd6f4;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .step-sub {
+    color: #9399b2;
+    font-size: 8px;
+    margin-top: 2px;
+  }
+  .tabbar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+  .tabbar div {
+    border-radius: 5px;
+    background: #313244;
+    color: #bac2de;
+    font-size: 8px;
+    text-align: center;
+    padding: 5px 2px;
+  }
+  .tabbar .active {
+    background: #89b4fa;
+    color: #11111b;
+    font-weight: 800;
+  }
+  .bottom-action {
+    position: sticky;
+    bottom: 0;
+    border-radius: 7px;
+    background: #a6e3a1;
+    color: #11111b;
+    text-align: center;
+    padding: 8px;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .notes {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  @media (max-width: 720px) {
+    .notes {
+      grid-template-columns: 1fr;
+    }
+  }
+  .note {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 8px;
+    color: #bac2de;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+</style>
+
+<h2>Dashboard + Simulator Overhaul: 3 Mobile-First Directions</h2>
+<p class="subtitle">
+  Click the option that feels closest. Each mockup keeps the current simulator capabilities, but changes navigation, grouping, and disclosure so new users are not dropped into every control at once.
+</p>
+
+<div class="wos-grid cards">
+  <div class="wos-card card" data-choice="A-guided-run" onclick="toggleSelect(this)">
+    <div class="wos-top">
+      <div>
+        <h3 class="wos-title">A. Guided Run Builder</h3>
+        <p class="subtitle" style="margin:4px 0 0;font-size:11px">Best for first-time users and mobile.</p>
+      </div>
+      <span class="wos-tag">Recommended</span>
+    </div>
+    <div class="wos-body">
+      <div class="device-row">
+        <div class="phone">
+          <div class="mini-bar"><span>Simulate</span><span>3/5</span></div>
+          <div class="mini-section">
+            <div class="mini-label">Setup progress</div>
+            <div class="step">
+              <div class="step-num">1</div>
+              <div><div class="step-title">Choose mode</div><div class="step-sub">Solo or rally, saved run or upload.</div></div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div><div class="step-title">Attacker</div><div class="step-sub">Troops, heroes, stats summarized.</div></div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div><div class="step-title">Defender</div><div class="step-sub">Same fields, same order.</div></div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Current step: Attacker</div>
+            <div class="field-grid">
+              <div class="field">Inf 1k</div>
+              <div class="field">Lanc 1k</div>
+              <div class="field">Mark 1k</div>
+              <div class="field">Hero</div>
+              <div class="field">Tier</div>
+              <div class="field">Stats</div>
+            </div>
+          </div>
+          <div class="bottom-action">Continue to Defender</div>
+        </div>
+        <div class="desktop">
+          <div class="mini-bar"><span>Dashboard</span><span>New run</span></div>
+          <div class="summary-strip">
+            <div class="metric"><b>Ready</b><span>6 required fields</span></div>
+            <div class="metric"><b>1000</b><span>replicates</span></div>
+            <div class="metric"><b>Solo</b><span>mode</span></div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Run builder</div>
+            <div class="two-col">
+              <div>
+                <div class="step"><div class="step-num">1</div><div><div class="step-title">Basics</div><div class="step-sub">Mode, upload, saved run.</div></div></div>
+                <div class="step"><div class="step-num">2</div><div><div class="step-title">Attacker</div><div class="step-sub">Card opens focused editor.</div></div></div>
+                <div class="step"><div class="step-num">3</div><div><div class="step-title">Defender</div><div class="step-sub">Mirror editor.</div></div></div>
+              </div>
+              <div class="mini-section" style="margin:0">
+                <div class="mini-label">Preview</div>
+                <div class="field-grid">
+                  <div class="field">Atk</div><div class="field">Def</div><div class="field">Swap</div>
+                  <div class="field">Run</div><div class="field">Ratio</div><div class="field">Share</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">After run</div>
+            <div class="summary-strip">
+              <div class="metric"><b>63%</b><span>attacker win</span></div>
+              <div class="metric"><b>+420</b><span>avg margin</span></div>
+              <div class="metric"><b>Trace</b><span>optional detail</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="notes">
+        <div class="note"><b>Why it helps:</b> mobile users see one decision at a time, with a visible path from setup to results.</div>
+        <div class="note"><b>Tradeoff:</b> fastest expert workflow needs shortcuts like "edit all" or step jump buttons.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wos-card card" data-choice="B-command-center" onclick="toggleSelect(this)">
+    <div class="wos-top">
+      <div>
+        <h3 class="wos-title">B. Command Center</h3>
+        <p class="subtitle" style="margin:4px 0 0;font-size:11px">Best for returning users and scanability.</p>
+      </div>
+      <span class="wos-tag">Dense but calmer</span>
+    </div>
+    <div class="wos-body">
+      <div class="device-row">
+        <div class="phone">
+          <div class="mini-bar"><span>Simulate</span><span>Run</span></div>
+          <div class="mini-section">
+            <div class="summary-strip">
+              <div class="metric"><b>Atk</b><span>3k troops</span></div>
+              <div class="metric"><b>Def</b><span>3k troops</span></div>
+              <div class="metric"><b>Solo</b><span>mode</span></div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="active">Summary</div><div>Attacker</div><div>Defender</div><div>Results</div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">What changed?</div>
+            <div class="pill-row">
+              <span class="pill hot">Report loaded</span>
+              <span class="pill">Hero sync on</span>
+              <span class="pill">Pets off</span>
+              <span class="pill">City 0%</span>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Quick actions</div>
+            <div class="field-grid">
+              <div class="field">Upload</div><div class="field">Swap</div><div class="field">Recent</div>
+              <div class="field">Preset</div><div class="field">Ratio</div><div class="field">Trace</div>
+            </div>
+          </div>
+          <div class="bottom-action">Simulate 1000 reps</div>
+        </div>
+        <div class="desktop">
+          <div class="mini-bar"><span>Dashboard</span><span>Health | Runs | Sim</span></div>
+          <div class="summary-strip">
+            <div class="metric"><b>2.14%</b><span>avg error</span></div>
+            <div class="metric"><b>4</b><span>regressions</span></div>
+            <div class="metric"><b>Sim</b><span>primary action</span></div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Simulator command center</div>
+            <div class="two-col">
+              <div class="mini-section" style="margin:0">
+                <div class="mini-label">Attacker summary</div>
+                <div class="pill-row"><span class="pill hot">Inf 1k</span><span class="pill">Flint</span><span class="pill">T6</span></div>
+              </div>
+              <div class="mini-section" style="margin:0">
+                <div class="mini-label">Defender summary</div>
+                <div class="pill-row"><span class="pill hot">Inf 1k</span><span class="pill">Molly</span><span class="pill">T6</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Workspace tabs</div>
+            <div class="tabbar">
+              <div class="active">Inputs</div><div>Buffs</div><div>Optimize</div><div>Results</div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="summary-strip">
+              <div class="metric"><b>Run</b><span>sticky button</span></div>
+              <div class="metric"><b>Ratio</b><span>separate tab</span></div>
+              <div class="metric"><b>Save</b><span>auto snapshot</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="notes">
+        <div class="note"><b>Why it helps:</b> users always know current setup state before diving into detailed controls.</div>
+        <div class="note"><b>Tradeoff:</b> still exposes many concepts, so onboarding copy and empty states must be excellent.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wos-card card" data-choice="C-progressive-disclosure" onclick="toggleSelect(this)">
+    <div class="wos-top">
+      <div>
+        <h3 class="wos-title">C. Progressive Disclosure</h3>
+        <p class="subtitle" style="margin:4px 0 0;font-size:11px">Best for preserving expert speed.</p>
+      </div>
+      <span class="wos-tag">Lowest rebuild risk</span>
+    </div>
+    <div class="wos-body">
+      <div class="device-row">
+        <div class="phone">
+          <div class="mini-bar"><span>Simulate</span><span>Basic</span></div>
+          <div class="mini-section">
+            <div class="mini-label">Basic setup</div>
+            <div class="field-grid">
+              <div class="field">Mode</div><div class="field">Reps</div><div class="field">Upload</div>
+              <div class="field">Atk</div><div class="field">Def</div><div class="field">Run</div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Collapsed advanced groups</div>
+            <div class="pill-row">
+              <span class="pill">Hero skills</span>
+              <span class="pill">Stat matrix</span>
+              <span class="pill">City buffs</span>
+              <span class="pill">Pet buffs</span>
+              <span class="pill">Joiners</span>
+              <span class="pill">Optimize</span>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Active details</div>
+            <div class="two-col">
+              <div class="field">Atk stats</div>
+              <div class="field">Def stats</div>
+            </div>
+          </div>
+          <div class="bottom-action">Simulate</div>
+        </div>
+        <div class="desktop">
+          <div class="mini-bar"><span>Simulate Battle</span><span>Basic | Advanced</span></div>
+          <div class="mini-section">
+            <div class="mini-label">Above the fold</div>
+            <div class="two-col">
+              <div class="mini-section" style="margin:0">
+                <div class="mini-label">Attacker</div>
+                <div class="field-grid"><div class="field">Inf</div><div class="field">Lanc</div><div class="field">Mark</div><div class="field">Hero</div><div class="field">Tier</div><div class="field">Stats</div></div>
+              </div>
+              <div class="mini-section" style="margin:0">
+                <div class="mini-label">Defender</div>
+                <div class="field-grid"><div class="field">Inf</div><div class="field">Lanc</div><div class="field">Mark</div><div class="field">Hero</div><div class="field">Tier</div><div class="field">Stats</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="mini-label">Advanced drawers</div>
+            <div class="field-grid">
+              <div class="field">Skills</div><div class="field">Joiners</div><div class="field">Buffs</div>
+              <div class="field">Pets</div><div class="field">Ratio</div><div class="field">Trace</div>
+            </div>
+          </div>
+          <div class="mini-section">
+            <div class="summary-strip">
+              <div class="metric"><b>Basic</b><span>default</span></div>
+              <div class="metric"><b>Expert</b><span>remembered</span></div>
+              <div class="metric"><b>Run</b><span>sticky footer</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="notes">
+        <div class="note"><b>Why it helps:</b> keeps the current mental model but hides advanced groups until needed.</div>
+        <div class="note"><b>Tradeoff:</b> less transformative; users may still feel the page is dense once several drawers open.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.toggleSelect = window.toggleSelect || function toggleSelect(el) {
+    const container = el.closest(".options") || el.closest(".cards");
+    const multi = container && container.dataset.multiselect !== undefined;
+    if (container && !multi) {
+      container.querySelectorAll(".option, .card").forEach((node) => {
+        node.classList.remove("selected");
+      });
+    }
+    if (multi) {
+      el.classList.toggle("selected");
+    } else {
+      el.classList.add("selected");
+    }
+  };
+</script>
+
+<div class="section" style="margin-top:18px">
+  <h3>Shared Dashboard Changes Across All Three</h3>
+  <div class="options" data-multiselect>
+    <div class="option" data-choice="dashboard-health-first" onclick="toggleSelect(this)">
+      <div class="letter">1</div>
+      <div class="content"><h3>Health-first dashboard</h3><p>Lead with latest accuracy, regressions, coverage, and one clear "Start simulation" action.</p></div>
+    </div>
+    <div class="option" data-choice="dashboard-task-groups" onclick="toggleSelect(this)">
+      <div class="letter">2</div>
+      <div class="content"><h3>Task-grouped navigation</h3><p>Group links as Monitor, Validate, Simulate, and Library instead of one long sidebar list.</p></div>
+    </div>
+    <div class="option" data-choice="dashboard-mobile-home" onclick="toggleSelect(this)">
+      <div class="letter">3</div>
+      <div class="content"><h3>Mobile home shortcuts</h3><p>On phones, replace the drawer-first experience with large shortcuts for Run, Simulate, Coverage, and Testcases.</p></div>
+    </div>
+  </div>
+</div>

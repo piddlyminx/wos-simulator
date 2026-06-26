@@ -9,6 +9,8 @@ import {
   useState,
   type FocusEventHandler,
   type KeyboardEventHandler,
+  type MouseEventHandler,
+  type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
 import OptimizeRatioScatterChart from "@/components/OptimizeRatioScatterChart";
@@ -81,6 +83,7 @@ import {
 import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/simulator/worker-client";
 
 export type Side = "attacker" | "defender";
+type SimWorkspaceTab = Side | "setup" | "results";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
 const STAT_NAMES: ("attack" | "defense" | "lethality" | "health")[] = [
   "attack",
@@ -89,6 +92,7 @@ const STAT_NAMES: ("attack" | "defense" | "lethality" | "health")[] = [
   "health",
 ];
 type StatName = (typeof STAT_NAMES)[number];
+type SimRoleSectionId = "troops" | "stats" | "joiners" | "buffs";
 const STAT_SHORT_LABELS: Record<StatName, string> = {
   attack: "Atk",
   defense: "Def",
@@ -209,17 +213,48 @@ function formatSavedRunTimestamp(iso: string): string {
 
 const DEFAULT_PAGE_TITLE = "Simulate Battle - WOS Simulator Dashboard";
 const STAT_PRESETS_STORAGE_KEY = "wos-simulator.player-stat-presets.v1";
+const AUTO_SELECT_INPUT_TYPES = new Set([
+  "number",
+  "text",
+  "search",
+  "tel",
+  "url",
+  "email",
+]);
+let inputSelectedOnFocus: HTMLInputElement | null = null;
 
 const selectFocusedInputText: FocusEventHandler<HTMLDivElement> = (event) => {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return;
-  if (
-    !["number", "text", "search", "tel", "url", "email"].includes(target.type)
-  ) {
-    return;
-  }
-  requestAnimationFrame(() => target.select());
+  if (!AUTO_SELECT_INPUT_TYPES.has(target.type)) return;
+  target.select();
+  inputSelectedOnFocus = target;
+  window.setTimeout(() => {
+    if (inputSelectedOnFocus === target) inputSelectedOnFocus = null;
+  }, 0);
 };
+
+const keepFocusSelectionOnMouseUp: MouseEventHandler<HTMLDivElement> = (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return;
+  if (target !== inputSelectedOnFocus) return;
+  event.preventDefault();
+  inputSelectedOnFocus = null;
+};
+
+function useWideSimLayout() {
+  const [wide, setWide] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1536px)");
+    const update = () => setWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  return wide;
+}
 
 export function newStatPresetId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -921,7 +956,7 @@ function buildInitialSavedRunState(
       attacker: defaultSide(),
       defender: defaultSide(),
       loadedPresetNames: { attacker: null, defender: null },
-      replicates: 1000,
+      replicates: 5000,
       rallyMode: false,
       result: null,
       optimizeResult: null,
@@ -1056,7 +1091,11 @@ export default function SimulateClient({
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
   const [rallyMode, setRallyMode] = useState(() => initialState.rallyMode);
+  const [mobileTab, setMobileTab] = useState<SimWorkspaceTab>(() =>
+    initialState.result || initialState.optimizeResult ? "results" : "attacker",
+  );
   const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(true);
+  const wideSimLayout = useWideSimLayout();
   const [statSyncToast, setStatSyncToast] = useState<StatSyncToast | null>(
     null,
   );
@@ -1258,6 +1297,7 @@ export default function SimulateClient({
       });
       setBattleTrace((saved.result as SimulateApiResponse).trace ?? null);
       setOptimizeResult(null);
+      setMobileTab("results");
     } else {
       const optimizeRequest = saved.request as OptimizeRatioRequestPayload;
       setOptimizeReplicates(
@@ -1303,6 +1343,7 @@ export default function SimulateClient({
         saved_kind: saved.kind,
         share_url: saved.share_url,
       });
+      setMobileTab("results");
     }
 
     storeSavedRunMeta({
@@ -1386,6 +1427,28 @@ export default function SimulateClient({
         setLoadingSavedRun(false);
         return;
       }
+      const plainState = buildInitialSavedRunState(null, null);
+      setAttacker(plainState.attacker);
+      setDefender(plainState.defender);
+      setReplicates(plainState.replicates);
+      setRallyMode(plainState.rallyMode);
+      setResult(null);
+      setBattleTrace(null);
+      setTraceError(null);
+      setOptimizeResult(null);
+      setSelectedOptimizeRowKey(null);
+      setOptimizeError(null);
+      setOptimizeReplicates(plainState.optimizeReplicates);
+      setOptimizeStepInput(plainState.optimizeStepInput);
+      setOptimizeInfantryMinPct(plainState.optimizeInfantryMinPct);
+      setOptimizeInfantryMaxPct(plainState.optimizeInfantryMaxPct);
+      setOptimizeSearchMode(plainState.optimizeSearchMode);
+      setOptimizeSide(plainState.optimizeSide);
+      setSimulateProgress(null);
+      setOptimizeProgress(null);
+      setMobileTab("attacker");
+      setUploadWarnings([]);
+      setError(null);
       setLoadingSavedRun(false);
       setSavedRunMeta(null);
       setSavedRunError(null);
@@ -1666,6 +1729,7 @@ export default function SimulateClient({
       );
       const computed = await job.promise;
       setResult(computed);
+      setMobileTab("results");
       try {
         const saveMeta = await saveComputedRun("simulate", payload, computed);
         if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
@@ -1738,6 +1802,7 @@ export default function SimulateClient({
       const computed = await job.promise;
       setSelectedOptimizeRowKey(null);
       setOptimizeResult(computed);
+      setMobileTab("results");
       try {
         const saveMeta = await saveComputedRun("optimize_ratio", payload, computed);
         if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
@@ -1876,90 +1941,80 @@ export default function SimulateClient({
   const optimizeInputsValid = resolvedInfantryBounds.isValid;
 
   return (
-    <div onFocusCapture={selectFocusedInputText}>
-      <div className="mb-4 flex flex-col gap-3 sm:mb-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="space-y-1">
-          <h2
-            className="text-lg font-bold"
-            style={{ color: "var(--sidebar-active)" }}
-          >
+    <div
+      className="simulate-workspace"
+      onFocusCapture={selectFocusedInputText}
+      onMouseUpCapture={keepFocusSelectionOnMouseUp}
+    >
+      <div className="mb-4 space-y-3 sm:mb-5">
+        <div hidden>
+          <h2 className="sim-page-title text-xl font-bold">
             Simulate Battle
           </h2>
-          <p className="max-w-2xl text-xs opacity-60">
-            Enter each side&apos;s troops, heroes, and stat bonuses, then
-            simulate or search attacker mixes without hiding regressions.
+          <p className="max-w-2xl text-sm leading-5" style={{ color: "var(--sim-muted)" }}>
+            Start from a report or role presets, then work through the visible
+            setup sections before running the sim.
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-end">
-          <label
-            className="flex items-center justify-center gap-2 rounded px-3 py-2 text-xs font-bold min-h-[44px] cursor-pointer"
-            style={{
-              border: `1px solid ${rallyMode ? "var(--sidebar-active)" : "var(--border-color)"}`,
-              backgroundColor: rallyMode
-                ? "rgba(137, 180, 250, 0.15)"
-                : "var(--sidebar-bg)",
-              color: rallyMode ? "var(--sidebar-active)" : "var(--main-text)",
-            }}
-            title="Enable Rally mode: each army gets up to 4 joiner heroes and main heroes' skill 4 is active."
-          >
-            <input
-              type="checkbox"
-              checked={rallyMode}
-              onChange={(e) => setRallyMode(e.target.checked)}
-              aria-label="Rally mode"
-            />
-            Rally
-          </label>
-          <label
-            className="flex items-center justify-center gap-2 rounded px-3 py-2 text-xs font-bold min-h-[44px] cursor-pointer"
-            style={{
-              border: `1px solid ${syncStatsOnHeroChange ? "var(--sidebar-active)" : "var(--border-color)"}`,
-              backgroundColor: syncStatsOnHeroChange
-                ? "rgba(137, 180, 250, 0.15)"
-                : "var(--sidebar-bg)",
-              color: syncStatsOnHeroChange
-                ? "var(--sidebar-active)"
-                : "var(--main-text)",
-            }}
-            title="When you change a hero, apply the A/D/L/H difference between the old and new hero to that army's matching troop-type stats."
-          >
-            <input
-              type="checkbox"
-              checked={syncStatsOnHeroChange}
-              onChange={(e) => {
-                setSyncStatsOnHeroChange(e.target.checked);
-                if (!e.target.checked) dismissToast();
-              }}
-              aria-label="Update stats on hero change"
-            />
-            Sync hero stats
-          </label>
-          <button
-            type="button"
-            onClick={() => setUploadOpen(true)}
-            className="col-span-2 rounded px-3 py-2 text-xs font-bold min-h-[44px] sm:col-span-1"
-            style={{
-              border: "1px solid var(--border-color)",
-              backgroundColor: "var(--sidebar-bg)",
-              color: "var(--sidebar-active)",
-            }}
-          >
-            Upload report
-          </button>
+
+        <section className="sim-start-card" data-testid="simulate-start-card">
+          <div>
+            <button
+              type="button"
+              onClick={() => setUploadOpen(true)}
+              className="sim-upload-primary px-3 py-2"
+            >
+              <span className="block text-xs font-bold">Upload report</span>
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <label
+              className="sim-toggle grid cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-2.5 py-1.5 text-xs font-bold"
+              data-active={rallyMode}
+              title="Enable Rally mode: each army gets up to 4 joiner heroes and main heroes' skill 4 is active."
+            >
+              <input
+                className="sim-switch-input"
+                type="checkbox"
+                checked={rallyMode}
+                onChange={(e) => setRallyMode(e.target.checked)}
+                aria-label="Rally mode"
+              />
+              <span className="sim-switch" aria-hidden="true" />
+              <span className="min-w-0">
+                <span className="block">Rally mode</span>
+              </span>
+            </label>
+            <label
+              className="sim-toggle grid cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-2.5 py-1.5 text-xs font-bold"
+              data-active={syncStatsOnHeroChange}
+              title="When you change a hero, apply the A/D/L/H difference between the old and new hero to that army's matching troop-type stats."
+            >
+              <input
+                className="sim-switch-input"
+                type="checkbox"
+                checked={syncStatsOnHeroChange}
+                onChange={(e) => {
+                  setSyncStatsOnHeroChange(e.target.checked);
+                  if (!e.target.checked) dismissToast();
+                }}
+                aria-label="Update stats on hero change"
+              />
+              <span className="sim-switch" aria-hidden="true" />
+              <span className="min-w-0">
+                <span className="block">Sync hero stats</span>
+              </span>
+            </label>
+          </div>
           <button
             type="button"
             onClick={() => setRecentRunsOpen(true)}
-            className="col-span-2 rounded px-3 py-2 text-xs font-bold min-h-[44px] sm:col-span-1"
-            style={{
-              border: "1px solid var(--border-color)",
-              backgroundColor: "var(--sidebar-bg)",
-              color: "var(--main-text)",
-            }}
+            className="sim-edit-chip min-h-[32px] px-3 text-xs font-bold"
             data-testid="recent-runs-toggle"
           >
             Recent runs
           </button>
-        </div>
+        </section>
       </div>
 
       {statSyncToast && (
@@ -1977,12 +2032,8 @@ export default function SimulateClient({
 
       {uploadWarnings.length > 0 && (
         <div
-          className="rounded px-3 py-2 mb-4 text-xs font-mono"
-          style={{
-            border: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-            color: "#f9e2af",
-          }}
+          className="sim-tool-panel mb-4 px-3 py-2 text-xs font-mono"
+          style={{ color: "var(--sim-yellow)" }}
         >
           OCR warnings (unparsed fields kept their previous values):
           <ul className="list-disc list-inside mt-1">
@@ -1995,13 +2046,10 @@ export default function SimulateClient({
 
       {(loadingSavedRun || savedRunMeta || savedRunError) && (
         <div
-          className="mb-4 rounded px-3 py-2 text-xs"
+          className="sim-tool-panel mb-4 px-3 py-2 text-xs"
           style={{
-            border: `1px solid ${
-              savedRunError ? "#f38ba8" : "var(--border-color)"
-            }`,
-            backgroundColor: "var(--sidebar-bg)",
-            color: savedRunError ? "#f38ba8" : "var(--main-text)",
+            borderColor: savedRunError ? "#f38ba8" : undefined,
+            color: savedRunError ? "#f38ba8" : "var(--sim-text)",
           }}
           data-testid="saved-run-banner"
         >
@@ -2023,8 +2071,76 @@ export default function SimulateClient({
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row items-stretch gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 3 : 1 }}>
+      <div className="sim-tab-shell" data-testid="sim-workbench-tabs">
+      {wideSimLayout ? (
+        <div
+          className="sim-workbench-tabs mb-3 grid grid-cols-2 gap-1"
+          role="tablist"
+          aria-label="Simulation workspace"
+        >
+          {([
+            ["setup", "Setup"],
+            ["results", "Results"],
+          ] as [SimWorkspaceTab, string][]).map(([tab, label]) => {
+            const active =
+              tab === "setup" ? mobileTab !== "results" : mobileTab === "results";
+            return (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setMobileTab(tab)}
+                className="sim-tab px-2 py-2 text-xs font-black"
+                data-active={active}
+                data-testid={`sim-tab-${tab}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      ) : (
+        <div
+          className="sim-workbench-tabs mb-3 grid grid-cols-3 gap-1"
+          role="tablist"
+          aria-label="Simulation setup"
+        >
+          {([
+            ["attacker", "Attacker"],
+            ["defender", "Defender"],
+            ["results", "Results"],
+          ] as [SimWorkspaceTab, string][]).map(([tab, label]) => {
+            const active = mobileTab === tab;
+            return (
+              <button
+                key={tab}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setMobileTab(tab)}
+                className="sim-tab px-2 py-2 text-xs font-black"
+                data-active={active}
+                data-testid={`sim-tab-${tab}`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      </div>
+
+      <div
+        className={`${mobileTab === "results" ? "hidden" : "block"} sim-panel-setup-shell`}
+        data-testid="sim-panel-setup"
+      >
+      <div className="sim-role-grid mb-4 sm:mb-6">
+        <div
+          className="sim-role-slot min-w-0"
+          data-narrow-active={mobileTab === "attacker" || mobileTab === "setup"}
+          style={{ order: sidesSwapped ? 3 : 1 }}
+        >
           <SidePanel
             title="Attacker"
             which="attacker"
@@ -2043,21 +2159,18 @@ export default function SimulateClient({
           />
         </div>
         <div
-          className="flex md:flex-col items-center justify-center"
+          className="sim-role-swap-slot items-center justify-center"
           style={{ order: 2 }}
         >
           <button
             type="button"
             onClick={swapSides}
-            className="text-xs px-3 py-2 rounded font-bold min-h-[44px]"
+            className="sim-edit-chip min-h-[44px] px-3 py-2 text-xs font-black"
             style={{
-              border: `1px solid ${sidesSwapped ? "var(--sidebar-active)" : "var(--border-color)"}`,
               backgroundColor: sidesSwapped
                 ? "rgba(137, 180, 250, 0.15)"
-                : "var(--main-bg)",
-              color: sidesSwapped
-                ? "var(--sidebar-active)"
-                : "var(--main-text)",
+                : "var(--sim-panel)",
+              color: sidesSwapped ? "var(--sim-blue)" : "var(--sim-text)",
             }}
             title="Swap attacker and defender. Use this if you entered them the wrong way round; the values you typed stay visually in place while the Attacker / Defender labels trade sides."
             aria-label="Swap attacker and defender"
@@ -2066,7 +2179,11 @@ export default function SimulateClient({
             ⇆ Swap
           </button>
         </div>
-        <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 1 : 3 }}>
+        <div
+          className="sim-role-slot min-w-0"
+          data-narrow-active={mobileTab === "defender"}
+          style={{ order: sidesSwapped ? 1 : 3 }}
+        >
           <SidePanel
             title="Defender"
             which="defender"
@@ -2084,6 +2201,7 @@ export default function SimulateClient({
             onOpenPreset={() => openStatPresetModal("defender")}
           />
         </div>
+      </div>
       </div>
 
       {recentRunsOpen && (
@@ -2118,23 +2236,18 @@ export default function SimulateClient({
               e.preventDefault();
               createStatPresetFromSide();
             }}
-            className="w-full max-w-md rounded p-4 shadow-xl"
-            style={{
-              border: "1px solid var(--border-color)",
-              backgroundColor: "var(--sidebar-bg)",
-            }}
+            className="sim-modal w-full max-w-md p-4 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h3
                   id="stat-profile-modal-title"
-                  className="text-sm font-bold uppercase tracking-wider"
-                  style={{ color: "var(--sidebar-active)" }}
+                  className="sim-modal-title"
                 >
                   {SIDE_LABELS[presetModalSide]} profile
                 </h3>
-                <p className="mt-1 text-xs opacity-60">
+                <p className="sim-modal-copy mt-1">
                   Profiles store base player stats only. Hero stats are removed
                   on create and reapplied on load.
                 </p>
@@ -2142,11 +2255,7 @@ export default function SimulateClient({
               <button
                 type="button"
                 onClick={closeStatPresetModal}
-                className="rounded px-2 py-1 text-lg leading-none"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                }}
+                className="sim-edit-chip min-h-[32px] px-2 py-1 text-sm font-bold leading-none"
                 aria-label="Close profile modal"
               >
                 ×
@@ -2154,18 +2263,13 @@ export default function SimulateClient({
             </div>
 
             <label className="mb-3 flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-wider opacity-50">
+              <span className="sim-field-label">
                 Loaded profile
               </span>
               <select
                 value={activePresetId}
                 onChange={(e) => chooseStatPreset(e.target.value)}
-                className="rounded px-2 py-2 font-mono text-xs min-h-[40px]"
-                style={{
-                  backgroundColor: "var(--main-bg)",
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                }}
+                className="sim-input min-h-[40px] px-2 py-2 font-mono text-xs"
                 aria-label={`${presetModalSide} stat profile`}
               >
                 <option value="">
@@ -2180,7 +2284,7 @@ export default function SimulateClient({
             </label>
 
             <label className="mb-4 flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-wider opacity-50">
+              <span className="sim-field-label">
                 New profile name
               </span>
               <input
@@ -2188,12 +2292,7 @@ export default function SimulateClient({
                 value={presetDraftName}
                 onChange={(e) => setPresetDraftName(e.target.value)}
                 placeholder={`${SIDE_LABELS[presetModalSide]} profile`}
-                className="rounded px-2 py-2 text-sm min-h-[40px]"
-                style={{
-                  backgroundColor: "var(--main-bg)",
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                }}
+                className="sim-input min-h-[40px] px-2 py-2 text-sm"
                 aria-label={`${presetModalSide} new profile name`}
               />
             </label>
@@ -2201,24 +2300,15 @@ export default function SimulateClient({
             <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
               <button
                 type="submit"
-                className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
-                style={{
-                  border: "1px solid var(--sidebar-active)",
-                  backgroundColor: "transparent",
-                  color: "var(--sidebar-active)",
-                }}
+                className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold"
+                style={{ color: "var(--sim-blue)" }}
               >
                 Create from current stats
               </button>
               <button
                 type="button"
                 onClick={closeStatPresetModal}
-                className="rounded px-3 py-2 text-xs font-bold min-h-[40px]"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  backgroundColor: "var(--main-bg)",
-                  color: "var(--main-text)",
-                }}
+                className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold"
               >
                 Done
               </button>
@@ -2239,151 +2329,98 @@ export default function SimulateClient({
         </div>
       )}
 
+      <div className="sim-top-actions" data-testid="sim-action-dock">
+      <div className="sim-runbar mb-4 sm:mb-6" data-testid="simulate-runbar">
+        <label className="flex min-w-0 flex-col gap-1">
+          <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: "var(--sim-muted)" }}>
+            Replicates
+          </span>
+          <input
+            type="number"
+            min={1}
+            max={10000}
+            value={replicates}
+            onChange={(e) =>
+              setReplicates(
+                Math.max(
+                  1,
+                  Math.min(10000, parseInt(e.target.value || "1", 10)),
+                ),
+              )
+            }
+            className="sim-input font-mono text-sm tabular-nums"
+            style={{ textAlign: "right" }}
+          />
+        </label>
+        <button
+          onClick={runSimulation}
+          disabled={loading}
+          className="sim-run-button px-5 py-2 text-sm font-black"
+          style={{
+            opacity: loading ? 0.55 : 1,
+            cursor: loading ? "wait" : "pointer",
+          }}
+        >
+          {loading ? "Simulating…" : "Simulate"}
+        </button>
+        {error && (
+          <span className="col-span-2 text-xs" style={{ color: "#f38ba8" }}>
+            {error}
+          </span>
+        )}
+        <div className="col-span-2">
+          <ProgressBar
+            active={loading}
+            done={simulateProgress?.done ?? 0}
+            total={simulateProgress?.total ?? replicates}
+          />
+        </div>
+      </div>
       <div
-        className="rounded p-3 sm:p-4 mb-4 sm:mb-6 flex flex-col gap-4"
-        style={{
-          border: "1px solid var(--border-color)",
-          backgroundColor: "var(--sidebar-bg)",
-        }}
+        className="sim-tool-panel sim-optimize-command-panel order-2 mb-4 flex flex-col gap-4 p-3 sm:mb-6 sm:p-4"
+        data-testid="optimize-panel"
       >
-        <div className="grid gap-4 xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
-          <div
-            className="rounded p-3"
-            style={{
-              border: "1px solid var(--border-color)",
-              backgroundColor: "var(--main-bg)",
-            }}
-          >
-            <h3 className="mb-3 text-xs uppercase tracking-wider opacity-60 font-bold">
-              Run battle
-            </h3>
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3">
-              <label className="flex flex-col gap-1">
-                <span className="text-xs uppercase tracking-wider opacity-60">
-                  Replicates
-                </span>
-                <input
-                  type="number"
-                  min={1}
-                  max={5000}
-                  value={replicates}
-                  onChange={(e) =>
-                    setReplicates(
-                      Math.max(
-                        1,
-                        Math.min(5000, parseInt(e.target.value || "1", 10)),
-                      ),
-                    )
-                  }
-                  className="rounded px-3 py-2 font-mono text-sm min-h-[44px] text-right tabular-nums"
-                  style={{
-                    backgroundColor: "var(--sidebar-bg)",
-                    border: "1px solid var(--border-color)",
-                    color: "var(--main-text)",
-                  }}
-                />
-              </label>
-              <button
-                onClick={runSimulation}
-                disabled={loading}
-                className="px-4 py-2 rounded font-bold text-sm min-h-[44px]"
-                style={{
-                  backgroundColor: "var(--sidebar-active)",
-                  color: "#1e1e2e",
-                  opacity: loading ? 0.5 : 1,
-                  cursor: loading ? "wait" : "pointer",
-                }}
-              >
-                {loading ? "Simulating…" : "Simulate"}
-              </button>
-              {error && (
-                <span
-                  className="col-span-2 text-xs"
-                  style={{ color: "#f38ba8" }}
-                >
-                  {error}
-                </span>
-              )}
-            </div>
-            <ProgressBar
-              active={loading}
-              done={simulateProgress?.done ?? 0}
-              total={simulateProgress?.total ?? replicates}
-            />
-          </div>
-
-          <div
-            className="rounded p-3"
-            style={{
-              border: "1px solid var(--border-color)",
-              backgroundColor: "var(--main-bg)",
-            }}
-          >
-            <h3 className="mb-3 text-xs uppercase tracking-wider opacity-60 font-bold">
+        <div className="grid gap-4">
+          <div className="sim-modifier-card p-3">
+            <h3 className="sr-only">
               Optimise ratio
             </h3>
-            <div className="flex flex-col gap-3">
-              <p className="text-xs opacity-60">
+            <div className="sim-optimize-flow">
+              <p className="sim-optimize-description text-xs opacity-60" id="optimize-help-text">
                 Keeps {optimizedSideLabel.toLowerCase()} total troops (
                 {optimizedTotalTroops.toLocaleString()}), tiers, heroes, stats,
                 and the full {staticSideLabel.toLowerCase()} setup fixed; only
                 the {optimizedSideLabel.toLowerCase()} troop mix changes.
               </p>
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="sim-optimize-mode-grid grid gap-2 sm:grid-cols-2">
                 <fieldset className="flex flex-col gap-1">
-                  <legend className="text-xs uppercase tracking-wider opacity-60">
+                  <legend className="sim-field-label">
                     Optimise side
                   </legend>
-                  <div className="grid grid-cols-2 overflow-hidden rounded border border-[var(--border-color)]">
+                  <div className="sim-segmented">
                     {(["attacker", "defender"] as OptimizeSide[]).map((side) => (
                       <button
                         key={side}
                         type="button"
                         onClick={() => setOptimizeSide(side)}
-                        className="px-3 py-2 text-xs font-bold"
-                        style={{
-                          backgroundColor:
-                            optimizeSide === side
-                              ? "var(--sidebar-active)"
-                              : "transparent",
-                          color:
-                            optimizeSide === side ? "#1e1e2e" : "var(--main-text)",
-                        }}
+                        data-active={optimizeSide === side}
                       >
                         {SIDE_LABELS[side]}
                       </button>
                     ))}
                   </div>
                 </fieldset>
-                <fieldset className="flex flex-col gap-1">
-                  <legend className="text-xs uppercase tracking-wider opacity-60">
-                    Search mode
-                  </legend>
-                  <div className="grid grid-cols-2 overflow-hidden rounded border border-[var(--border-color)]">
-                    {(["adaptive", "grid"] as OptimizeSearchMode[]).map((mode) => (
-                      <button
-                        key={mode}
-                        type="button"
-                        onClick={() => setOptimizeSearchMode(mode)}
-                        className="px-3 py-2 text-xs font-bold capitalize"
-                        style={{
-                          backgroundColor:
-                            optimizeSearchMode === mode
-                              ? "var(--sidebar-active)"
-                              : "transparent",
-                          color:
-                            optimizeSearchMode === mode
-                              ? "#1e1e2e"
-                              : "var(--main-text)",
-                        }}
-                      >
-                        {mode}
-                      </button>
-                    ))}
-                  </div>
-                </fieldset>
+                <button
+                  type="button"
+                  className="sim-help-button"
+                  aria-label="Optimise ratio help"
+                  aria-describedby="optimize-help-text"
+                  title={`Keeps ${optimizedSideLabel.toLowerCase()} total troops, tiers, heroes, stats, and the full ${staticSideLabel.toLowerCase()} setup fixed; only the ${optimizedSideLabel.toLowerCase()} troop mix changes.`}
+                >
+                  ?
+                </button>
               </div>
-              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="sim-optimize-action-row">
                 <button
                   type="button"
                   onClick={runOptimizeRatio}
@@ -2393,22 +2430,14 @@ export default function SimulateClient({
                     optimizedTotalTroops <= 0 ||
                     !optimizeInputsValid
                   }
-                  className="rounded px-4 py-2 text-sm font-bold min-h-[42px]"
+                  className="sim-edit-chip min-h-[42px] px-4 py-2 text-sm font-bold"
                   style={{
-                    backgroundColor:
-                      optimizeBudgetTooLarge || !optimizeInputsValid
-                        ? "var(--sidebar-bg)"
-                        : "#a6e3a1",
-                    border: `1px solid ${
-                      optimizeBudgetTooLarge || !optimizeInputsValid
-                        ? "var(--border-color)"
-                        : "#a6e3a1"
-                    }`,
-                    color:
-                      optimizeBudgetTooLarge || !optimizeInputsValid
-                        ? "var(--sidebar-text)"
-                        : "#11111b",
-                    opacity: optimizeLoading ? 0.65 : 1,
+                    opacity:
+                      optimizeLoading ||
+                      optimizeBudgetTooLarge ||
+                      !optimizeInputsValid
+                        ? 0.65
+                        : 1,
                     cursor:
                       optimizeLoading ||
                       optimizeBudgetTooLarge ||
@@ -2432,12 +2461,7 @@ export default function SimulateClient({
                   onClick={() => setOptimizePanelOpen((open) => !open)}
                   aria-expanded={optimizePanelOpen}
                   aria-controls="optimize-options-panel"
-                  className="rounded px-3 py-2 text-xs font-bold min-h-[42px]"
-                  style={{
-                    border: "1px solid var(--border-color)",
-                    backgroundColor: "transparent",
-                    color: "var(--main-text)",
-                  }}
+                  className="sim-edit-chip min-h-[42px] px-3 py-2 text-xs font-bold"
                   data-testid="optimize-options-toggle"
                 >
                   {optimizePanelOpen ? "Hide options" : "Show options"}
@@ -2456,7 +2480,7 @@ export default function SimulateClient({
                 done={optimizeProgress?.done ?? 0}
                 total={optimizeProgress?.total ?? estimatedOptimizeCompositions}
               />
-              <p className="text-xs opacity-60">
+              <p className="sim-optimize-detail text-xs opacity-60">
                 Infantry search band: {resolvedInfantryBounds.minPct}% to{" "}
                 {resolvedInfantryBounds.maxPct}%.
                 {optimizeSearchMode === "adaptive"
@@ -2468,15 +2492,11 @@ export default function SimulateClient({
               {optimizePanelOpen && (
                 <div
                   id="optimize-options-panel"
-                  className="grid gap-3 rounded border p-3 md:grid-cols-2 2xl:grid-cols-4"
-                  style={{
-                    borderColor: "var(--border-color)",
-                    backgroundColor: "rgba(255,255,255,0.02)",
-                  }}
+                  className="sim-tool-panel grid gap-3 p-3 md:grid-cols-2 2xl:grid-cols-4"
                   data-testid="optimize-options-panel"
                 >
                   <label className="flex flex-col gap-1">
-                    <span className="text-xs uppercase tracking-wider opacity-60">
+                    <span className="sim-field-label">
                       Ratio reps
                     </span>
                     <input
@@ -2493,17 +2513,14 @@ export default function SimulateClient({
                           ),
                         )
                       }
-                      className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
                       style={{
-                        backgroundColor: "var(--sidebar-bg)",
-                        border: "1px solid var(--border-color)",
-                        color: "var(--main-text)",
                         opacity: optimizeSearchMode === "adaptive" ? 0.55 : 1,
                       }}
                     />
                   </label>
                   <label className="flex flex-col gap-1">
-                    <span className="text-xs uppercase tracking-wider opacity-60">
+                    <span className="sim-field-label">
                       Grid step
                     </span>
                     <input
@@ -2516,17 +2533,14 @@ export default function SimulateClient({
                       placeholder={String(
                         recommendedOptimizeStep(optimizedTotalTroops),
                       )}
-                      className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
+                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
                       style={{
-                        backgroundColor: "var(--sidebar-bg)",
-                        border: "1px solid var(--border-color)",
-                        color: "var(--main-text)",
                         opacity: optimizeSearchMode === "adaptive" ? 0.55 : 1,
                       }}
                     />
                   </label>
                   <label className="flex flex-col gap-1">
-                    <span className="text-xs uppercase tracking-wider opacity-60">
+                    <span className="sim-field-label">
                       Inf min %
                     </span>
                     <input
@@ -2539,16 +2553,11 @@ export default function SimulateClient({
                           parseFloat(e.target.value || "0"),
                         )
                       }
-                      className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
-                      style={{
-                        backgroundColor: "var(--sidebar-bg)",
-                        border: "1px solid var(--border-color)",
-                        color: "var(--main-text)",
-                      }}
+                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
                     />
                   </label>
                   <label className="flex flex-col gap-1">
-                    <span className="text-xs uppercase tracking-wider opacity-60">
+                    <span className="sim-field-label">
                       Inf max %
                     </span>
                     <input
@@ -2561,18 +2570,31 @@ export default function SimulateClient({
                           parseFloat(e.target.value || "0"),
                         )
                       }
-                      className="rounded px-3 py-2 font-mono text-sm min-h-[42px] text-right tabular-nums"
-                      style={{
-                        backgroundColor: "var(--sidebar-bg)",
-                        border: "1px solid var(--border-color)",
-                        color: "var(--main-text)",
-                      }}
+                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
                     />
                   </label>
+                  <fieldset className="md:col-span-2 2xl:col-span-4">
+                    <legend className="sim-field-label mb-1">
+                      Search mode
+                    </legend>
+                    <div className="sim-segmented max-w-xs">
+                      {(["adaptive", "grid"] as OptimizeSearchMode[]).map((mode) => (
+                        <button
+                          key={mode}
+                          type="button"
+                          onClick={() => setOptimizeSearchMode(mode)}
+                          className="capitalize"
+                          data-active={optimizeSearchMode === mode}
+                        >
+                          {mode}
+                        </button>
+                      ))}
+                    </div>
+                  </fieldset>
                 </div>
               )}
               <p
-                className="text-xs font-mono"
+                className="sim-optimize-status text-xs font-mono"
                 style={{
                   color:
                     optimizeBudgetTooLarge || !optimizeInputsValid
@@ -2599,6 +2621,19 @@ export default function SimulateClient({
         </div>
       </div>
 
+      </div>
+
+      <div
+        className={`${mobileTab === "results" ? "block" : "hidden"} sim-panel-results-shell`}
+        data-testid="sim-panel-results"
+      >
+        {!result && !optimizeResult ? (
+          <div className="sim-tool-panel mb-4 p-3 text-xs" style={{ color: "var(--sim-muted)" }}>
+            Results will appear here after running a simulation or optimisation.
+          </div>
+        ) : null}
+      </div>
+
       <UploadReportModal
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
@@ -2609,38 +2644,32 @@ export default function SimulateClient({
 
       {result && (
         <div
-          className="rounded p-3 sm:p-4 mb-6"
-          style={{
-            border: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-          }}
+          className={`${
+            mobileTab === "results" ? "block" : "hidden"
+          } sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
         >
-          <h3 className="text-sm uppercase tracking-wider opacity-60 mb-3 font-bold">
+          <h3 className="mb-3 text-sm font-bold opacity-70">
             Results ({result.replicates} replicates)
           </h3>
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3 mb-4">
             {summaryCards?.map((c) => (
               <div
                 key={c.label}
-                className="rounded px-3 py-2 flex flex-col gap-0.5 sm:min-w-40"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  backgroundColor: "var(--main-bg)",
-                }}
+                className="sim-tool-panel flex flex-col gap-0.5 px-3 py-2 sm:min-w-40"
               >
                 <span className="text-[10px] sm:text-xs uppercase tracking-wider opacity-50">
                   {c.label}
                 </span>
                 <span
                   className="font-mono text-sm font-bold"
-                  style={{ color: "var(--sidebar-active)" }}
+                  style={{ color: "var(--sim-blue)" }}
                 >
                   {c.value}
                 </span>
               </div>
             ))}
           </div>
-          <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+          <h4 className="mb-2 text-xs font-bold opacity-70">
             Survivor distribution
           </h4>
           <p className="text-xs opacity-60 mb-2">
@@ -2682,16 +2711,14 @@ export default function SimulateClient({
 
       {optimizeResult && (
         <div
-          className="rounded p-3 sm:p-4 mb-6"
+          className={`${
+            mobileTab === "results" ? "block" : "hidden"
+          } sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
           data-testid="optimize-results"
-          style={{
-            border: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-          }}
         >
           <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <h3 className="text-sm uppercase tracking-wider opacity-60 font-bold">
+              <h3 className="text-sm font-bold opacity-70">
                 Ratio Optimisation
               </h3>
               <p className="mt-1 text-xs opacity-60">
@@ -2712,12 +2739,8 @@ export default function SimulateClient({
             <button
               type="button"
               onClick={applySelectedOptimizeRatio}
-              className="rounded px-3 py-2 text-xs font-bold"
-              style={{
-                border: "1px solid var(--sidebar-active)",
-                color: "var(--sidebar-active)",
-                backgroundColor: "transparent",
-              }}
+              className="sim-edit-chip min-h-[34px] px-3 py-2 text-xs font-bold"
+              style={{ color: "var(--sim-blue)" }}
             >
               Use selected{" "}
               {(optimizeResult.optimized_side ?? optimizeSide) === "defender"
@@ -2752,26 +2775,18 @@ export default function SimulateClient({
 
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
             <div
-              className="rounded p-3"
-              style={{
-                border: "1px solid var(--border-color)",
-                backgroundColor: "var(--main-bg)",
-              }}
+              className="sim-tool-panel p-3"
             >
-              <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+              <h4 className="mb-2 text-xs font-bold opacity-70">
                 3D win-rate samples
               </h4>
               <OptimizeRatioScatterChart points={optimizeResult.points} />
             </div>
 
             <div
-              className="rounded p-3"
-              style={{
-                border: "1px solid var(--border-color)",
-                backgroundColor: "var(--main-bg)",
-              }}
+              className="sim-tool-panel p-3"
             >
-              <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+              <h4 className="mb-2 text-xs font-bold opacity-70">
                 Top 10 ratios
               </h4>
               <div className="overflow-x-auto sm:overflow-visible">
@@ -2779,7 +2794,7 @@ export default function SimulateClient({
                   <thead>
                     <tr
                       className="text-left uppercase tracking-wider opacity-50"
-                      style={{ borderBottom: "1px solid var(--border-color)" }}
+                      style={{ borderBottom: "1px solid var(--sim-line)" }}
                     >
                       <th className="w-8 pb-1 pr-1">#</th>
                       <th className="pb-1 pr-1 text-right">Winrate</th>
@@ -2877,21 +2892,15 @@ export function RecentRunsModal({
       data-testid="recent-runs-modal"
     >
       <div
-        className="max-h-[85vh] w-full max-w-lg overflow-hidden rounded shadow-xl"
-        style={{
-          border: "1px solid var(--border-color)",
-          backgroundColor: "var(--sidebar-bg)",
-        }}
+        className="sim-modal max-h-[85vh] w-full max-w-lg overflow-hidden shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex items-center justify-between gap-3 px-4 py-3"
-          style={{ borderBottom: "1px solid var(--border-color)" }}
+          className="sim-modal-header flex items-center justify-between gap-3 border-b border-[var(--sim-line)] px-4 py-3"
         >
           <h3
             id="recent-runs-modal-title"
-            className="text-sm font-bold uppercase tracking-wider"
-            style={{ color: "var(--sidebar-active)" }}
+            className="sim-modal-title"
           >
             Recent runs
           </h3>
@@ -2899,22 +2908,14 @@ export function RecentRunsModal({
             <button
               type="button"
               onClick={onRefresh}
-              className="rounded px-2 py-1 text-xs"
-              style={{
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
+              className="sim-edit-chip min-h-[32px] px-3 py-1 text-xs font-bold"
             >
               Refresh
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="rounded px-2 py-1 text-lg leading-none"
-              style={{
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
+              className="sim-edit-chip min-h-[32px] px-2 py-1 text-sm font-bold leading-none"
               aria-label="Close recent runs"
             >
               ×
@@ -2940,12 +2941,7 @@ export function RecentRunsModal({
                   key={run.id}
                   type="button"
                   onClick={() => onChoose(run)}
-                  className="rounded p-3 text-left"
-                  style={{
-                    border: "1px solid var(--border-color)",
-                    backgroundColor: "var(--main-bg)",
-                    color: "var(--main-text)",
-                  }}
+                  className="sim-tool-panel p-3 text-left"
                 >
                   <span className="block truncate text-xs font-bold">
                     {run.title}
@@ -2964,11 +2960,8 @@ export function RecentRunsModal({
                   type="button"
                   onClick={onLoadMore}
                   disabled={loadingMore}
-                  className="rounded px-3 py-2 text-xs font-bold"
+                  className="sim-edit-chip min-h-[36px] px-3 py-2 text-xs font-bold"
                   style={{
-                    border: "1px solid var(--border-color)",
-                    backgroundColor: "transparent",
-                    color: "var(--main-text)",
                     opacity: loadingMore ? 0.6 : 1,
                   }}
                 >
@@ -3037,7 +3030,7 @@ export function ProgressBar({
             top: 0,
             bottom: 0,
             width: `${Math.min(displayPct, 100)}%`,
-            backgroundColor: "var(--sidebar-active)",
+            backgroundColor: "var(--sim-blue)",
             transition: active ? "width 0.2s ease-out" : "width 0.4s ease-out",
             borderRadius: "9999px",
           }}
@@ -3053,18 +3046,14 @@ export function ProgressBar({
 export function ResultCard({ label, value }: { label: string; value: string }) {
   return (
     <div
-      className="rounded px-3 py-2 flex flex-col gap-0.5"
-      style={{
-        border: "1px solid var(--border-color)",
-        backgroundColor: "var(--main-bg)",
-      }}
+      className="sim-tool-panel flex flex-col gap-0.5 px-3 py-2"
     >
       <span className="text-[10px] sm:text-xs uppercase tracking-wider opacity-50">
         {label}
       </span>
       <span
         className="font-mono text-sm font-bold"
-        style={{ color: "var(--sidebar-active)" }}
+        style={{ color: "var(--sim-blue)" }}
       >
         {value}
       </span>
@@ -3116,6 +3105,7 @@ function StatBonusInput({
         setDraft(String(normalized));
       }}
       onChange={(e) => {
+        focusedRef.current = true;
         const next = e.target.value;
         if (!/^\d*[.,]?\d*$/.test(next)) return;
         setDraft(next);
@@ -3124,12 +3114,7 @@ function StatBonusInput({
           onValueChange(parsed);
         }
       }}
-      className="simulate-stat-input h-8 w-full min-w-0 rounded px-1 py-1 font-mono text-[11px] text-center tabular-nums sm:h-9 sm:text-xs"
-      style={{
-        backgroundColor: "var(--sidebar-bg)",
-        border: "1px solid var(--border-color)",
-        color: "var(--main-text)",
-      }}
+      className="simulate-stat-input sim-input h-8 px-1 py-1 text-center font-mono text-[11px] tabular-nums sm:h-9 sm:text-xs"
       aria-label={ariaLabel}
     />
   );
@@ -3137,6 +3122,204 @@ function StatBonusInput({
 
 function parseStatBonusDraft(value: string): number {
   return parseFloat(value.replace(",", "."));
+}
+
+function RoleSection({
+  id,
+  title,
+  summary,
+  preview,
+  activeSection,
+  onActivate,
+  children,
+  testid,
+}: {
+  id: SimRoleSectionId;
+  title: string;
+  summary: string;
+  preview?: ReactNode;
+  activeSection: SimRoleSectionId | null;
+  onActivate: (id: SimRoleSectionId | null) => void;
+  children: ReactNode;
+  testid?: string;
+}) {
+  const open = activeSection === id;
+  return (
+    <section
+      data-testid={testid}
+      className="sim-section-card p-3 lg:p-3.5"
+      data-open={open}
+    >
+      <button
+        type="button"
+        onClick={() => onActivate(open ? null : id)}
+        className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 text-left"
+        aria-expanded={open}
+      >
+          <span
+            className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
+            style={{
+              backgroundColor: "rgba(166, 227, 161, 0.16)",
+              color: "var(--sim-green)",
+            }}
+            aria-hidden="true"
+          >
+          ✓
+        </span>
+        <span className="min-w-0">
+            <span className="block text-xs font-bold" style={{ color: "var(--sim-blue)" }}>
+            {title}
+          </span>
+          <span className="mt-0.5 block truncate text-[10px] opacity-60">
+            {summary}
+          </span>
+        </span>
+          <span
+            className="sim-edit-chip px-2 py-1 text-[10px] font-bold"
+          >
+          {open ? "Close" : "Open"}
+        </span>
+      </button>
+      {open ? <div className="mt-3">{children}</div> : preview}
+    </section>
+  );
+}
+
+function TroopSetupPreview({ state }: { state: SideState }) {
+  return (
+    <div className="sim-summary-table sim-summary-table-troops" aria-hidden="true">
+      {CATEGORIES.map((cat) => (
+        <div key={cat} className="sim-summary-row sim-summary-row-troops">
+          <span className="sim-summary-name">
+            {troopCategoryLabel(cat)}
+          </span>
+          <span className="font-mono tabular-nums">
+            {state.troops[cat].toLocaleString()}
+          </span>
+          <span className="font-mono">{state.tiers[cat]}</span>
+          <span className="truncate">{state.heroes[cat].name ?? "None"}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function statModifierPercent(baseValue: number, effectiveValue: number): number {
+  if (baseValue === 0) return effectiveValue === 0 ? 0 : 100;
+  return ((effectiveValue - baseValue) / baseValue) * 100;
+}
+
+function formattedEffectiveStat(
+  baseValue: number,
+  bonusGroups: { up: number; down: number },
+) {
+  const effectiveNumber = applyStatBonusGroups(
+    baseValue,
+    bonusGroups.up,
+    bonusGroups.down,
+  );
+  const hasModifier = bonusGroups.up !== 0 || bonusGroups.down !== 0;
+  const modifierPercent = statModifierPercent(baseValue, effectiveNumber);
+  const value = effectiveStatPreview(baseValue, bonusGroups.up, bonusGroups.down);
+  const tone =
+    !hasModifier || Math.abs(modifierPercent) < 0.05
+      ? "neutral"
+      : modifierPercent > 0
+        ? "up"
+        : "down";
+  return {
+    value,
+    modifierText: hasModifier ? ` (${signedPercent(modifierPercent)})` : "",
+    tone,
+  };
+}
+
+function troopSummaryInitial(cat: TroopCategory): string {
+  if (cat === "infantry") return "I";
+  if (cat === "lancer") return "L";
+  return "M";
+}
+
+function StatSetupPreview({
+  state,
+  opponent,
+  which,
+  rallyMode,
+}: {
+  state: SideState;
+  opponent: SideState;
+  which: Side;
+  rallyMode: boolean;
+}) {
+  return (
+    <div
+      className="sim-summary-table sim-stat-summary-matrix"
+      data-testid="stat-bonus-summary-matrix"
+      aria-hidden="true"
+    >
+      <div className="sim-summary-row sim-stat-summary-row sim-summary-head">
+        <span />
+        {STAT_NAMES.map((stat) => (
+          <span key={stat}>{STAT_SHORT_LABELS[stat]}</span>
+        ))}
+      </div>
+      {CATEGORIES.map((cat) => (
+        <div key={cat} className="sim-summary-row sim-stat-summary-row">
+          <span className="sim-summary-name" title={troopCategoryLabel(cat)}>
+            {troopSummaryInitial(cat)}
+          </span>
+          {STAT_NAMES.map((stat) => {
+            const statValue = formattedEffectiveStat(
+              state.stats[cat][stat],
+              effectiveStatBonusGroups(state, opponent, which, stat, rallyMode),
+            );
+            return (
+              <span
+                key={stat}
+                className={`sim-summary-stat-value ${
+                  statValue.tone === "up"
+                    ? "sim-value-up"
+                    : statValue.tone === "down"
+                      ? "sim-value-down"
+                      : ""
+                }`}
+              >
+                <span>{statValue.value}</span>
+                {statValue.modifierText ? (
+                  <span className="sim-summary-modifier">
+                    {statValue.modifierText.trim()}
+                  </span>
+                ) : null}
+              </span>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function JoinerSetupPreview({ state }: { state: SideState }) {
+  const names = state.joiners.map((slot) => slot.name).filter(Boolean);
+  return (
+    <p className="sim-summary-line" aria-hidden="true">
+      {names.length > 0 ? names.join(" · ") : "No joiners selected"}
+    </p>
+  );
+}
+
+function ModifierSetupPreview({ state }: { state: SideState }) {
+  const cityActive = STAT_MODIFIER_NAMES.filter(
+    (name) => state.statModifiers[name] !== 0,
+  ).length;
+  const petActive = PET_MODIFIER_NAMES.filter(
+    (name) => state.petModifiers[name] !== 0,
+  ).length;
+  return (
+    <p className="sim-summary-line" aria-hidden="true">
+      City {cityActive} active · Pets {petActive} active
+    </p>
+  );
 }
 
 export function SidePanel({
@@ -3162,6 +3345,8 @@ export function SidePanel({
   loadedPresetName: string | null;
   onOpenPreset: () => void;
 }) {
+  const [activeSection, setActiveSection] =
+    useState<SimRoleSectionId | null>("troops");
   const troopCountRefs = useRef<Record<TroopCategory, HTMLInputElement | null>>(
     {
       infantry: null,
@@ -3190,293 +3375,328 @@ export function SidePanel({
       troopCountRefs.current[nextCat]?.focus();
     };
 
+  const totalTroops = CATEGORIES.reduce((sum, cat) => sum + state.troops[cat], 0);
+  const heroSummary = CATEGORIES.map((cat) => state.heroes[cat].name ?? "None").join(" / ");
+  const tierSummary = CATEGORIES.map((cat) => state.tiers[cat].toUpperCase()).join(" / ");
+  const activeJoiners = state.joiners.filter((slot) => slot.name).length;
+  const cityActive = STAT_MODIFIER_NAMES.filter(
+    (name) => state.statModifiers[name] !== 0,
+  ).length;
+  const petActive = PET_MODIFIER_NAMES.filter(
+    (name) => state.petModifiers[name] !== 0,
+  ).length;
   return (
-    <div
-      className="rounded p-3 sm:p-4 min-w-0"
-      style={{
-        border: "1px solid var(--border-color)",
-        backgroundColor: "var(--sidebar-bg)",
-      }}
-    >
-      <div className="mb-3 flex items-center justify-between gap-2 sm:mb-4">
-        <div className="min-w-0">
-          <h3
-            className="text-sm uppercase tracking-wider font-bold"
-            style={{ color: "var(--sidebar-active)" }}
-          >
-            {title}
-          </h3>
-          {loadedPresetName && (
-            <p className="mt-0.5 truncate text-[10px] font-mono opacity-55">
-              {loadedPresetName}
-            </p>
-          )}
-        </div>
-        <button
-          type="button"
-          onClick={onOpenPreset}
-          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded text-base"
-          style={{
-            border: "1px solid var(--border-color)",
-            backgroundColor: loadedPresetName
-              ? "rgba(137, 180, 250, 0.15)"
-              : "var(--main-bg)",
-            color: loadedPresetName
-              ? "var(--sidebar-active)"
-              : "var(--main-text)",
-          }}
-          title={`${title} player profile`}
-          aria-label={`${which} player profile`}
+    <div className="sim-role-panel min-w-0">
+      <div className="flex flex-col gap-2 lg:gap-3">
+        <div
+          className="sim-role-header p-2.5"
+          data-testid={`side-section-${which}-preset`}
         >
-          👤
-        </button>
-      </div>
-
-      <div className="mb-4 grid grid-cols-1 gap-2 lg:grid-cols-3 sm:mb-5">
-        {CATEGORIES.map((cat) => (
-          <TroopColumn
-            key={cat}
-            cat={cat}
-            which={which}
-            state={state}
-            setState={setState}
-            rallyMode={rallyMode}
-            syncStatsOnHeroChange={syncStatsOnHeroChange}
-            onStatSync={onStatSync}
-            countInputRef={(node) => {
-              troopCountRefs.current[cat] = node;
-            }}
-            onCountKeyDown={handleTroopCountTab(cat)}
-          />
-        ))}
-      </div>
-
-      {rallyMode && (
-        <div className="mb-4 sm:mb-5">
-          <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
-            Joiner Heroes (skill 1 @ lvl 5)
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {state.joiners.map((slot, i) => (
-              <label key={i} className="flex items-center gap-2 text-xs">
-                <span className="opacity-60 w-10 flex-shrink-0">#{i + 1}</span>
-                <select
-                  value={slot.name ?? ""}
-                  onChange={(e) => {
-                    const next = e.target.value || null;
-                    setState((prev) => {
-                      const joiners = prev.joiners.map((j, idx) =>
-                        idx === i ? { name: next } : j,
-                      );
-                      return { ...prev, joiners };
-                    });
-                  }}
-                  className="rounded px-2 py-2 font-mono text-xs flex-1 min-w-0 min-h-[36px]"
-                  style={{
-                    backgroundColor: "var(--main-bg)",
-                    border: "1px solid var(--border-color)",
-                    color: "var(--main-text)",
-                  }}
-                  aria-label={`${which} joiner ${i + 1}`}
-                >
-                  <option value="">— None —</option>
-                  {HEROES.map((h) => (
-                    <option key={h.name} value={h.name}>
-                      {h.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <h3 className="text-xs font-bold" style={{ color: "var(--sim-blue)" }}>
+                {title}
+              </h3>
+              <p className="mt-0.5 truncate text-[10px] opacity-60">
+                {loadedPresetName
+                  ? `${loadedPresetName} loaded`
+                  : "No role preset loaded"}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onOpenPreset}
+              className="sim-profile-button font-bold"
+              aria-label={`${which} player profile`}
+            >
+              Load / Save
+            </button>
           </div>
         </div>
-      )}
 
-      <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
-        Stat Bonuses (%)
-      </h4>
-      <div className="grid grid-cols-1 gap-2 lg:grid-cols-3">
-        {CATEGORIES.map((cat) => (
+        <RoleSection
+          id="troops"
+          title="Troops, tiers, heroes"
+          summary={`${totalTroops.toLocaleString()} troops · ${heroSummary} · ${tierSummary}`}
+          preview={<TroopSetupPreview state={state} />}
+          activeSection={activeSection}
+          onActivate={setActiveSection}
+          testid={`side-section-${which}-troops`}
+        >
+          <div className="grid grid-cols-1 gap-2">
+            {CATEGORIES.map((cat) => (
+              <TroopColumn
+                key={cat}
+                cat={cat}
+                which={which}
+                state={state}
+                setState={setState}
+                rallyMode={rallyMode}
+                syncStatsOnHeroChange={syncStatsOnHeroChange}
+                onStatSync={onStatSync}
+                countInputRef={(node) => {
+                  troopCountRefs.current[cat] = node;
+                }}
+                onCountKeyDown={handleTroopCountTab(cat)}
+              />
+            ))}
+          </div>
+        </RoleSection>
+
+        <RoleSection
+          id="stats"
+          title="Stat bonuses"
+          summary="3 troop types × 4 stats"
+          preview={
+            <StatSetupPreview
+              state={state}
+              opponent={opponent}
+              which={which}
+              rallyMode={rallyMode}
+            />
+          }
+          activeSection={activeSection}
+          onActivate={setActiveSection}
+          testid={`side-section-${which}-stats`}
+        >
           <div
-            key={cat}
-            className="min-w-0 rounded border p-2 lg:p-2.5"
-            style={{
-              borderColor: "var(--border-color)",
-              backgroundColor: "var(--main-bg)",
-            }}
+            className="sim-stat-edit-matrix"
+            data-testid="stat-bonus-edit-matrix"
           >
-            <span className="mb-1.5 block text-[10px] uppercase tracking-wider opacity-60">
-              {troopCategoryLabel(cat)}
-            </span>
-            <div className="grid grid-cols-4 gap-x-1.5 gap-y-1.5 lg:grid-cols-2">
-              {STAT_NAMES.map((stat) => {
-                const skill4Bonus = sideSkill4BonusPercent(
-                  state,
-                  which,
-                  stat as Skill4Stat,
-                  rallyMode,
-                );
-                const manualGroups = manualStatModifierGroups(
-                  state.statModifiers,
-                  opponent.statModifiers,
-                  stat,
-                );
-                const petGroups = petStatModifierGroups(
-                  state.petModifiers,
-                  opponent.petModifiers,
-                  stat,
-                );
-                const bonusGroups = effectiveStatBonusGroups(
-                  state,
-                  opponent,
-                  which,
-                  stat,
-                  rallyMode,
-                );
-                const baseValue = state.stats[cat][stat];
-                const hasBonus =
-                  bonusGroups.up !== 0 || bonusGroups.down !== 0;
-                const previewValue =
-                  hasBonus
+            <div className="sim-stat-edit-row sim-stat-edit-head">
+              <span />
+              {STAT_NAMES.map((stat) => (
+                <span key={stat}>{STAT_SHORT_LABELS[stat]}</span>
+              ))}
+            </div>
+            {CATEGORIES.map((cat) => (
+              <div
+                key={cat}
+                className="sim-stat-edit-row"
+              >
+                <span className="sim-summary-name">
+                  {troopCategoryLabel(cat)}
+                </span>
+                {STAT_NAMES.map((stat) => {
+                  const skill4Bonus = sideSkill4BonusPercent(
+                    state,
+                    which,
+                    stat as Skill4Stat,
+                    rallyMode,
+                  );
+                  const manualGroups = manualStatModifierGroups(
+                    state.statModifiers,
+                    opponent.statModifiers,
+                    stat,
+                  );
+                  const petGroups = petStatModifierGroups(
+                    state.petModifiers,
+                    opponent.petModifiers,
+                    stat,
+                  );
+                  const bonusGroups = effectiveStatBonusGroups(
+                    state,
+                    opponent,
+                    which,
+                    stat,
+                    rallyMode,
+                  );
+                  const baseValue = state.stats[cat][stat];
+                  const hasBonus =
+                    bonusGroups.up !== 0 || bonusGroups.down !== 0;
+                  const previewValue = hasBonus
                     ? effectiveStatPreview(
                         baseValue,
                         bonusGroups.up,
                         bonusGroups.down,
                       )
                     : null;
-                const previewNumber =
-                  hasBonus
+                  const previewNumber = hasBonus
                     ? applyStatBonusGroups(
                         baseValue,
                         bonusGroups.up,
                         bonusGroups.down,
                       )
                     : baseValue;
-                const modifierSummary = [
-                  bonusGroups.up !== 0 ? signedPercent(bonusGroups.up) : null,
-                  bonusGroups.down !== 0
-                    ? `-${bonusGroups.down.toFixed(1)}%`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join(" / ");
-                const sourceText = [
-                  skill4Bonus !== 0
-                    ? `skill 4 ${signedPercent(skill4Bonus)}`
-                    : null,
-                  manualGroups.up !== 0
-                    ? `manual ${signedPercent(manualGroups.up)}`
-                    : null,
-                  manualGroups.down !== 0
-                    ? `manual -${manualGroups.down.toFixed(1)}%`
-                    : null,
-                  petGroups.up !== 0
-                    ? `pet ${signedPercent(petGroups.up)}`
-                    : null,
-                  petGroups.down !== 0
-                    ? `pet -${petGroups.down.toFixed(1)}%`
-                    : null,
-                ]
-                  .filter(Boolean)
-                  .join(", ");
-                return (
-                  <label
-                    key={stat}
-                    className="flex min-w-0 flex-col gap-0.5 text-[10px]"
-                  >
-                    <span
-                      className="truncate text-center font-mono uppercase opacity-60"
-                      title={statLabel(cat, stat)}
+                  const modifierSummary = [
+                    bonusGroups.up !== 0 ? signedPercent(bonusGroups.up) : null,
+                    bonusGroups.down !== 0
+                      ? `-${bonusGroups.down.toFixed(1)}%`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" / ");
+                  const sourceText = [
+                    skill4Bonus !== 0
+                      ? `skill 4 ${signedPercent(skill4Bonus)}`
+                      : null,
+                    manualGroups.up !== 0
+                      ? `manual ${signedPercent(manualGroups.up)}`
+                      : null,
+                    manualGroups.down !== 0
+                      ? `manual -${manualGroups.down.toFixed(1)}%`
+                      : null,
+                    petGroups.up !== 0
+                      ? `pet ${signedPercent(petGroups.up)}`
+                      : null,
+                    petGroups.down !== 0
+                      ? `pet -${petGroups.down.toFixed(1)}%`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(", ");
+                  return (
+                    <label
+                      key={stat}
+                      className="sim-stat-edit-cell"
                     >
-                      {STAT_SHORT_LABELS[stat]}
-                    </span>
-                    <StatBonusInput
-                      value={baseValue}
-                      onValueChange={(v) => {
-                        setState((prev) => ({
-                          ...prev,
-                          stats: {
-                            ...prev.stats,
-                            [cat]: {
-                              ...prev.stats[cat],
-                              [stat]: isNaN(v) ? 0 : v,
+                      <span className="sr-only">{STAT_SHORT_LABELS[stat]}</span>
+                      <StatBonusInput
+                        value={baseValue}
+                        onValueChange={(v) => {
+                          setState((prev) => ({
+                            ...prev,
+                            stats: {
+                              ...prev.stats,
+                              [cat]: {
+                                ...prev.stats[cat],
+                                [stat]: isNaN(v) ? 0 : v,
+                              },
                             },
-                          },
-                        }));
-                      }}
-                      ariaLabel={statLabel(cat, stat)}
-                    />
-                    {previewValue ? (
-                      <span
-                        className="min-h-[1.7rem] text-center font-mono text-[8px] leading-tight sm:text-[9px] lg:min-h-[2rem] lg:text-[10px]"
-                        style={{
-                          color: previewNumber >= baseValue ? "#a6e3a1" : "#f38ba8",
+                          }));
                         }}
-                      >
+                        ariaLabel={statLabel(cat, stat)}
+                      />
+                      {previewValue ? (
                         <span
-                          title={`${sourceText || "Manual modifiers"} apply before battle, for an effective stat of ${previewValue}.`}
-                          data-testid={`stat-preview-${which}-${cat}-${stat}`}
+                          className="min-h-[1.7rem] text-center font-mono text-[8px] leading-tight sm:text-[9px]"
+                          style={{
+                            color:
+                              previewNumber >= baseValue ? "#a6e3a1" : "#f38ba8",
+                          }}
                         >
-                          <span className="block truncate">[{previewValue}]</span>
-                          <span className="block truncate">{modifierSummary}</span>
+                          <span
+                            title={`${sourceText || "Manual modifiers"} apply before battle, for an effective stat of ${previewValue}.`}
+                            data-testid={`stat-preview-${which}-${cat}-${stat}`}
+                          >
+                            <span className="block truncate">[{previewValue}]</span>
+                            <span className="block truncate">{modifierSummary}</span>
+                          </span>
                         </span>
-                      </span>
-                    ) : null}
-                  </label>
-                );
-              })}
-            </div>
+                      ) : null}
+                    </label>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        ))}
+        </RoleSection>
+
+        {rallyMode && (
+          <RoleSection
+            id="joiners"
+            title="Joiners"
+            summary={`${activeJoiners}/4 selected`}
+            preview={<JoinerSetupPreview state={state} />}
+            activeSection={activeSection}
+            onActivate={setActiveSection}
+            testid={`side-section-${which}-joiners`}
+          >
+            <div className="grid grid-cols-1 gap-2">
+              {state.joiners.map((slot, i) => (
+                <label key={i} className="flex items-center gap-2 text-xs">
+                  <span className="w-10 flex-shrink-0 opacity-60">#{i + 1}</span>
+                  <select
+                    value={slot.name ?? ""}
+                    onChange={(e) => {
+                      const next = e.target.value || null;
+                      setState((prev) => {
+                        const joiners = prev.joiners.map((j, idx) =>
+                          idx === i ? { name: next } : j,
+                        );
+                        return { ...prev, joiners };
+                      });
+                    }}
+                    className="min-h-[40px] min-w-0 flex-1 rounded px-2 py-2 font-mono text-xs"
+                    style={{
+                      backgroundColor: "var(--sim-field)",
+                      border: "1px solid var(--sim-line)",
+                      color: "var(--sim-text)",
+                    }}
+                    aria-label={`${which} joiner ${i + 1}`}
+                  >
+                    <option value="">— None —</option>
+                    {HEROES.map((h) => (
+                      <option key={h.name} value={h.name}>
+                        {h.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </RoleSection>
+        )}
+
+        <RoleSection
+          id="buffs"
+          title="Buffs and debuffs"
+          summary={`City ${cityActive} active · Pets ${petActive} active`}
+          preview={<ModifierSetupPreview state={state} />}
+          activeSection={activeSection}
+          onActivate={setActiveSection}
+          testid={`side-section-${which}-buffs`}
+        >
+          <StatModifierControls
+            which={which}
+            modifiers={state.statModifiers}
+            petModifiers={state.petModifiers}
+            onChange={(name, value) => {
+              setState((prev) => ({
+                ...prev,
+                statModifiers: {
+                  ...prev.statModifiers,
+                  [name]: value,
+                },
+              }));
+            }}
+            onPetChange={(name, value) => {
+              setState((prev) => ({
+                ...prev,
+                petModifiers: {
+                  ...prev.petModifiers,
+                  [name]: value,
+                },
+              }));
+            }}
+            onCityPreset={(value) => {
+              setState((prev) => ({
+                ...prev,
+                statModifiers: STAT_MODIFIER_NAMES.reduce(
+                  (next, name) => ({ ...next, [name]: value }),
+                  {} as StatModifierState,
+                ),
+              }));
+            }}
+            onPetPreset={(enabled) => {
+              setState((prev) => ({
+                ...prev,
+                petModifiers: enabled
+                  ? {
+                      attack: PET_BUFF_MAX,
+                      defense: PET_BUFF_MAX,
+                      lethality: PET_BUFF_MAX,
+                      health: PET_BUFF_MAX,
+                      enemy_defense: PET_DEFENSE_DEBUFF_MAX,
+                      enemy_lethality: PET_DEFAULT_DEBUFF_MAX,
+                      enemy_health: PET_DEFAULT_DEBUFF_MAX,
+                    }
+                  : defaultPetModifiers(),
+              }));
+            }}
+          />
+        </RoleSection>
       </div>
-      <StatModifierControls
-        which={which}
-        modifiers={state.statModifiers}
-        petModifiers={state.petModifiers}
-        onChange={(name, value) => {
-          setState((prev) => ({
-            ...prev,
-            statModifiers: {
-              ...prev.statModifiers,
-              [name]: value,
-            },
-          }));
-        }}
-        onPetChange={(name, value) => {
-          setState((prev) => ({
-            ...prev,
-            petModifiers: {
-              ...prev.petModifiers,
-              [name]: value,
-            },
-          }));
-        }}
-        onCityPreset={(value) => {
-          setState((prev) => ({
-            ...prev,
-            statModifiers: STAT_MODIFIER_NAMES.reduce(
-              (next, name) => ({ ...next, [name]: value }),
-              {} as StatModifierState,
-            ),
-          }));
-        }}
-        onPetPreset={(enabled) => {
-          setState((prev) => ({
-            ...prev,
-            petModifiers: enabled
-              ? {
-                  attack: PET_BUFF_MAX,
-                  defense: PET_BUFF_MAX,
-                  lethality: PET_BUFF_MAX,
-                  health: PET_BUFF_MAX,
-                  enemy_defense: PET_DEFENSE_DEBUFF_MAX,
-                  enemy_lethality: PET_DEFAULT_DEBUFF_MAX,
-                  enemy_health: PET_DEFAULT_DEBUFF_MAX,
-                }
-              : defaultPetModifiers(),
-          }));
-        }}
-      />
     </div>
   );
 }
@@ -3505,36 +3725,24 @@ function StatModifierControls({
   const [cityDetailsOpen, setCityDetailsOpen] = useState(false);
   const [petDetailsOpen, setPetDetailsOpen] = useState(false);
   return (
-    <div
-      className="mt-3 rounded border p-2.5"
-      style={{
-        borderColor: "var(--border-color)",
-        backgroundColor: "var(--main-bg)",
-      }}
-    >
-      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider opacity-60">
-        Extra Buffs / Debuffs
-      </h4>
-      <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
-        <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
-          <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+    <div className="sim-modifier-editor mt-3">
+      <div className="grid grid-cols-1 gap-2">
+        <div className="sim-modifier-group">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
             <button
               type="button"
               aria-expanded={cityDetailsOpen}
               aria-controls={`city-modifier-fields-${which}`}
               data-testid={`city-modifier-details-${which}`}
               onClick={() => setCityDetailsOpen((open) => !open)}
-              className="flex min-h-[30px] min-w-0 items-center gap-1 text-left text-[10px] font-bold uppercase tracking-wider opacity-70 hover:opacity-100"
+              className="flex min-h-[30px] w-full min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
             >
               <span className="w-3 text-center text-[9px] opacity-70">
                 {cityDetailsOpen ? "▼" : "▶"}
               </span>
               <span className="truncate">City</span>
             </button>
-            <div
-              className="inline-grid grid-cols-3 overflow-hidden rounded border"
-              style={{ borderColor: "var(--border-color)" }}
-            >
+            <div className="sim-segmented">
               {STAT_MODIFIER_OPTIONS.map((value) => {
                 const selected = cityPreset === value;
                 return (
@@ -3545,17 +3753,7 @@ function StatModifierControls({
                     aria-pressed={selected}
                     data-testid={`city-modifier-${which}-${value}`}
                     onClick={() => onCityPreset(value)}
-                    className="min-h-[30px] px-2 text-[10px] font-bold"
-                    style={{
-                      backgroundColor: selected
-                        ? "var(--sidebar-active)"
-                        : "var(--sidebar-bg)",
-                      color: selected ? "#111827" : "var(--main-text)",
-                      borderRight:
-                        value === 20
-                          ? "0"
-                          : "1px solid var(--border-color)",
-                    }}
+                    data-active={selected}
                     title={`Set all city buffs/debuffs to ${value}%`}
                   >
                     {value}%
@@ -3582,15 +3780,15 @@ function StatModifierControls({
           )}
         </div>
 
-        <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
-          <div className="mb-2 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+        <div className="sim-modifier-group">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
             <button
               type="button"
               aria-expanded={petDetailsOpen}
               aria-controls={`pet-modifier-fields-${which}`}
               data-testid={`pet-modifier-details-${which}`}
               onClick={() => setPetDetailsOpen((open) => !open)}
-              className="flex min-h-[30px] min-w-0 items-center gap-1 text-left text-[10px] font-bold uppercase tracking-wider opacity-70 hover:opacity-100"
+              className="flex min-h-[30px] w-full min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
             >
               <span className="w-3 text-center text-[9px] opacity-70">
                 {petDetailsOpen ? "▼" : "▶"}
@@ -3603,14 +3801,8 @@ function StatModifierControls({
               aria-pressed={petEnabled}
               data-testid={`pet-modifier-${which}-toggle`}
               onClick={() => onPetPreset(!petEnabled)}
-              className="min-h-[30px] rounded px-3 text-[10px] font-bold"
-              style={{
-                backgroundColor: petEnabled
-                  ? "var(--sidebar-active)"
-                  : "var(--sidebar-bg)",
-                border: "1px solid var(--border-color)",
-                color: petEnabled ? "#111827" : "var(--main-text)",
-              }}
+              className="sim-compact-toggle"
+              data-active={petEnabled}
               title="Toggle pet buffs at max values and debuffs at strongest values."
             >
               {petEnabled ? "On" : "Off"}
@@ -3650,14 +3842,11 @@ function SegmentedCityModifier({
   onChange: (name: StatModifierName, value: number) => void;
 }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-      <span className="min-w-0 truncate text-[10px] uppercase tracking-wider opacity-60">
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
+      <span className="min-w-0 truncate text-[10px] opacity-70">
         {STAT_MODIFIER_LABELS[name]}
       </span>
-      <div
-        className="inline-grid grid-cols-3 overflow-hidden rounded border"
-        style={{ borderColor: "var(--border-color)" }}
-      >
+      <div className="sim-segmented">
         {STAT_MODIFIER_OPTIONS.map((option) => {
           const selected = value === option;
           return (
@@ -3668,15 +3857,7 @@ function SegmentedCityModifier({
               aria-pressed={selected}
               data-testid={`stat-modifier-${which}-${name}-${option}`}
               onClick={() => onChange(name, option)}
-              className="min-h-[30px] px-2 text-[10px] font-bold"
-              style={{
-                backgroundColor: selected
-                  ? "var(--sidebar-active)"
-                  : "var(--sidebar-bg)",
-                color: selected ? "#111827" : "var(--main-text)",
-                borderRight:
-                  option === 20 ? "0" : "1px solid var(--border-color)",
-              }}
+              data-active={selected}
               title={`${STAT_MODIFIER_LABELS[name]} ${statModifierDescription(name, option)}`}
             >
               {statModifierDescription(name, option)}
@@ -3704,7 +3885,7 @@ function PetModifierInput({
   const display = isDebuff && value > 0 ? `-${value.toFixed(1)}%` : `+${value.toFixed(1)}%`;
   return (
     <label className="grid grid-cols-[minmax(0,1fr)_5rem_3.25rem] items-center gap-2 text-[10px]">
-      <span className="min-w-0 truncate uppercase tracking-wider opacity-60">
+      <span className="min-w-0 truncate opacity-70">
         {PET_MODIFIER_LABELS[name]}
       </span>
       <input
@@ -3720,12 +3901,7 @@ function PetModifierInput({
             : Math.max(0, Math.min(max, Math.round(parsed * 2) / 2));
           onChange(name, next);
         }}
-        className="min-h-[30px] rounded px-2 text-right font-mono text-[10px] tabular-nums"
-        style={{
-          backgroundColor: "var(--sidebar-bg)",
-          border: "1px solid var(--border-color)",
-          color: "var(--main-text)",
-        }}
+        className="sim-input min-h-[30px] px-2 text-right text-[10px] tabular-nums"
         aria-label={`${which} pet ${PET_MODIFIER_LABELS[name]}`}
         data-testid={`pet-modifier-${which}-${name}`}
       />
@@ -3770,79 +3946,59 @@ function TroopColumn({
 
   return (
     <div
-      className="flex min-w-0 flex-col gap-1.5 rounded border p-2 lg:gap-2"
-      style={{
-        borderColor: "var(--border-color)",
-        backgroundColor: "var(--main-bg)",
-      }}
+      className="sim-unit-row"
+      data-testid={`sim-unit-row-${which}-${cat}`}
     >
-      <span className="text-[10px] uppercase tracking-wider opacity-70 font-mono truncate">
+      <span className="sim-unit-name truncate">
         {troopCategoryLabel(cat)}
       </span>
-      <div className="grid grid-cols-[minmax(0,1fr)_minmax(4rem,0.38fr)] gap-1.5">
-        <label className="flex min-w-0 flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wider opacity-50">
-            Troops
-          </span>
-          <input
-            ref={countInputRef}
-            type="number"
-            min={0}
-            inputMode="numeric"
-            value={state.troops[cat]}
-            onKeyDown={onCountKeyDown}
-            onChange={(e) => {
-              const v = parseInt(e.target.value || "0", 10);
-              setState((prev) => ({
-                ...prev,
-                troops: {
-                  ...prev.troops,
-                  [cat]: isNaN(v) ? 0 : Math.max(0, v),
-                },
-              }));
-            }}
-            className="h-8 w-full min-w-0 rounded px-2 py-1 font-mono text-xs text-right tabular-nums sm:h-[34px]"
-            style={{
-              backgroundColor: "var(--sidebar-bg)",
-              border: "1px solid var(--border-color)",
-              color: "var(--main-text)",
-            }}
-            aria-label={`${cat} troop count`}
-          />
-        </label>
-        <label className="flex min-w-0 flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wider opacity-50">
-            Tier
-          </span>
-          <select
-            value={state.tiers[cat]}
-            onChange={(e) => {
-              const v = e.target.value;
-              setState((prev) => ({
-                ...prev,
-                tiers: { ...prev.tiers, [cat]: v },
-              }));
-            }}
-            className="h-8 w-full min-w-0 rounded px-1.5 py-1 font-mono text-[11px] sm:h-[34px] sm:text-xs"
-            style={{
-              backgroundColor: "var(--sidebar-bg)",
-              border: "1px solid var(--border-color)",
-              color: "var(--main-text)",
-            }}
-            aria-label={`${cat} troop tier`}
-          >
-            {TROOP_TIERS.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <label className="flex flex-col gap-1">
-        <span className="text-[10px] uppercase tracking-wider opacity-50">
-          Hero
-        </span>
+      <label>
+        <span className="sim-field-label">Troops</span>
+        <input
+          ref={countInputRef}
+          type="number"
+          min={0}
+          inputMode="numeric"
+          value={state.troops[cat]}
+          onKeyDown={onCountKeyDown}
+          onChange={(e) => {
+            const v = parseInt(e.target.value || "0", 10);
+            setState((prev) => ({
+              ...prev,
+              troops: {
+                ...prev.troops,
+                [cat]: isNaN(v) ? 0 : Math.max(0, v),
+              },
+            }));
+          }}
+          className="sim-input font-mono text-xs tabular-nums"
+          style={{ textAlign: "right" }}
+          aria-label={`${cat} troop count`}
+        />
+      </label>
+      <label>
+        <span className="sim-field-label">Tier</span>
+        <select
+          value={state.tiers[cat]}
+          onChange={(e) => {
+            const v = e.target.value;
+            setState((prev) => ({
+              ...prev,
+              tiers: { ...prev.tiers, [cat]: v },
+            }));
+          }}
+          className="sim-input font-mono text-xs"
+          aria-label={`${cat} troop tier`}
+        >
+          {TROOP_TIERS.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label className="sim-hero-field">
+        <span className="sim-field-label">Hero</span>
         <select
           value={heroSlot.name ?? ""}
           onChange={(e) => {
@@ -3914,12 +4070,7 @@ function TroopColumn({
               });
             }
           }}
-          className="h-8 w-full min-w-0 rounded px-2 py-1 font-mono text-xs sm:h-[34px]"
-          style={{
-            backgroundColor: "var(--sidebar-bg)",
-            border: "1px solid var(--border-color)",
-            color: "var(--main-text)",
-          }}
+          className="sim-input font-mono text-xs"
           aria-label={`${cat} hero`}
         >
           <option value="">— None —</option>
@@ -3931,11 +4082,8 @@ function TroopColumn({
         </select>
       </label>
 
-      <div className="mt-0.5 flex flex-col gap-1">
-        <span className="text-[10px] uppercase tracking-wider opacity-50">
-          Skills
-        </span>
-        <div className="grid grid-cols-4 gap-1">
+      {hero && (
+        <div className="sim-skill-strip">
           {[1, 2, 3, 4].map((slot) => {
             const enabled = skillSlotEnabled(
               hero,
@@ -3943,11 +4091,8 @@ function TroopColumn({
               rallyMode,
             );
             return (
-              <label
-                key={slot}
-                className="flex min-w-0 flex-col gap-0.5 text-[10px]"
-              >
-                <span className="text-center font-mono opacity-60">{slot}</span>
+              <label key={slot} className="min-w-0">
+                <span className="sim-field-label text-center">S{slot}</span>
                 <select
                   value={heroSlot.skills[slot - 1]}
                   disabled={!enabled}
@@ -3970,13 +4115,8 @@ function TroopColumn({
                       };
                     });
                   }}
-                  className="h-7 w-full rounded px-1 py-0.5 font-mono text-[10px] sm:h-8 sm:text-[11px]"
-                  style={{
-                    backgroundColor: "var(--sidebar-bg)",
-                    border: "1px solid var(--border-color)",
-                    color: "var(--main-text)",
-                    opacity: enabled ? 1 : 0.4,
-                  }}
+                  className="sim-input h-8 px-1 font-mono text-[11px]"
+                  style={{ opacity: enabled ? 1 : 0.45 }}
                   aria-label={`${cat} skill ${slot}`}
                 >
                   {[0, 1, 2, 3, 4, 5].map((l) => (
@@ -3988,26 +4128,26 @@ function TroopColumn({
               </label>
             );
           })}
+          {rallyMode && skill4 && (
+            <span
+              className="col-span-4 truncate text-right font-mono text-[10px]"
+              style={{
+                color: skill4Active ? "var(--sim-green)" : "var(--sim-muted)",
+                opacity: skill4Active ? 1 : 0.6,
+              }}
+              title={
+                skill4Active
+                  ? `Active: skill 4 grants +${skill4Pct.toFixed(1)}% ${skill4.stat} to all troops.`
+                  : `Inactive on this side: this hero's skill 4 only works on ${skill4.role}.`
+              }
+            >
+              {skill4Active
+                ? `Skill 4: +${skill4Pct.toFixed(1)}% ${skill4.stat}`
+                : `Skill 4 (${skill4.role}-only)`}
+            </span>
+          )}
         </div>
-        {rallyMode && skill4 && (
-          <span
-            className="text-[10px] font-mono text-right truncate"
-            style={{
-              color: skill4Active ? "#a6e3a1" : "#6c7086",
-              opacity: skill4Active ? 1 : 0.6,
-            }}
-            title={
-              skill4Active
-                ? `Active: skill 4 grants +${skill4Pct.toFixed(1)}% ${skill4.stat} to all troops.`
-                : `Inactive on this side: this hero's skill 4 only works on ${skill4.role}.`
-            }
-          >
-            {skill4Active
-              ? `Skill 4: +${skill4Pct.toFixed(1)}% ${skill4.stat}`
-              : `Skill 4 (${skill4.role}-only)`}
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 }
@@ -4054,11 +4194,12 @@ function StatSyncToastBanner({
     <div
       role="status"
       aria-live="polite"
-      className="fixed inset-x-3 top-16 z-50 rounded px-3 py-2 text-xs shadow-lg sm:left-auto sm:right-5 sm:top-5 sm:w-[min(34rem,calc(100vw-2.5rem))]"
+      className="fixed inset-x-3 z-50 rounded px-3 py-2 text-xs shadow-lg sm:left-auto sm:right-5 sm:w-[min(34rem,calc(100vw-2.5rem))]"
       style={{
-        border: "1px solid var(--sidebar-active)",
+        border: "1px solid var(--sim-blue)",
         backgroundColor: "rgba(137, 180, 250, 0.12)",
-        color: "var(--main-text)",
+        color: "var(--sim-text)",
+        bottom: "calc(11.5rem + env(safe-area-inset-bottom, 0px))",
       }}
     >
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -4073,24 +4214,15 @@ function StatSyncToastBanner({
               <button
                 type="button"
                 onClick={onDisable}
-                className="px-2 py-1 rounded font-bold"
-                style={{
-                  border: "1px solid var(--sidebar-active)",
-                  color: "var(--sidebar-active)",
-                  backgroundColor: "transparent",
-                }}
+                className="sim-edit-chip px-2 py-1 font-bold"
+                style={{ color: "var(--sim-blue)" }}
               >
                 Disable sync
               </button>
               <button
                 type="button"
                 onClick={onKeepEnabled}
-                className="px-2 py-1 rounded"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                  backgroundColor: "transparent",
-                }}
+                className="sim-edit-chip px-2 py-1"
               >
                 Keep enabled
               </button>
@@ -4110,24 +4242,15 @@ function StatSyncToastBanner({
               <button
                 type="button"
                 onClick={onUndo}
-                className="px-2 py-1 rounded font-bold"
-                style={{
-                  border: "1px solid var(--sidebar-active)",
-                  color: "var(--sidebar-active)",
-                  backgroundColor: "transparent",
-                }}
+                className="sim-edit-chip px-2 py-1 font-bold"
+                style={{ color: "var(--sim-blue)" }}
               >
                 Undo stat change
               </button>
               <button
                 type="button"
                 onClick={onDismiss}
-                className="px-2 py-1 rounded opacity-70"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                  backgroundColor: "transparent",
-                }}
+                className="sim-edit-chip px-2 py-1 opacity-70"
                 aria-label="Dismiss"
               >
                 ×
@@ -4150,7 +4273,7 @@ export function SkillUseTable({
   if (entries.length === 0) {
     return (
       <div>
-        <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+        <h4 className="mb-2 text-xs font-bold opacity-70">
           {title}
         </h4>
         <p className="text-xs opacity-50">No skill activations.</p>
@@ -4159,14 +4282,14 @@ export function SkillUseTable({
   }
   return (
     <div>
-      <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+      <h4 className="mb-2 text-xs font-bold opacity-70">
         {title}
       </h4>
       <table className="w-full text-xs font-mono">
         <thead>
           <tr
             className="text-left uppercase tracking-wider opacity-50"
-            style={{ borderBottom: "1px solid var(--border-color)" }}
+            style={{ borderBottom: "1px solid var(--sim-line)" }}
           >
             <th className="pb-1 pr-2">Skill</th>
             <th className="pb-1 pr-2 text-right">Avg Trig</th>
@@ -4177,7 +4300,7 @@ export function SkillUseTable({
           {entries.map((e) => (
             <tr
               key={e.name}
-              style={{ borderBottom: "1px solid var(--border-color)" }}
+              style={{ borderBottom: "1px solid var(--sim-line)" }}
             >
               <td className="py-1 pr-2 opacity-80">{e.name}</td>
               <td className="py-1 pr-2 text-right">
@@ -4219,7 +4342,7 @@ export function BattleTraceDetails({
     <div className="mt-4">
       <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h4 className="text-xs uppercase tracking-wider opacity-60 font-bold">
+          <h4 className="text-xs font-bold opacity-70">
             Example battle trace
           </h4>
           <p className="text-xs opacity-60">
@@ -4233,7 +4356,7 @@ export function BattleTraceDetails({
           <thead>
             <tr
               className="text-right uppercase tracking-wider opacity-50"
-              style={{ borderBottom: "1px solid var(--border-color)" }}
+              style={{ borderBottom: "1px solid var(--sim-line)" }}
             >
               {[...TRACE_UNITS].reverse().map((unit) => (
                 <th key={`${leftSide}-${unit}`} className="px-2 py-2">
@@ -4256,7 +4379,7 @@ export function BattleTraceDetails({
                   <tr
                     onClick={() => setExpandedRound(expanded ? null : round.round)}
                     className="cursor-pointer"
-                    style={{ borderBottom: "1px solid var(--border-color)" }}
+                    style={{ borderBottom: "1px solid var(--sim-line)" }}
                   >
                     {[...TRACE_UNITS].reverse().map((unit) => (
                       <td key={`${round.round}-${leftSide}-${unit}`} className="px-2 py-2 text-right">
@@ -4301,8 +4424,8 @@ function SkillKillSummary({
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {sides.map((side) => (
-        <div key={side} className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--main-bg)" }}>
-          <h5 className="mb-2 text-xs uppercase tracking-wider opacity-60 font-bold">
+        <div key={side} className="sim-tool-panel p-3">
+          <h5 className="mb-2 text-xs font-bold opacity-70">
             {SIDE_LABELS[side]} skill kills
           </h5>
           {Object.keys(trace.skill_kills[side] ?? {}).length === 0 ? (
@@ -4344,7 +4467,7 @@ function RoundTraceDetails({
     <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
       {sides.map((side) => (
         <div key={side}>
-          <h5 className="mb-1 text-xs uppercase tracking-wider opacity-60 font-bold">
+          <h5 className="mb-1 text-xs font-bold opacity-70">
             {SIDE_LABELS[side]} active kills
           </h5>
           <div className="space-y-1">
@@ -4359,7 +4482,7 @@ function RoundTraceDetails({
               );
             })}
           </div>
-          <h5 className="mb-1 mt-3 text-xs uppercase tracking-wider opacity-60 font-bold">
+          <h5 className="mb-1 mt-3 text-xs font-bold opacity-70">
             Effects used this round
           </h5>
           {round[side].effects.filter((effect) => effect.used).length === 0 ? (
@@ -4393,8 +4516,8 @@ function TraceTotals({
   return (
     <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
       {sides.map((side) => (
-        <div key={side} className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--main-bg)" }}>
-          <h5 className="mb-2 text-xs uppercase tracking-wider opacity-60 font-bold">
+        <div key={side} className="sim-tool-panel p-3">
+          <h5 className="mb-2 text-xs font-bold opacity-70">
             {SIDE_LABELS[side]} totals
           </h5>
           {TRACE_UNITS.map((unit) => {

@@ -361,12 +361,13 @@ export default function TestcaseDriftChart({ rows }: Props) {
     };
   });
 
-  const activeSeriesId = hoveredSeriesId ?? pinnedSeriesId;
+  const activeSeriesId = pinnedSeriesId ?? hoveredSeriesId;
   const activeSeries =
     (activeSeriesId
       ? seriesMeta.find((series) => series.id === activeSeriesId)
       : null) ?? null;
-  const activeSeriesName = activeSeries?.displayName ?? null;
+  const activeSeriesName =
+    pinnedSeriesId == null ? activeSeries?.displayName ?? null : null;
 
   // Per-series value arrays aligned to the run index, plus two alternating
   // bridge arrays that smoothly interpolate interior gaps only.

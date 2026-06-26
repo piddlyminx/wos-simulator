@@ -5,9 +5,9 @@ import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
 import { MAX_OPTIMIZE_BATTLES, MAX_OPTIMIZE_COMPOSITIONS, type OptimizeRatioPoint, type OptimizeRatioResult, type OptimizeSide } from "@/lib/optimize-ratio";
 import { toBattleInput } from "./adapters";
 
-const ADAPTIVE_PHASE1_REPLICATES = 30;
-const ADAPTIVE_PHASE2_REPLICATES = 10;
-const ADAPTIVE_FINAL_REPLICATES = 100;
+const ADAPTIVE_PHASE1_REPLICATES = 20;
+const ADAPTIVE_PHASE2_REPLICATES = 20;
+const ADAPTIVE_FINAL_REPLICATES = 300;
 const ADAPTIVE_MAX_PHASE2_SEEDS = 20;
 const ADAPTIVE_LOCAL_NEIGHBOURS_PER_SEED = 49;
 const ADAPTIVE_MAX_FINALISTS = 40;

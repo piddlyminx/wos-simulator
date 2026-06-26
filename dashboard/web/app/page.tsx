@@ -13,6 +13,7 @@ import {
   getTopRegressions,
 } from "@/lib/db";
 import CoverageTrendChart from "@/components/CoverageTrendChart";
+import CheckNowControls from "@/components/CheckNowControls";
 import { isPublicSimulateSurface } from "@/lib/public-surface";
 import { testcaseDetailHref } from "@/lib/testcase-file";
 
@@ -63,10 +64,7 @@ function Card({
       }}
     >
       <header className="flex flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-        <h3
-          className="max-w-full text-sm font-bold uppercase tracking-wider leading-6 sm:leading-normal"
-          style={{ color: "var(--sidebar-active)" }}
-        >
+        <h3 className="max-w-full text-sm font-bold leading-6 sm:leading-normal">
           {title}
         </h3>
         {href && (
@@ -102,7 +100,7 @@ function Stat({
       : "var(--sidebar-active)";
   return (
     <div className="flex min-w-[7.5rem] flex-col gap-0.5 sm:min-w-20">
-      <span className="text-[10px] uppercase tracking-wider opacity-50">
+      <span className="text-[10px] font-bold opacity-50">
         {label}
       </span>
       <span
@@ -111,6 +109,42 @@ function Stat({
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+function SummaryTile({
+  label,
+  value,
+  helper,
+  tone,
+}: {
+  label: string;
+  value: string;
+  helper: string;
+  tone?: "good" | "bad" | "warn";
+}) {
+  const color =
+    tone === "good"
+      ? "#a6e3a1"
+      : tone === "bad"
+      ? "#f38ba8"
+      : tone === "warn"
+      ? "#f9e2af"
+      : "var(--sidebar-active)";
+  return (
+    <div
+      className="rounded p-3"
+      style={{
+        border: "1px solid var(--border-color)",
+        backgroundColor: "var(--sidebar-bg)",
+      }}
+    >
+      <div className="text-[10px] font-bold opacity-55">{label}</div>
+      <div className="mt-1 text-xl font-bold leading-tight" style={{ color }}>
+        {value}
+      </div>
+      <div className="mt-1 text-[11px] opacity-55">{helper}</div>
     </div>
   );
 }
@@ -130,12 +164,10 @@ export default function HomePage() {
   if (!latestRunId) {
     return (
       <div>
-        <h2
-          className="text-lg font-bold mb-4"
-          style={{ color: "var(--sidebar-active)" }}
-        >
-          Dashboard
+        <h2 className="text-xl font-bold mb-1" style={{ color: "var(--sidebar-active)" }}>
+          Health Dashboard
         </h2>
+        <p className="mb-4 text-sm opacity-65">Can I trust the simulator today?</p>
         <div
           className="rounded p-6 text-sm opacity-60"
           style={{ border: "1px solid var(--border-color)" }}
@@ -174,12 +206,18 @@ export default function HomePage() {
   );
   const matrix = getCoverageMatrix(latestRunId);
   const perHero = new Map<string, { covered: number; total: number }>();
+  let coveredSkillRows = 0;
+  let totalSkillRows = 0;
   for (const row of matrix) {
     const entry = perHero.get(row.hero) ?? { covered: 0, total: 0 };
     entry.total += 1;
+    totalSkillRows += 1;
     if (row.covered_bool === 1) entry.covered += 1;
+    if (row.covered_bool === 1) coveredSkillRows += 1;
     perHero.set(row.hero, entry);
   }
+  const coveragePct =
+    totalSkillRows > 0 ? (coveredSkillRows / totalSkillRows) * 100 : null;
 
   const compareHref =
     topRegressions.length > 0
@@ -190,18 +228,83 @@ export default function HomePage() {
 
   return (
     <div>
-      <h2
-        className="text-lg font-bold mb-4"
-        style={{ color: "var(--sidebar-active)" }}
-      >
-        Dashboard
-      </h2>
+      <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h2 className="text-xl font-bold" style={{ color: "var(--sidebar-active)" }}>
+            Health Dashboard
+          </h2>
+          <p className="mt-1 text-sm opacity-65">Can I trust the simulator today?</p>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Link
+            href="/simulate"
+            className="inline-flex min-h-[40px] items-center justify-center rounded px-3 py-2 text-xs font-bold"
+            style={{
+              border: "1px solid var(--sidebar-active)",
+              backgroundColor: "var(--sidebar-active)",
+              color: "#1e1e2e",
+            }}
+          >
+            Run simulation
+          </Link>
+          <Link
+            href="#check-now"
+            className="inline-flex min-h-[40px] items-center justify-center rounded px-3 py-2 text-xs font-bold"
+            style={{
+              border: "1px solid var(--border-color)",
+              backgroundColor: "var(--sidebar-bg)",
+              color: "var(--main-text)",
+            }}
+          >
+            Check now
+          </Link>
+        </div>
+      </div>
+
+      <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <SummaryTile
+          label="Average error"
+          value={formatPct(latestRun?.overall_avg_error_pct)}
+          helper={latestRun ? formatRelativeAge(latestRun.started_at) : "No run"}
+          tone={
+            latestRun?.overall_avg_error_pct == null
+              ? undefined
+              : latestRun.overall_avg_error_pct <= 5
+              ? "good"
+              : latestRun.overall_avg_error_pct <= 10
+              ? "warn"
+              : "bad"
+          }
+        />
+        <SummaryTile
+          label="Regressions"
+          value={String(delta.regressed)}
+          helper={`${delta.improved} improved`}
+          tone={delta.regressed > 0 ? "bad" : "good"}
+        />
+        <SummaryTile
+          label="Coverage"
+          value={coveragePct == null ? "—" : `${coveragePct.toFixed(0)}%`}
+          helper={`${coveredSkillRows}/${totalSkillRows} hero skills`}
+          tone={coveragePct == null ? undefined : coveragePct >= 90 ? "good" : "warn"}
+        />
+        <SummaryTile
+          label="Skipped"
+          value={String(delta.skipped)}
+          helper="latest run"
+          tone={delta.skipped > 0 ? "warn" : "good"}
+        />
+      </div>
+
+      <div id="check-now">
+        <CheckNowControls />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Card 1 — Latest Run */}
         <Card
           testid="card-latest-run"
-          title="Latest Run"
+          title="Latest run"
           href={prevRun ? `/runs/${latestRunId}/compare/prev` : `/runs/${latestRunId}`}
         >
           <div className="flex flex-wrap gap-5">
@@ -238,7 +341,7 @@ export default function HomePage() {
         {/* Card 2 — Recent Regressions */}
         <Card
           testid="card-regressions"
-          title="Recent Regressions (last 3 runs)"
+          title="Needs attention"
           href={compareHref}
         >
           {topRegressions.length === 0 ? (
@@ -294,7 +397,7 @@ export default function HomePage() {
         {/* Card 3 — Coverage Trend + newest hero generations */}
         <Card
           testid="card-coverage"
-          title="Coverage Trend + Gen 5-7 Heroes"
+          title="Coverage trend + Gen 5-7 heroes"
           href="/coverage"
         >
           {coverageTrend.length > 0 && <CoverageTrendChart data={coverageTrend} />}
@@ -340,12 +443,12 @@ export default function HomePage() {
         {/* Card 4 — Testcase additions/retirals */}
         <Card
           testid="card-testcase-changes"
-          title="Testcase Changes (last 7 days)"
+          title="Testcase changes (last 7 days)"
           href="/testcases/changelog"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <p className="text-[10px] uppercase tracking-wider opacity-50 mb-1">
+              <p className="text-[10px] font-bold opacity-50 mb-1">
                 Added ({recentChanges.added.length})
               </p>
               {recentChanges.added.length === 0 ? (
@@ -368,7 +471,7 @@ export default function HomePage() {
               )}
             </div>
             <div>
-              <p className="text-[10px] uppercase tracking-wider opacity-50 mb-1">
+              <p className="text-[10px] font-bold opacity-50 mb-1">
                 Retired ({recentChanges.retired.length})
               </p>
               {recentChanges.retired.length === 0 ? (
@@ -396,7 +499,7 @@ export default function HomePage() {
         {/* Card 5 — Recent simulator commits */}
         <Card
           testid="card-recent-commits"
-          title="Recent Simulator Commits (last 7 days)"
+          title="Recent activity"
           href={compareHref}
         >
           {recentCommits.length === 0 ? (

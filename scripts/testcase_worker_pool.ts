@@ -1,5 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { dirname, resolve } from "node:path";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 
@@ -66,10 +67,18 @@ export class TestcaseWorkerPool {
   }
 
   private startWorker(): WorkerState {
-    const child = spawn("npx", ["--yes", "tsx", WORKER_SCRIPT], {
-      cwd: process.cwd(),
-      stdio: ["pipe", "pipe", "pipe"]
-    });
+    // Derive tsx's CJS hook path from what tsx injected into our own execArgv.
+    // tsx sets execArgv = ["--require", ".../tsx/dist/preflight.cjs", "--import", "...loader.mjs"]
+    const preflightIdx = process.execArgv.indexOf("--require");
+    const preflightPath = preflightIdx >= 0 ? process.execArgv[preflightIdx + 1] : undefined;
+    const tsxCjs = preflightPath ? join(dirname(preflightPath), "cjs/index.cjs") : undefined;
+    const useCjs = !!tsxCjs && existsSync(tsxCjs);
+    const profArgs = process.env.PROFILE_WORKERS
+      ? ["--cpu-prof", "--cpu-prof-dir=/tmp/wos-prof"]
+      : [];
+    const child = useCjs
+      ? spawn("node", [...profArgs, "--require", tsxCjs!, WORKER_SCRIPT], { cwd: process.cwd(), stdio: ["pipe", "pipe", "pipe"] })
+      : spawn("npx", ["--yes", "tsx", WORKER_SCRIPT], { cwd: process.cwd(), stdio: ["pipe", "pipe", "pipe"] });
     const worker: WorkerState = { process: child, idle: true, closed: false, stderr: "" };
     const stdout = createInterface({ input: child.stdout, crlfDelay: Infinity });
     stdout.on("line", (line) => this.handleResponse(worker, line));

@@ -35,6 +35,30 @@ async function assertNoConsoleErrors(page: Page) {
   return errors;
 }
 
+async function openSimRoleSection(
+  page: Page,
+  side: "attacker" | "defender",
+  section: "stats" | "buffs",
+) {
+  const roleTab = page.getByTestId(`sim-tab-${side}`);
+  if ((await roleTab.count()) > 0) {
+    if ((await roleTab.getAttribute("aria-selected")) !== "true") {
+      await roleTab.click();
+    }
+  }
+  const label = section === "stats" ? /Stat bonuses/i : /Buffs and debuffs/i;
+  const button = page
+    .getByTestId(`side-section-${side}-${section}`)
+    .getByRole("button", { name: label });
+  if ((await button.getAttribute("aria-expanded")) !== "true") {
+    await button.click();
+  }
+}
+
+function simBuffSection(page: Page, side: "attacker" | "defender") {
+  return page.getByTestId(`side-section-${side}-buffs`);
+}
+
 const SAVED_SIMULATION_ID = "run-share-wos-357";
 const SAVED_SIMULATION_REQUEST = {
   attacker: {
@@ -502,11 +526,14 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/bear");
     expect(response?.status()).toBe(200);
 
-    await expect(page.getByRole("heading", { name: "Bear Sim", exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Player Army" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Bear Sim" })).toBeVisible();
+    await expect(page.getByTestId("bear-start-card")).toBeVisible();
+    await expect(page.getByTestId("bear-tab-setup")).toBeVisible();
+    await expect(page.getByTestId("bear-tab-results")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Player army" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Bear Sim", exact: true })).toBeVisible();
     await expect(page.getByRole("button", { name: "Upload report" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Optimise ratio" })).toBeVisible();
+    await page.getByTestId("bear-tab-results").click();
+    await expect(page.getByRole("button", { name: "Optimise ratio", exact: true })).toBeVisible();
     await expect(page.locator('nav a[href="/bear"]').first()).toBeVisible();
 
     expect(errors).toHaveLength(0);
@@ -744,10 +771,82 @@ test.describe("Dashboard smoke tests", () => {
     await expect(chart).toHaveAttribute("data-axis-limit", "1666");
     await expect(chart).toHaveAttribute("data-axis-reversed", "true");
 
-    await page
-      .getByRole("button", { name: "Swap attacker and defender" })
-      .click();
-    await expect(chart).toHaveAttribute("data-axis-reversed", "false");
+    expect(errors).toHaveLength(0);
+  });
+
+  test("/simulate — plain navigation clears saved optimisation results", async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(err.message));
+
+    const savedOptimizeId = "run-share-plain-nav-optimize";
+    const optimizePoint = {
+      rank: 1,
+      infantry_pct: 50,
+      lancer_pct: 25,
+      marksman_pct: 25,
+      infantry_count: 1500,
+      lancer_count: 750,
+      marksman_count: 750,
+      win_rate_pct: 64.2,
+      avg_margin: 42.5,
+      is_best: true,
+    };
+
+    await page.route(`**/api/simulate/runs/${savedOptimizeId}`, async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          version: 1,
+          id: savedOptimizeId,
+          kind: "optimize_ratio",
+          created_at: "2026-04-23T08:34:00.000Z",
+          share_url: `/simulate?run=${savedOptimizeId}`,
+          request: {
+            ...SAVED_SIMULATION_REQUEST,
+            grid_step: 25,
+            search_replicates: 3,
+            infantry_min_pct: 30,
+            infantry_max_pct: 70,
+            top_n: 10,
+            search_mode: "grid",
+            optimize_side: "attacker",
+          },
+          result: {
+            optimized_side: "attacker",
+            search_mode: "grid",
+            infantry_min_pct: 30,
+            infantry_max_pct: 70,
+            projected_battles: 3,
+            compositions_tested: 1,
+            replicates_per_ratio: 3,
+            best: optimizePoint,
+            points: [optimizePoint],
+            top_results: [optimizePoint],
+          },
+        }),
+      });
+    });
+
+    await page.goto(`/simulate?run=${savedOptimizeId}`);
+    await expect(
+      page.getByRole("heading", { name: "Ratio Optimisation" }),
+    ).toBeVisible();
+
+    await page.getByRole("link", { name: /^Battle Sim$/ }).click();
+    await expect(page).toHaveURL(/\/simulate$/);
+    await page.getByTestId("sim-tab-results").click();
+
+    await expect(page.getByTestId("saved-run-banner")).toHaveCount(0);
+    await expect(page.getByTestId("optimize-results")).toHaveCount(0);
+    await expect(page.getByTestId("sim-panel-results")).toContainText(
+      "Results will appear here after running a simulation or optimisation.",
+    );
 
     expect(errors).toHaveLength(0);
   });
@@ -809,6 +908,7 @@ test.describe("Dashboard smoke tests", () => {
       page.locator('select[aria-label="marksman skill 4"]').first(),
     ).toHaveValue("5");
 
+    await openSimRoleSection(page, "attacker", "stats");
     const preview = page.locator(
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
@@ -832,11 +932,12 @@ test.describe("Dashboard smoke tests", () => {
       .locator('select[aria-label="marksman hero"]')
       .first()
       .selectOption("Alonso");
-    await page.locator('[data-testid="city-modifier-details-attacker"]').click();
-    await page
-      .locator('[data-testid="stat-modifier-attacker-lethality-10"]')
-      .click();
+    await openSimRoleSection(page, "attacker", "buffs");
+    const attackerBuffs = simBuffSection(page, "attacker");
+    await attackerBuffs.getByTestId("city-modifier-details-attacker").click();
+    await attackerBuffs.getByTestId("stat-modifier-attacker-lethality-10").click();
 
+    await openSimRoleSection(page, "attacker", "stats");
     const lethalityPreview = page.locator(
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
@@ -844,13 +945,14 @@ test.describe("Dashboard smoke tests", () => {
     await expect(lethalityPreview).toContainText("[150]");
     await expect(lethalityPreview).toContainText("+25.0%");
 
-    await page
-      .locator('[data-testid="stat-modifier-attacker-attack-10"]')
-      .click();
-    await page.locator('[data-testid="city-modifier-details-defender"]').click();
-    await page
-      .locator('[data-testid="stat-modifier-defender-enemy_attack-20"]')
-      .click();
+    await openSimRoleSection(page, "attacker", "buffs");
+    await attackerBuffs.getByTestId("city-modifier-details-attacker").click();
+    await attackerBuffs.getByTestId("stat-modifier-attacker-attack-10").click();
+    await openSimRoleSection(page, "defender", "buffs");
+    const defenderBuffs = simBuffSection(page, "defender");
+    await defenderBuffs.getByTestId("city-modifier-details-defender").click();
+    await defenderBuffs.getByTestId("stat-modifier-defender-enemy_attack-20").click();
+    await openSimRoleSection(page, "attacker", "stats");
     const attackInput = page.getByLabel("Infantry Attack").first();
     await expect(attackInput).toHaveValue("100");
 
@@ -872,29 +974,34 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
-    await page.locator('[data-testid="city-modifier-attacker-10"]').click();
+    await openSimRoleSection(page, "attacker", "buffs");
+    await simBuffSection(page, "attacker").getByTestId("city-modifier-attacker-10").click();
+    await openSimRoleSection(page, "attacker", "stats");
     await expect(
       page.locator('[data-testid="stat-preview-attacker-infantry-attack"]'),
     ).toContainText("+10.0%");
 
-    await page.locator('[data-testid="pet-modifier-defender-toggle"]').click();
+    await openSimRoleSection(page, "defender", "buffs");
+    await simBuffSection(page, "defender").getByTestId("pet-modifier-defender-toggle").click();
+    await openSimRoleSection(page, "attacker", "stats");
     await expect(
       page.locator('[data-testid="stat-preview-attacker-infantry-defense"]'),
     ).toContainText("-10.0%");
 
-    await page.locator('[data-testid="pet-modifier-details-defender"]').click();
+    await openSimRoleSection(page, "defender", "buffs");
+    const defenderBuffs = simBuffSection(page, "defender");
+    await defenderBuffs.getByTestId("pet-modifier-details-defender").click();
     await expect(
-      page.locator('[data-testid="pet-modifier-defender-enemy_defense"]'),
+      defenderBuffs.getByTestId("pet-modifier-defender-enemy_defense"),
     ).toHaveAttribute("max", "10");
     await expect(
-      page.locator('[data-testid="pet-modifier-defender-enemy_lethality"]'),
+      defenderBuffs.getByTestId("pet-modifier-defender-enemy_lethality"),
     ).toHaveAttribute("max", "5");
     await expect(
-      page.locator('[data-testid="pet-modifier-defender-enemy_health"]'),
+      defenderBuffs.getByTestId("pet-modifier-defender-enemy_health"),
     ).toHaveAttribute("max", "5");
-    await page
-      .locator('[data-testid="pet-modifier-defender-enemy_defense"]')
-      .fill("10");
+    await defenderBuffs.getByTestId("pet-modifier-defender-enemy_defense").fill("10");
+    await openSimRoleSection(page, "attacker", "stats");
     await expect(
       page.locator('[data-testid="stat-preview-attacker-infantry-defense"]'),
     ).toContainText("-10.0%");
@@ -910,19 +1017,26 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
+    await openSimRoleSection(page, "attacker", "stats");
     const input = page.getByLabel("Infantry Attack").first();
-    await input.fill("");
-    await input.pressSequentially("100.");
+    await input.click();
+    await page.waitForTimeout(50);
+    await page.keyboard.press("ControlOrMeta+A");
+    await page.keyboard.press("Backspace");
+    await page.keyboard.insertText("100.");
     await expect(input).toHaveValue("100.");
 
-    await input.pressSequentially("5");
+    await page.keyboard.insertText("5");
     await expect(input).toHaveValue("100.5");
 
     await input.blur();
     await expect(input).toHaveValue("100.5");
 
-    await input.fill("");
-    await input.pressSequentially("123,4");
+    await input.click();
+    await page.waitForTimeout(50);
+    await page.keyboard.press("ControlOrMeta+A");
+    await page.keyboard.press("Backspace");
+    await page.keyboard.insertText("123,4");
     await expect(input).toHaveValue("123,4");
 
     await input.blur();
@@ -1071,7 +1185,7 @@ test.describe("Dashboard smoke tests", () => {
     await page.getByRole("button", { name: /^grid$/i }).click();
     await page.getByLabel("Ratio reps").fill("1");
     await page.getByLabel("Grid step").fill("1");
-    await page.getByRole("button", { name: /Optimise ratio/i }).click();
+    await page.getByRole("button", { name: /^Optimise ratio$/i }).click();
     await expect(page.locator("body")).toContainText("Ratio Optimisation");
     await expect(page.locator("body")).toContainText("Top 10 ratios");
     await expect(page.locator("body")).toContainText("3D win-rate samples");
@@ -1271,21 +1385,28 @@ test.describe("Dashboard smoke tests", () => {
     await dialog.getByRole("button", { name: /Parse and apply/i }).click();
     await expect(dialog).toBeHidden();
 
-    await expect(page.getByLabel("Infantry attack").first()).toHaveValue("1000");
-    await expect(page.getByLabel("Infantry defense").first()).toHaveValue("1000");
-    await expect(page.locator('[data-testid="city-modifier-details-attacker"]')).toBeVisible();
-    await expect(page.locator('[data-testid="city-modifier-attacker-10"]')).not.toHaveAttribute(
+    await openSimRoleSection(page, "attacker", "stats");
+    await expect(page.getByLabel("Infantry Attack").first()).toHaveValue("1000");
+    await expect(page.getByLabel("Infantry Defense").first()).toHaveValue("1000");
+
+    await openSimRoleSection(page, "attacker", "buffs");
+    const attackerBuffs = simBuffSection(page, "attacker");
+    await expect(attackerBuffs.getByTestId("city-modifier-details-attacker")).toBeVisible();
+    await expect(attackerBuffs.getByTestId("city-modifier-attacker-10")).not.toHaveAttribute(
       "aria-pressed",
       "true",
     );
-    await page.locator('[data-testid="city-modifier-details-attacker"]').click();
+    await attackerBuffs.getByTestId("city-modifier-details-attacker").click();
     await expect(
-      page.locator('[data-testid="stat-modifier-attacker-attack-10"]'),
+      attackerBuffs.getByTestId("stat-modifier-attacker-attack-10"),
     ).toHaveAttribute("aria-pressed", "true");
-    await page.locator('[data-testid="city-modifier-details-defender"]').click();
+    await openSimRoleSection(page, "defender", "buffs");
+    const defenderBuffs = simBuffSection(page, "defender");
+    await defenderBuffs.getByTestId("city-modifier-details-defender").click();
     await expect(
-      page.locator('[data-testid="stat-modifier-defender-enemy_defense-10"]'),
+      defenderBuffs.getByTestId("stat-modifier-defender-enemy_defense-10"),
     ).toHaveAttribute("aria-pressed", "true");
+    await openSimRoleSection(page, "attacker", "stats");
     await expect(
       page.locator('[data-testid="stat-preview-attacker-infantry-attack"]'),
     ).toContainText("1110");

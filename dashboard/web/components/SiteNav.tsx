@@ -5,21 +5,39 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { PublicSurface } from "@/lib/public-surface";
 
-const DASHBOARD_LINKS: { href: string; label: string }[] = [
-  { href: "/", label: "Dashboard" },
-  { href: "/runs", label: "Runs" },
-  { href: "/parity", label: "Run Reports" },
-  { href: "/coverage", label: "Coverage" },
-  { href: "/heroes", label: "Heroes" },
-  { href: "/testcases", label: "Testcases" },
-  { href: "/testcases/changelog", label: "Changelog" },
-  { href: "/simulate", label: "Simulate" },
-  { href: "/bear", label: "Bear Sim" },
-  { href: "/tournament", label: "Tournament" },
+const DASHBOARD_GROUPS: {
+  title: string;
+  links: { href: string; label: string }[];
+}[] = [
+  {
+    title: "Quality Metrics",
+    links: [
+      { href: "/", label: "Health Dashboard" },
+      { href: "/runs", label: "Runs" },
+      { href: "/parity", label: "Run Reports" },
+      { href: "/coverage", label: "Coverage" },
+    ],
+  },
+  {
+    title: "Simulation Running",
+    links: [
+      { href: "/simulate", label: "Battle Sim" },
+      { href: "/bear", label: "Bear Sim" },
+      { href: "/tournament", label: "Tournament" },
+    ],
+  },
+  {
+    title: "Library",
+    links: [
+      { href: "/heroes", label: "Heroes" },
+      { href: "/testcases", label: "Testcases" },
+      { href: "/testcases/changelog", label: "Changelog" },
+    ],
+  },
 ];
 
 const SIMULATE_LINKS: { href: string; label: string }[] = [
-  { href: "/simulate", label: "Simulate" },
+  { href: "/simulate", label: "Battle Sim" },
   { href: "/bear", label: "Bear Sim" },
 ];
 
@@ -35,7 +53,10 @@ export default function SiteNav({
 }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const links = publicSurface === "simulate" ? SIMULATE_LINKS : DASHBOARD_LINKS;
+  const groups =
+    publicSurface === "simulate"
+      ? [{ title: "Simulation Running", links: SIMULATE_LINKS }]
+      : DASHBOARD_GROUPS;
   const subtitle =
     publicSurface === "simulate" ? "Battle Simulator" : "Accuracy Dashboard";
 
@@ -173,27 +194,34 @@ export default function SiteNav({
                 </svg>
               </button>
             </div>
-            {links.map((link) => {
-              const active = isActive(pathname ?? "", link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="nav-link block px-3 py-3 rounded text-base transition-colors"
-                  aria-current={active ? "page" : undefined}
-                  style={
-                    active
-                      ? {
-                          backgroundColor: "var(--sidebar-hover)",
-                          color: "var(--sidebar-active)",
-                        }
-                      : undefined
-                  }
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
+            {groups.map((group) => (
+              <div key={group.title} className="mt-2 first:mt-0">
+                <div className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wider opacity-45">
+                  {group.title}
+                </div>
+                {group.links.map((link) => {
+                  const active = isActive(pathname ?? "", link.href);
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="nav-link block px-3 py-3 rounded text-base transition-colors"
+                      aria-current={active ? "page" : undefined}
+                      style={
+                        active
+                          ? {
+                              backgroundColor: "var(--sidebar-hover)",
+                              color: "var(--sidebar-active)",
+                            }
+                          : undefined
+                      }
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
         </div>
       )}
@@ -213,27 +241,34 @@ export default function SiteNav({
           </h1>
           <p className="text-xs opacity-40 mt-1">{subtitle}</p>
         </div>
-        {links.map((link) => {
-          const active = isActive(pathname ?? "", link.href);
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="nav-link block px-3 py-2 rounded text-sm transition-colors"
-              aria-current={active ? "page" : undefined}
-              style={
-                active
-                  ? {
-                      backgroundColor: "var(--sidebar-hover)",
-                      color: "var(--sidebar-active)",
-                    }
-                  : undefined
-              }
-            >
-              {link.label}
-            </Link>
-          );
-        })}
+        {groups.map((group) => (
+          <div key={group.title} className="mb-3 last:mb-0">
+            <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider opacity-40">
+              {group.title}
+            </div>
+            {group.links.map((link) => {
+              const active = isActive(pathname ?? "", link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="nav-link block px-3 py-2 rounded text-sm transition-colors"
+                  aria-current={active ? "page" : undefined}
+                  style={
+                    active
+                      ? {
+                          backgroundColor: "var(--sidebar-hover)",
+                          color: "var(--sidebar-active)",
+                        }
+                      : undefined
+                  }
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
     </>
   );

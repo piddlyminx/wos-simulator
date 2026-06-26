@@ -329,54 +329,33 @@ export default function UploadReportModal({
       aria-label="Upload battle report"
     >
       <div
-        className="w-full max-w-3xl max-h-screen sm:max-h-full overflow-y-auto sm:rounded"
-        style={{
-          border: "1px solid var(--border-color)",
-          backgroundColor: "var(--sidebar-bg)",
-        }}
+        className="sim-modal w-full max-w-3xl max-h-screen overflow-y-auto sm:max-h-full"
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="flex flex-wrap items-center justify-between gap-2 px-3 sm:px-4 py-3 sticky top-0 z-10"
-          style={{
-            borderBottom: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-          }}
+          className="sim-modal-header sticky top-0 z-10 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-line)] px-3 py-3 sm:px-4"
         >
-          <h3
-            className="text-sm uppercase tracking-wider font-bold"
-            style={{ color: "var(--sidebar-active)" }}
-          >
-            Upload Battle Report
-          </h3>
+          <h3 className="sim-modal-title">Upload report</h3>
           <div className="flex items-center gap-2 flex-wrap">
             <label
-              className="flex items-center gap-2 text-xs px-2 py-2 rounded cursor-pointer font-bold min-h-[36px]"
-              style={{
-                border: `1px solid ${rallyMode ? "var(--sidebar-active)" : "var(--border-color)"}`,
-                backgroundColor: rallyMode
-                  ? "rgba(137, 180, 250, 0.15)"
-                  : "var(--main-bg)",
-                color: rallyMode ? "var(--sidebar-active)" : "var(--main-text)",
-              }}
+              className="sim-toggle grid min-w-[9.5rem] cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-2.5 py-1.5 text-xs font-bold"
+              data-active={rallyMode}
               title="Rally mode: skill 4 is applied, so OCR stats are scaled down before filling the main form."
             >
               <input
+                className="sim-switch-input"
                 type="checkbox"
                 checked={rallyMode}
                 onChange={(e) => setRallyMode(e.target.checked)}
                 aria-label="Rally mode"
               />
-              Rally mode
+              <span className="sim-switch" aria-hidden="true" />
+              <span>Rally mode</span>
             </label>
             <button
               type="button"
               onClick={handleClose}
-              className="text-xs px-3 py-2 rounded min-h-[36px]"
-              style={{
-                border: "1px solid var(--border-color)",
-                color: "var(--main-text)",
-              }}
+              className="sim-edit-chip min-h-[36px] px-3 py-2 text-xs font-bold"
               aria-label="Close"
             >
               Close
@@ -386,17 +365,13 @@ export default function UploadReportModal({
 
         <div className="p-3 sm:p-4 flex flex-col gap-3 sm:gap-4">
           <div
-            className="grid gap-3 rounded p-3 sm:grid-cols-[minmax(0,1fr)_11rem]"
-            style={{
-              border: "1px solid var(--border-color)",
-              backgroundColor: "var(--main-bg)",
-            }}
+            className="sim-tool-panel grid gap-3 p-3 sm:grid-cols-[minmax(0,1fr)_11rem]"
           >
             <div className="flex flex-col gap-2 text-xs leading-relaxed">
-              <p className="font-bold" style={{ color: "var(--sidebar-active)" }}>
+              <p className="sim-modal-section-title">
                 Upload a Stat Bonuses screenshot like this example.
               </p>
-              <p className="opacity-75">
+              <p className="sim-modal-copy">
                 Troop counts must be shown as absolute numbers, not percentages.
                 Keep the troop avatars, troop counts, and every stat row in frame
                 so the parser can read the troop types and all bonuses.
@@ -405,10 +380,10 @@ export default function UploadReportModal({
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/examples/stat-bonuses-report.png"
-              alt="Example Stat Bonuses report with troop avatars, troop counts, and all stat rows visible"
+              alt="Reference Stat Bonuses report with troop avatars, troop counts, and all stat rows visible"
               className="w-full rounded object-cover"
               style={{
-                border: "1px solid var(--border-color)",
+                border: "1px solid var(--sim-line)",
                 maxHeight: 180,
                 objectPosition: "top",
               }}
@@ -422,11 +397,10 @@ export default function UploadReportModal({
             onDragLeave={() => setDragging(false)}
             onDrop={onDrop}
             onClick={() => fileInputRef.current?.click()}
-            className="rounded p-4 flex flex-col items-center justify-center gap-2 cursor-pointer text-center"
+            className="sim-upload-dropzone relative flex cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden p-4 text-center"
+            data-dragging={dragging}
             style={{
-              border: `2px dashed ${dragging ? "var(--sidebar-active)" : "var(--border-color)"}`,
-              backgroundColor: "var(--main-bg)",
-              minHeight: 120,
+              minHeight: 220,
             }}
             role="button"
             aria-label="Drop zone"
@@ -440,11 +414,25 @@ export default function UploadReportModal({
               />
             ) : (
               <>
-                <span className="text-sm font-bold">
-                  Drag &amp; drop, paste (Ctrl+V), or click to browse
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/examples/stat-bonuses-report.png"
+                  alt="Example Stat Bonuses report with troop avatars, troop counts, and all stat rows visible"
+                  className="absolute inset-0 h-full w-full object-cover opacity-25"
+                  style={{ objectPosition: "top" }}
+                />
+                <span
+                  className="relative rounded px-3 py-2 text-sm font-bold"
+                  style={{ backgroundColor: "rgba(24,24,37,0.86)" }}
+                >
+                  Drop report here, tap to choose, or paste into this area
                 </span>
-                <span className="text-xs opacity-60">
-                  Expects a Stat Bonuses screenshot (see task attachment).
+                <span
+                  className="relative rounded px-3 py-2 text-xs opacity-80"
+                  style={{ backgroundColor: "rgba(24,24,37,0.86)" }}
+                >
+                  Use a Stat Bonuses screenshot with both armies, troop counts,
+                  heroes, and stat rows visible.
                 </span>
               </>
             )}
@@ -466,11 +454,7 @@ export default function UploadReportModal({
                   setImageBase64(null);
                   if (fileInputRef.current) fileInputRef.current.value = "";
                 }}
-                className="text-xs px-2 py-1 rounded"
-                style={{
-                  border: "1px solid var(--border-color)",
-                  color: "var(--main-text)",
-                }}
+                className="sim-edit-chip min-h-[32px] px-3 py-1 text-xs font-bold"
               >
                 Clear image
               </button>
@@ -498,13 +482,12 @@ export default function UploadReportModal({
               <button
                 type="button"
                 onClick={() => setSidesSwapped((v) => !v)}
-                className="text-xs px-3 py-2 rounded font-bold min-h-[36px]"
+                className="sim-edit-chip min-h-[36px] px-3 py-2 text-xs font-bold"
                 style={{
-                  border: `1px solid ${sidesSwapped ? "var(--sidebar-active)" : "var(--border-color)"}`,
                   backgroundColor: sidesSwapped
                     ? "rgba(137, 180, 250, 0.15)"
-                    : "var(--main-bg)",
-                  color: sidesSwapped ? "var(--sidebar-active)" : "var(--main-text)",
+                    : "var(--sim-panel)",
+                  color: sidesSwapped ? "var(--sim-blue)" : "var(--sim-text)",
                 }}
                 title="Swap attacker and defender. Use this when you were the defender in the report — battle reports always show 'me' on the left."
                 aria-label="Swap attacker and defender"
@@ -530,10 +513,8 @@ export default function UploadReportModal({
 
           {error && (
             <div
-              className="rounded px-3 py-2 text-xs font-mono"
+              className="sim-tool-panel px-3 py-2 text-xs font-mono"
               style={{
-                border: "1px solid var(--border-color)",
-                backgroundColor: "var(--main-bg)",
                 color: "#f38ba8",
               }}
             >
@@ -543,20 +524,12 @@ export default function UploadReportModal({
         </div>
 
         <div
-          className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 px-3 sm:px-4 py-3 sticky bottom-0 z-10"
-          style={{
-            borderTop: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-          }}
+          className="sim-modal-footer sticky bottom-0 z-10 flex flex-col-reverse gap-2 border-t border-[var(--sim-line)] px-3 py-3 sm:flex-row sm:justify-end sm:px-4"
         >
           <button
             type="button"
             onClick={handleClose}
-            className="text-xs px-3 py-2 rounded min-h-[44px]"
-            style={{
-              border: "1px solid var(--border-color)",
-              color: "var(--main-text)",
-            }}
+            className="sim-edit-chip min-h-[44px] px-3 py-2 text-xs font-bold"
           >
             Cancel
           </button>
@@ -564,10 +537,8 @@ export default function UploadReportModal({
             type="button"
             onClick={submit}
             disabled={loading || !imageBase64}
-            className="text-xs px-3 py-2 rounded font-bold min-h-[44px]"
+            className="sim-run-button min-h-[44px] px-3 py-2 text-xs font-bold"
             style={{
-              backgroundColor: "var(--sidebar-active)",
-              color: "#1e1e2e",
               opacity: loading || !imageBase64 ? 0.5 : 1,
               cursor: loading || !imageBase64 ? "not-allowed" : "pointer",
             }}
@@ -624,14 +595,8 @@ function HeroPickerPanel({
     });
   };
   return (
-    <div
-      className="rounded p-3"
-      style={{
-        border: "1px solid var(--border-color)",
-        backgroundColor: "var(--main-bg)",
-      }}
-    >
-      <h4 className="text-xs uppercase tracking-wider opacity-60 mb-2 font-bold">
+    <div className="sim-tool-panel p-3">
+      <h4 className="sim-modal-section-title mb-2">
         {title}
       </h4>
       <div className="flex flex-col gap-2">
@@ -646,18 +611,13 @@ function HeroPickerPanel({
           return (
             <div key={cat} className="flex flex-col gap-1">
               <label className="flex items-center justify-between gap-2 text-xs">
-                <span className="opacity-70 w-16">{label}</span>
+                <span className="sim-field-label w-16">{label}</span>
                 <select
                   value={heroes[cat] ?? ""}
                   onChange={(e) => {
                     onChange({ ...heroes, [cat]: e.target.value || null });
                   }}
-                  className="rounded px-2 py-1 font-mono text-xs flex-1"
-                  style={{
-                    backgroundColor: "var(--sidebar-bg)",
-                    border: "1px solid var(--border-color)",
-                    color: "var(--main-text)",
-                  }}
+                  className="sim-input min-h-[32px] flex-1 px-2 py-1 font-mono text-xs"
                   aria-label={`${title} ${cat}`}
                 >
                   <option value="">— None —</option>
@@ -670,19 +630,14 @@ function HeroPickerPanel({
               </label>
               {showSkill4 && (
                 <label className="flex items-center justify-between gap-2 text-[11px] pl-16">
-                  <span className="opacity-60">Skill 4 lvl</span>
+                  <span className="sim-field-label">Skill 4 level</span>
                   <select
                     value={skill4[cat]}
                     onChange={(e) => {
                       const v = parseInt(e.target.value, 10);
                       onSkill4Change({ ...skill4, [cat]: isNaN(v) ? 0 : v });
                     }}
-                    className="rounded px-1.5 py-0.5 font-mono text-[11px] w-14"
-                    style={{
-                      backgroundColor: "var(--sidebar-bg)",
-                      border: "1px solid var(--border-color)",
-                      color: "var(--main-text)",
-                    }}
+                    className="sim-input min-h-[30px] w-14 px-1.5 py-0.5 font-mono text-[11px]"
                     aria-label={`${title} ${cat} skill 4 level`}
                   >
                     {[0, 1, 2, 3, 4, 5].map((l) => (
@@ -713,30 +668,25 @@ function HeroPickerPanel({
           );
         })}
       </div>
-      <div className="mt-3 rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
-        <h5 className="mb-1 text-[10px] font-bold uppercase tracking-wider opacity-60">
-          Active buffs in screenshot
-        </h5>
+      <div className="sim-modifier-editor mt-3">
+        <h5 className="sim-modal-section-title">Buffs and debuffs</h5>
         <div className="grid grid-cols-1 gap-2">
-          <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+          <div className="sim-modifier-group">
+            <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
               <button
                 type="button"
                 aria-expanded={cityDetailsOpen}
                 aria-controls={`upload-city-modifier-fields-${which}`}
                 data-testid={`upload-city-modifier-details-${which}`}
                 onClick={() => setCityDetailsOpen((open) => !open)}
-                className="flex min-h-[30px] min-w-0 items-center gap-1 text-left text-[10px] font-bold uppercase tracking-wider opacity-70 hover:opacity-100"
+                className="flex min-h-[30px] min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
               >
                 <span className="w-3 text-center text-[9px] opacity-70">
                   {cityDetailsOpen ? "▼" : "▶"}
                 </span>
                 <span className="truncate">City</span>
               </button>
-              <div
-                className="inline-grid grid-cols-3 overflow-hidden rounded border"
-                style={{ borderColor: "var(--border-color)" }}
-              >
+              <div className="sim-segmented">
                 {STAT_MODIFIER_OPTIONS.map((value) => {
                   const selected = cityPreset === value;
                   return (
@@ -755,15 +705,8 @@ function HeroPickerPanel({
                           ),
                         })
                       }
-                      className="min-h-[30px] px-2 text-[10px] font-bold"
-                      style={{
-                        backgroundColor: selected
-                          ? "var(--sidebar-active)"
-                          : "var(--sidebar-bg)",
-                        color: selected ? "#111827" : "var(--main-text)",
-                        borderRight:
-                          value === 20 ? "0" : "1px solid var(--border-color)",
-                      }}
+                      data-active={selected}
+                      title={`Set all city buffs/debuffs to ${value}%`}
                     >
                       {value}%
                     </button>
@@ -788,15 +731,15 @@ function HeroPickerPanel({
               </div>
             )}
           </div>
-          <div className="rounded border p-2" style={{ borderColor: "var(--border-color)" }}>
-            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+          <div className="sim-modifier-group">
+            <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
               <button
                 type="button"
                 aria-expanded={petDetailsOpen}
                 aria-controls={`upload-pet-modifier-fields-${which}`}
                 data-testid={`upload-pet-modifier-details-${which}`}
                 onClick={() => setPetDetailsOpen((open) => !open)}
-                className="flex min-h-[30px] min-w-0 items-center gap-1 text-left text-[10px] font-bold uppercase tracking-wider opacity-70 hover:opacity-100"
+                className="flex min-h-[30px] min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
               >
                 <span className="w-3 text-center text-[9px] opacity-70">
                   {petDetailsOpen ? "▼" : "▶"}
@@ -821,17 +764,12 @@ function HeroPickerPanel({
                           enemy_defense: PET_DEFENSE_DEBUFF_MAX,
                           enemy_lethality: PET_DEFAULT_DEBUFF_MAX,
                           enemy_health: PET_DEFAULT_DEBUFF_MAX,
-                        },
+                      },
                   })
                 }
-                className="min-h-[30px] rounded px-3 text-[10px] font-bold"
-                style={{
-                  backgroundColor: petEnabled
-                    ? "var(--sidebar-active)"
-                    : "var(--sidebar-bg)",
-                  border: "1px solid var(--border-color)",
-                  color: petEnabled ? "#111827" : "var(--main-text)",
-                }}
+                className="sim-compact-toggle"
+                data-active={petEnabled}
+                title="Toggle pet buffs at max values and debuffs at strongest values."
               >
                 {petEnabled ? "On" : "Off"}
               </button>
@@ -890,14 +828,11 @@ function UploadCityModifier({
   onChange: (name: StatModifierName, value: number) => void;
 }) {
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-      <span className="min-w-0 truncate text-[10px] uppercase tracking-wider opacity-60">
+    <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
+      <span className="min-w-0 truncate text-[10px] opacity-60">
         {STAT_MODIFIER_LABELS[name]}
       </span>
-      <div
-        className="inline-grid grid-cols-3 overflow-hidden rounded border"
-        style={{ borderColor: "var(--border-color)" }}
-      >
+      <div className="sim-segmented">
         {STAT_MODIFIER_OPTIONS.map((option) => {
           const selected = value === option;
           return (
@@ -908,15 +843,8 @@ function UploadCityModifier({
               aria-pressed={selected}
               data-testid={`upload-stat-modifier-${which}-${name}-${option}`}
               onClick={() => onChange(name, option)}
-              className="min-h-[30px] px-2 text-[10px] font-bold"
-              style={{
-                backgroundColor: selected
-                  ? "var(--sidebar-active)"
-                  : "var(--sidebar-bg)",
-                color: selected ? "#111827" : "var(--main-text)",
-                borderRight:
-                  option === 20 ? "0" : "1px solid var(--border-color)",
-              }}
+              data-active={selected}
+              title={`${STAT_MODIFIER_LABELS[name]} ${statModifierDescription(name, option)}`}
             >
               {statModifierDescription(name, option)}
             </button>
@@ -943,7 +871,7 @@ function UploadPetModifier({
   const display = isDebuff && value > 0 ? `-${value.toFixed(1)}%` : `+${value.toFixed(1)}%`;
   return (
     <label className="grid grid-cols-[minmax(0,1fr)_5rem_3.25rem] items-center gap-2 text-[10px]">
-      <span className="min-w-0 truncate uppercase tracking-wider opacity-60">
+      <span className="min-w-0 truncate opacity-60">
         {PET_MODIFIER_LABELS[name]}
       </span>
       <input
@@ -959,12 +887,7 @@ function UploadPetModifier({
             : Math.max(0, Math.min(max, Math.round(parsed * 2) / 2));
           onChange(name, next);
         }}
-        className="min-h-[30px] rounded px-2 text-right font-mono text-[10px] tabular-nums"
-        style={{
-          backgroundColor: "var(--sidebar-bg)",
-          border: "1px solid var(--border-color)",
-          color: "var(--main-text)",
-        }}
+        className="sim-input min-h-[30px] px-2 text-right font-mono text-[10px] tabular-nums"
         aria-label={`${which} upload pet ${PET_MODIFIER_LABELS[name]}`}
         data-testid={`upload-pet-modifier-${which}-${name}`}
       />

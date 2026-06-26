@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState, type FocusEventHandler } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FocusEventHandler, type MouseEventHandler } from "react";
 import OptimizeRatioScatterChart from "@/components/OptimizeRatioScatterChart";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
 import type { OcrResult, UploadActiveModifiers } from "@/components/UploadReportModal";
@@ -92,6 +92,8 @@ interface BearSimClientProps {
   initialSavedRunError?: string | null;
 }
 
+type BearWorkspaceTab = "setup" | "results";
+
 interface SavedRunMeta {
   id: string;
   kind: SavedSimulationKind;
@@ -126,7 +128,21 @@ const selectFocusedInputText: FocusEventHandler<HTMLDivElement> = (event) => {
   const target = event.target;
   if (!(target instanceof HTMLInputElement)) return;
   if (!["number", "text", "search", "tel", "url", "email"].includes(target.type)) return;
-  requestAnimationFrame(() => target.select());
+  target.select();
+  inputSelectedOnFocus = target;
+  window.setTimeout(() => {
+    if (inputSelectedOnFocus === target) inputSelectedOnFocus = null;
+  }, 0);
+};
+
+let inputSelectedOnFocus: HTMLInputElement | null = null;
+
+const keepFocusSelectionOnMouseUp: MouseEventHandler<HTMLDivElement> = (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement)) return;
+  if (target !== inputSelectedOnFocus) return;
+  event.preventDefault();
+  inputSelectedOnFocus = null;
 };
 
 function defaultActiveModifiers(): UploadActiveModifiers {
@@ -346,6 +362,9 @@ export default function BearSimClient({
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
+  const [workspaceTab, setWorkspaceTab] = useState<BearWorkspaceTab>(() =>
+    initialState.result || initialState.optimizeResult ? "results" : "setup",
+  );
 
   const [statPresets, setStatPresets] = useState<PlayerStatPreset[]>([]);
   const [loadedPresetId, setLoadedPresetId] = useState<string | null>(null);
@@ -487,6 +506,7 @@ export default function BearSimClient({
       setBattleTrace((saved.result as BearSimResult).trace ?? null);
       setOptimizeResult(null);
       setSelectedOptimizeKey(null);
+      setWorkspaceTab("results");
     } else {
       const optimizeRequest = saved.request as BearOptimizeRatioRequestPayload;
       setOptimizeReplicates(Math.max(1, Math.min(500, clampValue(optimizeRequest.search_replicates, DEFAULT_OPTIMIZE_REPLICATES))));
@@ -504,6 +524,7 @@ export default function BearSimClient({
         saved_kind: saved.kind,
         share_url: saved.share_url,
       });
+      setWorkspaceTab("results");
     }
 
     storeSavedRunMeta({
@@ -719,6 +740,7 @@ export default function BearSimClient({
       const job = runWorkerBearSimulation(payload, (done, total) => setProgress({ done, total }));
       const computed = await job.promise;
       setResult(computed);
+      setWorkspaceTab("results");
       try {
         const saveMeta = await saveComputedRun("bear_simulate", payload, computed);
         if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
@@ -771,6 +793,7 @@ export default function BearSimClient({
       const job = runWorkerBearOptimizeRatio(payload, (done, total) => setOptimizeProgress({ done, total }));
       const computed = await job.promise;
       setOptimizeResult(computed);
+      setWorkspaceTab("results");
       try {
         const saveMeta = await saveComputedRun("bear_optimize_ratio", payload, computed);
         if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
@@ -812,43 +835,46 @@ export default function BearSimClient({
     : [];
 
   return (
-    <div onFocusCapture={selectFocusedInputText}>
-      <div className="mb-4 flex flex-col gap-3 sm:mb-6 lg:flex-row lg:items-start lg:justify-between">
-        <div className="space-y-1">
-          <h2 className="text-lg font-bold" style={{ color: "var(--sidebar-active)" }}>
+    <div
+      className="simulate-workspace"
+      onFocusCapture={selectFocusedInputText}
+      onMouseUpCapture={keepFocusSelectionOnMouseUp}
+    >
+      <div className="mb-4 space-y-3 sm:mb-5">
+        <div hidden>
+          <h2 className="sim-page-title text-xl font-bold">
             Bear Sim
           </h2>
-          <p className="max-w-2xl text-xs opacity-60">
+          <p className="max-w-2xl text-sm leading-5" style={{ color: "var(--sim-muted)" }}>
             Enter one rally army and score uncapped damage against the fixed 5k infantry bear over 10 rounds.
           </p>
         </div>
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => setRecentRunsOpen(true)}
-            className="rounded px-3 py-2 text-xs font-bold min-h-[44px]"
-            style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)", color: "var(--main-text)" }}
-          >
-            Recent runs
-          </button>
+
+        <section className="sim-start-card bear-start-card" data-testid="bear-start-card">
           <button
             type="button"
             onClick={() => setUploadOpen(true)}
-            className="rounded px-3 py-2 text-xs font-bold min-h-[44px]"
-            style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)", color: "var(--sidebar-active)" }}
+            className="sim-upload-primary px-3 py-2"
           >
-            Upload report
+            <span className="block text-xs font-bold">Upload report</span>
           </button>
-        </div>
+          <button
+            type="button"
+            onClick={() => setRecentRunsOpen(true)}
+            className="sim-edit-chip min-h-[32px] px-3 py-2 text-xs font-bold"
+            data-testid="bear-recent-runs-toggle"
+          >
+            Recent runs
+          </button>
+        </section>
       </div>
 
       {(loadingSavedRun || savedRunMeta || savedRunError) && (
         <div
-          className="mb-4 rounded px-3 py-2 text-xs font-mono"
+          className="sim-tool-panel mb-4 px-3 py-2 text-xs font-mono"
           style={{
-            border: `1px solid ${savedRunError ? "#f38ba8" : "var(--border-color)"}`,
-            backgroundColor: "var(--sidebar-bg)",
-            color: savedRunError ? "#f38ba8" : "var(--main-text)",
+            borderColor: savedRunError ? "#f38ba8" : undefined,
+            color: savedRunError ? "#f38ba8" : "var(--sim-text)",
           }}
           data-testid="bear-saved-run-banner"
         >
@@ -871,7 +897,7 @@ export default function BearSimClient({
       )}
 
       {uploadWarnings.length > 0 && (
-        <div className="mb-4 rounded px-3 py-2 text-xs font-mono" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)", color: "#f9e2af" }}>
+        <div className="sim-tool-panel mb-4 px-3 py-2 text-xs font-mono" style={{ color: "var(--sim-yellow)" }}>
           OCR warnings:
           <ul className="mt-1 list-inside list-disc">
             {uploadWarnings.map((warning, index) => <li key={index}>{warning}</li>)}
@@ -879,9 +905,40 @@ export default function BearSimClient({
         </div>
       )}
 
-      <div className="mb-4 max-w-5xl sm:mb-6">
+      <div
+        className="sim-tab-shell sim-workbench-tabs mb-3 grid grid-cols-2 gap-1"
+        role="tablist"
+        aria-label="Bear simulator workspace"
+      >
+        {([
+          ["setup", "Setup"],
+          ["results", "Results"],
+        ] as [BearWorkspaceTab, string][]).map(([tab, label]) => {
+          const active = workspaceTab === tab;
+          return (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              onClick={() => setWorkspaceTab(tab)}
+              className="sim-tab px-2 py-2 text-xs font-black"
+              data-active={active}
+              data-testid={`bear-tab-${tab}`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div
+        className={`${workspaceTab === "setup" ? "block" : "hidden"} sim-panel-setup-shell`}
+        data-testid="bear-panel-setup"
+      >
+      <div className="bear-army-panel mb-4 sm:mb-6">
         <SidePanel
-          title="Player Army"
+          title="Player army"
           which="attacker"
           state={player}
           opponent={defaultSide()}
@@ -893,29 +950,30 @@ export default function BearSimClient({
           onOpenPreset={openPresetModal}
         />
       </div>
+      </div>
 
-      <div className="mb-4 grid gap-4 xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
-        <div className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)" }}>
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider opacity-60">Run bear sim</h3>
+      <div className="sim-top-actions" data-testid="bear-top-actions">
+        <div className="sim-tool-panel p-3">
+          <h3 className="mb-3 text-xs font-bold opacity-70">Run bear sim</h3>
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-3">
             <label className="flex flex-col gap-1">
-              <span className="text-xs uppercase tracking-wider opacity-60">Replicates</span>
+              <span className="text-[10px] font-black" style={{ color: "var(--sim-muted)" }}>Replicates</span>
               <input
                 type="number"
                 min={1}
                 max={5000}
                 value={replicates}
                 onChange={(event) => setReplicates(Math.max(1, Math.min(5000, parseInt(event.target.value || "1", 10))))}
-                className="min-h-[44px] rounded px-3 py-2 text-right font-mono text-sm tabular-nums"
-                style={{ backgroundColor: "var(--sidebar-bg)", border: "1px solid var(--border-color)", color: "var(--main-text)" }}
+                className="sim-input font-mono text-sm tabular-nums"
+                style={{ textAlign: "right" }}
               />
             </label>
             <button
               type="button"
               onClick={runBear}
               disabled={loading}
-              className="min-h-[44px] rounded px-4 py-2 text-sm font-bold"
-              style={{ backgroundColor: "var(--sidebar-active)", color: "#1e1e2e", opacity: loading ? 0.5 : 1 }}
+              className="sim-run-button px-4 py-2 text-sm font-bold"
+              style={{ opacity: loading ? 0.5 : 1 }}
             >
               {loading ? "Simulating..." : "Bear Sim"}
             </button>
@@ -924,8 +982,8 @@ export default function BearSimClient({
           <ProgressBar active={loading} done={progress?.done ?? 0} total={progress?.total ?? replicates} />
         </div>
 
-        <div className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)" }}>
-          <h3 className="mb-3 text-xs font-bold uppercase tracking-wider opacity-60">Optimise ratio</h3>
+        <div className="sim-tool-panel sim-optimize-command-panel p-3">
+          <h3 className="mb-3 text-xs font-bold opacity-70">Optimise ratio</h3>
           <p className="mb-3 text-xs opacity-60">
             Keeps total troops ({totalTroops.toLocaleString()}), tiers, heroes, stats, and buffs fixed; only the troop mix changes.
           </p>
@@ -934,11 +992,8 @@ export default function BearSimClient({
               type="button"
               onClick={runOptimize}
               disabled={optimizeLoading || optimizeBudgetTooLarge || totalTroops <= 0 || !resolvedInfantryBounds.isValid}
-              className="min-h-[42px] rounded px-4 py-2 text-sm font-bold"
+              className="sim-edit-chip min-h-[42px] px-4 py-2 text-sm font-bold"
               style={{
-                backgroundColor: optimizeBudgetTooLarge || !resolvedInfantryBounds.isValid ? "var(--sidebar-bg)" : "#a6e3a1",
-                border: `1px solid ${optimizeBudgetTooLarge || !resolvedInfantryBounds.isValid ? "var(--border-color)" : "#a6e3a1"}`,
-                color: optimizeBudgetTooLarge || !resolvedInfantryBounds.isValid ? "var(--sidebar-text)" : "#11111b",
                 opacity: optimizeLoading ? 0.65 : 1,
               }}
             >
@@ -947,8 +1002,7 @@ export default function BearSimClient({
             <button
               type="button"
               onClick={() => setOptimizePanelOpen((open) => !open)}
-              className="min-h-[42px] rounded px-3 py-2 text-xs font-bold"
-              style={{ border: "1px solid var(--border-color)", color: "var(--main-text)" }}
+              className="sim-edit-chip min-h-[42px] px-3 py-2 text-xs font-bold"
             >
               {optimizePanelOpen ? "Hide options" : "Show options"}
             </button>
@@ -958,21 +1012,21 @@ export default function BearSimClient({
           </div>
           <ProgressBar active={optimizeLoading} done={optimizeProgress?.done ?? 0} total={optimizeProgress?.total ?? estimatedOptimizeCompositions} />
           {optimizePanelOpen && (
-            <div className="mt-3 grid gap-3 rounded border p-3 md:grid-cols-2 2xl:grid-cols-4" style={{ borderColor: "var(--border-color)" }}>
+            <div className="sim-tool-panel mt-3 grid gap-3 p-3 md:grid-cols-2 2xl:grid-cols-4">
               <SmallNumberInput label="Ratio reps" value={optimizeReplicates} disabled={optimizeSearchMode === "adaptive"} onChange={setOptimizeReplicates} min={1} max={500} />
               <SmallTextInput label="Grid step" value={optimizeStepInput} disabled={optimizeSearchMode === "adaptive"} placeholder={String(recommendedOptimizeStep(totalTroops))} onChange={setOptimizeStepInput} />
               <SmallNumberInput label="Inf min %" value={optimizeInfantryMinPct} onChange={setOptimizeInfantryMinPct} min={0} max={100} />
               <SmallNumberInput label="Inf max %" value={optimizeInfantryMaxPct} onChange={setOptimizeInfantryMaxPct} min={0} max={100} />
               <fieldset className="md:col-span-2 2xl:col-span-4">
-                <legend className="mb-1 text-xs uppercase tracking-wider opacity-60">Search mode</legend>
-                <div className="grid max-w-xs grid-cols-2 overflow-hidden rounded border border-[var(--border-color)]">
+                <legend className="sim-field-label mb-1">Search mode</legend>
+                <div className="sim-segmented max-w-xs">
                   {(["adaptive", "grid"] as OptimizeSearchMode[]).map((mode) => (
                     <button
                       key={mode}
                       type="button"
                       onClick={() => setOptimizeSearchMode(mode)}
-                      className="px-3 py-2 text-xs font-bold capitalize"
-                      style={{ backgroundColor: optimizeSearchMode === mode ? "var(--sidebar-active)" : "transparent", color: optimizeSearchMode === mode ? "#1e1e2e" : "var(--main-text)" }}
+                      className="capitalize"
+                      data-active={optimizeSearchMode === mode}
                     >
                       {mode}
                     </button>
@@ -983,6 +1037,17 @@ export default function BearSimClient({
           )}
           {optimizeError && <p className="mt-2 text-xs" style={{ color: "#f38ba8" }}>{optimizeError}</p>}
         </div>
+      </div>
+
+      <div
+        className={`${workspaceTab === "results" ? "block" : "hidden"} sim-panel-results-shell`}
+        data-testid="bear-panel-results"
+      >
+        {!result && !optimizeResult ? (
+          <div className="sim-tool-panel mb-4 p-3 text-xs" style={{ color: "var(--sim-muted)" }}>
+            Results will appear here after running a bear sim or optimisation.
+          </div>
+        ) : null}
       </div>
 
       {presetOpen && (
@@ -1037,12 +1102,14 @@ export default function BearSimClient({
       )}
 
       {result && (
-        <div className="mb-6 rounded p-3 sm:p-4" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)" }}>
-          <h3 className="mb-3 text-sm font-bold uppercase tracking-wider opacity-60">Results ({result.replicates} replicates)</h3>
+        <div
+          className={`${workspaceTab === "results" ? "block" : "hidden"} sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
+        >
+          <h3 className="mb-3 text-sm font-bold opacity-70">Results ({result.replicates} replicates)</h3>
           <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
             {summaryCards.map((card) => <ResultCard key={card.label} label={card.label} value={card.value} />)}
           </div>
-          <h4 className="mb-2 text-xs font-bold uppercase tracking-wider opacity-60">Score distribution</h4>
+          <h4 className="mb-2 text-xs font-bold opacity-70">Score distribution</h4>
           <SimulateOutcomeChart
             outcomes={result.scores}
             outcomeRuns={result.score_runs?.map((run) => ({ outcome: run.score, seed: run.seed }))}
@@ -1063,15 +1130,18 @@ export default function BearSimClient({
       )}
 
       {optimizeResult && (
-        <div className="mb-6 rounded p-3 sm:p-4" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)" }} data-testid="bear-optimize-results">
+        <div
+          className={`${workspaceTab === "results" ? "block" : "hidden"} sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
+          data-testid="bear-optimize-results"
+        >
           <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-wider opacity-60">Bear Ratio Optimisation</h3>
+              <h3 className="text-sm font-bold opacity-70">Bear Ratio Optimisation</h3>
               <p className="mt-1 text-xs opacity-60">
                 Best average score {compactNumber(optimizeResult.best.avg_score)} across {optimizeResult.compositions_tested.toLocaleString()} candidates.
               </p>
             </div>
-            <button type="button" onClick={applySelectedOptimizeRatio} className="rounded px-3 py-2 text-xs font-bold" style={{ border: "1px solid var(--sidebar-active)", color: "var(--sidebar-active)" }}>
+            <button type="button" onClick={applySelectedOptimizeRatio} className="sim-edit-chip min-h-[34px] px-3 py-2 text-xs font-bold" style={{ color: "var(--sim-blue)" }}>
               Use selected ratio
             </button>
           </div>
@@ -1083,8 +1153,8 @@ export default function BearSimClient({
             <ResultCard label="Infantry band" value={`${optimizeResult.infantry_min_pct}%-${optimizeResult.infantry_max_pct}%`} />
           </div>
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
-            <div className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--main-bg)" }}>
-              <h4 className="mb-2 text-xs font-bold uppercase tracking-wider opacity-60">3D score samples</h4>
+            <div className="sim-tool-panel p-3">
+              <h4 className="mb-2 text-xs font-bold opacity-70">3D score samples</h4>
               <OptimizeRatioScatterChart points={optimizeResult.points.map(bearPointForStandardChart)} />
             </div>
             <TopBearRatiosTable
@@ -1106,7 +1176,7 @@ function optimizeRowKey(point: BearOptimizeRatioPoint): string {
 function SmallNumberInput({ label, value, onChange, min, max, disabled = false }: { label: string; value: number; onChange: (value: number) => void; min: number; max: number; disabled?: boolean }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-xs uppercase tracking-wider opacity-60">{label}</span>
+      <span className="sim-field-label">{label}</span>
       <input
         type="number"
         min={min}
@@ -1114,8 +1184,8 @@ function SmallNumberInput({ label, value, onChange, min, max, disabled = false }
         disabled={disabled}
         value={value}
         onChange={(event) => onChange(Math.max(min, Math.min(max, parseFloat(event.target.value || String(min)))))}
-        className="min-h-[42px] rounded px-3 py-2 text-right font-mono text-sm tabular-nums"
-        style={{ backgroundColor: "var(--sidebar-bg)", border: "1px solid var(--border-color)", color: "var(--main-text)", opacity: disabled ? 0.55 : 1 }}
+        className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+        style={{ opacity: disabled ? 0.55 : 1 }}
       />
     </label>
   );
@@ -1124,7 +1194,7 @@ function SmallNumberInput({ label, value, onChange, min, max, disabled = false }
 function SmallTextInput({ label, value, onChange, placeholder, disabled = false }: { label: string; value: string; onChange: (value: string) => void; placeholder: string; disabled?: boolean }) {
   return (
     <label className="flex flex-col gap-1">
-      <span className="text-xs uppercase tracking-wider opacity-60">{label}</span>
+      <span className="sim-field-label">{label}</span>
       <input
         type="number"
         min={1}
@@ -1132,8 +1202,8 @@ function SmallTextInput({ label, value, onChange, placeholder, disabled = false 
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
-        className="min-h-[42px] rounded px-3 py-2 text-right font-mono text-sm tabular-nums"
-        style={{ backgroundColor: "var(--sidebar-bg)", border: "1px solid var(--border-color)", color: "var(--main-text)", opacity: disabled ? 0.55 : 1 }}
+        className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+        style={{ opacity: disabled ? 0.55 : 1 }}
       />
     </label>
   );
@@ -1165,31 +1235,30 @@ function PresetModal({
           event.preventDefault();
           onCreate();
         }}
-        className="w-full max-w-md rounded p-4 shadow-xl"
-        style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)" }}
+        className="sim-modal w-full max-w-md p-4 shadow-xl"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--sidebar-active)" }}>Bear profile</h3>
-            <p className="mt-1 text-xs opacity-60">Profiles store base player stats only.</p>
+            <h3 className="sim-modal-title">Bear profile</h3>
+            <p className="sim-modal-copy mt-1">Profiles store base player stats only.</p>
           </div>
-          <button type="button" onClick={onClose} className="rounded px-2 py-1 text-lg leading-none" style={{ border: "1px solid var(--border-color)" }} aria-label="Close profile modal">x</button>
+          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[32px] px-2 py-1 text-sm font-bold leading-none" aria-label="Close profile modal">x</button>
         </div>
         <label className="mb-3 flex flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wider opacity-50">Loaded profile</span>
-          <select value={activePresetId} onChange={(event) => onChoose(event.target.value)} className="min-h-[40px] rounded px-2 py-2 font-mono text-xs" style={{ backgroundColor: "var(--main-bg)", border: "1px solid var(--border-color)", color: "var(--main-text)" }}>
+          <span className="sim-field-label">Loaded profile</span>
+          <select value={activePresetId} onChange={(event) => onChoose(event.target.value)} className="sim-input min-h-[40px] px-2 py-2 font-mono text-xs">
             <option value="">-- None --</option>
             {presets.map((preset) => <option key={preset.id} value={preset.id}>{preset.name}</option>)}
           </select>
         </label>
         <label className="mb-4 flex flex-col gap-1">
-          <span className="text-[10px] uppercase tracking-wider opacity-50">New profile name</span>
-          <input value={draftName} onChange={(event) => onDraftName(event.target.value)} className="min-h-[40px] rounded px-2 py-2 text-sm" style={{ backgroundColor: "var(--main-bg)", border: "1px solid var(--border-color)", color: "var(--main-text)" }} />
+          <span className="sim-field-label">New profile name</span>
+          <input value={draftName} onChange={(event) => onDraftName(event.target.value)} className="sim-input min-h-[40px] px-2 py-2 text-sm" />
         </label>
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <button type="submit" className="min-h-[40px] rounded px-3 py-2 text-xs font-bold" style={{ border: "1px solid var(--sidebar-active)", color: "var(--sidebar-active)" }}>Create from current stats</button>
-          <button type="button" onClick={onClose} className="min-h-[40px] rounded px-3 py-2 text-xs font-bold" style={{ border: "1px solid var(--border-color)" }}>Done</button>
+          <button type="submit" className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold" style={{ color: "var(--sim-blue)" }}>Create from current stats</button>
+          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold">Done</button>
         </div>
         {status && <p className="mt-3 text-xs font-mono" style={{ color: status.kind === "error" ? "#f38ba8" : "#a6e3a1" }}>{status.message}</p>}
       </form>
@@ -1199,11 +1268,11 @@ function PresetModal({
 
 function TopBearRatiosTable({ rows, selectedKey, onSelect }: { rows: BearOptimizeRatioPoint[]; selectedKey: string | null; onSelect: (row: BearOptimizeRatioPoint) => void }) {
   return (
-    <div className="rounded p-3" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--main-bg)" }}>
-      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider opacity-60">Top ratios</h4>
+    <div className="sim-tool-panel p-3">
+      <h4 className="mb-2 text-xs font-bold opacity-70">Top ratios</h4>
       <table className="w-full text-[11px] font-mono sm:text-xs">
         <thead>
-          <tr className="text-left uppercase tracking-wider opacity-50" style={{ borderBottom: "1px solid var(--border-color)" }}>
+          <tr className="text-left uppercase tracking-wider opacity-50" style={{ borderBottom: "1px solid var(--sim-line)" }}>
             <th className="pb-1 pr-1">#</th>
             <th className="pb-1 pr-1 text-right">Score</th>
             <th className="pb-1 pr-1 text-right">Ratio</th>
@@ -1276,19 +1345,19 @@ function BearUploadModal({ open, onClose, onApply }: { open: boolean; onClose: (
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3" style={{ backgroundColor: "rgba(0,0,0,0.6)" }} role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="w-full max-w-2xl rounded p-4" style={{ border: "1px solid var(--border-color)", backgroundColor: "var(--sidebar-bg)" }} onClick={(event) => event.stopPropagation()}>
+      <div className="sim-modal w-full max-w-2xl p-4" onClick={(event) => event.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between gap-3">
-          <h3 className="text-sm font-bold uppercase tracking-wider" style={{ color: "var(--sidebar-active)" }}>Upload Bear Stats</h3>
-          <button type="button" onClick={onClose} className="rounded px-2 py-1" style={{ border: "1px solid var(--border-color)" }}>Close</button>
+          <h3 className="sim-modal-title">Upload bear stats</h3>
+          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[32px] px-3 py-1 text-xs font-bold">Close</button>
         </div>
-        <div className="mb-3 grid grid-cols-2 overflow-hidden rounded border border-[var(--border-color)]">
+        <div className="sim-segmented mb-3 grid-cols-2">
           {(["left", "right"] as const).map((side) => (
-            <button key={side} type="button" onClick={() => setSelectedSide(side)} className="px-3 py-2 text-xs font-bold capitalize" style={{ backgroundColor: selectedSide === side ? "var(--sidebar-active)" : "transparent", color: selectedSide === side ? "#1e1e2e" : "var(--main-text)" }}>
+            <button key={side} type="button" onClick={() => setSelectedSide(side)} className="px-3 py-2 text-xs font-bold" data-active={selectedSide === side}>
               Import {side} stats
             </button>
           ))}
         </div>
-        <button type="button" onClick={() => fileInputRef.current?.click()} className="flex min-h-40 w-full flex-col items-center justify-center gap-2 rounded border border-dashed p-4 text-center" style={{ borderColor: "var(--border-color)", backgroundColor: "var(--main-bg)" }}>
+        <button type="button" onClick={() => fileInputRef.current?.click()} className="sim-upload-dropzone flex min-h-40 w-full flex-col items-center justify-center gap-2 p-4 text-center">
           {imageDataUrl ? <img src={imageDataUrl} alt="OCR preview" className="max-h-64 max-w-full object-contain" /> : <span className="text-sm font-bold">Click to choose a Stat Bonuses screenshot</span>}
         </button>
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(event) => {
@@ -1297,8 +1366,8 @@ function BearUploadModal({ open, onClose, onApply }: { open: boolean; onClose: (
         }} />
         {error && <p className="mt-3 text-xs" style={{ color: "#f38ba8" }}>{error}</p>}
         <div className="mt-4 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="min-h-[40px] rounded px-3 py-2 text-xs font-bold" style={{ border: "1px solid var(--border-color)" }}>Cancel</button>
-          <button type="button" onClick={submit} disabled={loading || !imageBase64} className="min-h-[40px] rounded px-3 py-2 text-xs font-bold" style={{ backgroundColor: "var(--sidebar-active)", color: "#1e1e2e", opacity: loading || !imageBase64 ? 0.5 : 1 }}>
+          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold">Cancel</button>
+          <button type="button" onClick={submit} disabled={loading || !imageBase64} className="sim-run-button min-h-[40px] px-3 py-2 text-xs font-bold" style={{ opacity: loading || !imageBase64 ? 0.5 : 1 }}>
             {loading ? "Parsing..." : "Parse and apply"}
           </button>
         </div>

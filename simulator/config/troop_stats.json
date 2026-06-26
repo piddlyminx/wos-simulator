@@ -875,6 +875,30 @@
             "Health": 2073
         }
     },
+    "infantry_t10_fc9": {
+        "id": "infantry_t10_fc9",
+        "type": "infantry",
+        "tier": 10,
+        "fc": 9,
+        "stats": {
+            "Attack": 726,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 2178
+        }
+    },
+    "infantry_t10_fc10": {
+        "id": "infantry_t10_fc10",
+        "type": "infantry",
+        "tier": 10,
+        "fc": 10,
+        "stats": {
+            "Attack": 762,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 2286
+        }
+    },
     "infantry_t11": {
         "id": "infantry_t11",
         "type": "infantry",
@@ -935,6 +959,30 @@
             "Health": 2285
         }
     },
+    "infantry_t11_fc9": {
+        "id": "infantry_t11_fc9",
+        "type": "infantry",
+        "tier": 11,
+        "fc": 9,
+        "stats": {
+            "Attack": 800,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 2400
+        }
+    },
+    "infantry_t11_fc10": {
+        "id": "infantry_t11_fc10",
+        "type": "infantry",
+        "tier": 11,
+        "fc": 10,
+        "stats": {
+            "Attack": 840,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 2520
+        }
+    },
     "lancer_t10_fc6": {
         "id": "lancer_t10_fc6",
         "type": "lancer",
@@ -969,6 +1017,30 @@
             "Defense": 10,
             "Lethality": 10,
             "Health": 691
+        }
+    },
+    "lancer_t10_fc9": {
+        "id": "lancer_t10_fc9",
+        "type": "lancer",
+        "tier": 10,
+        "fc": 9,
+        "stats": {
+            "Attack": 2178,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 726
+        }
+    },
+    "lancer_t10_fc10": {
+        "id": "lancer_t10_fc10",
+        "type": "lancer",
+        "tier": 10,
+        "fc": 10,
+        "stats": {
+            "Attack": 2286,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 762
         }
     },
     "lancer_t11_fc6": {
@@ -1007,6 +1079,30 @@
             "Health": 762
         }
     },
+    "lancer_t11_fc9": {
+        "id": "lancer_t11_fc9",
+        "type": "lancer",
+        "tier": 11,
+        "fc": 9,
+        "stats": {
+            "Attack": 2400,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 800
+        }
+    },
+    "lancer_t11_fc10": {
+        "id": "lancer_t11_fc10",
+        "type": "lancer",
+        "tier": 11,
+        "fc": 10,
+        "stats": {
+            "Attack": 2520,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 840
+        }
+    },
     "marksman_t10_fc6": {
         "id": "marksman_t10_fc6",
         "type": "marksman",
@@ -1043,6 +1139,30 @@
             "Health": 519
         }
     },
+    "marksman_t10_fc9": {
+        "id": "marksman_t10_fc9",
+        "type": "marksman",
+        "tier": 10,
+        "fc": 9,
+        "stats": {
+            "Attack": 2904,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 545
+        }
+    },
+    "marksman_t10_fc10": {
+        "id": "marksman_t10_fc10",
+        "type": "marksman",
+        "tier": 10,
+        "fc": 10,
+        "stats": {
+            "Attack": 3048,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 572
+        }
+    },
     "marksman_t11_fc6": {
         "id": "marksman_t11_fc6",
         "type": "marksman",
@@ -1077,6 +1197,30 @@
             "Defense": 10,
             "Lethality": 10,
             "Health": 572
+        }
+    },
+    "marksman_t11_fc9": {
+        "id": "marksman_t11_fc9",
+        "type": "marksman",
+        "tier": 11,
+        "fc": 9,
+        "stats": {
+            "Attack": 3200,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 600
+        }
+    },
+    "marksman_t11_fc10": {
+        "id": "marksman_t11_fc10",
+        "type": "marksman",
+        "tier": 11,
+        "fc": 10,
+        "stats": {
+            "Attack": 3360,
+            "Defense": 10,
+            "Lethality": 10,
+            "Health": 630
         }
     },
     "lancer_t1": {

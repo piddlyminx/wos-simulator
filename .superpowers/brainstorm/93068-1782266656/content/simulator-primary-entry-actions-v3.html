@@ -1,0 +1,518 @@
+<style>
+  :root {
+    --bg: #11131c;
+    --panel: #1b1d2a;
+    --panel-2: #252839;
+    --line: rgba(205, 214, 244, 0.16);
+    --text: #cdd6f4;
+    --muted: #9399b2;
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --yellow: #f9e2af;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 22px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-size: 22px;
+  }
+  .subtitle {
+    margin: 0 0 18px;
+    max-width: 880px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 0.72fr 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 1000px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .mock {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .mock-head {
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+  .mock-head h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .tag {
+    border: 1px solid rgba(137, 180, 250, 0.35);
+    border-radius: 999px;
+    color: var(--blue);
+    padding: 4px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .mock-body {
+    padding: 12px;
+  }
+  .phone {
+    width: min(100%, 390px);
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: #0f111a;
+    overflow: hidden;
+    min-height: 720px;
+  }
+  .desktop {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0f111a;
+    overflow: hidden;
+    min-height: 720px;
+  }
+  .topbar {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .menu {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+  }
+  .content {
+    padding: 12px;
+  }
+  .entry {
+    border: 1px solid rgba(137, 180, 250, 0.28);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+  }
+  .entry-title {
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .primary-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .action {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    min-height: 78px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .action.primary {
+    border-color: var(--blue);
+    background: rgba(137, 180, 250, 0.15);
+  }
+  .action.secondary {
+    border-color: rgba(166, 227, 161, 0.35);
+    background: rgba(166, 227, 161, 0.10);
+  }
+  .action b {
+    color: var(--text);
+    font-size: 12px;
+  }
+  .action span {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.35;
+  }
+  .quick-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .quick {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #151824;
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 12px 0 10px;
+  }
+  .tab {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--muted);
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .tab.active {
+    background: var(--blue);
+    color: #11131c;
+    border-color: var(--blue);
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+    margin-bottom: 9px;
+  }
+  .label {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .field {
+    border-radius: 7px;
+    background: var(--panel-2);
+    min-height: 44px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .field b {
+    font-size: 11px;
+    color: var(--text);
+  }
+  .field span {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 9px;
+  }
+  .runbar {
+    position: sticky;
+    bottom: 0;
+    border-top: 1px solid var(--line);
+    background: rgba(27, 29, 42, 0.98);
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .reps {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #0f111a;
+    padding: 9px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .run {
+    border-radius: 7px;
+    background: var(--blue);
+    color: #11131c;
+    padding: 10px 13px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .desktop-layout {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    min-height: 720px;
+  }
+  .drawer {
+    border-right: 1px solid var(--line);
+    background: var(--panel);
+    padding: 14px 10px;
+  }
+  .drawer h3 {
+    margin: 0 0 14px;
+    color: var(--blue);
+    font-size: 13px;
+  }
+  .nav-title {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 16px 0 7px;
+  }
+  .nav-item {
+    border-radius: 6px;
+    padding: 8px 9px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .nav-item.active {
+    background: rgba(137, 180, 250, 0.16);
+    color: var(--blue);
+  }
+  .desktop-main {
+    padding: 16px;
+  }
+  .desktop-header {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .desktop-header h3 {
+    margin: 0;
+    color: var(--blue);
+    font-size: 16px;
+  }
+  .desktop-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .desktop-action {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+    min-height: 54px;
+  }
+  .desktop-action.hot {
+    border-color: var(--blue);
+    background: rgba(137, 180, 250, 0.14);
+  }
+  .desktop-action.good {
+    border-color: rgba(166, 227, 161, 0.35);
+    background: rgba(166, 227, 161, 0.1);
+  }
+  .desktop-action b {
+    display: block;
+    color: var(--text);
+    font-size: 12px;
+  }
+  .desktop-action span {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 4px;
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .notes {
+    margin-top: 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 12px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+</style>
+
+<div class="page">
+  <h1>Simulator v3: Primary Entry Actions Above Tabs</h1>
+  <p class="subtitle">
+    OCR paste and preset loading are the two most common starts, so they become the first controls users see. The mobile simulator still uses three task tabs: Attacker, Defender, Results.
+  </p>
+
+  <div class="grid">
+    <section class="mock">
+      <div class="mock-head">
+        <h2>Mobile Battle Sim</h2>
+        <span class="tag">3 tabs, no buried import flow</span>
+      </div>
+      <div class="mock-body">
+        <div class="phone">
+          <div class="topbar">
+            <span>Battle Sim</span>
+            <div class="menu">☰</div>
+          </div>
+          <div class="content">
+            <section class="entry">
+              <div class="entry-title">Start from</div>
+              <div class="primary-actions">
+                <div class="action primary">
+                  <b>Paste report</b>
+                  <span>OCR attacker and defender from a screenshot or text dump.</span>
+                </div>
+                <div class="action secondary">
+                  <b>Load preset</b>
+                  <span>Use a saved setup, player stats, or common army profile.</span>
+                </div>
+              </div>
+              <div class="quick-row">
+                <div class="quick">Recent</div>
+                <div class="quick">Save</div>
+                <div class="quick">Share</div>
+              </div>
+            </section>
+
+            <div class="tabs">
+              <div class="tab active">Attacker</div>
+              <div class="tab">Defender</div>
+              <div class="tab">Results</div>
+            </div>
+
+            <section class="card">
+              <div class="label">Attacker summary</div>
+              <div class="summary">
+                <div class="field"><b>1,000</b><span>Inf T6</span></div>
+                <div class="field"><b>1,000</b><span>Lancer T6</span></div>
+                <div class="field"><b>1,000</b><span>Marks T6</span></div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="label">Heroes</div>
+              <div class="summary">
+                <div class="field"><b>Flint</b><span>Inf</span></div>
+                <div class="field"><b>Mia</b><span>Lancer</span></div>
+                <div class="field"><b>Bahiti</b><span>Marks</span></div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="label">Advanced sections</div>
+              <div class="summary">
+                <div class="field"><b>Stats</b><span>edit</span></div>
+                <div class="field"><b>Buffs</b><span>off</span></div>
+                <div class="field"><b>Joiners</b><span>solo</span></div>
+              </div>
+            </section>
+          </div>
+          <div class="runbar">
+            <div class="reps">Replicates: 1000</div>
+            <div class="run">Simulate</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock">
+      <div class="mock-head">
+        <h2>Desktop Battle Sim</h2>
+        <span class="tag">Same hierarchy, more room</span>
+      </div>
+      <div class="mock-body">
+        <div class="desktop">
+          <div class="desktop-layout">
+            <aside class="drawer">
+              <h3>WOS Sim</h3>
+              <div class="nav-title">Quality Metrics</div>
+              <div class="nav-item">Health Dashboard</div>
+              <div class="nav-item">Runs</div>
+              <div class="nav-item">Coverage</div>
+              <div class="nav-title">Simulation Running</div>
+              <div class="nav-item active">Battle Sim</div>
+              <div class="nav-item">Bear Sim</div>
+              <div class="nav-item">Tournament</div>
+              <div class="nav-title">Library</div>
+              <div class="nav-item">Heroes</div>
+              <div class="nav-item">Testcases</div>
+            </aside>
+            <main class="desktop-main">
+              <div class="desktop-header">
+                <div>
+                  <h3>Battle Sim</h3>
+                  <p class="subtitle" style="margin:5px 0 0">Start from OCR or presets, then refine attacker and defender setup.</p>
+                </div>
+              </div>
+              <div class="desktop-actions">
+                <div class="desktop-action hot"><b>Paste report</b><span>Open OCR/import modal</span></div>
+                <div class="desktop-action good"><b>Load preset</b><span>Saved setup or stat profile</span></div>
+                <div class="desktop-action"><b>Recent</b><span>Saved runs</span></div>
+                <div class="desktop-action"><b>Save</b><span>Share setup</span></div>
+              </div>
+              <div class="tabs" style="grid-template-columns: repeat(3, 160px); justify-content:start">
+                <div class="tab active">Attacker</div>
+                <div class="tab">Defender</div>
+                <div class="tab">Results</div>
+              </div>
+              <div class="columns">
+                <section class="card">
+                  <div class="label">Attacker</div>
+                  <div class="summary">
+                    <div class="field"><b>1,000</b><span>Inf T6</span></div>
+                    <div class="field"><b>1,000</b><span>Lancer T6</span></div>
+                    <div class="field"><b>1,000</b><span>Marks T6</span></div>
+                  </div>
+                </section>
+                <section class="card">
+                  <div class="label">Run controls</div>
+                  <div class="summary">
+                    <div class="field"><b>1000</b><span>reps</span></div>
+                    <div class="field"><b>Solo</b><span>mode</span></div>
+                    <div class="field"><b>Run</b><span>primary</span></div>
+                  </div>
+                </section>
+              </div>
+              <section class="card">
+                <div class="label">Lower detail area</div>
+                <div class="summary">
+                  <div class="field"><b>Stats</b><span>matrix</span></div>
+                  <div class="field"><b>Skills</b><span>levels</span></div>
+                  <div class="field"><b>Buffs</b><span>city/pet</span></div>
+                </div>
+              </section>
+            </main>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="notes">
+    Recommendation: keep exactly three simulator tabs on mobile, but put a persistent start block above them with two large actions: Paste report and Load preset. Recent, Save, and Share are visible but secondary. This matches the real flow without making users hunt through a fourth tab.
+  </section>
+</div>

@@ -1,0 +1,523 @@
+<style>
+  :root {
+    --bg: #11131c;
+    --panel: #1b1d2a;
+    --panel-2: #252839;
+    --input: #10131d;
+    --line: rgba(205, 214, 244, 0.16);
+    --text: #cdd6f4;
+    --muted: #9399b2;
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --yellow: #f9e2af;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 22px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-size: 22px;
+  }
+  .subtitle {
+    margin: 0 0 18px;
+    max-width: 900px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .mock {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .mock-head {
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+  .mock-head h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .tag {
+    border: 1px solid rgba(137, 180, 250, 0.35);
+    border-radius: 999px;
+    color: var(--blue);
+    padding: 4px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .mock-body {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: minmax(340px, 390px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .mock-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  .phone {
+    width: min(100%, 390px);
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: #0f111a;
+    overflow: hidden;
+    min-height: 790px;
+  }
+  .topbar {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .menu {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+  }
+  .content {
+    padding: 12px;
+  }
+  .label {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+  }
+  .start-card,
+  .section-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+    margin-bottom: 9px;
+  }
+  .upload {
+    border: 1px solid var(--blue);
+    border-radius: 8px;
+    background: rgba(137, 180, 250, 0.15);
+    min-height: 50px;
+    padding: 10px;
+  }
+  .upload b,
+  .section-title b {
+    display: block;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .upload span,
+  .section-title span {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+  .toggle-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .toggle {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    min-height: 38px;
+    padding: 7px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 7px;
+    align-items: center;
+  }
+  .switch {
+    width: 28px;
+    height: 16px;
+    border-radius: 999px;
+    background: var(--blue);
+    position: relative;
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #11131c;
+  }
+  .toggle b {
+    display: block;
+    font-size: 9px;
+  }
+  .toggle span {
+    display: block;
+    color: var(--muted);
+    font-size: 8px;
+    margin-top: 2px;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 12px 0 10px;
+  }
+  .tab {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--muted);
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .tab.active {
+    background: var(--blue);
+    color: #11131c;
+    border-color: var(--blue);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .check {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: rgba(166, 227, 161, 0.16);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .edit {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel-2);
+    color: var(--text);
+    min-height: 34px;
+    display: grid;
+    place-items: center;
+    padding: 0 9px;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .summary-pills {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 9px;
+  }
+  .pill {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--panel-2);
+    color: var(--muted);
+    padding: 4px 7px;
+    font-size: 9px;
+  }
+  .expanded-editor {
+    border-top: 1px solid rgba(205, 214, 244, 0.1);
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+  .unit-strip {
+    display: grid;
+    grid-template-columns: 74px 1fr 58px;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .unit-name {
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .control,
+  .select {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--input);
+    min-height: 34px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+  .select::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--muted);
+  }
+  .bottom-sheet {
+    border: 1px solid rgba(137, 180, 250, 0.3);
+    border-radius: 12px 12px 0 0;
+    background: #202332;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  .matrix {
+    display: grid;
+    gap: 6px;
+  }
+  .matrix-row {
+    display: grid;
+    grid-template-columns: 68px repeat(4, 1fr);
+    gap: 5px;
+    align-items: center;
+  }
+  .matrix-label {
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .stat-input {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--input);
+    min-height: 32px;
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    line-height: 1.15;
+    text-align: center;
+  }
+  .runbar {
+    position: sticky;
+    bottom: 0;
+    border-top: 1px solid var(--line);
+    background: rgba(27, 29, 42, 0.98);
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .run {
+    border-radius: 7px;
+    background: var(--blue);
+    color: #11131c;
+    padding: 10px 13px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .notes {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 14px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .notes h3 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-size: 14px;
+  }
+  .notes ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+  }
+  .notes li {
+    margin: 7px 0;
+  }
+</style>
+
+<div class="page">
+  <h1>Simulator v7: Calm Required Sections</h1>
+  <p class="subtitle">
+    This version keeps all required setup visible, but stops expanding every field at once. Mobile users see a clear checklist and edit one focused section at a time.
+  </p>
+
+  <section class="mock">
+    <div class="mock-head">
+      <h2>Mobile Attacker Tab</h2>
+      <span class="tag">Checklist + focused editor</span>
+    </div>
+    <div class="mock-body">
+      <div class="phone">
+        <div class="topbar">
+          <span>Battle Sim</span>
+          <div class="menu">☰</div>
+        </div>
+        <div class="content">
+          <section class="start-card">
+            <div class="label">Start from report</div>
+            <div class="upload">
+              <b>Upload report</b>
+              <span>OCR both armies. Drag, choose, or paste in the upload modal.</span>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle">
+                <div class="switch"></div>
+                <div><b>Rally mode</b><span>Joiners + skill 4</span></div>
+              </div>
+              <div class="toggle">
+                <div class="switch"></div>
+                <div><b>Sync hero stats</b><span>Adjust on hero swap</span></div>
+              </div>
+            </div>
+          </section>
+
+          <div class="tabs">
+            <div class="tab active">Attacker</div>
+            <div class="tab">Defender</div>
+            <div class="tab">Results</div>
+          </div>
+
+          <section class="section-card">
+            <div class="section-head">
+              <div class="check">✓</div>
+              <div class="section-title">
+                <b>Attacker preset</b>
+                <span>Duel attack preset loaded</span>
+              </div>
+              <div class="edit">Load</div>
+            </div>
+            <div class="summary-pills">
+              <span class="pill">Save from attacker</span>
+              <span class="pill">Different from defender</span>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-head">
+              <div class="check">✓</div>
+              <div class="section-title">
+                <b>Troops, tiers, heroes</b>
+                <span>3k troops · Flint / Mia / Bahiti · all T6</span>
+              </div>
+              <div class="edit">Edit</div>
+            </div>
+            <div class="expanded-editor">
+              <div class="unit-strip">
+                <div class="unit-name">Infantry</div>
+                <div class="control">1,000 troops</div>
+                <div class="select">T6</div>
+              </div>
+              <div class="unit-strip">
+                <div class="unit-name">Hero</div>
+                <div class="select">Flint</div>
+                <div class="select">5/5</div>
+              </div>
+              <div class="summary-pills">
+                <span class="pill">Lancer: 1,000 · Mia · T6</span>
+                <span class="pill">Marksman: 1,000 · Bahiti · T6</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-head">
+              <div class="check">✓</div>
+              <div class="section-title">
+                <b>Stat bonuses</b>
+                <span>3 troop types × 4 stats · all 100%</span>
+              </div>
+              <div class="edit">Edit</div>
+            </div>
+            <div class="bottom-sheet">
+              <div class="label">Focused stat editor</div>
+              <div class="matrix">
+                <div class="matrix-row">
+                  <div class="matrix-label">Infantry</div>
+                  <div class="stat-input">Atk<br>100</div>
+                  <div class="stat-input">Def<br>100</div>
+                  <div class="stat-input">Leth<br>100</div>
+                  <div class="stat-input">HP<br>100</div>
+                </div>
+                <div class="matrix-row">
+                  <div class="matrix-label">Lancer</div>
+                  <div class="stat-input">Atk<br>100</div>
+                  <div class="stat-input">Def<br>100</div>
+                  <div class="stat-input">Leth<br>100</div>
+                  <div class="stat-input">HP<br>100</div>
+                </div>
+                <div class="matrix-row">
+                  <div class="matrix-label">Marksman</div>
+                  <div class="stat-input">Atk<br>100</div>
+                  <div class="stat-input">Def<br>100</div>
+                  <div class="stat-input">Leth<br>100</div>
+                  <div class="stat-input">HP<br>100</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-head">
+              <div class="check">✓</div>
+              <div class="section-title">
+                <b>Joiners</b>
+                <span>Rally on · 4 empty joiner slots</span>
+              </div>
+              <div class="edit">Edit</div>
+            </div>
+          </section>
+
+          <section class="section-card">
+            <div class="section-head">
+              <div class="check">✓</div>
+              <div class="section-title">
+                <b>Buffs and debuffs</b>
+                <span>Folded · city 0% · pets off</span>
+              </div>
+              <div class="edit">Edit</div>
+            </div>
+          </section>
+        </div>
+        <div class="runbar">
+          <div class="control">Replicates: 1000</div>
+          <div class="run">Simulate</div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        <h3>Why this is calmer</h3>
+        <ul>
+          <li>Required setup is visible as sections, so users know what matters.</li>
+          <li>Only one section is expanded at a time on mobile.</li>
+          <li>Each collapsed section shows enough summary to catch mistakes.</li>
+          <li>The stat matrix still exists, but appears in a focused editor instead of permanently occupying the page.</li>
+          <li>Buffs remain last and folded because they are optional compared with troops, heroes, stats, and joiners.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</div>

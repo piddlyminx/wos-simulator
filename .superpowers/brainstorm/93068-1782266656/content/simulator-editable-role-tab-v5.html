@@ -1,0 +1,540 @@
+<style>
+  :root {
+    --bg: #11131c;
+    --panel: #1b1d2a;
+    --panel-2: #252839;
+    --input: #10131d;
+    --line: rgba(205, 214, 244, 0.16);
+    --text: #cdd6f4;
+    --muted: #9399b2;
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 22px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-size: 22px;
+  }
+  .subtitle {
+    margin: 0 0 18px;
+    max-width: 900px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .mock {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .mock-head {
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+  .mock-head h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .tag {
+    border: 1px solid rgba(137, 180, 250, 0.35);
+    border-radius: 999px;
+    color: var(--blue);
+    padding: 4px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .mock-body {
+    padding: 12px;
+    display: grid;
+    grid-template-columns: minmax(340px, 390px) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .mock-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  .phone {
+    width: min(100%, 390px);
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: #0f111a;
+    overflow: hidden;
+    min-height: 820px;
+  }
+  .topbar {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .menu {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+  }
+  .content {
+    padding: 12px;
+  }
+  .global {
+    border: 1px solid rgba(137, 180, 250, 0.28);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+  }
+  .label {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+  }
+  .upload {
+    border: 1px solid var(--blue);
+    border-radius: 8px;
+    background: rgba(137, 180, 250, 0.15);
+    min-height: 54px;
+    padding: 10px;
+  }
+  .upload b {
+    display: block;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .upload span {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+  .toggle-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .toggle {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    min-height: 42px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+  .switch {
+    width: 30px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--blue);
+    position: relative;
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #11131c;
+  }
+  .toggle b {
+    display: block;
+    font-size: 10px;
+  }
+  .toggle span {
+    display: block;
+    color: var(--muted);
+    font-size: 8px;
+    margin-top: 2px;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 12px 0 10px;
+  }
+  .tab {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--muted);
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .tab.active {
+    background: var(--blue);
+    color: #11131c;
+    border-color: var(--blue);
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+    margin-bottom: 9px;
+  }
+  .preset-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 6px;
+    align-items: center;
+  }
+  .control,
+  .select,
+  .small-btn {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--input);
+    min-height: 38px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+  .select::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--muted);
+  }
+  .small-btn {
+    justify-content: center;
+    background: var(--panel-2);
+    font-weight: 900;
+  }
+  .unit-row {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #151824;
+    padding: 9px;
+    margin-bottom: 8px;
+  }
+  .unit-title {
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .unit-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) 72px;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .hero-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .skill-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+  .skill {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--input);
+    min-height: 30px;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    font-size: 10px;
+  }
+  .stats-matrix {
+    display: grid;
+    gap: 6px;
+  }
+  .stat-row {
+    display: grid;
+    grid-template-columns: 68px repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    align-items: center;
+  }
+  .stat-label {
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 900;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .stat {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--input);
+    min-height: 36px;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    font-size: 9px;
+    line-height: 1.15;
+    text-align: center;
+    padding: 0 2px;
+  }
+  .joiners {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .folded {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    min-height: 38px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .runbar {
+    position: sticky;
+    bottom: 0;
+    border-top: 1px solid var(--line);
+    background: rgba(27, 29, 42, 0.98);
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .run {
+    border-radius: 7px;
+    background: var(--blue);
+    color: #11131c;
+    padding: 10px 13px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .notes {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 14px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .notes h3 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-size: 14px;
+  }
+  .notes ul {
+    margin: 8px 0 0 18px;
+    padding: 0;
+  }
+  .notes li {
+    margin: 7px 0;
+  }
+</style>
+
+<div class="page">
+  <h1>Simulator v6: Required Setup Looks Editable</h1>
+  <p class="subtitle">
+    This revision keeps the v4 structure, but makes troop count, troop tier, hero, skill choices, and all per-troop stat bonuses look like real controls instead of summaries.
+  </p>
+
+  <section class="mock">
+    <div class="mock-head">
+      <h2>Mobile Attacker Tab</h2>
+      <span class="tag">Explicit inputs</span>
+    </div>
+    <div class="mock-body">
+      <div class="phone">
+        <div class="topbar">
+          <span>Battle Sim</span>
+          <div class="menu">☰</div>
+        </div>
+        <div class="content">
+          <section class="global">
+            <div class="label">Start from report</div>
+            <div class="upload">
+              <b>Upload report</b>
+              <span>OCR both armies. Drag, choose, or paste in the upload modal.</span>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle">
+                <div class="switch"></div>
+                <div><b>Rally mode</b><span>Joiners + skill 4</span></div>
+              </div>
+              <div class="toggle">
+                <div class="switch"></div>
+                <div><b>Sync hero stats</b><span>Adjust stats on swap</span></div>
+              </div>
+            </div>
+          </section>
+
+          <div class="tabs">
+            <div class="tab active">Attacker</div>
+            <div class="tab">Defender</div>
+            <div class="tab">Results</div>
+          </div>
+
+          <section class="card">
+            <div class="label">Attacker preset</div>
+            <div class="preset-row">
+              <div class="select">Duel attack preset</div>
+              <div class="small-btn">Load</div>
+              <div class="small-btn">Save</div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="label">Troops, tiers, heroes</div>
+            <div class="unit-row">
+              <div class="unit-title">Infantry</div>
+              <div class="unit-controls">
+                <div class="control">Troops: 1,000</div>
+                <div class="select">T6</div>
+              </div>
+              <div class="hero-line">
+                <div class="select">Hero: Flint</div>
+                <div class="small-btn">Clear</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill">S1 5</div>
+                <div class="skill">S2 5</div>
+                <div class="skill">S3 5</div>
+                <div class="skill">S4 0</div>
+              </div>
+            </div>
+
+            <div class="unit-row">
+              <div class="unit-title">Lancer</div>
+              <div class="unit-controls">
+                <div class="control">Troops: 1,000</div>
+                <div class="select">T6</div>
+              </div>
+              <div class="hero-line">
+                <div class="select">Hero: Mia</div>
+                <div class="small-btn">Clear</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill">S1 5</div>
+                <div class="skill">S2 5</div>
+                <div class="skill">S3 5</div>
+                <div class="skill">S4 0</div>
+              </div>
+            </div>
+
+            <div class="unit-row">
+              <div class="unit-title">Marksman</div>
+              <div class="unit-controls">
+                <div class="control">Troops: 1,000</div>
+                <div class="select">T6</div>
+              </div>
+              <div class="hero-line">
+                <div class="select">Hero: Bahiti</div>
+                <div class="small-btn">Clear</div>
+              </div>
+              <div class="skill-row">
+                <div class="skill">S1 5</div>
+                <div class="skill">S2 5</div>
+                <div class="skill">S3 5</div>
+                <div class="skill">S4 0</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="label">Stat bonuses</div>
+            <div class="stats-matrix">
+              <div class="stat-row">
+                <div class="stat-label">Infantry</div>
+                <div class="stat">Atk<br>100</div>
+                <div class="stat">Def<br>100</div>
+                <div class="stat">Leth<br>100</div>
+                <div class="stat">HP<br>100</div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label">Lancer</div>
+                <div class="stat">Atk<br>100</div>
+                <div class="stat">Def<br>100</div>
+                <div class="stat">Leth<br>100</div>
+                <div class="stat">HP<br>100</div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label">Marksman</div>
+                <div class="stat">Atk<br>100</div>
+                <div class="stat">Def<br>100</div>
+                <div class="stat">Leth<br>100</div>
+                <div class="stat">HP<br>100</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="label">Joiners</div>
+            <div class="joiners">
+              <div class="select">1: None</div>
+              <div class="select">2: None</div>
+              <div class="select">3: None</div>
+              <div class="select">4: None</div>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="folded">
+              <span>Buffs and debuffs start folded</span>
+              <span class="small-btn">Edit</span>
+            </div>
+          </section>
+        </div>
+        <div class="runbar">
+          <div class="control">Replicates: 1000</div>
+          <div class="run">Simulate</div>
+        </div>
+      </div>
+
+      <aside class="notes">
+        <h3>What changed from v4</h3>
+        <ul>
+          <li>Each unit type is an editable row, not a summary tile.</li>
+          <li>Troop count is a visible input-like control.</li>
+          <li>Tier and hero read as dropdowns with chevrons.</li>
+          <li>Skills are explicit per hero, so rally skill 4 behavior has a place to live.</li>
+          <li>Stats are shown as a 3 × 4 matrix: each troop type has attack, defense, lethality, and health.</li>
+          <li>Joiners remain visible because they are required for normal rally runs.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</div>

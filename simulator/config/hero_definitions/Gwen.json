@@ -6,7 +6,8 @@
     "EagleVision": {
       "description": "Increasing target's damage taken by X%",
       "trigger": {
-        "type": "attack"
+        "type": "attack",
+        "every": 2
       },
       "effects": {
         "EagleVision/1": {
@@ -19,7 +20,7 @@
             25
           ],
           "units": {
-            "applies_to": "target"
+            "applies_to": "trigger.target"
           },
           "duration": {
             "type": "attack",
@@ -29,10 +30,10 @@
       }
     },
     "AirDominance": {
-      "description": "Grants all troops' attack X% extra damage after every 5 attacks and causes the target to receive X% extra damage for its next attack received",
+      "description": "Grants all troops' attack X% extra damage after every 4 attacks and causes the target to receive X% extra damage for its next attack received",
       "trigger": {
         "type": "attack",
-        "every": 5
+        "every": 4
       },
       "effects": {
         "AirDominance/1": {
@@ -58,9 +59,9 @@
               "target": "effect.applies_vs"
             }
           ]
-        },
+         },
         "AirDominance/2": {
-          "type": "active.hero.defense.down",
+          "type": "active.hero.damageTaken.up",
           "value": [
             5,
             7.5,
@@ -99,8 +100,7 @@
           "units": {
             "applies_to": [
               "marksman"
-            ],
-            "applies_vs": "any"
+            ]
           },
           "duration": {
             "type": "attack",

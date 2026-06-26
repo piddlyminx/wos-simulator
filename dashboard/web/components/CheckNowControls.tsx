@@ -54,7 +54,7 @@ function StatusPanel({ status }: { status: CheckNowStatus }) {
       aria-live="polite"
     >
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-        <span className="font-bold uppercase tracking-wider" style={{ color: tone }}>
+        <span className="font-bold" style={{ color: tone }}>
           {status.state === "running"
             ? "Running"
             : status.state === "succeeded"
@@ -237,7 +237,7 @@ export default function CheckNowControls() {
       <div className="flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
         <div className="flex flex-col gap-1 max-w-2xl">
           <h3
-            className="text-sm font-bold uppercase tracking-wider"
+            className="text-sm font-bold"
             style={{ color: "var(--sidebar-active)" }}
           >
             Check now

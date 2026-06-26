@@ -1,7 +1,56 @@
 import { test, expect } from "@playwright/test";
 
 const IPHONE_SE = { width: 375, height: 667 };
+const TABLET = { width: 768, height: 1024 };
 const DESKTOP = { width: 1280, height: 800 };
+const ROOMY_DESKTOP = { width: 1536, height: 900 };
+const WIDE_DESKTOP = { width: 2048, height: 1152 };
+
+async function expectNoVisibleElementOverflow(page: import("@playwright/test").Page) {
+  const offenders = await page.evaluate(() => {
+    const visible = (el: HTMLElement) => {
+      const style = getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      return (
+        style.display !== "none" &&
+        style.visibility !== "hidden" &&
+        rect.width > 0 &&
+        rect.height > 0
+      );
+    };
+    return Array.from(
+      document.querySelectorAll<HTMLElement>(
+        "input, select, button, [data-testid^='side-section-'], [data-testid^='sim-unit-row-'], [data-testid='stat-bonus-summary-matrix'], [data-testid='stat-bonus-edit-matrix']",
+      ),
+    )
+      .filter(visible)
+      .flatMap((el) => {
+        const parent = el.closest<HTMLElement>(
+          "[data-testid^='side-section-'], .sim-role-panel, .sim-tool-panel, .sim-start-card",
+        );
+        if (!parent || !visible(parent)) return [];
+        const rect = el.getBoundingClientRect();
+        const bounds = parent.getBoundingClientRect();
+        const out =
+          rect.left < bounds.left - 1 ||
+          rect.right > bounds.right + 1 ||
+          rect.top < bounds.top - 1 ||
+          rect.bottom > bounds.bottom + 1;
+        return out
+          ? [
+              {
+                testid: el.dataset.testid ?? "",
+                tag: el.tagName,
+                text: el.textContent?.trim().slice(0, 60) ?? "",
+                rect,
+                bounds,
+              },
+            ]
+          : [];
+      });
+  });
+  expect(offenders).toEqual([]);
+}
 
 test.describe("WOS-202 mobile nav + simulate layout", () => {
   test("primary routes stay within the mobile viewport and keep key controls readable", async ({
@@ -82,8 +131,12 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await trigger.click();
     const drawer = page.getByRole("dialog", { name: /Site navigation/i });
     await expect(drawer).toBeVisible();
+    await expect(drawer.getByText("Quality Metrics")).toBeVisible();
+    await expect(drawer.getByText("Simulation Running")).toBeVisible();
+    await expect(drawer.getByText("Library")).toBeVisible();
     const simulateLink = drawer.locator("a[href='/simulate']");
     await expect(simulateLink).toBeVisible();
+    await expect(simulateLink).toHaveText("Battle Sim");
 
     // Drawer closes with Escape.
     await page.keyboard.press("Escape");
@@ -108,18 +161,41 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
 
     // Title + both side panel titles rendered.
     await expect(page.locator("h2")).toContainText("Simulate Battle");
+    await expect(page.getByRole("button", { name: "Upload report" })).toBeVisible();
+    await expect(page.getByLabel("Rally mode").first()).toBeVisible();
+    await expect(page.getByLabel("Update stats on hero change").first()).toBeVisible();
+    await expect(
+      page.locator(".sim-switch-input + .sim-switch").first(),
+    ).toBeVisible();
+    await expect(page.getByTestId("sim-workbench-tabs")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-attacker")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-defender")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-results")).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Attacker", exact: true }),
     ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Defender", exact: true }),
-    ).toBeVisible();
+    ).not.toBeVisible();
+    await expect(page.getByTestId("side-section-attacker-preset")).toBeVisible();
+    await expect(page.locator('select[aria-label="infantry skill 1"]')).toHaveCount(0);
+    await expect(page.getByTestId("side-section-attacker-joiners")).toHaveCount(0);
+    await expect(page.getByTestId("simulate-runbar")).toBeVisible();
+    await expect(page.getByTestId("optimize-panel")).toBeVisible();
+    const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
+    expect(dockBox).not.toBeNull();
+    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(IPHONE_SE.height - 190);
+    const setupBox = await page.getByTestId("sim-panel-setup").boundingBox();
+    expect(setupBox).not.toBeNull();
+    expect(setupBox?.y ?? 9999).toBeLessThanOrEqual(330);
 
     await page.getByLabel("Rally mode").first().check();
+    await expect(page.getByTestId("side-section-attacker-joiners")).toBeVisible();
     await page
       .locator('select[aria-label="marksman hero"]')
       .first()
       .selectOption("Alonso");
+    await page.getByRole("button", { name: /Stat bonuses/i }).click();
     const preview = page.locator(
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
@@ -127,6 +203,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(preview).toContainText("[130]");
     await expect(preview).toContainText("+15.0%");
 
+    await expect(page.getByTestId("simulate-runbar")).toBeVisible();
     await expect(page.getByTestId("optimize-options-toggle")).toBeVisible();
     await expect(
       page.locator('[data-testid="optimize-options-panel"]'),
@@ -134,7 +211,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
 
     const simulateBtn = page.getByRole("button", { name: /^Simulate$/i });
     const replicateBox = await page
-      .locator('input[type="number"][max="5000"]')
+      .locator('input[type="number"][max="10000"]')
       .boundingBox();
     const simulateBox = await simulateBtn.boundingBox();
     expect(replicateBox).not.toBeNull();
@@ -146,7 +223,6 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     // Simulate button touch-target is at least 44px tall (Apple HIG minimum).
     expect((simulateBox?.height ?? 0) + 0.5).toBeGreaterThanOrEqual(44);
 
-    // No horizontal scroll on the body.
     const overflow = await page.evaluate(() => {
       const doc = document.documentElement;
       return {
@@ -155,8 +231,73 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       };
     });
     expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
+    await expectNoVisibleElementOverflow(page);
 
     expect(errors).toHaveLength(0);
+  });
+
+  test("simulate upload report modal shows an example-backed drop target", async ({
+    page,
+  }) => {
+    await page.setViewportSize(IPHONE_SE);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.getByRole("button", { name: "Upload report" }).click();
+    const modal = page.getByRole("dialog", { name: /Upload battle report/i });
+    await expect(modal).toBeVisible();
+    await expect(modal.getByText("Drop report here")).toBeVisible();
+    await expect(modal.getByText(/tap to choose/i)).toBeVisible();
+    await expect(modal.getByText(/paste/i)).toBeVisible();
+    await expect(modal.getByAltText(/Example Stat Bonuses report/i)).toBeVisible();
+    await expect(modal.getByText("Buffs and debuffs").first()).toBeVisible();
+    await expect(modal.getByText("Active buffs / debuffs")).toHaveCount(0);
+
+    const cityToggle = modal.getByTestId("upload-city-modifier-details-attacker");
+    const petsToggle = modal.getByTestId("upload-pet-modifier-details-attacker");
+    await expect(cityToggle).toBeVisible();
+    await expect(petsToggle).toBeVisible();
+
+    const modifierStyles = await modal.evaluate((dialog) => {
+      const read = (selector: string) => {
+        const el = dialog.querySelector<HTMLElement>(selector);
+        if (!el) return null;
+        const style = window.getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          textTransform: style.textTransform,
+          fontSize: Number.parseFloat(style.fontSize),
+          width: rect.width,
+          dialogWidth: dialog.getBoundingClientRect().width,
+          className: el.className,
+        };
+      };
+      return {
+        city: read('[data-testid="upload-city-modifier-details-attacker"]'),
+        pets: read('[data-testid="upload-pet-modifier-details-attacker"]'),
+      };
+    });
+    expect(modifierStyles.city).not.toBeNull();
+    expect(modifierStyles.pets).not.toBeNull();
+    expect(modifierStyles.city?.textTransform).not.toBe("uppercase");
+    expect(modifierStyles.pets?.textTransform).not.toBe("uppercase");
+    expect(modifierStyles.city?.fontSize ?? 99).toBeLessThanOrEqual(11);
+    expect(modifierStyles.pets?.fontSize ?? 99).toBeLessThanOrEqual(11);
+    expect(modifierStyles.city?.className ?? "").not.toContain("tracking-wider");
+    expect(modifierStyles.pets?.className ?? "").not.toContain("tracking-wider");
+    expect(modifierStyles.city?.width ?? 9999).toBeLessThanOrEqual(
+      (modifierStyles.city?.dialogWidth ?? 0) - 24,
+    );
+  });
+
+  test("/runs keeps the filtered signed-bias testcase drift chart", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/runs");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByTestId("testcase-drift-chart")).toBeVisible();
+    await expect(page.getByTestId("hide-smoke-runs-toggle")).toBeVisible();
   });
 
   test("desktop viewport shows sidebar nav and no mobile trigger", async ({
@@ -175,17 +316,48 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
 
     // Sidebar link visible without any interaction.
     await expect(page.locator("nav a[href='/simulate']").first()).toBeVisible();
+    await expect(page.locator("nav a[href='/simulate']").first()).toHaveText(
+      "Battle Sim",
+    );
+    await expect(page.getByText("Quality Metrics")).toBeVisible();
+    await expect(page.getByText("Simulation Running")).toBeVisible();
+    await expect(page.getByText("Library")).toBeVisible();
 
     // Mobile hamburger is rendered (md:hidden) but must not be visible on desktop.
     await expect(
       page.getByRole("button", { name: /Open menu/i }),
     ).not.toBeVisible();
 
+    await expect(page.getByTestId("simulate-start-card")).toBeVisible();
+    await expect(page.getByTestId("sim-workbench-tabs")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-attacker")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-defender")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-results")).toBeVisible();
+    await expect(page.getByTestId("simulate-runbar")).toBeVisible();
+    await expect(page.getByTestId("optimize-panel")).toBeVisible();
+
+    await expect(
+      page.getByRole("button", { name: /Troops, tiers, heroes/i }).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Stat bonuses/i }).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /Buffs and debuffs/i }).first(),
+    ).toBeVisible();
+    await expect(page.getByText("Extra Buffs / Debuffs")).toHaveCount(0);
+    const infantryRow = page.getByTestId("sim-unit-row-attacker-infantry");
+    await expect(infantryRow).toBeVisible();
+    const infantryRowBox = await infantryRow.boundingBox();
+    expect(infantryRowBox).not.toBeNull();
+    expect(infantryRowBox?.height ?? 999).toBeLessThan(110);
+
     await page.getByLabel("Rally mode").first().check();
     await page
       .locator('select[aria-label="marksman hero"]')
       .first()
       .selectOption("Alonso");
+    await page.getByRole("button", { name: /Stat bonuses/i }).first().click();
     const preview = page.locator(
       '[data-testid="stat-preview-attacker-infantry-lethality"]',
     );
@@ -193,8 +365,8 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(preview).toContainText("[130]");
     await expect(preview).toContainText("+15.0%");
 
-    // Stat cells stay compact on desktop, keep the skill-4 preview stacked
-    // under the input, and remain wide enough to show 5-digit values.
+    // Stat cells keep the skill-4 preview stacked under the input, and remain
+    // wide enough to show 5-digit values.
     const infantryLethalityField = page
       .locator("label")
       .filter({ has: page.getByLabel("Infantry Lethality") })
@@ -219,7 +391,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
         headerText: header?.textContent?.trim() ?? null,
         inputType: input?.type ?? null,
         inputWidth: input?.getBoundingClientRect().width ?? 0,
-        fiveDigitTextWidth: context?.measureText("12345").width ?? 0,
+        decimalStatTextWidth: context?.measureText("1703.4").width ?? 0,
         padding,
         previewTop:
           preview && input
@@ -231,12 +403,513 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     expect(statLayout.headerText).toBe("Leth");
     expect(statLayout.inputType).toBe("text");
     expect(statLayout.inputWidth).toBeGreaterThan(
-      statLayout.fiveDigitTextWidth + statLayout.padding,
+      statLayout.decimalStatTextWidth + statLayout.padding,
     );
-    expect(statLayout.inputWidth).toBeLessThan(90);
     expect(statLayout.previewTop).not.toBeNull();
     expect((statLayout.previewTop ?? -1) + 0.5).toBeGreaterThanOrEqual(0);
 
     expect(errors).toHaveLength(0);
+  });
+
+  test("simulate roomy desktop uses setup and results tabs with side-by-side role panels", async ({
+    page,
+  }) => {
+    await page.setViewportSize(ROOMY_DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await expect(page.getByTestId("sim-workbench-tabs")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-setup")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-results")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-attacker")).toHaveCount(0);
+    await expect(page.getByTestId("sim-tab-defender")).toHaveCount(0);
+    await expect(page.getByTestId("sim-panel-setup")).toBeVisible();
+    await expect(page.getByTestId("sim-panel-results")).not.toBeVisible();
+
+    const attacker = page.getByTestId("side-section-attacker-preset");
+    const defender = page.getByTestId("side-section-defender-preset");
+    await expect(attacker).toBeVisible();
+    await expect(defender).toBeVisible();
+    const attackerBox = await attacker.boundingBox();
+    const defenderBox = await defender.boundingBox();
+    expect(attackerBox?.width ?? 0).toBeGreaterThanOrEqual(520);
+    expect(defenderBox?.width ?? 0).toBeGreaterThanOrEqual(520);
+    expect(Math.abs((attackerBox?.y ?? 0) - (defenderBox?.y ?? 0))).toBeLessThan(20);
+
+    await expect(page.getByTestId("simulate-runbar")).toBeVisible();
+    await expect(page.getByTestId("optimize-panel")).toBeVisible();
+    const actionsBox = await page.getByTestId("simulate-runbar").boundingBox();
+    const tabsBox = await page.getByTestId("sim-workbench-tabs").boundingBox();
+    const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
+    expect(actionsBox).not.toBeNull();
+    expect(tabsBox).not.toBeNull();
+    expect(dockBox).not.toBeNull();
+    expect(actionsBox?.y ?? 0).toBeGreaterThan(tabsBox?.y ?? 9999);
+    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(ROOMY_DESKTOP.height - 140);
+    await page.getByTestId("sim-tab-results").click();
+    await expect(page.getByTestId("sim-panel-results")).toBeVisible();
+    await expect(page.getByTestId("sim-panel-setup")).not.toBeVisible();
+    await expectNoVisibleElementOverflow(page);
+  });
+
+  test("simulate layout switches tabs at widths where role panels would be too narrow", async ({
+    page,
+  }) => {
+    for (const width of [375, 768, 1280, 1366, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      const response = await page.goto("/simulate");
+      expect(response?.status()).toBe(200);
+
+      await expect(page.getByTestId("sim-tab-attacker")).toBeVisible();
+      await expect(page.getByTestId("sim-tab-defender")).toBeVisible();
+      await expect(page.getByTestId("sim-tab-results")).toBeVisible();
+      await expect(page.getByTestId("sim-tab-setup")).toHaveCount(0);
+      await expect(
+        page.getByRole("heading", { name: "Attacker", exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: "Defender", exact: true }),
+      ).not.toBeVisible();
+      await expect(page.getByTestId("simulate-runbar")).toBeVisible();
+      await expect(page.getByTestId("optimize-panel")).toBeVisible();
+      await expectNoVisibleElementOverflow(page);
+    }
+  });
+
+  test("simulate desktop starts with compact command controls and one font system", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1600, height: 950 });
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const startCard = page.getByTestId("simulate-start-card");
+
+    const startBox = await startCard.boundingBox();
+    expect(startBox).not.toBeNull();
+    await expect(page.locator(".sim-page-title")).not.toBeVisible();
+    await expect(
+      page.getByText(/Start from a report or role presets/i),
+    ).not.toBeVisible();
+    expect(startBox?.y ?? 9999).toBeLessThanOrEqual(125);
+    expect(startBox?.height ?? 9999).toBeLessThanOrEqual(76);
+
+    const uploadBox = await page
+      .getByRole("button", { name: /^Upload report/i })
+      .boundingBox();
+    const rallyBox = await page.getByLabel("Rally mode").first().boundingBox();
+    const syncBox = await page
+      .getByLabel("Update stats on hero change")
+      .first()
+      .boundingBox();
+    expect(uploadBox).not.toBeNull();
+    expect(rallyBox).not.toBeNull();
+    expect(syncBox).not.toBeNull();
+    expect(uploadBox?.height ?? 9999).toBeLessThanOrEqual(42);
+    expect(rallyBox?.height ?? 9999).toBeLessThanOrEqual(38);
+    expect(syncBox?.height ?? 9999).toBeLessThanOrEqual(38);
+
+    const fonts = await page.evaluate(() => {
+      const workspace = document.querySelector(".simulate-workspace");
+      const titleEl = document.querySelector(".sim-page-title");
+      return {
+        body: getComputedStyle(document.body).fontFamily,
+        workspace: workspace ? getComputedStyle(workspace).fontFamily : null,
+        title: titleEl ? getComputedStyle(titleEl).fontFamily : null,
+      };
+    });
+    expect(fonts.workspace).toBe(fonts.body);
+    expect(fonts.title).toBe(fonts.body);
+  });
+
+  test("simulate desktop uses a bottom action dock below the workbench", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const runbarBox = await page.getByTestId("simulate-runbar").boundingBox();
+    const optimizeBox = await page.getByTestId("optimize-panel").boundingBox();
+    const tabsBox = await page.getByTestId("sim-workbench-tabs").boundingBox();
+    const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
+    expect(runbarBox).not.toBeNull();
+    expect(optimizeBox).not.toBeNull();
+    expect(tabsBox).not.toBeNull();
+    expect(dockBox).not.toBeNull();
+    expect(runbarBox?.y ?? 0).toBeGreaterThan(tabsBox?.y ?? 9999);
+    expect(optimizeBox?.y ?? 0).toBeGreaterThan(tabsBox?.y ?? 9999);
+    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(DESKTOP.height - 140);
+    expect((dockBox?.y ?? 0) + (dockBox?.height ?? 0)).toBeLessThanOrEqual(
+      DESKTOP.height,
+    );
+    expect(Math.abs((runbarBox?.y ?? 0) - (optimizeBox?.y ?? 9999))).toBeLessThanOrEqual(16);
+
+    const replicateBox = await page.getByLabel("Replicates").boundingBox();
+    expect(replicateBox).not.toBeNull();
+    expect(replicateBox?.width ?? 9999).toBeLessThanOrEqual(110);
+    const simulateColor = await page
+      .getByRole("button", { name: /^Simulate$/i })
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    const optimizeColor = await page
+      .getByRole("button", { name: /^Optimise ratio$/i })
+      .evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(simulateColor).not.toBe(optimizeColor);
+    await expect(page.getByRole("button", { name: "Grid" })).not.toBeVisible();
+    await page.getByTestId("optimize-options-toggle").click();
+    await expect(page.getByRole("button", { name: "Grid" })).toBeVisible();
+  });
+
+  test("simulate tablet start actions stay contained in the content column", async ({
+    page,
+  }) => {
+    await page.setViewportSize(TABLET);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const startCard = page.getByTestId("simulate-start-card");
+    const cardBox = await startCard.boundingBox();
+    expect(cardBox).not.toBeNull();
+
+    for (const control of [
+      page.getByRole("button", { name: "Upload report" }),
+      page.getByLabel("Rally mode").first(),
+      page.getByLabel("Update stats on hero change").first(),
+      page.getByTestId("recent-runs-toggle"),
+    ]) {
+      const box = await control.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box?.x ?? 0).toBeGreaterThanOrEqual((cardBox?.x ?? 0) - 1);
+      expect((box?.x ?? 0) + (box?.width ?? 0)).toBeLessThanOrEqual(
+        (cardBox?.x ?? 0) + (cardBox?.width ?? 0) + 1,
+      );
+    }
+  });
+
+  test("simulate section controls expose clear accordion actions and unclipped option text", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1600, height: 950 });
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const troopsButton = page
+      .getByRole("button", { name: /Troops, tiers, heroes/i })
+      .first();
+    await expect(troopsButton).toContainText("Close");
+
+    const buffsButton = page
+      .getByRole("button", { name: /Buffs and debuffs/i })
+      .first();
+    await buffsButton.click();
+    await expect(buffsButton).toContainText("Close");
+    await expect(troopsButton).toContainText("Open");
+
+    for (const testId of [
+      "city-modifier-attacker-0",
+      "city-modifier-attacker-10",
+      "city-modifier-attacker-20",
+      "pet-modifier-attacker-toggle",
+    ]) {
+      const clipped = await page.getByTestId(testId).evaluate((el) => {
+        return el.scrollWidth > el.clientWidth + 1;
+      });
+      expect(clipped).toBe(false);
+    }
+  });
+
+  test("simulate collapsed sections keep readable setup summaries", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const statsButton = page
+      .getByRole("button", { name: /Stat bonuses/i })
+      .first();
+    await statsButton.click();
+    await page.getByLabel("Infantry Attack").first().fill("1703.4");
+    await statsButton.click();
+
+    const statsSection = page.getByTestId("side-section-attacker-stats");
+    await expect(statsSection.getByTestId("stat-bonus-summary-matrix")).toBeVisible();
+    await expect(
+      statsSection.getByTestId("stat-bonus-summary-matrix").locator(".sim-summary-name").first(),
+    ).toHaveText("I");
+    await expect(statsSection).toContainText("Atk");
+    await expect(statsSection).toContainText("1703.4");
+    await expect(statsSection).toContainText("Def");
+    await expect(statsSection).toContainText("100");
+
+    const troopsSection = page.getByTestId("side-section-attacker-troops");
+    await expect(troopsSection).toContainText("Infantry");
+    await expect(troopsSection).toContainText("1,000");
+    await expect(troopsSection).toContainText("t6");
+    await expect(troopsSection).toContainText("None");
+    await expect(troopsSection).not.toContainText("0/0/0/0");
+
+    const buffsSection = page.getByTestId("side-section-attacker-buffs");
+    await expect(buffsSection).toContainText("City 0 active");
+    await expect(buffsSection).toContainText("Pets 0 active");
+    await expect(buffsSection.locator(".sim-preview-pill")).toHaveCount(0);
+
+    const summaryStyling = await page
+      .locator(".sim-summary-row:not(.sim-summary-head), .sim-summary-line")
+      .evaluateAll((rows) =>
+        rows.map((row) => {
+          const style = getComputedStyle(row as HTMLElement);
+          return {
+            borderTopWidth: style.borderTopWidth,
+            backgroundColor: style.backgroundColor,
+          };
+        }),
+      );
+    expect(summaryStyling.length).toBeGreaterThan(0);
+    expect(summaryStyling).toEqual(
+      summaryStyling.map(() => ({
+        borderTopWidth: "0px",
+        backgroundColor: "rgba(0, 0, 0, 0)",
+      })),
+    );
+  });
+
+  test("simulate toast does not cover top action controls", async ({ page }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const hero = page.getByLabel("infantry hero").first();
+    await hero.selectOption({ index: 1 });
+    const toast = page.getByRole("status");
+    await expect(toast).toBeVisible();
+
+    const boxes = await page.evaluate(() => {
+      const rect = (selector: string) => {
+        const el = document.querySelector(selector);
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return {
+          left: r.left,
+          top: r.top,
+          right: r.right,
+          bottom: r.bottom,
+        };
+      };
+      const overlaps = (a: ReturnType<typeof rect>, b: ReturnType<typeof rect>) =>
+        Boolean(
+          a &&
+            b &&
+            a.left < b.right &&
+            a.right > b.left &&
+            a.top < b.bottom &&
+            a.bottom > b.top,
+        );
+      return {
+        toastVsStart: overlaps(rect('[role="status"]'), rect('[data-testid="simulate-start-card"]')),
+        toastVsRun: overlaps(rect('[role="status"]'), rect('[data-testid="simulate-runbar"]')),
+        toastVsOptimize: overlaps(rect('[role="status"]'), rect('[data-testid="optimize-panel"]')),
+      };
+    });
+    expect(boxes.toastVsStart).toBe(false);
+    expect(boxes.toastVsRun).toBe(false);
+    expect(boxes.toastVsOptimize).toBe(false);
+  });
+
+  test("simulate stat summary shows effective buffed and debuffed values", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.getByRole("button", { name: /Buffs and debuffs/i }).first().click();
+    await page.getByTestId("city-modifier-attacker-20").click();
+    await page.getByTestId("pet-modifier-attacker-toggle").click();
+    await page.getByRole("button", { name: /Buffs and debuffs/i }).first().click();
+
+    const statsSection = page.getByTestId("side-section-attacker-stats");
+    const matrix = statsSection.getByTestId("stat-bonus-summary-matrix");
+    await expect(matrix).toBeVisible();
+    await expect(matrix).toContainText("160");
+    await expect(matrix).toContainText("(+60");
+    await expect(matrix.locator(".sim-value-up").first()).toBeVisible();
+    await expect(page.getByTestId("side-section-attacker-buffs")).toContainText(
+      /City [1-9]/,
+    );
+  });
+
+  test("simulate mobile stat summary uses compact row labels without value overlap", async ({
+    page,
+  }) => {
+    await page.setViewportSize(IPHONE_SE);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.getByRole("button", { name: /Buffs and debuffs/i }).first().click();
+    await page.getByTestId("city-modifier-attacker-20").click();
+    await page.getByTestId("pet-modifier-attacker-toggle").click();
+    await page.getByRole("button", { name: /Buffs and debuffs/i }).first().click();
+
+    const matrix = page
+      .getByTestId("side-section-attacker-stats")
+      .getByTestId("stat-bonus-summary-matrix");
+    await expect(matrix).toBeVisible();
+    await expect(matrix.locator(".sim-summary-name").nth(0)).toHaveText("I");
+    await expect(matrix.locator(".sim-summary-name").nth(1)).toHaveText("L");
+    await expect(matrix.locator(".sim-summary-name").nth(2)).toHaveText("M");
+
+    const overlaps = await matrix.evaluate((el) => {
+      const visibleRows = Array.from(
+        el.querySelectorAll<HTMLElement>(".sim-stat-summary-row"),
+      ).filter((row) => row.getBoundingClientRect().width > 0);
+      return visibleRows.flatMap((row) => {
+        const cells = Array.from(row.children).map((cell) => {
+          const rect = cell.getBoundingClientRect();
+          return {
+            left: rect.left,
+            right: rect.right,
+            text: cell.textContent?.trim() ?? "",
+          };
+        });
+        const rowOverlaps: { left: string; right: string }[] = [];
+        for (let i = 0; i < cells.length - 1; i += 1) {
+          if (cells[i].right > cells[i + 1].left - 1) {
+            rowOverlaps.push({
+              left: cells[i].text,
+              right: cells[i + 1].text,
+            });
+          }
+        }
+        return rowOverlaps;
+      });
+    });
+    expect(overlaps).toEqual([]);
+  });
+
+  test("troop count inputs select on focus and keep rapid zero-containing typing", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const troopCount = page
+      .locator('input[aria-label="infantry troop count"]')
+      .first();
+    await expect(troopCount).toHaveValue("1000");
+
+    await troopCount.click();
+    await page.keyboard.type("10");
+
+    await expect(troopCount).toHaveValue("10");
+
+    await page.keyboard.press("Tab");
+    const lancerCount = page
+      .locator('input[aria-label="lancer troop count"]')
+      .first();
+    await expect(lancerCount).toBeFocused();
+    await page.keyboard.type("20");
+    await expect(lancerCount).toHaveValue("20");
+  });
+
+  test("simulate role setup stays contained on wide desktop", async ({
+    page,
+  }) => {
+    await page.setViewportSize(WIDE_DESKTOP);
+
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    const overflow = await page.evaluate(() => {
+      const doc = document.documentElement;
+      return {
+        scrollWidth: doc.scrollWidth,
+        clientWidth: doc.clientWidth,
+      };
+    });
+    expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
+
+    for (const side of ["attacker", "defender"] as const) {
+      const section = page.getByTestId(`side-section-${side}-troops`);
+      const sectionBox = await section.boundingBox();
+      expect(sectionBox).not.toBeNull();
+
+      for (const cat of ["infantry", "lancer", "marksman"] as const) {
+        const row = page.getByTestId(`sim-unit-row-${side}-${cat}`);
+        await expect(row).toBeVisible();
+        const rowBox = await row.boundingBox();
+        expect(rowBox).not.toBeNull();
+        expect((rowBox?.x ?? 0) + (rowBox?.width ?? 0)).toBeLessThanOrEqual(
+          (sectionBox?.x ?? 0) + (sectionBox?.width ?? 0) + 1,
+        );
+        expect(rowBox?.x ?? 0).toBeGreaterThanOrEqual((sectionBox?.x ?? 0) - 1);
+
+        const descendantBounds = await row.evaluate((el) => {
+          const rects = Array.from(
+            el.querySelectorAll<HTMLElement>("input, select, label, span"),
+          ).map((child) => child.getBoundingClientRect());
+          return {
+            left: Math.min(...rects.map((rect) => rect.left)),
+            right: Math.max(...rects.map((rect) => rect.right)),
+          };
+        });
+        expect(descendantBounds.left).toBeGreaterThanOrEqual(
+          (sectionBox?.x ?? 0) - 1,
+        );
+        expect(descendantBounds.right).toBeLessThanOrEqual(
+          (sectionBox?.x ?? 0) + (sectionBox?.width ?? 0) + 1,
+        );
+      }
+    }
+    await expectNoVisibleElementOverflow(page);
+  });
+
+  test("bear sim uses setup/results tabs and contains army rows", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/bear");
+    expect(response?.status()).toBe(200);
+
+    await expect(page.getByTestId("bear-start-card")).toBeVisible();
+    await expect(page.getByTestId("bear-tab-setup")).toBeVisible();
+    await expect(page.getByTestId("bear-tab-results")).toBeVisible();
+    await expect(page.getByTestId("bear-panel-setup")).toBeVisible();
+    await expect(page.getByTestId("bear-panel-results")).not.toBeVisible();
+    await expect(page.getByRole("button", { name: "Upload report" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Player army" })).toBeVisible();
+    await expect(page.getByText("Run bear sim")).toBeVisible();
+    const bearRunBox = await page.getByText("Run bear sim").boundingBox();
+    const bearTabsBox = await page.getByTestId("bear-tab-setup").boundingBox();
+    const bearDockBox = await page.getByTestId("bear-top-actions").boundingBox();
+    expect(bearRunBox).not.toBeNull();
+    expect(bearTabsBox).not.toBeNull();
+    expect(bearDockBox).not.toBeNull();
+    expect(bearRunBox?.y ?? 0).toBeGreaterThan(bearTabsBox?.y ?? 9999);
+    expect(bearDockBox?.y ?? 0).toBeGreaterThanOrEqual(DESKTOP.height - 150);
+
+    const panelBox = await page.locator(".bear-army-panel").boundingBox();
+    const rowBox = await page
+      .getByTestId("sim-unit-row-attacker-infantry")
+      .boundingBox();
+    expect(panelBox).not.toBeNull();
+    expect(rowBox).not.toBeNull();
+    expect(panelBox?.width ?? 9999).toBeLessThanOrEqual(880);
+    expect((rowBox?.x ?? 0) + (rowBox?.width ?? 0)).toBeLessThanOrEqual(
+      (panelBox?.x ?? 0) + (panelBox?.width ?? 0) + 1,
+    );
+
+    const overflow = await page.evaluate(() => {
+      const doc = document.documentElement;
+      return { scrollWidth: doc.scrollWidth, clientWidth: doc.clientWidth };
+    });
+    expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
+
+    await page.getByTestId("bear-tab-results").click();
+    await expect(page.getByTestId("bear-panel-results")).toBeVisible();
+    await expect(page.getByTestId("bear-panel-setup")).not.toBeVisible();
+    await expect(page.getByText("Run bear sim")).toBeVisible();
+    await expectNoVisibleElementOverflow(page);
   });
 });

@@ -1,0 +1,578 @@
+<style>
+  :root {
+    --bg: #11131c;
+    --panel: #1b1d2a;
+    --panel-2: #252839;
+    --line: rgba(205, 214, 244, 0.16);
+    --text: #cdd6f4;
+    --muted: #9399b2;
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --yellow: #f9e2af;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 22px;
+  }
+  h1 {
+    margin: 0 0 8px;
+    color: var(--blue);
+    font-size: 22px;
+  }
+  .subtitle {
+    margin: 0 0 18px;
+    max-width: 920px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(360px, 0.8fr) minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 1050px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .mock {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    overflow: hidden;
+  }
+  .mock-head {
+    border-bottom: 1px solid var(--line);
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+  }
+  .mock-head h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .tag {
+    border: 1px solid rgba(137, 180, 250, 0.35);
+    border-radius: 999px;
+    color: var(--blue);
+    padding: 4px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .mock-body {
+    padding: 12px;
+  }
+  .phone {
+    width: min(100%, 390px);
+    margin: 0 auto;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: #0f111a;
+    overflow: hidden;
+    min-height: 780px;
+  }
+  .desktop {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #0f111a;
+    overflow: hidden;
+    min-height: 780px;
+  }
+  .topbar {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .menu {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    color: var(--blue);
+  }
+  .content {
+    padding: 12px;
+  }
+  .global-actions {
+    border: 1px solid rgba(137, 180, 250, 0.28);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+  }
+  .label {
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+  }
+  .upload-button {
+    border: 1px solid var(--blue);
+    border-radius: 8px;
+    background: rgba(137, 180, 250, 0.15);
+    min-height: 64px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .upload-button b {
+    color: var(--text);
+    font-size: 13px;
+  }
+  .upload-button span {
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.4;
+    margin-top: 5px;
+  }
+  .toggle-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .toggle {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel-2);
+    min-height: 46px;
+    padding: 8px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+  .switch {
+    width: 30px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--blue);
+    position: relative;
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: #11131c;
+  }
+  .toggle b {
+    display: block;
+    font-size: 10px;
+    color: var(--text);
+  }
+  .toggle span {
+    display: block;
+    font-size: 8px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 12px 0 10px;
+  }
+  .tab {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--muted);
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .tab.active {
+    background: var(--blue);
+    color: #11131c;
+    border-color: var(--blue);
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    padding: 10px;
+    margin-bottom: 9px;
+  }
+  .preset-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 6px;
+    align-items: center;
+  }
+  .select {
+    border-radius: 7px;
+    background: #10131d;
+    border: 1px solid var(--line);
+    min-height: 38px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    font-size: 10px;
+  }
+  .small-btn {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel-2);
+    color: var(--text);
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0 8px;
+    font-size: 10px;
+    font-weight: 900;
+  }
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .field {
+    border-radius: 7px;
+    background: var(--panel-2);
+    min-height: 44px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .field b {
+    font-size: 11px;
+    color: var(--text);
+  }
+  .field span {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 9px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+  .stat {
+    border-radius: 6px;
+    background: var(--panel-2);
+    min-height: 36px;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    font-size: 10px;
+  }
+  .joiner-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+  .folded {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+    min-height: 38px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .runbar {
+    position: sticky;
+    bottom: 0;
+    border-top: 1px solid var(--line);
+    background: rgba(27, 29, 42, 0.98);
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .reps {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #0f111a;
+    padding: 9px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .run {
+    border-radius: 7px;
+    background: var(--blue);
+    color: #11131c;
+    padding: 10px 13px;
+    font-size: 12px;
+    font-weight: 900;
+  }
+  .modal-backdrop {
+    background: rgba(0,0,0,0.55);
+    min-height: 780px;
+    padding: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal {
+    width: min(100%, 560px);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+    box-shadow: 0 24px 70px rgba(0,0,0,0.55);
+    padding: 14px;
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .modal-head h3 {
+    margin: 0;
+    color: var(--blue);
+    font-size: 15px;
+  }
+  .dropzone {
+    border: 1px dashed rgba(137, 180, 250, 0.7);
+    border-radius: 8px;
+    min-height: 320px;
+    padding: 14px;
+    display: flex;
+    align-items: end;
+    background:
+      linear-gradient(rgba(15, 17, 26, 0.50), rgba(15, 17, 26, 0.86)),
+      linear-gradient(135deg, rgba(137, 180, 250, 0.22), transparent 32%),
+      radial-gradient(circle at 26% 20%, rgba(166, 227, 161, 0.18), transparent 18%),
+      #0f111a;
+    position: relative;
+    overflow: hidden;
+  }
+  .sample-report {
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 7px;
+    opacity: 0.72;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 10px;
+    color: rgba(205, 214, 244, 0.72);
+  }
+  .sample-armies {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .sample-army {
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 8px;
+  }
+  .drop-copy {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    border-radius: 7px;
+    background: rgba(17, 19, 28, 0.86);
+    padding: 12px;
+  }
+  .drop-copy b {
+    display: block;
+    color: var(--text);
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  .drop-copy span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .modal-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .modal-action {
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    min-height: 40px;
+    display: grid;
+    place-items: center;
+    background: var(--panel-2);
+    font-size: 10px;
+    font-weight: 900;
+  }
+</style>
+
+<div class="page">
+  <h1>Simulator v4: Global Upload, Role Presets, Required Setup Visible</h1>
+  <p class="subtitle">
+    Updated from your feedback: use "Upload report"; keep report upload global because it contains both armies; put load/save preset controls inside Attacker and Defender; keep stats and joiners visible because they are required setup; start buffs folded.
+  </p>
+
+  <div class="grid">
+    <section class="mock">
+      <div class="mock-head">
+        <h2>Mobile Attacker Tab</h2>
+        <span class="tag">Report global, presets role-specific</span>
+      </div>
+      <div class="mock-body">
+        <div class="phone">
+          <div class="topbar">
+            <span>Battle Sim</span>
+            <div class="menu">☰</div>
+          </div>
+          <div class="content">
+            <section class="global-actions">
+              <div class="label">Start from report</div>
+              <div class="upload-button">
+                <b>Upload report</b>
+                <span>OCR both armies from one battle report. Drag, choose, or paste in the upload modal.</span>
+              </div>
+              <div class="toggle-row">
+                <div class="toggle">
+                  <div class="switch"></div>
+                  <div><b>Rally mode</b><span>Joiners and skill 4 active</span></div>
+                </div>
+                <div class="toggle">
+                  <div class="switch"></div>
+                  <div><b>Sync hero stats</b><span>Update stats on hero swap</span></div>
+                </div>
+              </div>
+            </section>
+
+            <div class="tabs">
+              <div class="tab active">Attacker</div>
+              <div class="tab">Defender</div>
+              <div class="tab">Results</div>
+            </div>
+
+            <section class="card">
+              <div class="label">Attacker preset</div>
+              <div class="preset-row">
+                <div class="select">Duel attack preset</div>
+                <div class="small-btn">Load</div>
+                <div class="small-btn">Save</div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="label">Troops and heroes</div>
+              <div class="summary">
+                <div class="field"><b>1,000</b><span>Inf T6 / Flint</span></div>
+                <div class="field"><b>1,000</b><span>Lancer T6 / Mia</span></div>
+                <div class="field"><b>1,000</b><span>Marks T6 / Bahiti</span></div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="label">Stat bonuses</div>
+              <div class="stats-grid">
+                <div class="stat">Atk 100</div>
+                <div class="stat">Def 100</div>
+                <div class="stat">Leth 100</div>
+                <div class="stat">HP 100</div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="label">Joiners</div>
+              <div class="joiner-row">
+                <div class="field"><b>1</b><span>None</span></div>
+                <div class="field"><b>2</b><span>None</span></div>
+                <div class="field"><b>3</b><span>None</span></div>
+                <div class="field"><b>4</b><span>None</span></div>
+              </div>
+            </section>
+
+            <section class="card">
+              <div class="folded">
+                <span>Buffs and debuffs start folded</span>
+                <span class="small-btn">Edit</span>
+              </div>
+            </section>
+          </div>
+          <div class="runbar">
+            <div class="reps">Replicates: 1000</div>
+            <div class="run">Simulate</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mock">
+      <div class="mock-head">
+        <h2>Upload Report Modal</h2>
+        <span class="tag">Example shown inside target</span>
+      </div>
+      <div class="mock-body">
+        <div class="desktop">
+          <div class="modal-backdrop">
+            <div class="modal">
+              <div class="modal-head">
+                <div>
+                  <h3>Upload report</h3>
+                  <p class="subtitle" style="margin:5px 0 0">Use a report image that shows both armies and stat bonuses.</p>
+                </div>
+                <div class="menu">×</div>
+              </div>
+              <div class="dropzone">
+                <div class="sample-report">
+                  <div>Example battle report</div>
+                  <div class="sample-armies">
+                    <div class="sample-army">
+                      <div class="label">Attacker</div>
+                      <div>Infantry / Lancer / Marksman</div>
+                      <div>Heroes + stat bonuses</div>
+                    </div>
+                    <div class="sample-army">
+                      <div class="label">Defender</div>
+                      <div>Infantry / Lancer / Marksman</div>
+                      <div>Heroes + stat bonuses</div>
+                    </div>
+                  </div>
+                  <div>Make sure troops, heroes, and stat lines are visible.</div>
+                </div>
+                <div class="drop-copy">
+                  <b>Drop report here, tap to choose, or paste into this area</b>
+                  <span>The example remains as the background until a file or pasted image is provided. After OCR, the modal previews attacker and defender values before applying them.</span>
+                </div>
+              </div>
+              <div class="modal-actions">
+                <div class="modal-action">Choose file</div>
+                <div class="modal-action">Paste image</div>
+                <div class="modal-action">Use OCR</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
