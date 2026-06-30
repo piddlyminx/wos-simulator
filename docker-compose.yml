@@ -2,11 +2,10 @@
 #
 # Services:
 #   - app:         Next.js dev server with live reload. The host's
-#                  dashboard/web/ directory is bind-mounted into the container
-#                  so source edits are picked up without any image rebuild.
-#                  /app/node_modules and /app/.next are named-volume overlays
-#                  so the container-built native modules (better-sqlite3) and
-#                  Next cache don't fight the host filesystem.
+#                  repo subtrees are bind-mounted under /repo so source edits
+#                  are picked up without any image rebuild. Node dependencies
+#                  come from the image at /repo/node_modules; only the Next
+#                  build cache is a writable volume.
 #
 # See docker-compose.env.example for optional local settings.
 
@@ -15,13 +14,14 @@ services:
     build:
       context: .
       dockerfile: dashboard/web/Dockerfile
+      target: dev
     image: wos-simulator-dashboard:dev
     restart: unless-stopped
-    # The entrypoint repairs named-volume ownership, then drops to the node user
-    # (uid 1000) so bind-mounted outputs remain writable from the WSL shell.
+    entrypoint: ["/bin/sh", "/repo/dashboard/web/docker-entrypoint.sh"]
+    command: ["npm", "run", "dev:docker", "--", "--hostname", "0.0.0.0", "--port", "3000"]
     environment:
       NODE_ENV: development
-      DB_PATH: /data/test_results/dashboard.sqlite
+      DB_PATH: /repo/test_results/dashboard.sqlite
       SIM_RUNS_DIR: /data/simulations
       STAT_PRESETS_FILE: /data/stat-presets/player-stat-presets.json
       # Watcher polling for WSL2/SMB/NFS-backed mounts where native inotify can
@@ -29,52 +29,28 @@ services:
       NEXT_WATCH_POLL_INTERVAL_MS: ${NEXT_WATCH_POLL_INTERVAL_MS:-1000}
       WATCHPACK_POLLING: ${WATCHPACK_POLLING:-true}
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING:-true}
+    tmpfs:
+      # Hide host dashboard/web/node_modules from the ./dashboard bind mount.
+      # Node then walks up to the image-managed /repo/node_modules tree.
+      - /repo/dashboard/web/node_modules
     volumes:
-      # Live bind mount of the source tree. Edits on disk -> Next dev reload in
-      # the container.
-      - ./dashboard/web:/app
-      # Browser-side worker imports @v3/*, which resolves to /simulator/src in
-      # the container because the dashboard app is mounted at /app (the @v3
-      # alias target is ../../simulator/src).
-      - ./simulator/src:/simulator/src:ro
-      - ./simulator/config:/simulator/config:ro
-      # Named-volume overlays: keep container-built node_modules and the Next
-      # cache out of the host tree.
-      - wos_node_modules:/app/node_modules
-      - wos_next_cache:/app/.next
+      # Keep the same relative repo layout as host and production containers.
+      - ./dashboard:/repo/dashboard:ro
+      - ./scripts:/repo/scripts:ro
+      - ./skill:/repo/skill:ro
+      - ./simulator:/repo/simulator:ro
+      - ./testcases:/repo/testcases:ro
+      - ./test_results:/repo/test_results:rw
+      - ./shared/fighters_data:/repo/shared/fighters_data
+      # Next dev needs a writable cache under the app directory.
+      - wos_next_cache:/repo/dashboard/web/.next
+      # Check Now writes fresh parity reports under simulator/testcase_results.
+      - ./simulator/testcase_results:/repo/simulator/testcase_results:rw
       # Host-backed simulation stores. Point these at an sshfs/shared mount in
       # the ignored root .env when you want Docker dev and host dev to share
       # the same saved runs and stat presets.
       - ${SIM_RUNS_DIR:-./tmp/simulate-runs}:/data/simulations
       - ${STAT_PRESETS_DIR:-./tmp/stat-presets}:/data/stat-presets
-      # Read-write DB mount (required for -shm / -wal siblings).
-      - ./test_results:/data/test_results:rw
-      # The dashboard's "Import report" route spawns dashboard/ocr_report.py
-      # inside the container (REPO_ROOT = cwd/../.. = /). Mount the host
-      # dashboard/ tree read-only at /dashboard so the route can reach it.
-      # The parser delegates to the imported agent skill under /skill.
-      - ./dashboard:/dashboard:ro
-      - ./skill:/skill:ro
-      # Python testcase/check utilities still need the simulator support trees.
-      # The browser simulate page does not call Python compute endpoints.
-      - ./archived/v1/Base_classes:/archived/v1/Base_classes:ro
-      - ./archived/v1/assets:/archived/v1/assets:ro
-      # fighters_data is NOT mounted :ro because JsonUtil.load_fighters_data
-      # opens these files with 'r+' (it only reads, but the fd demands write
-      # access). The simulator does not actually write here, so the host
-      # files stay unchanged in practice.
-      - ./shared/fighters_data:/shared/fighters_data
-      # The "Check now" button spawns archived/v1/check_testcases.py via
-      # dashboard/check_now.py. In the container, REPO_ROOT resolves to /
-      # (cwd==/app, ../.. == /), so the legacy simulator and its dependencies
-      # must be accessible at those paths.
-      - ./archived/v1/check_testcases.py:/archived/v1/check_testcases.py:ro
-      - ./testcases:/testcases:ro
-      # Also mount test_results at / so check_testcases.py can write run JSON
-      # and ingest.py can find dashboard.sqlite (both use relative path
-      # test_results/ from REPO_ROOT=/). The /data/test_results mount remains
-      # for the Next.js server's DB_PATH env var.
-      - ./test_results:/test_results:rw
     expose:
       - "3000"
     # Optional local access without going through the tunnel.
@@ -82,5 +58,4 @@ services:
       - "${APP_PORT:-3000}:3000"
 
 volumes:
-  wos_node_modules:
   wos_next_cache:

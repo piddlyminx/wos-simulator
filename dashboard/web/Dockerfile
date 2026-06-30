@@ -1,22 +1,15 @@
 # syntax=docker/dockerfile:1.7
 #
-# Dev-mode image for the WOS simulator dashboard.
+# Unified dashboard image for development and production.
 #
-# docker-compose bind-mounts dashboard/web/ over /app so on-disk edits are
-# picked up by the Next.js dev server with no image rebuild. The image itself
-# only exists to pre-install node_modules (including the native better-sqlite3
-# build) and provide the dev command — everything under /app is expected to be
-# replaced by the host bind mount at runtime.
-#
-# The dashboard spawns the report-stats parser for the import flow. Battle
-# simulation and ratio optimisation run in the browser via the TypeScript
-# web worker (simulator/), so this image no longer hosts Python simulate
-# endpoints. compose mounts the host dashboard/, simulator/, skill/, and shared/
-# trees at the matching container paths so scripts can reach them. A dedicated
-# /opt/sim-venv holds the Python deps for OCR/import helpers.
+# Both targets keep the app at /repo/dashboard/web and install dependencies at
+# /repo/node_modules. Dev bind mounts can replace repo source trees without
+# shadowing node_modules; package-lock changes are picked up by rebuilding the
+# image.
 
-FROM node:20-bookworm-slim
-WORKDIR /app
+FROM node:20-bookworm-slim AS base
+
+WORKDIR /repo
 
 # better-sqlite3 is a native module; node-gyp needs python + a C++ toolchain.
 # RapidOCR/ONNX Runtime/OpenCV are needed for the OCR flow. A dedicated
@@ -43,24 +36,72 @@ RUN python3 -m venv /opt/sim-venv \
  && /opt/sim-venv/bin/uv pip install --python /opt/sim-venv/bin/python \
       --no-deps --reinstall "opencv-python-headless==4.13.0.92" \
  && rapidocr_models=$(/opt/sim-venv/bin/python -c 'from pathlib import Path; import rapidocr; print(Path(rapidocr.__file__).parent / "models")') \
- && chown -R node:node "$rapidocr_models"
+ && chown -R node:node "$rapidocr_models" \
+ && chmod -R a+rwX "$rapidocr_models"
+
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    SIMULATOR_PYTHON=/opt/sim-venv/bin/python \
+    NODE_PATH=/repo/node_modules \
+    PATH=/repo/node_modules/.bin:$PATH
+
+FROM base AS deps
 
 COPY dashboard/web/package.json dashboard/web/package-lock.json ./
-COPY dashboard/web/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN npm ci --no-audit --no-fund
 
-RUN mkdir -p /app/.next /data/simulations /data/test_results /test_results \
- && chown -R node:node /app /data /test_results \
- && chmod +x /usr/local/bin/docker-entrypoint.sh
+FROM deps AS dev
+
+WORKDIR /repo/dashboard/web
+
+COPY dashboard /repo/dashboard
+COPY scripts /repo/scripts
+COPY skill /repo/skill
+COPY simulator /repo/simulator
+COPY testcases /repo/testcases
+COPY shared/fighters_data /repo/shared/fighters_data
+
+RUN mkdir -p \
+      /repo/dashboard/web/.next \
+      /repo/simulator/testcase_results \
+      /repo/test_results \
+      /data/simulations \
+      /data/stat-presets \
+      /test_results \
+ && chown -R node:node \
+      /repo/dashboard/web/.next \
+      /repo/simulator/testcase_results \
+      /repo/test_results \
+      /data \
+      /test_results
+
+ENV NODE_ENV=development
 
 USER node
 
-RUN npm ci --no-audit --no-fund
-
-ENV NODE_ENV=development \
-    NEXT_TELEMETRY_DISABLED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    SIMULATOR_PYTHON=/opt/sim-venv/bin/python
-
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/repo/dashboard/web/docker-entrypoint.sh"]
 EXPOSE 3000
 CMD ["npm", "run", "dev:docker", "--", "--hostname", "0.0.0.0", "--port", "3000"]
+
+FROM deps AS prod-build
+
+WORKDIR /repo/dashboard/web
+
+# Keep the same relative repo layout in the image that local builds use.
+COPY dashboard /repo/dashboard
+COPY simulator/src /repo/simulator/src
+COPY simulator/config /repo/simulator/config
+
+ENV NODE_ENV=production
+
+RUN npm run build
+
+FROM prod-build AS prod
+
+RUN mkdir -p /data/simulations /data/test_results /test_results \
+ && chown -R node:node /data /test_results
+
+USER node
+
+EXPOSE 3000
+CMD ["npm", "run", "start", "--", "--hostname", "0.0.0.0", "--port", "3000"]

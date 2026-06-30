@@ -10,7 +10,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: dashboard/web/Dockerfile.prod
+      dockerfile: dashboard/web/Dockerfile
+      target: prod
     image: ${WOS_SIM_IMAGE:-wos-simulator-dashboard:prod}
     user: "${WOS_SIM_UID:-1000}:${WOS_SIM_GID:-1000}"
     restart: unless-stopped

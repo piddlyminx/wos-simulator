@@ -6,12 +6,21 @@ __pycache__
 
 dashboard/web/node_modules
 dashboard/web/.next
+dashboard/web/.next-*
+dashboard/web/.next-user
 dashboard/web/.turbo
 dashboard/web/test-results
 dashboard/web/playwright-report
 dashboard/web/*.tsbuildinfo
 
+simulator/node_modules
+simulator/testcase_results
+
+skill/tmp
+skill/logs
+
 test-results
+test_results
 tmp
 
 .env

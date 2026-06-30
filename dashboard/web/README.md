@@ -51,13 +51,16 @@ picked up even when native file notifications are unreliable. Set
 `CHOKIDAR_USEPOLLING=false` in `.env` to disable polling on native Linux
 filesystems.
 
-The Docker dev app uses named volumes for `/app/node_modules` and `/app/.next`.
-Saved simulation runs are host bind mounts, configured by `SIM_RUNS_DIR` in the
-ignored repo-root `.env`. Point that path at a trusted shared mount when Docker
-dev and host dev should use the same saved-run store. If the shared mount is
-FUSE-backed, Docker must be allowed to read it from the daemon side; for sshfs
-that usually means mounting with `allow_other` on a host where `/etc/fuse.conf`
-enables `user_allow_other`.
+The Docker dev app bind-mounts repo subtrees under `/repo` while keeping
+container-built dependencies in the image at `/repo/node_modules`. Rebuild the
+image after `package.json` or `package-lock.json` changes. Only the Next dev
+cache at `/repo/dashboard/web/.next` is a named volume. Saved simulation runs
+are host bind mounts, configured by `SIM_RUNS_DIR` in the ignored repo-root
+`.env`. Point that path at a trusted shared mount when Docker dev and host dev
+should use the same saved-run store. If the shared mount is FUSE-backed, Docker
+must be allowed to read it from the daemon side; for sshfs that usually means
+mounting with `allow_other` on a host where `/etc/fuse.conf` enables
+`user_allow_other`.
 
 Do not run a second `docker compose run app ...` container while the live app
 is up, because two Next dev servers sharing the same `.next` volume can corrupt
@@ -78,7 +81,8 @@ docker volume rm wos-simulator_wos_next_cache
 docker compose up -d app
 ```
 
-This preserves `wos_node_modules` and the host-backed saved-run store.
+This preserves the image-managed dependency tree and the host-backed saved-run
+store.
 
 When the Docker dev app is already running, verify dashboard source/UI changes
 directly at `http://localhost:3000`. The bind mount plus polling watcher should

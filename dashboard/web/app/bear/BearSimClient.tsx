@@ -979,7 +979,7 @@ export default function BearSimClient({
       </div>
       </div>
 
-      <div className="sim-top-actions" data-testid="bear-top-actions">
+      <div className="sim-top-actions bear-action-dock" data-testid="bear-top-actions">
         <div className="sim-action-card sim-action-card-run">
           <div className="sim-runbar mb-4 sm:mb-6" data-testid="bear-runbar">
             <label className="flex min-w-0 flex-col gap-1">
@@ -1107,7 +1107,7 @@ export default function BearSimClient({
       </div>
 
       <div
-        className={`${workspaceTab === "results" ? "block" : "hidden"} sim-panel-results-shell`}
+        className={`${workspaceTab === "results" ? "block" : "hidden"} sim-panel-results-shell bear-results-panel`}
         data-testid="bear-panel-results"
       >
         {!result && !optimizeResult ? (
@@ -1170,7 +1170,7 @@ export default function BearSimClient({
 
       {result && (
         <div
-          className={`${workspaceTab === "results" ? "block" : "hidden"} sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
+          className={`${workspaceTab === "results" ? "block" : "hidden"} sim-tool-panel sim-panel-results-shell bear-results-panel mb-6 p-3 sm:p-4`}
         >
           <h3 className="mb-3 text-sm font-bold opacity-70">Results ({result.replicates} replicates)</h3>
           <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
@@ -1198,7 +1198,7 @@ export default function BearSimClient({
 
       {optimizeResult && (
         <div
-          className={`${workspaceTab === "results" ? "block" : "hidden"} sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
+          className={`${workspaceTab === "results" ? "block" : "hidden"} sim-tool-panel sim-panel-results-shell bear-results-panel mb-6 p-3 sm:p-4`}
           data-testid="bear-optimize-results"
         >
           <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">

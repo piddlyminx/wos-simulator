@@ -24,7 +24,7 @@ the host.
 
 ## Relevant Files
 
-- `dashboard/web/Dockerfile.prod`
+- `dashboard/web/Dockerfile`
 - `docker-compose.prod.yml`
 - `scripts/wos-prod-deploy.sh`
 - `dashboard/web/app/simulate/page.tsx`

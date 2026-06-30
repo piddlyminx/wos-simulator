@@ -4,6 +4,23 @@ set -eu
 cache_dir="${NEXT_DIST_DIR:-${NEXT_CACHE_DIR:-.next}}"
 lock_file="$cache_dir/.wos-next-cache.lock"
 
+next_bin() {
+  if [ -x ./node_modules/.bin/next ]; then
+    printf '%s\n' ./node_modules/.bin/next
+    return 0
+  fi
+  if [ -x /repo/node_modules/.bin/next ]; then
+    printf '%s\n' /repo/node_modules/.bin/next
+    return 0
+  fi
+  if command -v next >/dev/null 2>&1; then
+    command -v next
+    return 0
+  fi
+  echo "Could not find the Next.js CLI." >&2
+  exit 127
+}
+
 print_running_next_processes() {
   echo "Possible running Next processes:" >&2
   if command -v ps >/dev/null 2>&1; then
@@ -30,11 +47,11 @@ if [ "$#" -eq 0 ]; then
 fi
 
 if [ "$1" = "start" ]; then
-  exec ./node_modules/.bin/next "$@"
+  exec "$(next_bin)" "$@"
 fi
 
 if [ "${WOS_NEXT_CACHE_LOCK_HELD:-}" = "1" ]; then
-  exec ./node_modules/.bin/next "$@"
+  exec "$(next_bin)" "$@"
 fi
 
 mkdir -p "$cache_dir"
@@ -51,4 +68,4 @@ EOF
   exit 75
 fi
 
-exec ./node_modules/.bin/next "$@"
+exec "$(next_bin)" "$@"
