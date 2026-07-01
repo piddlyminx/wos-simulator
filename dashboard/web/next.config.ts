@@ -1,10 +1,13 @@
 import type { NextConfig } from "next";
+import fs from "fs";
 import path from "path";
 
 const pollIntervalMs = Number(process.env.NEXT_WATCH_POLL_INTERVAL_MS ?? 0);
 const distDir = process.env.NEXT_DIST_DIR ?? ".next";
 const repoRoot = path.resolve(__dirname, "../..");
-const simulatorSourceRoot = path.resolve(__dirname, "../../simulator/src");
+
+const simulatorPath = fs.existsSync('/.dockerenv') ? "./.simulator/src" : "../../simulator/src";
+const simulatorSourceRoot = path.resolve(__dirname, simulatorPath);
 
 const nextConfig: NextConfig = {
   distDir,
