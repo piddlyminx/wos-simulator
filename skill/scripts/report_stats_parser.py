@@ -194,32 +194,31 @@ def _crop_report_panel_for_ocr(img_bgr: np.ndarray) -> np.ndarray:
 
     Dashboard uploads are report-panel screenshots with blue action buttons
     below the parseable content. Removing those controls keeps coordinates
-    stable while reducing OCR detector work. If the tan panel-bottom band cannot
-    be found, return the original image and let the normal fallback path handle
-    the crop.
+    stable while reducing OCR detector work. If the blue controls are not
+    present, keep the full image; tan report bands also appear inside the stat
+    table and are not a safe crop boundary.
     """
     if img_bgr.size == 0:
         return img_bgr
     image_height = img_bgr.shape[0]
     hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
-    tan_mask = cv2.inRange(hsv, (5, 20, 100), (30, 120, 245))
-    row_density = tan_mask.mean(axis=1) / 255.0
-    rows = np.where(row_density > 0.55)[0]
-    groups: list[list[int]] = []
-    for row in rows:
-        row_index = int(row)
-        if not groups or row_index > groups[-1][-1] + 1:
-            groups.append([row_index])
-        else:
-            groups[-1].append(row_index)
 
-    bottom_candidates = [group for group in groups if len(group) > 2 and group[0] > image_height * 0.45]
-    if not bottom_candidates:
-        return img_bgr
-    crop_bottom = min(image_height, bottom_candidates[0][-1] + 8)
-    if crop_bottom >= image_height - 8:
-        return img_bgr
-    return img_bgr[:crop_bottom]
+    blue_mask = cv2.inRange(hsv, (90, 60, 80), (125, 255, 255))
+    blue_row_density = blue_mask.mean(axis=1) / 255.0
+    blue_rows = np.where(blue_row_density > 0.20)[0]
+    blue_groups: list[list[int]] = []
+    for row in blue_rows:
+        row_index = int(row)
+        if not blue_groups or row_index > blue_groups[-1][-1] + 1:
+            blue_groups.append([row_index])
+        else:
+            blue_groups[-1].append(row_index)
+    blue_candidates = [group for group in blue_groups if len(group) > 8 and group[0] > image_height * 0.55]
+    if blue_candidates:
+        crop_bottom = blue_candidates[0][0]
+        if 0 < crop_bottom < image_height - 8:
+            return img_bgr[:crop_bottom]
+    return img_bgr
 
 
 def _ocr_pass(
@@ -760,6 +759,18 @@ def _needs_ocr_repair(result: dict[str, Any]) -> bool:
     )
 
 
+def _missing_stat_bonus_count(result: dict[str, Any] | None) -> int:
+    if result is None:
+        return len(STAT_FIELDS) * 2
+    missing = 0
+    for field in STAT_FIELDS:
+        if field not in result["left"]["stat_bonuses"]:
+            missing += 1
+        if field not in result["right"]["stat_bonuses"]:
+            missing += 1
+    return missing
+
+
 def _compute_final_missing_fields(result: dict[str, Any]) -> list[str]:
     missing: set[str] = set()
     if result.get("meta", {}).get("troop_slots_present") is False:
@@ -1228,18 +1239,25 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
     except ValueError:
         result = None
 
-    if result is None:
+    if _missing_stat_bonus_count(result) > 0:
         strategies.append("rapidocr:enhanced")
         enhanced = _ocr_pass(img_bgr, scale=2.0, sharpen=True, clahe=True)
         try:
-            result = extract_values_from_ocr_items(enhanced, image_width=image_width, image_height=image_height)
+            enhanced_result = extract_values_from_ocr_items(enhanced, image_width=image_width, image_height=image_height)
+            if _missing_stat_bonus_count(enhanced_result) < _missing_stat_bonus_count(result):
+                result = enhanced_result
         except ValueError:
-            result = None
+            pass
 
-    if result is None:
+    if _missing_stat_bonus_count(result) > 0:
         strategies.append("rapidocr:original")
         original = _ocr_pass(img_bgr)
-        result = extract_values_from_ocr_items(original, image_width=image_width, image_height=image_height)
+        original_result = extract_values_from_ocr_items(original, image_width=image_width, image_height=image_height)
+        if _missing_stat_bonus_count(original_result) < _missing_stat_bonus_count(result):
+            result = original_result
+
+    if result is None:
+        raise ValueError("Could not find a 'Stat Bonuses' header in the OCR output")
 
     result["meta"]["ocr_strategy"] = strategies
     result["meta"]["template_match_image"] = "original"

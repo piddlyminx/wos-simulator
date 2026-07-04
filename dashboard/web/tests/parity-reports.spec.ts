@@ -167,6 +167,8 @@ test.describe("simulator parity report helpers", () => {
         sampleCount: 1,
         game: expect.objectContaining({ passes: false, bias_pct: 11.1 }),
         baseline: expect.objectContaining({ passes: true, bias_pct: 25 }),
+        matched: true,
+        simulatorMu: 10,
       }),
     ]);
     expect(loaded?.summary).toEqual(
@@ -175,7 +177,7 @@ test.describe("simulator parity report helpers", () => {
         testcasesFound: 1,
         executedCases: 1,
         comparedToGame: 1,
-        comparedToBaseline: 1,
+        comparedToBaseline: 0,
         simulatorVsGameFailures: 1,
         simulatorVsBaselineFailures: 0,
       }),
@@ -289,9 +291,9 @@ test.describe("simulator parity report helpers", () => {
     expect(result.executedCases).toBe(1);
     expect(result.warnings).toBe(1);
     expect(result.errors).toBe(4);
-    expect(result.comparedToBaseline).toBe(5);
+    expect(result.comparedToBaseline).toBe(0);
     expect(result.comparedToGame).toBe(6);
-    expect(result.simulatorVsBaselineFailures).toBe(1);
+    expect(result.simulatorVsBaselineFailures).toBe(0);
     expect(result.simulatorVsGameFailures).toBe(1);
   });
 

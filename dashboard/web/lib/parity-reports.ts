@@ -271,9 +271,6 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
   const errors = Number(
     counts.errors ?? (Array.isArray(report.errors) ? report.errors.length : 0),
   );
-  const comparedToBaseline = Number(
-    counts.comparedToBaseline ?? rows.filter((row) => row.baseline !== null).length,
-  );
   const comparedToGame = Number(
     counts.comparedToGame ?? rows.filter((row) => row.game !== null).length,
   );
@@ -284,17 +281,17 @@ export function summarizeParityReport(report: ParityReportJson): ParitySummary {
     executedCases: Number(counts.executed ?? counts.executedCases ?? rows.length),
     warnings,
     errors,
-    comparedToBaseline,
+    comparedToBaseline: 0,
     comparedToGame,
-    simulatorVsBaselineFailures: rows.filter((row) => row.baseline?.passes === false).length,
+    simulatorVsBaselineFailures: 0,
     simulatorVsGameFailures: rows.filter((row) => row.game?.passes === false).length,
 
     selectedCases: Number(counts.testcasesFound ?? rows.length),
     parseErrors: 0,
     unexpectedErrors: errors,
     diagnostics: warnings,
-    matchedRows: rows.filter((row) => row.baseline !== null || row.game !== null).length,
-    unmatchedRows: rows.filter((row) => row.baseline === null && row.game === null).length,
+    matchedRows: rows.filter((row) => row.game !== null).length,
+    unmatchedRows: rows.filter((row) => row.game === null).length,
   };
 }
 
@@ -351,7 +348,6 @@ function rowFromTestcase(
 ): ParityComparisonRow {
   const game = testcase.game ?? null;
   const baseline = testcase.baseline ?? null;
-  const candidate = baseline ?? game;
   const file = testcase.file ?? key.split("#", 1)[0] ?? "";
   const testcaseId = testcase.testcase_id ?? testcase.testcaseId ?? "";
   const idx = Number(testcase.idx ?? key.match(/#(\d+)$/)?.[1] ?? 0);
@@ -368,23 +364,23 @@ function rowFromTestcase(
     baseline,
     gameStatAdjustment: testcase.gameStatAdjustment,
 
-    matched: baseline !== null || game !== null,
-    nSim: baseline?.n_reference,
-    muSim: baseline?.mu_reference,
-    sigmaSim: baseline?.sigma_reference,
+    matched: game !== null,
+    nSim: game?.n_candidate,
+    muSim: game?.mu_candidate,
+    sigmaSim: game?.sigma_candidate,
     nGame: game?.n_reference,
     muGame: game?.mu_reference,
     sigmaGame: game?.sigma_reference,
     referencePasses: game?.passes,
     referenceBiasPct: game?.bias_pct,
-    simulatorN: candidate?.n_candidate,
-    simulatorMu: candidate?.mu_candidate,
-    simulatorSigma: candidate?.sigma_candidate,
-    simulatorSem: candidate?.sem,
-    simulatorVsBaselinePasses: baseline?.passes,
-    simulatorVsBaselineBiasRaw: baseline?.bias_raw,
-    simulatorVsBaselineBiasPct: baseline?.bias_pct,
-    simulatorVsBaselineZ: baseline?.stat ?? undefined,
+    simulatorN: game?.n_candidate,
+    simulatorMu: game?.mu_candidate,
+    simulatorSigma: game?.sigma_candidate,
+    simulatorSem: game?.sem,
+    simulatorVsBaselinePasses: undefined,
+    simulatorVsBaselineBiasRaw: undefined,
+    simulatorVsBaselineBiasPct: undefined,
+    simulatorVsBaselineZ: undefined,
     simulatorVsGamePasses: game?.passes,
     simulatorVsGameBiasRaw: game?.bias_raw,
     simulatorVsGameBiasPct: game?.bias_pct,

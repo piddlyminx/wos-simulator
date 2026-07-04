@@ -21,15 +21,9 @@ export default function ParityReportSummary({
         value={String(summary.errors)}
         color={summary.errors > 0 ? "#f38ba8" : undefined}
       />
-      <MetricCard label="Compared Baseline" value={String(summary.comparedToBaseline)} />
       <MetricCard
         label="Compared Game"
         value={String(summary.comparedToGame)}
-      />
-      <MetricCard
-        label="Simulator vs Baseline Fail"
-        value={String(summary.simulatorVsBaselineFailures)}
-        color={summary.simulatorVsBaselineFailures > 0 ? "#f38ba8" : "#a6e3a1"}
       />
       <MetricCard
         label="Simulator vs Game Fail"

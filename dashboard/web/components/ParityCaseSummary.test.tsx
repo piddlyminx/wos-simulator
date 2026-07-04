@@ -13,8 +13,7 @@ test("simulator sample metadata omits single stored sample score delta", () => {
       deterministic: false,
       sampleCount: 100,
       simulatorScoreDelta: 42,
-      game: null,
-      baseline: {
+      game: {
         n_candidate: 100,
         mu_candidate: 10,
         sigma_candidate: 3,
@@ -30,6 +29,7 @@ test("simulator sample metadata omits single stored sample score delta", () => {
         q: null,
         passes: true,
       },
+      baseline: null,
     },
     caseReport: {
       file: "testcases/example.json",

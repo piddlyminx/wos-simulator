@@ -10,8 +10,6 @@ type SortKey =
   | "testcaseId"
   | "gameStat"
   | "gameBiasPct"
-  | "baselineStat"
-  | "baselineBiasPct"
   | "simulatorMu";
 
 function fmt(value: number | null | undefined, digits = 2): string {
@@ -52,19 +50,15 @@ function groupStyle(options: { left?: boolean; right?: boolean }) {
 }
 
 function candidate(row: ParityComparisonRow): ParityMetric | null {
-  return row.game ?? row.baseline;
+  return row.game;
 }
 
 function defaultRank(row: ParityComparisonRow): number {
   const gameFail = row.game?.passes === false ? 1_000_000 : 0;
-  const baselineFail = row.baseline?.passes === false ? 100_000 : 0;
   return (
     gameFail +
-    baselineFail +
     Math.abs(row.game?.stat ?? 0) * 100 +
-    Math.abs(row.game?.bias_pct ?? 0) +
-    Math.abs(row.baseline?.stat ?? 0) * 10 +
-    Math.abs(row.baseline?.bias_pct ?? 0)
+    Math.abs(row.game?.bias_pct ?? 0)
   );
 }
 
@@ -72,8 +66,6 @@ function sortValue(row: ParityComparisonRow, sortKey: SortKey): number {
   if (sortKey === "rank") return defaultRank(row);
   if (sortKey === "gameStat") return Math.abs(row.game?.stat ?? 0);
   if (sortKey === "gameBiasPct") return Math.abs(row.game?.bias_pct ?? 0);
-  if (sortKey === "baselineStat") return Math.abs(row.baseline?.stat ?? 0);
-  if (sortKey === "baselineBiasPct") return Math.abs(row.baseline?.bias_pct ?? 0);
   if (sortKey === "simulatorMu") return Math.abs(candidate(row)?.mu_candidate ?? 0);
   return 0;
 }
@@ -116,11 +108,7 @@ export default function ParityReportTable({
     const q = query.trim().toLowerCase();
     return rows
       .filter((row) => {
-        if (
-          onlyFailures &&
-          row.game?.passes !== false &&
-          row.baseline?.passes !== false
-        ) {
+        if (onlyFailures && row.game?.passes !== false) {
           return false;
         }
         if (!q) return true;
@@ -188,29 +176,13 @@ export default function ParityReportTable({
               <th className={stickyTh}>#</th>
               <th className={stickyTh}>Adj</th>
               <th className={stickyTh} style={groupStyle({ left: true })}>G μ</th>
-              <th className={stickyTh}>B μ</th>
               <th className={stickyTh} style={groupStyle({ right: true })}>
                 <button type="button" onClick={() => setSort("simulatorMu")}>
                   S μ
                 </button>
               </th>
               <th className={stickyTh}>G σ</th>
-              <th className={stickyTh}>B σ</th>
               <th className={stickyTh} style={groupStyle({ right: true })}>S σ</th>
-              <th className={stickyTh}>B n</th>
-              <th className={stickyTh}>S n</th>
-              <th className={stickyTh}>B raw</th>
-              <th className={stickyTh}>
-                <button type="button" onClick={() => setSort("baselineBiasPct")}>
-                  B%
-                </button>
-              </th>
-              <th className={stickyTh}>
-                <button type="button" onClick={() => setSort("baselineStat")}>
-                  B stat
-                </button>
-              </th>
-              <th className={stickyTh} style={groupStyle({ right: true })}>BP</th>
               <th className={stickyTh}>G n</th>
               <th className={stickyTh}>S n</th>
               <th className={stickyTh}>G raw</th>
@@ -264,30 +236,14 @@ export default function ParityReportTable({
                   <td className={compactTd} style={groupStyle({ left: true })}>
                     {fmt(row.game?.mu_reference, 1)}
                   </td>
-                  <td className={compactTd}>
-                    {fmt(row.baseline?.mu_reference, 1)}
-                  </td>
                   <td className={compactTd} style={groupStyle({ right: true })}>
                     {fmt(simulator?.mu_candidate, 1)}
                   </td>
                   <td className={compactTd}>
                     {fmt(row.game?.sigma_reference, 1)}
                   </td>
-                  <td className={compactTd}>
-                    {fmt(row.baseline?.sigma_reference, 1)}
-                  </td>
                   <td className={compactTd} style={groupStyle({ right: true })}>
                     {fmt(simulator?.sigma_candidate, 1)}
-                  </td>
-                  <td className={compactTd}>
-                    {row.baseline?.n_reference ?? "-"}
-                  </td>
-                  <td className={compactTd}>{row.baseline?.n_candidate ?? "-"}</td>
-                  <td className={compactTd}>{fmt(row.baseline?.bias_raw, 1)}</td>
-                  <td className={compactTd}>{fmtPct(row.baseline?.bias_pct)}</td>
-                  <td className={compactTd}>{fmt(row.baseline?.stat)}</td>
-                  <td className={compactTd} style={groupStyle({ right: true })}>
-                    {pass(row.baseline?.passes)}
                   </td>
                   <td className={compactTd}>
                     {row.game?.n_reference ?? "-"}

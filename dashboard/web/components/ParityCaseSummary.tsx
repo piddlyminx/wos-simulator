@@ -30,17 +30,14 @@ export default function ParityCaseSummary({
   caseReport?: ParityCaseReport;
 }) {
   const attacks = caseReport?.result?.attacks ?? [];
-  const simulator = row.game ?? row.baseline;
+  const simulator = row.game;
   const simulatorMu = simulator?.mu_candidate ?? caseReport?.simulatorStats?.mu;
   return (
     <div className="space-y-6">
       <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Summary label="simulator mu" value={fmt(simulatorMu)} />
-        <Summary label="baseline mu" value={fmt(row.baseline?.mu_reference)} />
         <Summary label="game mu" value={fmt(row.game?.mu_reference)} />
-        <Summary label="simulator vs baseline stat" value={fmt(row.baseline?.stat)} />
         <Summary label="simulator vs game stat" value={fmt(row.game?.stat)} />
-        <Summary label="simulator vs baseline bias%" value={fmt(row.baseline?.bias_pct)} />
         <Summary label="simulator vs game bias%" value={fmt(row.game?.bias_pct)} />
       </section>
 
@@ -98,13 +95,11 @@ export function buildSimulatorSampleMetadata({
   row: ParityComparisonRow;
   caseReport?: ParityCaseReport;
 }) {
-  const simulator = row.game ?? row.baseline;
   return {
     deterministic: row.deterministic ?? caseReport?.deterministic,
     sampleCount: row.sampleCount ?? caseReport?.sampleCount,
     game: row.game,
-    baseline: row.baseline,
-    simulatorStats: caseReport?.simulatorStats ?? metricToSimulatorStats(simulator),
+    simulatorStats: caseReport?.simulatorStats ?? metricToSimulatorStats(row.game),
   };
 }
 

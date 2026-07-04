@@ -135,6 +135,21 @@ cd <repo-root>
 npx tsx scripts/run_testcases.ts --output-dir simulator/testcase_results --db-ingest
 ```
 
+The `/parity` page only needs the compact summary JSON for its high-level table.
+Full battle details are written under the matching `simulator_parity_*/cases/`
+directory and can stay local. To refresh a small repo-friendly parity snapshot,
+write the summary-only stdout to an allow-listed filename:
+
+```bash
+cd <repo-root>
+npx tsx scripts/run_testcases.ts --repeat 100 --no-run-snapshot \
+  > simulator/testcase_results/latest.summary.json
+```
+
+This file is safe to commit because it omits `details`, `result`, and per-attack
+trace data. The case drilldown links will have no full detail unless a matching
+local artifact directory exists.
+
 The SQLite DB remains the source for historical run/trend pages. Legacy
 historical snapshots can still be backfilled with `python dashboard/backfill.py`.
 

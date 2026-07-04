@@ -416,6 +416,71 @@ test("human summary does not count missing legacy baseline rows as warnings", ()
   assert.match(text, /Warnings: 0/);
 });
 
+test("human summary status ignores failing legacy baseline comparison when game passes", () => {
+  const text = formatHumanSummary({
+    reportKind: "simulator-parity-summary",
+    schemaVersion: 1,
+    createdAt: "2026-01-02T03:04:05.000Z",
+    options: { repeat: 1 },
+    counts: {
+      filesFound: 1,
+      testcasesFound: 1,
+      executed: 1,
+      warnings: 0,
+      errors: 0,
+      comparedToGame: 1,
+      comparedToBaseline: 1,
+    },
+    warnings: [],
+    errors: [],
+    testcases: {
+      "testcases/game_pass_baseline_fail.json#0": {
+        file: "testcases/game_pass_baseline_fail.json",
+        testcase_id: "game_pass_baseline_fail",
+        idx: 0,
+        deterministic: true,
+        sampleCount: 1,
+        game: {
+          n_candidate: 1,
+          mu_candidate: 10,
+          sigma_candidate: 0,
+          n_reference: 1,
+          mu_reference: 10,
+          sigma_reference: 0,
+          bias_raw: 0,
+          bias_pct: 0,
+          sem: 0,
+          stat_type: "deterministic",
+          stat: null,
+          p: null,
+          q: null,
+          passes: true,
+        },
+        baseline: {
+          n_candidate: 1,
+          mu_candidate: 10,
+          sigma_candidate: 0,
+          n_reference: 1,
+          mu_reference: 25,
+          sigma_reference: 0,
+          bias_raw: -15,
+          bias_pct: -15,
+          sem: 0,
+          stat_type: "deterministic",
+          stat: null,
+          p: null,
+          q: null,
+          passes: false,
+        },
+      },
+    },
+    details: [],
+  });
+
+  assert.match(text, /PASS\s+0\s+game_pass_baseline_fail/);
+  assert.doesNotMatch(text, /Base bias%/);
+});
+
 test("cli snapshot paths are unique when timestamps collide", () => {
   const outputDir = tempDir("simulator-parity-collision");
   const preloadPath = resolve(outputDir, "fixed-date.mjs");

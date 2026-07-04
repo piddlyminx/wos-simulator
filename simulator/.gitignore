@@ -1,4 +1,5 @@
 testcase_results/*
+!testcase_results/*.summary.json
 !testcase_results/v1_resullt_2026-05-17T10-05-10Z.json
 !testcase_results/v1_result_2026-05-21T04-46-47Z.json
 tournament_results/*

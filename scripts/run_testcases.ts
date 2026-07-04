@@ -132,7 +132,7 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
     lines.push("No testcase results.");
   } else {
     lines.push(formatTable([
-      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Base bias%", "Stat", "p", "q(BH)"],
+      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Stat", "p", "q(BH)"],
       ...rows.map((row) => [
         row.status,
         row.index,
@@ -146,7 +146,6 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
         row.gameSd,
         row.simSd,
         row.gameBiasPct,
-        row.baseBiasPct,
         row.stat,
         row.p,
         row.q
@@ -201,7 +200,6 @@ function isLegacyMissingBaselineWarning(warning: TestcaseRunReport["warnings"][n
 }
 
 function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | undefined): Record<string, string> {
-  const primary = entry.game ?? entry.baseline;
   return {
     status: testcaseStatus(entry, detail),
     index: String(entry.idx),
@@ -210,23 +208,20 @@ function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | unde
     gameN: formatNumber(entry.game?.n_reference),
     mode: entry.deterministic ? "det" : entry.sampleCount > 1 ? "stoch" : "single",
     statAdjustment: formatSignedNumber(entry.gameStatAdjustment?.value),
-    simMu: formatNumber(primary?.mu_candidate),
+    simMu: formatNumber(entry.game?.mu_candidate),
     gameMu: formatNumber(entry.game?.mu_reference),
     gameSd: formatNumber(entry.game?.sigma_reference),
-    simSd: formatNumber(primary?.sigma_candidate),
+    simSd: formatNumber(entry.game?.sigma_candidate),
     gameBiasPct: formatSignedPct(entry.game?.bias_pct),
-    baseBiasPct: formatSignedPct(entry.baseline?.bias_pct),
-    stat: formatNumber(primary?.stat),
-    p: formatProbability(primary?.p),
-    q: formatProbability(primary?.q)
+    stat: formatNumber(entry.game?.stat),
+    p: formatProbability(entry.game?.p),
+    q: formatProbability(entry.game?.q)
   };
 }
 
 function testcaseStatus(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | undefined): "PASS" | "FAIL" | "WARN" | "ERROR" {
   if (detail?.error) return "ERROR";
-  const comparisons = [entry.game, entry.baseline].filter((value): value is NonNullable<typeof value> => !!value);
-  if (comparisons.some((comparison) => !comparison.passes)) return "FAIL";
-  if (comparisons.length > 0) return "PASS";
+  if (entry.game) return entry.game.passes ? "PASS" : "FAIL";
   return "WARN";
 }
 
@@ -253,7 +248,7 @@ function samplePreviewRows(entry: TestcaseSummaryEntry, detail: TestcaseCaseRepo
       outcome: sample.scoreDelta,
       deltaVsGameMu: deltaVsGameMu(entry, sample.scoreDelta),
       gameSd: entry.game?.sigma_reference,
-      simSd: entry.game?.sigma_candidate ?? entry.baseline?.sigma_candidate,
+      simSd: entry.game?.sigma_candidate,
       runMetric: runMetric(entry, sample.scoreDelta)
     }));
   }
@@ -266,7 +261,7 @@ function samplePreviewRows(entry: TestcaseSummaryEntry, detail: TestcaseCaseRepo
     outcome: scoreDelta,
     deltaVsGameMu: deltaVsGameMu(entry, scoreDelta),
     gameSd: entry.game?.sigma_reference,
-    simSd: entry.game?.sigma_candidate ?? entry.baseline?.sigma_candidate,
+    simSd: entry.game?.sigma_candidate,
     runMetric: runMetric(entry, scoreDelta)
   }));
 }

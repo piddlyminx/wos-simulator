@@ -163,7 +163,12 @@ class ReportStatsParserTests(unittest.TestCase):
 
     def test_dashboard_report_fixtures_parse_all_values(self) -> None:
         expected_by_report = json.loads((ROOT / "tests" / "fixtures" / "dashboard_report_expected.json").read_text())
-        report_paths = sorted((ROOT / "dashboard" / "test_reports").glob("*.png"))
+        report_dir = ROOT / "dashboard" / "test_reports"
+        report_paths = sorted(
+            path
+            for pattern in ("*.png", "*.jpg", "*.jpeg")
+            for path in report_dir.glob(pattern)
+        )
         self.assertEqual([path.name for path in report_paths], sorted(path.name for path in report_paths))
         self.assertEqual(set(path.name for path in report_paths), set(expected_by_report))
 

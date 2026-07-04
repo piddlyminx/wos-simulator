@@ -4,7 +4,6 @@ import { fileURLToPath } from "node:url";
 
 import {
   loadCalibrationComparison,
-  readCalibrationCase,
   type CalibrationCaseComparison,
   type SampleStats,
   sampleStats
@@ -351,7 +350,6 @@ function applyExecutionResult(
   }
   const stats = execution.simulatorStats;
   const gameResult = (entry as { game_report_result?: unknown }).game_report_result;
-  const calibration = readCalibrationCase(comparison, reportFile, testcaseId, { index });
   const initialTroops = totalInputTroops(preparedCase.input!.attacker) + totalInputTroops(preparedCase.input!.defender);
   const simulatorDistribution = { n: stats.n, mu: stats.mu, sigma: stats.sigma };
   const gameDistribution = distributionFromGameResult(gameResult);
@@ -377,15 +375,6 @@ function applyExecutionResult(
       })
     : undefined;
   if (gameStatAdjustment) game = gameStatAdjustment.adjusted;
-  const baseline = calibration?.nSim !== undefined && calibration.muSim !== undefined && calibration.sigmaSim !== undefined
-    ? compareOutcomeDistribution({
-        candidate: simulatorDistribution,
-        reference: { n: calibration.nSim, mu: calibration.muSim, sigma: calibration.sigmaSim },
-        initialTroops,
-        deterministic: result.randomness.deterministic,
-        thresholds: comparison.thresholds
-      })
-    : null;
 
   detail.result = result;
   detail.deterministic = execution.deterministic;
@@ -396,14 +385,10 @@ function applyExecutionResult(
   detail.simulatorSampleDeltas = execution.simulatorSampleDeltas;
   detail.gameStatAdjustment = gameStatAdjustment ? statAdjustmentForReport(gameStatAdjustment) : undefined;
   detail.gameResult = gameResult;
-  detail.calibration = calibration;
   detail.visibility = visibilityFromResult(result);
   detail.diagnostics.push(...execution.diagnostics);
   if (!game) {
     report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "game_comparison", reason: "Missing game_report_result" });
-  }
-  if (!baseline) {
-    report.warnings.push({ file: reportFile, testcase_id: testcaseId, idx: index, stage: "baseline_comparison", reason: "No matching baseline snapshot row" });
   }
   report.counts.executed += 1;
   report.testcases[preparedCase.key!] = {
@@ -413,7 +398,7 @@ function applyExecutionResult(
     deterministic: execution.deterministic,
     sampleCount: execution.sampleCount,
     game,
-    baseline,
+    baseline: null,
     ...(gameStatAdjustment ? { gameStatAdjustment: statAdjustmentForReport(gameStatAdjustment) } : {})
   };
 }
@@ -632,7 +617,6 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
 
 export function applyComparisonQValues(report: Pick<TestcaseRunReport, "testcases">): void {
   applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.game).filter((value): value is ParityComparisonMetrics => !!value));
-  applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.baseline).filter((value): value is ParityComparisonMetrics => !!value));
 }
 
 export function assignDetailArtifactPaths(report: TestcaseRunReport, artifactRoot: string): void {
