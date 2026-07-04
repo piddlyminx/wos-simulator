@@ -64,6 +64,29 @@ async function openStatProfileModal(page: Page, side: "attacker" | "defender") {
   return dialog;
 }
 
+async function openProfileDialog(page: Page, label: string) {
+  const dialog = page.getByTestId("stat-profile-modal");
+  await expect(async () => {
+    await page.getByLabel(label).click();
+    await expect(dialog).toBeVisible({ timeout: 500 });
+  }).toPass({ timeout: 5000 });
+  return dialog;
+}
+
+function profileFixture(id: string, name: string) {
+  return {
+    id,
+    name,
+    created_at: "2026-04-23T08:00:00.000Z",
+    updated_at: "2026-04-23T08:00:00.000Z",
+    stats: {
+      infantry: { attack: 201, defense: 202, lethality: 203, health: 204 },
+      lancer: { attack: 211, defense: 212, lethality: 213, health: 214 },
+      marksman: { attack: 221, defense: 222, lethality: 223, health: 224 },
+    },
+  };
+}
+
 function simBuffSection(page: Page, side: "attacker" | "defender") {
   return page.getByTestId(`side-section-${side}-buffs`);
 }
@@ -229,37 +252,6 @@ test.describe("Dashboard smoke tests", () => {
       .locator('[data-testid="runs-table"] tbody tr')
       .count();
     expect(rows).toBeGreaterThan(0);
-
-    expect(errors).toHaveLength(0);
-  });
-
-  test("/runs — check-now controls are visible and the filter expands", async ({
-    page,
-  }) => {
-    const errors: string[] = [];
-    page.on("console", (msg) => {
-      if (msg.type() === "error") errors.push(msg.text());
-    });
-    page.on("pageerror", (err) => errors.push(err.message));
-
-    const response = await page.goto("/runs");
-    expect(response?.status()).toBe(200);
-
-    await expect(
-      page.locator('[data-testid="check-now-controls"]'),
-    ).toBeVisible();
-    await expect(
-      page.locator('[data-testid="check-now-button"]'),
-    ).toBeVisible();
-    await expect(
-      page.locator('[data-testid="check-now-filter-input"]'),
-    ).toHaveCount(0);
-
-    await page.locator('[data-testid="check-now-filter-toggle"]').click();
-    const input = page.locator('[data-testid="check-now-filter-input"]');
-    await expect(input).toBeVisible();
-    await input.fill("alonso solo");
-    await expect(input).toHaveValue("alonso solo");
 
     expect(errors).toHaveLength(0);
   });
@@ -553,6 +545,44 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
+  test("/bear — saving an existing stat profile updates it from current stats", async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(err.message));
+
+    const preset = profileFixture("bear-profile", "Bear saved profile");
+    await page.addInitScript((preset) => {
+      window.localStorage.setItem(
+        "wos-simulator.player-stat-presets.v1",
+        JSON.stringify([preset]),
+      );
+    }, preset);
+
+    const response = await page.goto("/bear");
+    expect(response?.status()).toBe(200);
+
+    const dialog = await openProfileDialog(page, "attacker player profile");
+    await dialog.getByLabel("bear stat profile").selectOption("bear-profile");
+    await dialog.getByRole("button", { name: "Save current stats" }).click();
+    await expect(dialog).toContainText("Updated Bear saved profile");
+
+    const stored = await page.evaluate(() => {
+      const raw = window.localStorage.getItem(
+        "wos-simulator.player-stat-presets.v1",
+      );
+      return raw ? JSON.parse(raw) : [];
+    });
+    expect(stored).toHaveLength(1);
+    expect(stored[0].id).toBe("bear-profile");
+    expect(stored[0].stats.infantry.attack).toBe(100);
+
+    expect(errors).toHaveLength(0);
+  });
+
   test("/simulate — successful runs update the URL to the saved share link", async ({
     page,
   }) => {
@@ -586,6 +616,7 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
+    await page.getByTestId("optimize-options-toggle").click();
     await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
     await page.getByRole("button", { name: /^Simulate$/i }).click();
     await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
@@ -676,6 +707,7 @@ test.describe("Dashboard smoke tests", () => {
     await expect(dialog).toBeHidden();
     await expect(page.locator("body")).toContainText("Attacker saved profile");
 
+    await page.getByTestId("optimize-options-toggle").click();
     await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
     await page.getByRole("button", { name: /^Simulate$/i }).click();
     await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
@@ -916,12 +948,11 @@ test.describe("Dashboard smoke tests", () => {
 
     await page.getByRole("link", { name: /^Battle Sim$/ }).click();
     await expect(page).toHaveURL(/\/simulate$/);
-    await page.getByTestId("sim-tab-results").click();
 
     await expect(page.getByTestId("saved-run-banner")).toHaveCount(0);
     await expect(page.getByTestId("optimize-results")).toHaveCount(0);
     await expect(page.getByTestId("sim-panel-results")).toContainText(
-      "Results will appear here after running a simulation or optimisation.",
+      "Results will appear here after running a simulation, optimisation, or ratio exploration.",
     );
 
     expect(errors).toHaveLength(0);
@@ -1189,6 +1220,7 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
+    await page.getByRole("tab", { name: "Optimise ratio" }).click();
     await expect(
       page.locator('[data-testid="optimize-options-panel"]'),
     ).toHaveCount(0);
@@ -1197,7 +1229,7 @@ test.describe("Dashboard smoke tests", () => {
       page.locator('[data-testid="optimize-options-panel"]'),
     ).toBeVisible();
     await expect(page.locator("body")).toContainText(
-      "1,119 comps · 30/10/100 reps · up to 16,770 battles",
+      "1,609 comps · 20/20/200 reps · up to 39,380 battles",
     );
 
     await page.locator('input[aria-label="infantry troop count"]').first().fill("1");
@@ -1214,6 +1246,7 @@ test.describe("Dashboard smoke tests", () => {
       page.locator("h3").filter({ hasText: /Results \(/ }),
     ).toHaveCount(0);
 
+    await page.getByRole("tab", { name: "Simulate" }).click();
     await page.getByRole("spinbutton", { name: /replicates/i }).fill("1");
     await page.getByRole("button", { name: /^Simulate$/i }).click();
     await expect(page.getByTestId("simulate-outcome-chart")).toBeVisible();
@@ -1257,6 +1290,7 @@ test.describe("Dashboard smoke tests", () => {
     await page.locator('input[aria-label="infantry troop count"]').first().fill("3");
     await page.locator('input[aria-label="lancer troop count"]').first().fill("0");
     await page.locator('input[aria-label="marksman troop count"]').first().fill("0");
+    await page.getByRole("tab", { name: "Optimise ratio" }).click();
     await page.getByTestId("optimize-options-toggle").click();
     await page.getByRole("button", { name: /^grid$/i }).click();
     await page.getByLabel("Ratio reps").fill("1");

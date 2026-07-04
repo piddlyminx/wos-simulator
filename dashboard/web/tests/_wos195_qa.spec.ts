@@ -1,12 +1,4 @@
 import { test, expect } from "@playwright/test";
-import path from "path";
-import fs from "fs";
-
-const OUT = path.join(__dirname, "..", "test-results", "wos-195-qa");
-
-test.beforeAll(() => {
-  fs.mkdirSync(OUT, { recursive: true });
-});
 
 test.describe("WOS-195 Simulate page visual QA", () => {
   test("page loads and shows battle layout", async ({ page }) => {
@@ -14,19 +6,11 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     await page.goto("/simulate");
     await page.waitForLoadState("networkidle");
 
-    // 1280px uses the tabbed setup layout; the defender panel is shown via
-    // the workspace tab instead of being visible alongside the attacker.
+    // 1280px now uses the wide setup layout; both side panels are visible
+    // without workspace tabs.
     await expect(page.getByRole("heading", { name: "Attacker", exact: true })).toBeVisible();
-    await expect(page.getByTestId("sim-tab-defender")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Defender", exact: true })).not.toBeVisible();
-
-    await page.getByTestId("sim-tab-defender").click();
+    await expect(page.getByTestId("sim-workbench-tabs")).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "Defender", exact: true })).toBeVisible();
-
-    await page.screenshot({
-      path: path.join(OUT, "01-initial-desktop.png"),
-      fullPage: true,
-    });
   });
 
   test("troop inputs exist for infantry, lancer, marksman on both sides", async ({
@@ -46,11 +30,6 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     const selects = page.locator("select");
     const count = await selects.count();
     expect(count).toBeGreaterThan(6); // at least 6 tier dropdowns (3 per side)
-
-    await page.screenshot({
-      path: path.join(OUT, "02-troop-inputs.png"),
-      fullPage: true,
-    });
   });
 
   test("hero selects exist and skill selects render after hero selection", async ({
@@ -85,11 +64,6 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     expect(content).toContain("Def");
     expect(content).toContain("Leth");
     expect(content).toContain("HP");
-
-    await page.screenshot({
-      path: path.join(OUT, "03-stats-section.png"),
-      fullPage: true,
-    });
   });
 
   test("replicates input and Simulate button present", async ({ page }) => {
@@ -104,10 +78,6 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     // Simulate button
     const simulateBtn = page.getByRole("button", { name: /simulate/i });
     await expect(simulateBtn).toBeVisible();
-
-    await page.screenshot({
-      path: path.join(OUT, "04-simulate-button.png"),
-    });
   });
 
   test("hero selection enables skill selects with correct defaults", async ({
@@ -123,11 +93,6 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     await firstHeroSelect.selectOption({ index: 1 }); // pick first actual hero
 
     await page.waitForTimeout(500);
-
-    await page.screenshot({
-      path: path.join(OUT, "05-hero-selected.png"),
-      fullPage: true,
-    });
   });
 
   test("simulate runs and shows results", async ({ page }) => {
@@ -153,11 +118,6 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     // Wait for results (up to 30s for sim to complete)
     await page.waitForTimeout(2000);
 
-    await page.screenshot({
-      path: path.join(OUT, "06-simulate-running.png"),
-      fullPage: true,
-    });
-
     // Wait longer for results
     await page.waitForFunction(
       () => {
@@ -166,11 +126,6 @@ test.describe("WOS-195 Simulate page visual QA", () => {
       },
       { timeout: 30000 }
     );
-
-    await page.screenshot({
-      path: path.join(OUT, "07-results.png"),
-      fullPage: true,
-    });
 
     const text = await page.evaluate(() => document.body.innerText);
 
@@ -187,10 +142,8 @@ test.describe("WOS-195 Simulate page visual QA", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/simulate");
     await page.waitForLoadState("networkidle");
-
-    await page.screenshot({
-      path: path.join(OUT, "08-mobile.png"),
-      fullPage: true,
-    });
+    await expect(page.getByTestId("sim-workbench-tabs")).toBeVisible();
+    await expect(page.getByTestId("sim-tab-attacker")).toBeVisible();
+    await expect(page.getByTestId("sim-action-dock")).toBeVisible();
   });
 });

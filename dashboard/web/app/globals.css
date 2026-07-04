@@ -290,6 +290,172 @@ body {
   padding: 10px 12px;
 }
 
+.sim-mode-actions {
+  grid-template-columns: minmax(0, 1fr);
+  padding: 0;
+  box-shadow: none;
+}
+
+.sim-mode-command {
+  display: grid;
+  width: min(100%, 820px);
+  min-width: 0;
+  justify-self: center;
+  gap: 8px;
+  border: 1px solid var(--sim-line);
+  background: var(--sim-panel);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 -16px 34px rgba(16, 19, 29, 0.64);
+}
+
+.sim-mode-command-main {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.sim-mode-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.sim-mode-tab {
+  min-height: 34px;
+  border: 1px solid var(--sim-line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--sim-muted);
+  border-radius: 7px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.sim-mode-tab[data-active="true"] {
+  border-color: var(--sim-blue);
+  background: var(--sim-blue);
+  color: #11131c;
+}
+
+.sim-mode-command-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.sim-mode-status {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.sim-mode-status-label {
+  color: var(--sim-text);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.sim-mode-status-detail,
+.sim-mode-inline-status {
+  color: var(--sim-muted);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  line-height: 1.3;
+  white-space: normal;
+}
+
+.sim-mode-inline-status {
+  margin: 0;
+}
+
+.sim-mode-primary-button {
+  min-width: 8.75rem;
+}
+
+.sim-mode-options {
+  border: 1px solid var(--sim-line);
+  background: rgba(16, 19, 29, 0.96);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 -18px 36px rgba(0, 0, 0, 0.38);
+}
+
+.sim-mode-options-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.sim-mode-options-header h3 {
+  margin: 0;
+  color: var(--sim-blue);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.sim-options-close,
+.sim-mode-secondary-button {
+  border: 1px solid var(--sim-line);
+  background: transparent;
+  color: var(--sim-blue);
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.sim-options-close {
+  min-height: 30px;
+  padding: 0 10px;
+}
+
+.sim-mode-secondary-button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.sim-mode-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 10px;
+}
+
+.sim-mode-option-row {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(4.75rem, max-content) minmax(4.75rem, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.sim-mode-option-row .sim-input,
+.sim-mode-option-row .sim-mode-secondary-button {
+  min-height: 34px;
+}
+
+.sim-mode-options-grid-compact {
+  grid-template-columns: minmax(0, 16rem);
+}
+
+.sim-mode-option-copy {
+  grid-column: 1 / -1;
+  color: var(--sim-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.sim-mode-option-copy p {
+  margin: 0 0 4px;
+}
+
 .sim-tab-shell {
   order: 30;
 }
@@ -316,56 +482,6 @@ body {
 
 .sim-role-swap-slot {
   display: none;
-}
-
-.surface-role-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-}
-
-.surface-role-grid .sim-role-slot {
-  display: block;
-}
-
-.surface-role-grid .sim-role-swap-slot {
-  display: flex;
-}
-
-.sim-runbar.surface-runbar {
-  grid-template-columns: max-content minmax(0, 1fr);
-}
-
-.sim-top-actions .sim-runbar.surface-runbar {
-  grid-template-columns: max-content minmax(0, 1fr);
-}
-
-.sim-runbar.surface-runbar .sim-run-button {
-  white-space: nowrap;
-}
-
-.surface-start-card {
-  max-width: 100%;
-}
-
-.surface-start-toggles {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.surface-action-dock {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.sim-top-actions.surface-action-dock {
-  box-shadow: none;
-}
-
-.surface-action-dock .surface-action-card {
-  grid-column: 1;
-  justify-self: center;
-  width: max-content;
-  max-width: 100%;
-  box-shadow: 0 -12px 28px rgba(16, 19, 29, 0.42);
 }
 
 .sim-role-panel {
@@ -949,10 +1065,6 @@ body {
     grid-template-columns: repeat(2, minmax(10.5rem, max-content));
   }
 
-  .surface-start-toggles {
-    grid-template-columns: repeat(2, minmax(10.5rem, max-content));
-  }
-
   .sim-top-actions {
     right: max(24px, calc((100vw - 13rem - 1500px) / 2 + 24px));
     left: calc(13rem + max(24px, calc((100vw - 13rem - 1500px) / 2 + 24px)));
@@ -976,15 +1088,20 @@ body {
     max-width: 100%;
   }
 
-  .surface-action-dock {
+  .sim-mode-actions {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .surface-action-dock .surface-action-card {
-    grid-column: 1;
-    justify-self: center;
-    width: max-content;
-    max-width: 100%;
+  .sim-mode-command {
+    grid-column: 1 / -1;
+  }
+
+  .sim-mode-options-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .sim-mode-option-copy {
+    grid-column: 1 / -1;
   }
 
   .sim-tab-shell {
@@ -1063,10 +1180,6 @@ body {
     align-items: start;
   }
 
-  .surface-role-grid.sim-role-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .bear-start-card {
     grid-template-columns: repeat(2, max-content);
   }
@@ -1127,6 +1240,37 @@ body {
     grid-template-columns: minmax(0, 1fr);
     gap: 8px;
     padding: 10px 12px;
+  }
+
+  .sim-mode-command {
+    padding: 8px;
+  }
+
+  .sim-mode-command-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .sim-mode-status {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .sim-mode-primary-button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .sim-mode-options {
+    padding: 8px;
+  }
+
+  .sim-mode-options-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sim-mode-tab {
+    padding: 0 5px;
+    font-size: 10px;
   }
 
   .sim-action-help-row {

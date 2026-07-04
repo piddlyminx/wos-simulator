@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type FocusEventHandler, type MouseEventHandler } from "react";
 import OptimizeRatioScatterChart from "@/components/OptimizeRatioScatterChart";
+import PlayerStatProfileModal from "@/components/PlayerStatProfileModal";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
 import type { OcrResult, UploadActiveModifiers } from "@/components/UploadReportModal";
 import type { TroopCategory } from "@/lib/heroes-catalogue";
@@ -43,10 +44,7 @@ import {
   type SavedSimulationRunResponse,
 } from "@/lib/simulate-run";
 import {
-  cleanStatPresetName,
-  MAX_STAT_PRESETS,
-  normalizeStatPresetStats,
-  sortPlayerStatPresets,
+  loadLocalStatPresets,
   type PlayerStatPreset,
 } from "@/lib/stat-presets";
 import {
@@ -59,13 +57,10 @@ import {
   compactNumber,
   defaultSide,
   heroAdjustedStats,
-  loadLocalStatPresets,
   mergeSideFromOcr,
-  newStatPresetId,
   ProgressBar,
   RecentRunsModal,
   ResultCard,
-  saveLocalStatPresets,
   SidePanel,
   sideWithPresetStats,
   sideFromPayload,
@@ -383,8 +378,6 @@ export default function BearSimClient({
   const [loadedPresetId, setLoadedPresetId] = useState<string | null>(null);
   const [loadedPresetName, setLoadedPresetName] = useState<string | null>(() => initialState.loadedPresetName);
   const [presetOpen, setPresetOpen] = useState(false);
-  const [presetDraftName, setPresetDraftName] = useState("Bear profile");
-  const [presetStatus, setPresetStatus] = useState<{ kind: "ok" | "error"; message: string } | null>(null);
 
   const [optimizeLoading, setOptimizeLoading] = useState(false);
   const [optimizeError, setOptimizeError] = useState<string | null>(null);
@@ -412,12 +405,7 @@ export default function BearSimClient({
   useEffect(() => {
     try {
       setStatPresets(loadLocalStatPresets());
-    } catch (err) {
-      setPresetStatus({
-        kind: "error",
-        message: err instanceof Error ? err.message : "Failed to load presets",
-      });
-    }
+    } catch {}
   }, []);
 
   useEffect(() => {
@@ -641,55 +629,11 @@ export default function BearSimClient({
     "Bear Sim scores the configured player army against the fixed bear target. Optimise searches troop ratios while keeping total troops, tiers, heroes, stats, and buffs fixed.";
 
   function openPresetModal() {
-    const loaded = statPresets.find((preset) => preset.id === loadedPresetId);
-    setPresetDraftName(loaded?.name ?? loadedPresetName ?? "Bear profile");
-    setPresetStatus(null);
     setPresetOpen(true);
   }
 
-  function createStatPresetFromPlayer() {
-    try {
-      if (statPresets.length >= MAX_STAT_PRESETS) throw new Error(`Preset limit reached (${MAX_STAT_PRESETS})`);
-      const timestamp = new Date().toISOString();
-      const preset: PlayerStatPreset = {
-        id: newStatPresetId(),
-        name: cleanStatPresetName(presetDraftName) || `Preset ${statPresets.length + 1}`,
-        created_at: timestamp,
-        updated_at: timestamp,
-        stats: normalizeStatPresetStats(heroAdjustedStats(player, "subtract")),
-      };
-      const next = sortPlayerStatPresets([preset, ...statPresets.filter((row) => row.id !== preset.id)]);
-      saveLocalStatPresets(next);
-      setStatPresets(next);
-      setLoadedPresetId(preset.id);
-      setLoadedPresetName(preset.name);
-      setPresetDraftName(preset.name);
-      setPresetStatus({ kind: "ok", message: `Created ${preset.name}.` });
-    } catch (err) {
-      setPresetStatus({
-        kind: "error",
-        message: err instanceof Error ? err.message : "Failed to save preset",
-      });
-    }
-  }
-
-  function chooseStatPreset(id: string) {
-    if (!id) {
-      setLoadedPresetId(null);
-      setLoadedPresetName(null);
-      setPresetStatus({ kind: "ok", message: "No profile loaded." });
-      return;
-    }
-    const preset = statPresets.find((row) => row.id === id);
-    if (!preset) {
-      setPresetStatus({ kind: "error", message: "Choose a profile to load." });
-      return;
-    }
+  function loadStatPreset(preset: PlayerStatPreset) {
     setPlayer((prev) => sideWithPresetStats(prev, preset));
-    setLoadedPresetId(preset.id);
-    setLoadedPresetName(preset.name);
-    setPresetDraftName(preset.name);
-    setPresetStatus({ kind: "ok", message: `Loaded ${preset.name}.` });
   }
 
   function maybeActivateSavedRun(
@@ -1118,14 +1062,21 @@ export default function BearSimClient({
       </div>
 
       {presetOpen && (
-        <PresetModal
+        <PlayerStatProfileModal
+          title="Bear profile"
+          defaultName="Bear profile"
+          currentStats={heroAdjustedStats(player, "subtract")}
           presets={statPresets}
-          activePresetId={loadedPresetId ?? ""}
-          draftName={presetDraftName}
-          status={presetStatus}
-          onDraftName={setPresetDraftName}
-          onChoose={chooseStatPreset}
-          onCreate={createStatPresetFromPlayer}
+          setPresets={setStatPresets}
+          loadedPresetId={loadedPresetId}
+          loadedPresetName={loadedPresetName}
+          selectAriaLabel="bear stat profile"
+          nameAriaLabel="bear new profile name"
+          onLoadPreset={loadStatPreset}
+          onLoadedPresetChange={(id, name) => {
+            setLoadedPresetId(id);
+            setLoadedPresetName(name);
+          }}
           onClose={() => setPresetOpen(false)}
         />
       )}
@@ -1273,63 +1224,6 @@ function SmallTextInput({ label, value, onChange, placeholder, disabled = false 
         style={{ opacity: disabled ? 0.55 : 1 }}
       />
     </label>
-  );
-}
-
-function PresetModal({
-  presets,
-  activePresetId,
-  draftName,
-  status,
-  onDraftName,
-  onChoose,
-  onCreate,
-  onClose,
-}: {
-  presets: PlayerStatPreset[];
-  activePresetId: string;
-  draftName: string;
-  status: { kind: "ok" | "error"; message: string } | null;
-  onDraftName: (value: string) => void;
-  onChoose: (id: string) => void;
-  onCreate: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-3 py-6" style={{ backgroundColor: "rgba(0,0,0,0.55)" }} role="dialog" aria-modal="true" onClick={onClose}>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          onCreate();
-        }}
-        className="sim-modal w-full max-w-md p-4 shadow-xl"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="mb-4 flex items-start justify-between gap-3">
-          <div>
-            <h3 className="sim-modal-title">Bear profile</h3>
-            <p className="sim-modal-copy mt-1">Profiles store base player stats only.</p>
-          </div>
-          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[32px] px-2 py-1 text-sm font-bold leading-none" aria-label="Close profile modal">x</button>
-        </div>
-        <label className="mb-3 flex flex-col gap-1">
-          <span className="sim-field-label">Loaded profile</span>
-          <select value={activePresetId} onChange={(event) => onChoose(event.target.value)} className="sim-input min-h-[40px] px-2 py-2 font-mono text-xs">
-            <option value="">-- None --</option>
-            {presets.map((preset) => <option key={preset.id} value={preset.id}>{preset.name}</option>)}
-          </select>
-        </label>
-        <label className="mb-4 flex flex-col gap-1">
-          <span className="sim-field-label">New profile name</span>
-          <input value={draftName} onChange={(event) => onDraftName(event.target.value)} className="sim-input min-h-[40px] px-2 py-2 text-sm" />
-        </label>
-        <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <button type="submit" className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold" style={{ color: "var(--sim-blue)" }}>Create from current stats</button>
-          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold">Done</button>
-        </div>
-        {status && <p className="mt-3 text-xs font-mono" style={{ color: status.kind === "error" ? "#f38ba8" : "#a6e3a1" }}>{status.message}</p>}
-      </form>
-    </div>
   );
 }
 

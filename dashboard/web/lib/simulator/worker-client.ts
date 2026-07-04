@@ -14,7 +14,6 @@ type WorkerJobRequest =
   | Omit<Extract<SimulatorWorkerRequest, { type: "bearOptimize" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "optimizeRatio" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "tournament" }>, "id">
-  | Omit<Extract<SimulatorWorkerRequest, { type: "surfaceSweep" }>, "id">
   | Omit<Extract<SimulatorWorkerRequest, { type: "progressiveSurfaceSweep" }>, "id">;
 
 export function runWorkerSimulation(
@@ -68,13 +67,6 @@ export function runWorkerTournament(
   return runWorkerJob<TournamentResult>({ type: "tournament", payload }, "tournamentResult", onProgress);
 }
 
-export function runWorkerSurfaceSweep(
-  payload: SurfaceSweepPayload,
-  onProgress: (done: number, total: number) => void
-): { promise: Promise<SurfaceSweepResult>; cancel: () => void } {
-  return runWorkerJob<SurfaceSweepResult>({ type: "surfaceSweep", payload }, "surfaceResult", onProgress);
-}
-
 export function runWorkerProgressiveSurfaceSweep(
   payload: SurfaceSweepPayload,
   onProgress: (done: number, total: number) => void,
@@ -99,21 +91,27 @@ function runWorkerJob<T>(
   const id = nextJobId++;
   const worker = new Worker(new URL("../../app/simulate/simulate.worker.ts", import.meta.url), { type: "module" });
   const progress = createProgressThrottle(onProgress);
+  let settled = false;
+  let rejectJob: ((reason?: unknown) => void) | null = null;
   const promise = new Promise<T>((resolve, reject) => {
+    rejectJob = reject;
     worker.onmessage = (event: MessageEvent<SimulatorWorkerResponse>) => {
       const message = event.data;
       if (message.id !== id) return;
       onMessage?.(message);
       if (message.type === "progress") progress.update(message.done, message.total);
       else if (message.type === resultType && "data" in message) {
+        settled = true;
         progress.flush();
         resolve(message.data as T);
       } else if (message.type === "error") {
+        settled = true;
         progress.cancel();
         reject(new Error(message.message));
       }
     };
     worker.onerror = (event) => {
+      settled = true;
       progress.cancel();
       reject(new Error(event.message));
     };
@@ -125,9 +123,12 @@ function runWorkerJob<T>(
   return {
     promise,
     cancel() {
+      if (settled) return;
+      settled = true;
       progress.cancel();
       worker.postMessage({ id, type: "cancel" } satisfies SimulatorWorkerRequest);
       worker.terminate();
+      rejectJob?.(new Error("cancelled"));
     },
   };
 }

@@ -69,13 +69,69 @@ test("runProgressiveSurfaceSweep emits previews and reuses completed pair result
   assert.equal(result.winrateMatrix.length, 4356);
 });
 
+test("runSurfaceSweep preserves per-side troop tiers while varying counts", async () => {
+  const attacker = {
+    ...sampleSide(),
+    troop_types: {
+      infantry: "infantry_t11_fc10",
+      lancer: "lancer_t10",
+      marksman: "marksman_t9",
+    },
+  };
+  const defender = {
+    ...sampleSide(),
+    troop_types: {
+      infantry: "infantry_t8",
+      lancer: "lancer_t7",
+      marksman: "marksman_t6",
+    },
+  };
+
+  await runSurfaceSweep(
+    {
+      ...samplePayload(),
+      attacker,
+      defender,
+      attackerTotal: 90,
+      defenderTotal: 60,
+    },
+    {
+      runBatches: async (tasks) => {
+        assert.deepEqual(Object.keys(tasks[0].attFighter.troops).sort(), [
+          "infantry_t11_fc10",
+          "lancer_t10",
+          "marksman_t9",
+        ]);
+        assert.deepEqual(Object.keys(tasks[0].defFighter.troops).sort(), [
+          "infantry_t8",
+          "lancer_t7",
+          "marksman_t6",
+        ]);
+        assert.equal(
+          Object.values(tasks[0].attFighter.troops).reduce((sum, value) => sum + value, 0),
+          90,
+        );
+        assert.equal(
+          Object.values(tasks[0].defFighter.troops).reduce((sum, value) => sum + value, 0),
+          60,
+        );
+        return tasks.map<SurfaceBatchResult>((task) => ({
+          attIdx: task.attIdx,
+          defIdx: task.defIdx,
+          winrate: 0.5,
+        }));
+      },
+    },
+  );
+});
+
 function samplePayload(): SurfaceSweepPayload {
   return {
     attacker: sampleSide(),
     defender: sampleSide(),
     pointsPerEdge: 2,
-    total: 10,
-    tier: "t1",
+    attackerTotal: 10,
+    defenderTotal: 10,
     replicates: 1,
     rallyMode: false,
     jobs: 2,

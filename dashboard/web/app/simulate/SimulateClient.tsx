@@ -14,7 +14,9 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import OptimizeRatioScatterChart from "@/components/OptimizeRatioScatterChart";
+import PlayerStatProfileModal from "@/components/PlayerStatProfileModal";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
+import TernaryPanel, { WinrateLegend } from "@/components/TernaryPanel";
 import UploadReportModal, {
   UploadActiveModifiers,
   UploadReportSubmission,
@@ -54,6 +56,7 @@ import {
   OptimizeSide,
   recommendedOptimizeStep,
   resolveInfantryBounds,
+  resolveAdaptiveSearchSettings,
   totalTroopsForCounts,
 } from "@/lib/optimize-ratio";
 import {
@@ -73,20 +76,39 @@ import {
   SimulateStatModifiersPayload,
   SimulateTrace,
   SimulateTraceUnit,
+  SurfaceSweepApiResponse,
 } from "@/lib/simulate-run";
 import {
-  cleanStatPresetName,
-  MAX_STAT_PRESETS,
-  normalizePlayerStatPreset,
-  normalizeStatPresetStats,
-  sortPlayerStatPresets,
+  loadLocalStatPresets,
   type PlayerStatPreset,
   type StatPresetValues,
 } from "@/lib/stat-presets";
-import { runWorkerOptimizeRatio, runWorkerSimulation, runWorkerSimulationTrace } from "@/lib/simulator/worker-client";
+import {
+  estimateProgressiveSurfaceBattles,
+  latticePoints,
+  progressiveSurfaceStages,
+  SURFACE_RATIO_TOTAL,
+  type SurfaceSweepPayload,
+  type SurfaceSweepResult,
+} from "@/lib/simulator/surface";
+import {
+  attackerSurfaceValues,
+  defenderSurfaceValues,
+  nextNullableNumberState,
+  nextProgressState,
+  surfacePointLabel,
+  type SurfaceProgressState,
+} from "@/lib/simulator/surface-view";
+import {
+  runWorkerOptimizeRatio,
+  runWorkerProgressiveSurfaceSweep,
+  runWorkerSimulation,
+  runWorkerSimulationTrace,
+} from "@/lib/simulator/worker-client";
 
 export type Side = "attacker" | "defender";
 type SimWorkspaceTab = Side | "setup" | "results";
+type RunMode = "simulate" | "optimise" | "explore";
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
 const STAT_NAMES: ("attack" | "defense" | "lethality" | "health")[] = [
   "attack",
@@ -161,6 +183,9 @@ const SAVED_RUN_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
   hour12: false,
 });
 const RECENT_RUNS_PAGE_SIZE = 20;
+const DEFAULT_SURFACE_POINTS_PER_EDGE = 11;
+const DEFAULT_SURFACE_REPLICATES = 5;
+const DEFAULT_SURFACE_JOBS = 4;
 
 export interface HeroSlotState {
   name: string | null;
@@ -197,11 +222,10 @@ interface SaveMetaPayload {
   share_url?: string;
 }
 
-type PresetStatus = { kind: "ok" | "error"; message: string } | null;
-
 function savedRunKindLabel(kind: SavedSimulationKind): string {
   if (kind === "simulate") return "Simulation";
   if (kind === "optimize_ratio") return "Ratio search";
+  if (kind === "ratio_explorer") return "Explore ratios";
   if (kind === "bear_simulate") return "Bear sim";
   return "Bear ratio search";
 }
@@ -215,7 +239,6 @@ function formatSavedRunTimestamp(iso: string): string {
 }
 
 const DEFAULT_PAGE_TITLE = "Simulate Battle - WOS Simulator Dashboard";
-const STAT_PRESETS_STORAGE_KEY = "wos-simulator.player-stat-presets.v1";
 const AUTO_SELECT_INPUT_TYPES = new Set([
   "number",
   "text",
@@ -257,34 +280,6 @@ function useWideSimLayout() {
   }, []);
 
   return wide;
-}
-
-export function newStatPresetId(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return `preset-${Date.now().toString(36)}-${Math.random()
-    .toString(36)
-    .slice(2, 10)}`;
-}
-
-export function loadLocalStatPresets(): PlayerStatPreset[] {
-  if (typeof window === "undefined") return [];
-  const raw = window.localStorage.getItem(STAT_PRESETS_STORAGE_KEY);
-  if (!raw) return [];
-  const parsed = JSON.parse(raw) as unknown;
-  if (!Array.isArray(parsed)) {
-    throw new Error("Preset store must be an array");
-  }
-  return sortPlayerStatPresets(parsed.map(normalizePlayerStatPreset));
-}
-
-export function saveLocalStatPresets(presets: PlayerStatPreset[]): void {
-  if (typeof window === "undefined") return;
-  window.localStorage.setItem(
-    STAT_PRESETS_STORAGE_KEY,
-    JSON.stringify(sortPlayerStatPresets(presets)),
-  );
 }
 
 export function defaultSide(): SideState {
@@ -940,12 +935,20 @@ interface InitialSavedRunState {
   rallyMode: boolean;
   result: SimulateApiResponse | null;
   optimizeResult: OptimizeRatioApiResponse | null;
+  surfaceResult: SurfaceSweepApiResponse | null;
   optimizeReplicates: number;
   optimizeStepInput: string;
+  adaptivePhase1Replicates: number;
+  adaptivePhase2Replicates: number;
+  adaptiveFinalReplicates: number;
   optimizeInfantryMinPct: number;
   optimizeInfantryMaxPct: number;
   optimizeSearchMode: OptimizeSearchMode;
   optimizeSide: OptimizeSide;
+  surfacePointsPerEdge: number;
+  surfaceReplicates: number;
+  surfaceJobs: number;
+  surfaceShownPointsPerEdge: number | null;
   savedRunMeta: SavedRunMeta | null;
   savedRunError: string | null;
 }
@@ -963,18 +966,26 @@ function buildInitialSavedRunState(
       rallyMode: false,
       result: null,
       optimizeResult: null,
+      surfaceResult: null,
       optimizeReplicates: DEFAULT_OPTIMIZE_REPLICATES,
       optimizeStepInput: "",
+      adaptivePhase1Replicates: ADAPTIVE_PHASE1_REPLICATES,
+      adaptivePhase2Replicates: ADAPTIVE_PHASE2_REPLICATES,
+      adaptiveFinalReplicates: ADAPTIVE_FINAL_REPLICATES,
       optimizeInfantryMinPct: DEFAULT_INFANTRY_MIN_PCT,
       optimizeInfantryMaxPct: DEFAULT_INFANTRY_MAX_PCT,
       optimizeSearchMode: DEFAULT_OPTIMIZE_SEARCH_MODE,
       optimizeSide: DEFAULT_OPTIMIZE_SIDE,
+      surfacePointsPerEdge: DEFAULT_SURFACE_POINTS_PER_EDGE,
+      surfaceReplicates: DEFAULT_SURFACE_REPLICATES,
+      surfaceJobs: DEFAULT_SURFACE_JOBS,
+      surfaceShownPointsPerEdge: null,
       savedRunMeta: null,
       savedRunError: error ?? null,
     };
   }
 
-  const request = saved.request as SimulateRequestPayload;
+  const request = saved.request as SimulateRequestPayload | SurfaceSweepPayload;
   const base = {
     attacker: sideFromPayload(request.attacker),
     defender: sideFromPayload(request.defender),
@@ -988,17 +999,14 @@ function buildInitialSavedRunState(
           ? request.defender.stat_profile_name
           : null,
     },
-    replicates: Math.max(
-      1,
-      Math.min(5000, clampValue(request.replicates, 1000)),
-    ),
-    rallyMode: Boolean(request.rally_mode),
+    replicates: Math.max(1, Math.min(5000, clampValue("replicates" in request ? request.replicates : 1000, 1000))),
+    rallyMode: Boolean("rallyMode" in request ? request.rallyMode : request.rally_mode),
     savedRunMeta: {
       id: saved.id,
       kind: saved.kind,
       createdAt: saved.created_at,
       shareUrl: saved.share_url,
-      title: buildSimulationRunTitle(saved.request),
+      title: buildSimulationRunTitle(saved.request, saved.kind),
     },
     savedRunError: null,
   };
@@ -1014,19 +1022,70 @@ function buildInitialSavedRunState(
         share_url: saved.share_url,
       },
       optimizeResult: null,
+      surfaceResult: null,
       optimizeReplicates: DEFAULT_OPTIMIZE_REPLICATES,
       optimizeStepInput: "",
+      adaptivePhase1Replicates: ADAPTIVE_PHASE1_REPLICATES,
+      adaptivePhase2Replicates: ADAPTIVE_PHASE2_REPLICATES,
+      adaptiveFinalReplicates: ADAPTIVE_FINAL_REPLICATES,
       optimizeInfantryMinPct: DEFAULT_INFANTRY_MIN_PCT,
       optimizeInfantryMaxPct: DEFAULT_INFANTRY_MAX_PCT,
       optimizeSearchMode: DEFAULT_OPTIMIZE_SEARCH_MODE,
       optimizeSide: DEFAULT_OPTIMIZE_SIDE,
+      surfacePointsPerEdge: DEFAULT_SURFACE_POINTS_PER_EDGE,
+      surfaceReplicates: DEFAULT_SURFACE_REPLICATES,
+      surfaceJobs: DEFAULT_SURFACE_JOBS,
+      surfaceShownPointsPerEdge: null,
+    };
+  }
+
+  if (saved.kind === "ratio_explorer") {
+    const surfaceRequest = saved.request as SurfaceSweepPayload;
+    return {
+      ...base,
+      result: null,
+      optimizeResult: null,
+      surfaceResult: {
+        ...(saved.result as SurfaceSweepResult),
+        saved_run_id: saved.id,
+        saved_at: saved.created_at,
+        saved_kind: saved.kind,
+        share_url: saved.share_url,
+      },
+      optimizeReplicates: DEFAULT_OPTIMIZE_REPLICATES,
+      optimizeStepInput: "",
+      adaptivePhase1Replicates: ADAPTIVE_PHASE1_REPLICATES,
+      adaptivePhase2Replicates: ADAPTIVE_PHASE2_REPLICATES,
+      adaptiveFinalReplicates: ADAPTIVE_FINAL_REPLICATES,
+      optimizeInfantryMinPct: DEFAULT_INFANTRY_MIN_PCT,
+      optimizeInfantryMaxPct: DEFAULT_INFANTRY_MAX_PCT,
+      optimizeSearchMode: DEFAULT_OPTIMIZE_SEARCH_MODE,
+      optimizeSide: DEFAULT_OPTIMIZE_SIDE,
+      surfacePointsPerEdge: Math.max(
+        1,
+        Math.min(21, Math.floor(surfaceRequest.pointsPerEdge || DEFAULT_SURFACE_POINTS_PER_EDGE)),
+      ),
+      surfaceReplicates: Math.max(
+        1,
+        Math.min(50, Math.floor(surfaceRequest.replicates || DEFAULT_SURFACE_REPLICATES)),
+      ),
+      surfaceJobs: Math.max(
+        1,
+        Math.min(16, Math.floor(surfaceRequest.jobs || DEFAULT_SURFACE_JOBS)),
+      ),
+      surfaceShownPointsPerEdge: Math.max(
+        1,
+        Math.min(21, Math.floor(surfaceRequest.pointsPerEdge || DEFAULT_SURFACE_POINTS_PER_EDGE)),
+      ),
     };
   }
 
   const optimizeRequest = saved.request as OptimizeRatioRequestPayload;
+  const adaptiveSettings = resolveAdaptiveSearchSettings(optimizeRequest);
   return {
     ...base,
     result: null,
+    surfaceResult: null,
     optimizeResult: {
       ...(saved.result as OptimizeRatioResult),
       saved_run_id: saved.id,
@@ -1047,6 +1106,9 @@ function buildInitialSavedRunState(
     optimizeStepInput: Number.isFinite(optimizeRequest.grid_step)
       ? String(optimizeRequest.grid_step)
       : "",
+    adaptivePhase1Replicates: adaptiveSettings.adaptive_phase1_replicates,
+    adaptivePhase2Replicates: adaptiveSettings.adaptive_phase2_replicates,
+    adaptiveFinalReplicates: adaptiveSettings.adaptive_final_replicates,
     optimizeInfantryMinPct: clampValue(
       optimizeRequest.infantry_min_pct,
       DEFAULT_INFANTRY_MIN_PCT,
@@ -1059,6 +1121,10 @@ function buildInitialSavedRunState(
       optimizeRequest.search_mode === "grid" ? "grid" : DEFAULT_OPTIMIZE_SEARCH_MODE,
     optimizeSide:
       optimizeRequest.optimize_side === "defender" ? "defender" : DEFAULT_OPTIMIZE_SIDE,
+    surfacePointsPerEdge: DEFAULT_SURFACE_POINTS_PER_EDGE,
+    surfaceReplicates: DEFAULT_SURFACE_REPLICATES,
+    surfaceJobs: DEFAULT_SURFACE_JOBS,
+    surfaceShownPointsPerEdge: null,
   };
 }
 
@@ -1095,7 +1161,7 @@ export default function SimulateClient({
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
   const [rallyMode, setRallyMode] = useState(() => initialState.rallyMode);
   const [mobileTab, setMobileTab] = useState<SimWorkspaceTab>(() =>
-    initialState.result || initialState.optimizeResult ? "results" : "attacker",
+    initialState.result || initialState.optimizeResult || initialState.surfaceResult ? "results" : "attacker",
   );
   const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(true);
   const wideSimLayout = useWideSimLayout();
@@ -1108,15 +1174,35 @@ export default function SimulateClient({
     useState<OptimizeRatioResult | OptimizeRatioApiResponse | null>(
       () => initialState.optimizeResult,
     );
+  const [surfaceResult, setSurfaceResult] =
+    useState<SurfaceSweepResult | SurfaceSweepApiResponse | null>(
+      () => initialState.surfaceResult,
+    );
   const [selectedOptimizeRowKey, setSelectedOptimizeRowKey] = useState<string | null>(
     null,
   );
-  const [optimizePanelOpen, setOptimizePanelOpen] = useState(false);
+  const [runMode, setRunMode] = useState<RunMode>(() =>
+    initialState.surfaceResult
+      ? "explore"
+      : initialState.optimizeResult
+        ? "optimise"
+        : "simulate",
+  );
+  const [runOptionsOpen, setRunOptionsOpen] = useState(false);
   const [optimizeReplicates, setOptimizeReplicates] = useState<number>(
     () => initialState.optimizeReplicates,
   );
   const [optimizeStepInput, setOptimizeStepInput] = useState(
     () => initialState.optimizeStepInput,
+  );
+  const [adaptivePhase1Replicates, setAdaptivePhase1Replicates] = useState(
+    () => initialState.adaptivePhase1Replicates,
+  );
+  const [adaptivePhase2Replicates, setAdaptivePhase2Replicates] = useState(
+    () => initialState.adaptivePhase2Replicates,
+  );
+  const [adaptiveFinalReplicates, setAdaptiveFinalReplicates] = useState(
+    () => initialState.adaptiveFinalReplicates,
   );
   const [optimizeInfantryMinPct, setOptimizeInfantryMinPct] = useState(
     () => initialState.optimizeInfantryMinPct,
@@ -1130,6 +1216,24 @@ export default function SimulateClient({
   const [optimizeSide, setOptimizeSide] = useState<OptimizeSide>(
     () => initialState.optimizeSide,
   );
+  const [surfaceLoading, setSurfaceLoading] = useState(false);
+  const [surfaceError, setSurfaceError] = useState<string | null>(null);
+  const [surfacePointsPerEdge, setSurfacePointsPerEdge] = useState(
+    () => initialState.surfacePointsPerEdge,
+  );
+  const [surfaceReplicates, setSurfaceReplicates] = useState(
+    () => initialState.surfaceReplicates,
+  );
+  const [surfaceJobs, setSurfaceJobs] = useState(() => initialState.surfaceJobs);
+  const [surfaceProgress, setSurfaceProgress] = useState<SurfaceProgressState>(null);
+  const [surfaceShownPointsPerEdge, setSurfaceShownPointsPerEdge] = useState<number | null>(
+    () => initialState.surfaceShownPointsPerEdge,
+  );
+  const [hoveredSurfaceAttIdx, setHoveredSurfaceAttIdx] = useState<number | null>(null);
+  const [hoveredSurfaceDefIdx, setHoveredSurfaceDefIdx] = useState<number | null>(null);
+  const [pinnedSurfaceAttIdx, setPinnedSurfaceAttIdx] = useState<number | null>(null);
+  const [pinnedSurfaceDefIdx, setPinnedSurfaceDefIdx] = useState<number | null>(null);
+  const surfaceCancelRef = useRef<(() => void) | null>(null);
   const [savedRunMeta, setSavedRunMeta] = useState<SavedRunMeta | null>(
     () => initialState.savedRunMeta,
   );
@@ -1149,9 +1253,6 @@ export default function SimulateClient({
     Record<Side, string | null>
   >(() => initialState.loadedPresetNames);
   const [presetModalSide, setPresetModalSide] = useState<Side | null>(null);
-  const [presetSelectedId, setPresetSelectedId] = useState("");
-  const [presetDraftName, setPresetDraftName] = useState("");
-  const [presetStatus, setPresetStatus] = useState<PresetStatus>(null);
   const [recentRunsOpen, setRecentRunsOpen] = useState(false);
   const [recentRuns, setRecentRuns] = useState<SavedSimulationRunListItem[]>([]);
   const [recentRunsLoading, setRecentRunsLoading] = useState(false);
@@ -1169,6 +1270,7 @@ export default function SimulateClient({
   useEffect(() => {
     return () => {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      surfaceCancelRef.current?.();
     };
   }, []);
 
@@ -1199,14 +1301,8 @@ export default function SimulateClient({
       try {
         const presets = loadLocalStatPresets();
         if (!cancelled) setStatPresets(presets);
-      } catch (err) {
-        if (!cancelled) {
-          setPresetStatus({
-            kind: "error",
-            message:
-              err instanceof Error ? err.message : "Failed to load presets",
-          });
-        }
+      } catch {
+        // Ignore malformed local profile storage; the modal can create a fresh list.
       } finally {
         if (!cancelled) setLoadingPresets(false);
       }
@@ -1269,7 +1365,7 @@ export default function SimulateClient({
   }, []);
 
   const applySavedRun = useCallback((saved: SavedSimulationRunResponse) => {
-    const request = saved.request as SimulateRequestPayload;
+    const request = saved.request as SimulateRequestPayload | SurfaceSweepPayload;
     setAttacker(sideFromPayload(request.attacker));
     setDefender(sideFromPayload(request.defender));
     setLoadedPresetIds({ attacker: null, defender: null });
@@ -1284,14 +1380,19 @@ export default function SimulateClient({
           : null,
     });
     setReplicates(
-      Math.max(1, Math.min(5000, clampValue(request.replicates, 1000))),
+      Math.max(
+        1,
+        Math.min(5000, clampValue("replicates" in request ? request.replicates : 1000, 1000)),
+      ),
     );
-    setRallyMode(Boolean(request.rally_mode));
+    setRallyMode(Boolean("rallyMode" in request ? request.rallyMode : request.rally_mode));
     setUploadWarnings([]);
     setError(null);
     setOptimizeError(null);
+    setSurfaceError(null);
 
     if (saved.kind === "simulate") {
+      setRunMode("simulate");
       setResult({
         ...(saved.result as SimulateApiResponse),
         saved_run_id: saved.id,
@@ -1301,9 +1402,12 @@ export default function SimulateClient({
       });
       setBattleTrace((saved.result as SimulateApiResponse).trace ?? null);
       setOptimizeResult(null);
+      setSurfaceResult(null);
       setMobileTab("results");
-    } else {
+    } else if (saved.kind === "optimize_ratio") {
+      setRunMode("optimise");
       const optimizeRequest = saved.request as OptimizeRatioRequestPayload;
+      const adaptiveSettings = resolveAdaptiveSearchSettings(optimizeRequest);
       setOptimizeReplicates(
         Math.max(
           1,
@@ -1321,6 +1425,9 @@ export default function SimulateClient({
           ? String(optimizeRequest.grid_step)
           : "",
       );
+      setAdaptivePhase1Replicates(adaptiveSettings.adaptive_phase1_replicates);
+      setAdaptivePhase2Replicates(adaptiveSettings.adaptive_phase2_replicates);
+      setAdaptiveFinalReplicates(adaptiveSettings.adaptive_final_replicates);
       setOptimizeInfantryMinPct(
         clampValue(optimizeRequest.infantry_min_pct, DEFAULT_INFANTRY_MIN_PCT),
       );
@@ -1338,6 +1445,7 @@ export default function SimulateClient({
           : DEFAULT_OPTIMIZE_SIDE,
       );
       setResult(null);
+      setSurfaceResult(null);
       setBattleTrace(null);
       setSelectedOptimizeRowKey(null);
       setOptimizeResult({
@@ -1348,6 +1456,50 @@ export default function SimulateClient({
         share_url: saved.share_url,
       });
       setMobileTab("results");
+    } else {
+      setRunMode("explore");
+      const surfaceRequest = saved.request as SurfaceSweepPayload;
+      setResult(null);
+      setBattleTrace(null);
+      setOptimizeResult(null);
+      setSelectedOptimizeRowKey(null);
+      setSurfaceResult({
+        ...(saved.result as SurfaceSweepResult),
+        saved_run_id: saved.id,
+        saved_at: saved.created_at,
+        saved_kind: saved.kind,
+        share_url: saved.share_url,
+      });
+      setSurfacePointsPerEdge(
+        Math.max(
+          1,
+          Math.min(21, Math.floor(surfaceRequest.pointsPerEdge || DEFAULT_SURFACE_POINTS_PER_EDGE)),
+        ),
+      );
+      setSurfaceReplicates(
+        Math.max(
+          1,
+          Math.min(50, Math.floor(surfaceRequest.replicates || DEFAULT_SURFACE_REPLICATES)),
+        ),
+      );
+      setSurfaceJobs(
+        Math.max(
+          1,
+          Math.min(16, Math.floor(surfaceRequest.jobs || DEFAULT_SURFACE_JOBS)),
+        ),
+      );
+      setSurfaceShownPointsPerEdge(
+        Math.max(
+          1,
+          Math.min(21, Math.floor(surfaceRequest.pointsPerEdge || DEFAULT_SURFACE_POINTS_PER_EDGE)),
+        ),
+      );
+      setSurfaceProgress(null);
+      setPinnedSurfaceAttIdx(null);
+      setPinnedSurfaceDefIdx(null);
+      setHoveredSurfaceAttIdx(null);
+      setHoveredSurfaceDefIdx(null);
+      setMobileTab("results");
     }
 
     storeSavedRunMeta({
@@ -1355,20 +1507,21 @@ export default function SimulateClient({
       kind: saved.kind,
       createdAt: saved.created_at,
       shareUrl: saved.share_url,
-      title: buildSimulationRunTitle(saved.request),
+      title: buildSimulationRunTitle(saved.request, saved.kind),
     });
   }, [storeSavedRunMeta]);
 
   function maybeActivateSavedRun(
     meta: SaveMetaPayload,
-    request: SimulateRequestPayload | OptimizeRatioRequestPayload,
+    request: SimulateRequestPayload | OptimizeRatioRequestPayload | SurfaceSweepPayload,
   ) {
     if (
       typeof meta.saved_run_id !== "string" ||
       typeof meta.saved_at !== "string" ||
       typeof meta.share_url !== "string" ||
       (meta.saved_kind !== "simulate" &&
-        meta.saved_kind !== "optimize_ratio")
+        meta.saved_kind !== "optimize_ratio" &&
+        meta.saved_kind !== "ratio_explorer")
     ) {
       return;
     }
@@ -1376,7 +1529,7 @@ export default function SimulateClient({
     const kind = meta.saved_kind;
     const createdAt = meta.saved_at;
     const shareUrl = meta.share_url;
-    const title = buildSimulationRunTitle(request);
+    const title = buildSimulationRunTitle(request, kind);
     storeSavedRunMeta({
       id,
       kind,
@@ -1405,7 +1558,7 @@ export default function SimulateClient({
 
   async function saveComputedRun(
     kind: SavedSimulationKind,
-    request: SimulateRequestPayload | OptimizeRatioRequestPayload,
+    request: SimulateRequestPayload | OptimizeRatioRequestPayload | SurfaceSweepPayload,
     computedResult: SavedSimulationResult,
   ): Promise<SaveMetaPayload | null> {
     const res = await fetch("/api/simulate/runs", {
@@ -1440,16 +1593,32 @@ export default function SimulateClient({
       setBattleTrace(null);
       setTraceError(null);
       setOptimizeResult(null);
+      setSurfaceResult(null);
       setSelectedOptimizeRowKey(null);
       setOptimizeError(null);
+      setSurfaceError(null);
       setOptimizeReplicates(plainState.optimizeReplicates);
       setOptimizeStepInput(plainState.optimizeStepInput);
+      setAdaptivePhase1Replicates(plainState.adaptivePhase1Replicates);
+      setAdaptivePhase2Replicates(plainState.adaptivePhase2Replicates);
+      setAdaptiveFinalReplicates(plainState.adaptiveFinalReplicates);
       setOptimizeInfantryMinPct(plainState.optimizeInfantryMinPct);
       setOptimizeInfantryMaxPct(plainState.optimizeInfantryMaxPct);
       setOptimizeSearchMode(plainState.optimizeSearchMode);
       setOptimizeSide(plainState.optimizeSide);
+      setRunMode("simulate");
+      setRunOptionsOpen(false);
+      setSurfacePointsPerEdge(plainState.surfacePointsPerEdge);
+      setSurfaceReplicates(plainState.surfaceReplicates);
+      setSurfaceJobs(plainState.surfaceJobs);
       setSimulateProgress(null);
       setOptimizeProgress(null);
+      setSurfaceProgress(null);
+      setSurfaceShownPointsPerEdge(null);
+      setPinnedSurfaceAttIdx(null);
+      setPinnedSurfaceDefIdx(null);
+      setHoveredSurfaceAttIdx(null);
+      setHoveredSurfaceDefIdx(null);
       setMobileTab("attacker");
       setUploadWarnings([]);
       setError(null);
@@ -1575,119 +1744,22 @@ export default function SimulateClient({
   const setSide = (side: Side) =>
     side === "attacker" ? setAttacker : setDefender;
 
-  const loadedPresetId = presetModalSide
-    ? loadedPresetIds[presetModalSide] ?? ""
-    : "";
-
   function openStatPresetModal(side: Side) {
-    const loadedPreset = statPresets.find((p) => p.id === loadedPresetIds[side]);
-    setPresetSelectedId(loadedPreset?.id ?? loadedPresetIds[side] ?? "");
     setPresetModalSide(side);
-    setPresetDraftName(
-      loadedPreset?.name ??
-        loadedPresetNames[side] ??
-        `${SIDE_LABELS[side]} profile`,
-    );
-    setPresetStatus(null);
   }
 
   function closeStatPresetModal() {
     setPresetModalSide(null);
-    setPresetStatus(null);
   }
 
-  function createStatPresetFromSide() {
-    if (!presetModalSide) return;
-    setPresetStatus(null);
-    const source = presetModalSide === "attacker" ? attacker : defender;
-    try {
-      const cleanName = cleanStatPresetName(presetDraftName);
-      const fallbackName = `Preset ${statPresets.length + 1}`;
-      const presetName = cleanName || fallbackName;
-      const existingPreset =
-        statPresets.find((p) => p.id === presetSelectedId) ??
-        statPresets.find(
-          (p) => p.name.toLocaleLowerCase() === presetName.toLocaleLowerCase(),
-        );
-      if (!existingPreset && statPresets.length >= MAX_STAT_PRESETS) {
-        throw new Error(`Preset limit reached (${MAX_STAT_PRESETS})`);
-      }
-      const timestamp = new Date().toISOString();
-      const preset: PlayerStatPreset = {
-        id: existingPreset?.id ?? newStatPresetId(),
-        name: presetName,
-        created_at: existingPreset?.created_at ?? timestamp,
-        updated_at: timestamp,
-        stats: normalizeStatPresetStats(heroAdjustedStats(source, "subtract")),
-      };
-      const nextPresets = sortPlayerStatPresets([
-        preset,
-        ...statPresets.filter((p) => p.id !== preset.id),
-      ]);
-      saveLocalStatPresets(nextPresets);
-      setStatPresets(nextPresets);
-      setLoadedPresetIds((prev) => ({ ...prev, [presetModalSide]: preset.id }));
-      setLoadedPresetNames((prev) => ({ ...prev, [presetModalSide]: preset.name }));
-      setPresetSelectedId(preset.id);
-      setPresetDraftName(preset.name);
-      setPresetStatus({
-        kind: "ok",
-        message: `${existingPreset ? "Updated" : "Created"} ${preset.name} from ${SIDE_LABELS[presetModalSide].toLowerCase()} stats.`,
-      });
-    } catch (err) {
-      setPresetStatus({
-        kind: "error",
-        message: err instanceof Error ? err.message : "Failed to save preset",
-      });
-    }
-  }
-
-  function chooseStatPreset(id: string) {
-    if (!presetModalSide) return;
-    setPresetSelectedId(id);
-    if (!id) {
-      setPresetDraftName(`${SIDE_LABELS[presetModalSide]} profile`);
-      setPresetStatus(null);
-      return;
-    }
-    const selectedPreset = statPresets.find((p) => p.id === id);
-    if (!selectedPreset) {
-      setPresetStatus({ kind: "error", message: "Choose a profile." });
-      return;
-    }
-    setPresetDraftName(selectedPreset.name);
-    setPresetStatus(null);
-  }
-
-  function loadSelectedStatPreset() {
-    if (!presetModalSide) return;
-    if (!presetSelectedId) {
-      setLoadedPresetIds((prev) => ({ ...prev, [presetModalSide]: null }));
-      setLoadedPresetNames((prev) => ({ ...prev, [presetModalSide]: null }));
-      setPresetDraftName(`${SIDE_LABELS[presetModalSide]} profile`);
-      setPresetStatus({
-        kind: "ok",
-        message: `${SIDE_LABELS[presetModalSide]} has no loaded profile.`,
-      });
-      return;
-    }
-    const selectedPreset = statPresets.find((p) => p.id === presetSelectedId);
-    if (!selectedPreset) {
-      setPresetStatus({ kind: "error", message: "Choose a profile to load." });
-      return;
-    }
-    const setter = presetModalSide === "attacker" ? setAttacker : setDefender;
+  function loadStatPreset(side: Side, selectedPreset: PlayerStatPreset) {
+    const setter = side === "attacker" ? setAttacker : setDefender;
     setter((prev) => sideWithPresetStats(prev, selectedPreset));
-    setLoadedPresetIds((prev) => ({ ...prev, [presetModalSide]: selectedPreset.id }));
-    setLoadedPresetNames((prev) => ({
-      ...prev,
-      [presetModalSide]: selectedPreset.name,
-    }));
-    setPresetDraftName(selectedPreset.name);
-    setPresetStatus({
-      kind: "ok",
-      message: `Loaded ${selectedPreset.name} into ${presetModalSide}.`,
-    });
+  }
+
+  function setLoadedStatPreset(side: Side, id: string | null, name: string | null) {
+    setLoadedPresetIds((prev) => ({ ...prev, [side]: id }));
+    setLoadedPresetNames((prev) => ({ ...prev, [side]: name }));
   }
 
   function applyUpload(submission: UploadReportSubmission) {
@@ -1735,6 +1807,7 @@ export default function SimulateClient({
   }
 
   async function runSimulation() {
+    setRunMode("simulate");
     setLoading(true);
     setError(null);
     setTraceError(null);
@@ -1742,6 +1815,8 @@ export default function SimulateClient({
     setResult(null);
     setOptimizeError(null);
     setOptimizeResult(null);
+    setSurfaceError(null);
+    setSurfaceResult(null);
     setSelectedOptimizeRowKey(null);
     setSavedRunError(null);
     setSimulateProgress({ done: 0, total: replicates });
@@ -1797,6 +1872,7 @@ export default function SimulateClient({
   }
 
   async function runOptimizeRatio() {
+    setRunMode("optimise");
     setOptimizeLoading(true);
     setError(null);
     setTraceError(null);
@@ -1804,6 +1880,8 @@ export default function SimulateClient({
     setResult(null);
     setOptimizeError(null);
     setOptimizeResult(null);
+    setSurfaceError(null);
+    setSurfaceResult(null);
     setSelectedOptimizeRowKey(null);
     setSavedRunError(null);
     setOptimizeProgress({ done: 0, total: estimatedOptimizeCompositions });
@@ -1819,6 +1897,9 @@ export default function SimulateClient({
         ...basePayload,
         grid_step: resolvedOptimizeStep,
         search_replicates: optimizeReplicates,
+        adaptive_phase1_replicates: resolvedAdaptiveSearchSettings.adaptive_phase1_replicates,
+        adaptive_phase2_replicates: resolvedAdaptiveSearchSettings.adaptive_phase2_replicates,
+        adaptive_final_replicates: resolvedAdaptiveSearchSettings.adaptive_final_replicates,
         infantry_min_pct: resolvedInfantryBounds.minPct,
         infantry_max_pct: resolvedInfantryBounds.maxPct,
         top_n: DEFAULT_TOP_RESULTS,
@@ -1846,6 +1927,93 @@ export default function SimulateClient({
       setOptimizeError(err instanceof Error ? err.message : String(err));
     } finally {
       setOptimizeLoading(false);
+    }
+  }
+
+  async function runSurfaceExplore() {
+    setRunMode("explore");
+    if (surfaceLoading) {
+      surfaceCancelRef.current?.();
+      return;
+    }
+    setSurfaceLoading(true);
+    setError(null);
+    setTraceError(null);
+    setBattleTrace(null);
+    setResult(null);
+    setOptimizeError(null);
+    setOptimizeResult(null);
+    setSelectedOptimizeRowKey(null);
+    setSurfaceError(null);
+    setSurfaceResult(null);
+    setSurfaceShownPointsPerEdge(null);
+    setPinnedSurfaceAttIdx(null);
+    setPinnedSurfaceDefIdx(null);
+    setHoveredSurfaceAttIdx(null);
+    setHoveredSurfaceDefIdx(null);
+    setSavedRunError(null);
+    setSurfaceProgress({ done: 0, total: surfaceEstimatedBattles });
+
+    const basePayload = toApiPayload(
+      attacker,
+      defender,
+      1,
+      rallyMode,
+      loadedPresetNames,
+    );
+    const payload = {
+      attacker: basePayload.attacker,
+      defender: basePayload.defender,
+      attackerTotal: attackerTotalTroops,
+      defenderTotal: defenderTotalTroops,
+      pointsPerEdge: surfacePointsPerEdge,
+      replicates: surfaceReplicates,
+      rallyMode,
+      jobs: surfaceJobs,
+    } satisfies SurfaceSweepPayload;
+    const job = runWorkerProgressiveSurfaceSweep(
+      payload,
+      (done, total) => {
+        setSurfaceProgress((prev) => nextProgressState(prev, done, total));
+      },
+      (stage) => {
+        setSurfaceResult(stage.result);
+        setSurfaceShownPointsPerEdge((prev) =>
+          nextNullableNumberState(prev, stage.pointsPerEdge),
+        );
+        setPinnedSurfaceAttIdx((prev) => nextNullableNumberState(prev, null));
+        setPinnedSurfaceDefIdx((prev) => nextNullableNumberState(prev, null));
+        setHoveredSurfaceAttIdx((prev) => nextNullableNumberState(prev, null));
+        setHoveredSurfaceDefIdx((prev) => nextNullableNumberState(prev, null));
+      },
+    );
+    surfaceCancelRef.current = job.cancel;
+    try {
+      const computed = await job.promise;
+      setSurfaceResult(computed);
+      setSurfaceShownPointsPerEdge((prev) =>
+        nextNullableNumberState(prev, surfacePointsPerEdge),
+      );
+      setMobileTab("results");
+      setSurfaceLoading(false);
+      surfaceCancelRef.current = null;
+      try {
+        const saveMeta = await saveComputedRun("ratio_explorer", payload, computed);
+        if (saveMeta) maybeActivateSavedRun(saveMeta, payload);
+      } catch (saveErr) {
+        setSavedRunError(
+          saveErr instanceof Error
+            ? saveErr.message
+            : "Explore ratios completed but failed to save",
+        );
+      }
+    } catch (err) {
+      if (err instanceof Error && err.message !== "cancelled") {
+        setSurfaceError(err.message);
+      }
+    } finally {
+      setSurfaceLoading(false);
+      surfaceCancelRef.current = null;
     }
   }
 
@@ -1912,7 +2080,6 @@ export default function SimulateClient({
     optimizeSide === "defender" ? SIDE_LABELS.defender : SIDE_LABELS.attacker;
   const staticSideLabel =
     optimizeSide === "defender" ? SIDE_LABELS.attacker : SIDE_LABELS.defender;
-  const actionHelpText = `Simulate runs the attacker and defender exactly as configured. Optimise searches ${optimizedSideLabel.toLowerCase()} troop ratios while keeping troops, tiers, heroes, stats, and the ${staticSideLabel.toLowerCase()} setup fixed.`;
 
   const resolvedOptimizeStep = useMemo(() => {
     const parsed = parseInt(optimizeStepInput, 10);
@@ -1925,6 +2092,16 @@ export default function SimulateClient({
   const resolvedInfantryBounds = useMemo(
     () => resolveInfantryBounds(optimizeInfantryMinPct, optimizeInfantryMaxPct),
     [optimizeInfantryMaxPct, optimizeInfantryMinPct],
+  );
+
+  const resolvedAdaptiveSearchSettings = useMemo(
+    () =>
+      resolveAdaptiveSearchSettings({
+        adaptive_phase1_replicates: adaptivePhase1Replicates,
+        adaptive_phase2_replicates: adaptivePhase2Replicates,
+        adaptive_final_replicates: adaptiveFinalReplicates,
+      }),
+    [adaptiveFinalReplicates, adaptivePhase1Replicates, adaptivePhase2Replicates],
   );
 
   const estimatedOptimizeCompositions = useMemo(
@@ -1954,12 +2131,14 @@ export default function SimulateClient({
         ? estimateAdaptiveBattleCount(
             resolvedInfantryBounds.minPct,
             resolvedInfantryBounds.maxPct,
+            resolvedAdaptiveSearchSettings,
           )
         : estimatedOptimizeCompositions * optimizeReplicates,
     [
       estimatedOptimizeCompositions,
       optimizeReplicates,
       optimizeSearchMode,
+      resolvedAdaptiveSearchSettings,
       resolvedInfantryBounds.maxPct,
       resolvedInfantryBounds.minPct,
     ],
@@ -1970,6 +2149,126 @@ export default function SimulateClient({
     estimatedOptimizeBattles > MAX_OPTIMIZE_BATTLES;
   const optimizeInputsValid = resolvedInfantryBounds.isValid;
   const optimizeHelpText = `Only the ${optimizedSideLabel.toLowerCase()} troop mix changes. Total troops, tiers, heroes, stats, and the ${staticSideLabel.toLowerCase()} setup stay fixed.`;
+  const surfacePointCount = latticePoints(surfacePointsPerEdge, SURFACE_RATIO_TOTAL).length;
+  const surfaceEstimatedPairs = surfacePointCount * surfacePointCount;
+  const surfaceEstimatedBattles = estimateProgressiveSurfaceBattles(surfacePointsPerEdge, surfaceReplicates);
+  const surfaceStagePlan = progressiveSurfaceStages(surfacePointsPerEdge);
+  const surfaceStageStatus = surfaceLoading
+    ? surfaceShownPointsPerEdge
+      ? surfaceShownPointsPerEdge >= surfacePointsPerEdge
+        ? `Showing final ${surfaceShownPointsPerEdge}-point surface`
+        : `Showing ${surfaceShownPointsPerEdge}-point preview, refining to ${surfacePointsPerEdge}`
+      : `Calculating ${surfaceStagePlan[0]}-point preview`
+    : surfaceShownPointsPerEdge
+      ? `Showing ${surfaceShownPointsPerEdge}-point surface`
+      : null;
+  const surfaceMatrix = useMemo(
+    () => surfaceResult?.winrateMatrix ?? [],
+    [surfaceResult],
+  );
+  const surfaceSize = surfaceResult?.points.length ?? 0;
+  const activeSurfaceDefIdx = hoveredSurfaceDefIdx ?? pinnedSurfaceDefIdx;
+  const activeSurfaceAttIdx = hoveredSurfaceAttIdx ?? pinnedSurfaceAttIdx;
+  const surfaceAttValues = useMemo(() => {
+    if (!surfaceResult) return [];
+    return attackerSurfaceValues(surfaceMatrix, surfaceSize, activeSurfaceDefIdx);
+  }, [activeSurfaceDefIdx, surfaceMatrix, surfaceResult, surfaceSize]);
+  const surfaceDefValues = useMemo(() => {
+    if (!surfaceResult) return [];
+    return defenderSurfaceValues(surfaceMatrix, surfaceSize, activeSurfaceAttIdx);
+  }, [activeSurfaceAttIdx, surfaceMatrix, surfaceResult, surfaceSize]);
+  const surfaceCanRun = attackerTotalTroops > 0 && defenderTotalTroops > 0;
+  const runOptionsPanelId = "run-mode-options-panel";
+  const runModeLabel: Record<RunMode, string> = {
+    simulate: "Simulate",
+    optimise: "Optimise ratio",
+    explore: "Explore ratios",
+  };
+  const runModeSummary =
+    runMode === "simulate"
+      ? `${replicates.toLocaleString()} reps`
+      : runMode === "optimise"
+        ? `${estimatedOptimizeCompositions.toLocaleString()} comps · ${
+            optimizeSearchMode === "adaptive"
+              ? `${resolvedAdaptiveSearchSettings.adaptive_phase1_replicates}/${resolvedAdaptiveSearchSettings.adaptive_phase2_replicates}/${resolvedAdaptiveSearchSettings.adaptive_final_replicates} reps`
+              : `${optimizeReplicates.toLocaleString()} reps`
+          } · ${optimizeSearchMode === "adaptive" ? "up to " : ""}${estimatedOptimizeBattles.toLocaleString()} battles`
+        : `${surfaceEstimatedPairs.toLocaleString()} pairs · ${surfaceReplicates.toLocaleString()} reps · ${surfaceEstimatedBattles.toLocaleString()} staged battles`;
+  const runModeProgress =
+    runMode === "simulate"
+      ? {
+          active: loading,
+          done: simulateProgress?.done ?? 0,
+          total: simulateProgress?.total ?? replicates,
+        }
+      : runMode === "optimise"
+        ? {
+            active: optimizeLoading,
+            done: optimizeProgress?.done ?? 0,
+            total: optimizeProgress?.total ?? estimatedOptimizeCompositions,
+          }
+        : {
+            active: surfaceLoading,
+            done: surfaceProgress?.done ?? 0,
+            total: surfaceProgress?.total ?? surfaceEstimatedBattles,
+          };
+  const runModeError =
+    runMode === "simulate"
+      ? error
+      : runMode === "optimise"
+        ? optimizeError
+        : surfaceError;
+  const runModePrimaryLabel =
+    runMode === "simulate"
+      ? loading
+        ? "Simulating..."
+        : "Simulate"
+      : runMode === "optimise"
+        ? optimizeLoading
+          ? "Optimising..."
+          : "Optimise ratio"
+        : surfaceLoading
+          ? "Cancel"
+          : "Explore ratios";
+  const runModeDisabled =
+    runMode === "simulate"
+      ? loading
+      : runMode === "optimise"
+        ? optimizeLoading ||
+          optimizeBudgetTooLarge ||
+          optimizedTotalTroops <= 0 ||
+          !optimizeInputsValid
+        : !surfaceCanRun;
+  const runModeTitle =
+    runMode === "optimise"
+      ? !optimizeInputsValid
+        ? "Infantry max % must be greater than or equal to infantry min %."
+        : optimizeBudgetTooLarge
+          ? "Increase the grid step or lower ratio reps before running the search."
+          : `Search ${optimizedSideLabel.toLowerCase()} troop compositions while keeping total troops, heroes, tiers, and stats fixed.`
+      : runMode === "explore"
+        ? surfaceCanRun
+          ? "Explore all attacker and defender troop ratios using the configured army totals and tiers."
+          : "Both armies need at least one troop before exploring ratios."
+        : "Run the attacker and defender exactly as configured.";
+  const runModeStatus =
+    runMode === "optimise"
+      ? !optimizeInputsValid
+        ? "Fix the infantry bounds before optimising."
+        : optimizeBudgetTooLarge
+          ? "Projected search is too large. Increase the grid step or lower ratio reps."
+          : optimizeSearchMode === "adaptive"
+            ? `Adaptive search uses ${resolvedAdaptiveSearchSettings.adaptive_phase1_replicates}-rep coarse checks, ${resolvedAdaptiveSearchSettings.adaptive_phase2_replicates}-rep local neighbours, then ${resolvedAdaptiveSearchSettings.adaptive_final_replicates}-rep finalists.`
+            : "Current grid settings are within the allowed optimise budget."
+      : runMode === "explore"
+        ? surfaceStageStatus ?? "Counts vary across both armies; configured totals, tiers, heroes, stats, and buffs stay fixed."
+        : "Runs the currently configured attacker and defender without varying troop ratios.";
+
+  function runSelectedMode() {
+    if (runMode === "simulate") void runSimulation();
+    else if (runMode === "optimise") void runOptimizeRatio();
+    else void runSurfaceExplore();
+  }
 
   return (
     <div
@@ -2091,10 +2390,7 @@ export default function SimulateClient({
             <span>Saved run load failed: {savedRunError}</span>
           ) : savedRunMeta ? (
             <span>
-              Loaded saved{" "}
-              {savedRunMeta.kind === "simulate"
-                ? "simulation run"
-                : "ratio search"}{" "}
+              Loaded saved {savedRunKindLabel(savedRunMeta.kind).toLowerCase()}{" "}
               <code className="font-mono">{savedRunMeta.id}</code> from{" "}
               {formatSavedRunTimestamp(savedRunMeta.createdAt)}. The current
               URL points at this saved snapshot.
@@ -2228,342 +2524,205 @@ export default function SimulateClient({
       )}
 
       {presetModalSide && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center px-3 py-6"
-          style={{ backgroundColor: "rgba(0, 0, 0, 0.55)" }}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="stat-profile-modal-title"
-          data-testid="stat-profile-modal"
-          onClick={closeStatPresetModal}
-        >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              createStatPresetFromSide();
-            }}
-            className="sim-modal w-full max-w-md p-4 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-4 flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <h3
-                  id="stat-profile-modal-title"
-                  className="sim-modal-title"
-                >
-                  {SIDE_LABELS[presetModalSide]} profile
-                </h3>
-                <p className="sim-modal-copy mt-1">
-                  Profiles store base player stats only. Hero stats are removed
-                  on create and reapplied on load.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={closeStatPresetModal}
-                className="sim-edit-chip min-h-[32px] px-2 py-1 text-sm font-bold leading-none"
-                aria-label="Close profile modal"
-              >
-                ×
-              </button>
-            </div>
-
-            <label className="mb-3 flex flex-col gap-1">
-              <span className="sim-field-label">
-                Profile
-              </span>
-              <select
-                value={presetSelectedId}
-                onChange={(e) => chooseStatPreset(e.target.value)}
-                className="sim-input min-h-[40px] px-2 py-2 font-mono text-xs"
-                aria-label={`${presetModalSide} stat profile`}
-              >
-                <option value="">
-                  {loadingPresets ? "Loading…" : "— None —"}
-                </option>
-                {statPresets.map((preset) => (
-                  <option key={preset.id} value={preset.id}>
-                    {preset.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-
-            <label className="mb-4 flex flex-col gap-1">
-              <span className="sim-field-label">
-                New profile name
-              </span>
-              <input
-                type="text"
-                value={presetDraftName}
-                onChange={(e) => setPresetDraftName(e.target.value)}
-                placeholder={`${SIDE_LABELS[presetModalSide]} profile`}
-                className="sim-input min-h-[40px] px-2 py-2 text-sm"
-                aria-label={`${presetModalSide} new profile name`}
-              />
-            </label>
-
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-              <button
-                type="button"
-                onClick={loadSelectedStatPreset}
-                className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold"
-                disabled={presetSelectedId === loadedPresetId}
-              >
-                Load selected
-              </button>
-              <button
-                type="submit"
-                className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold"
-                style={{ color: "var(--sim-blue)" }}
-              >
-                Save current stats
-              </button>
-              <button
-                type="button"
-                onClick={closeStatPresetModal}
-                className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold"
-              >
-                Done
-              </button>
-            </div>
-
-            {presetStatus && (
-              <p
-                className="mt-3 text-xs font-mono"
-                style={{
-                  color: presetStatus.kind === "error" ? "#f38ba8" : "#a6e3a1",
-                }}
-                data-testid="stat-preset-status"
-              >
-                {presetStatus.message}
-              </p>
-            )}
-          </form>
-        </div>
+        <PlayerStatProfileModal
+          title={`${SIDE_LABELS[presetModalSide]} profile`}
+          defaultName={`${SIDE_LABELS[presetModalSide]} profile`}
+          currentStats={heroAdjustedStats(
+            presetModalSide === "attacker" ? attacker : defender,
+            "subtract",
+          )}
+          presets={statPresets}
+          setPresets={setStatPresets}
+          loadedPresetId={loadedPresetIds[presetModalSide]}
+          loadedPresetName={loadedPresetNames[presetModalSide]}
+          loadingPresets={loadingPresets}
+          selectAriaLabel={`${presetModalSide} stat profile`}
+          nameAriaLabel={`${presetModalSide} new profile name`}
+          onLoadPreset={(preset) => loadStatPreset(presetModalSide, preset)}
+          onLoadedPresetChange={(id, name) =>
+            setLoadedStatPreset(presetModalSide, id, name)
+          }
+          onClose={closeStatPresetModal}
+        />
       )}
 
-      <div className="sim-top-actions" data-testid="sim-action-dock">
-      <div className="sim-action-card sim-action-card-run">
-        <div className="sim-runbar mb-4 sm:mb-6" data-testid="simulate-runbar">
-          <label className="flex min-w-0 flex-col gap-1">
-            <span className="text-[10px] font-black uppercase tracking-wider" style={{ color: "var(--sim-muted)" }}>
-              Replicates
-            </span>
-            <input
-              type="number"
-              min={1}
-              max={10000}
-              value={replicates}
-              onChange={(e) =>
-                setReplicates(
-                  Math.max(
-                    1,
-                    Math.min(10000, parseInt(e.target.value || "1", 10)),
-                  ),
-                )
-              }
-              className="sim-input font-mono text-sm tabular-nums"
-              style={{ textAlign: "right" }}
-            />
-          </label>
-          <button
-            onClick={runSimulation}
-            disabled={loading}
-            className="sim-run-button px-5 py-2 text-sm font-black"
-            style={{
-              opacity: loading ? 0.55 : 1,
-              cursor: loading ? "wait" : "pointer",
-            }}
-          >
-            {loading ? "Simulating…" : "Simulate"}
-          </button>
-          {error && (
-            <span className="col-span-2 text-xs" style={{ color: "#f38ba8" }}>
-              {error}
-            </span>
-          )}
-          <div className="col-span-2">
-            <ProgressBar
-              active={loading}
-              done={simulateProgress?.done ?? 0}
-              total={simulateProgress?.total ?? replicates}
-            />
-          </div>
-        </div>
-      </div>
-      <div className="sim-action-card sim-action-card-optimize">
-        <div
-          className="sim-tool-panel sim-optimize-command-panel order-2 mb-4 flex flex-col gap-4 p-3 sm:mb-6 sm:p-4"
-          data-testid="optimize-panel"
+      <div className="sim-top-actions sim-mode-actions" data-testid="sim-action-dock">
+        <section
+          className="sim-mode-command"
+          aria-label="Run mode"
+          data-testid="run-mode-command"
         >
-        <div className="grid gap-4">
-          <div className="sim-modifier-card p-3">
-            <h3 className="sr-only">
-              Optimise ratio
-            </h3>
-            <div className="sim-optimize-flow">
-              <p className="sim-optimize-description text-xs opacity-60" id="optimize-help-text">
-                {optimizeHelpText}
-              </p>
-              <button
-                type="button"
-                className="sim-optimize-side-toggle"
-                onClick={() =>
-                  setOptimizeSide((side) =>
-                    side === "attacker" ? "defender" : "attacker",
-                  )
-                }
-                aria-label={`Optimise ${optimizedSideLabel.toLowerCase()} ratio. Click to switch side.`}
-              >
-                <span>{optimizedSideLabel}</span>
-                <span aria-hidden="true">⇄</span>
-              </button>
-              <div className="sim-optimize-action-row">
+          {runOptionsOpen && (
+            <div
+              id={runOptionsPanelId}
+              className="sim-mode-options"
+              data-testid="run-mode-options-panel"
+            >
+              <div className="sim-mode-options-header">
+                <h3>{runModeLabel[runMode]} options</h3>
                 <button
                   type="button"
-                  onClick={() => setOptimizePanelOpen((open) => !open)}
-                  aria-expanded={optimizePanelOpen}
-                  aria-controls="optimize-options-panel"
-                  aria-label={optimizePanelOpen ? "Hide optimise options" : "Show optimise options"}
-                  className="sim-options-toggle"
-                  data-testid="optimize-options-toggle"
+                  onClick={() => setRunOptionsOpen(false)}
+                  className="sim-options-close"
+                  aria-label="Hide run options"
                 >
-                  <span>Options</span>
-                  <span aria-hidden="true" className="sim-options-chevron" />
+                  Close
                 </button>
-                <span className="sim-action-help-row">
-                  <span className="sim-help-wrap">
-                    <button
-                      type="button"
-                      className="sim-help-button"
-                      aria-label="Simulation actions help"
-                      aria-describedby="action-help-tooltip"
-                    >
-                      ?
-                    </button>
-                    <span
-                      id="action-help-tooltip"
-                      role="tooltip"
-                      className="sim-help-tooltip"
-                      data-testid="optimize-help-tooltip"
-                    >
-                      {actionHelpText}
-                    </span>
-                  </span>
-                </span>
-                <button
-                  type="button"
-                  onClick={runOptimizeRatio}
-                  disabled={
-                    optimizeLoading ||
-                    optimizeBudgetTooLarge ||
-                    optimizedTotalTroops <= 0 ||
-                    !optimizeInputsValid
-                  }
-                  className="sim-optimize-run-button"
-                  style={{
-                    opacity:
-                      optimizeLoading ||
-                      optimizeBudgetTooLarge ||
-                      !optimizeInputsValid
-                        ? 0.65
-                        : 1,
-                    cursor:
-                      optimizeLoading ||
-                      optimizeBudgetTooLarge ||
-                      optimizedTotalTroops <= 0 ||
-                      !optimizeInputsValid
-                        ? "not-allowed"
-                        : "pointer",
-                  }}
-                  title={
-                    !optimizeInputsValid
-                      ? "Infantry max % must be greater than or equal to infantry min %."
-                      : optimizeBudgetTooLarge
-                        ? "Increase the grid step or lower ratio reps before running the search."
-                        : `Search ${optimizedSideLabel.toLowerCase()} troop compositions while keeping total troops, heroes, tiers, and stats fixed.`
-                  }
-                >
-                  {optimizeLoading ? "Optimising…" : "Optimise ratio"}
-                </button>
-                <span className="text-xs font-mono opacity-60">
-                  {estimatedOptimizeCompositions.toLocaleString()} comps ·{" "}
-                  {optimizeSearchMode === "adaptive"
-                    ? `${ADAPTIVE_PHASE1_REPLICATES}/${ADAPTIVE_PHASE2_REPLICATES}/${ADAPTIVE_FINAL_REPLICATES} reps`
-                    : `${optimizeReplicates.toLocaleString()} reps`}{" "}
-                  · {optimizeSearchMode === "adaptive" ? "up to " : ""}
-                  {estimatedOptimizeBattles.toLocaleString()} battles
-                </span>
               </div>
-              <ProgressBar
-                active={optimizeLoading}
-                done={optimizeProgress?.done ?? 0}
-                total={optimizeProgress?.total ?? estimatedOptimizeCompositions}
-              />
-              <p className="sim-optimize-detail text-xs opacity-60">
-                Infantry search band: {resolvedInfantryBounds.minPct}% to{" "}
-                {resolvedInfantryBounds.maxPct}%.
-                {optimizeSearchMode === "adaptive"
-                  ? ` Adaptive search starts on a 5% grid, then checks 1% neighbours and ${ADAPTIVE_FINAL_REPLICATES}-rep finalists.`
-                  : optimizeStepInput.trim()
-                  ? ` Step ${resolvedOptimizeStep.toLocaleString()} troops.`
-                  : ` Auto step ${resolvedOptimizeStep.toLocaleString()} troops.`}
-              </p>
-              {optimizePanelOpen && (
-                <div
-                  id="optimize-options-panel"
-                  className="sim-tool-panel grid gap-3 p-3 md:grid-cols-2 2xl:grid-cols-4"
-                  data-testid="optimize-options-panel"
-                >
-                  <label className="flex flex-col gap-1">
-                    <span className="sim-field-label">
-                      Ratio reps
-                    </span>
+              {runMode === "simulate" && (
+                <div className="sim-mode-options-grid sim-mode-options-grid-compact">
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Replicates</span>
                     <input
                       type="number"
                       min={1}
-                      max={500}
-                      value={optimizeReplicates}
-                      disabled={optimizeSearchMode === "adaptive"}
+                      max={10000}
+                      value={replicates}
                       onChange={(e) =>
-                        setOptimizeReplicates(
+                        setReplicates(
                           Math.max(
                             1,
-                            Math.min(500, parseInt(e.target.value || "1", 10)),
+                            Math.min(10000, parseInt(e.target.value || "1", 10)),
                           ),
                         )
                       }
                       className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
-                      style={{
-                        opacity: optimizeSearchMode === "adaptive" ? 0.55 : 1,
-                      }}
                     />
                   </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="sim-field-label">
-                      Grid step
-                    </span>
-                    <input
-                      type="number"
-                      min={1}
-                      inputMode="numeric"
-                      value={optimizeStepInput}
-                      disabled={optimizeSearchMode === "adaptive"}
-                      onChange={(e) => setOptimizeStepInput(e.target.value)}
-                      placeholder={String(
-                        recommendedOptimizeStep(optimizedTotalTroops),
-                      )}
-                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
-                      style={{
-                        opacity: optimizeSearchMode === "adaptive" ? 0.55 : 1,
-                      }}
-                    />
+                </div>
+              )}
+              {runMode === "optimise" && (
+                <div
+                  className="sim-mode-options-grid"
+                  data-testid="optimize-options-panel"
+                >
+	                  <div className="sim-mode-option-copy">
+	                    <p>{optimizeHelpText}</p>
+	                    <p>
+	                      Infantry search band: {resolvedInfantryBounds.minPct}% to{" "}
+	                      {resolvedInfantryBounds.maxPct}%.
+	                      {optimizeSearchMode === "adaptive"
+	                        ? " Adaptive search starts on a 5% grid, checks 1% neighbours, then reruns finalist ratios."
+	                        : optimizeStepInput.trim()
+	                          ? ` Step ${resolvedOptimizeStep.toLocaleString()} troops.`
+	                          : ` Auto step ${resolvedOptimizeStep.toLocaleString()} troops.`}
+                    </p>
+                  </div>
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Optimise side</span>
+                    <button
+                      type="button"
+                      className="sim-mode-secondary-button"
+                      onClick={() =>
+                        setOptimizeSide((side) =>
+                          side === "attacker" ? "defender" : "attacker",
+                        )
+                      }
+                      aria-label={`Optimise ${optimizedSideLabel.toLowerCase()} ratio. Click to switch side.`}
+                    >
+                      <span>{optimizedSideLabel}</span>
+                      <span aria-hidden="true">⇄</span>
+                    </button>
                   </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="sim-field-label">
-                      Inf min %
-                    </span>
+		                  <div className="sim-mode-option-row" role="group" aria-labelledby="optimize-search-mode-label">
+		                    <span id="optimize-search-mode-label" className="sim-field-label">Search mode</span>
+		                    <div className="sim-segmented">
+                      {(["adaptive", "grid"] as OptimizeSearchMode[]).map((mode) => (
+                        <button
+                          key={mode}
+                          type="button"
+                          onClick={() => setOptimizeSearchMode(mode)}
+                          className="capitalize"
+                          data-active={optimizeSearchMode === mode}
+                        >
+                          {mode}
+		                        </button>
+		                      ))}
+		                    </div>
+		                  </div>
+	                  {optimizeSearchMode === "adaptive" ? (
+	                    <>
+	                      <label className="sim-mode-option-row">
+	                        <span className="sim-field-label">Coarse reps</span>
+	                        <input
+	                          type="number"
+	                          min={1}
+	                          max={500}
+	                          value={adaptivePhase1Replicates}
+	                          onChange={(e) =>
+	                            setAdaptivePhase1Replicates(
+	                              Math.max(1, Math.min(500, parseInt(e.target.value || "1", 10))),
+	                            )
+	                          }
+	                          className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+	                        />
+	                      </label>
+	                      <label className="sim-mode-option-row">
+	                        <span className="sim-field-label">Local reps</span>
+	                        <input
+	                          type="number"
+	                          min={1}
+	                          max={500}
+	                          value={adaptivePhase2Replicates}
+	                          onChange={(e) =>
+	                            setAdaptivePhase2Replicates(
+	                              Math.max(1, Math.min(500, parseInt(e.target.value || "1", 10))),
+	                            )
+	                          }
+	                          className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+	                        />
+	                      </label>
+	                      <label className="sim-mode-option-row">
+	                        <span className="sim-field-label">Final reps</span>
+	                        <input
+	                          type="number"
+	                          min={1}
+	                          max={500}
+	                          value={adaptiveFinalReplicates}
+	                          onChange={(e) =>
+	                            setAdaptiveFinalReplicates(
+	                              Math.max(1, Math.min(500, parseInt(e.target.value || "1", 10))),
+	                            )
+	                          }
+	                          className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+	                        />
+	                      </label>
+	                    </>
+	                  ) : (
+	                    <>
+	                      <label className="sim-mode-option-row">
+	                        <span className="sim-field-label">Ratio reps</span>
+	                        <input
+	                          type="number"
+	                          min={1}
+	                          max={500}
+	                          value={optimizeReplicates}
+	                          onChange={(e) =>
+	                            setOptimizeReplicates(
+	                              Math.max(1, Math.min(500, parseInt(e.target.value || "1", 10))),
+	                            )
+	                          }
+	                          className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+	                        />
+	                      </label>
+	                      <label className="sim-mode-option-row">
+	                        <span className="sim-field-label">Grid step</span>
+	                        <input
+	                          type="number"
+	                          min={1}
+	                          inputMode="numeric"
+	                          value={optimizeStepInput}
+	                          onChange={(e) => setOptimizeStepInput(e.target.value)}
+	                          placeholder={String(
+	                            recommendedOptimizeStep(optimizedTotalTroops),
+	                          )}
+	                          className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+	                        />
+	                      </label>
+	                    </>
+	                  )}
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Inf min %</span>
                     <input
                       type="number"
                       min={0}
@@ -2577,10 +2736,8 @@ export default function SimulateClient({
                       className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
                     />
                   </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="sim-field-label">
-                      Inf max %
-                    </span>
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Inf max %</span>
                     <input
                       type="number"
                       min={0}
@@ -2594,64 +2751,154 @@ export default function SimulateClient({
                       className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
                     />
                   </label>
-                  <fieldset className="md:col-span-2 2xl:col-span-4">
-                    <legend className="sim-field-label mb-1">
-                      Search mode
-                    </legend>
-                    <div className="sim-segmented max-w-xs">
-                      {(["adaptive", "grid"] as OptimizeSearchMode[]).map((mode) => (
-                        <button
-                          key={mode}
-                          type="button"
-                          onClick={() => setOptimizeSearchMode(mode)}
-                          className="capitalize"
-                          data-active={optimizeSearchMode === mode}
-                        >
-                          {mode}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
                 </div>
               )}
-              <p
-                className="sim-optimize-status text-xs font-mono"
-                style={{
-                  color:
-                    optimizeBudgetTooLarge || !optimizeInputsValid
-                      ? "#f9e2af"
-                      : "var(--sidebar-text)",
-                  opacity: 0.8,
-                }}
-              >
-                {!optimizeInputsValid
-                  ? "Fix the infantry bounds before optimising."
-                    : optimizeBudgetTooLarge
-                      ? "Projected search is too large. Increase the grid step or lower ratio reps."
-                    : optimizeSearchMode === "adaptive"
-                      ? `Adaptive search uses ${ADAPTIVE_PHASE1_REPLICATES}-rep coarse checks, ${ADAPTIVE_PHASE2_REPLICATES}-rep local neighbours, then ${ADAPTIVE_FINAL_REPLICATES}-rep finalists.`
-                      : "Current grid settings are within the allowed optimise budget."}
-              </p>
-              {optimizeError && (
-                <span className="text-xs" style={{ color: "#f38ba8" }}>
-                  {optimizeError}
-                </span>
+              {runMode === "explore" && (
+                <div
+                  className="sim-mode-options-grid"
+                  data-testid="explore-ratios-options-panel"
+                >
+                  <div className="sim-mode-option-copy">
+                    <p>
+                      Sweeps both armies across all troop ratios. Counts vary;
+                      each side keeps its configured tiers, heroes, stats, buffs,
+                      and total troop count.
+                    </p>
+                  </div>
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Points / edge</span>
+                    <select
+                      value={surfacePointsPerEdge}
+                      onChange={(e) => setSurfacePointsPerEdge(Number(e.target.value))}
+                      className="sim-input min-h-[42px] px-3 py-2 font-mono text-sm"
+                    >
+                      {[6, 11, 21].map((n) => (
+                        <option key={n} value={n}>
+                          {n} {"->"} {((n * (n + 1)) / 2).toLocaleString()} comps
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Ratio reps</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={50}
+                      value={surfaceReplicates}
+                      onChange={(e) =>
+                        setSurfaceReplicates(
+                          Math.max(1, Math.min(50, parseInt(e.target.value || "1", 10))),
+                        )
+                      }
+                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+                    />
+                  </label>
+                  <label className="sim-mode-option-row">
+                    <span className="sim-field-label">Workers</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={16}
+                      value={surfaceJobs}
+                      onChange={(e) =>
+                        setSurfaceJobs(
+                          Math.max(1, Math.min(16, parseInt(e.target.value || "1", 10))),
+                        )
+                      }
+                      className="sim-input min-h-[42px] px-3 py-2 text-right font-mono text-sm tabular-nums"
+                    />
+                  </label>
+                </div>
               )}
             </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          )}
 
+          <div className="sim-mode-command-main" data-testid="optimize-panel">
+            <div
+              className="sim-mode-tabs"
+              role="tablist"
+              aria-label="Run mode"
+            >
+              {(["simulate", "optimise", "explore"] as RunMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  role="tab"
+                  aria-selected={runMode === mode}
+                  onClick={() => setRunMode(mode)}
+                  data-active={runMode === mode}
+                  className="sim-mode-tab"
+                >
+                  {runModeLabel[mode]}
+                </button>
+              ))}
+            </div>
+
+            <div className="sim-mode-command-row" data-testid="simulate-runbar">
+              <button
+                type="button"
+                onClick={() => setRunOptionsOpen((open) => !open)}
+                aria-expanded={runOptionsOpen}
+                aria-controls={runOptionsPanelId}
+                aria-label={runOptionsOpen ? "Hide run options" : "Show run options"}
+                className="sim-options-toggle"
+                data-testid="optimize-options-toggle"
+              >
+                <span>Options</span>
+                <span aria-hidden="true" className="sim-options-chevron" />
+              </button>
+              <div className="sim-mode-status">
+                <span className="sim-mode-status-label">{runModeLabel[runMode]}</span>
+                <span className="sim-mode-status-detail">{runModeSummary}</span>
+              </div>
+              <button
+                type="button"
+                onClick={runSelectedMode}
+                disabled={runModeDisabled}
+                className="sim-run-button sim-mode-primary-button"
+                style={{
+                  opacity: runModeDisabled ? 0.62 : 1,
+                  cursor:
+                    runModeDisabled || loading || optimizeLoading
+                      ? "not-allowed"
+                      : surfaceLoading
+                        ? "wait"
+                        : "pointer",
+                }}
+                title={runModeTitle}
+              >
+                {runModePrimaryLabel}
+              </button>
+            </div>
+            <p
+              className="sim-mode-inline-status"
+              style={{
+                color:
+                  runModeError ||
+                  (runMode === "optimise" && (optimizeBudgetTooLarge || !optimizeInputsValid))
+                    ? "#f38ba8"
+                    : "var(--sim-muted)",
+              }}
+            >
+              {runModeError ?? runModeStatus}
+            </p>
+            <ProgressBar
+              active={runModeProgress.active}
+              done={runModeProgress.done}
+              total={runModeProgress.total}
+            />
+          </div>
+        </section>
       </div>
 
       <div
         className={`${wideSimLayout || mobileTab === "results" ? "block" : "hidden"} sim-panel-results-shell`}
         data-testid="sim-panel-results"
       >
-        {!result && !optimizeResult ? (
+        {!result && !optimizeResult && !surfaceResult ? (
           <div className="sim-tool-panel sim-results-placeholder mb-4 p-3 text-xs" style={{ color: "var(--sim-muted)" }}>
-            Results will appear here after running a simulation or optimisation.
+            Results will appear here after running a simulation, optimisation, or ratio exploration.
           </div>
         ) : null}
       </div>
@@ -2875,6 +3122,82 @@ export default function SimulateClient({
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {surfaceResult && (
+        <div
+          className={`${
+            wideSimLayout || mobileTab === "results" ? "block" : "hidden"
+          } sim-tool-panel sim-panel-results-shell mb-6 p-3 sm:p-4`}
+          data-testid="surface-results"
+        >
+          <div className="mb-4">
+            <h3 className="text-sm font-bold opacity-70">
+              Explore Ratios
+            </h3>
+            <p className="mt-1 text-xs opacity-60">
+              Attacker compositions sum to {attackerTotalTroops.toLocaleString()} troops and defender compositions sum to {defenderTotalTroops.toLocaleString()} troops. Each point keeps the configured troop tiers for that side.
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-center sm:gap-6">
+            <TernaryPanel
+              points={surfaceResult.points}
+              total={SURFACE_RATIO_TOTAL}
+              values={surfaceAttValues}
+              selectedIdx={pinnedSurfaceAttIdx}
+              title={
+                activeSurfaceDefIdx !== null
+                  ? "Attackers vs selected defender"
+                  : "Attackers - mean vs all defenders"
+              }
+              subtitle={
+                activeSurfaceDefIdx !== null
+                  ? `Each point shows the matchup outcome against defender ${surfacePointLabel(surfaceResult.points[activeSurfaceDefIdx], SURFACE_RATIO_TOTAL)}.`
+                  : "Each point shows the average matchup outcome across all defender compositions."
+              }
+              showLegend={false}
+              onHover={(i) => {
+                setHoveredSurfaceAttIdx((prev) => nextNullableNumberState(prev, i));
+                if (i !== null) setHoveredSurfaceDefIdx((prev) => nextNullableNumberState(prev, null));
+              }}
+              onClick={(i) => {
+                setPinnedSurfaceAttIdx((prev) => (prev === i ? null : i));
+                setPinnedSurfaceDefIdx((prev) => nextNullableNumberState(prev, null));
+              }}
+            />
+            <TernaryPanel
+              points={surfaceResult.points}
+              total={SURFACE_RATIO_TOTAL}
+              values={surfaceDefValues}
+              selectedIdx={pinnedSurfaceDefIdx}
+              title={
+                activeSurfaceAttIdx !== null
+                  ? "Defenders vs selected attacker"
+                  : "Defenders - mean matchup outcome"
+              }
+              subtitle={
+                activeSurfaceAttIdx !== null
+                  ? `Each point shows the matchup outcome for selected attacker ${surfacePointLabel(surfaceResult.points[activeSurfaceAttIdx], SURFACE_RATIO_TOTAL)}.`
+                  : "Each point shows the average matchup outcome across all attacker compositions."
+              }
+              showLegend={false}
+              onHover={(j) => {
+                setHoveredSurfaceDefIdx((prev) => nextNullableNumberState(prev, j));
+                if (j !== null) setHoveredSurfaceAttIdx((prev) => nextNullableNumberState(prev, null));
+              }}
+              onClick={(j) => {
+                setPinnedSurfaceDefIdx((prev) => (prev === j ? null : j));
+                setPinnedSurfaceAttIdx((prev) => nextNullableNumberState(prev, null));
+              }}
+            />
+          </div>
+          <div className="mt-3">
+            <WinrateLegend />
+          </div>
+          <p className="mt-3 text-center text-[10px] opacity-50">
+            Blue is defender-favored, white is even, and red is attacker-favored. Hover a point to show that composition matchup profile on the other triangle; click to pin.
+          </p>
         </div>
       )}
 
@@ -3207,13 +3530,7 @@ function RoleSection({
   );
 }
 
-function TroopSetupPreview({
-  state,
-  fixedTroopTier = null,
-}: {
-  state: SideState;
-  fixedTroopTier?: string | null;
-}) {
+function TroopSetupPreview({ state }: { state: SideState }) {
   return (
     <div className="sim-summary-table sim-summary-table-troops" aria-hidden="true">
       {CATEGORIES.map((cat) => (
@@ -3224,7 +3541,7 @@ function TroopSetupPreview({
           <span className="font-mono tabular-nums">
             {state.troops[cat].toLocaleString()}
           </span>
-          <span className="font-mono">{fixedTroopTier ?? state.tiers[cat]}</span>
+          <span className="font-mono">{state.tiers[cat]}</span>
           <span className="truncate">{state.heroes[cat].name ?? "None"}</span>
         </div>
       ))}
@@ -3361,8 +3678,6 @@ export function SidePanel({
   onStatSync,
   loadedPresetName,
   onOpenPreset,
-  hideTroopCount = false,
-  fixedTroopTier = null,
 }: {
   title: string;
   which: Side;
@@ -3374,8 +3689,6 @@ export function SidePanel({
   onStatSync: StatSyncHandler;
   loadedPresetName: string | null;
   onOpenPreset: () => void;
-  hideTroopCount?: boolean;
-  fixedTroopTier?: string | null;
 }) {
   const [activeSection, setActiveSection] =
     useState<SimRoleSectionId | null>("troops");
@@ -3410,7 +3723,6 @@ export function SidePanel({
   const totalTroops = CATEGORIES.reduce((sum, cat) => sum + state.troops[cat], 0);
   const heroSummary = CATEGORIES.map((cat) => state.heroes[cat].name ?? "None").join(" / ");
   const tierSummary = CATEGORIES.map((cat) => state.tiers[cat].toUpperCase()).join(" / ");
-  const fixedTierSummary = fixedTroopTier?.toUpperCase() ?? null;
   const activeJoiners = state.joiners.filter((slot) => slot.name).length;
   const cityActive = STAT_MODIFIER_NAMES.filter(
     (name) => state.statModifiers[name] !== 0,
@@ -3449,9 +3761,9 @@ export function SidePanel({
 
         <RoleSection
           id="troops"
-          title={hideTroopCount && fixedTroopTier ? "Heroes" : hideTroopCount ? "Tiers & heroes" : "Troops, tiers, heroes"}
-          summary={hideTroopCount ? `${heroSummary} · ${fixedTierSummary ?? tierSummary}` : `${totalTroops.toLocaleString()} troops · ${heroSummary} · ${tierSummary}`}
-          preview={<TroopSetupPreview state={state} fixedTroopTier={fixedTroopTier} />}
+          title="Troops, tiers, heroes"
+          summary={`${totalTroops.toLocaleString()} troops · ${heroSummary} · ${tierSummary}`}
+          preview={<TroopSetupPreview state={state} />}
           activeSection={activeSection}
           onActivate={setActiveSection}
           testid={`side-section-${which}-troops`}
@@ -3467,8 +3779,6 @@ export function SidePanel({
                 rallyMode={rallyMode}
                 syncStatsOnHeroChange={syncStatsOnHeroChange}
                 onStatSync={onStatSync}
-                hideTroopCount={hideTroopCount}
-                fixedTroopTier={fixedTroopTier}
                 countInputRef={(node) => {
                   troopCountRefs.current[cat] = node;
                 }}
@@ -3958,8 +4268,6 @@ function TroopColumn({
   rallyMode,
   syncStatsOnHeroChange,
   onStatSync,
-  hideTroopCount = false,
-  fixedTroopTier = null,
   countInputRef,
   onCountKeyDown,
 }: {
@@ -3970,8 +4278,6 @@ function TroopColumn({
   rallyMode: boolean;
   syncStatsOnHeroChange: boolean;
   onStatSync: StatSyncHandler;
-  hideTroopCount?: boolean;
-  fixedTroopTier?: string | null;
   countInputRef?: (node: HTMLInputElement | null) => void;
   onCountKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }) {
@@ -3991,55 +4297,51 @@ function TroopColumn({
       <span className="sim-unit-name truncate">
         {troopCategoryLabel(cat)}
       </span>
-      {!hideTroopCount && (
-        <label>
-          <span className="sim-field-label">Troops</span>
-          <input
-            ref={countInputRef}
-            type="number"
-            min={0}
-            inputMode="numeric"
-            value={state.troops[cat]}
-            onKeyDown={onCountKeyDown}
-            onChange={(e) => {
-              const v = parseInt(e.target.value || "0", 10);
-              setState((prev) => ({
-                ...prev,
-                troops: {
-                  ...prev.troops,
-                  [cat]: isNaN(v) ? 0 : Math.max(0, v),
-                },
-              }));
-            }}
-            className="sim-input font-mono text-xs tabular-nums"
-            style={{ textAlign: "right" }}
-            aria-label={`${cat} troop count`}
-          />
-        </label>
-      )}
-      {!fixedTroopTier && (
-        <label>
-          <span className="sim-field-label">Tier</span>
-          <select
-            value={state.tiers[cat]}
-            onChange={(e) => {
-              const v = e.target.value;
-              setState((prev) => ({
-                ...prev,
-                tiers: { ...prev.tiers, [cat]: v },
-              }));
-            }}
-            className="sim-input font-mono text-xs"
-            aria-label={`${cat} troop tier`}
-          >
-            {TROOP_TIERS.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
+      <label>
+        <span className="sim-field-label">Troops</span>
+        <input
+          ref={countInputRef}
+          type="number"
+          min={0}
+          inputMode="numeric"
+          value={state.troops[cat]}
+          onKeyDown={onCountKeyDown}
+          onChange={(e) => {
+            const v = parseInt(e.target.value || "0", 10);
+            setState((prev) => ({
+              ...prev,
+              troops: {
+                ...prev.troops,
+                [cat]: isNaN(v) ? 0 : Math.max(0, v),
+              },
+            }));
+          }}
+          className="sim-input font-mono text-xs tabular-nums"
+          style={{ textAlign: "right" }}
+          aria-label={`${cat} troop count`}
+        />
+      </label>
+      <label>
+        <span className="sim-field-label">Tier</span>
+        <select
+          value={state.tiers[cat]}
+          onChange={(e) => {
+            const v = e.target.value;
+            setState((prev) => ({
+              ...prev,
+              tiers: { ...prev.tiers, [cat]: v },
+            }));
+          }}
+          className="sim-input font-mono text-xs"
+          aria-label={`${cat} troop tier`}
+        >
+          {TROOP_TIERS.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </label>
       <label className="sim-hero-field">
         <span className="sim-field-label">Hero</span>
         <select

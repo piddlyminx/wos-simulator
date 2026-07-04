@@ -10,7 +10,6 @@ export type SimulatorWorkerRequest =
   | { id: number; type: "bearOptimize"; payload: BearOptimizeRatioRequestPayload }
   | { id: number; type: "optimizeRatio"; payload: OptimizeRatioRequestPayload }
   | { id: number; type: "tournament"; payload: TournamentRequestPayload }
-  | { id: number; type: "surfaceSweep"; payload: SurfaceSweepPayload }
   | { id: number; type: "progressiveSurfaceSweep"; payload: SurfaceSweepPayload }
   | { id: number; type: "cancel" };
 

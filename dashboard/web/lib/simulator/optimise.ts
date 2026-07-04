@@ -3,18 +3,16 @@ import { simulateBattle } from "@simulator/simulator";
 import type { SimulatorConfig } from "@simulator/types";
 import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
 import {
-  ADAPTIVE_FINAL_REPLICATES,
   ADAPTIVE_LOCAL_NEIGHBOURS_PER_SEED,
   ADAPTIVE_MAX_FINALISTS,
   ADAPTIVE_MAX_PHASE2_SEEDS,
-  ADAPTIVE_PHASE1_REPLICATES,
-  ADAPTIVE_PHASE2_REPLICATES,
   DEFAULT_INFANTRY_MAX_PCT,
   DEFAULT_INFANTRY_MIN_PCT,
   DEFAULT_OPTIMIZE_REPLICATES,
   DEFAULT_TOP_RESULTS,
   MAX_OPTIMIZE_BATTLES,
   MAX_OPTIMIZE_COMPOSITIONS,
+  resolveAdaptiveSearchSettings,
   type OptimizeRatioPoint,
   type OptimizeRatioResult,
   type OptimizeSide,
@@ -114,6 +112,7 @@ export async function runOptimizeRatio(
 
   const step = normaliseStep(total, request.grid_step);
   const replicates = normaliseReplicates(request.search_replicates);
+  const adaptiveSettings = resolveAdaptiveSearchSettings(request);
   const infantryMinPct = normalisePct(request.infantry_min_pct, DEFAULT_INFANTRY_MIN_PCT);
   const infantryMaxPct = normalisePct(request.infantry_max_pct, DEFAULT_INFANTRY_MAX_PCT);
   if (infantryMinPct > infantryMaxPct) throw new Error("Infantry max % must be greater than or equal to infantry min %.");
@@ -121,7 +120,7 @@ export async function runOptimizeRatio(
 
   return searchMode === "grid"
     ? await runGridOptimize(request, total, step, replicates, infantryMinPct, infantryMaxPct, topN, config, battleSimulator, options)
-    : await runAdaptiveOptimize(request, total, step, infantryMinPct, infantryMaxPct, topN, config, battleSimulator, options);
+    : await runAdaptiveOptimize(request, total, step, adaptiveSettings, infantryMinPct, infantryMaxPct, topN, config, battleSimulator, options);
 }
 
 async function runGridOptimize(
@@ -166,6 +165,7 @@ async function runAdaptiveOptimize(
   request: OptimizeRatioRequestPayload,
   total: number,
   step: number,
+  adaptiveSettings: ReturnType<typeof resolveAdaptiveSearchSettings>,
   infantryMinPct: number,
   infantryMaxPct: number,
   topN: number,
@@ -178,7 +178,7 @@ async function runAdaptiveOptimize(
 
   const estimatedTotal = estimatedAdaptiveCompositions(phase1Compositions.length);
   const seedBase = options.seedBase ?? "optimize";
-  const phase1 = await evaluateBatch(request, phase1Compositions, ADAPTIVE_PHASE1_REPLICATES, config, battleSimulator, seedBase, "coarse", 0, estimatedTotal, options);
+  const phase1 = await evaluateBatch(request, phase1Compositions, adaptiveSettings.adaptive_phase1_replicates, config, battleSimulator, seedBase, "coarse", 0, estimatedTotal, options);
   const optimizeSide = normalizeOptimizeSide(request.optimize_side);
   const topByWin = rankOptimizeRows(phase1, optimizeSide).slice(0, 10);
   const topByMargin = [...phase1].sort((a, b) => b.avg_margin - a.avg_margin).slice(0, 10);
@@ -186,7 +186,7 @@ async function runAdaptiveOptimize(
   const phase2 = await evaluateBatch(
     request,
     phase2Compositions,
-    ADAPTIVE_PHASE2_REPLICATES,
+    adaptiveSettings.adaptive_phase2_replicates,
     config,
     battleSimulator,
     seedBase,
@@ -206,7 +206,7 @@ async function runAdaptiveOptimize(
   const finalistPoints = await evaluateBatch(
     request,
     finalists,
-    ADAPTIVE_FINAL_REPLICATES,
+    adaptiveSettings.adaptive_final_replicates,
     config,
     battleSimulator,
     seedBase,
@@ -217,9 +217,9 @@ async function runAdaptiveOptimize(
   );
   const points = [...phase1, ...phase2, ...finalistPoints];
   const projectedBattles =
-    phase1Compositions.length * ADAPTIVE_PHASE1_REPLICATES +
-    phase2Compositions.length * ADAPTIVE_PHASE2_REPLICATES +
-    finalists.length * ADAPTIVE_FINAL_REPLICATES;
+    phase1Compositions.length * adaptiveSettings.adaptive_phase1_replicates +
+    phase2Compositions.length * adaptiveSettings.adaptive_phase2_replicates +
+    finalists.length * adaptiveSettings.adaptive_final_replicates;
 
   return finalizeOptimizeResult(request, {
     total,
@@ -229,7 +229,7 @@ async function runAdaptiveOptimize(
     finalRows: finalistPoints,
     compositionsTested: phase1Compositions.length + phase2Compositions.length + finalists.length,
     projectedBattles,
-    replicatesPerRatio: ADAPTIVE_FINAL_REPLICATES,
+    replicatesPerRatio: adaptiveSettings.adaptive_final_replicates,
     infantryMinPct,
     infantryMaxPct,
     phaseCounts: {

@@ -18,6 +18,12 @@ export const ADAPTIVE_MAX_FINALISTS = 40;
 export type OptimizeSearchMode = "adaptive" | "grid";
 export type OptimizeSide = "attacker" | "defender";
 
+export interface AdaptiveSearchSettings {
+  adaptive_phase1_replicates: number;
+  adaptive_phase2_replicates: number;
+  adaptive_final_replicates: number;
+}
+
 export interface OptimizeRatioPoint {
   infantry_count: number;
   lancer_count: number;
@@ -90,14 +96,41 @@ export function estimateAdaptiveCompositionCount(
 export function estimateAdaptiveBattleCount(
   minPct = DEFAULT_INFANTRY_MIN_PCT,
   maxPct = DEFAULT_INFANTRY_MAX_PCT,
+  settings?: Partial<AdaptiveSearchSettings>,
 ): number {
+  const resolved = resolveAdaptiveSearchSettings(settings);
   return (
-    estimateAdaptivePhase1Count(minPct, maxPct) * ADAPTIVE_PHASE1_REPLICATES +
+    estimateAdaptivePhase1Count(minPct, maxPct) * resolved.adaptive_phase1_replicates +
     ADAPTIVE_MAX_PHASE2_SEEDS *
       ADAPTIVE_LOCAL_NEIGHBOURS_PER_SEED *
-      ADAPTIVE_PHASE2_REPLICATES +
-    ADAPTIVE_MAX_FINALISTS * ADAPTIVE_FINAL_REPLICATES
+      resolved.adaptive_phase2_replicates +
+    ADAPTIVE_MAX_FINALISTS * resolved.adaptive_final_replicates
   );
+}
+
+function normaliseAdaptiveReplicateCount(value: unknown, fallback: number): number {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return fallback;
+  return Math.max(1, Math.min(500, Math.floor(parsed)));
+}
+
+export function resolveAdaptiveSearchSettings(
+  settings?: Partial<AdaptiveSearchSettings>,
+): AdaptiveSearchSettings {
+  return {
+    adaptive_phase1_replicates: normaliseAdaptiveReplicateCount(
+      settings?.adaptive_phase1_replicates,
+      ADAPTIVE_PHASE1_REPLICATES,
+    ),
+    adaptive_phase2_replicates: normaliseAdaptiveReplicateCount(
+      settings?.adaptive_phase2_replicates,
+      ADAPTIVE_PHASE2_REPLICATES,
+    ),
+    adaptive_final_replicates: normaliseAdaptiveReplicateCount(
+      settings?.adaptive_final_replicates,
+      ADAPTIVE_FINAL_REPLICATES,
+    ),
+  };
 }
 
 export interface InfantryBounds {

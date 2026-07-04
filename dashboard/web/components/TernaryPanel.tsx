@@ -108,7 +108,7 @@ export default function TernaryPanel({
               onMouseLeave={() => onHover?.(null)}
               onClick={() => onClick?.(i)}
             >
-              <title>{`Inf ${p.inf.toLocaleString()} / Lanc ${p.lanc.toLocaleString()} / Mark ${p.mark.toLocaleString()}\nOutcome: ${((1 - v) * 100).toFixed(1)}% defender / ${(v * 100).toFixed(1)}% attacker`}</title>
+              <title>{`Inf ${formatPointPct(p.inf, total)} / Lanc ${formatPointPct(p.lanc, total)} / Mark ${formatPointPct(p.mark, total)}\nOutcome: ${((1 - v) * 100).toFixed(1)}% defender / ${(v * 100).toFixed(1)}% attacker`}</title>
             </circle>
           );
         })}
@@ -117,6 +117,11 @@ export default function TernaryPanel({
       {showLegend && <WinrateLegend />}
     </div>
   );
+}
+
+function formatPointPct(value: number, total: number): string {
+  const pct = (value / Math.max(1, total)) * 100;
+  return `${Number(pct.toFixed(1))}%`;
 }
 
 export function WinrateLegend() {

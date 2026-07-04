@@ -8,8 +8,12 @@ export interface SurfaceSweepPayload {
   attacker: SimulateSidePayload;
   defender: SimulateSidePayload;
   pointsPerEdge: number;
-  total: number;
-  tier: string;
+  attackerTotal: number;
+  defenderTotal: number;
+  /** Legacy saved runs used one global total. New callers should use per-side totals. */
+  total?: number;
+  /** Legacy saved runs used one global tier. New callers preserve side troop_types. */
+  tier?: string;
   replicates: number;
   /** Rally mode — if true, uses rally engagement type (asymmetric skills) */
   rallyMode: boolean;
@@ -85,6 +89,7 @@ export interface RunProgressiveSurfaceSweepOptions extends RunSurfaceSweepOption
 type SurfacePairCache = Map<string, number>;
 
 const PROGRESSIVE_PREVIEW_STAGES = [6, 11, 21] as const;
+export const SURFACE_RATIO_TOTAL = 10_000;
 
 export async function runSurfaceSweep(
   payload: SurfaceSweepPayload,
@@ -101,13 +106,12 @@ export function progressiveSurfaceStages(finalPointsPerEdge: number): number[] {
 
 export function estimateProgressiveSurfaceBattles(
   finalPointsPerEdge: number,
-  total: number,
   replicates: number,
 ): number {
   const seen = new Set<string>();
   let pairs = 0;
   for (const n of progressiveSurfaceStages(finalPointsPerEdge)) {
-    const pts = latticePoints(n, total);
+    const pts = latticePoints(n, SURFACE_RATIO_TOTAL);
     for (const att of pts) {
       for (const def of pts) {
         const key = pairKey(att, def);
@@ -126,7 +130,7 @@ export async function runProgressiveSurfaceSweep(
 ): Promise<SurfaceSweepResult> {
   const cache: SurfacePairCache = new Map();
   const stages = progressiveSurfaceStages(payload.pointsPerEdge);
-  const totalBattles = estimateProgressiveSurfaceBattles(payload.pointsPerEdge, payload.total, payload.replicates);
+  const totalBattles = estimateProgressiveSurfaceBattles(payload.pointsPerEdge, payload.replicates);
   let doneOffset = 0;
   let finalResult: SurfaceSweepResult | null = null;
 
@@ -161,37 +165,53 @@ async function runSurfaceSweepInternal(
   cache?: SurfacePairCache,
 ): Promise<SurfaceSweepResult> {
   const config = options.config ?? loadSimulatorConfig();
-  const pts = latticePoints(payload.pointsPerEdge, payload.total);
+  const pts = latticePoints(payload.pointsPerEdge, SURFACE_RATIO_TOTAL);
   const T = pts.length;
   const symmetric = false;
   const seedBase = options.seedBase ?? "surface";
+  const attackerTotal = Math.max(
+    0,
+    Math.floor(payload.attackerTotal ?? payload.total ?? sideTotal(payload.attacker)),
+  );
+  const defenderTotal = Math.max(
+    0,
+    Math.floor(payload.defenderTotal ?? payload.total ?? sideTotal(payload.defender)),
+  );
 
   // Build FighterInput templates (no troops) by running adapters with 0 troops.
   // Passive debuff effects depend on the opponent's stat_modifiers, so we must
   // pair each side with its correct opponent when constructing the template.
-  const mkTroopTypes = (): Record<"infantry" | "lancer" | "marksman", string> => ({
-    infantry: `infantry_${payload.tier}`,
-    lancer: `lancer_${payload.tier}`,
-    marksman: `marksman_${payload.tier}`,
-  });
   const zeroTroops = { infantry: 0, lancer: 0, marksman: 0 };
-  const attDummy: SimulateSidePayload = { ...payload.attacker, troops: zeroTroops, troop_types: mkTroopTypes() };
-  const defDummy: SimulateSidePayload = { ...payload.defender, troops: zeroTroops, troop_types: mkTroopTypes() };
+  const attDummy: SimulateSidePayload = { ...payload.attacker, troops: zeroTroops };
+  const defDummy: SimulateSidePayload = { ...payload.defender, troops: zeroTroops };
   const templateBattle = toBattleInput(
     { attacker: attDummy, defender: defDummy, replicates: 1, rally_mode: payload.rallyMode },
     "template",
   );
-  const attBase: Omit<FighterInput, "troops"> = (({ troops: _, ...rest }) => rest)(templateBattle.attacker);
-  const defBase: Omit<FighterInput, "troops"> = (({ troops: _, ...rest }) => rest)(templateBattle.defender);
+  const attBase = fighterWithoutTroops(templateBattle.attacker);
+  const defBase = fighterWithoutTroops(templateBattle.defender);
 
-  const troopsFor = (p: SurfacePoint): Record<string, number> => ({
-    [`infantry_${payload.tier}`]: p.inf,
-    [`lancer_${payload.tier}`]: p.lanc,
-    [`marksman_${payload.tier}`]: p.mark,
-  });
+  const troopsFor = (
+    p: SurfacePoint,
+    side: SimulateSidePayload,
+    total: number,
+  ): Record<string, number> => {
+    const counts = scalePointToTotal(p, total);
+    return {
+      [side.troop_types.infantry]: counts.infantry,
+      [side.troop_types.lancer]: counts.lancer,
+      [side.troop_types.marksman]: counts.marksman,
+    };
+  };
 
-  const attFighters: FighterInput[] = pts.map((p) => ({ ...attBase, troops: troopsFor(p) }));
-  const defFighters: FighterInput[] = pts.map((p) => ({ ...defBase, troops: troopsFor(p) }));
+  const attFighters: FighterInput[] = pts.map((p) => ({
+    ...attBase,
+    troops: troopsFor(p, payload.attacker, attackerTotal),
+  }));
+  const defFighters: FighterInput[] = pts.map((p) => ({
+    ...defBase,
+    troops: troopsFor(p, payload.defender, defenderTotal),
+  }));
 
   // Upper triangle only when symmetric, full matrix when rally mode
   const pairs: [number, number][] = [];
@@ -269,6 +289,34 @@ function pointKey(p: SurfacePoint): string {
 
 function pairKey(attacker: SurfacePoint, defender: SurfacePoint): string {
   return `${pointKey(attacker)}|${pointKey(defender)}`;
+}
+
+function sideTotal(side: SimulateSidePayload): number {
+  return (
+    (side.troops?.infantry ?? 0) +
+    (side.troops?.lancer ?? 0) +
+    (side.troops?.marksman ?? 0)
+  );
+}
+
+function scalePointToTotal(
+  point: SurfacePoint,
+  total: number,
+): Record<"infantry" | "lancer" | "marksman", number> {
+  const pointTotal = Math.max(1, point.inf + point.lanc + point.mark);
+  const infantry = Math.round((total * point.inf) / pointTotal);
+  const lancer = Math.round((total * point.lanc) / pointTotal);
+  return {
+    infantry,
+    lancer,
+    marksman: Math.max(0, total - infantry - lancer),
+  };
+}
+
+function fighterWithoutTroops(fighter: FighterInput): Omit<FighterInput, "troops"> {
+  const rest: Partial<FighterInput> = { ...fighter };
+  delete rest.troops;
+  return rest as Omit<FighterInput, "troops">;
 }
 
 export function runPair(

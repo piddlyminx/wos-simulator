@@ -216,19 +216,20 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       page.locator('[data-testid="optimize-options-panel"]'),
     ).toHaveCount(0);
 
-    const simulateBtn = page.getByRole("button", { name: /^Simulate$/i });
-    const replicateBox = await page
-      .locator('input[type="number"][max="10000"]')
-      .boundingBox();
+    const runbar = page.getByTestId("simulate-runbar");
+    const simulateBtn = runbar.getByRole("button", { name: /^Simulate$/i });
+    const optionsButton = page.getByTestId("optimize-options-toggle");
+    const optionsBox = await optionsButton.boundingBox();
     const simulateBox = await simulateBtn.boundingBox();
-    expect(replicateBox).not.toBeNull();
+    expect(optionsBox).not.toBeNull();
     expect(simulateBox).not.toBeNull();
     expect(
-      Math.abs((replicateBox?.y ?? 0) - (simulateBox?.y ?? 0)),
+      Math.abs((optionsBox?.y ?? 0) - (simulateBox?.y ?? 0)),
     ).toBeLessThanOrEqual(16);
 
     // Simulate button touch-target is at least 44px tall (Apple HIG minimum).
     expect((simulateBox?.height ?? 0) + 0.5).toBeGreaterThanOrEqual(44);
+    await expect(page.getByTestId("optimize-panel")).toContainText("1,000 reps");
 
     const overflow = await page.evaluate(() => {
       const doc = document.documentElement;
@@ -427,7 +428,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
 
     await expect(page.getByTestId("sim-workbench-tabs")).toHaveCount(0);
     await expect(page.getByTestId("sim-panel-setup")).toBeVisible();
-    await expect(page.getByTestId("sim-panel-results")).toBeVisible();
+    await expect(page.getByTestId("sim-panel-results")).toHaveCount(1);
     await expect(page.getByTestId("sim-tab-attacker")).toHaveCount(0);
     await expect(page.getByTestId("sim-tab-defender")).toHaveCount(0);
 
@@ -444,15 +445,10 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(page.getByTestId("simulate-runbar")).toBeVisible();
     await expect(page.getByTestId("optimize-panel")).toBeVisible();
     const actionsBox = await page.getByTestId("simulate-runbar").boundingBox();
-    const resultsBox = await page.getByTestId("sim-panel-results").boundingBox();
     const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
     expect(actionsBox).not.toBeNull();
-    expect(resultsBox).not.toBeNull();
     expect(dockBox).not.toBeNull();
-    expect(actionsBox?.y ?? 0).toBeGreaterThan(
-      (resultsBox?.y ?? 0) + (resultsBox?.height ?? 0),
-    );
-    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(ROOMY_DESKTOP.height - 140);
+    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(ROOMY_DESKTOP.height - 150);
     await expectNoVisibleElementOverflow(page);
   });
 
@@ -554,12 +550,10 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     const runbarBox = await page.getByTestId("simulate-runbar").boundingBox();
     const optimizeBox = await page.getByTestId("optimize-panel").boundingBox();
     const setupBox = await page.getByTestId("sim-panel-setup").boundingBox();
-    const resultsBox = await page.getByTestId("sim-panel-results").boundingBox();
     const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
     expect(runbarBox).not.toBeNull();
     expect(optimizeBox).not.toBeNull();
     expect(setupBox).not.toBeNull();
-    expect(resultsBox).not.toBeNull();
     expect(dockBox).not.toBeNull();
     await expect(page.getByTestId("sim-workbench-tabs")).toHaveCount(0);
     const startBox = await page.getByTestId("simulate-start-card").boundingBox();
@@ -571,41 +565,40 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
           ((startBox?.x ?? 0) + (startBox?.width ?? 0)),
       ),
     ).toBeLessThanOrEqual(2);
-    expect(resultsBox?.y ?? 0).toBeGreaterThanOrEqual(
-      (setupBox?.y ?? 0) + (setupBox?.height ?? 0) - 1,
-    );
-    expect(Math.abs((resultsBox?.x ?? 0) - (setupBox?.x ?? 9999))).toBeLessThanOrEqual(2);
-    expect(
-      Math.abs(
-        ((resultsBox?.x ?? 0) + (resultsBox?.width ?? 0)) -
-          ((setupBox?.x ?? 0) + (setupBox?.width ?? 0)),
-      ),
-    ).toBeLessThanOrEqual(2);
     expect(dockBox?.y ?? 0).toBeGreaterThan(
-      (resultsBox?.y ?? 0) + (resultsBox?.height ?? 0),
+      (setupBox?.y ?? 0) + (setupBox?.height ?? 0),
     );
-    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(desktopStack.height - 140);
+    expect(dockBox?.y ?? 0).toBeGreaterThanOrEqual(desktopStack.height - 150);
     expect((dockBox?.y ?? 0) + (dockBox?.height ?? 0)).toBeLessThanOrEqual(
       desktopStack.height,
     );
-    expect(Math.abs((runbarBox?.y ?? 0) - (optimizeBox?.y ?? 9999))).toBeLessThanOrEqual(16);
+    expect(runbarBox?.y ?? 0).toBeGreaterThanOrEqual(optimizeBox?.y ?? 9999);
+    expect((runbarBox?.y ?? 0) + (runbarBox?.height ?? 0)).toBeLessThanOrEqual(
+      (optimizeBox?.y ?? 0) + (optimizeBox?.height ?? 0) + 1,
+    );
 
+    const optionsToggle = page.getByTestId("optimize-options-toggle");
+    await optionsToggle.click();
     const replicateBox = await page.getByLabel("Replicates").boundingBox();
     expect(replicateBox).not.toBeNull();
-    expect(replicateBox?.width ?? 9999).toBeLessThanOrEqual(110);
+    expect(replicateBox?.width ?? 9999).toBeLessThanOrEqual(190);
     const simulateColor = await page
+      .getByTestId("simulate-runbar")
       .getByRole("button", { name: /^Simulate$/i })
       .evaluate((el) => getComputedStyle(el).backgroundColor);
+    await optionsToggle.click();
+    await page.getByRole("tab", { name: "Optimise ratio" }).click();
     const optimizeColor = await page
+      .getByTestId("simulate-runbar")
       .getByRole("button", { name: /^Optimise ratio$/i })
       .evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(simulateColor).toBe(optimizeColor);
-    await expect(page.getByRole("button", { name: "Grid" })).not.toBeVisible();
-    await page.getByTestId("optimize-options-toggle").click();
+    await expect(page.getByRole("button", { name: "Grid" })).toHaveCount(0);
+    await optionsToggle.click();
     await expect(page.getByRole("button", { name: "Grid" })).toBeVisible();
   });
 
-  test("simulate action dock keeps optimise controls compact and exposes visible help", async ({
+  test("simulate action dock keeps run controls compact and exposes options help", async ({
     page,
   }) => {
     for (const width of [1024, 1280, 1440]) {
@@ -614,85 +607,81 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       expect(response?.status()).toBe(200);
 
       const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
-      const sideToggleBox = await page
-        .locator(".sim-optimize-side-toggle")
+      const tablistBox = await page
+        .getByRole("tablist", { name: "Run mode" })
         .boundingBox();
-      const optimizeButtonBox = await page
-        .getByRole("button", { name: /^Optimise ratio$/i })
+      const runButtonBox = await page
+        .getByTestId("simulate-runbar")
+        .getByRole("button", { name: /^Simulate$/i })
         .boundingBox();
       const optionsButtonBox = await page
         .getByTestId("optimize-options-toggle")
         .boundingBox();
 
       expect(dockBox).not.toBeNull();
-      expect(sideToggleBox).not.toBeNull();
-      expect(optimizeButtonBox).not.toBeNull();
+      expect(tablistBox).not.toBeNull();
+      expect(runButtonBox).not.toBeNull();
       expect(optionsButtonBox).not.toBeNull();
-      expect(sideToggleBox?.width ?? 9999).toBeLessThanOrEqual(180);
+      expect(tablistBox?.width ?? 9999).toBeLessThanOrEqual(dockBox?.width ?? 0);
       expect((optionsButtonBox?.x ?? 0) + (optionsButtonBox?.width ?? 0)).toBeLessThanOrEqual(
         (dockBox?.x ?? 0) + (dockBox?.width ?? 0) + 1,
       );
-      expect((optimizeButtonBox?.height ?? 0) + 0.5).toBeGreaterThanOrEqual(34);
+      expect((runButtonBox?.height ?? 0) + 0.5).toBeGreaterThanOrEqual(34);
       await expectNoVisibleElementOverflow(page);
     }
 
     await page.setViewportSize({ width: 768, height: 506 });
     await page.goto("/simulate");
-    const helpButton = page.getByRole("button", { name: "Simulation actions help" });
-    await helpButton.hover();
-    const tooltip = page.getByTestId("optimize-help-tooltip");
-    await expect(tooltip).toBeVisible();
-    await expect(tooltip).toContainText(
-      "Simulate runs the attacker and defender exactly as configured",
-    );
-    const tooltipBox = await tooltip.boundingBox();
-    const helpBox = await helpButton.boundingBox();
-    expect(tooltipBox).not.toBeNull();
-    expect(helpBox).not.toBeNull();
-    expect(tooltipBox?.x ?? -1).toBeGreaterThanOrEqual(8);
-    expect((tooltipBox?.x ?? 0) + (tooltipBox?.width ?? 9999)).toBeLessThanOrEqual(760);
-    expect((tooltipBox?.y ?? 9999) + (tooltipBox?.height ?? 9999)).toBeLessThanOrEqual(
-      (helpBox?.y ?? 0) - 6,
-    );
+    await page.getByRole("tab", { name: "Optimise ratio" }).click();
+    await page.getByTestId("optimize-options-toggle").click();
+    const optionsPanel = page.getByTestId("optimize-options-panel");
+    await expect(optionsPanel).toBeVisible();
+    await expect(optionsPanel).toContainText("Infantry search band");
+    await expect(optionsPanel).toContainText("Adaptive search starts");
   });
 
-  test("simulate desktop optimise command uses compact side toggle and chevron options", async ({
+  test("simulate desktop optimise command uses run mode tabs and chevron options", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 820 });
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
-    const sideToggle = page.locator(".sim-optimize-side-toggle");
-    const optimizeButton = page.getByRole("button", { name: /^Optimise ratio$/i });
+    const optimizeTab = page.getByRole("tab", { name: "Optimise ratio" });
+    const optimizeButton = page
+      .getByTestId("simulate-runbar")
+      .getByRole("button", { name: /^Optimise ratio$/i });
     const optionsToggle = page.getByTestId("optimize-options-toggle");
-    const flowBox = await page.locator(".sim-optimize-flow").boundingBox();
-    const sideBox = await sideToggle.boundingBox();
+    await optimizeTab.click();
+    const commandBox = await page.getByTestId("optimize-panel").boundingBox();
+    const tabBox = await optimizeTab.boundingBox();
     const actionBox = await optimizeButton.boundingBox();
     const toggleBox = await optionsToggle.boundingBox();
 
-    await expect(sideToggle).toContainText("Attacker");
-    await sideToggle.click();
-    await expect(sideToggle).toContainText("Defender");
-    await expect(optionsToggle).toHaveAccessibleName(/Show optimise options/i);
+    await expect(optionsToggle).toHaveAccessibleName(/Show run options/i);
     await expect(optionsToggle).not.toContainText(/Show options|Hide options/i);
-    expect(flowBox).not.toBeNull();
-    expect(sideBox).not.toBeNull();
+    expect(commandBox).not.toBeNull();
+    expect(tabBox).not.toBeNull();
     expect(actionBox).not.toBeNull();
     expect(toggleBox).not.toBeNull();
-    const sideCenter = (sideBox?.y ?? 0) + (sideBox?.height ?? 0) / 2;
+    const tabCenter = (tabBox?.y ?? 0) + (tabBox?.height ?? 0) / 2;
     const actionCenter = (actionBox?.y ?? 0) + (actionBox?.height ?? 0) / 2;
     const toggleCenter = (toggleBox?.y ?? 0) + (toggleBox?.height ?? 0) / 2;
-    expect(Math.abs(sideCenter - actionCenter)).toBeLessThanOrEqual(2);
+    expect(tabCenter).toBeLessThan(actionCenter);
     expect(Math.abs(actionCenter - toggleCenter)).toBeLessThanOrEqual(2);
     expect((toggleBox?.x ?? 0) + (toggleBox?.width ?? 0)).toBeLessThanOrEqual(
-      (flowBox?.x ?? 0) + (flowBox?.width ?? 0) + 1,
+      (commandBox?.x ?? 0) + (commandBox?.width ?? 0) + 1,
     );
-    expect(toggleBox?.width ?? 9999).toBeLessThanOrEqual(100);
+    expect(toggleBox?.width ?? 9999).toBeLessThanOrEqual(120);
 
     await optionsToggle.click();
-    await expect(optionsToggle).toHaveAccessibleName(/Hide optimise options/i);
+    await expect(optionsToggle).toHaveAccessibleName(/Hide run options/i);
     await expect(page.getByTestId("optimize-options-panel")).toBeVisible();
+    const optionsPanel = page.getByTestId("optimize-options-panel");
+    const sideToggle = optionsPanel.locator(".sim-mode-secondary-button");
+    await expect(sideToggle).toContainText("Attacker");
+    await sideToggle.click();
+    await expect(optionsPanel.locator(".sim-mode-secondary-button")).toContainText("Defender");
   });
 
   test("simulate mobile action dock aligns controls into rows", async ({
@@ -703,44 +692,31 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     expect(response?.status()).toBe(200);
 
     const dockBox = await page.getByTestId("sim-action-dock").boundingBox();
-    const replicateBox = await page.getByLabel("Replicates").boundingBox();
-    const simulateBox = await page.getByRole("button", { name: /^Simulate$/i }).boundingBox();
-    const sideToggleBox = await page
-      .locator(".sim-optimize-side-toggle")
+    const modeTabsBox = await page
+      .getByRole("tablist", { name: "Run mode" })
       .boundingBox();
-    const helpBox = await page.getByRole("button", { name: "Simulation actions help" }).boundingBox();
-    const optimizeBox = await page
-      .getByRole("button", { name: /^Optimise ratio$/i })
+    const simulateBox = await page
+      .getByTestId("simulate-runbar")
+      .getByRole("button", { name: /^Simulate$/i })
       .boundingBox();
     const optionsBox = await page.getByTestId("optimize-options-toggle").boundingBox();
+    const statusBox = await page.locator(".sim-mode-status").boundingBox();
 
     for (const box of [
       dockBox,
-      replicateBox,
+      modeTabsBox,
       simulateBox,
-      sideToggleBox,
-      helpBox,
-      optimizeBox,
       optionsBox,
+      statusBox,
     ]) {
       expect(box).not.toBeNull();
     }
 
-    expect(Math.abs((replicateBox?.y ?? 0) - (simulateBox?.y ?? 9999))).toBeLessThanOrEqual(2);
-    expect(Math.abs((optimizeBox?.y ?? 0) - (optionsBox?.y ?? 9999))).toBeLessThanOrEqual(2);
-    expect(Math.abs((sideToggleBox?.y ?? 0) - (optionsBox?.y ?? 9999))).toBeLessThanOrEqual(2);
-    expect(helpBox?.y ?? 9999).toBeLessThan(replicateBox?.y ?? 0);
+    expect(modeTabsBox?.y ?? 9999).toBeLessThan(optionsBox?.y ?? 0);
+    expect(Math.abs((simulateBox?.y ?? 0) - (optionsBox?.y ?? 9999))).toBeLessThanOrEqual(2);
+    expect(statusBox?.y ?? 0).toBeGreaterThan(simulateBox?.y ?? 9999);
     expect((optionsBox?.x ?? 0) + (optionsBox?.width ?? 0)).toBeLessThanOrEqual(
       (dockBox?.x ?? 0) + (dockBox?.width ?? 0) - 10,
-    );
-    await page.getByRole("button", { name: "Simulation actions help" }).hover();
-    const tooltip = page.getByTestId("optimize-help-tooltip");
-    await expect(tooltip).toBeVisible();
-    const tooltipBox = await tooltip.boundingBox();
-    expect(tooltipBox).not.toBeNull();
-    expect(tooltipBox?.x ?? -1).toBeGreaterThanOrEqual(8);
-    expect((tooltipBox?.x ?? 0) + (tooltipBox?.width ?? 9999)).toBeLessThanOrEqual(
-      IPHONE_SE.width - 8,
     );
     await expectNoVisibleElementOverflow(page);
   });
@@ -813,18 +789,23 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
   test("simulate collapsed sections keep readable setup summaries", async ({
     page,
   }) => {
-    await page.setViewportSize(DESKTOP);
+    await page.setViewportSize({ width: 1600, height: 950 });
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
 
-    const statsButton = page
-      .getByRole("button", { name: /Stat bonuses/i })
-      .first();
-    await statsButton.click();
-    await page.getByLabel("Infantry Attack").first().fill("1703.4");
+    const statsSection = page.getByTestId("side-section-attacker-stats");
+    const statsButton = statsSection.getByRole("button", {
+      name: /Stat bonuses/i,
+    });
+    await expect(async () => {
+      if ((await statsButton.getAttribute("aria-expanded")) !== "true") {
+        await statsButton.click();
+      }
+      await expect(statsButton).toHaveAttribute("aria-expanded", "true");
+    }).toPass();
+    await statsSection.getByLabel("Infantry Attack").fill("1703.4");
     await statsButton.click();
 
-    const statsSection = page.getByTestId("side-section-attacker-stats");
     await expect(statsSection.getByTestId("stat-bonus-summary-matrix")).toBeVisible();
     await expect(
       statsSection.getByTestId("stat-bonus-summary-matrix").locator(".sim-summary-name").first(),

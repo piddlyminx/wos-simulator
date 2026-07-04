@@ -29,6 +29,7 @@ export interface PlayerStatPreset {
 const ID_RE = /^[A-Za-z0-9_-]{8,128}$/;
 export const MAX_STAT_PRESETS = 200;
 export const MAX_STAT_PRESET_NAME_LENGTH = 80;
+export const STAT_PRESETS_STORAGE_KEY = "wos-simulator.player-stat-presets.v1";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -92,5 +93,33 @@ export function sortPlayerStatPresets(
 ): PlayerStatPreset[] {
   return [...presets].sort((a, b) =>
     b.updated_at.localeCompare(a.updated_at),
+  );
+}
+
+export function newStatPresetId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `preset-${Date.now().toString(36)}-${Math.random()
+    .toString(36)
+    .slice(2, 10)}`;
+}
+
+export function loadLocalStatPresets(): PlayerStatPreset[] {
+  if (typeof window === "undefined") return [];
+  const raw = window.localStorage.getItem(STAT_PRESETS_STORAGE_KEY);
+  if (!raw) return [];
+  const parsed = JSON.parse(raw) as unknown;
+  if (!Array.isArray(parsed)) {
+    throw new Error("Preset store must be an array");
+  }
+  return sortPlayerStatPresets(parsed.map(normalizePlayerStatPreset));
+}
+
+export function saveLocalStatPresets(presets: PlayerStatPreset[]): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(
+    STAT_PRESETS_STORAGE_KEY,
+    JSON.stringify(sortPlayerStatPresets(presets)),
   );
 }

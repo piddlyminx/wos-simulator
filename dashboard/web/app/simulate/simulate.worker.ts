@@ -1,7 +1,7 @@
 import { runOptimizeRatio, runOptimizeBatchDirect, type OptimizeBatchResult, type OptimizeBatchTask } from "@/lib/simulator/optimise";
 import { runBearOptimizeRatio, runBearSimulation, runBearSimulationTrace } from "@/lib/simulator/bear";
 import { runSimulation, runSimulationBatchDirect, runSimulationTrace, type SimulateBatchResult, type SimulateBatchTask } from "@/lib/simulator/simulate";
-import { runProgressiveSurfaceSweep, runSurfaceSweep, runPair, type SurfaceBatchResult, type SurfaceBatchTask } from "@/lib/simulator/surface";
+import { runProgressiveSurfaceSweep, runPair, type SurfaceBatchResult, type SurfaceBatchTask } from "@/lib/simulator/surface";
 import { loadSimulatorConfig } from "@simulator/config";
 import type { SimulatorWorkerRequest, SimulatorWorkerResponse } from "@/lib/simulator/worker-protocol";
 import { runBattleTasksDirect, runTournament, type BattleSummary, type BattleTask, type TournamentRunOptions } from "@/lib/tournament";
@@ -70,15 +70,6 @@ async function handleMessage(request: SimulatorWorkerRequest): Promise<void> {
         runBatches: createOptimizeBatchRunner(request.id, BATTLE_WORKER_COUNT),
       });
       postIfActive(request.id, { id: request.id, type: "optimizeResult", data });
-    } else if (request.type === "surfaceSweep") {
-      const data = await runSurfaceSweep(request.payload, {
-        seedBase: `surface:${request.id}`,
-        onProgress: (done, total) => postIfActive(request.id, { id: request.id, type: "progress", done, total }),
-        runBatches: request.payload.jobs > 1
-          ? createSurfaceBatchRunner(request.id, request.payload.jobs)
-          : undefined,
-      });
-      postIfActive(request.id, { id: request.id, type: "surfaceResult", data });
     } else if (request.type === "progressiveSurfaceSweep") {
       const data = await runProgressiveSurfaceSweep(request.payload, {
         seedBase: `surface:${request.id}`,
