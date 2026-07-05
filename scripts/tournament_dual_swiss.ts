@@ -29,7 +29,7 @@ export interface CliOptions {
   finalsTopM: number;
   finalsReps?: number;
   finalsOnly?: string;
-  finalsMaxSameHeroes: number;
+  finalsMaxSameShell: number;
   repeatJoiners: boolean;
   playerStats: string;
 }
@@ -51,7 +51,7 @@ const VALUE_FLAGS = new Set([
   "--finals-top-m",
   "--finals-reps",
   "--finals-only",
-  "--finals-max-same-heroes",
+  "--finals-max-same-shell",
   "--player-stats"
 ]);
 
@@ -69,7 +69,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
     startFreezeRound: 8,
     minPoolSize: 200,
     finalsTopM: 200,
-    finalsMaxSameHeroes: 10,
+    finalsMaxSameShell: 10,
     repeatJoiners: false,
     playerStats: "max"
   };
@@ -136,8 +136,8 @@ export function parseCliArgs(argv: string[]): CliOptions {
       case "--finals-only":
         options.finalsOnly = readValue();
         break;
-      case "--finals-max-same-heroes":
-        options.finalsMaxSameHeroes = parseInteger(readValue(), arg);
+      case "--finals-max-same-shell":
+        options.finalsMaxSameShell = parseInteger(readValue(), arg);
         break;
       case "--player-stats":
         options.playerStats = readValue();
@@ -181,8 +181,8 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
           `--finals-top-m=${args.finalsTopM} requested, but ${args.finalsOnly} has only ${attackCandidates.length} offense and ${defenseCandidates.length} defense candidates`
         );
       }
-      topAttackers = selectFinalsTeamsByMainLineup(attackCandidates, args.finalsTopM, args.finalsMaxSameHeroes);
-      topDefenders = selectFinalsTeamsByMainLineup(defenseCandidates, args.finalsTopM, args.finalsMaxSameHeroes);
+      topAttackers = selectFinalsTeamsByMainLineup(attackCandidates, args.finalsTopM, args.finalsMaxSameShell);
+      topDefenders = selectFinalsTeamsByMainLineup(defenseCandidates, args.finalsTopM, args.finalsMaxSameShell);
       outDir = join("tournament_results", `ds_${deriveResultsLabel(args.finalsOnly)}_${timestamp()}`);
       copyQualifierCsvs(args.finalsOnly, outDir);
       console.log(`Loaded finals qualifiers from ${args.finalsOnly}`);
@@ -230,12 +230,12 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
         topAttackers = selectFinalsTeamsByMainLineup(
           attackPool.finalScoresOrdered.map((score) => score.team),
           args.finalsTopM,
-          args.finalsMaxSameHeroes
+          args.finalsMaxSameShell
         );
         topDefenders = selectFinalsTeamsByMainLineup(
           defensePool.finalScoresOrdered.map((score) => score.team),
           args.finalsTopM,
-          args.finalsMaxSameHeroes
+          args.finalsMaxSameShell
         );
       }
     }
@@ -284,7 +284,7 @@ function parseNumber(value: string, flag: string): number {
 
 function validateOptions(options: CliOptions): void {
   for (const ratio of options.ratios) parseRatio(ratio, options.total);
-  if (options.finalsMaxSameHeroes < 0) throw new Error("--finals-max-same-heroes must be >= 0");
+  if (options.finalsMaxSameShell < 0) throw new Error("--finals-max-same-shell must be >= 0");
   if (options.finalsOnly && options.finalsTopM <= 0) throw new Error("--finals-only requires --finals-top-m > 0");
   if (options.finalsOnly) {
     for (const name of ["swiss_off.csv", "swiss_def.csv"]) {

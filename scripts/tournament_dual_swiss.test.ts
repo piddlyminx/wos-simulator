@@ -12,11 +12,14 @@ test("parseCliArgs parses multiple ratios and finals options", () => {
     "10",
     "--finals-reps",
     "3",
+    "--finals-max-same-shell",
+    "4",
     "--repeat-joiners"
   ]);
   assert.deepEqual(options.ratios, ["50,20,30", "60,40,0"]);
   assert.equal(options.finalsTopM, 10);
   assert.equal(options.finalsReps, 3);
+  assert.equal(options.finalsMaxSameShell, 4);
   assert.equal(options.repeatJoiners, true);
 });
 

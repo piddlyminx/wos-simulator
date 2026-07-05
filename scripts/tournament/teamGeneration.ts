@@ -79,7 +79,8 @@ export function selectFinalsTeamsByMainLineup(teams: Team[], topM: number, maxSa
   const counts = new Map<string, number>();
   for (const team of teams) {
     if (selected.length >= topM) break;
-    const key = team.mains.join("\u0000");
+    let key = team.mains.join("\u0000");
+    key += team.ratioLabel;
     const count = counts.get(key) ?? 0;
     if (count >= maxSameMainLineup) continue;
     selected.push(team);
