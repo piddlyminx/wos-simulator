@@ -14,6 +14,7 @@ import { ALL_UNIT_MASK, unitMask } from "./types";
 import { normalizeUnitType } from "./normalize";
 
 export type Rng = () => number;
+type EffectDurationConstraint = NonNullable<EffectDuration["constraints"]>[number];
 
 interface CompiledTriggerSelectors {
   source: ParsedTriggerSelector;
@@ -127,11 +128,17 @@ function skillStackingSourceKey(skill: ResolvedSkill): string {
   return skill.heroName ?? skill.troopType ?? "global";
 }
 
+export function sourceLabel(effect: ActiveEffect): string {
+  return [effect.source.heroName ?? effect.source.troopType ?? effect.source.kind, effect.source.skillId, effect.source.effectId].filter(Boolean).join("/");
+}
+
 export function isEffectActive(effect: ActiveEffect, round: number): boolean {
   if (round < effect.startRound) return false;
-  if (effect.duration.type === "battle") return true;
-  if (effect.duration.type === "round") return round < effect.startRound + Math.max(1, effect.duration.value);
-  return effect.uses < Math.max(1, effect.duration.value);
+  return durationConstraints(effect.duration).every((constraint) => isDurationConstraintActive(effect, round, constraint));
+}
+
+export function hasAttackDurationConstraint(effect: ActiveEffect): boolean {
+  return durationConstraints(effect.duration).some((constraint) => constraint.type === "attack");
 }
 
 export function currentEffectValuePct(effect: ActiveEffect, round: number): number {
@@ -229,11 +236,42 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {
   if (!duration) return { type: "battle", value: 0 };
-  const rawType = duration.type === "turn" ? "round" : duration.type;
-  if (rawType === "round" || rawType === "attack" || rawType === "battle") {
-    return { type: rawType, value: Number(duration.value ?? (rawType === "battle" ? 0 : 1)), delay: Number(duration.delay ?? 0) };
-  }
+  const namedConstraints = normalizeNamedDurationConstraints(duration);
+  if (namedConstraints.length > 0) return { type: "battle", value: 0, constraints: namedConstraints };
   return { type: "battle", value: 0 };
+}
+
+function durationConstraints(duration: EffectDuration): EffectDurationConstraint[] {
+  return duration.constraints ?? [{ type: duration.type, count: duration.value }];
+}
+
+function isDurationConstraintActive(effect: ActiveEffect, round: number, constraint: EffectDurationConstraint): boolean {
+  const delay = Math.max(0, constraint.delay ?? 0);
+  if (constraint.type === "battle") return true;
+  if (constraint.type === "round") {
+    const startRound = effect.createdRound + delay;
+    if (round < startRound) return false;
+    if (constraint.count === undefined) return true;
+    return round < startRound + Math.max(1, constraint.count);
+  }
+  if (constraint.count === undefined) return true;
+  return effect.uses < delay + Math.max(1, constraint.count);
+}
+
+function normalizeNamedDurationConstraints(duration: NonNullable<EffectIntentDefinition["duration"]>): EffectDurationConstraint[] {
+  const constraints: EffectDurationConstraint[] = [];
+  const turns = duration.turns ?? duration.rounds;
+  if (turns) constraints.push(normalizeNamedDurationConstraint("round", turns));
+  if (duration.attacks) constraints.push(normalizeNamedDurationConstraint("attack", duration.attacks));
+  return constraints;
+}
+
+function normalizeNamedDurationConstraint(type: "round" | "attack", value: { count?: number; delay?: number }): EffectDurationConstraint {
+  return {
+    type,
+    ...(value.count === undefined ? {} : { count: Number(value.count) }),
+    ...(value.delay === undefined ? {} : { delay: Number(value.delay) })
+  };
 }
 
 function normalizeSameEffectStacking(value: EffectIntentDefinition["same_effect_stacking"]): SameEffectStacking {

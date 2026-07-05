@@ -12,7 +12,7 @@ import type {
 import { UNIT_TYPES } from "./types";
 import { classifyEffectForJob } from "./classifier";
 import { ATOMIC_BUCKETS, BUCKET_DEFINITIONS, type AtomicBucket } from "./damageBuckets";
-import { currentEffectValuePct, isEffectActive } from "./effects";
+import { currentEffectValuePct, isEffectActive, sourceLabel } from "./effects";
 import { bucketCandidatesForJob, type EffectIndex } from "./effectIndex";
 import {
   buildStaticDamageProfile,
@@ -56,20 +56,17 @@ interface NumericDamageBuckets {
 
 export type DamageScratch = NumericDamageBuckets;
 
-// Lean result of a single damage job: the correctness-relevant outputs (kills, consumed
-// effect bookkeeping) plus, only when tracing, the recording detail. The heavy per-attack
+// Lean result of a single damage job: kills plus, only when tracing, the recording detail.
+// Usage charging happens via options.usedEffects (every mode); the heavy per-attack
 // AttackOutcome is assembled by the recorder, not here, so fast mode allocates nothing extra.
 export interface DamageResult {
   kills: number;
-  consumedEffectIds: string[];
-  appliedEffectIds?: string[];
   appliedEffects?: DamageEquationTrace["appliedEffects"];
   trace?: DamageEquationTrace;
 }
 
 const BUCKET_IDS = Object.fromEntries(ATOMIC_BUCKETS.map((bucket, index) => [bucket, index])) as Record<AtomicBucket, NumericBucketId>;
 const EMPTY_AGGREGATION_GROUPS: Record<string, DamageAggregationGroupTrace> = {};
-const EMPTY_CONSUMED_EFFECT_IDS: string[] = [];
 const TROOPS_COUNT_TERM = factorTerm("troops.count");
 const SOURCE_EXTRA_SKILL_TERM = factorTerm("source.extraSkill");
 const DEFAULT_FACTOR_TERMS = ATOMIC_BUCKETS.map((bucket) => factorTerm(bucket));
@@ -109,7 +106,7 @@ export function calculateDamageJob(
   job: DamageJob,
   fighters: Record<SideId, ResolvedFighter>,
   activeEffects: ActiveEffect[],
-  options: { trace?: boolean; effectIndex: EffectIndex; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch; capToDefenderTroops?: boolean }
+  options: { trace?: boolean; effectIndex: EffectIndex; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch; capToDefenderTroops?: boolean; usedEffects?: Set<ActiveEffect> }
 ): DamageResult {
   if (!options?.effectIndex) throw new Error("calculateDamageJob requires an effectIndex");
   // The damage math is one path; `trace` only decides whether we also capture the (expensive)
@@ -128,9 +125,9 @@ export function calculateDamageJob(
   applyBucketValue(buckets, "troops.count", armyTerm);
   applyBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
 
-  const appliedEffects: DamageEquationTrace["appliedEffects"] = detail === "full" ? [] : [];
-  const rejectedEffects: DamageEquationTrace["rejectedEffects"] = detail === "full" ? [] : [];
-  const consumedEffectIds = new Set<string>();
+  const appliedEffects: DamageEquationTrace["appliedEffects"] = [];
+  const rejectedEffects: DamageEquationTrace["rejectedEffects"] = [];
+  const usedEffects = options.usedEffects ?? new Set<ActiveEffect>();
   const candidates: BucketCandidate[] = [];
   const handledCandidateEffectIds = traceEnabled ? new Set<string>() : undefined;
   for (const candidate of bucketCandidatesForJob(options.effectIndex, job)) {
@@ -158,7 +155,7 @@ export function calculateDamageJob(
     }
   }
 
-  applyBucketCandidates(candidates, buckets, detail, appliedEffects, rejectedEffects, consumedEffectIds);
+  applyBucketCandidates(candidates, buckets, detail, appliedEffects, rejectedEffects, usedEffects);
   if (traceEnabled) appendStaticProfileAppliedEffects(appliedEffects, staticProfile.offense[job.attackerSide][job.attackerUnit]);
   if (traceEnabled) appendStaticProfileAppliedEffects(appliedEffects, staticProfile.defense[job.defenderSide][job.defenderUnit]);
 
@@ -184,12 +181,8 @@ export function calculateDamageJob(
       }
     : undefined;
 
-  const returnedConsumedEffectIds = consumedEffectIds.size === 0 ? EMPTY_CONSUMED_EFFECT_IDS : [...consumedEffectIds];
-
   return {
     kills,
-    consumedEffectIds: returnedConsumedEffectIds,
-    appliedEffectIds: traceEnabled ? appliedEffects.map((effect) => effect.effectId) : undefined,
     appliedEffects: traceEnabled ? appliedEffects : undefined,
     trace
   };
@@ -201,7 +194,7 @@ function applyBucketCandidates(
   detail: DamageDetail,
   appliedEffects: DamageEquationTrace["appliedEffects"],
   rejectedEffects: DamageEquationTrace["rejectedEffects"],
-  consumedEffectIds: Set<string>
+  usedEffects: Set<ActiveEffect>
 ): void {
   let maxGroups: Map<string, MaxBucketCandidateGroup> | undefined;
   for (const candidate of candidates) {
@@ -216,12 +209,12 @@ function applyBucketCandidates(
         maxGroups.set(key, { selected: candidate, candidates: [candidate] });
       }
     } else {
-      applyBucketCandidate(candidate, buckets, detail, appliedEffects, rejectedEffects, consumedEffectIds);
+      applyBucketCandidate(candidate, buckets, detail, appliedEffects, rejectedEffects, usedEffects);
     }
   }
   if (!maxGroups) return;
   for (const group of maxGroups.values()) {
-    applyBucketCandidateGroup(group.selected, group.candidates, buckets, detail, appliedEffects, rejectedEffects, consumedEffectIds);
+    applyBucketCandidateGroup(group.selected, group.candidates, buckets, detail, appliedEffects, rejectedEffects, usedEffects);
   }
 }
 
@@ -246,6 +239,8 @@ function applySelectedBucket(
   );
   if (appliedValuePct !== 0 && detail === "full") {
     const appliedEffect: DamageEquationTrace["appliedEffects"][number] = {
+      kind: "modifier",
+      activeEffectId: selected.effect.id,
       effectId: selected.effect.source.effectId ?? selected.effect.id,
       bucket: selected.bucket,
       valuePct: appliedValuePct,
@@ -267,11 +262,11 @@ function applyBucketCandidate(
   detail: DamageDetail,
   appliedEffects: DamageEquationTrace["appliedEffects"],
   rejectedEffects: DamageEquationTrace["rejectedEffects"],
-  consumedEffectIds: Set<string>
+  usedEffects: Set<ActiveEffect>
 ): void {
   const appliedValuePct = applySelectedBucket(candidate, buckets, detail, appliedEffects);
   if (appliedValuePct !== 0) {
-    if (candidate.effect.duration.type === "attack") consumedEffectIds.add(candidate.effect.id);
+    usedEffects.add(candidate.effect);
   } else if (detail === "full") {
     rejectedEffects.push({ effectId: candidate.effect.source.effectId ?? candidate.effect.id, reason: "same_effect_max_superseded" });
   }
@@ -284,12 +279,13 @@ function applyBucketCandidateGroup(
   detail: DamageDetail,
   appliedEffects: DamageEquationTrace["appliedEffects"],
   rejectedEffects: DamageEquationTrace["rejectedEffects"],
-  consumedEffectIds: Set<string>
+  usedEffects: Set<ActiveEffect>
 ): void {
   const appliedValuePct = applySelectedBucket(selected, buckets, detail, appliedEffects);
   if (appliedValuePct !== 0) {
+    // The whole max-stacking group is charged: suppressed siblings deplete alongside the winner.
     for (const candidate of candidates) {
-      if (candidate.effect.duration.type === "attack") consumedEffectIds.add(candidate.effect.id);
+      usedEffects.add(candidate.effect);
       if (detail === "full" && candidate !== selected) {
         rejectedEffects.push({ effectId: candidate.effect.source.effectId ?? candidate.effect.id, reason: "same_effect_max_suppressed" });
       }
@@ -355,6 +351,8 @@ function appendStaticProfileAppliedEffects(appliedEffects: DamageEquationTrace["
     if (!bucket.startsWith("passive.") || !term) continue;
     for (const contributor of term.contributors) {
       appliedEffects.push({
+        kind: "modifier",
+        activeEffectId: contributor.effectId,
         effectId: contributor.effectId,
         bucket,
         valuePct: contributor.valuePct,
@@ -560,6 +558,3 @@ function pctFromFactor(factor: number): number {
   return Number(((factor - 1) * 100).toFixed(12));
 }
 
-function sourceLabel(effect: ActiveEffect): string {
-  return [effect.source.heroName ?? effect.source.troopType ?? effect.source.kind, effect.source.skillId, effect.source.effectId].filter(Boolean).join("/");
-}

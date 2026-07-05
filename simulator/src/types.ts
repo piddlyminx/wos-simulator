@@ -78,6 +78,7 @@ export interface EffectDuration {
   type: "battle" | "round" | "attack";
   value: number;
   delay?: number;
+  constraints?: Array<{ type: "battle" | "round" | "attack"; count?: number; delay?: number }>;
 }
 
 export interface EffectIntentDefinition {
@@ -87,7 +88,11 @@ export interface EffectIntentDefinition {
   value_evolution?: { type?: string; step?: string; value?: number };
   units?: Record<string, unknown>;
   trigger_damage_jobs?: TriggerDamageJobDefinition[];
-  duration?: { type?: string; value?: number; delay?: number };
+  duration?: {
+    turns?: { count?: number; delay?: number };
+    rounds?: { count?: number; delay?: number };
+    attacks?: { count?: number; delay?: number };
+  };
   same_effect_stacking?: SameEffectStacking;
   reason?: string;
 }
@@ -172,6 +177,10 @@ export type SimulationMode = "fast" | "standard" | "trace";
 
 export interface SimulationOptions {
   mode?: SimulationMode;
+  // Whether a dodged / no_attack'd attack still charges (uses += 1) the attacker's
+  // attack-constrained effects, as the game does. Default true.
+  useEffectsOnDodge?: boolean;
+  useEffectsOnNoAttack?: boolean;
 }
 
 export interface ResolvedTroopLine {
@@ -245,6 +254,10 @@ export interface ActiveEffect {
   createdRound: number;
   startRound: number;
   duration: EffectDuration;
+  // Times this instance affected battle mechanics (damage bucket applied, control fired,
+  // attack ordered, extra attack spawned). Attack duration constraints and step:"attack"
+  // value evolution read it; cancelled attacks still charge attack-constrained effects
+  // unless useEffectsOnDodge/useEffectsOnNoAttack disable that.
   uses: number;
   stackingKey?: string;
   sameEffectStacking: SameEffectStacking;
@@ -310,21 +323,48 @@ export interface DamageEquationTrace {
   armyTerm: number;
   atomicBuckets: Record<string, DamageBucketTrace>;
   aggregationGroups: Record<string, DamageAggregationGroupTrace>;
-  appliedEffects: AppliedEffectTrace[];
+  appliedEffects: AppliedModifierEffect[];
   rejectedEffects: Array<{ effectId: string; reason: string }>;
   rawDamage: number;
   finalKills: number;
 }
 
-export interface AppliedEffectTrace {
+// One "this effect affected battle mechanics" event, discriminated on ActiveEffect.kind.
+// Events are built only in trace mode; the uses counter is charged in every mode.
+interface AppliedEffectBase {
+  // ActiveEffect.id — the runtime instance. Static-profile/input-stat contributors have no
+  // ActiveEffect and use the config-level effectId here too.
+  activeEffectId: string;
+  // Config-level id (source.effectId ?? ActiveEffect.id).
   effectId: string;
-  bucket: string;
-  valuePct: number;
   source: string;
   sourceSide?: SideId;
+}
+
+export interface AppliedModifierEffect extends AppliedEffectBase {
+  kind: "modifier";
+  bucket: string;
+  valuePct: number;
   stackingKey?: string;
   sameEffectStacking?: SameEffectStacking;
 }
+
+export interface AppliedControlEffect extends AppliedEffectBase {
+  kind: "control";
+  reason: "dodge" | "no_attack";
+}
+
+export interface AppliedOrderEffect extends AppliedEffectBase {
+  kind: "battle_order";
+  chosenTarget: UnitType;
+}
+
+export interface AppliedExtraAttackEffect extends AppliedEffectBase {
+  kind: "extra_attack";
+  spawnedJobIds: string[];
+}
+
+export type AppliedEffect = AppliedModifierEffect | AppliedControlEffect | AppliedOrderEffect | AppliedExtraAttackEffect;
 
 export interface AttackOutcome {
   jobId: string;
@@ -337,9 +377,7 @@ export interface AttackOutcome {
   defenderUnit: UnitType;
   kills: number;
   counterDeltas: CounterDelta[];
-  appliedEffectIds: string[];
-  appliedEffects: AppliedEffectTrace[];
-  consumedEffectIds: string[];
+  appliedEffects: AppliedEffect[];
   cancelledBy?: string;
   cancelReason?: "dodge" | "no_attack";
   trace?: DamageEquationTrace;

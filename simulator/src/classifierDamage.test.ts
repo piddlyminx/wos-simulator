@@ -101,7 +101,9 @@ function calculateIndexedDamageJob(
   }
   const staticDamageProfile = options.staticDamageProfile ?? buildStaticDamageProfile(fighters, effects);
   removeStaticProfileBucketEffects(effectIndex);
-  return calculateDamageJob(damageJob, fighters, effects, { ...options, effectIndex, staticDamageProfile });
+  const usedEffects = options.usedEffects ?? new Set<ActiveEffect>();
+  const result = calculateDamageJob(damageJob, fighters, effects, { ...options, effectIndex, staticDamageProfile, usedEffects });
+  return { ...result, usedEffectIds: [...usedEffects].map((usedEffect) => usedEffect.id) };
 }
 
 test("classifier routes up/down effects into neutral atomic buckets", () => {
@@ -412,7 +414,7 @@ test("pass-specific buckets only apply to matching damage job kind", () => {
   assert.equal(skillOutcome.trace?.atomicBuckets["type.skill.damage.up"].totalPct, 100);
 });
 
-test("attack-duration bucket effects are consumed by the applicable attack job", () => {
+test("attack-duration bucket effects are charged by the applicable attack job", () => {
   const oneAttackEffect = {
     ...effect("active.hero.attack.up", "attacker", 100),
     id: "attack-up-active",
@@ -421,11 +423,11 @@ test("attack-duration bucket effects are consumed by the applicable attack job",
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [oneAttackEffect], { trace: true });
 
-  assert.ok(outcome.consumedEffectIds.includes("attack-up-active"));
+  assert.ok(outcome.usedEffectIds.includes("attack-up-active"));
   assert.equal(outcome.trace?.atomicBuckets["active.hero.attack.up"].totalPct, 100);
 });
 
-test("turn-duration bucket effects are visible on the attack outcome without being consumed", () => {
+test("turn-duration bucket effects are charged and visible on the attack outcome", () => {
   const turnEffect = {
     ...effect("active.hero.defense.down", "defender", 30),
     id: "bad-luck-like",
@@ -435,10 +437,11 @@ test("turn-duration bucket effects are visible on the attack outcome without bei
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [turnEffect], { trace: true });
 
-  assert.equal(outcome.consumedEffectIds.includes("bad-luck-like"), false);
-  assert.ok(outcome.appliedEffectIds?.includes("BadLuckStreak/1"));
+  assert.ok(outcome.usedEffectIds.includes("bad-luck-like"));
   assert.deepEqual(outcome.appliedEffects, [
     {
+      kind: "modifier",
+      activeEffectId: "bad-luck-like",
       effectId: "BadLuckStreak/1",
       bucket: "active.hero.defense.down",
       valuePct: 30,
@@ -449,7 +452,7 @@ test("turn-duration bucket effects are visible on the attack outcome without bei
   ]);
 });
 
-test("attack-duration effects are only consumed when they participate in the calculation", () => {
+test("effects are only charged when they participate in the calculation", () => {
   const defenderOutgoingBuff = {
     ...effect("active.hero.lethality.up", "defender", 100),
     id: "defender-outgoing-buff",
@@ -459,7 +462,7 @@ test("attack-duration effects are only consumed when they participate in the cal
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [defenderOutgoingBuff], { trace: true });
 
   assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 0);
-  assert.equal(outcome.consumedEffectIds.includes("defender-outgoing-buff"), false);
+  assert.equal(outcome.usedEffectIds.includes("defender-outgoing-buff"), false);
 });
 
 test("pct attack value evolution uses the effect use count for the current bucket value", () => {
@@ -481,7 +484,7 @@ test("pct attack value evolution uses the effect use count for the current bucke
 
   assert.equal(Number(outcome.trace?.atomicBuckets["active.hero.attack.up"].totalPct?.toFixed(4)), 72.25);
   assert.equal(Number((outcome.kills / baseline.kills).toFixed(4)), 1.7225);
-  assert.ok(outcome.consumedEffectIds.includes("decayed-attack-up"));
+  assert.ok(outcome.usedEffectIds.includes("decayed-attack-up"));
 });
 
 test("pct turn value evolution starts decaying after the first active turn", () => {
@@ -506,7 +509,7 @@ test("pct turn value evolution starts decaying after the first active turn", () 
   assert.equal(secondTurn.trace?.atomicBuckets["active.hero.attack.up"].totalPct, 85);
 });
 
-test("max-stacked attack-duration effects consume the whole eligible group and output only the max current value", () => {
+test("max-stacked attack-duration effects charge the whole eligible group and output only the max current value", () => {
   const weaker = {
     ...effect("active.hero.lethality.up", "attacker", 50),
     id: "max-weaker",
@@ -533,7 +536,7 @@ test("max-stacked attack-duration effects consume the whole eligible group and o
 
   assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 50);
   assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].contributors.length, 1);
-  assert.deepEqual(new Set(outcome.consumedEffectIds), new Set(["max-weaker", "max-stronger-decayed"]));
+  assert.deepEqual(new Set(outcome.usedEffectIds), new Set(["max-weaker", "max-stronger-decayed"]));
 });
 
 test('applies_vs "trigger.source" resolves to the trigger source when gating a concrete target', () => {

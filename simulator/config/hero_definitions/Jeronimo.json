@@ -60,8 +60,9 @@
             "applies_vs": "any"
           },
           "duration": {
-            "type": "turn",
-            "value": 2
+            "turns": {
+              "count": 2
+            }
           }
         }
       }

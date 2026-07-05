@@ -1,6 +1,6 @@
 import { loadSimulatorConfig } from "@simulator/config";
 import { simulateBattle } from "@simulator/simulator";
-import type { AppliedEffectTrace, AttackOutcome, BattleResult, SimulatorConfig, UnitType } from "@simulator/types";
+import type { AppliedEffect, AttackOutcome, BattleResult, SimulatorConfig, UnitType } from "@simulator/types";
 import type {
   SimulateApiResult,
   SimulateOutcomeRun,
@@ -280,38 +280,47 @@ function effectUsage(result: BattleResult): SimulateTrace["effect_usage"] {
   return grouped;
 }
 
-function traceEffect(effect: AppliedEffectTrace, attack: AttackOutcome, uses: number): SimulateTraceEffect {
+function traceEffect(effect: AppliedEffect, attack: AttackOutcome, uses: number): SimulateTraceEffect {
   const sourceParts = effect.source.split("/");
   const hero = sourceParts[0] || unitLabel(attack.attackerUnit);
   const skillName = sourceParts[1] || effect.effectId;
+  const kindKey = effectKindKey(effect);
   return {
-    id: `${effect.effectId}:${effect.bucket}:${effect.source}`,
+    id: `${effect.effectId}:${kindKey}:${effect.source}`,
     hero,
     skill_name: skillName,
     effect_name: effect.effectId,
-    effect_type: effect.bucket,
-    benefit_on: effect.bucket,
+    effect_type: kindKey,
+    benefit_on: kindKey,
     extra_attack: attack.kind === "skill",
     used: true,
     uses_count: uses,
     trigger_count: uses,
-    value: effect.valuePct,
+    value: effect.kind === "modifier" ? effect.valuePct : 0,
     for_units: [traceUnit(attack.attackerUnit)],
     vs_units: [traceUnit(attack.defenderUnit)],
   };
 }
 
-function uniqueEffects(effects: AppliedEffectTrace[]): AppliedEffectTrace[] {
+// Modifiers keep their damage bucket as the display key; controls show their cancel reason;
+// order/extra-attack events show their kind.
+function effectKindKey(effect: AppliedEffect): string {
+  if (effect.kind === "modifier") return effect.bucket;
+  if (effect.kind === "control") return effect.reason;
+  return effect.kind;
+}
+
+function uniqueEffects(effects: AppliedEffect[]): AppliedEffect[] {
   const seen = new Set<string>();
   return effects.filter((effect) => {
-    const key = `${effect.effectId}:${effect.bucket}:${effect.source}`;
+    const key = `${effect.effectId}:${effectKindKey(effect)}:${effect.source}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
   });
 }
 
-function effectLabel(effect: AppliedEffectTrace): string {
+function effectLabel(effect: AppliedEffect): string {
   return `${effect.source}/${effect.effectId}`;
 }
 

@@ -48,8 +48,9 @@
             "applies_to": "trigger"
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           }
         }
       }
@@ -84,8 +85,9 @@
             "applies_vs": "trigger.target"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max",
           "trigger_damage_jobs": [

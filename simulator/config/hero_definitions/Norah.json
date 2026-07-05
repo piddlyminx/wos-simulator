@@ -74,8 +74,9 @@
             "applies_vs": "any"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max",
           "trigger_damage_jobs": [
@@ -109,8 +110,9 @@
             "applies_vs": "trigger.target"
           },
           "duration": {
-            "type": "turn",
-            "value": 2
+            "turns": {
+              "count": 2
+            }
           }
         },
         "Momentum/2": {
@@ -123,9 +125,10 @@
             25
           ],
           "duration": {
-            "type": "turn",
-            "value": 2,
-            "delay": 1
+            "turns": {
+              "count": 2,
+              "delay": 1
+            }
           }
         }
       }

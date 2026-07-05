@@ -26,8 +26,9 @@
             ]
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           }
         },
         "VenomInfusion/2": {
@@ -43,8 +44,9 @@
             "applies_to": "trigger.target"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           }
         }
       }
@@ -71,8 +73,9 @@
             ]
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max"
         },
@@ -90,8 +93,9 @@
             "applies_vs": "self.any"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max"
         }
@@ -117,8 +121,9 @@
             "applies_to": "enemy.infantry"
           },
           "duration": {
-            "type": "turn",
-            "value": 2
+            "turns": {
+              "count": 2
+            }
           },
           "same_effect_stacking": "max"
         },
@@ -135,8 +140,9 @@
             "applies_to": "enemy.marksman"
           },
           "duration": {
-            "type": "turn",
-            "value": 2
+            "turns": {
+              "count": 2
+            }
           },
           "same_effect_stacking": "max"
         }

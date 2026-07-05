@@ -103,9 +103,7 @@ test("battleResultToTrace maps a full simulator trace into dashboard detail rows
     defenderUnit: "infantry",
     kills: 4,
     counterDeltas: [],
-    appliedEffectIds: ["S1:e1"],
-    appliedEffects: [{ effectId: "S1:e1", bucket: "player.attack", valuePct: 10, source: "Greg/S1/S1:e1" }],
-    consumedEffectIds: [],
+    appliedEffects: [{ kind: "modifier", activeEffectId: "S1:e1", effectId: "S1:e1", bucket: "player.attack", valuePct: 10, source: "Greg/S1/S1:e1" }],
   }];
   sample.trace = {
     resolved: sample.resolved,
@@ -150,12 +148,11 @@ test("battleResultToTrace groups applied effects by source side, not attacking s
     defenderUnit: "infantry",
     kills: 4,
     counterDeltas: [],
-    appliedEffectIds: ["att-buff", "def-buff"],
     appliedEffects: [
-      { effectId: "att-buff", bucket: "active.hero.attack.up", valuePct: 10, source: "Edith/StrategicBalance/att-buff", sourceSide: "attacker" },
-      { effectId: "def-buff", bucket: "active.hero.defense.up", valuePct: 10, source: "Natalia/RitualDeciphering/def-buff", sourceSide: "defender" },
+      { kind: "modifier", activeEffectId: "att-buff", effectId: "att-buff", bucket: "active.hero.attack.up", valuePct: 10, source: "Edith/StrategicBalance/att-buff", sourceSide: "attacker" },
+      { kind: "modifier", activeEffectId: "def-buff", effectId: "def-buff", bucket: "active.hero.defense.up", valuePct: 10, source: "Natalia/RitualDeciphering/def-buff", sourceSide: "defender" },
+      { kind: "control", activeEffectId: "def-stun", effectId: "def-stun", source: "Natalia/RitualDeciphering/def-stun", sourceSide: "defender", reason: "no_attack" },
     ],
-    consumedEffectIds: [],
   }];
   sample.trace = {
     resolved: sample.resolved,
@@ -187,6 +184,10 @@ test("battleResultToTrace groups applied effects by source side, not attacking s
 
   assert.equal(trace.rounds[0].attacker.effects[0].hero, "Edith");
   assert.equal(trace.rounds[0].defender.effects[0].hero, "Natalia");
+  const controlRow = trace.rounds[0].defender.effects.find((effect) => effect.effect_type === "no_attack");
+  assert.notEqual(controlRow, undefined);
+  assert.equal(controlRow!.value, 0);
+  assert.equal(trace.effect_usage.defender.Marksmen["Natalia/RitualDeciphering/def-stun/def-stun"], 1);
 });
 
 test("skill kill summaries show only chance troop skills grouped under matching troop hero", () => {
@@ -227,9 +228,7 @@ test("skill kill summaries show only chance troop skills grouped under matching 
       defenderUnit: "infantry",
       kills: 100,
       counterDeltas: [],
-      appliedEffectIds: ["CrystalShield/1"],
-      appliedEffects: [{ effectId: "CrystalShield/1", bucket: "active.troop.defense.up", valuePct: 36, source: "infantry/CrystalShield/CrystalShield/1" }],
-      consumedEffectIds: [],
+      appliedEffects: [{ kind: "modifier", activeEffectId: "CrystalShield/1", effectId: "CrystalShield/1", bucket: "active.troop.defense.up", valuePct: 36, source: "infantry/CrystalShield/CrystalShield/1" }],
     },
     {
       jobId: "skill-1",
@@ -241,9 +240,7 @@ test("skill kill summaries show only chance troop skills grouped under matching 
       defenderUnit: "infantry",
       kills: 4,
       counterDeltas: [],
-      appliedEffectIds: ["S1:e1"],
-      appliedEffects: [{ effectId: "S1:e1", bucket: "source.extraSkill", valuePct: 100, source: "Greg/S1/S1:e1" }],
-      consumedEffectIds: [],
+      appliedEffects: [{ kind: "modifier", activeEffectId: "S1:e1", effectId: "S1:e1", bucket: "source.extraSkill", valuePct: 100, source: "Greg/S1/S1:e1" }],
     },
   ];
   sample.trace = {

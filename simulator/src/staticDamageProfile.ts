@@ -1,7 +1,7 @@
 import type { ActiveEffect, DamageBucketTrace, EffectIntentDefinition, ResolvedFighter, SideId, SkillFile, StatBlock, UnitType } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
 import { BUCKET_DEFINITIONS, bucketDefinition, STATIC_BUCKETS, type BucketPlacement, type BucketRole, type BucketValueType } from "./damageBuckets";
-import { currentEffectValuePct } from "./effects";
+import { currentEffectValuePct, sourceLabel } from "./effects";
 
 export interface StaticDamageProfileTerm {
   raw?: number;
@@ -90,12 +90,8 @@ export function assertStaticPassiveEffectDefinition(
 
   const duration = effect.duration;
   if (duration === undefined) return;
-  const durationType = duration.type ?? "battle";
-  if (durationType !== "battle") {
+  if (duration.turns !== undefined || duration.rounds !== undefined || duration.attacks !== undefined) {
     throw new Error(`passive effect ${effect.type} must use battle duration at ${path}`);
-  }
-  if (duration.delay !== undefined && duration.delay !== 0) {
-    throw new Error(`passive effect ${effect.type} must use battle duration with no delay at ${path}`);
   }
 }
 
@@ -266,9 +262,6 @@ function emptyStats(): StatBlock {
   return { attack: 0, defense: 0, lethality: 0, health: 0 };
 }
 
-function sourceLabel(effect: ActiveEffect): string {
-  return [effect.source.heroName ?? effect.source.troopType ?? effect.source.kind, effect.source.skillId, effect.source.effectId].filter(Boolean).join("/");
-}
 
 const STATIC_BUCKET_SET = new Set<string>([...STATIC_RAW_BUCKETS, ...STATIC_PLAYER_BUCKETS, ...STATIC_PASSIVE_BUCKETS]);
 const STATIC_PASSIVE_BUCKET_SET = new Set<string>(STATIC_PASSIVE_BUCKETS);

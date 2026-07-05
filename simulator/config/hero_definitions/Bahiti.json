@@ -47,8 +47,9 @@
             "applies_to": "trigger.source"
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           }
         }
       }

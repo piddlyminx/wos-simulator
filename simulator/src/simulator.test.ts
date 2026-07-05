@@ -7,7 +7,7 @@ import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./resolve";
 import { prepareBattle, runPrepared, simulateBattle, simulateBearBattle, signedRemainingScore } from "./simulator";
-import type { BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulatorConfig, SkillFile, UnitType } from "./types";
+import type { BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulationOptions, SimulatorConfig, SkillFile, UnitType } from "./types";
 
 test("runPrepared reuses the compiled input seed when no override is supplied", () => {
   const config = loadSimulatorConfig();
@@ -257,7 +257,7 @@ test("round-start trigger source self.any rolls once then creates one target-loc
                 type: "active.hero.lethality.up",
                 value: 100,
                 units: { applies_to: "trigger", applies_vs: "target" },
-                duration: { type: "turn", value: 1 }
+                duration: { turns: { count: 1 } }
               }
             }
           }
@@ -296,7 +296,7 @@ test("attack trigger source and target selectors match relative to the skill own
                 type: "active.hero.defense.up",
                 value: 100,
                 units: { applies_to: "target", applies_vs: "target" },
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -309,6 +309,142 @@ test("attack trigger source and target selectors match relative to the skill own
   assert.equal(report?.triggersSeen, 2);
   assert.equal(report?.skillActivations, 2);
   assert.equal(report?.effectActivations, 2);
+});
+
+test("attack-duration effects with a round cap expire at the end of their active turn even when unused", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 4,
+      attacker: {
+        troops: { lancer_t1: 1000000 },
+        heroes: { DreamLancer: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000, marksman_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      DreamLancer: {
+        name: "DreamLancer",
+        troop_type: "lancer",
+        skills: {
+          EvenTurnAmbusher: {
+            trigger: { type: "turn", every: 2 },
+            effects: {
+              order: {
+                type: "attack_order",
+                value: ["marksman", "infantry", "lancer"],
+                units: { applies_to: "lancer", applies_vs: "marksman" },
+                duration: { turns: { count: 1 } }
+              }
+            }
+          },
+          NightmareTrace: {
+            trigger: { type: "turn", every: 2, source: "lancer" },
+            effects: {
+              mark: {
+                type: "active.hero.defense.down",
+                value: 100,
+                units: { applies_to: "target", applies_vs: "lancer" },
+                duration: { turns: { count: 1, delay: 1 }, attacks: { count: 1 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const lancerAttacks = result.attacks.filter((attack) => attack.attackerSide === "attacker" && attack.attackerUnit === "lancer");
+  assert.equal(lancerAttacks.find((attack) => attack.jobId.startsWith("r2:"))?.defenderUnit, "marksman");
+  assert.equal(lancerAttacks.find((attack) => attack.jobId.startsWith("r3:"))?.defenderUnit, "infantry");
+  const round4LancerAttack = lancerAttacks.find((attack) => attack.jobId.startsWith("r4:"));
+  assert.equal(round4LancerAttack?.defenderUnit, "marksman");
+  assert.equal(round4LancerAttack?.appliedEffects.some((effect) => effect.effectId === "mark"), false);
+});
+
+test("attack-duration effects with a round cap expire after one applicable attack", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { infantry_t1: 1000000 },
+        heroes: { OneHit: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      OneHit: {
+        name: "OneHit",
+        troop_type: "infantry",
+        skills: {
+          OneAttackWindow: {
+            trigger: { type: "battle_start" },
+            effects: {
+              boost: {
+                type: "active.hero.attack.up",
+                value: 100,
+                units: { applies_to: "self.infantry", applies_vs: "any" },
+                duration: { turns: { count: 3 }, attacks: { count: 1 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const roundOneAttack = result.attacks.find((attack) => attack.jobId.startsWith("r1:attacker:infantry") && attack.kind === "normal");
+  const roundTwoAttack = result.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
+  assert.equal(roundOneAttack?.appliedEffects.some((effect) => effect.effectId === "boost"), true);
+  assert.equal(roundTwoAttack?.appliedEffects.some((effect) => effect.effectId === "boost"), false);
+});
+
+test("attack-duration effects with a round delay are not charged before the delay is over", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { infantry_t1: 1000000 },
+        heroes: { DelayedOneHit: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      DelayedOneHit: {
+        name: "DelayedOneHit",
+        troop_type: "infantry",
+        skills: {
+          DelayedAttackBudget: {
+            trigger: { type: "turn" },
+            effects: {
+              delayedBoost: {
+                type: "active.hero.attack.up",
+                value: 100,
+                units: { applies_to: "self.infantry", applies_vs: "any" },
+                duration: { turns: { delay: 1 }, attacks: { count: 1 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const roundOneAttack = result.attacks.find((attack) => attack.jobId.startsWith("r1:attacker:infantry") && attack.kind === "normal");
+  const roundTwoAttack = result.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
+  assert.equal(roundOneAttack?.appliedEffects.some((effect) => effect.effectId === "delayedBoost"), false);
+  assert.equal(roundTwoAttack?.appliedEffects.some((effect) => effect.effectId === "delayedBoost"), true);
 });
 
 test("simulateBattle reports resolved heroes, troop skills, activations, controls, and extra skill jobs", () => {
@@ -416,7 +552,7 @@ test("array joiner heroes preserve duplicate skill instances", () => {
                 type: "active.hero.lethality.up",
                 value: 10,
                 units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
-                duration: { type: "battle", value: 1 },
+                duration: {},
                 same_effect_stacking: "add"
               }
             }
@@ -472,7 +608,7 @@ test("joiner hero generation stats are not applied when main hero stats are enab
   assert.deepEqual(fighter.statBonuses.infantry, { attack: 11, defense: 22, lethality: 33, health: 44 });
 });
 
-test("attack-duration effects are consumed even when a normal attack is cancelled", () => {
+test("cancelled attacks report the winning control as an applied effect", () => {
   const result = simulateBattle(
     {
       maxRounds: 1,
@@ -496,31 +632,87 @@ test("attack-duration effects are consumed even when a normal attack is cancelle
                 type: "no_attack",
                 value: 100,
                 units: { applies_to: "trigger", applies_vs: "target" },
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               },
               debuff: {
                 type: "active.hero.attack.up",
                 value: 100,
                 units: { applies_to: "trigger", applies_vs: "target" },
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
   const cancelled = result.attacks.find((attack) => attack.cancelReason === "no_attack");
   assert.notEqual(cancelled, undefined);
   const cancelledAttack = cancelled!;
-  assert.equal(cancelledAttack.consumedEffectIds.length, 2);
-  assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":cancel:")));
-  assert.ok(cancelledAttack.consumedEffectIds.some((id) => id.includes(":debuff:")));
+  assert.equal(cancelledAttack.appliedEffects.length, 1);
+  const controlEvent = cancelledAttack.appliedEffects[0];
+  assert.equal(controlEvent.kind, "control");
+  assert.equal(controlEvent.kind === "control" && controlEvent.reason, "no_attack");
+  assert.ok(controlEvent.activeEffectId.includes(":cancel:"));
   assert.deepEqual(cancelledAttack.counterDeltas, [
     { side: "attacker", unit: "infantry", counter: "attacks", by: 1, cause: "normal_attack" },
     { side: "defender", unit: "infantry", counter: "received_attacks", by: 1, cause: "normal_attack" }
   ]);
+});
+
+test("attack-duration effects charged on a cancelled attack unless useEffectsOnNoAttack is disabled", () => {
+  // Round 1: the attacker's infantry attack is cancelled while an attack-1-duration buff is
+  // active. By default the cancelled attack charges the buff, so round 2 lands without it;
+  // with useEffectsOnNoAttack:false the buff survives to boost round 2.
+  const input = {
+    maxRounds: 2,
+    seed: "cancel-charge",
+    attacker: {
+      troops: { infantry_t1: 1000 },
+      heroes: { SelfStunned: { skill_1: 1 } }
+    },
+    defender: {
+      troops: { infantry_t1: 1000 },
+      heroes: {}
+    }
+  };
+  const config = minimalConfig({
+    SelfStunned: {
+      name: "SelfStunned",
+      skills: {
+        StunAndBuff: {
+          trigger: { type: "battle_start" },
+          effects: {
+            stun: {
+              type: "no_attack",
+              value: 100,
+              units: { applies_to: "self.infantry", applies_vs: "any" },
+              duration: { turns: { count: 1, delay: 1 } }
+            },
+            buff: {
+              type: "active.hero.attack.up",
+              value: 100,
+              units: { applies_to: "self.infantry", applies_vs: "any" },
+              duration: { attacks: { count: 1 } }
+            }
+          }
+        }
+      }
+    }
+  });
+
+  const roundTwoKills = (options: SimulationOptions): number => {
+    const result = simulateBattle(input, config, options);
+    const attack = result.attacks.find((entry) => entry.kind === "normal" && entry.jobId.startsWith("r2:attacker:infantry"));
+    assert.notEqual(attack, undefined);
+    return attack!.kills;
+  };
+
+  const charged = roundTwoKills({});
+  const uncharged = roundTwoKills({ useEffectsOnNoAttack: false });
+  assert.ok(uncharged > charged, `expected uncharged buff to boost round 2 (${uncharged} > ${charged})`);
 });
 
 test("cancelled normal attacks advance attack counters for later frequency checks", () => {
@@ -546,7 +738,7 @@ test("cancelled normal attacks advance attack counters for later frequency check
               cancel: {
                 type: "no_attack",
                 units: { applies_to: "trigger", applies_vs: "target" },
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -637,7 +829,7 @@ test("same_effect_stacking max consumes overlapping attack-duration extra skill 
                 same_effect_stacking: "max",
                 units: { applies_to: ["infantry"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 2 }
+                duration: { attacks: { count: 2 } }
               }
             }
           }
@@ -651,9 +843,11 @@ test("same_effect_stacking max consumes overlapping attack-duration extra skill 
   const roundTwoSkillOutcome = result.attacks.find((attack) => attack.kind === "skill" && attack.jobId.startsWith("r2:attacker:infantry"));
 
   assert.notEqual(roundTwoNormalOutcome, undefined);
-  assert.equal(roundTwoNormalOutcome!.consumedEffectIds.length, 2);
+  const extraAttackEvents = roundTwoNormalOutcome!.appliedEffects.filter((event) => event.kind === "extra_attack");
+  assert.equal(extraAttackEvents.length, 1);
+  assert.equal(extraAttackEvents[0].kind === "extra_attack" && extraAttackEvents[0].spawnedJobIds.length, 1);
   assert.notEqual(roundTwoSkillOutcome, undefined);
-  assert.equal(roundTwoSkillOutcome!.consumedEffectIds.length, 0);
+  assert.equal(roundTwoSkillOutcome!.appliedEffects.some((event) => event.kind === "extra_attack"), false);
 });
 
 test("requires_effect is ignored by native simulator effect activation", () => {
@@ -767,14 +961,14 @@ test("extra skill attacks with array trigger damage targets hit those defender u
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: ["lancer"] }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               },
               hitMarksman: {
                 type: "extra_skill_attack",
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: ["marksman"] }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -819,7 +1013,7 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -861,7 +1055,7 @@ test("skill report attributes kills only to the skill damage source", () => {
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -877,7 +1071,7 @@ test("skill report attributes kills only to the skill damage source", () => {
                 type: "active.hero.defense.up",
                 value: 50,
                 units: { applies_to: "trigger.target", applies_vs: "trigger.source" },
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -919,14 +1113,14 @@ test("same-round outcomes are capped to available target troops before tracing s
                 value: 500,
                 units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               },
               second: {
                 type: "extra_skill_attack",
                 value: 500,
                 units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1022,7 +1216,7 @@ test("extra skill trigger damage jobs reject missing runtime selectors", () => {
                     value: 100,
                     units: { applies_to: "trigger.source", applies_vs: "any" },
                     trigger_damage_jobs: [{ source: "use.source" } as never],
-                    duration: { type: "attack", value: 1 }
+                    duration: { attacks: { count: 1 } }
                   }
                 }
               }
@@ -1061,7 +1255,7 @@ test("extra skill attacks reject missing trigger damage jobs at activation", () 
                     type: "extra_skill_attack",
                     value: 100,
                     units: { applies_to: "trigger.source", applies_vs: "any" },
-                    duration: { type: "attack", value: 1 }
+                    duration: { attacks: { count: 1 } }
                   }
                 }
               }
@@ -1098,7 +1292,7 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1145,7 +1339,7 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1161,7 +1355,7 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
                 type: "no_attack",
                 value: 100,
                 units: { applies_to: "enemy.marksman", applies_vs: "any" },
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1173,7 +1367,7 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
 
   const cancelled = result.attacks.find((attack) => attack.cancelReason === "no_attack");
   assert.notEqual(cancelled, undefined);
-  assert.equal(cancelled!.consumedEffectIds.some((id) => id.includes(":hitAgain:")), false);
+  assert.equal(cancelled!.appliedEffects.some((event) => event.kind === "extra_attack"), false);
 
   const skillJobsByRound = result.trace?.rounds.map((round) => round.jobs.filter((job) => job.kind === "skill").length) ?? [];
   assert.deepEqual(skillJobsByRound, [0, 1]);
@@ -1205,7 +1399,7 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 2 }
+                duration: { attacks: { count: 2 } }
               }
             }
           }
@@ -1248,7 +1442,7 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           },
@@ -1260,7 +1454,7 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1304,7 +1498,7 @@ test("extra skill attack consumes one use regardless of multiple generated targe
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
-                duration: { type: "attack", value: 2 }
+                duration: { attacks: { count: 2 } }
               }
             }
           }
@@ -1382,7 +1576,7 @@ test("extra skill attack consumes one use when multiple same-round normal attack
                 value: 100,
                 units: { applies_to: ["infantry", "marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1422,7 +1616,7 @@ test("extra skill attack applies_vs must match the current normal attack target"
                 value: 100,
                 units: { applies_to: "trigger.source", applies_vs: ["lancer"] },
                 trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                duration: { type: "attack", value: 1 }
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1465,7 +1659,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "any" },
                 trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
-                duration: { type: "attack", value: 2 }
+                duration: { attacks: { count: 2 } }
               }
             }
           },
@@ -1476,7 +1670,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
                 type: "type.skill.damage.up",
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "any" },
-                duration: { type: "attack", value: 2 }
+                duration: { attacks: { count: 2 } }
               }
             }
           }
@@ -1519,7 +1713,7 @@ test("attack-triggered source and target selectors resolve to concrete active sc
                 type: "active.hero.lethality.down",
                 value: 50,
                 units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
-                duration: { type: "turn", value: 1 }
+                duration: { turns: { count: 1 } }
               }
             }
           }
@@ -1562,7 +1756,7 @@ test('attack-triggered target selector with applies_vs "any" gates later opposin
                 type: "active.hero.lethality.down",
                 value: 50,
                 units: { applies_to: "trigger.target", applies_vs: "any" },
-                duration: { type: "turn", value: 1 }
+                duration: { turns: { count: 1 } }
               }
             }
           }
@@ -1779,7 +1973,7 @@ test("fast simulation matches full semantic output without detailed attacks", ()
                   value: 100,
                   units: { applies_to: "trigger.source", applies_vs: "any" },
                   trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-                  duration: { type: "attack", value: 2 }
+                  duration: { attacks: { count: 2 } }
                 }
               }
             }
@@ -1794,7 +1988,7 @@ test("fast simulation matches full semantic output without detailed attacks", ()
                 pause: {
                   type: "no_attack",
                   units: { applies_to: "enemy.marksman", applies_vs: "any" },
-                  duration: { type: "attack", value: 1 }
+                  duration: { attacks: { count: 1 } }
                 }
               }
             }
@@ -1938,14 +2132,14 @@ function sameEffectStackingConfig(heroName: string, same_effect_stacking: "add" 
           same_effect_stacking,
           units: { applies_to: ["infantry"], applies_vs: "any" },
           trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
-          duration: { type: "turn", value: 2 }
+          duration: { turns: { count: 2 } }
         }
       : {
           type,
           value: 100,
           same_effect_stacking,
           units: { applies_to: ["infantry"], applies_vs: "any" },
-          duration: { type: "turn", value: 2 }
+          duration: { turns: { count: 2 } }
         };
   return minimalConfig({
     [heroName]: {

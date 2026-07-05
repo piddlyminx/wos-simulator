@@ -31,8 +31,9 @@
             "applies_vs": "trigger.target"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           }
         }
       }
@@ -64,9 +65,10 @@
             "applies_vs": "any"
           },
           "duration": {
-            "type": "turn",
-            "value": 2,
-            "delay": 1
+            "turns": {
+              "count": 2,
+              "delay": 1
+            }
           },
           "same_effect_stacking": "max"
         }
@@ -99,8 +101,9 @@
             "applies_vs": "trigger.target"
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max",
           "trigger_damage_jobs": [

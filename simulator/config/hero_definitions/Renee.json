@@ -25,9 +25,13 @@
             "applies_vs": "lancer"
           },
           "duration": {
-            "type": "attack",
-            "value": 1,
-            "delay": 1
+            "turns": {
+              "count": 1,
+              "delay": 1
+            },
+            "attacks": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max"
         }
@@ -55,9 +59,10 @@
             "applies_vs": "lancer"
           },
           "duration": {
-            "type": "turn",
-            "value": 1,
-            "delay": 1
+            "turns": {
+              "count": 1,
+              "delay": 1
+            }
           },
           "same_effect_stacking": "max"
         }
@@ -85,9 +90,10 @@
             "applies_vs": "any"
           },
           "duration": {
-            "type": "turn",
-            "value": 1,
-            "delay": 1
+            "turns": {
+              "count": 1,
+              "delay": 1
+            }
           },
           "same_effect_stacking": "max"
         }

@@ -71,6 +71,17 @@ test("loadSimulatorConfig rejects legacy effect metadata fields without naming t
   assert.throws(() => loadSimulatorConfigFromDir(root), /legacy field/i);
 });
 
+test("loadSimulatorConfig rejects legacy duration shape", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.lethality.up",
+    value: 10,
+    units: { applies_to: "trigger.source", applies_vs: "target" },
+    duration: { type: "attack", value: 1 } as never
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /duration key type.*not supported/i);
+});
+
 test("simulator config source does not reference legacy effect metadata names", () => {
   const legacyEffectMetadataKey = ["effect", "op"].join("_");
   const source = readFileSync(fileURLToPath(new URL("./config.ts", import.meta.url)), "utf8");
@@ -166,7 +177,7 @@ test("loadSimulatorConfig rejects passive effects that are not battle-start stat
     {
       type: "passive.attack.up",
       value: 10,
-      duration: { type: "round", value: 1 }
+      duration: { turns: { count: 1 } }
     },
     { type: "battle_start" }
   );

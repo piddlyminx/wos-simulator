@@ -31,8 +31,9 @@
             "applies_vs": "any"
           },
           "duration": {
-            "type": "turn",
-            "value": 3
+            "turns": {
+              "count": 3
+            }
           }
         }
       }
@@ -65,8 +66,9 @@
             "applies_vs": "self.any"
           },
           "duration": {
-            "type": "turn",
-            "value": 2
+            "turns": {
+              "count": 2
+            }
           }
         }
       }

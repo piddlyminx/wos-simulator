@@ -1,5 +1,9 @@
 import type {
   ActiveEffect,
+  AppliedControlEffect,
+  AppliedEffect,
+  AppliedExtraAttackEffect,
+  AppliedOrderEffect,
   AttackIntent,
   AttackOutcome,
   BearBattleResult,
@@ -27,11 +31,13 @@ import {
   chancePasses,
   createSeededRng,
   currentEffectValuePct,
+  hasAttackDurationConstraint,
   isEffectActive,
   oppositeSide,
   parseTriggerSelector,
   sideForTriggerRelation,
   skillMatchesTrigger,
+  sourceLabel,
   type Rng
 } from "./effects";
 import { classifyEffectForJob } from "./classifier";
@@ -49,7 +55,9 @@ const REPORT_KEY_CACHE = new WeakMap<ResolvedSkill, string>();
 interface Runtime {
   activeEffects: ActiveEffect[];
   effectIndex: EffectIndex;
-  effectById: Map<string, ActiveEffect>;
+  // Per-job scratch: effects that affected the job being calculated; drained by
+  // chargeUsedEffects (uses += 1 each) after every job in every mode.
+  usedEffects: Set<ActiveEffect>;
   staticDamageProfile?: StaticDamageProfile;
   damageScratch: DamageScratch;
   rng: Rng;
@@ -80,7 +88,8 @@ interface ExtraAttackEffectGroup {
 
 interface ExtraSkillJobsResult {
   jobs: DamageJob[];
-  consumedEffectIds: string[];
+  usedEffects: ActiveEffect[];
+  appliedEffects?: AppliedExtraAttackEffect[];
 }
 
 interface BattleRun {
@@ -222,7 +231,7 @@ function cloneRuntime(template: Runtime, rng: Rng): Runtime {
   return {
     activeEffects,
     effectIndex,
-    effectById: new Map(activeEffects.map((e) => [e.id, e])),
+    usedEffects: new Set(),
     staticDamageProfile: template.staticDamageProfile,
     damageScratch: createFastDamageScratch(),
     rng,
@@ -299,6 +308,10 @@ function runLoop(
   const mode = options.mode ?? "standard";
   const recorder = createRecorder(mode, runtime.skillReports, () => buildResolved(fighters.attacker, fighters.defender));
   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
+  const useEffectsOnCancel = {
+    dodge: options.useEffectsOnDodge ?? true,
+    no_attack: options.useEffectsOnNoAttack ?? true
+  };
 
   let rounds = 0;
   let score = 0;
@@ -309,7 +322,9 @@ function runLoop(
     expireInactive(runtime, round);
     triggerRoundStartSkills(round, runtime, roundStartTroops);
 
-    const intents = resolveAttackIntents(round, runtime, roundStartTroops);
+    // Trace-only: battle_order applied events keyed by the intent they ordered.
+    const orderEvents = recorder.capturesTrace ? new Map<string, AppliedOrderEffect>() : undefined;
+    const intents = resolveAttackIntents(round, runtime, roundStartTroops, orderEvents);
     const allJobs: DamageJob[] = []; // for recorder
     const results: DamageJobResult[] = [];
     const cancelled: CancelledAttack[] = [];
@@ -324,9 +339,15 @@ function runLoop(
       if (controls.no_attack || controls.dodge) {
         const control = controls.no_attack ?? controls.dodge!;
         runtime.attackControlCounts[control.reason] += 1;
-        const consumedEffectIds = attackDurationEffectIdsForJob(job, runtime.effectIndex);
-        cancelled.push({ intent, effectId: control.effect.id, reason: control.reason, consumedEffectIds });
-        consumeEffects(runtime, consumedEffectIds);
+        if (useEffectsOnCancel[control.reason]) chargeCancelledAttack(job, control.effect, runtime);
+        cancelled.push({
+          intent,
+          effectId: control.effect.id,
+          reason: control.reason,
+          appliedEffects: recorder.capturesTrace
+            ? appendedEvent(orderEvents?.get(intent.id), appliedControlEvent(control))
+            : NO_APPLIED_EFFECTS
+        });
       } else {
         pendingNormalJobs.push(job);
       }
@@ -334,7 +355,7 @@ function runLoop(
 
     // Phase 2: calculate each normal job; any extra_skill_attack effect it
     // uses spawns extra DamageJobs that are calculated immediately after.
-    // consumeEffects runs after each job so subsequent normal jobs see the
+    // chargeUsedEffects runs after each job so subsequent normal jobs see the
     // correct uses count on any shared extra_skill_attack effects.
     for (const job of pendingNormalJobs) {
       allJobs.push(job);
@@ -343,19 +364,21 @@ function runLoop(
         effectIndex: runtime.effectIndex,
         staticDamageProfile: runtime.staticDamageProfile,
         scratch: recorder.capturesTrace ? undefined : runtime.damageScratch,
-        capToDefenderTroops: loopOptions.capJobKills
+        capToDefenderTroops: loopOptions.capJobKills,
+        usedEffects: runtime.usedEffects
       });
-      results.push({ job, result: normalResult });
       if (loopOptions.scoreSide && job.attackerSide === loopOptions.scoreSide.attackerSide && job.defenderSide === loopOptions.scoreSide.defenderSide) {
         score += normalResult.kills;
       }
-      consumeEffects(runtime, normalResult.consumedEffectIds);
+      chargeUsedEffects(runtime);
 
-      const extraSkill = extraSkillJobs(job, round, runtime, roundStartTroops);
-      if (extraSkill.consumedEffectIds.length > 0) {
-        normalResult.consumedEffectIds = [...normalResult.consumedEffectIds, ...extraSkill.consumedEffectIds];
-        consumeEffects(runtime, extraSkill.consumedEffectIds);
-      }
+      const extraSkill = extraSkillJobs(job, round, runtime, roundStartTroops, recorder.capturesTrace);
+      for (const usedEffect of extraSkill.usedEffects) usedEffect.uses += 1;
+      results.push({
+        job,
+        result: normalResult,
+        extraAppliedEffects: appendedEvents(orderEvents?.get(job.sourceIntentId ?? ""), extraSkill.appliedEffects)
+      });
 
       for (const extraJob of extraSkill.jobs) {
         allJobs.push(extraJob);
@@ -364,13 +387,14 @@ function runLoop(
           effectIndex: runtime.effectIndex,
           staticDamageProfile: runtime.staticDamageProfile,
           scratch: recorder.capturesTrace ? undefined : runtime.damageScratch,
-          capToDefenderTroops: loopOptions.capJobKills
+          capToDefenderTroops: loopOptions.capJobKills,
+          usedEffects: runtime.usedEffects
         });
         results.push({ job: extraJob, result: extraResult });
         if (loopOptions.scoreSide && extraJob.attackerSide === loopOptions.scoreSide.attackerSide && extraJob.defenderSide === loopOptions.scoreSide.defenderSide) {
           score += extraResult.kills;
         }
-        consumeEffects(runtime, extraResult.consumedEffectIds);
+        chargeUsedEffects(runtime);
       }
     }
 
@@ -378,8 +402,8 @@ function runLoop(
     if (loopOptions.commitLosses) commitRound(cancelled, results, fighters, runtime);
     else commitRoundCounters(cancelled, results, runtime);
 
-    for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.effectId, entry.reason, entry.consumedEffectIds);
-    for (const entry of results) recorder.recordDamageJob(entry.job, entry.result);
+    for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.effectId, entry.reason, entry.appliedEffects);
+    for (const entry of results) recorder.recordDamageJob(entry.job, entry.result, entry.extraAppliedEffects);
     recorder.recordRound(round, roundStartTroops, intents, allJobs);
   }
 
@@ -399,12 +423,37 @@ interface CancelledAttack {
   intent: AttackIntent;
   effectId: string;
   reason: "dodge" | "no_attack";
-  consumedEffectIds: string[];
+  appliedEffects: AppliedEffect[];
 }
 
 interface DamageJobResult {
   job: DamageJob;
   result: DamageResult;
+  extraAppliedEffects?: AppliedEffect[];
+}
+
+const NO_APPLIED_EFFECTS: AppliedEffect[] = [];
+
+function appendedEvent(order: AppliedOrderEffect | undefined, event: AppliedEffect): AppliedEffect[] {
+  return order ? [order, event] : [event];
+}
+
+function appendedEvents(order: AppliedOrderEffect | undefined, events: AppliedEffect[] | undefined): AppliedEffect[] | undefined {
+  if (!order) return events;
+  return events ? [order, ...events] : [order];
+}
+
+function appliedEffectBase(effect: ActiveEffect): { activeEffectId: string; effectId: string; source: string; sourceSide: SideId } {
+  return {
+    activeEffectId: effect.id,
+    effectId: effect.source.effectId ?? effect.id,
+    source: sourceLabel(effect),
+    sourceSide: effect.ownerSide
+  };
+}
+
+function appliedControlEvent(control: Control): AppliedControlEffect {
+  return { kind: "control", ...appliedEffectBase(control.effect), reason: control.reason };
 }
 
 function triggerRoundStartSkills(
@@ -529,7 +578,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng): Runtime {
   return {
     activeEffects: [],
     effectIndex: createEffectIndex(),
-    effectById: new Map(),
+    usedEffects: new Set(),
     staticDamageProfile: undefined,
     damageScratch: createFastDamageScratch(),
     rng,
@@ -562,7 +611,6 @@ function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
 
 function addActiveEffect(runtime: Runtime, effect: ActiveEffect): void {
   runtime.activeEffects.push(effect);
-  runtime.effectById.set(effect.id, effect);
   indexEffect(runtime.effectIndex, effect);
 }
 
@@ -641,7 +689,8 @@ function triggerSkills(
 function resolveAttackIntents(
   round: number,
   runtime: Runtime,
-  roundStartTroops: DamageJob["roundStartTroops"]
+  roundStartTroops: DamageJob["roundStartTroops"],
+  orderEvents?: Map<string, AppliedOrderEffect>
 ): AttackIntent[] {
   const intents: AttackIntent[] = [];
   for (const side of ["attacker", "defender"] as SideId[]) {
@@ -649,12 +698,18 @@ function resolveAttackIntents(
     let orderIndex = 0;
     for (const attackerUnit of UNIT_TYPES) {
       if ((roundStartTroops[side][attackerUnit] ?? 0) <= 0) continue;
-      const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.effectIndex, round);
+      const ordered = orderFromEffects(attackerUnit, side, runtime.effectIndex, round);
+      const defenderUnit = firstLivingUnit(ordered?.order ?? UNIT_TYPES, defenderSide, roundStartTroops);
       if (!defenderUnit) continue;
+      const intentId = `r${round}:${side}:${attackerUnit}:${orderIndex}`;
+      if (ordered) {
+        ordered.effect.uses += 1;
+        orderEvents?.set(intentId, { kind: "battle_order", ...appliedEffectBase(ordered.effect), chosenTarget: defenderUnit });
+      }
       const previousAttackCount = runtime.counters.attacks[side][attackerUnit];
       const previousReceivedAttackCount = runtime.counters.received[defenderSide][defenderUnit];
       intents.push({
-        id: `r${round}:${side}:${attackerUnit}:${orderIndex}`,
+        id: intentId,
         round,
         source: "normal",
         attackerSide: side,
@@ -673,6 +728,8 @@ function resolveAttackIntents(
   return intents;
 }
 
+// Synthetic round-start trigger targeting reuses attack-order effects to pick a target but
+// does not charge them: no real attack intent is being ordered.
 function chooseDefenderUnit(
   attackerUnit: UnitType,
   attackerSide: SideId,
@@ -681,17 +738,26 @@ function chooseDefenderUnit(
   effectIndex: EffectIndex,
   round: number
 ): UnitType | undefined {
-  const order = orderFromEffects(attackerUnit, attackerSide, effectIndex, round) ?? UNIT_TYPES;
-  return order.find((unit) => (roundStartTroops[defenderSide][unit] ?? 0) > 0);
+  const order = orderFromEffects(attackerUnit, attackerSide, effectIndex, round)?.order ?? UNIT_TYPES;
+  return firstLivingUnit(order, defenderSide, roundStartTroops);
 }
 
-function orderFromEffects(attackerUnit: UnitType, attackerSide: SideId, index: EffectIndex, round: number): UnitType[] | undefined {
+function firstLivingUnit(order: readonly UnitType[], side: SideId, roundStartTroops: DamageJob["roundStartTroops"]): UnitType | undefined {
+  return order.find((unit) => (roundStartTroops[side][unit] ?? 0) > 0);
+}
+
+function orderFromEffects(
+  attackerUnit: UnitType,
+  attackerSide: SideId,
+  index: EffectIndex,
+  round: number
+): { order: UnitType[]; effect: ActiveEffect } | undefined {
   for (const effect of index.battleOrder) {
     if (!isEffectActive(effect, round) || effect.intent.type !== "attack_order") continue;
     if (effect.appliesTo.side !== attackerSide || !unitMaskHas(effect.appliesTo.units, attackerUnit)) continue;
     if (Array.isArray(effect.intent.value)) {
       try {
-        return effect.intent.value.map((value) => normalizeUnitType(String(value)));
+        return { order: effect.intent.value.map((value) => normalizeUnitType(String(value))), effect };
       } catch {
         return undefined;
       }
@@ -740,10 +806,12 @@ function extraSkillJobs(
   normalAttack: DamageJob,
   round: number,
   runtime: Runtime,
-  roundStartTroops: DamageJob["roundStartTroops"]
+  roundStartTroops: DamageJob["roundStartTroops"],
+  capturesTrace: boolean
 ): ExtraSkillJobsResult {
   const jobs: DamageJob[] = [];
-  const consumedEffectIds: string[] = [];
+  const usedEffects: ActiveEffect[] = [];
+  let appliedEffects: AppliedExtraAttackEffect[] | undefined;
   const effectGroups = selectStackedExtraAttackEffectGroups(
     runtime.effectIndex.extraAttacks.filter((effect) => isEffectActive(effect, round) && extraAttackEffectAppliesToNormalAttack(effect, normalAttack)),
     round
@@ -784,10 +852,19 @@ function extraSkillJobs(
       definitionIndex += 1;
     }
     if (jobs.length > firstJobIndex) {
-      consumedEffectIds.push(...effectGroup.effects.map((groupEffect) => groupEffect.id));
+      // The whole stacking group is charged whenever the selected effect spawned jobs,
+      // regardless of duration constraints (extra attacks always deplete per firing).
+      usedEffects.push(...effectGroup.effects);
+      if (capturesTrace) {
+        (appliedEffects ??= []).push({
+          kind: "extra_attack",
+          ...appliedEffectBase(effect),
+          spawnedJobIds: jobs.slice(firstJobIndex).map((spawned) => spawned.id)
+        });
+      }
     }
   }
-  return { jobs, consumedEffectIds };
+  return { jobs, usedEffects, appliedEffects };
 }
 
 function selectStackedExtraAttackEffectGroups(effects: ActiveEffect[], round: number): ExtraAttackEffectGroup[] {
@@ -926,24 +1003,28 @@ function commitRoundCounters(cancelled: CancelledAttack[], results: DamageJobRes
   }
 }
 
-function attackDurationEffectIdsForJob(job: DamageJob, index: EffectIndex): string[] {
-  const ids: string[] = [];
-  for (const candidate of bucketCandidatesForJob(index, job)) {
-    if (candidate.effect.duration.type === "attack") ids.push(candidate.effect.id);
-  }
-  for (const effect of index.controls) {
-    if (effect.duration.type !== "attack") continue;
-    const classification = classifyEffectForJob(effect, job);
-    if (classification?.kind === "control") ids.push(effect.id);
-  }
-  return ids;
+// Drain the per-job used-effects scratch, advancing each effect's uses counter. Runs in
+// every mode: uses drives attack-constraint expiry and step:"attack" value evolution.
+function chargeUsedEffects(runtime: Runtime): void {
+  if (runtime.usedEffects.size === 0) return;
+  for (const effect of runtime.usedEffects) effect.uses += 1;
+  runtime.usedEffects.clear();
 }
 
-function consumeEffects(runtime: Runtime, consumedEffectIds: string[]): void {
-  for (const consumed of consumedEffectIds) {
-    const effect = runtime.effectById.get(consumed);
-    if (effect) effect.uses += 1;
+// A cancelled attack still charges the attacker's attack-constrained effects (the attack
+// happened, it just didn't land) plus the control that cancelled it, whatever its duration.
+function chargeCancelledAttack(job: DamageJob, winningControl: ActiveEffect, runtime: Runtime): void {
+  const used = runtime.usedEffects;
+  for (const candidate of bucketCandidatesForJob(runtime.effectIndex, job)) {
+    if (hasAttackDurationConstraint(candidate.effect)) used.add(candidate.effect);
   }
+  for (const effect of runtime.effectIndex.controls) {
+    if (!hasAttackDurationConstraint(effect)) continue;
+    const classification = classifyEffectForJob(effect, job);
+    if (classification?.kind === "control") used.add(effect);
+  }
+  used.add(winningControl);
+  chargeUsedEffects(runtime);
 }
 
 function winnerFor(fighters: Record<SideId, ResolvedFighter>): SideId | undefined {

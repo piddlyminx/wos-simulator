@@ -173,6 +173,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       validateBattleStartEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
+      validateNativeEffectDuration(effect as EffectIntentDefinition, file, skillId, effectId);
       assertStaticPassiveEffectDefinition(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       if (!KNOWN_EFFECT_TYPES.has(type)) {
@@ -260,6 +261,45 @@ function validateNativeEffectValue(effect: EffectIntentDefinition, file: string,
     if (value < 0) {
       throw new Error(`negative native bucket effect ${effect.type} value is not supported at ${file}:${skillId}.${effectId}; use positive magnitudes`);
     }
+  }
+}
+
+function validateNativeEffectDuration(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
+  if (effect.duration === undefined) return;
+  const path = `${file}:${skillId}.${effectId}.duration`;
+  const duration = effect.duration as Record<string, unknown>;
+  for (const key of Object.keys(duration)) {
+    if (key !== "turns" && key !== "rounds" && key !== "attacks") {
+      throw new Error(`native effect duration key ${key} is not supported at ${path}; use turns and/or attacks`);
+    }
+  }
+  for (const key of ["turns", "rounds", "attacks"] as const) {
+    const value = duration[key];
+    if (value === undefined) continue;
+    validateNativeEffectDurationAxis(value, `${path}.${key}`);
+  }
+}
+
+function validateNativeEffectDurationAxis(value: unknown, path: string): void {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error(`native effect duration axis must be an object at ${path}`);
+  }
+  const axis = value as Record<string, unknown>;
+  for (const key of Object.keys(axis)) {
+    if (key !== "count" && key !== "delay") {
+      throw new Error(`native effect duration axis key ${key} is not supported at ${path}; use count and/or delay`);
+    }
+  }
+  if (axis.count === undefined && axis.delay === undefined) {
+    throw new Error(`native effect duration axis must define count or delay at ${path}`);
+  }
+  if (axis.count !== undefined) validateIntegerRange(axis.count, 1, `${path}.count`);
+  if (axis.delay !== undefined) validateIntegerRange(axis.delay, 0, `${path}.delay`);
+}
+
+function validateIntegerRange(value: unknown, min: number, path: string): void {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < min) {
+    throw new Error(`native effect duration ${path} must be an integer >= ${min}`);
   }
 }
 

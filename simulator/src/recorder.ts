@@ -1,4 +1,5 @@
 import type {
+  AppliedEffect,
   AttackIntent,
   AttackOutcome,
   BattleTrace,
@@ -11,7 +12,7 @@ import type { DamageResult } from "./damage";
 
 /**
  * Observes a battle and accumulates whatever the chosen mode needs to report. The battle loop
- * does all simulation-affecting work itself (kills, counters, effect consumption); the recorder
+ * does all simulation-affecting work itself (kills, counters, effect usage charging); the recorder
  * only records, so swapping recorders never changes the outcome. This keeps a single, linear
  * loop with no `if (mode === ...)` branches scattered through it.
  *
@@ -22,14 +23,15 @@ import type { DamageResult } from "./damage";
 export interface BattleRecorder {
   /** When true the loop asks calculateDamageJob to capture (expensive) per-bucket trace detail. */
   readonly capturesTrace: boolean;
-  recordCancelled(intent: AttackIntent, effectId: string, reason: "dodge" | "no_attack", consumedEffectIds: string[]): void;
-  recordDamageJob(job: DamageJob, result: DamageResult): void;
+  recordCancelled(intent: AttackIntent, effectId: string, reason: "dodge" | "no_attack", appliedEffects: AppliedEffect[]): void;
+  recordDamageJob(job: DamageJob, result: DamageResult, extraAppliedEffects?: AppliedEffect[]): void;
   recordRound(round: number, roundStartTroops: DamageJob["roundStartTroops"], intents: AttackIntent[], jobs: DamageJob[]): void;
   readonly attacks: AttackOutcome[];
   readonly trace: BattleTrace | undefined;
 }
 
 const NO_ATTACKS: AttackOutcome[] = [];
+const NO_APPLIED_EFFECTS: AppliedEffect[] = [];
 
 export const NULL_RECORDER: BattleRecorder = {
   capturesTrace: false,
@@ -62,7 +64,7 @@ class RecordingRecorder implements BattleRecorder {
     this.capturesTrace = trace !== undefined;
   }
 
-  recordCancelled(intent: AttackIntent, effectId: string, reason: "dodge" | "no_attack", consumedEffectIds: string[]): void {
+  recordCancelled(intent: AttackIntent, effectId: string, reason: "dodge" | "no_attack", appliedEffects: AppliedEffect[]): void {
     this.attacks.push({
       jobId: `${intent.id}:cancelled`,
       kind: "normal",
@@ -75,15 +77,13 @@ class RecordingRecorder implements BattleRecorder {
         { side: intent.attackerSide, unit: intent.attackerUnit, counter: "attacks", by: 1, cause: "normal_attack" },
         { side: intent.defenderSide, unit: intent.defenderUnit, counter: "received_attacks", by: 1, cause: "normal_attack" }
       ],
-      appliedEffectIds: [],
-      appliedEffects: [],
-      consumedEffectIds,
+      appliedEffects,
       cancelledBy: effectId,
       cancelReason: reason
     });
   }
 
-  recordDamageJob(job: DamageJob, result: DamageResult): void {
+  recordDamageJob(job: DamageJob, result: DamageResult, extraAppliedEffects?: AppliedEffect[]): void {
     if (job.kind === "skill" && job.sourceSkillReportKey && result.kills > 0) {
       const report = this.skillReports[job.attackerSide].get(job.sourceSkillReportKey);
       if (report) report.skillKills += result.kills;
@@ -103,9 +103,7 @@ class RecordingRecorder implements BattleRecorder {
         { side: job.attackerSide, unit: job.attackerUnit, counter: "attacks", by: 1, cause },
         { side: job.defenderSide, unit: job.defenderUnit, counter: "received_attacks", by: 1, cause }
       ],
-      appliedEffectIds: result.appliedEffectIds ?? [],
-      appliedEffects: result.appliedEffects ?? [],
-      consumedEffectIds: result.consumedEffectIds,
+      appliedEffects: mergeAppliedEffects(result.appliedEffects, extraAppliedEffects),
       trace: result.trace
     });
   }
@@ -113,4 +111,10 @@ class RecordingRecorder implements BattleRecorder {
   recordRound(round: number, roundStartTroops: DamageJob["roundStartTroops"], intents: AttackIntent[], jobs: DamageJob[]): void {
     this.trace?.rounds.push({ round, roundStartTroops, intents, jobs });
   }
+}
+
+function mergeAppliedEffects(applied: AppliedEffect[] | undefined, extra: AppliedEffect[] | undefined): AppliedEffect[] {
+  if (!applied?.length) return extra?.length ? extra : NO_APPLIED_EFFECTS;
+  if (!extra?.length) return applied;
+  return [...applied, ...extra];
 }

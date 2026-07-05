@@ -6,7 +6,7 @@
     "EagleVision": {
       "description": "Increasing target's damage taken by X%",
       "trigger": {
-        "type": "turn",
+        "type": "attack",
         "source": "self.any"
       },
       "effects": {
@@ -24,8 +24,9 @@
             "applies_vs": "trigger.source"
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           }
         }
       }
@@ -51,8 +52,9 @@
             "applies_vs": "trigger.target"
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           },
           "trigger_damage_jobs": [
             {
@@ -60,7 +62,7 @@
               "target": "effect.applies_vs"
             }
           ]
-         },
+        },
         "AirDominance/2": {
           "type": "active.hero.damageTaken.up",
           "value": [
@@ -74,9 +76,10 @@
             "applies_to": "target"
           },
           "duration": {
-            "type": "attack",
-            "value": 1,
-            "delay": 1
+            "attacks": {
+              "count": 1,
+              "delay": 1
+            }
           }
         }
       }
@@ -104,9 +107,10 @@
             ]
           },
           "duration": {
-            "type": "attack",
-            "value": 1,
-            "delay": 1
+            "attacks": {
+              "count": 1,
+              "delay": 1
+            }
           },
           "trigger_damage_jobs": [
             {

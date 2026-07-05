@@ -19,8 +19,9 @@
             ]
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           }
         },
         "ViperFormation/2": {
@@ -39,9 +40,10 @@
             ]
           },
           "duration": {
-            "type": "turn",
-            "value": 2,
-            "delay": 1
+            "turns": {
+              "count": 2,
+              "delay": 1
+            }
           },
           "same_effect_stacking": "max"
         },
@@ -60,9 +62,10 @@
             ]
           },
           "duration": {
-            "type": "turn",
-            "value": 2,
-            "delay": 1
+            "turns": {
+              "count": 2,
+              "delay": 1
+            }
           },
           "same_effect_stacking": "max"
         }
@@ -113,8 +116,9 @@
             ]
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           }
         },
         "BladeOfLight/2": {
@@ -130,8 +134,9 @@
             "applies_to": "target"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "add"
         }

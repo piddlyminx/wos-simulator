@@ -29,8 +29,9 @@
             "applies_to": "target"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max"
         }
@@ -63,8 +64,9 @@
             "applies_vs": "any"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max",
           "trigger_damage_jobs": [
@@ -99,8 +101,9 @@
             50
           ],
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max"
         }

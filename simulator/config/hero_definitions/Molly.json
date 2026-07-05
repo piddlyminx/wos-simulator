@@ -29,8 +29,9 @@
             "applies_to": "all"
           },
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           }
         }
       }
@@ -62,8 +63,9 @@
             "applies_vs": "trigger.target"
           },
           "duration": {
-            "type": "attack",
-            "value": 1
+            "attacks": {
+              "count": 1
+            }
           },
           "trigger_damage_jobs": [
             {

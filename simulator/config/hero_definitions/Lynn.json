@@ -26,8 +26,9 @@
             50
           ],
           "duration": {
-            "type": "turn",
-            "value": 1
+            "turns": {
+              "count": 1
+            }
           },
           "same_effect_stacking": "max"
         }
