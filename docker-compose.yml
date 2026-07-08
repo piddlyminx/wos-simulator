@@ -37,7 +37,12 @@ services:
       # Keep the same relative repo layout as host and production containers.
       - ./dashboard:/repo/dashboard:ro
       # Next dev refreshes this generated type file on startup.
-      - ./dashboard/web/next-env.d.ts:/repo/dashboard/web/next-env.d.ts:rw
+      - type: bind
+        source: ./dashboard/web/next-env.d.ts
+        target: /repo/dashboard/web/next-env.d.ts
+        read_only: false
+        bind:
+          create_host_path: false
       - ./scripts:/repo/scripts:ro
       - ./skill:/repo/skill:ro
       - ./simulator:/repo/simulator:ro

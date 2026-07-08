@@ -40,8 +40,8 @@ test("runTestcases returns compact summary entries and full detail entries separ
   assert.equal(summary?.deterministic, false);
   assert.equal(summary?.sampleCount, 5);
   assert.equal(typeof summary?.game?.mu_candidate, "number");
-  assert.equal(typeof summary?.baseline?.mu_candidate, "number");
-  assert.deepEqual(Object.keys(summary?.game ?? {}), Object.keys(summary?.baseline ?? {}));
+  assert.equal(summary?.baseline, null);
+  assert.equal(report.counts.comparedToBaseline, 0);
   assert.equal("result" in (summary as object), false);
   assert.ok(detail?.result);
   assert.equal(detail?.simulatorStats?.n, 5);
@@ -145,7 +145,7 @@ test("runTestcases logs structured damage aggregation errors and continues", () 
   assert.equal(Object.values(report.testcases)[0]?.testcase_id, "next_case_runs");
 });
 
-test("runTestcases keeps executed testcase and warns when baseline snapshot row is missing", () => {
+test("runTestcases keeps executed testcase without warning when legacy baseline is unavailable", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1, calibrationReportPath: "/tmp/does-not-exist.json" }, config);
   const summary = Object.values(report.testcases)[0];
@@ -153,15 +153,16 @@ test("runTestcases keeps executed testcase and warns when baseline snapshot row 
   assert.equal(report.counts.executed, 1);
   assert.equal(summary?.game?.n_candidate, 1);
   assert.equal(summary?.baseline, null);
-  assert.equal(report.warnings[0]?.stage, "baseline_comparison");
+  assert.equal(report.counts.comparedToBaseline, 0);
+  assert.deepEqual(report.warnings, []);
 });
 
-test("applyComparisonQValues keeps game and baseline correction families separate", () => {
+test("applyComparisonQValues corrects game comparisons only", () => {
   const firstGame = comparisonMetric(0.01);
   const secondGame = comparisonMetric(0.02);
-  const onlyBaseline = comparisonMetric(0.04);
+  const ignoredBaseline = comparisonMetric(0.04);
   const testcases: Record<string, TestcaseSummaryEntry> = {
-    "testcases/a.json#0": summaryEntry("a", 0, firstGame, onlyBaseline),
+    "testcases/a.json#0": summaryEntry("a", 0, firstGame, ignoredBaseline),
     "testcases/b.json#0": summaryEntry("b", 0, secondGame, null)
   };
 
@@ -169,7 +170,7 @@ test("applyComparisonQValues keeps game and baseline correction families separat
 
   assert.equal(firstGame.q, 0.02);
   assert.equal(secondGame.q, 0.02);
-  assert.equal(onlyBaseline.q, 0.04);
+  assert.equal(ignoredBaseline.q, null);
 });
 
 test("calibration lookup supports simulator symlink and source testcase path variants", () => {
@@ -185,7 +186,7 @@ test("calibration lookup supports simulator symlink and source testcase path var
   }
 });
 
-test("duplicate no-hero testcase ids align calibration rows by file and case index", () => {
+test("duplicate no-hero testcase ids keep game rows aligned by case index", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "greg_mia_nohero_control_current", repeat: 1 }, config);
 
@@ -198,15 +199,13 @@ test("duplicate no-hero testcase ids align calibration rows by file and case ind
   assert.equal(second?.testcaseId, "greg_mia_nohero_control_current");
   assert.equal(first?.visibility.attacker.heroes.length, 0);
   assert.equal(second?.visibility.attacker.heroes.length, 0);
-  assert.equal(first?.calibration?.idx, 0);
-  assert.equal(second?.calibration?.idx, 1);
-  assert.equal(first?.calibration?.muGame, 3752);
-  assert.equal(second?.calibration?.muGame, 3652);
-  assert.equal(battleScoreDelta(first?.gameResult), first?.calibration?.muGame);
-  assert.equal(battleScoreDelta(second?.gameResult), second?.calibration?.muGame);
+  assert.equal(first?.calibration, undefined);
+  assert.equal(second?.calibration, undefined);
+  assert.equal(battleScoreDelta(first?.gameResult), 3752);
+  assert.equal(battleScoreDelta(second?.gameResult), 3652);
 });
 
-test("no-hero simple testcase loads, runs, compares to calibration, and exposes aligned core fields", () => {
+test("no-hero simple testcase loads, runs, compares to game result, and exposes aligned core fields", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
   const entry = report.details[0];
@@ -215,10 +214,10 @@ test("no-hero simple testcase loads, runs, compares to calibration, and exposes 
   assert.equal(report.counts.testcasesFound, 1);
   assert.equal(summary?.testcase_id, "simple_001");
   assert.equal(summary?.game?.n_reference, 1);
-  assert.equal(summary?.baseline?.n_reference, 100);
+  assert.equal(summary?.baseline, null);
   assert.equal(entry?.visibility.attacker.heroes.length, 0);
   assert.equal(entry?.visibility.defender.heroes.length, 0);
-  assert.equal(entry?.calibration?.muGame, -186);
+  assert.equal(entry?.calibration, undefined);
   assert.equal(battleScoreDelta(entry?.gameResult), -186);
   assert.equal(battleScoreDelta(entry?.result), entry ? entry.result!.remaining.attacker.infantry + entry.result!.remaining.attacker.lancer + entry.result!.remaining.attacker.marksman - (entry.result!.remaining.defender.infantry + entry.result!.remaining.defender.lancer + entry.result!.remaining.defender.marksman) : undefined);
 });
@@ -255,7 +254,7 @@ test("runTestcases default round cap lets long no-hero baselines reach battle en
   assert.ok((entry?.result?.rounds ?? 0) > 100);
 });
 
-test("runTestcases reports a parity summary from calibration JSON", () => {
+test("runTestcases reports a game-focused parity summary without legacy baseline comparison", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001", repeat: 1 }, config);
   const row = Object.values(report.testcases)[0];
@@ -265,21 +264,15 @@ test("runTestcases reports a parity summary from calibration JSON", () => {
   assert.equal(row?.testcase_id, "simple_001");
   assert.equal(row?.idx, 0);
   assert.equal(row?.game?.mu_reference, -186);
-  assert.equal(row?.baseline?.mu_reference, -186);
-  assert.equal(row?.baseline?.bias_raw, 0);
-  assert.equal(row?.baseline?.sem, 0);
-  assert.equal(row?.baseline?.p, null);
-  assert.equal(row?.baseline?.q, null);
+  assert.equal(row?.baseline, null);
   assert.equal(typeof detail?.simulatorScoreDelta, "number");
   assert.equal(typeof row?.game?.bias_raw, "number");
   assert.equal(row?.game?.n_candidate, 1);
   assert.equal(typeof row?.game?.mu_candidate, "number");
-  assert.equal(typeof row?.baseline?.bias_raw, "number");
   assert.equal(typeof row?.game?.bias_raw, "number");
-  assert.equal(typeof row?.baseline?.passes, "boolean");
   assert.equal(typeof row?.game?.passes, "boolean");
   assert.equal(report.counts.comparedToGame, 1);
-  assert.equal(report.counts.comparedToBaseline, 1);
+  assert.equal(report.counts.comparedToBaseline, 0);
 });
 
 test("adaptTestcaseEntry promotes engagement_type to a top-level BattleInput key", () => {

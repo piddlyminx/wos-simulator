@@ -12,6 +12,7 @@ const STATUS_BADGE: Record<
   TestcaseDeltaRow["status"],
   { label: string; bg: string; color: string }
 > = {
+  changed:   { label: "changed",   bg: "rgba(203,166,247,0.16)",  color: "#cba6f7" },
   improved:  { label: "improved",  bg: "rgba(166,227,161,0.2)",  color: "#a6e3a1" },
   regressed: { label: "regressed", bg: "rgba(243,139,168,0.2)",  color: "#f38ba8" },
   added:     { label: "added",     bg: "rgba(137,220,235,0.2)",  color: "#89dceb" },
@@ -21,6 +22,7 @@ const STATUS_BADGE: Record<
 };
 
 const ROW_BG: Record<TestcaseDeltaRow["status"], string> = {
+  changed:   "rgba(203,166,247,0.04)",
   improved:  "rgba(166,227,161,0.05)",
   added:     "rgba(137,220,235,0.05)",
   regressed: "rgba(243,139,168,0.05)",
@@ -43,7 +45,7 @@ export default function CompareTable({ rows }: Props) {
   const filtered = useMemo(() => {
     let r = rows;
     if (filter === "changed") r = r.filter((x) => x.status !== "unchanged");
-    else if (filter === "flips") r = r.filter((x) => x.status === "improved" || x.status === "regressed");
+    else if (filter === "flips") r = r.filter((x) => x.passes_a !== x.passes_b && x.passes_a != null && x.passes_b != null);
     else if (filter === "added-retired") r = r.filter((x) => x.status === "added" || x.status === "retired");
     else if (filter === "skipped") r = r.filter((x) => x.status === "skipped");
 

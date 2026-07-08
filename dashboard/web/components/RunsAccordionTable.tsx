@@ -42,6 +42,8 @@ function ChangesSummary({ run }: { run: RunWithDelta }) {
   if (run.prev_run_id == null) return <span className="opacity-40">—</span>;
   return (
     <span className="font-mono text-xs opacity-80">
+      <span style={{ color: "#cba6f7" }}>Δ{run.count_changed}</span>
+      {" "}
       <span style={{ color: "#a6e3a1" }}>↑{run.count_improved}</span>
       {" "}
       <span style={{ color: "#f38ba8" }}>↓{run.count_regressed}</span>

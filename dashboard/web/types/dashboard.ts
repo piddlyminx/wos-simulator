@@ -90,6 +90,7 @@ export interface CoverageSnapshot {
 }
 
 export interface RunDeltaCounts {
+  changed: number;
   improved: number;
   regressed: number;
   added: number;
@@ -100,6 +101,7 @@ export interface RunDeltaCounts {
 export interface RunWithDelta extends Run {
   prev_run_id: string | null;
   delta_avg_error_pct: number | null;
+  count_changed: number;
   count_improved: number;
   count_regressed: number;
   count_added: number;
@@ -127,7 +129,7 @@ export interface TestcaseDeltaRow {
   passes_b: number | null;
   stat_adjustment_value: number | null;
   stat_adjustment_mode: string | null;
-  status: "improved" | "regressed" | "unchanged" | "added" | "retired" | "skipped";
+  status: "changed" | "improved" | "regressed" | "unchanged" | "added" | "retired" | "skipped";
 }
 
 export interface CoverageTrendPoint {

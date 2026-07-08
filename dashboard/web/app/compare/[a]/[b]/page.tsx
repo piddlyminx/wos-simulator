@@ -216,6 +216,11 @@ export default async function ComparePage({ params }: PageProps) {
           color={deltaErrorColor}
         />
         <MetricCard
+          label="Changed"
+          value={String(deltaCounts.changed)}
+          color="#cba6f7"
+        />
+        <MetricCard
           label="Improved"
           value={String(deltaCounts.improved)}
           color="#a6e3a1"

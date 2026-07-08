@@ -183,7 +183,7 @@ export default function HomePage() {
   const prevRun = getPreviousRun(latestRunId);
   const delta = prevRun
     ? getRunDeltaCounts(latestRunId, prevRun.id)
-    : { improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
+    : { changed: 0, improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
   const deltaAvgErr =
     prevRun &&
     latestRun?.overall_avg_error_pct != null &&
@@ -266,10 +266,10 @@ export default function HomePage() {
           }
         />
         <SummaryTile
-          label="Regressions"
-          value={String(delta.regressed)}
-          helper={`${delta.improved} improved`}
-          tone={delta.regressed > 0 ? "bad" : "good"}
+          label="Changed"
+          value={String(delta.changed)}
+          helper={`${delta.regressed} regressed, ${delta.improved} improved`}
+          tone={delta.regressed > 0 ? "bad" : delta.changed > 0 ? "warn" : "good"}
         />
         <SummaryTile
           label="Coverage"
@@ -312,6 +312,7 @@ export default function HomePage() {
             />
           </div>
           <div className="flex flex-wrap gap-5 mt-1">
+            <Stat label="Changed" value={String(delta.changed)} tone="warn" />
             <Stat label="Improved" value={String(delta.improved)} tone="good" />
             <Stat label="Regressed" value={String(delta.regressed)} tone="bad" />
             <Stat label="Added" value={String(delta.added)} />

@@ -9,6 +9,7 @@ dashboard/web/.next
 dashboard/web/.next-*
 dashboard/web/.next-user
 dashboard/web/.turbo
+dashboard/web/next-env.d.ts
 dashboard/web/test-results
 dashboard/web/playwright-report
 dashboard/web/*.tsbuildinfo

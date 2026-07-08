@@ -573,11 +573,9 @@ export function getMissingTables(
   }
 }
 
-// A testcase counts as improved/regressed if its pass/fail status flips,
-// OR if |bias_pct| moves by more than this threshold while staying on the same
-// side of the pass boundary. Catches drift-only regressions (e.g. 1.8% → 4.5%)
-// that the flip-only definition silently hides.
-export const BIAS_MOVE_THRESHOLD_PCT = 0.5;
+// Testcase comparisons intentionally report every stored bias_pct movement.
+// Runs are seeded repeatably, so any persisted movement is signal rather than
+// stochastic dashboard noise.
 
 /**
  * Compare two runs by their run_testcases and return counts of improved,
@@ -587,14 +585,14 @@ export function getRunDeltaCounts(
   currRunId: string,
   prevRunId: string
 ): RunDeltaCounts {
-  const zero: RunDeltaCounts = { improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
+  const zero: RunDeltaCounts = { changed: 0, improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
   const database = getDb();
   if (!database) return zero;
   try {
     // added/retired operate on run_testcase_files set difference (on-disk presence),
     // NOT on executed testcase keys. skipped = files present but excluded by a filter
-    // in the current run (included = 0). improved/regressed count per-testcase-key on
-    // either (a) a pass/fail flip, or (b) |bias_pct| moving past BIAS_MOVE_THRESHOLD_PCT.
+    // in the current run (included = 0). improved/regressed count directional
+    // absolute-error movements; changed counts same-error raw bias movement too.
     const row = database
       .prepare(
         `WITH curr_exec AS (
@@ -620,10 +618,17 @@ export function getRunDeltaCounts(
          SELECT
            SUM(
              CASE
+               WHEN prev_bias IS NOT NULL AND curr_bias IS NOT NULL AND curr_bias != prev_bias
+                 THEN 1
+               ELSE 0
+             END
+           ) AS changed,
+           SUM(
+             CASE
                WHEN prev_passes = 0 AND curr_passes = 1 THEN 1
                WHEN prev_passes = curr_passes
                     AND prev_bias IS NOT NULL AND curr_bias IS NOT NULL
-                    AND ABS(prev_bias) - ABS(curr_bias) > ?
+                    AND ABS(prev_bias) > ABS(curr_bias)
                  THEN 1
                ELSE 0
              END
@@ -633,7 +638,7 @@ export function getRunDeltaCounts(
                WHEN prev_passes = 1 AND curr_passes = 0 THEN 1
                WHEN prev_passes = curr_passes
                     AND prev_bias IS NOT NULL AND curr_bias IS NOT NULL
-                    AND ABS(curr_bias) - ABS(prev_bias) > ?
+                    AND ABS(curr_bias) > ABS(prev_bias)
                  THEN 1
                ELSE 0
              END
@@ -649,10 +654,9 @@ export function getRunDeltaCounts(
         currRunId,
         prevRunId,
         currRunId,
-        prevRunId,
-        BIAS_MOVE_THRESHOLD_PCT,
-        BIAS_MOVE_THRESHOLD_PCT
+        prevRunId
       ) as {
+      changed: number | null;
       improved: number | null;
       regressed: number | null;
       added: number | null;
@@ -660,6 +664,7 @@ export function getRunDeltaCounts(
       skipped: number | null;
     };
     return {
+      changed: row?.changed ?? 0,
       improved: row?.improved ?? 0,
       regressed: row?.regressed ?? 0,
       added: row?.added ?? 0,
@@ -698,12 +703,13 @@ export function getRunsWithDelta(limit = 50): RunWithDelta[] {
       const deltaCounts =
         prev != null
           ? getRunDeltaCounts(curr.id, prev.id)
-          : { improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
+          : { changed: 0, improved: 0, regressed: 0, added: 0, retired: 0, skipped: 0 };
 
       results.push({
         ...curr,
         prev_run_id: prev?.id ?? null,
         delta_avg_error_pct,
+        count_changed: deltaCounts.changed,
         count_improved: deltaCounts.improved,
         count_regressed: deltaCounts.regressed,
         count_added: deltaCounts.added,
@@ -818,15 +824,17 @@ export function getRunDeltaTable(runIdA: string, runIdB: string): TestcaseDeltaR
       } else if (
         r.bias_a != null &&
         r.bias_b != null &&
-        Math.abs(r.bias_a) - Math.abs(r.bias_b) > BIAS_MOVE_THRESHOLD_PCT
+        Math.abs(r.bias_a) > Math.abs(r.bias_b)
       ) {
         status = "improved";
       } else if (
         r.bias_a != null &&
         r.bias_b != null &&
-        Math.abs(r.bias_b) - Math.abs(r.bias_a) > BIAS_MOVE_THRESHOLD_PCT
+        Math.abs(r.bias_b) > Math.abs(r.bias_a)
       ) {
         status = "regressed";
+      } else if (r.bias_a != null && r.bias_b != null && r.bias_a !== r.bias_b) {
+        status = "changed";
       } else {
         status = "unchanged";
       }

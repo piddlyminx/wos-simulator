@@ -245,6 +245,86 @@ test("simulateBattle calculates all same-round damage from the round-start troop
   assert.equal(normalAttacks[1]?.trace?.roundStartTroops.defender.infantry, 1);
 });
 
+test("simulateBattle skips later attacks against same-round exhausted targets only", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 100, lancer_t1: 100 },
+        stats: {
+          infantry: { attack: 100000, lethality: 100000 },
+          lancer: { attack: 100000, lethality: 100000 }
+        },
+        heroes: {}
+      },
+      defender: {
+        troops: { infantry_t1: 1 },
+        stats: { infantry: { attack: 100000, lethality: 100000 } },
+        heroes: {}
+      }
+    },
+    minimalConfig(),
+    { mode: "trace" }
+  );
+
+  const normalAttacks = result.attacks.filter((attack) => attack.kind === "normal");
+
+  assert.deepEqual(
+    normalAttacks.map((attack) => attack.jobId),
+    ["r1:attacker:infantry:0:normal", "r1:defender:infantry:0:normal"]
+  );
+  assert.equal(normalAttacks[0]?.kills, 1);
+  assert.equal(normalAttacks[1]?.kills, 100);
+  assert.equal(result.trace?.rounds[0]?.jobs.some((job) => job.id === "r1:attacker:lancer:1:normal"), false);
+  assert.equal(result.remaining.attacker.infantry, 0);
+  assert.equal(result.remaining.defender.infantry, 0);
+});
+
+test("extra skill attacks against same-round exhausted targets are skipped entirely", () => {
+  const result = simulateBattle(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { marksman_t1: 100 },
+        stats: { marksman: { attack: 100000, lethality: 100000 } },
+        heroes: { FollowUp: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { lancer_t1: 1 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      FollowUp: {
+        name: "FollowUp",
+        skills: {
+          FollowUpShot: {
+            trigger: { type: "attack", probability: 100, source: "marksman" },
+            effects: {
+              hitAgain: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { attacks: { count: 1 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const normalAttack = result.attacks.find((attack) => attack.kind === "normal" && attack.attackerSide === "attacker");
+
+  assert.equal(result.attacks.some((attack) => attack.kind === "skill"), false);
+  assert.equal(result.trace?.rounds[0]?.jobs.some((job) => job.kind === "skill"), false);
+  assert.deepEqual(result.extraSkillAttackJobsByEffect, {});
+  assert.equal(normalAttack?.appliedEffects.some((effect) => effect.kind === "extra_attack"), false);
+  assert.equal(result.remaining.defender.lancer, 0);
+});
+
 test("simulateBattle carries fractional casualties between rounds and ceils final survivors", () => {
   const config = loadSimulatorConfig();
   const fixturePath = fileURLToPath(new URL("../testcases/emulator_verified/simple_001_nc.json", import.meta.url));
