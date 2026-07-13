@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 import { loadSimulatorConfig } from "../simulator/src/config";
-import { simulateBattle, signedRemainingScore } from "../simulator/src/simulator";
+import { prepareBattle, runPrepared, signedRemainingScore } from "../simulator/src/simulator";
 import type { BattleResult, SimulatorConfig } from "../simulator/src/types";
 import { generateTeams, parseRatio } from "./tournament/teamGeneration";
 import { teamToBattleInput } from "./tournament/teamInput";
@@ -32,9 +32,9 @@ function benchmarkFull(tasks: BattleTask[], config: SimulatorConfig): BenchmarkS
   let totalSignedScore = 0;
   const start = Date.now();
   for (const task of tasks) {
+    const prepared = prepareBattle(teamToBattleInput(task.attacker, task.defender, task.seed, config), config);
     for (let rep = 0; rep < task.reps; rep += 1) {
-      const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-      const result: BattleResult = simulateBattle(input, config, { mode: "standard" });
+      const result: BattleResult = runPrepared(prepared, task.seed + rep, { mode: "standard" });
       totalRounds += result.rounds;
       totalAttackOutcomes += result.attacks.length;
       totalSignedScore += signedScoreForResult(result);
@@ -56,9 +56,9 @@ function benchmarkFastScore(tasks: BattleTask[], config: SimulatorConfig): Bench
   let totalSignedScore = 0;
   const start = Date.now();
   for (const task of tasks) {
+    const prepared = prepareBattle(teamToBattleInput(task.attacker, task.defender, task.seed, config), config);
     for (let rep = 0; rep < task.reps; rep += 1) {
-      const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-      totalSignedScore += signedRemainingScore(simulateBattle(input, config, { mode: "fast" }));
+      totalSignedScore += signedRemainingScore(runPrepared(prepared, task.seed + rep, { mode: "fast" }));
     }
   }
   const elapsedMs = Date.now() - start;

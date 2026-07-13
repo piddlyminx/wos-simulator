@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { buildSimulatorConfig, loadSimulatorConfig, simulateBattle } from "../simulator/src/index";
+import { buildSimulatorConfig, loadSimulatorConfig, prepareBattle, runPrepared } from "../simulator/src/index";
 import type { BattleInput, FighterInput, HeroSkillLevels, SimulatorConfig, SkillFile } from "../simulator/src/types";
 
 type Side = "attacker" | "defender";
@@ -204,7 +204,7 @@ function runExperiment(experiment: Experiment) {
   const outcomes = experiment.target.candidates.map((candidate) => {
     const config = configWithPatchedEffect(experiment.target.hero, experiment.target.effectId, candidate);
     const input = inputForExperiment(tuned.experiment);
-    const result = simulateBattle(input, config, { mode: "fast" });
+    const result = runPrepared(prepareBattle(input, config), undefined, { mode: "fast" });
     const attacker = total(result.remaining.attacker);
     const defender = total(result.remaining.defender);
     return {
@@ -243,7 +243,8 @@ function tuneTroops(experiment: Experiment): { experiment: Experiment; gap: numb
       };
       if (!withinTroopCap(candidate.attackerTroops) || !withinTroopCap(candidate.defenderTroops)) continue;
       const scores = candidate.target.candidates.map((type) => {
-        const result = simulateBattle(inputForExperiment(candidate), configWithPatchedEffect(candidate.target.hero, candidate.target.effectId, type), { mode: "fast" });
+        const config = configWithPatchedEffect(candidate.target.hero, candidate.target.effectId, type);
+        const result = runPrepared(prepareBattle(inputForExperiment(candidate), config), undefined, { mode: "fast" });
         return total(result.remaining.attacker) - total(result.remaining.defender);
       });
       const gap = minPairGap(scores);

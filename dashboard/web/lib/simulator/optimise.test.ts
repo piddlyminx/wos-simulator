@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { loadSimulatorConfig } from "@simulator/config";
-import type { BattleInput, BattleResult, SimulationOptions, SimulatorConfig } from "@simulator/types";
+import type { BattleResult, SimulationOptions } from "@simulator/types";
 import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
 import { compositionGrid, countsForPercentages, rankOptimizeRows, runOptimizeRatio, wilsonLowerBound } from "./optimise";
 
@@ -34,9 +34,9 @@ test("runOptimizeRatio evaluates candidate battles in fast simulator mode", asyn
   const calls: SimulationOptions[] = [];
   const result = await runOptimizeRatio(sampleOptimizePayload(), {
     config: loadSimulatorConfig(),
-    simulateBattle: (_input: BattleInput, _config: SimulatorConfig, options?: SimulationOptions) => {
-      calls.push(options ?? {});
-      return fakeBattleResult();
+    runBattles: (_input, _config, seeds, options: SimulationOptions) => {
+      calls.push(...seeds.map(() => options));
+      return seeds.map(() => fakeBattleResult());
     },
   });
 

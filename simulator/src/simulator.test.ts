@@ -6,8 +6,12 @@ import { fileURLToPath } from "node:url";
 import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./resolve";
-import { prepareBattle, runPrepared, simulateBattle, simulateBearBattle, signedRemainingScore } from "./simulator";
+import { prepareBattle, runPrepared, simulateBearBattle, signedRemainingScore } from "./simulator";
 import type { BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulationOptions, SimulatorConfig, SkillFile, UnitType } from "./types";
+
+function runOnce(input: BattleInput, config: SimulatorConfig, options: SimulationOptions = {}) {
+  return runPrepared(prepareBattle(input, config), undefined, options);
+}
 
 test("runPrepared reuses the compiled input seed when no override is supplied", () => {
   const config = loadSimulatorConfig();
@@ -21,20 +25,21 @@ test("runPrepared reuses the compiled input seed when no override is supplied", 
     attacker: { troops: { infantry_t6: 5000, lancer_t6: 3000, marksman_t6: 4000 }, stats, heroes: { Mia: { skill_1: 5, skill_2: 5, skill_3: 5 } } },
     defender: { troops: { infantry_t6: 5000, lancer_t6: 3000, marksman_t6: 4000 }, stats, heroes: { Greg: { skill_1: 5, skill_2: 5 } } }
   };
-  const direct = simulateBattle(input, config);
+  const compiled = prepareBattle(input, config);
+  const direct = runPrepared(compiled, input.seed);
   // Only meaningful if chance triggers make the round loop seed-sensitive.
   assert.equal(direct.randomness.deterministic, false, "expected a stochastic battle");
-  // runPrepared with no seed override must reproduce simulateBattle using the compiled input seed,
+  // runPrepared with no seed override must reproduce an explicit compiled-input seed,
   // not silently fall back to the default seed.
-  const prepared = runPrepared(prepareBattle(input, config));
+  const prepared = runPrepared(compiled);
   assert.equal(prepared.winner, direct.winner);
   assert.equal(prepared.rounds, direct.rounds);
   assert.deepEqual(prepared.remaining, direct.remaining);
 });
 
-test("simulateBattle returns structured result for a no-hero battle", () => {
+test("runPrepared returns structured result for a no-hero battle", () => {
   const config = loadSimulatorConfig();
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 3,
       attacker: {
@@ -63,7 +68,7 @@ test("simulateBattle returns structured result for a no-hero battle", () => {
 });
 
 test("standard battle outcomes include round and applied effects without full traces", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -210,9 +215,9 @@ test("simulateBearBattle scores uncapped per-attack damage", () => {
   assert.ok(damage.score > defensive.score);
 });
 
-test("simulateBattle calculates all same-round damage from the round-start troop snapshot", () => {
+test("runPrepared calculates all same-round damage from the round-start troop snapshot", () => {
   const config = loadSimulatorConfig();
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -245,8 +250,8 @@ test("simulateBattle calculates all same-round damage from the round-start troop
   assert.equal(normalAttacks[1]?.trace?.roundStartTroops.defender.infantry, 1);
 });
 
-test("simulateBattle skips later attacks against same-round exhausted targets only", () => {
-  const result = simulateBattle(
+test("runPrepared skips later attacks against same-round exhausted targets only", () => {
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -281,7 +286,7 @@ test("simulateBattle skips later attacks against same-round exhausted targets on
 });
 
 test("extra skill attacks against same-round exhausted targets are skipped entirely", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -325,22 +330,22 @@ test("extra skill attacks against same-round exhausted targets are skipped entir
   assert.equal(result.remaining.defender.lancer, 0);
 });
 
-test("simulateBattle carries fractional casualties between rounds and ceils final survivors", () => {
+test("runPrepared carries fractional casualties between rounds and ceils final survivors", () => {
   const config = loadSimulatorConfig();
   const fixturePath = fileURLToPath(new URL("../testcases/emulator_verified/simple_001_nc.json", import.meta.url));
   const testcases = JSON.parse(readFileSync(fixturePath, "utf8")) as Array<BattleInput & { test_id: string }>;
   const input = testcases.find((testcase) => testcase.test_id === "simple_001");
   assert.notEqual(input, undefined);
 
-  const result = simulateBattle(input!, config, { mode: "trace" });
+  const result = runOnce(input!, config, { mode: "trace" });
 
   assert.equal(totalRemaining(result.remaining.attacker) - totalRemaining(result.remaining.defender), -186);
   assert.equal(result.remaining.defender.lancer, 186);
   assert.equal(result.trace?.rounds[1]?.roundStartTroops.defender.lancer.toFixed(6), "198.003308");
 });
 
-test("simulateBattle defaults to a 1500 round cap when no explicit maxRounds is provided", () => {
-  const result = simulateBattle(
+test("runPrepared defaults to a 1500 round cap when no explicit maxRounds is provided", () => {
+  const result = runOnce(
     {
       attacker: { troops: {}, heroes: {} },
       defender: { troops: {}, heroes: {} }
@@ -353,7 +358,7 @@ test("simulateBattle defaults to a 1500 round cap when no explicit maxRounds is 
 });
 
 test("round-start trigger source self.any rolls once then creates one target-locked effect per live unit type", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -392,7 +397,7 @@ test("round-start trigger source self.any rolls once then creates one target-loc
 });
 
 test("attack trigger source and target selectors match relative to the skill owner", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -431,7 +436,7 @@ test("attack trigger source and target selectors match relative to the skill own
 });
 
 test("attack-duration effects with a round cap expire at the end of their active turn even when unused", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 4,
       attacker: {
@@ -485,7 +490,7 @@ test("attack-duration effects with a round cap expire at the end of their active
 });
 
 test("attack-duration effects with a round cap expire after one applicable attack", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -526,7 +531,7 @@ test("attack-duration effects with a round cap expire after one applicable attac
 });
 
 test("attack-duration effects with a round delay are not charged before the delay is over", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -566,9 +571,144 @@ test("attack-duration effects with a round delay are not charged before the dela
   assert.equal(roundTwoAttack?.appliedEffects.some((effect) => effect.effectId === "delayedBoost"), true);
 });
 
-test("simulateBattle reports resolved heroes, troop skills, activations, controls, and extra skill jobs", () => {
+test("cancelled attacks do not charge attack-limited effects before their turn delay elapses", () => {
+  const result = runOnce(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { infantry_t1: 1000000 },
+        heroes: { DelayedAfterPause: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      DelayedAfterPause: {
+        name: "DelayedAfterPause",
+        troop_type: "infantry",
+        skills: {
+          PauseFirstRound: {
+            trigger: { type: "battle_start" },
+            effects: {
+              pause: {
+                type: "no_attack",
+                units: { applies_to: "self.infantry", applies_vs: "any" },
+                duration: { turns: { count: 1 } }
+              }
+            }
+          },
+          DelayedAttackBudget: {
+            trigger: { type: "turn", every: 99, first: 1 },
+            effects: {
+              delayedBoost: {
+                type: "active.hero.attack.up",
+                value: 100,
+                units: { applies_to: "self.infantry", applies_vs: "any" },
+                duration: { turns: { delay: 1 }, attacks: { count: 1 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const roundOne = result.attacks.find((attack) => attack.jobId.startsWith("r1:attacker:infantry"));
+  const roundTwo = result.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
+  assert.equal(roundOne?.cancelReason, "no_attack");
+  assert.equal(roundTwo?.appliedEffects.some((effect) => effect.effectId === "delayedBoost"), true);
+});
+
+test("attack delay skips eligible attacks before the effect can apply", () => {
+  const result = runOnce(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { marksman_t1: 1000000 },
+        heroes: { DelayedExtra: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      DelayedExtra: {
+        name: "DelayedExtra",
+        troop_type: "marksman",
+        skills: {
+          NextAttack: {
+            trigger: { type: "battle_start" },
+            effects: {
+              delayedExtra: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "self.marksman", applies_vs: "any" },
+                duration: { attacks: { count: 1, delay: 1 } },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  const skillAttacks = result.attacks.filter((attack) => attack.kind === "skill" && attack.attackerSide === "attacker");
+  assert.equal(skillAttacks.length, 1);
+  assert.ok(skillAttacks[0].jobId.startsWith("r2:"));
+});
+
+
+test("attack delay skips eligible damage jobs before a modifier can apply", () => {
+  const result = runOnce(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { infantry_t1: 1000000 },
+        heroes: { DelayedModifier: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      DelayedModifier: {
+        name: "DelayedModifier",
+        troop_type: "infantry",
+        skills: {
+          NextAttackBoost: {
+            trigger: { type: "battle_start" },
+            effects: {
+              delayedBoost: {
+                type: "active.hero.attack.up",
+                value: 100,
+                units: { applies_to: "self.infantry", applies_vs: "any" },
+                duration: { attacks: { count: 1, delay: 1 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const normalAttacks = result.attacks.filter(
+    (attack) => attack.kind === "normal" && attack.attackerSide === "attacker"
+  );
+  assert.equal(normalAttacks[0].appliedEffects.some((effect) => effect.effectId === "delayedBoost"), false);
+  assert.equal(normalAttacks[1].appliedEffects.some((effect) => effect.effectId === "delayedBoost"), true);
+});
+
+
+test("runPrepared reports resolved heroes, troop skills, activations, controls, and extra skill jobs", () => {
   const config = loadSimulatorConfig();
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -644,7 +784,7 @@ test("applyHeroGenerationStats bakes main hero generation stats into authoritati
 });
 
 test("array joiner heroes preserve duplicate skill instances", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -728,7 +868,7 @@ test("joiner hero generation stats are not applied when main hero stats are enab
 });
 
 test("cancelled attacks report the winning control as an applied effect", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -782,7 +922,7 @@ test("cancelled attacks report the winning control as an applied effect", () => 
 });
 
 test("no_attack applies_to cancels that unit attacking, not attacks targeting that unit", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -824,7 +964,7 @@ test("no_attack applies_to cancels that unit attacking, not attacks targeting th
 });
 
 test("dodge applies_to cancels attacks targeting that unit, not that unit attacking", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -866,7 +1006,7 @@ test("dodge applies_to cancels attacks targeting that unit, not that unit attack
 });
 
 test("attack-declared controls from later intents affect earlier same-round attacks", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -945,7 +1085,7 @@ test("attack-duration effects charged on a cancelled attack unless useEffectsOnN
   });
 
   const roundTwoKills = (options: SimulationOptions): number => {
-    const result = simulateBattle(input, config, options);
+    const result = runOnce(input, config, options);
     const attack = result.attacks.find((entry) => entry.kind === "normal" && entry.jobId.startsWith("r2:attacker:infantry"));
     assert.notEqual(attack, undefined);
     return attack!.kills;
@@ -957,7 +1097,7 @@ test("attack-duration effects charged on a cancelled attack unless useEffectsOnN
 });
 
 test("cancelled normal attacks advance attack counters for later frequency checks", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 4,
       attacker: {
@@ -995,7 +1135,7 @@ test("cancelled normal attacks advance attack counters for later frequency check
 });
 
 test("attack frequency triggers can start at a different first threshold", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 14,
       attacker: {
@@ -1033,8 +1173,8 @@ test("attack frequency triggers can start at a different first threshold", () =>
 });
 
 test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
-  const maxResult = simulateBattle(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.lethality.up"), { mode: "trace" });
-  const addResult = simulateBattle(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.lethality.up"), { mode: "trace" });
+  const maxResult = runOnce(sameEffectStackingInput("MaxStacker"), sameEffectStackingConfig("MaxStacker", "max", "active.hero.lethality.up"), { mode: "trace" });
+  const addResult = runOnce(sameEffectStackingInput("AddStacker"), sameEffectStackingConfig("AddStacker", "add", "active.hero.lethality.up"), { mode: "trace" });
 
   const maxRoundTwo = maxResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
   const addRoundTwo = addResult.attacks.find((attack) => attack.jobId.startsWith("r2:attacker:infantry") && attack.kind === "normal");
@@ -1046,7 +1186,7 @@ test("same_effect_stacking max caps overlapping modifier activations while add s
 });
 
 test("same_effect_stacking max caps duplicate hero instances of the same skill effect", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1070,8 +1210,8 @@ test("same_effect_stacking max caps duplicate hero instances of the same skill e
 });
 
 test("same_effect_stacking max caps overlapping extra skill attacks while add keeps all activations", () => {
-  const maxResult = simulateBattle(sameEffectStackingInput("MaxExtra"), sameEffectStackingConfig("MaxExtra", "max", "extra_skill_attack"), { mode: "trace" });
-  const addResult = simulateBattle(sameEffectStackingInput("AddExtra"), sameEffectStackingConfig("AddExtra", "add", "extra_skill_attack"), { mode: "trace" });
+  const maxResult = runOnce(sameEffectStackingInput("MaxExtra"), sameEffectStackingConfig("MaxExtra", "max", "extra_skill_attack"), { mode: "trace" });
+  const addResult = runOnce(sameEffectStackingInput("AddExtra"), sameEffectStackingConfig("AddExtra", "add", "extra_skill_attack"), { mode: "trace" });
 
   const maxRoundTwoSkillJobs = maxResult.trace?.rounds[1]?.jobs.filter((job) => job.kind === "skill") ?? [];
   const addRoundTwoSkillJobs = addResult.trace?.rounds[1]?.jobs.filter((job) => job.kind === "skill") ?? [];
@@ -1083,7 +1223,7 @@ test("same_effect_stacking max caps overlapping extra skill attacks while add ke
 });
 
 test("same_effect_stacking max consumes overlapping attack-duration extra skill effects as one group", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -1130,7 +1270,7 @@ test("same_effect_stacking max consumes overlapping attack-duration extra skill 
 });
 
 test("requires_effect is ignored by native simulator effect activation", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 0,
       attacker: {
@@ -1170,7 +1310,7 @@ test("requires_effect is ignored by native simulator effect activation", () => {
 });
 
 test("fighter passive effects are added to the static profile after battle_start effects", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1216,7 +1356,7 @@ test("fighter passive effects are added to the static profile after battle_start
 });
 
 test("extra skill attacks with array trigger damage targets hit those defender unit types", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1268,7 +1408,7 @@ test("extra skill attacks with array trigger damage targets hit those defender u
 });
 
 test('extra skill attacks with applies_vs "any" keep current-target compatibility', () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1310,7 +1450,7 @@ test('extra skill attacks with applies_vs "any" keep current-target compatibilit
 });
 
 test("skill report attributes kills only to the skill damage source", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1368,7 +1508,7 @@ test("skill report attributes kills only to the skill damage source", () => {
 });
 
 test("same-round outcomes are capped to available target troops before tracing skill kills", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1426,7 +1566,7 @@ test("same-round cap does not leave exhausted units targetable through floating 
   const input = testcases.find((testcase) => testcase.test_id === "sergey_solo");
   if (!input) throw new Error("missing sergey_solo fixture");
 
-  const result = simulateBattle(input, config);
+  const result = runOnce(input, config);
 
   assert.equal(result.winner, "attacker");
   assert.equal(result.remaining.attacker.marksman, 1349);
@@ -1434,7 +1574,7 @@ test("same-round cap does not leave exhausted units targetable through floating 
 });
 
 test("committed losses clamp exhausted floating point residue before next-round target selection", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -1471,7 +1611,7 @@ test("committed losses clamp exhausted floating point residue before next-round 
 test("extra skill trigger damage jobs reject missing runtime selectors", () => {
   assert.throws(
     () =>
-      simulateBattle(
+      runOnce(
         {
           maxRounds: 1,
           attacker: {
@@ -1511,7 +1651,7 @@ test("extra skill trigger damage jobs reject missing runtime selectors", () => {
 test("extra skill attacks reject missing trigger damage jobs at activation", () => {
   assert.throws(
     () =>
-      simulateBattle(
+      runOnce(
         {
           maxRounds: 1,
           attacker: {
@@ -1547,7 +1687,7 @@ test("extra skill attacks reject missing trigger damage jobs at activation", () 
 });
 
 test("attack-triggered extra skill attacks activate then resolve trigger damage jobs on normal attack use", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1594,7 +1734,7 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
 });
 
 test("cancelled normal attacks do not consume extra skill attack uses", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -1654,7 +1794,7 @@ test("cancelled normal attacks do not consume extra skill attack uses", () => {
 });
 
 test("extra skill attack effects cannot be used by later enemy normal attacks", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1697,7 +1837,7 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
 });
 
 test("extra skill trigger damage jobs can resolve to multiple living enemy targets without recursive attack triggers", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1753,7 +1893,7 @@ test("extra skill trigger damage jobs can resolve to multiple living enemy targe
 });
 
 test("extra skill attack consumes one use regardless of multiple generated target jobs", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -1795,7 +1935,7 @@ test("extra skill attack consumes one use regardless of multiple generated targe
 test('direct simulator configs reject applies_vs "all" usage gates', () => {
   assert.throws(
     () =>
-      simulateBattle(
+      runOnce(
         {
           maxRounds: 1,
           attacker: {
@@ -1831,7 +1971,7 @@ test('direct simulator configs reject applies_vs "all" usage gates', () => {
 });
 
 test("extra skill attack consumes one use when multiple same-round normal attacks match the effect", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1871,7 +2011,7 @@ test("extra skill attack consumes one use when multiple same-round normal attack
 });
 
 test("extra skill attack applies_vs must match the current normal attack target", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -1914,7 +2054,7 @@ test("extra skill attack applies_vs must match the current normal attack target"
 });
 
 test("extra skill de-dupe does not suppress unrelated attack-duration effect consumption", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 2,
       attacker: {
@@ -1969,7 +2109,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
 });
 
 test("attack-triggered source and target selectors resolve to concrete active scopes", () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -2012,7 +2152,7 @@ test("attack-triggered source and target selectors resolve to concrete active sc
 });
 
 test('attack-triggered target selector with applies_vs "any" gates later opposing attacks', () => {
-  const result = simulateBattle(
+  const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
@@ -2084,9 +2224,9 @@ test("engagement_type requirements decide whether hero skills resolve", () => {
     }
   };
 
-  const defaultResult = simulateBattle(input, config);
-  const rallyResult = simulateBattle({ ...input, engagement_type: "rally" }, config);
-  const garrisonResult = simulateBattle({ ...input, engagement_type: "garrison" }, config);
+  const defaultResult = runOnce(input, config);
+  const rallyResult = runOnce({ ...input, engagement_type: "rally" }, config);
+  const garrisonResult = runOnce({ ...input, engagement_type: "garrison" }, config);
 
   assert.equal(skillActivations(defaultResult, "RallyOnly"), 0);
   assert.equal(skillActivations(defaultResult, "GarrisonOnly"), 0);
@@ -2131,7 +2271,7 @@ test("rally engagement resolves hero widget roles by owning side", () => {
     }
   };
 
-  const result = simulateBattle(input, config);
+  const result = runOnce(input, config);
 
   const attackerRally = result.skillReport.attacker.find((entry) => entry.skillId === "RallyOnly");
   const defenderGarrison = result.skillReport.defender.find((entry) => entry.skillId === "GarrisonOnly");
@@ -2144,7 +2284,7 @@ test("rally engagement resolves hero widget roles by owning side", () => {
   assert.equal(Boolean(defenderGarrison), true);
 });
 
-test("simulateBattle identifies stochastic battles from resolved chance triggers", () => {
+test("runPrepared identifies stochastic battles from resolved chance triggers", () => {
   const config = minimalConfig({
     Chance: {
       name: "Chance",
@@ -2174,8 +2314,8 @@ test("simulateBattle identifies stochastic battles from resolved chance triggers
     }
   };
 
-  const chanceResult = simulateBattle(input, config);
-  const gatedOnlyResult = simulateBattle(
+  const chanceResult = runOnce(input, config);
+  const gatedOnlyResult = runOnce(
     {
       ...input,
       attacker: { ...input.attacker, heroes: { Chance: { skill_2: 1 } } }
@@ -2297,8 +2437,8 @@ test("fast simulation matches full semantic output without detailed attacks", ()
   ];
 
   for (const { name, input, config } of cases) {
-    const full = simulateBattle(input, config);
-    const fast = simulateBattle(input, config, { mode: "fast" });
+    const full = runOnce(input, config);
+    const fast = runOnce(input, config, { mode: "fast" });
 
     assert.deepEqual(semanticBattleSummary(fast), semanticBattleSummary(full), name);
     assert.deepEqual(fast.attacks, [], name);
@@ -2324,7 +2464,7 @@ test("signedRemainingScore returns signed remaining troops from a fast-mode resu
     }
   };
 
-  const result = simulateBattle(input, config, { mode: "fast" });
+  const result = runOnce(input, config, { mode: "fast" });
   const score = signedRemainingScore(result);
 
   const expected =
@@ -2366,7 +2506,7 @@ test("seeded probability rolls are deterministic and compare percentage threshol
   assert.equal(chancePasses({ ...skill, trigger: { type: "battle_start", probability: [100] } }, createSeededRng("x")), true);
 });
 
-function skillActivations(result: ReturnType<typeof simulateBattle>, skillId: string): number {
+function skillActivations(result: ReturnType<typeof runOnce>, skillId: string): number {
   return result.skillReport.attacker.find((entry) => entry.skillId === skillId)?.skillActivations ?? 0;
 }
 
@@ -2374,8 +2514,8 @@ function totalRemaining(troops: Record<UnitType, number>): number {
   return Object.values(troops).reduce((sum, count) => sum + count, 0);
 }
 
-function semanticBattleSummary(result: ReturnType<typeof simulateBattle>): Pick<
-  ReturnType<typeof simulateBattle>,
+function semanticBattleSummary(result: ReturnType<typeof runOnce>): Pick<
+  ReturnType<typeof runOnce>,
   "winner" | "rounds" | "remaining" | "effectActivationCounts" | "extraSkillAttackJobsByEffect" | "attackControlCounts"
 > {
   return {

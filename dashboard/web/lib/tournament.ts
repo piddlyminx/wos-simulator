@@ -1,5 +1,5 @@
 import { loadSimulatorConfig } from "@simulator/config";
-import { simulateBattle, signedRemainingScore } from "@simulator/simulator";
+import { prepareBattle, runPrepared, signedRemainingScore } from "@simulator/simulator";
 import { BattleInputBuilder } from "@simulator/battleInputBuilder";
 import type { BattleInput, FighterInput, SimulatorConfig, SkillFile } from "@simulator/types";
 
@@ -455,9 +455,10 @@ export function runSingleBattleDirect(
   if (task.reps < 1) throw new Error("Reps must be at least 1");
   let totalAttackerLeft = 0;
   let totalDefenderLeft = 0;
+  const input = teamToBattleInput(task.attacker, task.defender, task.seed, config);
+  const prepared = prepareBattle(input, config);
   for (let rep = 0; rep < task.reps; rep += 1) {
-    const input = teamToBattleInput(task.attacker, task.defender, task.seed + rep, config);
-    const score = signedRemainingScore(simulateBattle(input, config, { mode: "fast" }));
+    const score = signedRemainingScore(runPrepared(prepared, task.seed + rep, { mode: "fast" }));
     if (score > 0) totalAttackerLeft += score;
     else if (score < 0) totalDefenderLeft += -score;
   }

@@ -34,11 +34,11 @@ import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" 
 
 import { UNIT_TYPES } from "./types";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types";
-import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets";
-import { assertStaticPassiveEffectDefinition, isPassiveBucket, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile";
+import { bucketDefinition, DYNAMIC_EFFECT_BUCKETS, STATIC_PASSIVE_BUCKETS } from "./damageBuckets";
+import { assertStaticPassiveEffectDefinition, isPassiveBucket } from "./staticDamageProfile";
 
 const KNOWN_EFFECT_TYPES = new Set([
-  ...ATOMIC_BUCKETS.filter((bucket) => bucket.startsWith("active.") || bucket.startsWith("type.")),
+  ...DYNAMIC_EFFECT_BUCKETS,
   ...STATIC_PASSIVE_BUCKETS,
   "extra_skill_attack",
   "dodge",

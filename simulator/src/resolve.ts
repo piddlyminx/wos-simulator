@@ -4,6 +4,7 @@ import type {
   HeroInputCollection,
   ResolvedFighter,
   ResolvedHero,
+  ResolvedEffectIntentDefinition,
   ResolvedSkill,
   ResolvedTroopLine,
   SideId,
@@ -298,12 +299,13 @@ function hydrateSkill(
   heroInstanceId?: string,
   heroRole?: "main" | "joiner"
 ): ResolvedSkill {
-  const effects: EffectIntentDefinition[] = [];
+  const effects: ResolvedEffectIntentDefinition[] = [];
   for (const [effectId, effect] of Object.entries(rawSkill.effects ?? {})) {
     effects.push({
       id: effectId,
       ...effect,
-      value: levelSelectPreservingOrder(effect.value, level)
+      value: levelSelectPreservingOrder(effect.value, level),
+      sourceDefinition: effect
     });
   }
   return {

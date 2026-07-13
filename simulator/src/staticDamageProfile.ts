@@ -1,7 +1,17 @@
 import type { ActiveEffect, DamageBucketTrace, EffectIntentDefinition, ResolvedFighter, SideId, SkillFile, StatBlock, UnitType } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import { BUCKET_DEFINITIONS, bucketDefinition, STATIC_BUCKETS, type BucketPlacement, type BucketRole, type BucketValueType } from "./damageBuckets";
-import { currentEffectValuePct, sourceLabel } from "./effects";
+import {
+  BUCKET_DEFINITIONS,
+  STATIC_BUCKETS,
+  type BucketPlacement,
+  type BucketRole,
+  type BucketValueType,
+  type StaticDamageBucket,
+  type StaticPassiveBucket,
+  type StaticPlayerBucket,
+  type StaticRawBucket
+} from "./damageBuckets";
+import { sourceLabel } from "./effects";
 
 export interface StaticDamageProfileTerm {
   raw?: number;
@@ -11,6 +21,7 @@ export interface StaticDamageProfileTerm {
 
 export interface StaticDamageProfileEntry {
   factor: number;
+  playerFactorsValid: boolean;
   buckets: Partial<Record<StaticDamageBucket, StaticDamageProfileTerm>>;
 }
 
@@ -30,29 +41,6 @@ interface PassiveCandidateGroup {
   candidates: PassiveCandidate[];
   entry: StaticDamageProfileEntry;
 }
-
-export const STATIC_RAW_BUCKETS = ["troops.baseAttack", "troops.baseLethality", "troops.baseHealth", "troops.baseDefense"] as const;
-export const STATIC_PLAYER_BUCKETS = ["player.attack", "player.lethality", "player.health", "player.defense"] as const;
-export const STATIC_PASSIVE_BUCKETS = [
-  "passive.attack.up",
-  "passive.attack.down",
-  "passive.lethality.up",
-  "passive.lethality.down",
-  "passive.health.up",
-  "passive.health.down",
-  "passive.defense.up",
-  "passive.defense.down"
-] as const;
-
-export type StaticRawBucket = (typeof STATIC_RAW_BUCKETS)[number];
-export type StaticPlayerBucket = (typeof STATIC_PLAYER_BUCKETS)[number];
-export type StaticPassiveBucket = (typeof STATIC_PASSIVE_BUCKETS)[number];
-export type StaticDamageBucket = StaticRawBucket | StaticPlayerBucket | StaticPassiveBucket;
-
-// Roles are owned by the BUCKETS tree (single source of truth); derive, do not redeclare.
-const STATIC_PASSIVE_BUCKET_ROLES = Object.fromEntries(
-  STATIC_PASSIVE_BUCKETS.map((bucket) => [bucket, bucketDefinition(bucket)!.role])
-) as Record<StaticPassiveBucket, BucketRole>;
 
 export function buildStaticDamageProfile(fighters: Record<SideId, ResolvedFighter>, activeEffects: ActiveEffect[]): StaticDamageProfile {
   const profile: StaticDamageProfile = {
@@ -90,21 +78,22 @@ export function assertStaticPassiveEffectDefinition(
 
   const duration = effect.duration;
   if (duration === undefined) return;
-  if (duration.turns !== undefined || duration.rounds !== undefined || duration.attacks !== undefined) {
+  if (duration.turns !== undefined || duration.attacks !== undefined) {
     throw new Error(`passive effect ${effect.type} must use battle duration at ${path}`);
   }
 }
 
 export function isStaticProfileBucket(bucket: string): bucket is StaticDamageBucket {
-  return (STATIC_BUCKET_SET as Set<string>).has(bucket);
+  return BUCKET_DEFINITIONS[bucket as StaticDamageBucket]?.phase === "static";
 }
 
 export function isPassiveBucket(bucket: string): bucket is StaticPassiveBucket {
-  return (STATIC_PASSIVE_BUCKET_SET as Set<string>).has(bucket);
+  const definition = BUCKET_DEFINITIONS[bucket as StaticPassiveBucket];
+  return definition?.phase === "static" && definition.family === "passive";
 }
 
 export function staticPassiveBucketRole(bucket: string): BucketRole | undefined {
-  return isPassiveBucket(bucket) ? STATIC_PASSIVE_BUCKET_ROLES[bucket] : undefined;
+  return isPassiveBucket(bucket) ? BUCKET_DEFINITIONS[bucket].role : undefined;
 }
 
 function buildSideEntries(fighter: ResolvedFighter, role: "offense" | "defense"): Record<UnitType, StaticDamageProfileEntry> {
@@ -130,7 +119,7 @@ function buildEntry(fighter: ResolvedFighter, unit: UnitType, role: "offense" | 
       { effectId: "input:defense", source: "input_stats", valuePct: bonuses.defense, bucket: "player.defense" }
     ]);
   }
-  return { factor: 1, buckets };
+  return { factor: 1, playerFactorsValid: true, buckets };
 }
 
 function applyStaticPassives(profile: StaticDamageProfile, activeEffects: ActiveEffect[]): void {
@@ -142,7 +131,7 @@ function applyStaticPassives(profile: StaticDamageProfile, activeEffects: Active
     const targetEntries = role === "attacker" ? profile.offense[effect.appliesTo.side] : profile.defense[effect.appliesTo.side];
     for (const unit of UNIT_TYPES) {
       if (!unitMaskHas(effect.appliesTo.units, unit)) continue;
-      const candidate: PassiveCandidate = { effect, bucket, valuePct: currentEffectValuePct(effect, 1) };
+      const candidate: PassiveCandidate = { effect, bucket, valuePct: effect.getCurrentValuePct(1) };
       if (effect.sameEffectStacking === "max" && effect.stackingKey) {
         const key = `${role}:${effect.appliesTo.side}:${unit}:${bucket}:${effect.stackingKey}`;
         const group = groups.get(key);
@@ -177,10 +166,18 @@ function addPassiveCandidate(entry: StaticDamageProfileEntry, candidate: Passive
 function recomputeFactors(profile: StaticDamageProfile): void {
   for (const side of ["attacker", "defender"] as SideId[]) {
     for (const unit of UNIT_TYPES) {
-      profile.offense[side][unit].factor = offenseFactor(profile.offense[side][unit]);
-      profile.defense[side][unit].factor = defenseFactor(profile.defense[side][unit]);
+      const offense = profile.offense[side][unit];
+      const defense = profile.defense[side][unit];
+      offense.factor = offenseFactor(offense);
+      defense.factor = defenseFactor(defense);
+      offense.playerFactorsValid = playerPctFactorValid(offense, "player.attack") && playerPctFactorValid(offense, "player.lethality");
+      defense.playerFactorsValid = playerPctFactorValid(defense, "player.health") && playerPctFactorValid(defense, "player.defense");
     }
   }
+}
+
+function playerPctFactorValid(entry: StaticDamageProfileEntry, bucket: StaticPlayerBucket): boolean {
+  return 1 + (entry.buckets[bucket]?.totalPct ?? 0) / 100 > 0;
 }
 
 interface StaticFactorTerm {
@@ -189,16 +186,13 @@ interface StaticFactorTerm {
   placement: BucketPlacement;
 }
 
-// The closed-pool aggregation is driven entirely by BUCKETS-tree metadata (role/valueType/
-// placement); there is no second hand-written damage equation. Iteration follows tree
-// insertion order, which fixes the numerator/denominator float association — do not reorder
-// the static families in the tree without re-validating the parity gate.
+// The closed-pool aggregation is driven entirely by static bucket metadata (role/valueType/
+// placement); there is no second hand-written damage equation. Array order fixes the
+// numerator/denominator floating-point association.
 const STATIC_FACTOR_TERMS_BY_ROLE: Record<BucketRole, StaticFactorTerm[]> = { attacker: [], defender: [] };
-for (const path of Object.keys(BUCKET_DEFINITIONS)) {
-  const definition = BUCKET_DEFINITIONS[path];
-  if (definition.phase !== "static") continue;
+for (const definition of STATIC_BUCKETS) {
   STATIC_FACTOR_TERMS_BY_ROLE[definition.role].push({
-    bucket: path as StaticDamageBucket,
+    bucket: definition.path,
     valueType: definition.valueType,
     placement: definition.placement
   });
@@ -260,18 +254,4 @@ function fallbackStats(): StatBlock {
 
 function emptyStats(): StatBlock {
   return { attack: 0, defense: 0, lethality: 0, health: 0 };
-}
-
-
-const STATIC_BUCKET_SET = new Set<string>([...STATIC_RAW_BUCKETS, ...STATIC_PLAYER_BUCKETS, ...STATIC_PASSIVE_BUCKETS]);
-const STATIC_PASSIVE_BUCKET_SET = new Set<string>(STATIC_PASSIVE_BUCKETS);
-
-// The typed manifest above is a convenience for literal types; the BUCKETS tree is the
-// authority for which buckets are static. Fail loudly if the two ever drift.
-{
-  const manifest = [...STATIC_BUCKET_SET].sort().join(",");
-  const tree = [...STATIC_BUCKETS].sort().join(",");
-  if (manifest !== tree) {
-    throw new Error(`static bucket manifest drifted from BUCKETS tree:\n  manifest=[${manifest}]\n  tree=[${tree}]`);
-  }
 }

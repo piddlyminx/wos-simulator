@@ -4,24 +4,39 @@ import type {
   AttackIntent,
   EffectDuration,
   EffectIntentDefinition,
+  EvolvingActiveEffect,
+  ResolvedEffectIntentDefinition,
   ResolvedSkill,
   ResolvedUnitScope,
   SameEffectStacking,
   SideId,
   UnitType
 } from "./types";
-import { ALL_UNIT_MASK, unitMask } from "./types";
+import { ALL_UNIT_MASK, unitMask, unitMaskHas } from "./types";
 import { normalizeUnitType } from "./normalize";
 
 export type Rng = () => number;
-type EffectDurationConstraint = NonNullable<EffectDuration["constraints"]>[number];
-
-interface CompiledTriggerSelectors {
-  source: ParsedTriggerSelector;
-  target: ParsedTriggerSelector;
+interface CompiledActivation {
+  idPrefix: string;
+  source: ActiveEffect["source"];
+  ownerSide: SideId;
+  kind: ActiveEffectKind;
+  initialValuePct: number;
+  getCurrentValuePct: ActiveEffect["getCurrentValuePct"];
+  valueEvolution?: EvolvingActiveEffect["valueEvolution"];
+  triggerDamageJobs: ActiveEffect["triggerDamageJobs"];
+  duration: EffectDuration;
+  turnDelay: number;
+  attackDelay: number;
+  stackingKey: string;
+  sameEffectStacking: SameEffectStacking;
+  staticAppliesTo: ResolvedUnitScope;
+  staticAppliesVs: ResolvedUnitScope;
+  intentScoped: boolean;
 }
 
-const TRIGGER_SELECTOR_CACHE = new WeakMap<ResolvedSkill, CompiledTriggerSelectors>();
+const ACTIVATION_CACHE = new WeakMap<EffectIntentDefinition, CompiledActivation>();
+const INTENT_SCOPED_VALUES = new Set(["trigger.source", "trigger", "trigger.target", "target"]);
 
 export function oppositeSide(side: SideId): SideId {
   return side === "attacker" ? "defender" : "attacker";
@@ -40,32 +55,47 @@ export function skillMatchesTrigger(
   if (trigger.every && triggerType === "round_start" && !crossedFrequency(round - 1, round, trigger.every, trigger.first)) return false;
   if (trigger.every && triggerType === "attack_declared" && intent && !crossedFrequency(intent.previousAttackCount, intent.projectedAttackCount, trigger.every, trigger.first)) return false;
   if (!intent) return true;
-  const selectors = compiledTriggerSelectors(skill);
+  const selectors = compiledTriggerForSkill(skill);
   return (
-    triggerSelectorMatches(selectors.source, skill.side, intent.attackerSide, intent.attackerUnit) &&
-    triggerSelectorMatches(selectors.target, skill.side, intent.defenderSide, intent.defenderUnit)
+    triggerScopeMatches(selectors.source, intent.attackerSide, intent.attackerUnit) &&
+    triggerScopeMatches(selectors.target, intent.defenderSide, intent.defenderUnit)
   );
 }
 
-function compiledTriggerSelectors(skill: ResolvedSkill): CompiledTriggerSelectors {
-  const cached = TRIGGER_SELECTOR_CACHE.get(skill);
-  if (cached) return cached;
+export function compiledTriggerForSkill(skill: ResolvedSkill): NonNullable<ResolvedSkill["compiledTrigger"]> {
+  const cached = skill.compiledTrigger;
+  if (cached && cached.definition === skill.trigger && cached.side === skill.side && cached.level === skill.level) return cached;
   const compiled = {
-    source: parseTriggerSelector(skill.trigger.source, "self"),
-    target: parseTriggerSelector(skill.trigger.target, "enemy")
+    definition: skill.trigger,
+    side: skill.side,
+    level: skill.level,
+    source: compileTriggerScope(skill, skill.trigger.source, "self"),
+    target: compileTriggerScope(skill, skill.trigger.target, "enemy"),
+    probabilityPct: resolvedProbabilityPct(skill)
   };
-  TRIGGER_SELECTOR_CACHE.set(skill, compiled);
+  skill.compiledTrigger = compiled;
   return compiled;
 }
 
-export function chancePasses(skill: ResolvedSkill, rng: Rng): boolean {
+function compileTriggerScope(skill: ResolvedSkill, value: unknown, defaultRelation: TriggerSelectorRelation): ResolvedUnitScope {
+  const selector = parseTriggerSelector(value, defaultRelation);
+  return {
+    side: sideForTriggerRelation(skill.side, selector.relation),
+    units: selector.units ? unitMask(selector.units) : ALL_UNIT_MASK
+  };
+}
+
+function resolvedProbabilityPct(skill: ResolvedSkill): number {
   const probability = skill.trigger.probability;
-  if (probability === undefined) return true;
-  const value = Array.isArray(probability) ? Number(probability[Math.max(0, Math.min(probability.length - 1, skill.level - 1))]) : Number(probability);
-  if (!Number.isFinite(value) || value <= 0) return false;
+  const value = Array.isArray(probability) ? Number(probability[Math.max(0, Math.min(probability.length - 1, skill.level - 1))]) : Number(probability ?? 100);
+  return Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : 0;
+}
+
+export function chancePasses(skill: ResolvedSkill, rng: Rng): boolean {
+  const value = compiledTriggerForSkill(skill).probabilityPct;
+  if (value <= 0) return false;
   if (value >= 100) return true;
-  const threshold = value / 100;
-  return rng() < threshold;
+  return rng() < value / 100;
 }
 
 export function createSeededRng(seed: string | number = "simulator-default"): Rng {
@@ -82,20 +112,22 @@ export function crossedFrequency(previous: number, current: number, frequency: n
   return Math.floor((previous - first) / frequency) < Math.floor((current - first) / frequency);
 }
 
-export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinition, round: number, attackIntent?: AttackIntent): ActiveEffect {
+function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDefinition): CompiledActivation {
+  const cached = ACTIVATION_CACHE.get(intent);
+  if (cached) return cached;
   const units = intent.units ?? {};
   const ownerSide = skill.side;
-  const appliesTo = resolveUnitScope(units.applies_to, ownerSide, "applies_to", attackIntent, ownerSide);
-  const appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent, ownerSide);
+  const staticAppliesTo = resolveUnitScope(units.applies_to, ownerSide, "applies_to", undefined, ownerSide);
+  const staticAppliesVs = resolveUnitScope(units.applies_vs, oppositeSide(staticAppliesTo.side), "applies_vs", undefined, ownerSide);
   const duration = normalizeDuration(intent.duration);
-  const delay = duration.delay ?? 0;
   const effectKind = kindForIntent(intent);
   if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
     throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
   }
   const sourceKey = skillActivationSourceKey(skill);
-  return {
-    id: `${skill.side}:${skill.sourceKind}:${sourceKey}:${skill.id}:${intent.id}:r${round}:${attackIntent?.id ?? "global"}`,
+  const evolution = intent.value_evolution;
+  const compiled: CompiledActivation = {
+    idPrefix: `${skill.side}:${skill.sourceKind}:${sourceKey}:${skill.id}:${intent.id}:r`,
     source: {
       kind: skill.sourceKind,
       side: skill.side,
@@ -106,20 +138,73 @@ export function activateEffect(skill: ResolvedSkill, intent: EffectIntentDefinit
       skillName: skill.name,
       effectId: intent.id
     },
-    intent,
     ownerSide,
     kind: effectKind,
-    valuePct: typeof intent.value === "number" ? intent.value : undefined,
+    initialValuePct: finiteNumberOrZero(intent.value),
+    getCurrentValuePct: evolution ? evolvingActiveEffectValuePct : constantActiveEffectValuePct,
+    valueEvolution: evolution ? { type: evolution.type, step: evolution.step, amount: finiteNumberOrZero(evolution.value) } : undefined,
+    triggerDamageJobs: effectKind === "extra_attack" ? intent.trigger_damage_jobs : undefined,
+    duration,
+    turnDelay: Math.max(0, duration.turns?.delay ?? 0),
+    attackDelay: duration.attacks?.delay ?? 0,
+    stackingKey: `${skill.side}:${skill.sourceKind}:${skillStackingSourceKey(skill)}:${skill.id}:${intent.id}`,
+    sameEffectStacking: normalizeSameEffectStacking(intent.same_effect_stacking),
+    staticAppliesTo,
+    staticAppliesVs,
+    intentScoped:
+      (typeof units.applies_to === "string" && INTENT_SCOPED_VALUES.has(units.applies_to)) ||
+      (typeof units.applies_vs === "string" && INTENT_SCOPED_VALUES.has(units.applies_vs))
+  };
+  ACTIVATION_CACHE.set(intent, compiled);
+  return compiled;
+}
+
+export function activateEffect(skill: ResolvedSkill, intent: ResolvedEffectIntentDefinition, round: number, attackIntent?: AttackIntent): ActiveEffect {
+  const compiled = compiledActivation(skill, intent);
+  let appliesTo = compiled.staticAppliesTo;
+  let appliesVs = compiled.staticAppliesVs;
+  if (compiled.intentScoped && attackIntent) {
+    const units = intent.units ?? {};
+    appliesTo = resolveUnitScope(units.applies_to, compiled.ownerSide, "applies_to", attackIntent, compiled.ownerSide);
+    appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent, compiled.ownerSide);
+  }
+  const effect: ActiveEffect = {
+    id: compiled.idPrefix + round + ":" + (attackIntent?.id ?? "global"),
+    expired: false,
+    source: compiled.source,
+    intent,
+    ownerSide: compiled.ownerSide,
+    kind: compiled.kind,
+    bucketIndex: -1,
+    initialValuePct: compiled.initialValuePct,
+    getCurrentValuePct: compiled.getCurrentValuePct,
     appliesTo,
     appliesVs,
-    triggerDamageJobs: effectKind === "extra_attack" ? intent.trigger_damage_jobs : undefined,
+    triggerDamageJobs: compiled.triggerDamageJobs,
     createdRound: round,
-    startRound: round + delay,
-    duration,
+    startRound: Math.max(1, round + compiled.turnDelay),
+    duration: compiled.duration,
+    remainingAttackDelay: compiled.attackDelay,
     uses: 0,
-    stackingKey: `${skill.side}:${skill.sourceKind}:${skillStackingSourceKey(skill)}:${skill.id}:${intent.id}`,
-    sameEffectStacking: normalizeSameEffectStacking(intent.same_effect_stacking)
+    stackingKey: compiled.stackingKey,
+    sameEffectStacking: compiled.sameEffectStacking,
+    damageIndexGroup: compiled.kind === "modifier"
+      ? intent.damageGroup ?? intent.damageGroupsByScopeKey?.[resolvedEffectScopeKey(appliesTo, appliesVs)]
+      : undefined,
+    damageIndexPosition: undefined
   };
+  if (!compiled.valueEvolution) return effect;
+  return { ...effect, valueEvolution: compiled.valueEvolution } as EvolvingActiveEffect;
+}
+
+// Flatten both resolved usage scopes into a compact preparation-time lookup key.
+// Unit masks occupy three bits, so the full key space is 2 * 8 * 2 * 8 = 256.
+export function resolvedEffectScopeKey(appliesTo: ResolvedUnitScope, appliesVs: ResolvedUnitScope): number {
+  return ((sideIndex(appliesTo.side) * 8 + appliesTo.units) * 2 + sideIndex(appliesVs.side)) * 8 + appliesVs.units;
+}
+
+function sideIndex(side: SideId): number {
+  return side === "attacker" ? 0 : 1;
 }
 
 function skillActivationSourceKey(skill: ResolvedSkill): string {
@@ -134,30 +219,56 @@ export function sourceLabel(effect: ActiveEffect): string {
   return [effect.source.heroName ?? effect.source.troopType ?? effect.source.kind, effect.source.skillId, effect.source.effectId].filter(Boolean).join("/");
 }
 
-export function isEffectActive(effect: ActiveEffect, round: number): boolean {
-  if (round < effect.startRound) return false;
-  return durationConstraints(effect.duration).every((constraint) => isDurationConstraintActive(effect, round, constraint));
-}
-
 export function hasAttackDurationConstraint(effect: ActiveEffect): boolean {
-  return durationConstraints(effect.duration).some((constraint) => constraint.type === "attack");
+  return effect.duration.attacks !== undefined;
 }
 
-export function currentEffectValuePct(effect: ActiveEffect, round: number): number {
-  const baseValue = Number(effect.valuePct ?? 0);
-  if (!Number.isFinite(baseValue)) return 0;
-  const evolution = effect.intent.value_evolution;
-  if (!evolution) return baseValue;
-  const firstActiveRound = Math.max(1, effect.startRound);
-  const stepCount = evolution.step === "attack" ? effect.uses : evolution.step === "round" || evolution.step === "turn" ? Math.max(0, round - firstActiveRound) : 0;
-  const amount = Number(evolution.value ?? 0);
-  if (!Number.isFinite(amount) || stepCount <= 0) return baseValue;
+export function effectAttackUseLimit(effect: ActiveEffect): number | undefined {
+  const count = effect.duration.attacks?.count;
+  return count === undefined ? undefined : Math.max(1, count);
+}
+
+export function effectRoundWindow(effect: ActiveEffect): { activationRound: number; expirationRound?: number } | undefined {
+  const turns = effect.duration.turns;
+  if (!turns) return undefined;
+  return {
+    activationRound: effect.startRound,
+    ...(turns.count === undefined ? {} : { expirationRound: effect.startRound + Math.max(1, turns.count) })
+  };
+}
+
+export function isEffectAttackReady(effect: ActiveEffect): boolean {
+  return effect.remainingAttackDelay <= 0;
+}
+
+// Returns true when the effect may apply to this eligible attack. The attack
+// that consumes the final delay does not also consume the first active use.
+export function advanceEffectAttackDelay(effect: ActiveEffect): boolean {
+  const remaining = effect.remainingAttackDelay;
+  if (remaining <= 0) return true;
+  effect.remainingAttackDelay = remaining - 1;
+  return false;
+}
+
+export function constantActiveEffectValuePct(this: ActiveEffect, _round: number): number {
+  return this.initialValuePct;
+}
+
+export function evolvingActiveEffectValuePct(this: EvolvingActiveEffect, round: number): number {
+  const firstActiveRound = Math.max(1, this.startRound);
+  const evolution = this.valueEvolution;
+  const stepCount = evolution.step === "attack" ? this.uses : evolution.step === "round" || evolution.step === "turn" ? Math.max(0, round - firstActiveRound) : 0;
+  if (stepCount <= 0) return this.initialValuePct;
   if (evolution.type === "pct_decay") {
-    const factor = Math.max(0, 1 - amount / 100);
-    return baseValue * factor ** stepCount;
+    const factor = Math.max(0, 1 - evolution.amount / 100);
+    return this.initialValuePct * factor ** stepCount;
   }
-  if (evolution.type === "fixed_decay") return Math.max(0, baseValue - stepCount * amount);
-  return baseValue;
+  if (evolution.type === "fixed_decay") return Math.max(0, this.initialValuePct - stepCount * evolution.amount);
+  return this.initialValuePct;
+}
+
+function finiteNumberOrZero(value: unknown): number {
+  return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
 export type TriggerSelectorRelation = "self" | "enemy";
@@ -183,9 +294,8 @@ export function sideForTriggerRelation(skillSide: SideId, relation: TriggerSelec
   return relation === "self" ? skillSide : oppositeSide(skillSide);
 }
 
-function triggerSelectorMatches(selector: ParsedTriggerSelector, skillSide: SideId, actualSide: SideId, actualUnit: UnitType): boolean {
-  if (sideForTriggerRelation(skillSide, selector.relation) !== actualSide) return false;
-  return selector.units === undefined || selector.units.includes(actualUnit);
+function triggerScopeMatches(scope: ResolvedUnitScope, actualSide: SideId, actualUnit: UnitType): boolean {
+  return scope.side === actualSide && unitMaskHas(scope.units, actualUnit);
 }
 
 export function normalizeEngagementType(value: unknown): string | undefined {
@@ -237,40 +347,15 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
 }
 
 function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {
-  if (!duration) return { type: "battle", value: 0 };
-  const namedConstraints = normalizeNamedDurationConstraints(duration);
-  if (namedConstraints.length > 0) return { type: "battle", value: 0, constraints: namedConstraints };
-  return { type: "battle", value: 0 };
-}
-
-function durationConstraints(duration: EffectDuration): EffectDurationConstraint[] {
-  return duration.constraints ?? [{ type: duration.type, count: duration.value }];
-}
-
-function isDurationConstraintActive(effect: ActiveEffect, round: number, constraint: EffectDurationConstraint): boolean {
-  const delay = Math.max(0, constraint.delay ?? 0);
-  if (constraint.type === "battle") return true;
-  if (constraint.type === "round") {
-    const startRound = effect.createdRound + delay;
-    if (round < startRound) return false;
-    if (constraint.count === undefined) return true;
-    return round < startRound + Math.max(1, constraint.count);
-  }
-  if (constraint.count === undefined) return true;
-  return effect.uses < delay + Math.max(1, constraint.count);
-}
-
-function normalizeNamedDurationConstraints(duration: NonNullable<EffectIntentDefinition["duration"]>): EffectDurationConstraint[] {
-  const constraints: EffectDurationConstraint[] = [];
-  const turns = duration.turns ?? duration.rounds;
-  if (turns) constraints.push(normalizeNamedDurationConstraint("round", turns));
-  if (duration.attacks) constraints.push(normalizeNamedDurationConstraint("attack", duration.attacks));
-  return constraints;
-}
-
-function normalizeNamedDurationConstraint(type: "round" | "attack", value: { count?: number; delay?: number }): EffectDurationConstraint {
+  if (!duration) return {};
   return {
-    type,
+    ...(duration.turns ? { turns: normalizeDurationAxis(duration.turns) } : {}),
+    ...(duration.attacks ? { attacks: normalizeDurationAxis(duration.attacks) } : {})
+  };
+}
+
+function normalizeDurationAxis(value: { count?: number; delay?: number }): { count?: number; delay?: number } {
+  return {
     ...(value.count === undefined ? {} : { count: Number(value.count) }),
     ...(value.delay === undefined ? {} : { delay: Number(value.delay) })
   };

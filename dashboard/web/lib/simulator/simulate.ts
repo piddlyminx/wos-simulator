@@ -1,5 +1,5 @@
 import { loadSimulatorConfig } from "@simulator/config";
-import { simulateBattle } from "@simulator/simulator";
+import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { AppliedEffect, AttackOutcome, BattleResult, SimulatorConfig, UnitType } from "@simulator/types";
 import type {
   SimulateApiResult,
@@ -59,8 +59,10 @@ export function runSimulationBatchDirect(
 ): SimulateBatchResult[] {
   const total = tasks.length;
   const progressEvery = Math.max(1, Math.floor(Math.max(1, total) / 20));
+  if (total === 0) return [];
+  const prepared = prepareBattle(toBattleInput(request, tasks[0].seed), config);
   return tasks.map((task, index) => {
-    const result = simulateBattle(toBattleInput(request, task.seed), config);
+    const result = runPrepared(prepared, task.seed);
     const done = index + 1;
     if (done % progressEvery === 0 || done === total) onProgress?.(done, total);
     return { ...task, result };
@@ -73,7 +75,7 @@ export function runSimulationTrace(
   options: RunSimulationOptions = {},
 ): SimulateTrace {
   const config = options.config ?? loadSimulatorConfig();
-  const result = simulateBattle(toBattleInput(request, seed), config, { mode: "trace" });
+  const result = runPrepared(prepareBattle(toBattleInput(request, seed), config), undefined, { mode: "trace" });
   options.onProgress?.(1, 1);
   return battleResultToTrace(result, seed, troopHeroGroupLabels(request));
 }

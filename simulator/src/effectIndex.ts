@@ -1,35 +1,56 @@
-import type { ActiveEffect, DamageJob, DamageKind, SideId, UnitType } from "./types";
+import type { ActiveEffect, ActiveEffectGroup, DamageJob, DamageKind, SideId, UnitType } from "./types";
 import { unitsFromMask } from "./types";
-import { bucketDefinition, type AtomicBucket } from "./damageBuckets";
-import { isStaticProfileBucket } from "./staticDamageProfile";
-
-export interface IndexedBucketEffect {
-  effect: ActiveEffect;
-  bucket: AtomicBucket;
-}
+import { ATOMIC_BUCKETS, bucketDefinition, type AtomicBucket } from "./damageBuckets";
 
 export interface EffectIndex {
-  all: ActiveEffect[];
-  damageByJobShape: Array<IndexedBucketEffect[] | undefined>;
+  // Prepared stable graph. Repeated synchronous runs reuse these group references and
+  // reset only their live activation arrays.
+  damageGroupsByJobShape: ActiveEffectGroup[][];
+  damageGroups: ActiveEffectGroup[];
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
   battleOrder: ActiveEffect[];
 }
 
-const DAMAGE_JOB_SHAPE_SLOTS = 2 * 2 * 3 * 2 * 3;
+export const DAMAGE_JOB_SHAPE_SLOTS = 2 * 2 * 3 * 2 * 3;
 
-export function createEffectIndex(): EffectIndex {
+export function createEffectIndex(
+  damageGroups: ActiveEffectGroup[] = [],
+  damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => [])
+): EffectIndex {
+  for (const group of damageGroups) group.effects.length = 0;
   return {
-    all: [],
-    damageByJobShape: Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }),
+    damageGroupsByJobShape,
+    damageGroups,
     controls: [],
     extraAttacks: [],
     battleOrder: []
   };
 }
 
+export function cloneEffectIndex(
+  index: EffectIndex,
+  preparedEffects: ActiveEffect[],
+  cloneEffect: (effect: ActiveEffect) => ActiveEffect
+): EffectIndex {
+  for (const group of index.damageGroups) group.effects.length = 0;
+  const clone: EffectIndex = {
+    damageGroupsByJobShape: index.damageGroupsByJobShape,
+    damageGroups: index.damageGroups,
+    controls: index.controls.map(cloneEffect),
+    extraAttacks: index.extraAttacks.map(cloneEffect),
+    battleOrder: index.battleOrder.map(cloneEffect)
+  };
+  for (const effect of preparedEffects) {
+    const group = effect.damageIndexGroup;
+    if (!group || effect.damageIndexPosition === undefined) continue;
+    effect.damageIndexPosition = group.effects.length;
+    group.effects.push(effect);
+  }
+  return clone;
+}
+
 export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
-  index.all.push(effect);
   if (effect.kind === "control") {
     index.controls.push(effect);
     return;
@@ -43,62 +64,32 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
     return;
   }
 
+  const group = effect.damageIndexGroup;
+  if (!group) throw new Error(`Runtime modifier ${effect.id} has no prepared damage group`);
+  effect.bucketIndex = group.bucketIndex;
+  effect.damageIndexPosition = group.effects.length;
+  group.effects.push(effect);
+}
+
+export function isRuntimeIndexableEffect(effect: ActiveEffect): boolean {
+  if (effect.kind === "control" || effect.kind === "extra_attack" || effect.kind === "battle_order") return true;
   const definition = bucketDefinition(effect.intent.type);
-  // Static-phase buckets (passive.*) are aggregated by the static damage profile, not the
-  // per-job runtime path, so they must not enter the damage job-shape index.
-  if (!definition || definition.valueType !== "pct" || definition.phase === "static") return;
-
-  const jobKinds: DamageKind[] = definition.appliesTo ? [definition.appliesTo] : ["normal", "skill"];
-  const appliesToUnits = unitsFromMask(effect.appliesTo.units);
-  const appliesVsUnits = unitsFromMask(effect.appliesVs.units);
-  for (const jobKind of jobKinds) {
-    for (const appliesToUnit of appliesToUnits) {
-      for (const appliesVsUnit of appliesVsUnits) {
-        const slot =
-          definition.role === "attacker"
-            ? damageJobShapeSlot(jobKind, effect.appliesTo.side, appliesToUnit, effect.appliesVs.side, appliesVsUnit)
-            : damageJobShapeSlot(jobKind, effect.appliesVs.side, appliesVsUnit, effect.appliesTo.side, appliesToUnit);
-        const arr = index.damageByJobShape[slot];
-        const candidate = { effect, bucket: definition.path };
-        if (arr) arr.push(candidate);
-        else index.damageByJobShape[slot] = [candidate];
-      }
-    }
-  }
+  return definition !== undefined && definition.valueType === "pct" && definition.phase !== "static";
 }
 
-export function pruneEffectIndex(index: EffectIndex, isActive: (effect: ActiveEffect) => boolean): void {
-  compactEffects(index.all, isActive);
-  compactEffects(index.controls, isActive);
-  compactEffects(index.extraAttacks, isActive);
-  compactEffects(index.battleOrder, isActive);
-  for (let slot = 0; slot < index.damageByJobShape.length; slot += 1) {
-    const arr = index.damageByJobShape[slot];
-    if (!arr) continue;
-    compactCandidates(arr, isActive);
-    if (arr.length === 0) index.damageByJobShape[slot] = undefined;
-  }
+export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): void {
+  effect.expired = true;
+  if (effect.kind === "control") removeStable(index.controls, effect);
+  else if (effect.kind === "extra_attack") removeStable(index.extraAttacks, effect);
+  else if (effect.kind === "battle_order") removeStable(index.battleOrder, effect);
+  else removeDamageEffect(effect);
 }
 
-export function removeStaticProfileBucketEffects(index: EffectIndex): void {
-  compactEffects(index.all, (effect) => !isStaticProfileEffect(effect));
-  for (let slot = 0; slot < index.damageByJobShape.length; slot += 1) {
-    const arr = index.damageByJobShape[slot];
-    if (!arr) continue;
-    let write = 0;
-    for (let read = 0; read < arr.length; read += 1) {
-      if (!isStaticProfileBucket(arr[read].bucket)) { arr[write] = arr[read]; write += 1; }
-    }
-    arr.length = write;
-    if (arr.length === 0) index.damageByJobShape[slot] = undefined;
-  }
+export function damageJobSlot(job: DamageJob): number {
+  return damageJobShapeSlot(job.kind, job.attackerSide, job.attackerUnit, job.defenderSide, job.defenderUnit);
 }
 
-export function bucketCandidatesForJob(index: EffectIndex, job: DamageJob): IndexedBucketEffect[] {
-  return index.damageByJobShape[damageJobShapeSlot(job.kind, job.attackerSide, job.attackerUnit, job.defenderSide, job.defenderUnit)] ?? [];
-}
-
-function damageJobShapeSlot(
+export function damageJobShapeSlot(
   jobKind: DamageKind,
   attackerSide: SideId,
   attackerUnit: UnitType,
@@ -106,6 +97,50 @@ function damageJobShapeSlot(
   defenderUnit: UnitType
 ): number {
   return (((kindIndex(jobKind) * 2 + sideIndex(attackerSide)) * 3 + unitIndex(attackerUnit)) * 2 + sideIndex(defenderSide)) * 3 + unitIndex(defenderUnit);
+}
+
+const JOB_SHAPE_CACHE = new Map<number, Uint8Array>();
+const BUCKET_INDEX = new Map<string, number>(ATOMIC_BUCKETS.map((bucket, index) => [bucket, index]));
+
+export function damageBucketIndex(bucket: AtomicBucket): number {
+  return BUCKET_INDEX.get(bucket) ?? -1;
+}
+
+export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?: AtomicBucket): Uint8Array {
+  const runtimeDefinition = bucketOverride === undefined ? bucketDefinition(effect.intent.type) : undefined;
+  if (!bucketOverride && (!runtimeDefinition || runtimeDefinition.valueType !== "pct" || runtimeDefinition.phase === "static")) {
+    return EMPTY_JOB_SHAPE_SLOTS;
+  }
+  const bucket = (bucketOverride ?? runtimeDefinition?.path) as AtomicBucket | undefined;
+  if (!bucket) return EMPTY_JOB_SHAPE_SLOTS;
+  const key =
+    ((((BUCKET_INDEX.get(bucket) ?? 0) * 2 + sideIndex(effect.appliesTo.side)) * 8 + (effect.appliesTo.units & 7)) * 2 + sideIndex(effect.appliesVs.side)) * 8 +
+    (effect.appliesVs.units & 7);
+  const cached = JOB_SHAPE_CACHE.get(key);
+  if (cached) return cached;
+  const slots = buildShapeSlots(effect, bucket);
+  JOB_SHAPE_CACHE.set(key, slots);
+  return slots;
+}
+
+const EMPTY_JOB_SHAPE_SLOTS = new Uint8Array();
+
+function buildShapeSlots(effect: ActiveEffect, bucket: AtomicBucket): Uint8Array {
+  const definition = bucketDefinition(bucket)!;
+  const slots: number[] = [];
+  const jobKinds: DamageKind[] = definition.appliesTo ? [definition.appliesTo] : ["normal", "skill"];
+  for (const jobKind of jobKinds) {
+    for (const appliesToUnit of unitsFromMask(effect.appliesTo.units)) {
+      for (const appliesVsUnit of unitsFromMask(effect.appliesVs.units)) {
+        slots.push(
+          definition.role === "attacker"
+            ? damageJobShapeSlot(jobKind, effect.appliesTo.side, appliesToUnit, effect.appliesVs.side, appliesVsUnit)
+            : damageJobShapeSlot(jobKind, effect.appliesVs.side, appliesVsUnit, effect.appliesTo.side, appliesToUnit)
+        );
+      }
+    }
+  }
+  return Uint8Array.from(slots);
 }
 
 function kindIndex(kind: DamageKind): number { return kind === "normal" ? 0 : 1; }
@@ -116,29 +151,22 @@ function unitIndex(unit: UnitType): number {
   return 2;
 }
 
-function isStaticProfileEffect(effect: ActiveEffect): boolean {
-  const definition = bucketDefinition(effect.intent.type);
-  return isStaticProfileBucket(effect.intent.type) || (definition !== undefined && isStaticProfileBucket(definition.path));
+function removeStable(effects: ActiveEffect[], effect: ActiveEffect): void {
+  const index = effects.indexOf(effect);
+  if (index >= 0) effects.splice(index, 1);
 }
 
-function compactEffects(effects: ActiveEffect[], isActive: (effect: ActiveEffect) => boolean): void {
-  let write = 0;
-  for (let read = 0; read < effects.length; read += 1) {
-    const effect = effects[read];
-    if (!isActive(effect)) continue;
-    effects[write] = effect;
-    write += 1;
+function removeDamageEffect(effect: ActiveEffect): void {
+  const group = effect.damageIndexGroup;
+  const position = effect.damageIndexPosition;
+  if (!group || position === undefined) return;
+  const lastPosition = group.effects.length - 1;
+  const moved = group.effects[lastPosition];
+  if (position !== lastPosition) {
+    group.effects[position] = moved;
+    moved.damageIndexPosition = position;
   }
-  effects.length = write;
-}
-
-function compactCandidates(candidates: IndexedBucketEffect[], isActive: (effect: ActiveEffect) => boolean): void {
-  let write = 0;
-  for (let read = 0; read < candidates.length; read += 1) {
-    const candidate = candidates[read];
-    if (!isActive(candidate.effect)) continue;
-    candidates[write] = candidate;
-    write += 1;
-  }
-  candidates.length = write;
+  group.effects.pop();
+  effect.damageIndexGroup = undefined;
+  effect.damageIndexPosition = undefined;
 }

@@ -1,5 +1,5 @@
 import { loadSimulatorConfig } from "@simulator/config";
-import { simulateBattle } from "@simulator/simulator";
+import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { FighterInput, SimulatorConfig } from "@simulator/types";
 import type { SimulateSidePayload } from "@/lib/simulate-run";
 import { toBattleInput } from "./adapters";
@@ -328,17 +328,18 @@ export function runPair(
   rallyMode = false,
 ): number {
   let wins = 0;
+  const prepared = prepareBattle(
+    {
+      attacker: attFighter,
+      defender: defFighter,
+      seed: `${seedBase}:0`,
+      maxRounds: 1500,
+      ...(rallyMode ? { engagement_type: "rally" as const } : {}),
+    },
+    config,
+  );
   for (let r = 0; r < replicates; r++) {
-    const result = simulateBattle(
-      {
-        attacker: attFighter,
-        defender: defFighter,
-        seed: `${seedBase}:${r}`,
-        maxRounds: 1500,
-        ...(rallyMode ? { engagement_type: "rally" } : {}),
-      },
-      config,
-    );
+    const result = runPrepared(prepared, `${seedBase}:${r}`);
     const attLeft = Object.values(result.remaining.attacker).reduce((s, v) => s + v, 0);
     const defLeft = Object.values(result.remaining.defender).reduce((s, v) => s + v, 0);
     if (attLeft > defLeft) wins++;

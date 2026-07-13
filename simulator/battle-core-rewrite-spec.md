@@ -416,7 +416,8 @@ interface BattleResult {
   trace?: BattleTrace;
 }
 
-function simulateBattle(input: BattleInput, config: SimulatorConfig): BattleResult;
+function prepareBattle(input: BattleInput, config: SimulatorConfig): CompiledBattle;
+function runPrepared(compiled: CompiledBattle, seed?: string | number, options?: SimulationOptions): BattleResult;
 ```
 
 The simulator result should expose enough information for acceptance checks:

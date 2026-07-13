@@ -1,7 +1,7 @@
 import type { ActiveEffect, DamageJob, SideId, UnitType } from "./types";
 import { unitMaskHas } from "./types";
-import { bucketDefinition, type BucketName } from "./damageBuckets";
-import { staticPassiveBucketRole, type StaticPassiveBucket } from "./staticDamageProfile";
+import { bucketDefinition, type BucketName, type StaticPassiveBucket } from "./damageBuckets";
+import { staticPassiveBucketRole } from "./staticDamageProfile";
 
 export interface Classification {
   kind: "bucket" | "control" | "extra_skill_attack" | "battle_order" | "report_only";
@@ -30,9 +30,10 @@ export function classifyEffectForJob(effect: ActiveEffect, job: DamageJob): Clas
     return { kind: "report_only", reason: unsupportedReason(effect, job) };
   }
   if (!definition) return { kind: "report_only", reason: unsupportedReason(effect, job) };
+  if (definition.phase !== "dynamic") return { kind: "report_only", reason: unsupportedReason(effect, job) };
   if (definition.appliesTo !== undefined && definition.appliesTo !== job.kind) return { kind: "report_only", reason: "not_applicable_to_job_kind" };
-  if (definition.role === "attacker" && effect.appliesTo.side === job.attackerSide) return { kind: "bucket", bucket: type };
-  if (definition.role === "defender" && effect.appliesTo.side === job.defenderSide) return { kind: "bucket", bucket: type };
+  if (definition.role === "attacker" && effect.appliesTo.side === job.attackerSide) return { kind: "bucket", bucket: definition.path };
+  if (definition.role === "defender" && effect.appliesTo.side === job.defenderSide) return { kind: "bucket", bucket: definition.path };
   return { kind: "report_only", reason: unsupportedReason(effect, job) };
 }
 

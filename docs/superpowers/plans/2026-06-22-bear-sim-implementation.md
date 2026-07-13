@@ -133,7 +133,7 @@ function bearScore(attacks: AttackOutcome[]): number {
 Add export in `simulator/src/index.ts`:
 
 ```ts
-export { simulateBattle, simulateBearBattle, bearFighterInput, prepareBattle, runPrepared, signedRemainingScore } from "./simulator";
+export { simulateBearBattle, bearFighterInput, prepareBattle, runPrepared, signedRemainingScore } from "./simulator";
 ```
 
 - [ ] **Step 4: Change the loop to support bear score semantics**

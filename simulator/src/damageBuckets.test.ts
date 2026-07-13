@@ -14,7 +14,7 @@ test("active hero and troop damage aliases are supported all-damage buckets", ()
     "active.troop.damage.down",
     "active.troop.damageTaken.up",
     "active.troop.damageTaken.down"
-  ]) {
+  ] as const) {
     assert.equal(ATOMIC_BUCKETS.includes(bucket), true, bucket);
     assert.equal(bucketDefinition(bucket)?.appliesTo, undefined, bucket);
   }

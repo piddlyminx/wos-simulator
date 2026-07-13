@@ -9,7 +9,7 @@ import {
   sampleStats
 } from "./calibration";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
-import { simulateBattle, prepareBattle, runPrepared } from "./simulator";
+import { prepareBattle, runPrepared } from "./simulator";
 import { DamageAggregationError } from "./damage";
 import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, StatBlock, UnitType } from "./types";
 
@@ -496,8 +496,10 @@ function interpolatedZeroAdjustment(low: { value: number; bias: number }, high: 
 
 function simulateAdjustedDistribution(input: BattleInput, job: TestcaseExecutionJob, config: SimulatorConfig): SampleStats {
   const samples: number[] = [];
+  const compiled = prepareBattle(input, config);
   for (let iteration = 0; iteration < job.repeat; iteration += 1) {
-    const result = simulateBattle(sampleInput(input, job.seed, job.file, job.testcaseId, job.index, iteration), config, { mode: "fast" });
+    const seed = sampleSeed(job.seed ?? input.seed, job.file, job.testcaseId, job.index, iteration);
+    const result = runPrepared(compiled, seed, { mode: "fast" });
     const score = battleScoreDelta(result);
     if (score !== undefined) samples.push(score);
   }
@@ -800,10 +802,6 @@ function totalSide(troops: Record<UnitType, number>): number {
 
 function sampleSeed(baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): string {
   return `${baseSeed ?? "simulator-default"}:${relative(process.cwd(), file)}:${testcaseId}:${index}:${iteration}`;
-}
-
-function sampleInput(input: BattleInput, baseSeed: string | number | undefined, file: string, testcaseId: string, index: number, iteration: number): BattleInput {
-  return { ...input, seed: sampleSeed(baseSeed ?? input.seed, file, testcaseId, index, iteration) };
 }
 
 function snapshotKey(filePath: string, index: number): string {

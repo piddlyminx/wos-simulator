@@ -74,11 +74,14 @@ export interface TroopStatsRecord {
 export type TroopStatsCatalogue = Record<string, TroopStatsRecord>;
 export type HeroGenerationStatsCatalogue = Record<string, Partial<StatBlock>>;
 
-export interface EffectDuration {
-  type: "battle" | "round" | "attack";
-  value: number;
+export interface EffectDurationAxis {
+  count?: number;
   delay?: number;
-  constraints?: Array<{ type: "battle" | "round" | "attack"; count?: number; delay?: number }>;
+}
+
+export interface EffectDuration {
+  turns?: EffectDurationAxis;
+  attacks?: EffectDurationAxis;
 }
 
 export interface EffectIntentDefinition {
@@ -88,13 +91,19 @@ export interface EffectIntentDefinition {
   value_evolution?: { type?: string; step?: string; value?: number };
   units?: Record<string, unknown>;
   trigger_damage_jobs?: TriggerDamageJobDefinition[];
-  duration?: {
-    turns?: { count?: number; delay?: number };
-    rounds?: { count?: number; delay?: number };
-    attacks?: { count?: number; delay?: number };
-  };
+  duration?: EffectDuration;
   same_effect_stacking?: SameEffectStacking;
   reason?: string;
+}
+
+export interface ResolvedEffectIntentDefinition extends EffectIntentDefinition {
+  // Canonical config object retained across per-instance/level resolution. Duplicate
+  // main/joiner copies use this identity to share prepared activation groups.
+  sourceDefinition: Omit<EffectIntentDefinition, "id">;
+  // Fixed-scope effects take the direct group fast path. Dynamically resolved scopes
+  // use the compact scope-key table populated during battle preparation.
+  damageGroup?: ActiveEffectGroup;
+  damageGroupsByScopeKey?: Array<ActiveEffectGroup | undefined>;
 }
 
 export interface TriggerDefinition {
@@ -204,7 +213,15 @@ export interface ResolvedSkill {
   troopType?: UnitType;
   level: number;
   trigger: TriggerDefinition;
-  effects: EffectIntentDefinition[];
+  effects: ResolvedEffectIntentDefinition[];
+  compiledTrigger?: {
+    definition: TriggerDefinition;
+    side: SideId;
+    level: number;
+    source: ResolvedUnitScope;
+    target: ResolvedUnitScope;
+    probabilityPct: number;
+  };
 }
 
 export interface ResolvedHero {
@@ -240,13 +257,27 @@ export interface EffectSource {
   effectId?: string;
 }
 
+// Runtime damage modifiers with the same definition and resolved unit scopes share one
+// stable group in the job-shape index. Each activation records its dense position so
+// expiry can swap-remove it once, irrespective of how many job shapes reference the group.
+export interface ActiveEffectGroup {
+  effects: ActiveEffect[];
+  bucketIndex: number;
+  sameEffectStacking: SameEffectStacking;
+}
+
 export interface ActiveEffect {
   id: string;
+  expired?: boolean;
   source: EffectSource;
   intent: EffectIntentDefinition;
   ownerSide: SideId;
   kind: ActiveEffectKind;
-  valuePct?: number;
+  // Numeric slot in the runtime damage scratch. Dynamic modifiers receive it
+  // when indexed; non-damage effects keep -1.
+  bucketIndex: number;
+  initialValuePct: number;
+  getCurrentValuePct(round: number): number;
   // Resolved ActiveEffect usage gates. Native applies_vs config accepts "any",
   // trigger-relative selectors, or concrete unit selectors; it does not accept "all".
   appliesTo: ResolvedUnitScope;
@@ -255,6 +286,9 @@ export interface ActiveEffect {
   createdRound: number;
   startRound: number;
   duration: EffectDuration;
+  // Eligible attacks remaining before an attacks.delay effect can apply. This is
+  // runtime state resolved from config, separate from `uses` after activation.
+  remainingAttackDelay: number;
   // Times this instance affected battle mechanics (damage bucket applied, control fired,
   // attack ordered, extra attack spawned). Attack duration constraints and step:"attack"
   // value evolution read it; cancelled attacks still charge attack-constrained effects
@@ -262,6 +296,16 @@ export interface ActiveEffect {
   uses: number;
   stackingKey?: string;
   sameEffectStacking: SameEffectStacking;
+  damageIndexGroup?: ActiveEffectGroup;
+  damageIndexPosition?: number;
+}
+
+export interface EvolvingActiveEffect extends ActiveEffect {
+  valueEvolution: {
+    type?: string;
+    step?: string;
+    amount: number;
+  };
 }
 
 export interface AttackIntent {

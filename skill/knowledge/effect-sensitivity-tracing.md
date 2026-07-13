@@ -18,7 +18,7 @@ The current TypeScript simulator already has trace mode. Use it before adding ne
 Run options:
 
 ```ts
-simulateBattle(input, config, { mode: "trace" })
+const compiled = prepareBattle(input, config)
 runPrepared(compiled, seed, { mode: "trace" })
 ```
 

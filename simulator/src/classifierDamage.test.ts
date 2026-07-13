@@ -3,10 +3,10 @@ import { test } from "node:test";
 
 import { classifyEffectForJob } from "./classifier";
 import { calculateDamageJob } from "./damage";
-import { ATOMIC_BUCKETS } from "./damageBuckets";
-import { createEffectIndex, indexEffect, removeStaticProfileBucketEffects } from "./effectIndex";
-import { activateEffect } from "./effects";
-import { buildStaticDamageProfile, STATIC_PASSIVE_BUCKETS } from "./staticDamageProfile";
+import { ATOMIC_BUCKETS, STATIC_PASSIVE_BUCKETS } from "./damageBuckets";
+import { createEffectIndex, damageShapeSlotsForEffect, indexEffect } from "./effectIndex";
+import { activateEffect, evolvingActiveEffectValuePct, resolvedEffectScopeKey } from "./effects";
+import { buildStaticDamageProfile } from "./staticDamageProfile";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types";
 import { ALL_UNIT_MASK, unitMask } from "./types";
 
@@ -33,12 +33,15 @@ test("resolved effect scope matches concrete side and unit masks", () => {
     intent: { id: "scope/1", type: "active.hero.lethality.up", value: 25 },
     ownerSide: "attacker",
     kind: "modifier",
-    valuePct: 25,
+    bucketIndex: -1,
+    initialValuePct: 25,
+    getCurrentValuePct() { return this.initialValuePct; },
     appliesTo: { side: "attacker", units: unitMask(["infantry"]) },
     appliesVs: { side: "defender", units: unitMask(["lancer"]) },
     createdRound: 1,
     startRound: 1,
-    duration: { type: "battle", value: 0 },
+    duration: {},
+    remainingAttackDelay: 0,
     uses: 0,
     sameEffectStacking: "add"
   };
@@ -78,12 +81,15 @@ function effect(
     intent: { id: `${type}/1`, type, value: [valuePct] },
     ownerSide,
     kind: "modifier",
-    valuePct,
+    bucketIndex: -1,
+    initialValuePct: valuePct,
+    getCurrentValuePct() { return this.initialValuePct; },
     appliesTo: { side: ownerSide, units: ALL_UNIT_MASK },
     appliesVs: { side: ownerSide === "attacker" ? "defender" : "attacker", units: ALL_UNIT_MASK },
     createdRound: 1,
     startRound: 1,
-    duration: { type: "battle", value: 0 },
+    duration: {},
+    remainingAttackDelay: 0,
     uses: 0,
     sameEffectStacking: "add"
   };
@@ -95,15 +101,40 @@ function calculateIndexedDamageJob(
   effects: ActiveEffect[],
   options: Partial<Parameters<typeof calculateDamageJob>[3]> = {}
 ) {
-  const effectIndex = options.effectIndex ?? createEffectIndex();
+  const effectIndex = options.effectIndex ?? preparedEffectIndex(effects);
   if (!options.effectIndex) {
-    for (const activeEffect of effects) indexEffect(effectIndex, activeEffect);
+    for (const activeEffect of effects) {
+      if (activeEffect.damageIndexGroup) indexEffect(effectIndex, activeEffect);
+    }
   }
   const staticDamageProfile = options.staticDamageProfile ?? buildStaticDamageProfile(fighters, effects);
-  removeStaticProfileBucketEffects(effectIndex);
-  const usedEffects = options.usedEffects ?? new Set<ActiveEffect>();
+  const usedEffects = options.usedEffects ?? [];
   const result = calculateDamageJob(damageJob, fighters, effects, { ...options, effectIndex, staticDamageProfile, usedEffects });
   return { ...result, usedEffectIds: [...usedEffects].map((usedEffect) => usedEffect.id) };
+}
+
+function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectIndex> {
+  const groups: NonNullable<ActiveEffect["damageIndexGroup"]>[] = [];
+  const byShape: NonNullable<ActiveEffect["damageIndexGroup"]>[][] = Array.from({ length: 72 }, () => []);
+  const byResolvedGroup = new Map<string, NonNullable<ActiveEffect["damageIndexGroup"]>>();
+  for (const activeEffect of effects) {
+    const slots = damageShapeSlotsForEffect(activeEffect);
+    if (slots.length === 0) continue;
+    const key = `${activeEffect.stackingKey ?? activeEffect.id}:${resolvedEffectScopeKey(activeEffect.appliesTo, activeEffect.appliesVs)}`;
+    let group = byResolvedGroup.get(key);
+    if (!group) {
+      group = {
+        effects: [],
+        bucketIndex: ATOMIC_BUCKETS.indexOf(activeEffect.intent.type as never),
+        sameEffectStacking: activeEffect.sameEffectStacking
+      };
+      byResolvedGroup.set(key, group);
+      groups.push(group);
+      for (const slot of slots) byShape[slot].push(group);
+    }
+    activeEffect.damageIndexGroup = group;
+  }
+  return createEffectIndex(groups, byShape);
 }
 
 test("classifier routes up/down effects into neutral atomic buckets", () => {
@@ -121,7 +152,7 @@ test("classifier keeps hero and troop active effects in separate atomic buckets"
 });
 
 test("classifier routes the complete native bucket policy into atomic buckets", () => {
-  const atomicBuckets = new Set(ATOMIC_BUCKETS);
+  const atomicBuckets = new Set<string>(ATOMIC_BUCKETS);
   const expected = new Map([
     ["active.hero.lethality.up", "active.hero.lethality.up"],
     ["active.hero.lethality.down", "active.hero.lethality.down"],
@@ -272,7 +303,7 @@ test("active stat-up effects multiply separately from player stat bonuses", () =
 
 test("traced damage uses the effect index for applied bucket candidates", () => {
   const indexedEffect = effect("active.hero.attack.up", "attacker", 100);
-  const index = createEffectIndex();
+  const index = preparedEffectIndex([indexedEffect]);
   indexEffect(index, indexedEffect);
 
   const baseline = calculateIndexedDamageJob(job, simpleFighters(), [], { trace: true });
@@ -418,7 +449,7 @@ test("attack-duration bucket effects are charged by the applicable attack job", 
   const oneAttackEffect = {
     ...effect("active.hero.attack.up", "attacker", 100),
     id: "attack-up-active",
-    duration: { type: "attack" as const, value: 1 }
+    duration: { attacks: { count: 1 } }
   };
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [oneAttackEffect], { trace: true });
@@ -432,7 +463,7 @@ test("turn-duration bucket effects are charged and visible on the attack outcome
     ...effect("active.hero.defense.down", "defender", 30),
     id: "bad-luck-like",
     source: { ...effect("active.hero.defense.down", "defender", 30).source, effectId: "BadLuckStreak/1" },
-    duration: { type: "round" as const, value: 1 }
+    duration: { turns: { count: 1 } }
   };
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [turnEffect], { trace: true });
@@ -456,7 +487,7 @@ test("effects are only charged when they participate in the calculation", () => 
   const defenderOutgoingBuff = {
     ...effect("active.hero.lethality.up", "defender", 100),
     id: "defender-outgoing-buff",
-    duration: { type: "attack" as const, value: 1 }
+    duration: { attacks: { count: 1 } }
   };
 
   const outcome = calculateIndexedDamageJob(job, simpleFighters(), [defenderOutgoingBuff], { trace: true });
@@ -475,7 +506,9 @@ test("pct attack value evolution uses the effect use count for the current bucke
       value: 100,
       value_evolution: { type: "pct_decay", step: "attack", value: 15 }
     },
-    duration: { type: "attack" as const, value: 10 },
+    duration: { attacks: { count: 10 } },
+    valueEvolution: { type: "pct_decay", step: "attack", amount: 15 },
+    getCurrentValuePct: evolvingActiveEffectValuePct,
     uses: 2
   };
 
@@ -499,7 +532,9 @@ test("pct turn value evolution starts decaying after the first active turn", () 
     },
     createdRound: 0,
     startRound: 0,
-    duration: { type: "attack" as const, value: 10 }
+    valueEvolution: { type: "pct_decay", step: "turn", amount: 15 },
+    getCurrentValuePct: evolvingActiveEffectValuePct,
+    duration: { attacks: { count: 10 } }
   };
 
   const firstTurn = calculateIndexedDamageJob({ ...job, round: 1 }, simpleFighters(), [turnDecayAttackUp], { trace: true });
@@ -513,7 +548,7 @@ test("max-stacked attack-duration effects charge the whole eligible group and ou
   const weaker = {
     ...effect("active.hero.lethality.up", "attacker", 50),
     id: "max-weaker",
-    duration: { type: "attack" as const, value: 3 },
+    duration: { attacks: { count: 3 } },
     stackingKey: "same-max-group",
     sameEffectStacking: "max" as const
   };
@@ -526,7 +561,9 @@ test("max-stacked attack-duration effects charge the whole eligible group and ou
       value: 100,
       value_evolution: { type: "pct_decay", step: "attack", value: 50 }
     },
-    duration: { type: "attack" as const, value: 3 },
+    duration: { attacks: { count: 3 } },
+    valueEvolution: { type: "pct_decay", step: "attack", amount: 50 },
+    getCurrentValuePct: evolvingActiveEffectValuePct,
     uses: 1,
     stackingKey: "same-max-group",
     sameEffectStacking: "max" as const
@@ -537,6 +574,31 @@ test("max-stacked attack-duration effects charge the whole eligible group and ou
   assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 50);
   assert.equal(outcome.trace?.atomicBuckets["active.hero.lethality.up"].contributors.length, 1);
   assert.deepEqual(new Set(outcome.usedEffectIds), new Set(["max-weaker", "max-stronger-decayed"]));
+});
+
+test("max-stacked activations with disjoint resolved unit scopes apply independently", () => {
+  const infantry = {
+    ...effect("active.hero.lethality.up", "attacker", 40),
+    id: "max-infantry",
+    appliesTo: { side: "attacker" as const, units: unitMask("infantry") },
+    stackingKey: "same-resolved-effect",
+    sameEffectStacking: "max" as const
+  };
+  const lancer = {
+    ...effect("active.hero.lethality.up", "attacker", 70),
+    id: "max-lancer",
+    appliesTo: { side: "attacker" as const, units: unitMask("lancer") },
+    stackingKey: "same-resolved-effect",
+    sameEffectStacking: "max" as const
+  };
+  const fighters = simpleFighters();
+  const infantryOutcome = calculateIndexedDamageJob(job, fighters, [infantry, lancer], { trace: true });
+  const lancerOutcome = calculateIndexedDamageJob({ ...job, id: "lancer-job", attackerUnit: "lancer" }, fighters, [infantry, lancer], { trace: true });
+
+  assert.equal(infantryOutcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 40);
+  assert.deepEqual(infantryOutcome.usedEffectIds, ["max-infantry"]);
+  assert.equal(lancerOutcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 70);
+  assert.deepEqual(lancerOutcome.usedEffectIds, ["max-lancer"]);
 });
 
 test('applies_vs "trigger.source" resolves to the trigger source when gating a concrete target', () => {
@@ -555,6 +617,7 @@ test('applies_vs "trigger.source" resolves to the trigger source when gating a c
       id: "targeted-defense",
       type: "active.hero.defense.up",
       value: 50,
+      sourceDefinition: { type: "active.hero.defense.up" },
       units: { applies_to: "trigger.target", applies_vs: "trigger.source" }
     },
     1,
@@ -595,6 +658,7 @@ test('applies_vs "target" resolves to the trigger target', () => {
       id: "targeted-offense",
       type: "active.hero.lethality.up",
       value: 50,
+      sourceDefinition: { type: "active.hero.lethality.up" },
       units: { applies_to: "trigger.source", applies_vs: "target" }
     },
     1,
@@ -634,6 +698,7 @@ test('applies_vs "target" still resolves to the trigger target for defensive eff
       id: "targeted-defense",
       type: "active.hero.defense.up",
       value: 50,
+      sourceDefinition: { type: "active.hero.defense.up" },
       units: { applies_to: "trigger.target", applies_vs: "target" }
     },
     1,

@@ -13,7 +13,7 @@ Use this index to choose the smallest useful reading set before changing the Typ
 
 ## Current Simulator Map
 
-- Public API: `simulator/src/index.ts` exports `loadSimulatorConfig`, `BattleInputBuilder`, `simulateBattle`, `prepareBattle`, `runPrepared`, and bear helpers.
+- Public API: `simulator/src/index.ts` exports `loadSimulatorConfig`, `BattleInputBuilder`, `prepareBattle`, `runPrepared`, and bear helpers. Prepare once and reuse the compiled battle across seeded runs.
 - Inputs: `BattleInput` contains `attacker`, `defender`, optional `seed`, `maxRounds`, and `engagement_type`; each `FighterInput` contains troop-id counts, unit-keyed stat bonuses, optional `passive`, `heroes`, and `joiner_heroes`.
 - Resolution: `resolveFighter` converts troop ids and hero levels into `ResolvedFighter`, `ResolvedSkill`, troop skills, diagnostics, and unit aggregates.
 - Effects: skill files define `trigger` plus native bucket effects, `extra_skill_attack`, `dodge`, `no_attack`, or `attack_order`; runtime effects become `ActiveEffect`.

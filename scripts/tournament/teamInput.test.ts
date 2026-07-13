@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { loadSimulatorConfig } from "../../simulator/src/config";
-import { simulateBattle } from "../../simulator/src/simulator";
+import { prepareBattle, runPrepared } from "../../simulator/src/simulator";
 import { applyHeroGenerationStats } from "../../simulator/src/resolve";
 import { teamToBattleInput, teamToFighterInput } from "./teamInput";
 import type { HeroInputEntry } from "../../simulator/src/types";
@@ -57,7 +57,8 @@ test("teamToBattleInput applies supplied player stats (plus baked generation sta
 
 test("teamToBattleInput activates rally attacker and garrison defender widgets", () => {
   const config = loadSimulatorConfig();
-  const result = simulateBattle({ ...teamToBattleInput(sampleTeam, sampleTeam, 123, config), maxRounds: 0 }, config);
+  const input = { ...teamToBattleInput(sampleTeam, sampleTeam, 123, config), maxRounds: 0 };
+  const result = runPrepared(prepareBattle(input, config));
 
   assert.equal(result.skillReport.attacker.some((entry) => entry.skillId === "PrecisionDrive"), true);
   assert.equal(result.skillReport.defender.some((entry) => entry.skillId === "SiegeInsight"), true);
