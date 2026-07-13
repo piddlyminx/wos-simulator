@@ -7,6 +7,7 @@ import { ATOMIC_BUCKETS, STATIC_PASSIVE_BUCKETS } from "./damageBuckets";
 import { createEffectIndex, damageShapeSlotsForEffect, indexEffect } from "./effectIndex";
 import { activateEffect, evolvingActiveEffectValuePct, resolvedEffectScopeKey } from "./effects";
 import { buildStaticDamageProfile } from "./staticDamageProfile";
+import { createRecorder, type BattleRecorder } from "./recorder";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types";
 import { ALL_UNIT_MASK, unitMask } from "./types";
 
@@ -99,7 +100,7 @@ function calculateIndexedDamageJob(
   damageJob: DamageJob,
   fighters: Record<"attacker" | "defender", ResolvedFighter>,
   effects: ActiveEffect[],
-  options: Partial<Parameters<typeof calculateDamageJob>[3]> = {}
+  options: Omit<Partial<Parameters<typeof calculateDamageJob>[3]>, "recorder"> & { recorder?: BattleRecorder; trace?: boolean } = {}
 ) {
   const effectIndex = options.effectIndex ?? preparedEffectIndex(effects);
   if (!options.effectIndex) {
@@ -109,7 +110,11 @@ function calculateIndexedDamageJob(
   }
   const staticDamageProfile = options.staticDamageProfile ?? buildStaticDamageProfile(fighters, effects);
   const usedEffects = options.usedEffects ?? [];
-  const result = calculateDamageJob(damageJob, fighters, effects, { ...options, effectIndex, staticDamageProfile, usedEffects });
+  const recorder = options.recorder ?? createRecorder(options.trace === true ? "trace" : "standard", [], () => {
+    throw new Error("damage-only test recorder has no battle resolution");
+  });
+  const { trace: _trace, ...damageOptions } = options;
+  const result = calculateDamageJob(damageJob, fighters, effects, { ...damageOptions, recorder, effectIndex, staticDamageProfile, usedEffects });
   return { ...result, usedEffectIds: [...usedEffects].map((usedEffect) => usedEffect.id) };
 }
 

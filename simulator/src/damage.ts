@@ -1,7 +1,6 @@
 import type {
   ActiveEffect,
   ActiveEffectGroup,
-  DamageAggregationGroupTrace,
   DamageBucketTrace,
   DamageEquationTrace,
   DamageJob,
@@ -11,39 +10,31 @@ import type {
 } from "./types";
 import { UNIT_TYPES } from "./types";
 import { ATOMIC_BUCKETS, BUCKET_DEFINITIONS, type AtomicBucket, type StaticDamageBucket } from "./damageBuckets";
-import { advanceEffectAttackDelay, sourceLabel } from "./effects";
+import { advanceEffectAttackDelay } from "./effects";
 import { damageJobSlot, type EffectIndex } from "./effectIndex";
+import type { BattleRecorder, DamageJobRecorder } from "./recorder";
 import {
   buildStaticDamageProfile,
   type StaticDamageProfile,
   type StaticDamageProfileEntry
 } from "./staticDamageProfile";
 
-type AtomicBuckets = Record<string, DamageBucketTrace>;
-type GroupPlacement = "numerator" | "denominator";
-type DamageDetail = "full" | "fast";
 type NumericBucketId = number;
 interface DamageFactorTerm {
   id: string;
   bucket: NumericBucketId;
   bucketName: AtomicBucket;
-  placement: GroupPlacement;
+  placement: "numerator" | "denominator";
   appliesTo?: DamageJob["kind"];
-}
-
-interface DamageExpressionResult {
-  rawDamage: number;
-  aggregationGroups: Record<string, DamageAggregationGroupTrace>;
 }
 
 interface NumericDamageBuckets {
   factors: Float64Array;
-  contributors?: DamageBucketTrace["contributors"][];
 }
 
 export type DamageScratch = NumericDamageBuckets;
 
-// Lean result of a single damage job: kills plus, only when tracing, the recording detail.
+// Lean result of a single damage job: kills plus whatever the selected recorder requested.
 // Usage charging happens via options.usedEffects (every mode); the heavy per-attack
 // AttackOutcome is assembled by the recorder, not here, so fast mode allocates nothing extra.
 export interface DamageResult {
@@ -53,7 +44,6 @@ export interface DamageResult {
 }
 
 const BUCKET_IDS = Object.fromEntries(ATOMIC_BUCKETS.map((bucket, index) => [bucket, index])) as Record<AtomicBucket, NumericBucketId>;
-const EMPTY_AGGREGATION_GROUPS: Record<string, DamageAggregationGroupTrace> = {};
 const TROOPS_COUNT_INDEX = BUCKET_IDS["troops.count"];
 const SOURCE_EXTRA_SKILL_INDEX = BUCKET_IDS["source.extraSkill"];
 const DEFAULT_FACTOR_TERMS = ATOMIC_BUCKETS.map((bucket) => factorTerm(bucket));
@@ -105,14 +95,11 @@ export function calculateDamageJob(
   job: DamageJob,
   fighters: Record<SideId, ResolvedFighter>,
   activeEffects: ActiveEffect[],
-  options: { trace?: boolean; recordAppliedEffects?: boolean; effectIndex: EffectIndex; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch; capToDefenderTroops?: boolean; usedEffects?: ActiveEffect[] }
+  options: { recorder: BattleRecorder; effectIndex: EffectIndex; staticDamageProfile?: StaticDamageProfile; scratch?: DamageScratch; capToDefenderTroops?: boolean; usedEffects?: ActiveEffect[] }
 ): DamageResult {
   if (!options?.effectIndex) throw new Error("calculateDamageJob requires an effectIndex");
-  // The damage math is one path; `trace` only decides whether we also capture the (expensive)
-  // per-bucket contributor/aggregation detail. `detail` drives the existing helpers unchanged.
-  const traceEnabled = options.trace === true;
-  const recordAppliedEffects = traceEnabled || options.recordAppliedEffects === true;
-  const detail: DamageDetail = traceEnabled ? "full" : "fast";
+  if (!options.recorder) throw new Error("calculateDamageJob requires a recorder");
+  const recording = options.recorder.startDamageJob();
   const staticProfile = options.staticDamageProfile ?? buildStaticDamageProfile(fighters, activeEffects);
   const attacker = fighters[job.attackerSide];
   const defender = fighters[job.defenderSide];
@@ -120,65 +107,35 @@ export function calculateDamageJob(
   const defenderTroops = job.roundStartTroops[job.defenderSide][job.defenderUnit] ?? 0;
   const minInitialArmy = Math.max(1, Math.min(totalTroops(attacker.initialTroops), totalTroops(defender.initialTroops)));
   const armyTerm = Math.ceil(Math.sqrt(Math.max(0, attackerTroops)) * Math.sqrt(minInitialArmy));
-  const needsTraceBuckets = traceEnabled;
-  const buckets = needsTraceBuckets || !options.scratch ? createNumericDamageBuckets(needsTraceBuckets) : resetDamageScratch(options.scratch);
+  const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   buckets.factors[TROOPS_COUNT_INDEX] = Math.max(0, armyTerm);
   buckets.factors[SOURCE_EXTRA_SKILL_INDEX] = Math.max(0, job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
 
-  const appliedEffects: DamageEquationTrace["appliedEffects"] = [];
-  const rejectedEffects: DamageEquationTrace["rejectedEffects"] = [];
   const usedEffects = options.usedEffects ?? [];
   applyBucketEffects(
     options.effectIndex.damageGroupsByJobShape[damageJobSlot(job)],
     job.round,
     buckets,
-    detail,
-    recordAppliedEffects,
-    appliedEffects,
-    rejectedEffects,
+    recording,
     usedEffects
   );
 
-  if (recordAppliedEffects) appendStaticProfileAppliedEffects(appliedEffects, staticProfile.offense[job.attackerSide][job.attackerUnit]);
-  if (recordAppliedEffects) appendStaticProfileAppliedEffects(appliedEffects, staticProfile.defense[job.defenderSide][job.defenderUnit]);
+  const staticOffense = staticProfile.offense[job.attackerSide][job.attackerUnit];
+  const staticDefense = staticProfile.defense[job.defenderSide][job.defenderUnit];
+  recording.recordStaticProfile(staticOffense);
+  recording.recordStaticProfile(staticDefense);
 
-  const { rawDamage, aggregationGroups } = evaluateDefaultDamageExpression(job, buckets, detail, staticProfile);
+  const rawDamage = evaluateDefaultDamageExpression(job, buckets, staticProfile);
   const uncappedKills = Math.max(0, rawDamage);
   const kills = options.capToDefenderTroops === false ? uncappedKills : Math.min(defenderTroops, uncappedKills);
-  const trace = traceEnabled
-    ? {
-        roundStartTroops: {
-          attacker: { ...job.roundStartTroops.attacker },
-          defender: { ...job.roundStartTroops.defender }
-        },
-        armyTerm,
-        atomicBuckets: toTraceBuckets(buckets, [
-          staticProfile.offense[job.attackerSide][job.attackerUnit],
-          staticProfile.defense[job.defenderSide][job.defenderUnit]
-        ]),
-        aggregationGroups,
-        appliedEffects,
-        rejectedEffects,
-        rawDamage,
-        finalKills: kills
-      }
-    : undefined;
-
-  return {
-    kills,
-    appliedEffects: recordAppliedEffects ? appliedEffects : undefined,
-    trace
-  };
+  return recording.finish({ job, factors: buckets.factors, staticOffense, staticDefense, armyTerm, rawDamage, kills });
 }
 
 function applyBucketEffects(
   groups: ActiveEffectGroup[],
   round: number,
   buckets: NumericDamageBuckets,
-  detail: DamageDetail,
-  recordAppliedEffects: boolean,
-  appliedEffects: DamageEquationTrace["appliedEffects"],
-  rejectedEffects: DamageEquationTrace["rejectedEffects"],
+  recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
   for (const group of groups) {
@@ -187,14 +144,14 @@ function applyBucketEffects(
     if (group.sameEffectStacking !== "max") {
       for (const effect of effects) {
         if (!advanceEffectAttackDelay(effect)) continue;
-        applyBucketEffect(effect, round, buckets, detail, recordAppliedEffects, appliedEffects, rejectedEffects, usedEffects);
+        applyBucketEffect(effect, round, buckets, recording, usedEffects);
       }
       continue;
     }
     if (effects.length === 1) {
       const effect = effects[0];
       if (advanceEffectAttackDelay(effect)) {
-        applyBucketEffect(effect, round, buckets, detail, recordAppliedEffects, appliedEffects, rejectedEffects, usedEffects);
+        applyBucketEffect(effect, round, buckets, recording, usedEffects);
       }
       continue;
     }
@@ -206,20 +163,18 @@ function applyBucketEffects(
       if (!selected || effect.getCurrentValuePct(round) > selected.getCurrentValuePct(round)) selected = effect;
     }
     if (selected) {
-      applyBucketEffectGroup(selected, eligible, round, buckets, detail, recordAppliedEffects, appliedEffects, rejectedEffects, usedEffects);
+      applyBucketEffectGroup(selected, eligible, round, buckets, recording, usedEffects);
     }
   }
 }
 
-// Apply the selected candidate's value to its bucket and (in trace mode) record it; returns the
-// applied percentage. Shared by the single-candidate and max-group paths.
+// Apply the selected candidate's value to its bucket and emit the observation to the recorder;
+// returns the applied percentage. Shared by the single-candidate and max-group paths.
 function applySelectedBucket(
   selected: ActiveEffect,
   round: number,
   buckets: NumericDamageBuckets,
-  detail: DamageDetail,
-  recordAppliedEffects: boolean,
-  appliedEffects: DamageEquationTrace["appliedEffects"]
+  recording: DamageJobRecorder
 ): number {
   const appliedValuePct = selected.getCurrentValuePct(round);
   const bucketIndex = selected.bucketIndex;
@@ -227,31 +182,7 @@ function applySelectedBucket(
   if (update === 0) buckets.factors[bucketIndex] = Math.max(0, appliedValuePct);
   else if (update === 1) buckets.factors[bucketIndex] *= 1 + appliedValuePct / 100;
   else buckets.factors[bucketIndex] += appliedValuePct / 100;
-  if (detail === "full") {
-    buckets.contributors?.[bucketIndex].push({
-      effectId: selected.source.effectId ?? selected.id,
-      source: sourceLabel(selected),
-      sourceSide: selected.ownerSide,
-      valuePct: appliedValuePct,
-      bucket: selected.intent.type,
-      stackingKey: selected.stackingKey,
-      sameEffectStacking: selected.sameEffectStacking
-    });
-  }
-  if (appliedValuePct !== 0 && recordAppliedEffects) {
-    const appliedEffect: DamageEquationTrace["appliedEffects"][number] = {
-      kind: "modifier",
-      activeEffectId: selected.id,
-      effectId: selected.source.effectId ?? selected.id,
-      bucket: selected.intent.type,
-      valuePct: appliedValuePct,
-      source: sourceLabel(selected),
-      sourceSide: selected.ownerSide,
-      sameEffectStacking: selected.sameEffectStacking
-    };
-    if (selected.stackingKey !== undefined) appliedEffect.stackingKey = selected.stackingKey;
-    appliedEffects.push(appliedEffect);
-  }
+  recording.recordModifier(selected, appliedValuePct);
   return appliedValuePct;
 }
 
@@ -261,17 +192,14 @@ function applyBucketEffect(
   effect: ActiveEffect,
   round: number,
   buckets: NumericDamageBuckets,
-  detail: DamageDetail,
-  recordAppliedEffects: boolean,
-  appliedEffects: DamageEquationTrace["appliedEffects"],
-  rejectedEffects: DamageEquationTrace["rejectedEffects"],
+  recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
-  const appliedValuePct = applySelectedBucket(effect, round, buckets, detail, recordAppliedEffects, appliedEffects);
+  const appliedValuePct = applySelectedBucket(effect, round, buckets, recording);
   if (appliedValuePct !== 0) {
     usedEffects.push(effect);
-  } else if (detail === "full") {
-    rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "same_effect_max_superseded" });
+  } else {
+    recording.recordRejected(effect, "same_effect_max_superseded");
   }
 }
 
@@ -280,25 +208,18 @@ function applyBucketEffectGroup(
   effects: ActiveEffect[],
   round: number,
   buckets: NumericDamageBuckets,
-  detail: DamageDetail,
-  recordAppliedEffects: boolean,
-  appliedEffects: DamageEquationTrace["appliedEffects"],
-  rejectedEffects: DamageEquationTrace["rejectedEffects"],
+  recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
-  const appliedValuePct = applySelectedBucket(selected, round, buckets, detail, recordAppliedEffects, appliedEffects);
+  const appliedValuePct = applySelectedBucket(selected, round, buckets, recording);
   if (appliedValuePct !== 0) {
     // The whole max-stacking group is charged: suppressed siblings deplete alongside the winner.
     for (const effect of effects) {
       usedEffects.push(effect);
-      if (detail === "full" && effect !== selected) {
-        rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "same_effect_max_suppressed" });
-      }
+      if (effect !== selected) recording.recordRejected(effect, "same_effect_max_suppressed");
     }
-  } else if (detail === "full") {
-    for (const effect of effects) {
-      rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason: "same_effect_max_superseded" });
-    }
+  } else {
+    for (const effect of effects) recording.recordRejected(effect, "same_effect_max_superseded");
   }
 }
 
@@ -313,17 +234,14 @@ function factorTerm(bucket: AtomicBucket): DamageFactorTerm {
   };
 }
 
-function createNumericDamageBuckets(collectTrace: boolean): NumericDamageBuckets {
+function createNumericDamageBuckets(): NumericDamageBuckets {
   const factors = new Float64Array(ATOMIC_BUCKETS.length);
   factors.fill(1);
-  return {
-    factors,
-    contributors: collectTrace ? Array.from({ length: ATOMIC_BUCKETS.length }, () => []) : undefined
-  };
+  return { factors };
 }
 
-export function createFastDamageScratch(): DamageScratch {
-  return createNumericDamageBuckets(false);
+export function createDamageScratch(): DamageScratch {
+  return createNumericDamageBuckets();
 }
 
 function resetDamageScratch(buckets: DamageScratch): DamageScratch {
@@ -331,44 +249,21 @@ function resetDamageScratch(buckets: DamageScratch): DamageScratch {
   return buckets;
 }
 
-function appendStaticProfileAppliedEffects(appliedEffects: DamageEquationTrace["appliedEffects"], entry: StaticDamageProfileEntry): void {
-  for (const [bucket, term] of Object.entries(entry.buckets) as Array<[StaticDamageBucket, StaticDamageProfileEntry["buckets"][StaticDamageBucket]]>) {
-    if (!bucket.startsWith("passive.") || !term) continue;
-    for (const contributor of term.contributors) {
-      appliedEffects.push({
-        kind: "modifier",
-        activeEffectId: contributor.effectId,
-        effectId: contributor.effectId,
-        bucket,
-        valuePct: contributor.valuePct,
-        source: contributor.source,
-        sourceSide: contributor.sourceSide,
-        stackingKey: contributor.stackingKey,
-        sameEffectStacking: contributor.sameEffectStacking
-      });
-    }
-  }
-}
-
-function evaluateDefaultDamageExpression(job: DamageJob, buckets: NumericDamageBuckets, detail: DamageDetail, staticProfile?: StaticDamageProfile): DamageExpressionResult {
-  if (staticProfile) return evaluateProfiledDamageExpression(job, buckets, detail, staticProfile);
+function evaluateDefaultDamageExpression(job: DamageJob, buckets: NumericDamageBuckets, staticProfile?: StaticDamageProfile): number {
+  if (staticProfile) return evaluateProfiledDamageExpression(job, buckets, staticProfile);
   const factors = buckets.factors;
   let numerator = 1;
   for (const slot of DEFAULT_NUMERATOR_SLOTS[job.kind]) numerator *= factors[slot];
   let denominator = 1;
   for (const slot of DEFAULT_DENOMINATOR_SLOTS[job.kind]) denominator *= factors[slot];
-  return {
-    rawDamage: numerator / denominator,
-    aggregationGroups: detail === "full" ? buildAggregationGroups(job, buckets) : EMPTY_AGGREGATION_GROUPS
-  };
+  return numerator / denominator;
 }
 
 function evaluateProfiledDamageExpression(
   job: DamageJob,
   buckets: NumericDamageBuckets,
-  detail: DamageDetail,
   staticProfile: StaticDamageProfile
-): DamageExpressionResult {
+): number {
   const offense = staticProfile.offense[job.attackerSide][job.attackerUnit];
   const defense = staticProfile.defense[job.defenderSide][job.defenderUnit];
   if (!offense.playerFactorsValid || !defense.playerFactorsValid) validateProfiledStaticFactors(job, staticProfile);
@@ -381,10 +276,7 @@ function evaluateProfiledDamageExpression(
   for (const slot of PROFILED_NUMERATOR_SLOTS[job.kind]) numerator *= factors[slot];
   let denominator = 100;
   for (const slot of PROFILED_DENOMINATOR_SLOTS[job.kind]) denominator *= factors[slot];
-  return {
-    rawDamage: numerator / denominator,
-    aggregationGroups: detail === "full" ? buildAggregationGroups(job, buckets, staticProfile) : EMPTY_AGGREGATION_GROUPS
-  };
+  return numerator / denominator;
 }
 
 function validateProfiledStaticFactors(job: DamageJob, staticProfile: StaticDamageProfile): void {
@@ -409,135 +301,6 @@ function validateProfiledPctFactor(job: DamageJob, groupId: string, entry: Stati
   });
 }
 
-function buildAggregationGroups(job: DamageJob, buckets: NumericDamageBuckets, staticProfile?: StaticDamageProfile): Record<string, DamageAggregationGroupTrace> {
-  const aggregationGroups: Record<string, DamageAggregationGroupTrace> = {};
-  if (staticProfile) addStaticAggregationGroups(aggregationGroups, job, staticProfile);
-  for (const term of [...DEFAULT_NUMERATOR_TERMS, ...DEFAULT_DENOMINATOR_TERMS]) {
-    if (term.appliesTo && term.appliesTo !== job.kind) continue;
-    const definition = BUCKET_DEFINITIONS[term.bucketName];
-    const factor = buckets.factors[term.bucket];
-    if (definition.valueType === "raw") {
-      aggregationGroups[term.id] = {
-        id: term.id,
-        mode: "raw",
-        placement: term.placement,
-        inputBuckets: [term.bucketName],
-        factor,
-        contributors: contributorsForTerm(term, buckets)
-      };
-    } else {
-      const totalPct = pctFromFactor(factor);
-      aggregationGroups[term.id] = {
-        id: term.id,
-        mode: "sum_pct",
-        placement: term.placement,
-        inputBuckets: [term.bucketName],
-        totalPct,
-        factor,
-        contributors: contributorsForTerm(term, buckets)
-      };
-    }
-  }
-  return aggregationGroups;
-}
-
-function addStaticAggregationGroups(
-  aggregationGroups: Record<string, DamageAggregationGroupTrace>,
-  job: DamageJob,
-  staticProfile: StaticDamageProfile
-): void {
-  const offense = staticProfile.offense[job.attackerSide][job.attackerUnit];
-  const defense = staticProfile.defense[job.defenderSide][job.defenderUnit];
-  addStaticRawGroup(aggregationGroups, "troops.baseAttack", "numerator", offense, "troops.baseAttack");
-  addStaticRawGroup(aggregationGroups, "troops.baseLethality", "numerator", offense, "troops.baseLethality");
-  addStaticPctGroup(aggregationGroups, "player.attacker.attack", "numerator", offense, "player.attack");
-  addStaticPctGroup(aggregationGroups, "player.attacker.lethality", "numerator", offense, "player.lethality");
-  addStaticPctGroup(aggregationGroups, "passive.attacker.attack.up", "numerator", offense, "passive.attack.up");
-  addStaticPctGroup(aggregationGroups, "passive.attacker.lethality.up", "numerator", offense, "passive.lethality.up");
-  addStaticPctGroup(aggregationGroups, "passive.defender.health.down", "numerator", defense, "passive.health.down");
-  addStaticPctGroup(aggregationGroups, "passive.defender.defense.down", "numerator", defense, "passive.defense.down");
-
-  addStaticRawGroup(aggregationGroups, "troops.baseHealth", "denominator", defense, "troops.baseHealth");
-  addStaticRawGroup(aggregationGroups, "troops.baseDefense", "denominator", defense, "troops.baseDefense");
-  addStaticPctGroup(aggregationGroups, "player.defender.health", "denominator", defense, "player.health");
-  addStaticPctGroup(aggregationGroups, "player.defender.defense", "denominator", defense, "player.defense");
-  addStaticPctGroup(aggregationGroups, "passive.attacker.attack.down", "denominator", offense, "passive.attack.down");
-  addStaticPctGroup(aggregationGroups, "passive.attacker.lethality.down", "denominator", offense, "passive.lethality.down");
-  addStaticPctGroup(aggregationGroups, "passive.defender.health.up", "denominator", defense, "passive.health.up");
-  addStaticPctGroup(aggregationGroups, "passive.defender.defense.up", "denominator", defense, "passive.defense.up");
-}
-
-function addStaticRawGroup(
-  aggregationGroups: Record<string, DamageAggregationGroupTrace>,
-  id: string,
-  placement: GroupPlacement,
-  entry: StaticDamageProfileEntry,
-  bucket: StaticDamageBucket
-): void {
-  const term = entry.buckets[bucket];
-  aggregationGroups[id] = {
-    id,
-    mode: "raw",
-    placement,
-    inputBuckets: [bucket],
-    factor: Math.max(0, term?.raw ?? 0),
-    contributors: term?.contributors ?? []
-  };
-}
-
-function addStaticPctGroup(
-  aggregationGroups: Record<string, DamageAggregationGroupTrace>,
-  id: string,
-  placement: GroupPlacement,
-  entry: StaticDamageProfileEntry,
-  bucket: StaticDamageBucket
-): void {
-  const term = entry.buckets[bucket];
-  const totalPct = term?.totalPct ?? 0;
-  aggregationGroups[id] = {
-    id,
-    mode: "sum_pct",
-    placement,
-    inputBuckets: [bucket],
-    totalPct,
-    factor: 1 + totalPct / 100,
-    contributors: term?.contributors ?? []
-  };
-}
-
-function contributorsForTerm(term: DamageFactorTerm, buckets: NumericDamageBuckets): DamageBucketTrace["contributors"] {
-  if (!buckets.contributors) return [];
-  return buckets.contributors[term.bucket] ?? [];
-}
-
-function toTraceBuckets(buckets: NumericDamageBuckets, staticEntries: StaticDamageProfileEntry[] = []): AtomicBuckets {
-  const traced = Object.fromEntries(
-    ATOMIC_BUCKETS.map((bucket, index) => {
-      const contributors = buckets.contributors?.[index] ?? [];
-      const definition = BUCKET_DEFINITIONS[bucket];
-      const factor = buckets.factors[index];
-      if (definition.valueType === "raw") {
-        return [bucket, { raw: factor, factor, contributors: [...contributors] }];
-      }
-      return [bucket, { totalPct: pctFromFactor(factor), factor, contributors: [...contributors] }];
-    })
-  ) as AtomicBuckets;
-  for (const entry of staticEntries) {
-    for (const [bucket, term] of Object.entries(entry.buckets) as Array<[StaticDamageBucket, StaticDamageProfileEntry["buckets"][StaticDamageBucket]]>) {
-      if (!term) continue;
-      traced[bucket] =
-        term.raw !== undefined
-          ? { raw: term.raw, factor: Math.max(0, term.raw), contributors: [...term.contributors] }
-          : { totalPct: term.totalPct ?? 0, factor: 1 + (term.totalPct ?? 0) / 100, contributors: [...term.contributors] };
-    }
-  }
-  return traced;
-}
-
 function totalTroops(troops: Record<UnitType, number>): number {
   return UNIT_TYPES.reduce((sum, unit) => sum + (troops[unit] ?? 0), 0);
-}
-
-function pctFromFactor(factor: number): number {
-  return Number(((factor - 1) * 100).toFixed(12));
 }

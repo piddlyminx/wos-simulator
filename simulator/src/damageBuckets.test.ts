@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { createFastDamageScratch } from "./damage";
+import { createDamageScratch } from "./damage";
 import { ATOMIC_BUCKETS, bucketDefinition } from "./damageBuckets";
 
 test("active hero and troop damage aliases are supported all-damage buckets", () => {
@@ -34,7 +34,7 @@ test("type all damage buckets multiply percentage factors", () => {
 });
 
 test("damage scratch stores one factor value per atomic bucket", () => {
-  const scratch = createFastDamageScratch() as unknown as {
+  const scratch = createDamageScratch() as unknown as {
     factors?: Float64Array;
     raw?: unknown;
     pct?: unknown;

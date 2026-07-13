@@ -375,7 +375,7 @@ export interface DamageEquationTrace {
 }
 
 // One "this effect affected battle mechanics" event, discriminated on ActiveEffect.kind.
-// Events are built only in trace mode; the uses counter is charged in every mode.
+// Events are built by the standard and full-trace recorders; the uses counter is charged in every mode.
 interface AppliedEffectBase {
   // ActiveEffect.id — the runtime instance. Static-profile/input-stat contributors have no
   // ActiveEffect and use the config-level effectId here too.

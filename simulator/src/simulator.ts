@@ -1,9 +1,5 @@
 import type {
   ActiveEffect,
-  AppliedControlEffect,
-  AppliedEffect,
-  AppliedExtraAttackEffect,
-  AppliedOrderEffect,
   AttackIntent,
   AttackOutcome,
   BearBattleResult,
@@ -12,7 +8,6 @@ import type {
   BattleResult,
   BattleTrace,
   DamageJob,
-  EffectSource,
   FighterInput,
   ResolvedEffectIntentDefinition,
   ResolvedFighter,
@@ -20,13 +15,12 @@ import type {
   SideId,
   SimulationOptions,
   SimulatorConfig,
-  SkillReportEntry,
   TriggerDamageJobSelector,
   UnitType
 } from "./types";
 import { ALL_UNIT_MASK, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types";
-import { calculateDamageJob, createFastDamageScratch, type DamageResult, type DamageScratch } from "./damage";
-import { createRecorder } from "./recorder";
+import { calculateDamageJob, createDamageScratch, type DamageResult, type DamageScratch } from "./damage";
+import { createRecorder, NULL_RECORDER, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
   advanceEffectAttackDelay,
@@ -41,7 +35,6 @@ import {
   oppositeSide,
   resolvedEffectScopeKey,
   skillMatchesTrigger,
-  sourceLabel,
   type Rng
 } from "./effects";
 import { classifyEffectForJob } from "./classifier";
@@ -55,7 +48,6 @@ const DEFAULT_MAX_ROUNDS = 1500;
 const BEAR_ROUNDS = 10;
 const BEAR_DEFENSE = 36;
 const BEAR_TROOP_ID = "bear_infantry";
-const REPORT_KEY_CACHE = new WeakMap<ResolvedSkill, string>();
 
 interface Runtime {
   effectIndex: EffectIndex;
@@ -69,7 +61,6 @@ interface Runtime {
   damageScratch: DamageScratch;
   rng: Rng;
   skills: RuntimeSkills;
-  skillReports: Record<SideId, Map<string, SkillReportEntry>>;
   effectActivationCounts: Record<SideId, number>;
   extraSkillAttackJobsByEffect: Record<string, number>;
   attackControlCounts: { dodge: number; no_attack: number };
@@ -99,12 +90,14 @@ interface ExtraAttackEffectGroup {
 interface ExtraSkillJobsResult {
   jobs: DamageJob[];
   usedEffectGroups: ExtraSkillUsedEffectGroup[];
-  appliedEffects?: AppliedExtraAttackEffect[];
 }
 
 interface ExtraSkillUsedEffectGroup {
   sourceEffectId: string;
+  selected: ActiveEffect;
   effects: ActiveEffect[];
+  firstJobIndex: number;
+  jobCount: number;
 }
 
 interface BattleRun {
@@ -114,6 +107,7 @@ interface BattleRun {
   rounds: number;
   attacks: AttackOutcome[];
   trace?: BattleTrace;
+  skillReport: BattleResult["skillReport"];
   score?: number;
 }
 
@@ -186,7 +180,7 @@ export function prepareBattle(input: BattleInput, config: SimulatorConfig): Comp
   const runtimeSkills = buildRuntimeSkills([attacker, defender]);
   const deterministicBattleStart = !runtimeSkills.battleStart.some(hasChanceTrigger);
   // Deterministic battle-start => the entire pre-loop runtime is seed-independent; build it once.
-  const template = deterministicBattleStart ? setupRuntime(fighters, input, "simulator-prepare", runtimeSkills) : undefined;
+  const template = deterministicBattleStart ? setupRuntime(fighters, input, "simulator-prepare", NULL_RECORDER, runtimeSkills) : undefined;
   return { input, config, fighters, template, runtimeSkills, deterministicBattleStart };
 }
 
@@ -204,10 +198,7 @@ function buildBattleResult(run: BattleRun): BattleResult {
     rounds: run.rounds,
     remaining: { attacker: ceilTroops(fighters.attacker.troops), defender: ceilTroops(fighters.defender.troops) },
     attacks: run.attacks,
-    skillReport: {
-      attacker: [...runtime.skillReports.attacker.values()],
-      defender: [...runtime.skillReports.defender.values()]
-    },
+    skillReport: run.skillReport,
     resolved: buildResolved(fighters.attacker, fighters.defender),
     effectActivationCounts: runtime.effectActivationCounts,
     extraSkillAttackJobsByEffect: runtime.extraSkillAttackJobsByEffect,
@@ -228,12 +219,12 @@ function setupRuntime(
   fighters: Record<SideId, ResolvedFighter>,
   input: BattleInput,
   seed: string | number,
-  runtimeSkills?: RuntimeSkills,
-  collectSkillReports = true
+  recorder: BattleRecorder,
+  runtimeSkills?: RuntimeSkills
 ): Runtime {
-  const runtime = createRuntime([fighters.attacker, fighters.defender], createSeededRng(seed), runtimeSkills, collectSkillReports);
+  const runtime = createRuntime([fighters.attacker, fighters.defender], createSeededRng(seed), runtimeSkills);
   const setupEffects = [
-    ...triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime),
+    ...triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime, recorder),
     ...addInputPassiveEffects(runtime, input.attacker.passive, "attacker"),
     ...addInputPassiveEffects(runtime, input.defender.passive, "defender")
   ];
@@ -242,7 +233,19 @@ function setupRuntime(
   return runtime;
 }
 
-function cloneRuntime(template: Runtime, rng: Rng, collectSkillReports = true): Runtime {
+// Deterministic battle-start effects are materialized once in a prepared runtime. Replay only
+// their observation events for each run; combat state continues to come from the cloned template.
+function recordPreparedBattleStartSkills(runtime: Runtime, recorder: BattleRecorder): void {
+  for (const skill of runtime.skills.battleStart) {
+    if (!skillMatchesTrigger(skill, "battle_start", 0)) continue;
+    recorder.recordSkillTriggered(skill);
+    if (!chancePasses(skill, runtime.rng)) continue;
+    recorder.recordSkillActivated(skill);
+    for (const _effect of skill.effects) recorder.recordSkillEffectActivated(skill);
+  }
+}
+
+function cloneRuntime(template: Runtime, rng: Rng): Runtime {
   const effectClones = new Map<ActiveEffect, ActiveEffect>();
   const preparedEffects = template.preparedEffects.map((effect) => {
     const clone = { ...effect };
@@ -261,10 +264,9 @@ function cloneRuntime(template: Runtime, rng: Rng, collectSkillReports = true): 
     expireEffectsByRound: cloneEffectSchedule(template.expireEffectsByRound, cloneEffect),
     usedEffects: [],
     staticDamageProfile: template.staticDamageProfile,
-    damageScratch: createFastDamageScratch(),
+    damageScratch: createDamageScratch(),
     rng,
     skills: template.skills,
-    skillReports: collectSkillReports ? cloneSkillReports(template.skillReports) : { attacker: new Map(), defender: new Map() },
     effectActivationCounts: { ...template.effectActivationCounts },
     extraSkillAttackJobsByEffect: { ...template.extraSkillAttackJobsByEffect },
     attackControlCounts: { ...template.attackControlCounts },
@@ -278,15 +280,6 @@ function cloneRuntime(template: Runtime, rng: Rng, collectSkillReports = true): 
 
 function cloneEffectSchedule(schedule: Array<ActiveEffect[] | undefined>, cloneEffect: (effect: ActiveEffect) => ActiveEffect): Array<ActiveEffect[] | undefined> {
   return schedule.map((effects) => effects?.map(cloneEffect));
-}
-
-function cloneSkillReports(reports: Record<SideId, Map<string, SkillReportEntry>>): Record<SideId, Map<string, SkillReportEntry>> {
-  const cloneSide = (side: Map<string, SkillReportEntry>): Map<string, SkillReportEntry> => {
-    const out = new Map<string, SkillReportEntry>();
-    for (const [key, entry] of side) out.set(key, { ...entry, unsupportedEffects: [...entry.unsupportedEffects] });
-    return out;
-  };
-  return { attacker: cloneSide(reports.attacker), defender: cloneSide(reports.defender) };
 }
 
 function configWithBearTroop(config: SimulatorConfig): SimulatorConfig {
@@ -316,42 +309,50 @@ function runBattle(
   prepared?: CompiledBattle,
   loopOptions: RunLoopOptions = { capRoundKills: true, capJobKills: true, commitLosses: true }
 ): BattleRun {
-  const collectSkillReports = (options.mode ?? "standard") !== "fast";
   if (prepared?.template) {
     const fighters: Record<SideId, ResolvedFighter> = {
       attacker: cloneFighterForRun(prepared.fighters.attacker),
       defender: cloneFighterForRun(prepared.fighters.defender)
     };
-    const runtime = cloneRuntime(prepared.template, createSeededRng(input.seed ?? "simulator-default"), collectSkillReports);
-    return runLoop(input, fighters, runtime, options, loopOptions);
+    const recorder = recorderFor(options, fighters);
+    const runtime = cloneRuntime(prepared.template, createSeededRng(input.seed ?? "simulator-default"));
+    recordPreparedBattleStartSkills(runtime, recorder);
+    return runLoop(input, fighters, runtime, recorder, options, loopOptions);
   }
   const attacker = prepared ? cloneFighterForRun(prepared.fighters.attacker) : resolveFighter(input.attacker, "attacker", config, input.engagement_type);
   const defender = prepared ? cloneFighterForRun(prepared.fighters.defender) : resolveFighter(input.defender, "defender", config, input.engagement_type);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
-  const runtime = setupRuntime(fighters, input, input.seed ?? "simulator-default", prepared?.runtimeSkills, collectSkillReports);
-  return runLoop(input, fighters, runtime, options, loopOptions);
+  const recorder = recorderFor(options, fighters);
+  const runtime = setupRuntime(fighters, input, input.seed ?? "simulator-default", recorder, prepared?.runtimeSkills);
+  return runLoop(input, fighters, runtime, recorder, options, loopOptions);
+}
+
+function recorderFor(options: SimulationOptions, fighters: Record<SideId, ResolvedFighter>): BattleRecorder {
+  return createRecorder(
+    options.mode ?? "standard",
+    [fighters.attacker, fighters.defender],
+    () => buildResolved(fighters.attacker, fighters.defender)
+  );
 }
 
 function runLoop(
   input: BattleInput,
   fighters: Record<SideId, ResolvedFighter>,
   runtime: Runtime,
+  recorder: BattleRecorder,
   options: SimulationOptions,
   loopOptions: RunLoopOptions
 ): BattleRun {
-  const mode = options.mode ?? "standard";
-  const recorder = createRecorder(mode, runtime.skillReports, () => buildResolved(fighters.attacker, fighters.defender));
   const maxRounds = input.maxRounds ?? DEFAULT_MAX_ROUNDS;
   const useEffectsOnCancel = {
     dodge: options.useEffectsOnDodge ?? true,
     no_attack: options.useEffectsOnNoAttack ?? true
   };
   const damageJobOptions = {
-    trace: recorder.capturesTrace,
-    recordAppliedEffects: recorder.capturesAppliedEffects,
+    recorder,
     effectIndex: runtime.effectIndex,
     staticDamageProfile: runtime.staticDamageProfile,
-    scratch: recorder.capturesTrace ? undefined : runtime.damageScratch,
+    scratch: runtime.damageScratch,
     capToDefenderTroops: loopOptions.capJobKills,
     usedEffects: runtime.usedEffects
   };
@@ -363,12 +364,9 @@ function runLoop(
     rounds = round;
     const roundStartTroops = snapshotTroops(fighters);
     processEffectSchedule(runtime, round);
-    triggerRoundStartSkills(round, runtime, roundStartTroops);
+    triggerRoundStartSkills(round, runtime, roundStartTroops, recorder);
 
-    // Applied-effect events keyed by the intent they ordered.
-    const orderEvents = recorder.capturesAppliedEffects ? new Map<string, AppliedOrderEffect>() : undefined;
-    const intents = resolveAttackIntents(round, runtime, roundStartTroops, orderEvents);
-    const allJobs: DamageJob[] = []; // for recorder
+    const intents = resolveAttackIntents(round, runtime, roundStartTroops, recorder);
     const results: DamageJobResult[] = [];
     const cancelled: CancelledAttack[] = [];
 
@@ -381,7 +379,7 @@ function runLoop(
       const matchingTriggerSkills = runtime.skills.attackDeclaredByJobShape[
         damageJobShapeSlot("normal", intent.attackerSide, intent.attackerUnit, intent.defenderSide, intent.defenderUnit)
       ] ?? [];
-      triggerSkills("attack_declared", round, matchingTriggerSkills, runtime, intent);
+      triggerSkills("attack_declared", round, matchingTriggerSkills, runtime, recorder, intent);
       const job = normalJob(intent, roundStartTroops);
       declaredNormalJobs.push({ intent, job });
     }
@@ -410,38 +408,33 @@ function runLoop(
         }
         cancelled.push({
           intent,
-          effectId: control.effect.id,
-          reason: control.reason,
-          appliedEffects: recorder.capturesAppliedEffects
-            ? appendedEvent(orderEvents?.get(intent.id), appliedControlEvent(control))
-            : NO_APPLIED_EFFECTS
+          control
         });
         continue;
       }
 
-      if (recorder.capturesTrace) allJobs.push(job);
+      recorder.recordScheduledDamageJob(job);
       const normalResult = calculateDamageJob(job, fighters, [], damageJobOptions);
-      if (loopOptions.capRoundKills) capJobToRemainingTarget(normalResult, job, roundStartTroops, roundTargetDamage);
+      if (loopOptions.capRoundKills) capJobToRemainingTarget(normalResult, job, roundStartTroops, roundTargetDamage, recorder);
       if (loopOptions.scoreSide && job.attackerSide === loopOptions.scoreSide.attackerSide && job.defenderSide === loopOptions.scoreSide.defenderSide) {
         score += normalResult.kills;
       }
       chargeUsedEffects(runtime);
 
-      const extraSkill = extraSkillJobs(job, round, runtime, roundStartTroops, recorder.capturesAppliedEffects);
+      const extraSkill = extraSkillJobs(job, round, runtime, roundStartTroops, recorder);
       const processedExtraEffectIds = new Set<string>();
       const processedExtraJobIds = new Set<string>();
       const normalEntry: DamageJobResult = {
         job,
-        result: normalResult,
-        extraAppliedEffects: appendedEvents(orderEvents?.get(job.sourceIntentId ?? ""), undefined)
+        result: normalResult
       };
       results.push(normalEntry);
 
       for (const extraJob of extraSkill.jobs) {
         if (loopOptions.capRoundKills && targetExhausted(extraJob, roundStartTroops, roundTargetDamage)) continue;
-        if (recorder.capturesTrace) allJobs.push(extraJob);
+        recorder.recordScheduledDamageJob(extraJob);
         const extraResult = calculateDamageJob(extraJob, fighters, [], damageJobOptions);
-        if (loopOptions.capRoundKills) capJobToRemainingTarget(extraResult, extraJob, roundStartTroops, roundTargetDamage);
+        if (loopOptions.capRoundKills) capJobToRemainingTarget(extraResult, extraJob, roundStartTroops, roundTargetDamage, recorder);
         processedExtraEffectIds.add(extraJob.sourceEffectId ?? "");
         processedExtraJobIds.add(extraJob.id);
         if (extraJob.sourceEffectId) {
@@ -453,19 +446,26 @@ function runLoop(
         }
         chargeUsedEffects(runtime);
       }
-      normalEntry.extraAppliedEffects = appendedEvents(orderEvents?.get(job.sourceIntentId ?? ""), filterExtraAppliedEffects(extraSkill.appliedEffects, processedExtraJobIds));
       for (const usedEffectGroup of extraSkill.usedEffectGroups) {
         if (!processedExtraEffectIds.has(usedEffectGroup.sourceEffectId)) continue;
         for (const usedEffect of usedEffectGroup.effects) chargeEffectUse(runtime, usedEffect);
+        recorder.recordExtraAttack(
+          job,
+          usedEffectGroup.selected,
+          extraSkill.jobs,
+          usedEffectGroup.firstJobIndex,
+          usedEffectGroup.jobCount,
+          processedExtraJobIds
+        );
       }
     }
 
     if (loopOptions.commitLosses) commitRound(cancelled, results, fighters, runtime);
     else commitRoundCounters(cancelled, results, runtime);
 
-    for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.effectId, entry.reason, entry.appliedEffects);
-    for (const entry of results) recorder.recordDamageJob(entry.job, entry.result, entry.extraAppliedEffects);
-    recorder.recordRound(round, roundStartTroops, intents, allJobs);
+    for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.control.effect, entry.control.reason);
+    for (const entry of results) recorder.recordDamageJob(entry.job, entry.result);
+    recorder.recordRound(round, roundStartTroops, intents);
   }
 
   const winner = winnerFor(fighters) ?? "draw";
@@ -476,63 +476,36 @@ function runLoop(
     rounds,
     attacks: recorder.attacks,
     trace: recorder.trace,
+    skillReport: recorder.skillReport,
     score
   };
 }
 
 interface CancelledAttack {
   intent: AttackIntent;
-  effectId: string;
-  reason: "dodge" | "no_attack";
-  appliedEffects: AppliedEffect[];
+  control: Control;
 }
 
 interface DamageJobResult {
   job: DamageJob;
   result: DamageResult;
-  extraAppliedEffects?: AppliedEffect[];
-}
-
-const NO_APPLIED_EFFECTS: AppliedEffect[] = [];
-
-function appendedEvent(order: AppliedOrderEffect | undefined, event: AppliedEffect): AppliedEffect[] {
-  return order ? [order, event] : [event];
-}
-
-function appendedEvents(order: AppliedOrderEffect | undefined, events: AppliedEffect[] | undefined): AppliedEffect[] | undefined {
-  if (!order) return events;
-  return events ? [order, ...events] : [order];
-}
-
-function appliedEffectBase(effect: ActiveEffect): { activeEffectId: string; effectId: string; source: string; sourceSide: SideId } {
-  return {
-    activeEffectId: effect.id,
-    effectId: effect.source.effectId ?? effect.id,
-    source: sourceLabel(effect),
-    sourceSide: effect.ownerSide
-  };
-}
-
-function appliedControlEvent(control: Control): AppliedControlEffect {
-  return { kind: "control", ...appliedEffectBase(control.effect), reason: control.reason };
 }
 
 function triggerRoundStartSkills(
   round: number,
   runtime: Runtime,
-  roundStartTroops: DamageJob["roundStartTroops"]
+  roundStartTroops: DamageJob["roundStartTroops"],
+  recorder: BattleRecorder
 ): ActiveEffect[] {
   const activated: ActiveEffect[] = [];
-  activated.push(...triggerSkills("round_start", round, runtime.skills.roundStartGlobal, runtime));
+  activated.push(...triggerSkills("round_start", round, runtime.skills.roundStartGlobal, runtime, recorder));
   for (const skill of runtime.skills.roundStartPerUnit) {
     const side = roundTriggerSourceSide(skill);
     const defenderSide = roundTriggerTargetSide(skill, side);
     if (!skillMatchesTrigger(skill, "round_start", round)) continue;
-    const reports = runtime.skillReports[skill.side];
-    const report = reports.size === 0 ? undefined : reports.get(reportKey(skill));
-    if (report) report.triggersSeen += 1;
+    recorder.recordSkillTriggered(skill);
     if (!chancePasses(skill, runtime.rng)) continue;
-    if (report) report.skillActivations += 1;
+    recorder.recordSkillActivated(skill);
     let orderIndex = 0;
     for (const attackerUnit of roundTriggerUnits(skill, roundStartTroops)) {
       const defenderUnit = chooseDefenderUnit(attackerUnit, side, defenderSide, roundStartTroops, runtime.effectIndex, round);
@@ -544,7 +517,7 @@ function triggerRoundStartSkills(
         addActiveEffect(runtime, effect);
         activated.push(effect);
         runtime.effectActivationCounts[skill.side] += 1;
-        if (report) report.effectActivations += 1;
+        recorder.recordSkillEffectActivated(skill);
       }
       orderIndex += 1;
     }
@@ -613,26 +586,8 @@ function hasChanceTrigger(skill: ResolvedSkill): boolean {
   return Number.isFinite(value) && value > 0 && value < 100;
 }
 
-function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: RuntimeSkills, collectSkillReports = true): Runtime {
-  const reports: Record<SideId, Map<string, SkillReportEntry>> = { attacker: new Map(), defender: new Map() };
+function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: RuntimeSkills): Runtime {
   const skills = preparedSkills ?? buildRuntimeSkills(fighters);
-  for (const fighter of collectSkillReports ? fighters : []) {
-    for (const skill of [...(fighter.heroSkills ?? []), ...fighter.troopSkills]) {
-      reports[fighter.side].set(reportKey(skill), {
-        sourceKind: skill.sourceKind,
-        heroName: skill.heroName,
-        troopType: skill.troopType,
-        skillId: skill.id,
-        skillName: skill.name,
-        level: skill.level,
-        triggersSeen: 0,
-        skillActivations: 0,
-        effectActivations: 0,
-        skillKills: 0,
-        unsupportedEffects: []
-      });
-    }
-  }
   return {
     effectIndex: createEffectIndex(
       skills.damageGroups,
@@ -643,10 +598,9 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: R
     expireEffectsByRound: [],
     usedEffects: [],
     staticDamageProfile: undefined,
-    damageScratch: createFastDamageScratch(),
+    damageScratch: createDamageScratch(),
     rng,
     skills,
-    skillReports: reports,
     effectActivationCounts: { attacker: 0, defender: 0 },
     extraSkillAttackJobsByEffect: {},
     attackControlCounts: { dodge: 0, no_attack: 0 },
@@ -866,22 +820,21 @@ function triggerSkills(
   round: number,
   skills: ResolvedSkill[],
   runtime: Runtime,
+  recorder: BattleRecorder,
   intent?: AttackIntent
 ): ActiveEffect[] {
   const activated: ActiveEffect[] = [];
   for (const skill of skills) {
     if (!skillMatchesTrigger(skill, triggerType, round, intent)) continue;
-    const reports = runtime.skillReports[skill.side];
-    const report = reports.size === 0 ? undefined : reports.get(reportKey(skill));
-    if (report) report.triggersSeen += 1;
+    recorder.recordSkillTriggered(skill);
     if (!chancePasses(skill, runtime.rng)) continue;
-    if (report) report.skillActivations += 1;
+    recorder.recordSkillActivated(skill);
     for (const effectIntent of skill.effects) {
       const effect = activateEffect(skill, effectIntent, round, intent);
       addActiveEffect(runtime, effect);
       activated.push(effect);
       runtime.effectActivationCounts[skill.side] += 1;
-      if (report) report.effectActivations += 1;
+      recorder.recordSkillEffectActivated(skill);
     }
   }
   return activated;
@@ -891,7 +844,7 @@ function resolveAttackIntents(
   round: number,
   runtime: Runtime,
   roundStartTroops: DamageJob["roundStartTroops"],
-  orderEvents?: Map<string, AppliedOrderEffect>
+  recorder: BattleRecorder
 ): AttackIntent[] {
   const intents: AttackIntent[] = [];
   for (const side of ["attacker", "defender"] as SideId[]) {
@@ -905,7 +858,7 @@ function resolveAttackIntents(
       const intentId = `r${round}:${side}:${attackerUnit}:${orderIndex}`;
       if (ordered) {
         chargeEffectUse(runtime, ordered.effect);
-        orderEvents?.set(intentId, { kind: "battle_order", ...appliedEffectBase(ordered.effect), chosenTarget: defenderUnit });
+        recorder.recordBattleOrder(intentId, ordered.effect, defenderUnit);
       }
       const previousAttackCount = runtime.counters.attacks[side][attackerUnit];
       const previousReceivedAttackCount = runtime.counters.received[defenderSide][defenderUnit];
@@ -1020,11 +973,10 @@ function extraSkillJobs(
   round: number,
   runtime: Runtime,
   roundStartTroops: DamageJob["roundStartTroops"],
-  capturesTrace: boolean
+  recorder: BattleRecorder
 ): ExtraSkillJobsResult {
   const jobs: DamageJob[] = [];
   const usedEffectGroups: ExtraSkillUsedEffectGroup[] = [];
-  let appliedEffects: AppliedExtraAttackEffect[] | undefined;
   const effectGroups = selectStackedExtraAttackEffectGroups(
     runtime.effectIndex.extraAttacks.filter(
       (effect) => extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && advanceEffectAttackDelay(effect)
@@ -1042,12 +994,11 @@ function extraSkillJobs(
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
       const multiplier = multiplierForTriggerDamageJob(definition.multiplier, effect, round);
       if (multiplier <= 0) continue;
-      const sourceSkillReportKey = reportKeyForEffectSource(effect.source);
       for (const source of sources) {
         if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
         for (const target of targets) {
           if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
-          jobs.push({
+          const job: DamageJob = {
             id: `${normalAttack.sourceIntentId}:skill:${sourceEffectId}:${definitionIndex}:${jobs.length}`,
             round,
             kind: "skill",
@@ -1058,9 +1009,10 @@ function extraSkillJobs(
             defenderSide: target.side,
             defenderUnit: target.unit,
             sourceEffectId,
-            sourceSkillReportKey,
             sourceMultiplier: multiplier
-          });
+          };
+          jobs.push(job);
+          recorder.recordSkillDamageJob(job, effect);
         }
       }
       definitionIndex += 1;
@@ -1068,17 +1020,16 @@ function extraSkillJobs(
     if (jobs.length > firstJobIndex) {
       // The whole stacking group is charged whenever the selected effect spawned jobs,
       // regardless of duration constraints (extra attacks always deplete per firing).
-      usedEffectGroups.push({ sourceEffectId, effects: effectGroup.effects });
-      if (capturesTrace) {
-        (appliedEffects ??= []).push({
-          kind: "extra_attack",
-          ...appliedEffectBase(effect),
-          spawnedJobIds: jobs.slice(firstJobIndex).map((spawned) => spawned.id)
-        });
-      }
+      usedEffectGroups.push({
+        sourceEffectId,
+        selected: effect,
+        effects: effectGroup.effects,
+        firstJobIndex,
+        jobCount: jobs.length - firstJobIndex
+      });
     }
   }
-  return { jobs, usedEffectGroups, appliedEffects };
+  return { jobs, usedEffectGroups };
 }
 
 function selectStackedExtraAttackEffectGroups(effects: ActiveEffect[], round: number): ExtraAttackEffectGroup[] {
@@ -1182,27 +1133,15 @@ function capJobToRemainingTarget(
   result: DamageResult,
   job: DamageJob,
   roundStartTroops: DamageJob["roundStartTroops"],
-  roundTargetDamage: Record<SideId, Record<UnitType, number>>
+  roundTargetDamage: Record<SideId, Record<UnitType, number>>,
+  recorder: BattleRecorder
 ): void {
   const available = Math.max(0, roundStartTroops[job.defenderSide][job.defenderUnit] ?? 0);
   const alreadyDamaged = roundTargetDamage[job.defenderSide][job.defenderUnit];
   const remaining = Math.max(0, available - alreadyDamaged);
   result.kills = Math.min(result.kills, remaining);
   roundTargetDamage[job.defenderSide][job.defenderUnit] += result.kills;
-  if (result.trace) result.trace.finalKills = result.kills;
-}
-
-function filterExtraAppliedEffects(
-  events: AppliedExtraAttackEffect[] | undefined,
-  processedExtraJobIds: Set<string>
-): AppliedExtraAttackEffect[] | undefined {
-  if (!events) return undefined;
-  const filtered: AppliedExtraAttackEffect[] = [];
-  for (const event of events) {
-    const spawnedJobIds = event.spawnedJobIds.filter((jobId) => processedExtraJobIds.has(jobId));
-    if (spawnedJobIds.length > 0) filtered.push({ ...event, spawnedJobIds });
-  }
-  return filtered.length > 0 ? filtered : undefined;
+  recorder.recordFinalKills(result);
 }
 
 // Apply the round's effects to fighter state: remove killed troops and bump attack/received
@@ -1323,21 +1262,4 @@ function buildResolved(attacker: ResolvedFighter, defender: ResolvedFighter): Ba
       diagnostics: defender.diagnostics
     }
   };
-}
-
-function reportKey(skill: ResolvedSkill): string {
-  const cached = REPORT_KEY_CACHE.get(skill);
-  if (cached) return cached;
-  const key = reportKeyFromParts(skill.sourceKind, skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? "", skill.id);
-  REPORT_KEY_CACHE.set(skill, key);
-  return key;
-}
-
-function reportKeyForEffectSource(source: EffectSource): string | undefined {
-  if ((source.kind !== "hero_skill" && source.kind !== "troop_skill") || !source.skillId) return undefined;
-  return reportKeyFromParts(source.kind, source.heroInstanceId ?? source.heroName ?? source.troopType ?? "", source.skillId);
-}
-
-function reportKeyFromParts(sourceKind: SkillReportEntry["sourceKind"], sourceKey: string, skillId: string): string {
-  return `${sourceKind}:${sourceKey}:${skillId}`;
 }

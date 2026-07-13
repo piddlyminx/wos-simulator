@@ -106,6 +106,65 @@ test("standard battle outcomes include round and applied effects without full tr
   assert.equal(attack?.trace, undefined);
 });
 
+test("fast, standard, and trace recorders expose their complete output contracts", () => {
+  const input: BattleInput = {
+    maxRounds: 1,
+    seed: "recorder-contract",
+    attacker: {
+      troops: { infantry_t1: 1000 },
+      heroes: { RecorderHero: { skill_1: 1 } }
+    },
+    defender: {
+      troops: { infantry_t1: 1000 },
+      heroes: {}
+    }
+  };
+  const config = minimalConfig({
+    RecorderHero: {
+      name: "RecorderHero",
+      troop_type: "infantry",
+      skills: {
+        RecordedBoost: {
+          trigger: { type: "battle_start" },
+          effects: {
+            boost: {
+              type: "active.hero.attack.up",
+              value: 25,
+              units: { applies_to: "self.infantry", applies_vs: "any" }
+            }
+          }
+        }
+      }
+    }
+  });
+
+  const fast = runOnce(input, config, { mode: "fast" });
+  const standard = runOnce(input, config, { mode: "standard" });
+  const trace = runOnce(input, config, { mode: "trace" });
+
+  assert.deepEqual(semanticBattleSummary(fast), semanticBattleSummary(standard));
+  assert.deepEqual(semanticBattleSummary(trace), semanticBattleSummary(standard));
+  assert.deepEqual(fast.attacks, []);
+  assert.deepEqual(fast.skillReport, { attacker: [], defender: [] });
+  assert.equal(fast.trace, undefined);
+
+  assert.ok(standard.attacks.length > 0);
+  assert.equal(standard.attacks.every((attack) => attack.trace === undefined), true);
+  assert.equal(standard.attacks.some((attack) => attack.appliedEffects.some((effect) => effect.effectId === "boost")), true);
+  assert.equal(standard.trace, undefined);
+
+  const traceAttacksWithoutEquations = trace.attacks.map(({ trace: _equation, ...attack }) => attack);
+  const standardAttacksWithoutEquations = standard.attacks.map(({ trace: _equation, ...attack }) => attack);
+  assert.deepEqual(traceAttacksWithoutEquations, standardAttacksWithoutEquations);
+  assert.deepEqual(trace.skillReport, standard.skillReport);
+  assert.ok(trace.trace);
+  assert.deepEqual(trace.trace.resolved, trace.resolved);
+  assert.equal(trace.trace.rounds.length, trace.rounds);
+  assert.equal(trace.trace.rounds[0]?.jobs.length, trace.attacks.length);
+  assert.equal(trace.attacks.every((attack) => attack.trace?.atomicBuckets !== undefined), true);
+  assert.equal(trace.attacks.every((attack) => attack.trace?.aggregationGroups !== undefined), true);
+});
+
 test("simulateBearBattle runs exactly 10 rounds and leaves the bear army unchanged", () => {
   const player: FighterInput = {
     name: "Player",
@@ -1502,9 +1561,13 @@ test("skill report attributes kills only to the skill damage source", () => {
 
   const powerShot = result.skillReport.attacker.find((entry) => entry.skillId === "PowerShot");
   const crystalShield = result.skillReport.defender.find((entry) => entry.skillId === "CrystalShield");
+  const skillOutcome = result.attacks.find((entry) => entry.kind === "skill");
+  const skillJob = result.trace?.rounds.flatMap((round) => round.jobs).find((entry) => entry.kind === "skill");
 
   assert.ok((powerShot?.skillKills ?? 0) > 0);
   assert.equal(crystalShield?.skillKills, 0);
+  assert.match(skillOutcome?.sourceSkillReportKey ?? "", /PowerShot/);
+  assert.equal(skillJob?.sourceSkillReportKey, skillOutcome?.sourceSkillReportKey);
 });
 
 test("same-round outcomes are capped to available target troops before tracing skill kills", () => {
