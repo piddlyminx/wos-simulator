@@ -12,7 +12,7 @@
       },
       "effects": {
         "NightmareTrace/1": {
-          "type": "active.hero.defense.down",
+          "type": "active.hero.health.down",
           "value": [
             40,
             80,
@@ -46,7 +46,7 @@
       },
       "effects": {
         "Dreamcatcher/1": {
-          "type": "active.hero.defense.down",
+          "type": "active.hero.health.down",
           "value": [
             30,
             60,
@@ -77,7 +77,7 @@
       },
       "effects": {
         "Dreamslice/1": {
-          "type": "active.hero.defense.down",
+          "type": "active.hero.health.down",
           "value": [
             15,
             30,

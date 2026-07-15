@@ -2,18 +2,24 @@ import type { MainHeroRole, Team } from "./types";
 
 export const MAIN_POOL: Record<string, MainHeroRole> = {
   Edith: "inf",
+  Gatot: "inf",
+  Jeronimo: "inf",
   Hector: "inf",
   "Wu Ming": "inf",
   Gordon: "lanc",
   Mia: "lanc",
   Philly: "lanc",
+  Sonya: "lanc",
   // Alonso: "mark",
   Bradley: "mark",
   // Greg: "mark",
+  Hendrik: "mark",
   Wayne: "mark"
 };
 
 export const JOINER_POOL = [
+  "Hendrik",
+  "Sonya",
   "Jessie",
   "Seo-yoon",
   "Lumak",
@@ -22,7 +28,6 @@ export const JOINER_POOL = [
   "Mia",
   "Reina",
   "Renee",
-  "Ahmose",
   "Norah",
   "Philly",
   "Wayne",
