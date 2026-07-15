@@ -53,12 +53,11 @@
       "description": "Every 3 turns, the ancient abyssal spirit's descendants will work together with Hendrik's Marksmen to launch an attack, dealing X% damage to all enemies.",
       "trigger": {
         "type": "turn",
-        "every": 3,
-        "source": "marksman"
+        "every": 3
       },
       "effects": {
         "DragonsHeir/1": {
-          "type": "active.hero.damage.up",
+          "type": "extra_skill_attack",
           "value": [
             8,
             16,
@@ -67,14 +66,20 @@
             40
           ],
           "units": {
-            "applies_to": "trigger.source",
-            "applies_vs": "trigger.target"
+            "applies_to": "marksman",
+            "applies_vs": "any"
           },
           "duration": {
             "attacks": {
               "count": 1
             }
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "enemy.living"
+            }
+          ]
         }
       }
     },

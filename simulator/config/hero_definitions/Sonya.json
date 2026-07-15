@@ -30,7 +30,7 @@
       },
       "effects": {
         "BountyTemptation/1": {
-          "type": "active.hero.damage.up",
+          "type": "extra_skill_attack",
           "value": [
             15,
             30,
@@ -46,7 +46,13 @@
             "attacks": {
               "count": 1
             }
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
         },
         "BountyTemptation/2": {
           "type": "active.hero.attack.up",
@@ -75,7 +81,7 @@
       },
       "effects": {
         "TorrentialImpact/1": {
-          "type": "active.hero.damage.up",
+          "type": "extra_skill_attack",
           "value": [
             50,
             100,
@@ -91,7 +97,13 @@
             "attacks": {
               "count": 1
             }
-          }
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
         },
         "TorrentialImpact/2": {
           "type": "no_attack",
