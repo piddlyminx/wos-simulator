@@ -10,7 +10,6 @@ import type {
   SideId,
   SimulatorConfig,
   SkillDefinition,
-  SkillFile,
   SkillRequirement,
   StatBlock,
   UnitType
@@ -75,8 +74,7 @@ export function resolveFighter(input: FighterInput, side: SideId, config: Simula
   }
 
   const statBonuses = resolveInputStatBonuses(input.stats);
-  const heroes = resolveHeroes(input, side, config, diagnostics, engagementType);
-  const heroSkills = resolveHeroSkills(input, side, config, diagnostics, engagementType);
+  const { heroes, heroSkills } = resolveHeroesAndSkills(input, side, config, diagnostics, engagementType);
   const troopSkills = resolveTroopSkills(side, troopDetails, config, engagementType);
 
   return {
@@ -162,14 +160,17 @@ function heroCollectionInstances(collection: HeroInputCollection | undefined, ro
   });
 }
 
-function resolveHeroes(
+// One walk resolves both the hero roster and the hydrated skills, so a skill can never
+// appear in a hero's skillIds without also being hydrated (and vice versa).
+function resolveHeroesAndSkills(
   input: FighterInput,
   side: SideId,
   config: SimulatorConfig,
   diagnostics: string[],
   engagementType?: string
-): ResolvedHero[] {
+): { heroes: ResolvedHero[]; heroSkills: ResolvedSkill[] } {
   const heroes: ResolvedHero[] = [];
+  const heroSkills: ResolvedSkill[] = [];
   for (const instance of heroInputInstances(input)) {
     const resolvedHeroName = resolveHeroDefinitionKey(instance.name, config);
     const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
@@ -184,52 +185,25 @@ function resolveHeroes(
       });
       continue;
     }
-    heroes.push({
-      name: definition.name ?? instance.name,
-      heroGeneration: definition.hero_generation,
-      skillIds: resolveHeroSkillIds(definition, instance.levels, side, engagementType),
-      instanceId: instance.instanceId,
-      role: instance.role
-    });
-  }
-  void side;
-  return heroes;
-}
-
-function resolveHeroSkills(
-  input: FighterInput,
-  side: SideId,
-  config: SimulatorConfig,
-  diagnostics: string[],
-  engagementType?: string
-): ResolvedSkill[] {
-  const skills: ResolvedSkill[] = [];
-  for (const instance of heroInputInstances(input)) {
-    const resolvedHeroName = resolveHeroDefinitionKey(instance.name, config);
-    const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
-    if (!definition) continue;
+    const skillIds: string[] = [];
     let index = 0;
     for (const [skillId, rawSkill] of Object.entries(definition.skills ?? {})) {
       index += 1;
       const level = Number(instance.levels[`skill_${index}`] ?? instance.levels[skillId] ?? 0);
       if (level <= 0) continue;
       if (!heroRequirementsSatisfied(rawSkill.requirements, level, side, engagementType)) continue;
-      skills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", definition.name ?? resolvedHeroName, undefined, instance.instanceId, instance.role));
+      skillIds.push(skillId);
+      heroSkills.push(hydrateSkill(skillId, rawSkill, side, level, "hero_skill", definition.name ?? resolvedHeroName, undefined, instance.instanceId, instance.role));
     }
+    heroes.push({
+      name: definition.name ?? instance.name,
+      heroGeneration: definition.hero_generation,
+      skillIds,
+      instanceId: instance.instanceId,
+      role: instance.role
+    });
   }
-  void diagnostics;
-  return skills;
-}
-
-function resolveHeroSkillIds(definition: SkillFile, levelMap: Record<string, number>, side: SideId, engagementType?: string): string[] {
-  const ids: string[] = [];
-  let index = 0;
-  for (const [skillId, rawSkill] of Object.entries(definition.skills ?? {})) {
-    index += 1;
-    const level = Number(levelMap[`skill_${index}`] ?? levelMap[skillId] ?? 0);
-    if (level > 0 && heroRequirementsSatisfied(rawSkill.requirements, level, side, engagementType)) ids.push(skillId);
-  }
-  return ids;
+  return { heroes, heroSkills };
 }
 
 function resolveTroopSkills(
