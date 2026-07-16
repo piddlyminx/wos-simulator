@@ -93,7 +93,8 @@ export interface BattleRecorder {
   recordSkillDamageJob(job: DamageJob, effect: ActiveEffect): void;
   recordBattleOrder(intent: AttackIntent, effect: ActiveEffect, chosenTarget: UnitType): void;
   recordScheduledDamageJob(job: DamageJob): void;
-  recordExtraAttack(normalJob: DamageJob, effect: ActiveEffect, jobs: DamageJob[], firstJobIndex: number, jobCount: number, processedJobs: Set<DamageJob>): void;
+  /** One extra_skill_attack firing on a normal attack; spawnedJobCount is the number of its jobs that ran (always > 0). */
+  recordExtraAttack(normalJob: DamageJob, effect: ActiveEffect, spawnedJobCount: number): void;
   recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "dodge" | "no_attack"): void;
   recordDamageJob(job: DamageJob, result: DamageResult, intent?: AttackIntent): void;
   recordFinalKills(result: DamageResult): void;
@@ -230,21 +231,7 @@ export class BasicInfoRecorder implements BattleRecorder {
 
   recordScheduledDamageJob(_job: DamageJob): void {}
 
-  recordExtraAttack(
-    normalJob: DamageJob,
-    effect: ActiveEffect,
-    jobs: DamageJob[],
-    firstJobIndex: number,
-    jobCount: number,
-    processedJobs: Set<DamageJob>
-  ): void {
-    let spawnedJobCount = 0;
-    const end = firstJobIndex + jobCount;
-    for (let index = firstJobIndex; index < end; index += 1) {
-      const job = jobs[index];
-      if (job && processedJobs.has(job)) spawnedJobCount += 1;
-    }
-    if (spawnedJobCount === 0) return;
+  recordExtraAttack(normalJob: DamageJob, effect: ActiveEffect, spawnedJobCount: number): void {
     const event = this.effectEvent(effect, normalJob.round, { kind: "extra_attack", spawnedJobCount });
     const events = this.extraAttackEvents.get(normalJob);
     if (events) events.push(event);
