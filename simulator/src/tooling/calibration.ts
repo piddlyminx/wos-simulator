@@ -29,14 +29,6 @@ export interface SampleStats {
   samples?: number[];
 }
 
-export interface DistributionCompatibility {
-  biasRaw?: number;
-  biasPct?: number;
-  z?: number;
-  passes?: boolean;
-  statType: "deterministic" | "distribution" | "unmatched";
-}
-
 export interface CalibrationComparison {
   calibrationAvailable: boolean;
   reportPath?: string;
@@ -48,32 +40,6 @@ export interface CalibrationComparison {
   referencePassRate: number;
   thresholds?: Record<string, number>;
   cases: CalibrationCaseComparison[];
-  table: CalibrationComparisonRow[];
-}
-
-export interface CalibrationComparisonRow extends CalibrationCaseComparison {
-  matched: boolean;
-  referencePasses?: boolean;
-  referenceBiasPct?: number;
-  simulatorScoreDelta?: number;
-  simulator?: SampleStats;
-  simulatorVsBaseline?: DistributionCompatibility;
-  simulatorVsGame?: DistributionCompatibility;
-  simulatorVsGameRaw?: number;
-  simulatorVsGamePct?: number;
-  simulatorPasses?: boolean;
-  simulatorN?: number;
-  simulatorMu?: number;
-  simulatorSigma?: number;
-  simulatorSem?: number;
-  simulatorVsBaselineBiasRaw?: number;
-  simulatorVsBaselineBiasPct?: number;
-  simulatorVsBaselineZ?: number;
-  simulatorVsBaselinePasses?: boolean;
-  simulatorVsGameBiasRaw?: number;
-  simulatorVsGameBiasPct?: number;
-  simulatorVsGameZ?: number;
-  simulatorVsGamePasses?: boolean;
 }
 
 function defaultCalibrationDir(): string {
@@ -97,8 +63,7 @@ export function loadCalibrationComparison(path?: string): CalibrationComparison 
     referencePassedCases,
     referencePassRate: cases.length > 0 ? referencePassedCases / cases.length : 0,
     thresholds: normalizeThresholds(parsed.thresholds),
-    cases,
-    table: []
+    cases
   };
 }
 
@@ -220,7 +185,6 @@ function emptyCalibrationComparison(): CalibrationComparison {
     referencePassedCases: 0,
     referencePassRate: 0,
     cases: [],
-    table: []
   };
 }
 
