@@ -100,10 +100,10 @@ export interface ResolvedEffectIntentDefinition extends EffectIntentDefinition {
   // Canonical config object retained across per-instance/level resolution. Duplicate
   // main/joiner copies use this identity to share prepared activation groups.
   sourceDefinition: Omit<EffectIntentDefinition, "id">;
-  // Fixed-scope effects take the direct group fast path. Dynamically resolved scopes
+  // Fixed-scope runtime modifiers take the direct group fast path. Dynamically resolved scopes
   // use the compact scope-key table populated during battle preparation.
-  damageGroup?: ActiveEffectGroup;
-  damageGroupsByScopeKey?: Array<ActiveEffectGroup | undefined>;
+  effectGroup?: ActiveEffectGroup;
+  effectGroupsByScopeKey?: Array<ActiveEffectGroup | undefined>;
 }
 
 export interface TriggerDefinition {
@@ -258,9 +258,9 @@ export interface EffectSource {
   effectId?: string;
 }
 
-// Runtime damage modifiers with the same definition and resolved unit scopes share one
-// stable group in the job-shape index. Each activation records its dense position so
-// expiry can swap-remove it once, irrespective of how many job shapes reference the group.
+// Runtime modifiers with the same definition and resolved unit scopes share one stable
+// group. Modifier stacking follows this object association; job-producing and control
+// effects are indexed independently and never enter these groups.
 export interface ActiveEffectGroup {
   effects: ActiveEffect[];
   bucketIndex: number;
@@ -268,9 +268,10 @@ export interface ActiveEffectGroup {
 }
 
 export interface ActiveEffect {
-  id: string;
   expired?: boolean;
   source: EffectSource;
+  /** Direct runtime association used for skill reporting; never emitted. */
+  sourceSkill?: ResolvedSkill;
   intent: EffectIntentDefinition;
   ownerSide: SideId;
   kind: ActiveEffectKind;
@@ -295,10 +296,9 @@ export interface ActiveEffect {
   // value evolution read it; cancelled attacks still charge attack-constrained effects
   // unless useEffectsOnDodge/useEffectsOnNoAttack disable that.
   uses: number;
-  stackingKey?: string;
   sameEffectStacking: SameEffectStacking;
-  damageIndexGroup?: ActiveEffectGroup;
-  damageIndexPosition?: number;
+  effectGroup?: ActiveEffectGroup;
+  effectGroupPosition?: number;
 }
 
 export interface EvolvingActiveEffect extends ActiveEffect {
@@ -310,7 +310,6 @@ export interface EvolvingActiveEffect extends ActiveEffect {
 }
 
 export interface AttackIntent {
-  id: string;
   round: number;
   source: "normal";
   dealerSide: SideId;
@@ -325,17 +324,14 @@ export interface AttackIntent {
 }
 
 export interface DamageJob {
-  id: string;
   round: number;
   kind: DamageKind;
-  sourceIntentId: string;
   roundStartTroops: Record<SideId, Record<UnitType, number>>;
   dealerSide: SideId;
   dealerUnit: UnitType;
   takerSide: SideId;
   takerUnit: UnitType;
   sourceEffectId?: string;
-  sourceSkillReportKey?: string;
   sourceMultiplier?: number;
 }
 
@@ -351,7 +347,7 @@ export interface DamageBucketTrace {
   totalPct?: number;
   factor: number;
   raw?: number;
-  contributors: Array<{ effectId: string; source: string; sourceSide?: SideId; valuePct: number; bucket: string; stackingKey?: string; sameEffectStacking?: SameEffectStacking }>;
+  contributors: Array<{ effectId: string; source: string; sourceSide?: SideId; valuePct: number; bucket: string; sameEffectStacking?: SameEffectStacking }>;
 }
 
 export interface DamageAggregationGroupTrace {
@@ -375,57 +371,53 @@ export interface DamageEquationTrace {
   finalKills: number;
 }
 
-// One "this effect affected battle mechanics" event, discriminated on ActiveEffect.kind.
-// Events are built by the standard and full-trace recorders; the uses counter is charged in every mode.
-interface AppliedEffectBase {
-  // ActiveEffect.id — the runtime instance. Static-profile/input-stat contributors have no
-  // ActiveEffect and use the config-level effectId here too.
-  activeEffectId: string;
-  // Config-level id (source.effectId ?? ActiveEffect.id).
+export interface AppliedEffectSummary {
   effectId: string;
-  source: string;
-  sourceSide?: SideId;
-}
-
-export interface AppliedModifierEffect extends AppliedEffectBase {
-  kind: "modifier";
+  sourceSide: SideId;
   bucket: string;
   valuePct: number;
-  stackingKey?: string;
-  sameEffectStacking?: SameEffectStacking;
 }
 
-export interface AppliedControlEffect extends AppliedEffectBase {
+interface DetailedAppliedEffectBase extends AppliedEffectSummary {
+  source: string;
+}
+
+export interface AppliedModifierEffect extends DetailedAppliedEffectBase {
+  kind: "modifier";
+  sameEffectStacking: SameEffectStacking;
+}
+
+export interface AppliedControlEffect extends DetailedAppliedEffectBase {
   kind: "control";
   reason: "dodge" | "no_attack";
 }
 
-export interface AppliedOrderEffect extends AppliedEffectBase {
+export interface AppliedOrderEffect extends DetailedAppliedEffectBase {
   kind: "battle_order";
   chosenTarget: UnitType;
 }
 
-export interface AppliedExtraAttackEffect extends AppliedEffectBase {
+export interface AppliedExtraAttackEffect extends DetailedAppliedEffectBase {
   kind: "extra_attack";
-  spawnedJobIds: string[];
+  spawnedJobCount: number;
 }
 
-export type AppliedEffect = AppliedModifierEffect | AppliedControlEffect | AppliedOrderEffect | AppliedExtraAttackEffect;
+export type DetailedAppliedEffect = AppliedModifierEffect | AppliedControlEffect | AppliedOrderEffect | AppliedExtraAttackEffect;
+export type AppliedEffect = AppliedEffectSummary | DetailedAppliedEffect;
 
 export interface AttackOutcome {
-  jobId: string;
   round: number;
   kind: DamageKind;
   sourceEffectId?: string;
-  sourceSkillReportKey?: string;
   dealerSide: SideId;
   dealerUnit: UnitType;
   takerSide: SideId;
   takerUnit: UnitType;
   kills: number;
-  counterDeltas: CounterDelta[];
-  appliedEffects: AppliedEffect[];
-  cancelledBy?: string;
+  /** Trace-only counter bookkeeping. */
+  counterDeltas?: CounterDelta[];
+  /** Standard emits four-field summaries; trace emits detailed causal events. */
+  appliedEffects?: AppliedEffect[];
   cancelReason?: "dodge" | "no_attack";
   trace?: DamageEquationTrace;
 }

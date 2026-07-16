@@ -102,7 +102,6 @@ function applyPlayerBucket(factors: StaticDamageBucketFactors, bucket: StaticPla
 
 export function selectPassiveContributions(activeEffects: ActiveEffect[]): PassiveContribution[] {
   const contributions: PassiveContribution[] = [];
-  const maxGroups = new Map<string, PassiveContribution>();
   for (const effect of activeEffects) {
     const bucket = effect.intent.type;
     if (!isPassiveBucket(bucket)) continue;
@@ -111,16 +110,9 @@ export function selectPassiveContributions(activeEffects: ActiveEffect[]): Passi
     for (const unit of UNIT_TYPES) {
       if (!unitMaskHas(effect.appliesTo.units, unit)) continue;
       const contribution: PassiveContribution = { role, side, unit, bucket, effect, valuePct: effect.getCurrentValuePct(1) };
-      if (effect.sameEffectStacking === "max" && effect.stackingKey) {
-        const key = `${role}:${side}:${unit}:${bucket}:${effect.stackingKey}`;
-        const selected = maxGroups.get(key);
-        if (!selected || contribution.valuePct > selected.valuePct) maxGroups.set(key, contribution);
-      } else {
-        contributions.push(contribution);
-      }
+      contributions.push(contribution);
     }
   }
-  contributions.push(...maxGroups.values());
   return contributions;
 }
 

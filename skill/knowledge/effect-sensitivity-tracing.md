@@ -85,20 +85,14 @@ Rejected effects are as useful as applied effects. Current rejection entries are
 Useful reasons include:
 
 ```text
-not_active_this_round
-not_applicable_to_job
-not_applicable_to_job_kind
-unsupported_attacker_effect
-unsupported_defender_effect
-wrong_side
-not_bucket_effect
+same_effect_max_suppressed
+same_effect_max_superseded
 ```
 
-If adding new rejection reasons, keep them tied to the current classifier/indexing path:
+If adding new rejection reasons, keep them tied to the current damage-recording path:
 
-- `basicEffectApplies()` in `classifier.ts`
-- `bucketCandidatesForJob()` in `effectIndex.ts`
-- `isEffectActive()` in `effects.ts`
+- dynamic group selection in `damage.ts`
+- `DamageJobRecorder.recordRejected()` in `recorder.ts`
 
 ## Sensitivity Reports
 

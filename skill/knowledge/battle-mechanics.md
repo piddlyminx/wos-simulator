@@ -7,7 +7,6 @@ Read this before changing:
 - `simulator/src/damage.ts`
 - `simulator/src/damageBuckets.ts`
 - `simulator/src/effectIndex.ts`
-- `simulator/src/classifier.ts`
 - target selection or attack ordering in `simulator/src/simulator.ts`
 - troop-skill or hero-skill effect semantics
 

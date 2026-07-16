@@ -1,6 +1,7 @@
 import type {
   ActiveEffect,
   ActiveEffectGroup,
+  AppliedEffect,
   DamageEquationTrace,
   DamageJob,
   ResolvedFighter,
@@ -67,7 +68,7 @@ export type StaticDamageProfile = Record<SideId, Record<UnitType, StaticDamagePr
 // AttackOutcome is assembled by the recorder, not here.
 export interface DamageResult {
   kills: number;
-  appliedEffects?: DamageEquationTrace["appliedEffects"];
+  appliedEffects?: AppliedEffect[];
   trace?: DamageEquationTrace;
 }
 

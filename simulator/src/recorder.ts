@@ -6,6 +6,7 @@ import { UNIT_TYPES } from "./types";
 import type {
   ActiveEffect,
   AppliedEffect,
+  AppliedModifierEffect,
   AttackIntent,
   AttackOutcome,
   BattleTrace,
@@ -70,8 +71,8 @@ interface StaticProfileDescription {
 // Per-(side, unit) applied-effect fragments prebuilt from the static profile description; the
 // per-job recorders splice them into each damage event instead of re-walking the description.
 interface StaticAppliedIndex {
-  dealer: Record<SideId, Record<UnitType, DamageEquationTrace["appliedEffects"]>>;
-  taker: Record<SideId, Record<UnitType, DamageEquationTrace["appliedEffects"]>>;
+  dealer: Record<SideId, Record<UnitType, AppliedEffect[]>>;
+  taker: Record<SideId, Record<UnitType, AppliedEffect[]>>;
 }
 
 /**
@@ -90,11 +91,11 @@ export interface BattleRecorder {
   recordSkillTriggered(skill: ResolvedSkill): void;
   recordSkillEffectActivated(skill: ResolvedSkill): void;
   recordSkillDamageJob(job: DamageJob, effect: ActiveEffect): void;
-  recordBattleOrder(intentId: string, effect: ActiveEffect, chosenTarget: UnitType): void;
+  recordBattleOrder(intent: AttackIntent, effect: ActiveEffect, chosenTarget: UnitType): void;
   recordScheduledDamageJob(job: DamageJob): void;
-  recordExtraAttack(normalJob: DamageJob, effect: ActiveEffect, jobs: DamageJob[], firstJobIndex: number, jobCount: number, processedJobIds: Set<string>): void;
+  recordExtraAttack(normalJob: DamageJob, effect: ActiveEffect, jobs: DamageJob[], firstJobIndex: number, jobCount: number, processedJobs: Set<DamageJob>): void;
   recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "dodge" | "no_attack"): void;
-  recordDamageJob(job: DamageJob, result: DamageResult): void;
+  recordDamageJob(job: DamageJob, result: DamageResult, intent?: AttackIntent): void;
   recordFinalKills(result: DamageResult): void;
   recordRound(round: number, roundStartTroops: DamageJob["roundStartTroops"], intents: AttackIntent[]): void;
   readonly attacks: AttackOutcome[];
@@ -105,7 +106,6 @@ export interface BattleRecorder {
 const NO_ATTACKS: AttackOutcome[] = [];
 const NO_APPLIED_EFFECTS: AppliedEffect[] = [];
 const EMPTY_SKILL_REPORT: Record<SideId, SkillReportEntry[]> = { attacker: [], defender: [] };
-const REPORT_KEY_CACHE = new WeakMap<ResolvedSkill, string>();
 
 const NULL_DAMAGE_JOB_RECORDER: DamageJobRecorder = {
   recordModifier() {},
@@ -152,19 +152,20 @@ export function createRecorder(
 
 export class BasicInfoRecorder implements BattleRecorder {
   readonly attacks: AttackOutcome[] = [];
+  protected readonly detailedAttackEffects: boolean = false;
   protected staticApplied?: StaticAppliedIndex;
-  protected readonly orderEvents = new Map<string, AppliedEffect>();
-  protected readonly extraAttackEvents = new Map<string, AppliedEffect[]>();
-  protected readonly skillReports: Record<SideId, Map<string, SkillReportEntry>> = {
+  protected readonly orderEvents = new Map<AttackIntent, AppliedEffect>();
+  protected readonly extraAttackEvents = new Map<DamageJob, AppliedEffect[]>();
+  protected readonly skillReports: Record<SideId, Map<ResolvedSkill, SkillReportEntry>> = {
     attacker: new Map(),
     defender: new Map()
   };
-  protected readonly skillDamageKeys = new Map<string, string>();
+  protected readonly skillDamageReports = new Map<DamageJob, SkillReportEntry>();
 
   constructor(fighters: ResolvedFighter[] = []) {
     for (const fighter of fighters) {
       for (const skill of [...(fighter.heroSkills ?? []), ...fighter.troopSkills]) {
-        this.skillReports[fighter.side].set(skillReportKey(skill), {
+        this.skillReports[fighter.side].set(skill, {
           sourceKind: skill.sourceKind,
           heroName: skill.heroName,
           troopType: skill.troopType,
@@ -193,13 +194,13 @@ export class BasicInfoRecorder implements BattleRecorder {
   }
 
   recordStaticProfile(fighters: Record<SideId, ResolvedFighter>, setupEffects: ActiveEffect[]): void {
-    this.applyStaticDescription(buildStaticProfileDescription(fighters, setupEffects));
+    this.applyStaticDescription(buildStaticProfileDescription(fighters, setupEffects, this.detailedAttackEffects));
   }
 
   protected applyStaticDescription(description: StaticProfileDescription): void {
     this.staticApplied = {
-      dealer: staticAppliedFragments(description.dealer),
-      taker: staticAppliedFragments(description.taker)
+      dealer: staticAppliedFragments(description.dealer, this.detailedAttackEffects),
+      taker: staticAppliedFragments(description.taker, this.detailedAttackEffects)
     };
   }
 
@@ -218,16 +219,13 @@ export class BasicInfoRecorder implements BattleRecorder {
   }
 
   recordSkillDamageJob(job: DamageJob, effect: ActiveEffect): void {
-    const key = skillReportKeyForEffect(effect);
-    if (key) this.skillDamageKeys.set(job.id, key);
+    const skill = effect.sourceSkill;
+    const report = skill && this.skillReports[skill.side].get(skill);
+    if (report) this.skillDamageReports.set(job, report);
   }
 
-  recordBattleOrder(intentId: string, effect: ActiveEffect, chosenTarget: UnitType): void {
-    this.orderEvents.set(intentId, {
-      kind: "battle_order",
-      ...appliedEffectBase(effect),
-      chosenTarget
-    });
+  recordBattleOrder(intent: AttackIntent, effect: ActiveEffect, chosenTarget: UnitType): void {
+    this.orderEvents.set(intent, this.effectEvent(effect, intent.round, { kind: "battle_order", chosenTarget }));
   }
 
   recordScheduledDamageJob(_job: DamageJob): void {}
@@ -238,30 +236,27 @@ export class BasicInfoRecorder implements BattleRecorder {
     jobs: DamageJob[],
     firstJobIndex: number,
     jobCount: number,
-    processedJobIds: Set<string>
+    processedJobs: Set<DamageJob>
   ): void {
-    const spawnedJobIds: string[] = [];
+    let spawnedJobCount = 0;
     const end = firstJobIndex + jobCount;
     for (let index = firstJobIndex; index < end; index += 1) {
-      const jobId = jobs[index]?.id;
-      if (jobId && processedJobIds.has(jobId)) spawnedJobIds.push(jobId);
+      const job = jobs[index];
+      if (job && processedJobs.has(job)) spawnedJobCount += 1;
     }
-    if (spawnedJobIds.length === 0) return;
-    const event: AppliedEffect = {
-      kind: "extra_attack",
-      ...appliedEffectBase(effect),
-      spawnedJobIds
-    };
-    const events = this.extraAttackEvents.get(normalJob.id);
+    if (spawnedJobCount === 0) return;
+    const event = this.effectEvent(effect, normalJob.round, { kind: "extra_attack", spawnedJobCount });
+    const events = this.extraAttackEvents.get(normalJob);
     if (events) events.push(event);
-    else this.extraAttackEvents.set(normalJob.id, [event]);
+    else this.extraAttackEvents.set(normalJob, [event]);
   }
 
   recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "dodge" | "no_attack"): void {
-    const order = this.orderEvents.get(intent.id);
-    this.orderEvents.delete(intent.id);
+    const order = this.orderEvents.get(intent);
+    this.orderEvents.delete(intent);
+    const control = this.effectEvent(effect, intent.round, { kind: "control", reason });
+    const appliedEffects = order ? [order, control] : [control];
     this.attacks.push({
-      jobId: `${intent.id}:cancelled`,
       round: intent.round,
       kind: "normal",
       dealerSide: intent.dealerSide,
@@ -269,42 +264,48 @@ export class BasicInfoRecorder implements BattleRecorder {
       takerSide: intent.takerSide,
       takerUnit: intent.takerUnit,
       kills: 0,
-      counterDeltas: counterDeltas(intent, "normal_attack"),
-      appliedEffects: order
-        ? [order, { kind: "control", ...appliedEffectBase(effect), reason }]
-        : [{ kind: "control", ...appliedEffectBase(effect), reason }],
-      cancelledBy: effect.id,
+      ...(this.detailedAttackEffects ? { counterDeltas: counterDeltas(intent, "normal_attack") } : {}),
+      appliedEffects,
       cancelReason: reason
     });
   }
 
-  recordDamageJob(job: DamageJob, result: DamageResult): void {
-    const sourceSkillReportKey = this.skillDamageKeys.get(job.id);
-    this.skillDamageKeys.delete(job.id);
-    if (job.kind === "skill" && sourceSkillReportKey && result.kills > 0) {
-      const report = this.skillReports[job.dealerSide].get(sourceSkillReportKey);
-      if (report) report.skillKills += result.kills;
+  recordDamageJob(job: DamageJob, result: DamageResult, intent?: AttackIntent): void {
+    const sourceSkillReport = this.skillDamageReports.get(job);
+    this.skillDamageReports.delete(job);
+    if (job.kind === "skill" && sourceSkillReport && result.kills > 0) {
+      sourceSkillReport.skillKills += result.kills;
     }
+    const order = intent && job.kind === "normal" ? this.orderEvents.get(intent) : undefined;
+    if (intent && job.kind === "normal") this.orderEvents.delete(intent);
+    const extras = this.extraAttackEvents.get(job);
+    this.extraAttackEvents.delete(job);
+    const appliedEffects = mergeAppliedEffects(result.appliedEffects, order, extras);
     const cause = job.kind === "skill" ? "extra_skill_attack" : "normal_attack";
-    const order = job.sourceIntentId ? this.orderEvents.get(job.sourceIntentId) : undefined;
-    if (job.sourceIntentId) this.orderEvents.delete(job.sourceIntentId);
-    const extras = this.extraAttackEvents.get(job.id);
-    this.extraAttackEvents.delete(job.id);
     this.attacks.push({
-      jobId: job.id,
       round: job.round,
       kind: job.kind,
       sourceEffectId: job.sourceEffectId,
-      sourceSkillReportKey,
       dealerSide: job.dealerSide,
       dealerUnit: job.dealerUnit,
       takerSide: job.takerSide,
       takerUnit: job.takerUnit,
       kills: result.kills,
-      counterDeltas: counterDeltas(job, cause),
-      appliedEffects: mergeAppliedEffects(result.appliedEffects, order, extras),
+      ...(this.detailedAttackEffects ? { counterDeltas: counterDeltas(job, cause) } : {}),
+      ...(appliedEffects.length ? { appliedEffects } : {}),
       trace: result.trace
     });
+  }
+
+  protected effectEvent(
+    effect: ActiveEffect,
+    round: number,
+    detail: { kind: "control"; reason: "dodge" | "no_attack" } | { kind: "battle_order"; chosenTarget: UnitType } | { kind: "extra_attack"; spawnedJobCount: number }
+  ): AppliedEffect {
+    const summary = appliedEffectSummary(effect, round);
+    return this.detailedAttackEffects
+      ? { ...summary, source: sourceLabel(effect), ...detail }
+      : summary;
   }
 
   recordFinalKills(_result: DamageResult): void {}
@@ -312,16 +313,17 @@ export class BasicInfoRecorder implements BattleRecorder {
   recordRound(_round: number, _roundStartTroops: DamageJob["roundStartTroops"], _intents: AttackIntent[]): void {
     this.orderEvents.clear();
     this.extraAttackEvents.clear();
-    this.skillDamageKeys.clear();
+    this.skillDamageReports.clear();
   }
 
   protected incrementSkillReport(skill: ResolvedSkill, field: "triggersSeen" | "skillActivations" | "effectActivations"): void {
-    const report = this.skillReports[skill.side].get(skillReportKey(skill));
+    const report = this.skillReports[skill.side].get(skill);
     if (report) report[field] += 1;
   }
 }
 
 export class FullTraceRecorder extends BasicInfoRecorder {
+  protected override readonly detailedAttackEffects: boolean = true;
   private readonly rounds: BattleTrace["rounds"] = [];
   private readonly roundJobs: DamageJob[] = [];
   private staticDescription?: StaticProfileDescription;
@@ -345,8 +347,7 @@ export class FullTraceRecorder extends BasicInfoRecorder {
   }
 
   override recordScheduledDamageJob(job: DamageJob): void {
-    const sourceSkillReportKey = this.skillDamageKeys.get(job.id);
-    this.roundJobs.push(sourceSkillReportKey ? { ...job, sourceSkillReportKey } : job);
+    this.roundJobs.push(job);
   }
 
   override recordFinalKills(result: DamageResult): void {
@@ -364,45 +365,26 @@ export class FullTraceRecorder extends BasicInfoRecorder {
 }
 
 class BasicDamageJobRecorder implements DamageJobRecorder {
-  protected readonly appliedEffects: DamageEquationTrace["appliedEffects"] = [];
+  private readonly appliedEffects: AppliedEffect[] = [];
 
   constructor(private readonly staticApplied?: StaticAppliedIndex) {}
 
   recordModifier(effect: ActiveEffect, valuePct: number): void {
-    if (valuePct === 0) return;
-    const applied = {
-      kind: "modifier" as const,
-      activeEffectId: effect.id,
-      effectId: effect.source.effectId ?? effect.id,
-      bucket: effect.intent.type,
-      valuePct,
-      source: sourceLabel(effect),
-      sourceSide: effect.ownerSide,
-      sameEffectStacking: effect.sameEffectStacking,
-      ...(effect.stackingKey === undefined ? {} : { stackingKey: effect.stackingKey })
-    };
-    this.appliedEffects.push(applied);
+    if (valuePct !== 0) this.appliedEffects.push(appliedEffectSummary(effect, effect.createdRound, valuePct));
   }
-
   recordRejected(_effect: ActiveEffect, _reason: RejectedEffectReason): void {}
 
   finish({ job, kills }: DamageRecordingResult): DamageResult {
-    return { kills, appliedEffects: this.appliedEffectsFor(job) };
-  }
-
-  // Dynamic modifiers first, then the prebuilt static passive fragments for the job's
-  // participants — the same order the per-job walk used to produce.
-  protected appliedEffectsFor(job: DamageJob): DamageEquationTrace["appliedEffects"] {
     const statics = this.staticApplied;
-    if (!statics) return this.appliedEffects;
+    if (!statics) return { kills, appliedEffects: this.appliedEffects };
     const dealer = statics.dealer[job.dealerSide][job.dealerUnit];
     const taker = statics.taker[job.takerSide][job.takerUnit];
-    if (dealer.length === 0 && taker.length === 0) return this.appliedEffects;
-    return [...this.appliedEffects, ...dealer, ...taker];
+    return { kills, appliedEffects: [...this.appliedEffects, ...dealer, ...taker] };
   }
 }
 
-class FullDamageJobRecorder extends BasicDamageJobRecorder {
+class FullDamageJobRecorder implements DamageJobRecorder {
+  private readonly appliedEffects: DamageEquationTrace["appliedEffects"] = [];
   private readonly contributors: DamageBucketTrace["contributors"][] = Array.from(
     { length: ATOMIC_BUCKETS.length },
     () => []
@@ -410,35 +392,44 @@ class FullDamageJobRecorder extends BasicDamageJobRecorder {
   private readonly rejectedEffects: DamageEquationTrace["rejectedEffects"] = [];
 
   constructor(
-    staticApplied?: StaticAppliedIndex,
+    private readonly staticApplied?: StaticAppliedIndex,
     private readonly staticDescription?: StaticProfileDescription
-  ) { super(staticApplied); }
+  ) {}
 
-  override recordModifier(effect: ActiveEffect, valuePct: number): void {
+  recordModifier(effect: ActiveEffect, valuePct: number): void {
+    if (valuePct === 0) return;
     this.contributors[effect.bucketIndex]?.push({
-      effectId: effect.source.effectId ?? effect.id,
+      effectId: effectId(effect),
       source: sourceLabel(effect),
       sourceSide: effect.ownerSide,
       valuePct,
       bucket: effect.intent.type,
-      stackingKey: effect.stackingKey,
       sameEffectStacking: effect.sameEffectStacking
     });
-    super.recordModifier(effect, valuePct);
+    this.appliedEffects.push({
+      kind: "modifier",
+      effectId: effectId(effect),
+      bucket: effect.intent.type,
+      valuePct,
+      source: sourceLabel(effect),
+      sourceSide: effect.ownerSide,
+      sameEffectStacking: effect.sameEffectStacking
+    });
   }
 
-  override recordRejected(effect: ActiveEffect, reason: RejectedEffectReason): void {
-    this.rejectedEffects.push({ effectId: effect.source.effectId ?? effect.id, reason });
+  recordRejected(effect: ActiveEffect, reason: RejectedEffectReason): void {
+    this.rejectedEffects.push({ effectId: effectId(effect), reason });
   }
 
-  override finish(result: DamageRecordingResult): DamageResult {
-    const basic = super.finish(result);
+  finish(result: DamageRecordingResult): DamageResult {
     const job = result.job;
+    const appliedEffects = this.appliedEffectsFor(job);
     const staticEntries = this.staticDescription
       ? [this.staticDescription.dealer[job.dealerSide][job.dealerUnit], this.staticDescription.taker[job.takerSide][job.takerUnit]]
       : [];
     return {
-      ...basic,
+      kills: result.kills,
+      appliedEffects,
       trace: {
         roundStartTroops: {
           attacker: { ...job.roundStartTroops.attacker },
@@ -447,12 +438,23 @@ class FullDamageJobRecorder extends BasicDamageJobRecorder {
         armyTerm: result.armyTerm,
         atomicBuckets: toTraceBuckets(result.factors, this.contributors, staticEntries),
         aggregationGroups: buildAggregationGroups(job, result.factors, this.contributors, staticEntries),
-        appliedEffects: basic.appliedEffects ?? [],
+        appliedEffects,
         rejectedEffects: this.rejectedEffects,
         rawDamage: result.rawDamage,
         finalKills: result.kills
       }
     };
+  }
+
+  // Dynamic modifiers first, then the prebuilt static passive fragments for the job's
+  // participants — the same order the per-job walk used to produce.
+  private appliedEffectsFor(job: DamageJob): AppliedModifierEffect[] {
+    const statics = this.staticApplied;
+    if (!statics) return this.appliedEffects;
+    const dealer = statics.dealer[job.dealerSide][job.dealerUnit];
+    const taker = statics.taker[job.takerSide][job.takerUnit];
+    if (dealer.length === 0 && taker.length === 0) return this.appliedEffects;
+    return [...this.appliedEffects, ...dealer, ...taker] as AppliedModifierEffect[];
   }
 }
 
@@ -471,7 +473,11 @@ function factorTerm(bucket: AtomicBucket): DamageFactorTerm {
   };
 }
 
-function buildStaticProfileDescription(fighters: Record<SideId, ResolvedFighter>, setupEffects: ActiveEffect[]): StaticProfileDescription {
+function buildStaticProfileDescription(
+  fighters: Record<SideId, ResolvedFighter>,
+  setupEffects: ActiveEffect[],
+  detailed: boolean
+): StaticProfileDescription {
   const description: StaticProfileDescription = {
     dealer: {
       attacker: buildSideEntries(fighters.attacker, "dealer"),
@@ -483,7 +489,7 @@ function buildStaticProfileDescription(fighters: Record<SideId, ResolvedFighter>
     }
   };
   for (const contribution of selectPassiveContributions(setupEffects)) {
-    addPassiveTerm(description[contribution.role][contribution.side][contribution.unit], contribution);
+    addPassiveTerm(description[contribution.role][contribution.side][contribution.unit], contribution, detailed);
   }
   return description;
 }
@@ -522,16 +528,15 @@ function setPlayerTerm(buckets: StaticProfileEntry["buckets"], bucket: StaticPla
   };
 }
 
-function addPassiveTerm(entry: StaticProfileEntry, contribution: PassiveContribution): void {
+function addPassiveTerm(entry: StaticProfileEntry, contribution: PassiveContribution, detailed: boolean): void {
   const { bucket, effect, valuePct } = contribution;
   const contributor = {
-    effectId: effect.source.effectId ?? effect.id,
-    source: sourceLabel(effect),
+    effectId: effectId(effect),
+    source: detailed ? sourceLabel(effect) : "",
     sourceSide: effect.ownerSide,
     valuePct,
     bucket,
-    stackingKey: effect.stackingKey,
-    sameEffectStacking: effect.sameEffectStacking
+    ...(detailed ? { sameEffectStacking: effect.sameEffectStacking } : {})
   };
   const existing = entry.buckets[bucket];
   if (existing) {
@@ -544,34 +549,38 @@ function addPassiveTerm(entry: StaticProfileEntry, contribution: PassiveContribu
 }
 
 function staticAppliedFragments(
-  entries: Record<SideId, Record<UnitType, StaticProfileEntry>>
-): Record<SideId, Record<UnitType, DamageEquationTrace["appliedEffects"]>> {
+  entries: Record<SideId, Record<UnitType, StaticProfileEntry>>,
+  detailed: boolean
+): Record<SideId, Record<UnitType, AppliedEffect[]>> {
   return Object.fromEntries(
     (Object.entries(entries) as Array<[SideId, Record<UnitType, StaticProfileEntry>]>).map(([side, units]) => [
       side,
       Object.fromEntries(
-        (Object.entries(units) as Array<[UnitType, StaticProfileEntry]>).map(([unit, entry]) => [unit, passiveAppliedEffects(entry)])
+        (Object.entries(units) as Array<[UnitType, StaticProfileEntry]>).map(([unit, entry]) => [unit, passiveAppliedEffects(entry, detailed)])
       )
     ])
-  ) as Record<SideId, Record<UnitType, DamageEquationTrace["appliedEffects"]>>;
+  ) as Record<SideId, Record<UnitType, AppliedEffect[]>>;
 }
 
-function passiveAppliedEffects(entry: StaticProfileEntry): DamageEquationTrace["appliedEffects"] {
-  const applied: DamageEquationTrace["appliedEffects"] = [];
+function passiveAppliedEffects(entry: StaticProfileEntry, detailed: boolean): AppliedEffect[] {
+  const applied: AppliedEffect[] = [];
   for (const [bucket, term] of Object.entries(entry.buckets) as Array<[StaticDamageBucket, StaticProfileEntry["buckets"][StaticDamageBucket]]>) {
     if (!bucket.startsWith("passive.") || !term) continue;
     for (const contributor of term.contributors) {
-      applied.push({
-        kind: "modifier",
-        activeEffectId: contributor.effectId,
+      const summary = {
         effectId: contributor.effectId,
         bucket,
         valuePct: contributor.valuePct,
-        source: contributor.source,
-        sourceSide: contributor.sourceSide,
-        stackingKey: contributor.stackingKey,
-        sameEffectStacking: contributor.sameEffectStacking
-      });
+        sourceSide: contributor.sourceSide!
+      };
+      applied.push(detailed
+        ? {
+            ...summary,
+            kind: "modifier",
+            source: contributor.source,
+            sameEffectStacking: contributor.sameEffectStacking ?? "add"
+          }
+        : summary);
     }
   }
   return applied;
@@ -699,53 +708,27 @@ function toTraceBuckets(
   return traced;
 }
 
-function appliedEffectBase(effect: ActiveEffect): { activeEffectId: string; effectId: string; source: string; sourceSide: SideId } {
+function effectId(effect: ActiveEffect): string {
+  return effect.source.effectId ?? effect.intent.id;
+}
+
+function appliedEffectSummary(effect: ActiveEffect, round: number, valuePct = effect.getCurrentValuePct(round)): AppliedEffect {
   return {
-    activeEffectId: effect.id,
-    effectId: effect.source.effectId ?? effect.id,
-    source: sourceLabel(effect),
-    sourceSide: effect.ownerSide
+    effectId: effectId(effect),
+    sourceSide: effect.ownerSide,
+    bucket: effect.intent.type,
+    valuePct
   };
 }
 
 function counterDeltas(
   attack: Pick<AttackIntent | DamageJob, "dealerSide" | "dealerUnit" | "takerSide" | "takerUnit">,
   cause: "normal_attack" | "extra_skill_attack"
-): AttackOutcome["counterDeltas"] {
+): NonNullable<AttackOutcome["counterDeltas"]> {
   return [
     { side: attack.dealerSide, unit: attack.dealerUnit, counter: "attacks", by: 1, cause },
     { side: attack.takerSide, unit: attack.takerUnit, counter: "received_attacks", by: 1, cause }
   ];
-}
-
-function skillReportKey(skill: ResolvedSkill): string {
-  const cached = REPORT_KEY_CACHE.get(skill);
-  if (cached) return cached;
-  const key = skillReportKeyFromParts(
-    skill.sourceKind,
-    skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? "",
-    skill.id
-  );
-  REPORT_KEY_CACHE.set(skill, key);
-  return key;
-}
-
-function skillReportKeyForEffect(effect: ActiveEffect): string | undefined {
-  const source = effect.source;
-  if ((source.kind !== "hero_skill" && source.kind !== "troop_skill") || !source.skillId) return undefined;
-  return skillReportKeyFromParts(
-    source.kind,
-    source.heroInstanceId ?? source.heroName ?? source.troopType ?? "",
-    source.skillId
-  );
-}
-
-function skillReportKeyFromParts(
-  sourceKind: SkillReportEntry["sourceKind"],
-  sourceKey: string,
-  skillId: string
-): string {
-  return `${sourceKind}:${sourceKey}:${skillId}`;
 }
 
 function mergeAppliedEffects(

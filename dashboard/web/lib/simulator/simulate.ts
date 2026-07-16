@@ -1,6 +1,6 @@
 import { loadSimulatorConfig } from "@simulator/config";
 import { prepareBattle, runPrepared } from "@simulator/simulator";
-import type { AppliedEffect, AttackOutcome, BattleResult, SimulatorConfig, UnitType } from "@simulator/types";
+import type { AppliedEffect, AttackOutcome, BattleResult, DetailedAppliedEffect, SimulatorConfig, UnitType } from "@simulator/types";
 import type {
   SimulateApiResult,
   SimulateOutcomeRun,
@@ -28,8 +28,15 @@ export interface SimulateBatchTask {
   seed: string;
 }
 
+interface SimulateBatchSkillTally {
+  name: string;
+  activations: number;
+  kills: number;
+}
+
 export interface SimulateBatchResult extends SimulateBatchTask {
-  result: BattleResult;
+  outcome: number;
+  perSideSkills: Record<"attacker" | "defender", SimulateBatchSkillTally[]>;
 }
 
 export async function runSimulation(request: SimulateRequestPayload, options: RunSimulationOptions = {}): Promise<SimulateApiResult> {
@@ -43,12 +50,11 @@ export async function runSimulation(request: SimulateRequestPayload, options: Ru
     ? await options.runBatches(request, tasks, options.onProgress)
     : runSimulationBatchDirect(request, tasks, config, options.onProgress);
   const ordered = [...batchResults].sort((a, b) => a.index - b.index);
-  const results = ordered.map((row) => row.result);
   const outcomeRuns: SimulateOutcomeRun[] = ordered.map((row) => ({
-    outcome: signedOutcome(row.result),
+    outcome: row.outcome,
     seed: row.seed,
   }));
-  return { ...aggregateBattleResults(results), outcome_runs: outcomeRuns };
+  return { ...aggregateSimulationRows(ordered), outcome_runs: outcomeRuns };
 }
 
 export function runSimulationBatchDirect(
@@ -65,7 +71,7 @@ export function runSimulationBatchDirect(
     const result = runPrepared(prepared, task.seed);
     const done = index + 1;
     if (done % progressEvery === 0 || done === total) onProgress?.(done, total);
-    return { ...task, result };
+    return compactBattleResult(task, result);
   });
 }
 
@@ -89,16 +95,41 @@ export function signedOutcome(result: BattleResult): number {
 }
 
 export function aggregateBattleResults(results: BattleResult[]): SimulateApiResult {
-  const outcomes = results.map(signedOutcome);
-  const replicates = Math.max(1, results.length);
+  return aggregateSimulationRows(results.map((result, index) =>
+    compactBattleResult({ index, seed: String(index) }, result),
+  ));
+}
+
+function compactBattleResult(task: SimulateBatchTask, result: BattleResult): SimulateBatchResult {
+  return {
+    ...task,
+    outcome: signedOutcome(result),
+    perSideSkills: {
+      attacker: compactSkills(result, "attacker"),
+      defender: compactSkills(result, "defender"),
+    },
+  };
+}
+
+function compactSkills(result: BattleResult, side: "attacker" | "defender"): SimulateBatchSkillTally[] {
+  return result.skillReport[side].map((row) => ({
+    name: row.skillName,
+    activations: row.skillActivations,
+    kills: row.skillKills,
+  }));
+}
+
+function aggregateSimulationRows(rows: SimulateBatchResult[]): SimulateApiResult {
+  const outcomes = rows.map((row) => row.outcome);
+  const replicates = Math.max(1, rows.length);
   const mean = outcomes.reduce((sum, value) => sum + value, 0) / replicates;
   const variance = outcomes.reduce((sum, value) => sum + (value - mean) ** 2, 0) / replicates;
   const best = Math.max(...outcomes);
   const worst = Math.min(...outcomes);
   const attackerWins = outcomes.filter((value) => value > 0).length;
   const perSide = {
-    attacker: aggregateSkills(results, "attacker"),
-    defender: aggregateSkills(results, "defender"),
+    attacker: aggregateSkills(rows, "attacker"),
+    defender: aggregateSkills(rows, "defender"),
   };
   const avgAttActivations = perSide.attacker.reduce((sum, row) => sum + row.avg_activations, 0);
   const avgDefActivations = perSide.defender.reduce((sum, row) => sum + row.avg_activations, 0);
@@ -124,20 +155,20 @@ export function aggregateBattleResults(results: BattleResult[]): SimulateApiResu
   };
 }
 
-function aggregateSkills(results: BattleResult[], side: "attacker" | "defender"): SimulateSkillSummary[] {
+function aggregateSkills(rows: SimulateBatchResult[], side: "attacker" | "defender"): SimulateSkillSummary[] {
   const totals = new Map<string, { activations: number; kills: number }>();
-  for (const result of results) {
-    for (const row of result.skillReport[side]) {
-      const entry = totals.get(row.skillName) ?? { activations: 0, kills: 0 };
-      entry.activations += row.skillActivations;
-      entry.kills += row.skillKills;
-      totals.set(row.skillName, entry);
+  for (const result of rows) {
+    for (const row of result.perSideSkills[side]) {
+      const entry = totals.get(row.name) ?? { activations: 0, kills: 0 };
+      entry.activations += row.activations;
+      entry.kills += row.kills;
+      totals.set(row.name, entry);
     }
   }
   return [...totals.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([name, value]) => ({
     name,
-    avg_activations: value.activations / Math.max(1, results.length),
-    avg_kills: value.kills / Math.max(1, results.length),
+    avg_activations: value.activations / Math.max(1, rows.length),
+    avg_kills: value.kills / Math.max(1, rows.length),
   }));
 }
 
@@ -154,7 +185,7 @@ export function battleResultToTrace(result: BattleResult, seed: string | number,
       const sourceUnit = traceUnit(attack.dealerUnit);
       const targetUnit = traceUnit(attack.takerUnit);
       sideRounds[attack.dealerSide].kills[sourceUnit][targetUnit] += attack.kills;
-      for (const effect of uniqueEffects(attack.appliedEffects)) {
+      for (const effect of uniqueEffects(attack.appliedEffects ?? [])) {
         const sourceSide = effect.sourceSide ?? attack.dealerSide;
         sideRounds[sourceSide].effects.push(traceEffect(effect, attack, 1));
       }
@@ -193,17 +224,11 @@ function normalizedGroupLabel(value: string | null | undefined): string | undefi
 }
 
 function attacksGroupedByRound(result: BattleResult): Map<number, AttackOutcome[]> {
-  const roundsByJob = new Map<string, number>();
-  for (const round of result.trace?.rounds ?? []) {
-    for (const job of round.jobs) roundsByJob.set(job.id, round.round);
-  }
   const grouped = new Map<number, AttackOutcome[]>();
   for (const attack of result.attacks) {
-    const round = roundsByJob.get(attack.jobId);
-    if (round === undefined) continue;
-    const list = grouped.get(round) ?? [];
+    const list = grouped.get(attack.round) ?? [];
     list.push(attack);
-    grouped.set(round, list);
+    grouped.set(attack.round, list);
   }
   return grouped;
 }
@@ -271,7 +296,7 @@ function skillGroupLabel(
 function effectUsage(result: BattleResult): SimulateTrace["effect_usage"] {
   const grouped: SimulateTrace["effect_usage"] = { attacker: {}, defender: {} };
   for (const attack of result.attacks) {
-    for (const effect of uniqueEffects(attack.appliedEffects)) {
+    for (const effect of uniqueEffects(attack.appliedEffects ?? [])) {
       const unit = unitLabel(attack.dealerUnit);
       const sourceSide = effect.sourceSide ?? attack.dealerSide;
       const unitRows = grouped[sourceSide][unit] ?? {};
@@ -282,7 +307,7 @@ function effectUsage(result: BattleResult): SimulateTrace["effect_usage"] {
   return grouped;
 }
 
-function traceEffect(effect: AppliedEffect, attack: AttackOutcome, uses: number): SimulateTraceEffect {
+function traceEffect(effect: DetailedAppliedEffect, attack: AttackOutcome, uses: number): SimulateTraceEffect {
   const sourceParts = effect.source.split("/");
   const hero = sourceParts[0] || unitLabel(attack.dealerUnit);
   const skillName = sourceParts[1] || effect.effectId;
@@ -306,15 +331,16 @@ function traceEffect(effect: AppliedEffect, attack: AttackOutcome, uses: number)
 
 // Modifiers keep their damage bucket as the display key; controls show their cancel reason;
 // order/extra-attack events show their kind.
-function effectKindKey(effect: AppliedEffect): string {
+function effectKindKey(effect: DetailedAppliedEffect): string {
   if (effect.kind === "modifier") return effect.bucket;
   if (effect.kind === "control") return effect.reason;
   return effect.kind;
 }
 
-function uniqueEffects(effects: AppliedEffect[]): AppliedEffect[] {
+function uniqueEffects(effects: AppliedEffect[]): DetailedAppliedEffect[] {
   const seen = new Set<string>();
-  return effects.filter((effect) => {
+  return effects.filter((effect): effect is DetailedAppliedEffect => {
+    if (!("kind" in effect)) return false;
     const key = `${effect.effectId}:${effectKindKey(effect)}:${effect.source}`;
     if (seen.has(key)) return false;
     seen.add(key);
@@ -322,7 +348,7 @@ function uniqueEffects(effects: AppliedEffect[]): AppliedEffect[] {
   });
 }
 
-function effectLabel(effect: AppliedEffect): string {
+function effectLabel(effect: DetailedAppliedEffect): string {
   return `${effect.source}/${effect.effectId}`;
 }
 

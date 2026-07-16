@@ -1031,13 +1031,13 @@ denominator factor.
 
 For special non-bucket effects:
 
-| Native `type` | Classification |
+| Native `type` | Runtime behavior |
 | --- | --- |
 | `type: "extra_skill_attack"` | create ActiveEffect that can create skill damage jobs |
 | `type: "dodge"` | attack control |
 | `type: "no_attack"` | attack control |
 | `type: "attack_order"` | battle order modifier |
-| unsupported record with `reason` only | report warning; do not affect damage |
+| unsupported config type | config diagnostic; do not create a runtime effect |
 
 ### Aggregation Config
 
@@ -1099,10 +1099,12 @@ Runtime active and type buckets are aggregated by metadata on each bucket:
 - trace aggregation group ids use the bucket path directly, for example
   `active.hero.lethality.up`
 
-For same-effect stacking, the default is additive. Effects with
-`same_effect_stacking: "max"` and the same stacking key contribute only the
-largest applicable value for that bucket; suppressed candidates are traceable in
-full detail mode.
+Same-effect stacking applies only to runtime percentage modifiers. The default
+is additive. Modifier activations associated with the same prepared EffectGroup
+and `same_effect_stacking: "max"` contribute only the largest applicable value
+for that bucket; suppressed candidates are traceable in full detail mode.
+Passive effects are additive, while controls, battle orders, and
+`extra_skill_attack` effects never enter modifier stacking groups.
 
 ### Aggregation Errors
 
@@ -1210,8 +1212,8 @@ effects; extra skill attack source effects consume according to their own
 declared mode.
 ```
 
-The current simulator pass implements attack-duration consumption for applicable
-active effects by active-effect id, not by catalogue effect id. Applicable
+The current simulator pass implements attack-duration consumption on the
+applicable ActiveEffect object, not by catalogue effect id. Applicable
 one-attack effects are consumed when their normal damage job is evaluated, and
 they are also consumed when that normal attack intent is cancelled by dodge or
 no-attack control. This prevents same-named effects from different activations

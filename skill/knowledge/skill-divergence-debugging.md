@@ -55,7 +55,7 @@ If controls fail, debug stats, report parsing, troop data, target order, roundin
 | No-hero single-type controls fail | stats, troop data, base bucket aggregation, rounding/capping, report parsing |
 | No-hero mixed controls fail | troop id aggregation, mixed-tier data, target order, final capping |
 | Only one hero fails | that hero's `SkillFile`, trigger, chance, duration, delay, selectors, or effect bucket |
-| Multiple heroes with same effect type fail | shared bucket/classifier handling for that effect type |
+| Multiple heroes with same effect type fail | shared bucket definition/index handling for that effect type |
 | All chance-heavy cases are noisy | repeat count, chance trigger scope, seed handling, stochastic model |
 | Skill-damage cases fail | `extra_skill_attack.trigger_damage_jobs`, `sourceMultiplier`, `DamageJob.kind`, target job selectors |
 | Every-N attack/round cases fail | `trigger.every`, `crossedFrequency()`, attack counters, round boundary |

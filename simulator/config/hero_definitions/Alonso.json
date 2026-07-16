@@ -100,7 +100,6 @@
               "count": 1
             }
           },
-          "same_effect_stacking": "max",
           "trigger_damage_jobs": [
             {
               "source": "use.source",

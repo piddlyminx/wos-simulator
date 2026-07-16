@@ -6,7 +6,7 @@ export interface EffectIndex {
   // Prepared stable graph. Repeated synchronous runs reuse these group references and
   // reset only their live activation arrays.
   damageGroupsByJobShape: ActiveEffectGroup[][];
-  damageGroups: ActiveEffectGroup[];
+  effectGroups: ActiveEffectGroup[];
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
   battleOrder: ActiveEffect[];
@@ -15,13 +15,13 @@ export interface EffectIndex {
 export const DAMAGE_JOB_SHAPE_SLOTS = 2 * 2 * 3 * 2 * 3;
 
 export function createEffectIndex(
-  damageGroups: ActiveEffectGroup[] = [],
+  effectGroups: ActiveEffectGroup[] = [],
   damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => [])
 ): EffectIndex {
-  for (const group of damageGroups) group.effects.length = 0;
+  for (const group of effectGroups) group.effects.length = 0;
   return {
     damageGroupsByJobShape,
-    damageGroups,
+    effectGroups,
     controls: [],
     extraAttacks: [],
     battleOrder: []
@@ -33,18 +33,18 @@ export function cloneEffectIndex(
   preparedEffects: ActiveEffect[],
   cloneEffect: (effect: ActiveEffect) => ActiveEffect
 ): EffectIndex {
-  for (const group of index.damageGroups) group.effects.length = 0;
+  for (const group of index.effectGroups) group.effects.length = 0;
   const clone: EffectIndex = {
     damageGroupsByJobShape: index.damageGroupsByJobShape,
-    damageGroups: index.damageGroups,
+    effectGroups: index.effectGroups,
     controls: index.controls.map(cloneEffect),
     extraAttacks: index.extraAttacks.map(cloneEffect),
     battleOrder: index.battleOrder.map(cloneEffect)
   };
   for (const effect of preparedEffects) {
-    const group = effect.damageIndexGroup;
-    if (!group || effect.damageIndexPosition === undefined) continue;
-    effect.damageIndexPosition = group.effects.length;
+    const group = effect.effectGroup;
+    if (!group || effect.effectGroupPosition === undefined) continue;
+    effect.effectGroupPosition = group.effects.length;
     group.effects.push(effect);
   }
   return clone;
@@ -64,11 +64,11 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
     return;
   }
 
-  const group = effect.damageIndexGroup;
-  if (!group) throw new Error(`Runtime modifier ${effect.id} has no prepared damage group`);
-  effect.bucketIndex = group.bucketIndex;
-  effect.damageIndexPosition = group.effects.length;
+  const group = effect.effectGroup;
+  if (!group) throw new Error(`Runtime modifier ${effect.intent.id} has no prepared effect group`);
+  effect.effectGroupPosition = group.effects.length;
   group.effects.push(effect);
+  effect.bucketIndex = group.bucketIndex;
 }
 
 export function isRuntimeIndexableEffect(effect: ActiveEffect): boolean {
@@ -82,7 +82,7 @@ export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): voi
   if (effect.kind === "control") removeStable(index.controls, effect);
   else if (effect.kind === "extra_attack") removeStable(index.extraAttacks, effect);
   else if (effect.kind === "battle_order") removeStable(index.battleOrder, effect);
-  else removeDamageEffect(effect);
+  removeEffectGroupEntry(effect);
 }
 
 export function damageJobSlot(job: DamageJob): number {
@@ -154,17 +154,17 @@ function removeStable(effects: ActiveEffect[], effect: ActiveEffect): void {
   if (index >= 0) effects.splice(index, 1);
 }
 
-function removeDamageEffect(effect: ActiveEffect): void {
-  const group = effect.damageIndexGroup;
-  const position = effect.damageIndexPosition;
+function removeEffectGroupEntry(effect: ActiveEffect): void {
+  const group = effect.effectGroup;
+  const position = effect.effectGroupPosition;
   if (!group || position === undefined) return;
   const lastPosition = group.effects.length - 1;
   const moved = group.effects[lastPosition];
   if (position !== lastPosition) {
     group.effects[position] = moved;
-    moved.damageIndexPosition = position;
+    moved.effectGroupPosition = position;
   }
   group.effects.pop();
-  effect.damageIndexGroup = undefined;
-  effect.damageIndexPosition = undefined;
+  effect.effectGroup = undefined;
+  effect.effectGroupPosition = undefined;
 }

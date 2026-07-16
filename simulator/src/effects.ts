@@ -17,8 +17,8 @@ import { normalizeUnitType } from "./normalize";
 
 export type Rng = () => number;
 interface CompiledActivation {
-  idPrefix: string;
   source: ActiveEffect["source"];
+  sourceSkill: ResolvedSkill;
   ownerSide: SideId;
   kind: ActiveEffectKind;
   initialValuePct: number;
@@ -28,7 +28,6 @@ interface CompiledActivation {
   duration: EffectDuration;
   turnDelay: number;
   attackDelay: number;
-  stackingKey: string;
   sameEffectStacking: SameEffectStacking;
   staticAppliesTo: ResolvedUnitScope;
   staticAppliesVs: ResolvedUnitScope;
@@ -124,10 +123,8 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
   if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
     throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
   }
-  const sourceKey = skillActivationSourceKey(skill);
   const evolution = intent.value_evolution;
   const compiled: CompiledActivation = {
-    idPrefix: `${skill.side}:${skill.sourceKind}:${sourceKey}:${skill.id}:${intent.id}:r`,
     source: {
       kind: skill.sourceKind,
       side: skill.side,
@@ -138,6 +135,7 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
       skillName: skill.name,
       effectId: intent.id
     },
+    sourceSkill: skill,
     ownerSide,
     kind: effectKind,
     initialValuePct: finiteNumberOrZero(intent.value),
@@ -147,7 +145,6 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
     duration,
     turnDelay: Math.max(0, duration.turns?.delay ?? 0),
     attackDelay: duration.attacks?.delay ?? 0,
-    stackingKey: `${skill.side}:${skill.sourceKind}:${skillStackingSourceKey(skill)}:${skill.id}:${intent.id}`,
     sameEffectStacking: normalizeSameEffectStacking(intent.same_effect_stacking),
     staticAppliesTo,
     staticAppliesVs,
@@ -169,9 +166,9 @@ export function activateEffect(skill: ResolvedSkill, intent: ResolvedEffectInten
     appliesVs = resolveUnitScope(units.applies_vs, oppositeSide(appliesTo.side), "applies_vs", attackIntent, compiled.ownerSide);
   }
   const effect: ActiveEffect = {
-    id: compiled.idPrefix + round + ":" + (attackIntent?.id ?? "global"),
     expired: false,
     source: compiled.source,
+    sourceSkill: compiled.sourceSkill,
     intent,
     ownerSide: compiled.ownerSide,
     kind: compiled.kind,
@@ -186,12 +183,9 @@ export function activateEffect(skill: ResolvedSkill, intent: ResolvedEffectInten
     duration: compiled.duration,
     remainingAttackDelay: compiled.attackDelay,
     uses: 0,
-    stackingKey: compiled.stackingKey,
     sameEffectStacking: compiled.sameEffectStacking,
-    damageIndexGroup: compiled.kind === "modifier"
-      ? intent.damageGroup ?? intent.damageGroupsByScopeKey?.[resolvedEffectScopeKey(appliesTo, appliesVs)]
-      : undefined,
-    damageIndexPosition: undefined
+    effectGroup: intent.effectGroup ?? intent.effectGroupsByScopeKey?.[resolvedEffectScopeKey(appliesTo, appliesVs)],
+    effectGroupPosition: undefined
   };
   if (!compiled.valueEvolution) return effect;
   return { ...effect, valueEvolution: compiled.valueEvolution } as EvolvingActiveEffect;
@@ -205,14 +199,6 @@ export function resolvedEffectScopeKey(appliesTo: ResolvedUnitScope, appliesVs: 
 
 function sideIndex(side: SideId): number {
   return side === "attacker" ? 0 : 1;
-}
-
-function skillActivationSourceKey(skill: ResolvedSkill): string {
-  return skill.heroInstanceId ?? skill.heroName ?? skill.troopType ?? "global";
-}
-
-function skillStackingSourceKey(skill: ResolvedSkill): string {
-  return skill.heroName ?? skill.troopType ?? "global";
 }
 
 export function sourceLabel(effect: ActiveEffect): string {

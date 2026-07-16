@@ -3,7 +3,8 @@ import { test } from "node:test";
 
 import type { BattleResult } from "@simulator/types";
 import type { SimulateRequestPayload } from "@/lib/simulate-run";
-import { aggregateBattleResults, battleResultToTrace, runSimulation, signedOutcome } from "./simulate";
+import type { SimulateBatchResult, SimulateBatchTask } from "./simulate";
+import { aggregateBattleResults, battleResultToTrace, runSimulation, runSimulationBatchDirect, signedOutcome } from "./simulate";
 
 function result(attacker: number, defender: number, activations = 0): BattleResult {
   return {
@@ -57,6 +58,25 @@ function sampleSide(troops: Record<"infantry" | "lancer" | "marksman", number>):
   };
 }
 
+function batchResult(task: SimulateBatchTask, battle: BattleResult): SimulateBatchResult {
+  return {
+    ...task,
+    outcome: signedOutcome(battle),
+    perSideSkills: {
+      attacker: battle.skillReport.attacker.map((row) => ({
+        name: row.skillName,
+        activations: row.skillActivations,
+        kills: row.skillKills,
+      })),
+      defender: battle.skillReport.defender.map((row) => ({
+        name: row.skillName,
+        activations: row.skillActivations,
+        kills: row.skillKills,
+      })),
+    },
+  };
+}
+
 test("signedOutcome uses positive attacker survivors and negative defender survivors", () => {
   assert.equal(signedOutcome(result(12, 0)), 12);
   assert.equal(signedOutcome(result(0, 9)), -9);
@@ -77,10 +97,10 @@ test("runSimulation preserves replicate order from batched workers", async () =>
   const aggregate = await runSimulation(sampleSimulatePayload(2), {
     seedBase: "batch-test",
     runBatches: async (_request, tasks) =>
-      [...tasks].reverse().map((task) => ({
-        ...task,
-        result: task.index === 0 ? result(10, 0) : result(0, 5),
-      })),
+      [...tasks].reverse().map((task) => batchResult(
+        task,
+        task.index === 0 ? result(10, 0) : result(0, 5),
+      )),
   });
 
   assert.deepEqual(aggregate.outcomes, [10, -5]);
@@ -90,11 +110,22 @@ test("runSimulation preserves replicate order from batched workers", async () =>
   ]);
 });
 
+test("simulation batches discard attack-level battle data before crossing the worker boundary", () => {
+  const [batch] = runSimulationBatchDirect(
+    sampleSimulatePayload(1),
+    [{ index: 0, seed: "compact-batch:0" }],
+  );
+
+  assert.equal("result" in batch, false);
+  assert.equal(typeof batch.outcome, "number");
+  assert.ok(batch.perSideSkills.attacker.length > 0);
+  assert.ok(Buffer.byteLength(JSON.stringify(batch)) < 10_000);
+});
+
 test("battleResultToTrace maps a full simulator trace into dashboard detail rows", () => {
   const sample = result(9, 0, 1);
   sample.skillReport.attacker[0].skillKills = 4;
   sample.attacks = [{
-    jobId: "job-1",
     round: 1,
     kind: "skill",
     sourceEffectId: "S1:e1",
@@ -103,8 +134,7 @@ test("battleResultToTrace maps a full simulator trace into dashboard detail rows
     takerSide: "defender",
     takerUnit: "infantry",
     kills: 4,
-    counterDeltas: [],
-    appliedEffects: [{ kind: "modifier", activeEffectId: "S1:e1", effectId: "S1:e1", bucket: "player.attack", valuePct: 10, source: "Greg/S1/S1:e1" }],
+    appliedEffects: [{ kind: "modifier", effectId: "S1:e1", bucket: "player.attack", valuePct: 10, source: "Greg/S1/S1:e1", sourceSide: "attacker", sameEffectStacking: "add" }],
   }];
   sample.trace = {
     resolved: sample.resolved,
@@ -116,10 +146,8 @@ test("battleResultToTrace maps a full simulator trace into dashboard detail rows
       },
       intents: [],
       jobs: [{
-        id: "job-1",
         round: 1,
         kind: "skill",
-        sourceIntentId: "intent-1",
         roundStartTroops: {
           attacker: { infantry: 10, lancer: 20, marksman: 30 },
           defender: { infantry: 40, lancer: 50, marksman: 60 },
@@ -141,7 +169,6 @@ test("battleResultToTrace maps a full simulator trace into dashboard detail rows
 test("battleResultToTrace groups applied effects by source side, not attacking side", () => {
   const sample = result(9, 0, 1);
   sample.attacks = [{
-    jobId: "job-1",
     round: 1,
     kind: "normal",
     dealerSide: "attacker",
@@ -149,11 +176,10 @@ test("battleResultToTrace groups applied effects by source side, not attacking s
     takerSide: "defender",
     takerUnit: "infantry",
     kills: 4,
-    counterDeltas: [],
     appliedEffects: [
-      { kind: "modifier", activeEffectId: "att-buff", effectId: "att-buff", bucket: "active.hero.attack.up", valuePct: 10, source: "Edith/StrategicBalance/att-buff", sourceSide: "attacker" },
-      { kind: "modifier", activeEffectId: "def-buff", effectId: "def-buff", bucket: "active.hero.defense.up", valuePct: 10, source: "Natalia/RitualDeciphering/def-buff", sourceSide: "defender" },
-      { kind: "control", activeEffectId: "def-stun", effectId: "def-stun", source: "Natalia/RitualDeciphering/def-stun", sourceSide: "defender", reason: "no_attack" },
+      { kind: "modifier", effectId: "att-buff", bucket: "active.hero.attack.up", valuePct: 10, source: "Edith/StrategicBalance/att-buff", sourceSide: "attacker", sameEffectStacking: "add" },
+      { kind: "modifier", effectId: "def-buff", bucket: "active.hero.defense.up", valuePct: 10, source: "Natalia/RitualDeciphering/def-buff", sourceSide: "defender", sameEffectStacking: "add" },
+      { kind: "control", effectId: "def-stun", source: "Natalia/RitualDeciphering/def-stun", sourceSide: "defender", bucket: "no_attack", valuePct: 0, reason: "no_attack" },
     ],
   }];
   sample.trace = {
@@ -166,10 +192,8 @@ test("battleResultToTrace groups applied effects by source side, not attacking s
       },
       intents: [],
       jobs: [{
-        id: "job-1",
         round: 1,
         kind: "normal",
-        sourceIntentId: "intent-1",
         roundStartTroops: {
           attacker: { infantry: 10, lancer: 20, marksman: 30 },
           defender: { infantry: 40, lancer: 50, marksman: 60 },
@@ -222,7 +246,6 @@ test("skill kill summaries show only chance troop skills grouped under matching 
   sample.skillReport.attacker[0].skillKills = 4;
   sample.attacks = [
     {
-      jobId: "normal-1",
       round: 1,
       kind: "normal",
       dealerSide: "attacker",
@@ -230,11 +253,9 @@ test("skill kill summaries show only chance troop skills grouped under matching 
       takerSide: "defender",
       takerUnit: "infantry",
       kills: 100,
-      counterDeltas: [],
-      appliedEffects: [{ kind: "modifier", activeEffectId: "CrystalShield/1", effectId: "CrystalShield/1", bucket: "active.troop.defense.up", valuePct: 36, source: "infantry/CrystalShield/CrystalShield/1" }],
+      appliedEffects: [{ kind: "modifier", effectId: "CrystalShield/1", bucket: "active.troop.defense.up", valuePct: 36, source: "infantry/CrystalShield/CrystalShield/1", sourceSide: "attacker", sameEffectStacking: "add" }],
     },
     {
-      jobId: "skill-1",
       round: 1,
       kind: "skill",
       sourceEffectId: "S1:e1",
@@ -243,8 +264,7 @@ test("skill kill summaries show only chance troop skills grouped under matching 
       takerSide: "defender",
       takerUnit: "infantry",
       kills: 4,
-      counterDeltas: [],
-      appliedEffects: [{ kind: "modifier", activeEffectId: "S1:e1", effectId: "S1:e1", bucket: "source.extraSkill", valuePct: 100, source: "Greg/S1/S1:e1" }],
+      appliedEffects: [{ kind: "modifier", effectId: "S1:e1", bucket: "source.extraSkill", valuePct: 100, source: "Greg/S1/S1:e1", sourceSide: "attacker", sameEffectStacking: "add" }],
     },
   ];
   sample.trace = {
@@ -258,10 +278,8 @@ test("skill kill summaries show only chance troop skills grouped under matching 
       intents: [],
       jobs: [
         {
-          id: "normal-1",
           round: 1,
           kind: "normal",
-          sourceIntentId: "intent-1",
           roundStartTroops: {
             attacker: { infantry: 10, lancer: 20, marksman: 30 },
             defender: { infantry: 40, lancer: 50, marksman: 60 },
@@ -272,10 +290,8 @@ test("skill kill summaries show only chance troop skills grouped under matching 
           takerUnit: "infantry",
         },
         {
-          id: "skill-1",
           round: 1,
           kind: "skill",
-          sourceIntentId: "intent-1",
           roundStartTroops: {
             attacker: { infantry: 10, lancer: 20, marksman: 30 },
             defender: { infantry: 40, lancer: 50, marksman: 60 },

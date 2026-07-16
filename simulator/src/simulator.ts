@@ -1,5 +1,6 @@
 import type {
   ActiveEffect,
+  ActiveEffectGroup,
   AttackIntent,
   AttackOutcome,
   BearBattleResult,
@@ -37,7 +38,6 @@ import {
   skillMatchesTrigger,
   type Rng
 } from "./effects";
-import { classifyEffectForJob } from "./classifier";
 import { cloneEffectIndex, createEffectIndex, damageBucketIndex, damageJobShapeSlot, damageJobSlot, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
 import { normalizeUnitType } from "./normalize";
 import { emptyTroops, resolveFighter } from "./resolve";
@@ -81,24 +81,17 @@ interface RuntimeSkills {
   roundStartPerUnit: ResolvedSkill[];
   attackDeclared: ResolvedSkill[];
   attackDeclaredByJobShape: Array<ResolvedSkill[] | undefined>;
-  damageGroups: NonNullable<ActiveEffect["damageIndexGroup"]>[];
-  damageGroupsByJobShape: NonNullable<ActiveEffect["damageIndexGroup"]>[][];
-}
-
-interface ExtraAttackEffectGroup {
-  selected: ActiveEffect;
-  effects: ActiveEffect[];
+  effectGroups: ActiveEffectGroup[];
+  damageGroupsByJobShape: ActiveEffectGroup[][];
 }
 
 interface ExtraSkillJobsResult {
   jobs: DamageJob[];
-  usedEffectGroups: ExtraSkillUsedEffectGroup[];
+  usedEffects: ExtraSkillUsedEffect[];
 }
 
-interface ExtraSkillUsedEffectGroup {
-  sourceEffectId: string;
-  selected: ActiveEffect;
-  effects: ActiveEffect[];
+interface ExtraSkillUsedEffect {
+  effect: ActiveEffect;
   firstJobIndex: number;
   jobCount: number;
 }
@@ -310,7 +303,7 @@ function cloneRuntime(template: Runtime, rng: Rng): Runtime {
   });
   const cloneEffect = (effect: ActiveEffect): ActiveEffect => {
     const clone = effectClones.get(effect);
-    if (!clone) throw new Error(`prepared effect ${effect.id} is missing from the runtime template`);
+    if (!clone) throw new Error(`prepared effect ${effect.intent.id} is missing from the runtime template`);
     return clone;
   };
   const runtime: Runtime = {
@@ -481,11 +474,11 @@ function runLoop(
       chargeUsedEffects(runtime);
 
       const extraSkill = extraSkillJobs(job, round, runtime, roundStartTroops, recorder);
-      const processedExtraEffectIds = new Set<string>();
-      const processedExtraJobIds = new Set<string>();
+      const processedExtraJobs = new Set<DamageJob>();
       const normalEntry: DamageJobResult = {
         job,
-        result: normalResult
+        result: normalResult,
+        intent
       };
       results.push(normalEntry);
 
@@ -494,27 +487,34 @@ function runLoop(
         recorder.recordScheduledDamageJob(extraJob);
         const extraResult = calculateDamageJob(extraJob, fighters, damageJobOptions);
         if (loopOptions.capRoundKills) capJobToRemainingTarget(extraResult, extraJob, roundStartTroops, roundTargetDamage, recorder);
-        processedExtraEffectIds.add(extraJob.sourceEffectId ?? "");
-        processedExtraJobIds.add(extraJob.id);
+        processedExtraJobs.add(extraJob);
         if (extraJob.sourceEffectId) {
           runtime.extraSkillAttackJobsByEffect[extraJob.sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[extraJob.sourceEffectId] ?? 0) + 1;
         }
-        results.push({ job: extraJob, result: extraResult });
+        results.push({ job: extraJob, result: extraResult, intent });
         if (loopOptions.scoreSide && extraJob.dealerSide === loopOptions.scoreSide.dealerSide && extraJob.takerSide === loopOptions.scoreSide.takerSide) {
           score += extraResult.kills;
         }
         chargeUsedEffects(runtime);
       }
-      for (const usedEffectGroup of extraSkill.usedEffectGroups) {
-        if (!processedExtraEffectIds.has(usedEffectGroup.sourceEffectId)) continue;
-        for (const usedEffect of usedEffectGroup.effects) chargeEffectUse(runtime, usedEffect);
+      for (const usedEffect of extraSkill.usedEffects) {
+        const end = usedEffect.firstJobIndex + usedEffect.jobCount;
+        let processed = false;
+        for (let jobIndex = usedEffect.firstJobIndex; jobIndex < end; jobIndex += 1) {
+          if (processedExtraJobs.has(extraSkill.jobs[jobIndex])) {
+            processed = true;
+            break;
+          }
+        }
+        if (!processed) continue;
+        chargeEffectUse(runtime, usedEffect.effect);
         recorder.recordExtraAttack(
           job,
-          usedEffectGroup.selected,
+          usedEffect.effect,
           extraSkill.jobs,
-          usedEffectGroup.firstJobIndex,
-          usedEffectGroup.jobCount,
-          processedExtraJobIds
+          usedEffect.firstJobIndex,
+          usedEffect.jobCount,
+          processedExtraJobs
         );
       }
     }
@@ -523,7 +523,7 @@ function runLoop(
     else commitRoundCounters(cancelled, results, runtime);
 
     for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.control.effect, entry.control.reason);
-    for (const entry of results) recorder.recordDamageJob(entry.job, entry.result);
+    for (const entry of results) recorder.recordDamageJob(entry.job, entry.result, entry.intent);
     recorder.recordRound(round, roundStartTroops, intents);
   }
 
@@ -548,6 +548,7 @@ interface CancelledAttack {
 interface DamageJobResult {
   job: DamageJob;
   result: DamageResult;
+  intent?: AttackIntent;
 }
 
 function triggerRoundStartSkills(
@@ -612,7 +613,6 @@ function syntheticRoundIntent(
   runtime: Runtime
 ): AttackIntent {
   return {
-    id: `r${round}:${dealerSide}:${dealerUnit}:turn:${orderIndex}`,
     round,
     source: "normal",
     dealerSide,
@@ -647,7 +647,7 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: R
   const skills = preparedSkills ?? buildRuntimeSkills(fighters);
   return {
     effectIndex: createEffectIndex(
-      skills.damageGroups,
+      skills.effectGroups,
       skills.damageGroupsByJobShape
     ),
     preparedEffects: [],
@@ -672,23 +672,30 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: R
 function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
   const all = fighters.flatMap((fighter) => [...(fighter.heroSkills ?? []), ...fighter.troopSkills]);
   for (const skill of all) compiledTriggerForSkill(skill);
-  const damageGroups: NonNullable<ActiveEffect["damageIndexGroup"]>[] = [];
-  const damageGroupsByJobShape: NonNullable<ActiveEffect["damageIndexGroup"]>[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
-  const plansByDefinition: Record<SideId, Map<object, DamageGroupPlan>> = {
+  const effectGroups: ActiveEffectGroup[] = [];
+  const damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
+  const plansByDefinition: Record<SideId, Map<object, EffectGroupPlan>> = {
     attacker: new Map(),
     defender: new Map()
   };
   for (const skill of all) {
     for (const intent of skill.effects) {
       const definition = bucketDefinition(intent.type);
-      if (!definition || definition.valueType !== "pct" || definition.phase === "static") continue;
-      const existingPlan = plansByDefinition[skill.side].get(intent.sourceDefinition);
-      if (existingPlan) {
-        assignDamageGroupPlan(intent, existingPlan);
+      if (definition?.phase === "static") {
+        if (intent.same_effect_stacking === "max") {
+          throw new Error(`Static passive effect ${intent.id} cannot use max stacking; passive effects are additive`);
+        }
         continue;
       }
-      const groupsByScopeKey: Array<NonNullable<ActiveEffect["damageIndexGroup"]> | undefined> = [];
-      const groupsForDefinition: NonNullable<ActiveEffect["damageIndexGroup"]>[] = [];
+      const isDynamicModifier = definition?.valueType === "pct";
+      if (!isDynamicModifier) continue;
+      const existingPlan = plansByDefinition[skill.side].get(intent.sourceDefinition);
+      if (existingPlan) {
+        assignEffectGroupPlan(intent, existingPlan);
+        continue;
+      }
+      const groupsByScopeKey: Array<ActiveEffectGroup | undefined> = [];
+      const groupsForDefinition: ActiveEffectGroup[] = [];
       const slotsForDefinition: Uint8Array[] = [];
       for (const attackIntent of potentialActivationIntents(skill)) {
         const candidate = activateEffect(skill, intent, 1, attackIntent);
@@ -697,7 +704,7 @@ function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
         const slots = damageShapeSlotsForEffect(candidate, definition.path);
         if (slots.length === 0) continue;
         if (candidate.sameEffectStacking === "max") assertDisjointResolvedGroupSlots(intent.id, slots, slotsForDefinition);
-        const group: NonNullable<ActiveEffect["damageIndexGroup"]> = {
+        const group: ActiveEffectGroup = {
           effects: [],
           bucketIndex: damageBucketIndex(definition.path),
           sameEffectStacking: candidate.sameEffectStacking
@@ -705,13 +712,13 @@ function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
         groupsByScopeKey[scopeKey] = group;
         groupsForDefinition.push(group);
         slotsForDefinition.push(slots);
-        damageGroups.push(group);
+        effectGroups.push(group);
         for (const slot of slots) damageGroupsByJobShape[slot].push(group);
       }
-      if (groupsForDefinition.length === 0) throw new Error(`Runtime modifier ${intent.id} has no resolvable damage group`);
-      const plan: DamageGroupPlan = groupsForDefinition.length === 1 ? { fixed: groupsForDefinition[0] } : { byScopeKey: groupsByScopeKey };
+      if (groupsForDefinition.length === 0) throw new Error(`Runtime effect ${intent.id} has no resolvable effect group`);
+      const plan: EffectGroupPlan = groupsForDefinition.length === 1 ? { fixed: groupsForDefinition[0] } : { byScopeKey: groupsByScopeKey };
       plansByDefinition[skill.side].set(intent.sourceDefinition, plan);
-      assignDamageGroupPlan(intent, plan);
+      assignEffectGroupPlan(intent, plan);
     }
   }
   const battleStart = all.filter((skill) => skill.trigger.type === "battle_start");
@@ -737,19 +744,19 @@ function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
     roundStartPerUnit: roundStart.filter((skill) => hasPerUnitRoundTrigger(skill)),
     attackDeclared,
     attackDeclaredByJobShape,
-    damageGroups,
+    effectGroups,
     damageGroupsByJobShape
   };
 }
 
-interface DamageGroupPlan {
-  fixed?: NonNullable<ActiveEffect["damageIndexGroup"]>;
-  byScopeKey?: Array<NonNullable<ActiveEffect["damageIndexGroup"]> | undefined>;
+interface EffectGroupPlan {
+  fixed?: ActiveEffectGroup;
+  byScopeKey?: Array<ActiveEffectGroup | undefined>;
 }
 
-function assignDamageGroupPlan(intent: ResolvedEffectIntentDefinition, plan: DamageGroupPlan): void {
-  intent.damageGroup = plan.fixed;
-  intent.damageGroupsByScopeKey = plan.byScopeKey;
+function assignEffectGroupPlan(intent: ResolvedEffectIntentDefinition, plan: EffectGroupPlan): void {
+  intent.effectGroup = plan.fixed;
+  intent.effectGroupsByScopeKey = plan.byScopeKey;
 }
 
 function assertDisjointResolvedGroupSlots(effectId: string, slots: Uint8Array, existingGroups: Iterable<Uint8Array>): void {
@@ -775,7 +782,6 @@ function potentialActivationIntents(skill: ResolvedSkill): Array<AttackIntent | 
   for (const dealerUnit of dealerUnits) {
     for (const takerUnit of takerUnits) {
       intents.push({
-        id: "group-plan",
         round: 1,
         source: "normal",
         dealerSide,
@@ -841,7 +847,6 @@ function createInputPassiveEffects(passive: FighterInput["passive"], side: SideI
       if (!Number.isFinite(valuePct) || valuePct <= 0) continue;
       const bucket = `passive.${stat}.${direction}`;
       const effect: ActiveEffect = {
-        id: `${side}:input_stat:${bucket}`,
         source: {
           kind: "input_stat",
           side,
@@ -912,15 +917,9 @@ function resolveAttackIntents(
       const ordered = orderFromEffects(dealerUnit, side, runtime.effectIndex, true);
       const takerUnit = firstLivingUnit(ordered?.order ?? UNIT_TYPES, takerSide, roundStartTroops);
       if (!takerUnit) continue;
-      const intentId = `r${round}:${side}:${dealerUnit}:${orderIndex}`;
-      if (ordered) {
-        chargeEffectUse(runtime, ordered.effect);
-        recorder.recordBattleOrder(intentId, ordered.effect, takerUnit);
-      }
       const previousAttackCount = runtime.counters.attacks[side][dealerUnit];
       const previousReceivedAttackCount = runtime.counters.received[takerSide][takerUnit];
-      intents.push({
-        id: intentId,
+      const intent: AttackIntent = {
         round,
         source: "normal",
         dealerSide: side,
@@ -932,7 +931,12 @@ function resolveAttackIntents(
         projectedAttackCount: previousAttackCount + 1,
         previousReceivedAttackCount,
         projectedReceivedAttackCount: previousReceivedAttackCount + 1
-      });
+      };
+      if (ordered) {
+        chargeEffectUse(runtime, ordered.effect);
+        recorder.recordBattleOrder(intent, ordered.effect, takerUnit);
+      }
+      intents.push(intent);
       orderIndex += 1;
     }
   }
@@ -979,18 +983,33 @@ function applicableControls(
 ): ApplicableControls {
   const controls: ApplicableControls = { attackDurationEffects: [] };
   for (const effect of runtime.effectIndex.controls) {
-    const classification = classifyEffectForJob(effect, job);
-    if (classification?.kind === "control" && classification.control) {
-      if (!advanceEffectAttackDelay(effect)) continue;
-      if (hasAttackDurationConstraint(effect)) controls.attackDurationEffects.push(effect);
-      controls[classification.control] = {
-        effect,
-        reason: classification.control,
-        attackDurationEffects: controls.attackDurationEffects
-      };
-    }
+    const reason = controlType(effect);
+    if (!controlEffectApplies(effect, job, reason)) continue;
+    if (!advanceEffectAttackDelay(effect)) continue;
+    if (hasAttackDurationConstraint(effect)) controls.attackDurationEffects.push(effect);
+    controls[reason] = {
+      effect,
+      reason,
+      attackDurationEffects: controls.attackDurationEffects
+    };
   }
   return controls;
+}
+
+function controlType(effect: ActiveEffect): "dodge" | "no_attack" {
+  const type = effect.intent.type;
+  if (type === "dodge" || type === "no_attack") return type;
+  throw new Error(`control effect ${effect.intent.id} has unsupported type ${JSON.stringify(type)}`);
+}
+
+function controlEffectApplies(effect: ActiveEffect, job: DamageJob, control: "dodge" | "no_attack"): boolean {
+  const appliesToSide = control === "no_attack" ? job.dealerSide : job.takerSide;
+  const appliesToUnit = control === "no_attack" ? job.dealerUnit : job.takerUnit;
+  if (effect.appliesTo.side !== appliesToSide || !unitMaskHas(effect.appliesTo.units, appliesToUnit)) return false;
+
+  const appliesVsSide = control === "no_attack" ? job.takerSide : job.dealerSide;
+  const appliesVsUnit = control === "no_attack" ? job.takerUnit : job.dealerUnit;
+  return effect.appliesVs.side === appliesVsSide && unitMaskHas(effect.appliesVs.units, appliesVsUnit);
 }
 
 interface ApplicableControls {
@@ -1007,10 +1026,8 @@ interface Control {
 
 function normalJob(intent: AttackIntent, roundStartTroops: DamageJob["roundStartTroops"]): DamageJob {
   return {
-    id: `${intent.id}:normal`,
     round: intent.round,
     kind: "normal",
-    sourceIntentId: intent.id,
     roundStartTroops,
     dealerSide: intent.dealerSide,
     dealerUnit: intent.dealerUnit,
@@ -1028,19 +1045,14 @@ function extraSkillJobs(
   recorder: BattleRecorder
 ): ExtraSkillJobsResult {
   const jobs: DamageJob[] = [];
-  const usedEffectGroups: ExtraSkillUsedEffectGroup[] = [];
-  const effectGroups = selectStackedExtraAttackEffectGroups(
-    runtime.effectIndex.extraAttacks.filter(
-      (effect) => extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && advanceEffectAttackDelay(effect)
-    ),
-    round
+  const usedEffects: ExtraSkillUsedEffect[] = [];
+  const effects = runtime.effectIndex.extraAttacks.filter(
+    (effect) => extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && advanceEffectAttackDelay(effect)
   );
-  for (const effectGroup of effectGroups) {
-    const effect = effectGroup.selected;
+  for (const effect of effects) {
     const sourceEffectId = effect.source.effectId ?? effect.intent.id;
     const definitions = effect.triggerDamageJobs ?? [];
     const firstJobIndex = jobs.length;
-    let definitionIndex = 0;
     for (const definition of definitions) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
@@ -1051,10 +1063,8 @@ function extraSkillJobs(
         for (const target of targets) {
           if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
           const job: DamageJob = {
-            id: `${normalAttack.sourceIntentId}:skill:${sourceEffectId}:${definitionIndex}:${jobs.length}`,
             round,
             kind: "skill",
-            sourceIntentId: normalAttack.sourceIntentId,
             roundStartTroops,
             dealerSide: source.side,
             dealerUnit: source.unit,
@@ -1067,42 +1077,16 @@ function extraSkillJobs(
           recorder.recordSkillDamageJob(job, effect);
         }
       }
-      definitionIndex += 1;
     }
     if (jobs.length > firstJobIndex) {
-      // The whole stacking group is charged whenever the selected effect spawned jobs,
-      // regardless of duration constraints (extra attacks always deplete per firing).
-      usedEffectGroups.push({
-        sourceEffectId,
-        selected: effect,
-        effects: effectGroup.effects,
+      usedEffects.push({
+        effect,
         firstJobIndex,
         jobCount: jobs.length - firstJobIndex
       });
     }
   }
-  return { jobs, usedEffectGroups };
-}
-
-function selectStackedExtraAttackEffectGroups(effects: ActiveEffect[], round: number): ExtraAttackEffectGroup[] {
-  const selected: ExtraAttackEffectGroup[] = [];
-  const maxByKey = new Map<string, number>();
-  for (const effect of effects) {
-    if (effect.sameEffectStacking !== "max" || !effect.stackingKey) {
-      selected.push({ selected: effect, effects: [effect] });
-      continue;
-    }
-    const existingIndex = maxByKey.get(effect.stackingKey);
-    if (existingIndex === undefined) {
-      maxByKey.set(effect.stackingKey, selected.length);
-      selected.push({ selected: effect, effects: [effect] });
-      continue;
-    }
-    const existing = selected[existingIndex];
-    existing.effects.push(effect);
-    if (effect.getCurrentValuePct(round) > existing.selected.getCurrentValuePct(round)) existing.selected = effect;
-  }
-  return selected;
+  return { jobs, usedEffects };
 }
 
 function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {

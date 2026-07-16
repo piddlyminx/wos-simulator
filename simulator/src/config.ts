@@ -189,7 +189,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
           skillId,
           effectId,
           type,
-          reason: "Effect type is not in the initial simulator classifier policy"
+          reason: "Effect type is not supported by the native simulator"
         });
       }
     }
@@ -292,6 +292,9 @@ function validateStaticBucketEffect(
   if (effect.duration !== undefined) {
     throw new Error(`effect targeting static bucket ${effect.type} cannot define duration at ${path}`);
   }
+  if (effect.same_effect_stacking === "max") {
+    throw new Error(`effect targeting static bucket ${effect.type} cannot use max stacking at ${path}; passive effects are additive`);
+  }
 }
 
 function validateNativeEffectValue(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
@@ -367,6 +370,9 @@ function validateIntegerRange(value: unknown, min: number, path: string): void {
 
 function validateExtraSkillAttackEffect(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
   const path = `${file}:${skillId}.${effectId}`;
+  if (effect.same_effect_stacking !== undefined) {
+    throw new Error(`extra_skill_attack does not support same_effect_stacking at ${path}; every applicable effect emits all configured damage jobs`);
+  }
   if (!Array.isArray(effect.trigger_damage_jobs) || effect.trigger_damage_jobs.length === 0) {
     throw new Error(`extra_skill_attack requires non-empty trigger_damage_jobs at ${path}`);
   }

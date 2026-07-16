@@ -1,10 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { classifyEffectForJob } from "./classifier";
 import { calculateDamageJob, createDamageScratch, evaluateDamageExpression } from "./damage";
-import { ATOMIC_BUCKETS, DYNAMIC_BUCKETS, PASSIVE_BUCKETS, STATIC_BUCKETS, type BucketPlacement, type BucketRole } from "./damageBuckets";
-import { createEffectIndex, damageShapeSlotsForEffect, indexEffect } from "./effectIndex";
+import { ATOMIC_BUCKETS, DYNAMIC_BUCKETS, STATIC_BUCKETS, type BucketPlacement, type BucketRole } from "./damageBuckets";
+import { createEffectIndex, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, indexEffect } from "./effectIndex";
 import { activateEffect, evolvingActiveEffectValuePct, resolvedEffectScopeKey } from "./effects";
 import { buildStaticDamageBucketFactors, buildStaticDamageProfile } from "./staticDamageProfile";
 import { createRecorder, type BattleRecorder } from "./recorder";
@@ -12,10 +11,8 @@ import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types";
 import { ALL_UNIT_MASK, unitMask } from "./types";
 
 const job: DamageJob = {
-  id: "job-1",
   round: 1,
   kind: "normal",
-  sourceIntentId: "intent-1",
   roundStartTroops: {
     attacker: { infantry: 1000, lancer: 0, marksman: 0 },
     defender: { infantry: 0, lancer: 1000, marksman: 0 }
@@ -26,45 +23,6 @@ const job: DamageJob = {
   takerUnit: "lancer",
   sourceMultiplier: 1
 };
-
-test("resolved effect scope matches concrete side and unit masks", () => {
-  const active: ActiveEffect = {
-    id: "resolved-scope",
-    source: { kind: "hero_skill", side: "attacker", heroName: "Example", skillId: "Scope", effectId: "scope/1" },
-    intent: { id: "scope/1", type: "active.hero.lethality.up", value: 25 },
-    ownerSide: "attacker",
-    kind: "modifier",
-    bucketIndex: -1,
-    initialValuePct: 25,
-    getCurrentValuePct() { return this.initialValuePct; },
-    appliesTo: { side: "attacker", units: unitMask(["infantry"]) },
-    appliesVs: { side: "defender", units: unitMask(["lancer"]) },
-    createdRound: 1,
-    startRound: 1,
-    duration: {},
-    remainingAttackDelay: 0,
-    uses: 0,
-    sameEffectStacking: "add"
-  };
-
-  assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.lethality.up");
-  assert.equal(
-    classifyEffectForJob(active, {
-      ...job,
-      id: "job-attacker-marksman",
-      dealerUnit: "marksman"
-    })?.reason,
-    "not_applicable_to_job"
-  );
-  assert.equal(
-    classifyEffectForJob(active, {
-      ...job,
-      id: "job-defender-marksman",
-      takerUnit: "marksman"
-    })?.reason,
-    "not_applicable_to_job"
-  );
-});
 
 function effect(
   type: string,
@@ -77,7 +35,6 @@ function effect(
       ? { kind: sourceKind, side: ownerSide, troopType: "infantry" as const, skillId: "Skill", effectId: `${type}/1` }
       : { kind: sourceKind, side: ownerSide, heroName: "Example", skillId: "Skill", effectId: `${type}/1` };
   return {
-    id: `${type}-1`,
     source,
     intent: { id: `${type}/1`, type, value: [valuePct] },
     ownerSide,
@@ -105,7 +62,7 @@ function calculateIndexedDamageJob(
   const effectIndex = options.effectIndex ?? preparedEffectIndex(effects);
   if (!options.effectIndex) {
     for (const activeEffect of effects) {
-      if (activeEffect.damageIndexGroup) indexEffect(effectIndex, activeEffect);
+      if (activeEffect.effectGroup) indexEffect(effectIndex, activeEffect);
     }
   }
   const staticDamageProfile = options.staticDamageProfile ?? buildStaticDamageProfile(fighters, effects);
@@ -116,17 +73,17 @@ function calculateIndexedDamageJob(
   recorder.recordStaticProfile(fighters, effects);
   const { trace: _trace, ...damageOptions } = options;
   const result = calculateDamageJob(damageJob, fighters, { ...damageOptions, recorder, effectIndex, staticDamageProfile, usedEffects });
-  return { ...result, usedEffectIds: [...usedEffects].map((usedEffect) => usedEffect.id) };
+  return { ...result, usedEffectIds: [...usedEffects].map((usedEffect) => usedEffect.intent.id) };
 }
 
 function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectIndex> {
-  const groups: NonNullable<ActiveEffect["damageIndexGroup"]>[] = [];
-  const byShape: NonNullable<ActiveEffect["damageIndexGroup"]>[][] = Array.from({ length: 72 }, () => []);
-  const byResolvedGroup = new Map<string, NonNullable<ActiveEffect["damageIndexGroup"]>>();
+  const groups: NonNullable<ActiveEffect["effectGroup"]>[] = [];
+  const byShape: NonNullable<ActiveEffect["effectGroup"]>[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
+  const byResolvedGroup = new Map<string, NonNullable<ActiveEffect["effectGroup"]>>();
   for (const activeEffect of effects) {
     const slots = damageShapeSlotsForEffect(activeEffect);
     if (slots.length === 0) continue;
-    const key = `${activeEffect.stackingKey ?? activeEffect.id}:${resolvedEffectScopeKey(activeEffect.appliesTo, activeEffect.appliesVs)}`;
+    const key = `${activeEffect.source.effectId}:${resolvedEffectScopeKey(activeEffect.appliesTo, activeEffect.appliesVs)}`;
     let group = byResolvedGroup.get(key);
     if (!group) {
       group = {
@@ -138,114 +95,10 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
       groups.push(group);
       for (const slot of slots) byShape[slot].push(group);
     }
-    activeEffect.damageIndexGroup = group;
+    activeEffect.effectGroup = group;
   }
   return createEffectIndex(groups, byShape);
 }
-
-test("classifier routes up/down effects into neutral atomic buckets", () => {
-  assert.equal(classifyEffectForJob(effect("active.hero.health.up", "defender"), job)?.bucket, "active.hero.health.up");
-  assert.equal(classifyEffectForJob(effect("active.hero.health.down", "defender"), job)?.bucket, "active.hero.health.down");
-  assert.equal(classifyEffectForJob(effect("active.hero.attack.up", "attacker"), job)?.bucket, "active.hero.attack.up");
-  assert.equal(classifyEffectForJob(effect("active.hero.attack.down", "attacker"), job)?.bucket, "active.hero.attack.down");
-});
-
-test("classifier keeps hero and troop active effects in separate atomic buckets", () => {
-  assert.equal(classifyEffectForJob(effect("active.hero.lethality.up", "attacker", 20, "hero_skill"), job)?.bucket, "active.hero.lethality.up");
-  assert.equal(classifyEffectForJob(effect("active.troop.lethality.up", "attacker", 20, "troop_skill"), job)?.bucket, "active.troop.lethality.up");
-  assert.equal(classifyEffectForJob(effect("active.hero.lethality.up", "attacker", 10, "hero_skill"), job)?.bucket, "active.hero.lethality.up");
-  assert.equal(classifyEffectForJob(effect("active.troop.lethality.up", "attacker", 10, "troop_skill"), job)?.bucket, "active.troop.lethality.up");
-});
-
-test("classifier routes the complete native bucket policy into atomic buckets", () => {
-  const atomicBuckets = new Set<string>(ATOMIC_BUCKETS);
-  const expected = new Map([
-    ["active.hero.lethality.up", "active.hero.lethality.up"],
-    ["active.hero.lethality.down", "active.hero.lethality.down"],
-    ["active.hero.attack.up", "active.hero.attack.up"],
-    ["active.hero.attack.down", "active.hero.attack.down"],
-    ["active.hero.lethality.up", "active.hero.lethality.up"],
-    ["active.hero.lethality.down", "active.hero.lethality.down"],
-    ["active.hero.damage.up", "active.hero.damage.up"],
-    ["active.hero.damage.down", "active.hero.damage.down"],
-    ["active.troop.damage.up", "active.troop.damage.up"],
-    ["active.troop.damage.down", "active.troop.damage.down"],
-    ["type.normal.damage.up", "type.normal.damage.up"],
-    ["type.normal.damage.down", "type.normal.damage.down"],
-    ["type.skill.damage.up", "type.skill.damage.up"],
-    ["type.skill.damage.down", "type.skill.damage.down"],
-    ["type.all.damage.up", "type.all.damage.up"],
-    ["type.all.damage.down", "type.all.damage.down"],
-    ["active.hero.defense.up", "active.hero.defense.up"],
-    ["active.hero.defense.down", "active.hero.defense.down"],
-    ["active.hero.health.up", "active.hero.health.up"],
-    ["active.hero.health.down", "active.hero.health.down"],
-    ["active.hero.damageTaken.up", "active.hero.damageTaken.up"],
-    ["active.hero.damageTaken.down", "active.hero.damageTaken.down"],
-    ["active.troop.damageTaken.up", "active.troop.damageTaken.up"],
-    ["active.troop.damageTaken.down", "active.troop.damageTaken.down"],
-    ["type.normal.damageTaken.up", "type.normal.damageTaken.up"],
-    ["type.normal.damageTaken.down", "type.normal.damageTaken.down"],
-    ["type.skill.damageTaken.up", "type.skill.damageTaken.up"],
-    ["type.skill.damageTaken.down", "type.skill.damageTaken.down"]
-  ]);
-  const defenderEffectTypes = new Set([
-    "active.hero.defense.up",
-    "active.hero.defense.down",
-    "active.hero.health.up",
-    "active.hero.health.down",
-    "active.hero.damageTaken.up",
-    "active.hero.damageTaken.down",
-    "active.troop.damageTaken.up",
-    "active.troop.damageTaken.down",
-    "type.normal.damageTaken.up",
-    "type.normal.damageTaken.down",
-    "type.skill.damageTaken.up",
-    "type.skill.damageTaken.down"
-  ]);
-
-  for (const [type, expectedBucket] of expected) {
-    const ownerSide = defenderEffectTypes.has(type) ? "defender" : "attacker";
-    const classifierJob = type.startsWith("type.skill.") ? { ...job, id: "job-skill-route", kind: "skill" as const } : job;
-    const bucket = classifyEffectForJob(effect(type, ownerSide), classifierJob)?.bucket;
-    assert.equal(bucket, expectedBucket, type);
-    assert.ok(bucket !== undefined && atomicBuckets.has(bucket), `${type} route ${bucket} is not an atomic bucket`);
-  }
-
-  const passiveExpected = new Map([
-    ["passive.attack.up", "passive.attack.up"],
-    ["passive.lethality.up", "passive.lethality.up"],
-    ["passive.health.up", "passive.health.up"],
-    ["passive.defense.up", "passive.defense.up"]
-  ]);
-
-  for (const [type, expectedBucket] of passiveExpected) {
-    const ownerSide = type.includes(".attack.") || type.includes(".lethality.") ? "attacker" : "defender";
-    const bucket = classifyEffectForJob(effect(type, ownerSide), job)?.bucket;
-    assert.equal(bucket, expectedBucket, type);
-    assert.ok(bucket !== undefined && (PASSIVE_BUCKETS as readonly string[]).includes(bucket), `${type} route ${bucket} is not a passive bucket`);
-  }
-
-  assert.equal(classifyEffectForJob(effect("passive.attack.down", "attacker", 5), job)?.bucket, "passive.attack.down");
-});
-
-test("passive stat bonuses only apply in the damage role that consumes that stat", () => {
-  const reversedJob: DamageJob = {
-    ...job,
-    id: "job-reversed",
-    dealerSide: "defender",
-    dealerUnit: "lancer",
-    takerSide: "attacker",
-    takerUnit: "infantry"
-  };
-  const passiveAttack = effect("passive.attack.up", "attacker", 10);
-  const passiveHealth = effect("passive.health.up", "defender", 10);
-
-  assert.equal(classifyEffectForJob(passiveAttack, job)?.bucket, "passive.attack.up");
-  assert.equal(classifyEffectForJob(passiveAttack, reversedJob)?.reason, "unsupported_taker_effect");
-  assert.equal(classifyEffectForJob(passiveHealth, job)?.bucket, "passive.health.up");
-  assert.equal(classifyEffectForJob(passiveHealth, reversedJob)?.reason, "unsupported_dealer_effect");
-});
 
 test("damage calculator requires indexed effect candidates", () => {
   assert.throws(() => calculateDamageJob(job, simpleFighters(), { trace: true } as never), /effectIndex/i);
@@ -324,7 +177,6 @@ test("passive stat bonuses aggregate as up sum over down sum on top of player st
   fighters.attacker.statBonuses.infantry.attack = 2015.2;
   const passiveAttack = (value: number): ActiveEffect => ({
     ...effect(value < 0 ? "passive.attack.down" : "passive.attack.up", "attacker", Math.abs(value)),
-    id: `passive-attack-${value}`,
     intent: { id: `passive/attack/${value}`, type: value < 0 ? "passive.attack.down" : "passive.attack.up", value: Math.abs(value) }
   });
 
@@ -436,16 +288,18 @@ function unfactoredDynamicProduct(
   );
 }
 
-test("static damage profile preserves max stacking for duplicate passive effects", () => {
+test("static damage profile adds duplicate passive effects without effect groups", () => {
   const fighters = simpleFighters();
-  const weaker = { ...effect("passive.attack.up", "attacker", 20), id: "weak", stackingKey: "attacker:skill:passive", sameEffectStacking: "max" as const };
-  const stronger = { ...effect("passive.attack.up", "attacker", 50), id: "strong", stackingKey: "attacker:skill:passive", sameEffectStacking: "max" as const };
+  const weaker = effect("passive.attack.up", "attacker", 20);
+  const stronger = effect("passive.attack.up", "attacker", 50);
   const profile = buildStaticDamageProfile(fighters, [weaker, stronger]);
   const outcome = calculateIndexedDamageJob(job, fighters, [weaker, stronger], { trace: true, staticDamageProfile: profile });
 
-  assert.equal(outcome.trace?.atomicBuckets["passive.attack.up"].totalPct, 50);
-  assert.equal(outcome.trace?.atomicBuckets["passive.attack.up"].contributors.length, 1);
-  assert.equal(outcome.kills, calculateIndexedDamageJob(job, fighters, [], { trace: true }).kills * 1.5);
+  assert.equal(weaker.effectGroup, undefined);
+  assert.equal(stronger.effectGroup, undefined);
+  assert.equal(outcome.trace?.atomicBuckets["passive.attack.up"].totalPct, 70);
+  assert.equal(outcome.trace?.atomicBuckets["passive.attack.up"].contributors.length, 2);
+  assert.equal(outcome.kills, calculateIndexedDamageJob(job, fighters, [], { trace: true }).kills * 1.7);
 });
 
 test("default aggregation multiplies hero and troop active damage buckets", () => {
@@ -512,7 +366,7 @@ test("pass-specific buckets only apply to matching damage job kind", () => {
   const skillEffect = effect("type.skill.damage.up", "attacker", 100);
   const fighters = simpleFighters();
   const normalOutcome = calculateIndexedDamageJob(job, fighters, [normalEffect, skillEffect], { trace: true });
-  const skillOutcome = calculateIndexedDamageJob({ ...job, id: "job-skill", kind: "skill", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
+  const skillOutcome = calculateIndexedDamageJob({ ...job, kind: "skill", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
     trace: true
   });
 
@@ -525,7 +379,7 @@ test("pass-specific buckets only apply to matching damage job kind", () => {
 test("attack-duration bucket effects are charged by the applicable attack job", () => {
   const oneAttackEffect = {
     ...effect("active.hero.attack.up", "attacker", 100),
-    id: "attack-up-active",
+    intent: { id: "attack-up-active", type: "active.hero.attack.up", value: 100 },
     duration: { attacks: { count: 1 } }
   };
 
@@ -538,7 +392,7 @@ test("attack-duration bucket effects are charged by the applicable attack job", 
 test("turn-duration bucket effects are charged and visible on the attack outcome", () => {
   const turnEffect = {
     ...effect("active.hero.defense.down", "defender", 30),
-    id: "bad-luck-like",
+    intent: { id: "bad-luck-like", type: "active.hero.defense.down", value: 30 },
     source: { ...effect("active.hero.defense.down", "defender", 30).source, effectId: "BadLuckStreak/1" },
     duration: { turns: { count: 1 } }
   };
@@ -549,7 +403,6 @@ test("turn-duration bucket effects are charged and visible on the attack outcome
   assert.deepEqual(outcome.appliedEffects, [
     {
       kind: "modifier",
-      activeEffectId: "bad-luck-like",
       effectId: "BadLuckStreak/1",
       bucket: "active.hero.defense.down",
       valuePct: 30,
@@ -563,7 +416,7 @@ test("turn-duration bucket effects are charged and visible on the attack outcome
 test("effects are only charged when they participate in the calculation", () => {
   const defenderOutgoingBuff = {
     ...effect("active.hero.lethality.up", "defender", 100),
-    id: "defender-outgoing-buff",
+    intent: { id: "defender-outgoing-buff", type: "active.hero.lethality.up", value: 100 },
     duration: { attacks: { count: 1 } }
   };
 
@@ -576,9 +429,8 @@ test("effects are only charged when they participate in the calculation", () => 
 test("pct attack value evolution uses the effect use count for the current bucket value", () => {
   const decayedAttackUp = {
     ...effect("active.hero.attack.up", "attacker", 100),
-    id: "decayed-attack-up",
     intent: {
-      id: "active.hero.attack.up/decay",
+      id: "decayed-attack-up",
       type: "active.hero.attack.up",
       value: 100,
       value_evolution: { type: "pct_decay", step: "attack", value: 15 }
@@ -600,7 +452,6 @@ test("pct attack value evolution uses the effect use count for the current bucke
 test("pct turn value evolution starts decaying after the first active turn", () => {
   const turnDecayAttackUp = {
     ...effect("active.hero.attack.up", "attacker", 100),
-    id: "turn-decay-attack-up",
     intent: {
       id: "active.hero.attack.up/turn_decay",
       type: "active.hero.attack.up",
@@ -624,16 +475,14 @@ test("pct turn value evolution starts decaying after the first active turn", () 
 test("max-stacked attack-duration effects charge the whole eligible group and output only the max current value", () => {
   const weaker = {
     ...effect("active.hero.lethality.up", "attacker", 50),
-    id: "max-weaker",
+    intent: { id: "max-weaker", type: "active.hero.lethality.up", value: 50 },
     duration: { attacks: { count: 3 } },
-    stackingKey: "same-max-group",
     sameEffectStacking: "max" as const
   };
   const strongerButDecayed = {
     ...effect("active.hero.lethality.up", "attacker", 100),
-    id: "max-stronger-decayed",
     intent: {
-      id: "damage_up/decay",
+      id: "max-stronger-decayed",
       type: "active.hero.lethality.up",
       value: 100,
       value_evolution: { type: "pct_decay", step: "attack", value: 50 }
@@ -642,7 +491,6 @@ test("max-stacked attack-duration effects charge the whole eligible group and ou
     valueEvolution: { type: "pct_decay", step: "attack", amount: 50 },
     getCurrentValuePct: evolvingActiveEffectValuePct,
     uses: 1,
-    stackingKey: "same-max-group",
     sameEffectStacking: "max" as const
   };
 
@@ -656,21 +504,19 @@ test("max-stacked attack-duration effects charge the whole eligible group and ou
 test("max-stacked activations with disjoint resolved unit scopes apply independently", () => {
   const infantry = {
     ...effect("active.hero.lethality.up", "attacker", 40),
-    id: "max-infantry",
+    intent: { id: "max-infantry", type: "active.hero.lethality.up", value: 40 },
     appliesTo: { side: "attacker" as const, units: unitMask("infantry") },
-    stackingKey: "same-resolved-effect",
     sameEffectStacking: "max" as const
   };
   const lancer = {
     ...effect("active.hero.lethality.up", "attacker", 70),
-    id: "max-lancer",
+    intent: { id: "max-lancer", type: "active.hero.lethality.up", value: 70 },
     appliesTo: { side: "attacker" as const, units: unitMask("lancer") },
-    stackingKey: "same-resolved-effect",
     sameEffectStacking: "max" as const
   };
   const fighters = simpleFighters();
   const infantryOutcome = calculateIndexedDamageJob(job, fighters, [infantry, lancer], { trace: true });
-  const lancerOutcome = calculateIndexedDamageJob({ ...job, id: "lancer-job", dealerUnit: "lancer" }, fighters, [infantry, lancer], { trace: true });
+  const lancerOutcome = calculateIndexedDamageJob({ ...job, dealerUnit: "lancer" }, fighters, [infantry, lancer], { trace: true });
 
   assert.equal(infantryOutcome.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 40);
   assert.deepEqual(infantryOutcome.usedEffectIds, ["max-infantry"]);
@@ -699,7 +545,6 @@ test('applies_vs "trigger.source" resolves to the trigger source when gating a c
     },
     1,
     {
-      id: "intent",
       round: 1,
       source: "normal",
       dealerSide: "attacker",
@@ -716,7 +561,6 @@ test('applies_vs "trigger.source" resolves to the trigger source when gating a c
 
   assert.deepEqual(active.appliesTo, { side: "defender", units: unitMask("lancer") });
   assert.deepEqual(active.appliesVs, { side: "attacker", units: unitMask("infantry") });
-  assert.equal(classifyEffectForJob(active, job)?.bucket, "active.hero.defense.up");
 });
 
 test('applies_vs "target" resolves to the trigger target', () => {
@@ -740,7 +584,6 @@ test('applies_vs "target" resolves to the trigger target', () => {
     },
     1,
     {
-      id: "intent",
       round: 1,
       source: "normal",
       dealerSide: "attacker",
@@ -780,7 +623,6 @@ test('applies_vs "target" still resolves to the trigger target for defensive eff
     },
     1,
     {
-      id: "intent",
       round: 1,
       source: "normal",
       dealerSide: "attacker",

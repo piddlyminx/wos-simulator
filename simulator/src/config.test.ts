@@ -223,12 +223,21 @@ test("loadSimulatorConfig rejects effects targeting static buckets unless they a
     },
     { type: "battle_start", probability: 50 }
   );
+  const maxStackingRoot = writeConfigWithTroopEffect(
+    {
+      type: "passive.attack.up",
+      value: 10,
+      same_effect_stacking: "max"
+    },
+    { type: "battle_start" }
+  );
 
   assert.throws(() => loadSimulatorConfigFromDir(turnRoot), /static bucket passive\.attack\.up.*battle_start/i);
   assert.throws(() => loadSimulatorConfigFromDir(durationRoot), /static bucket passive\.attack\.up.*duration/i);
   assert.throws(() => loadSimulatorConfigFromDir(emptyDurationRoot), /static bucket passive\.attack\.up.*duration/i);
   assert.throws(() => loadSimulatorConfigFromDir(evolvingRoot), /static bucket passive\.attack\.up.*value_evolution/i);
   assert.throws(() => loadSimulatorConfigFromDir(probabilityRoot), /static bucket passive\.attack\.up.*probability/i);
+  assert.throws(() => loadSimulatorConfigFromDir(maxStackingRoot), /static bucket passive\.attack\.up.*cannot use max stacking/i);
 });
 
 test("loadSimulatorConfig rejects skill effects targeting input-derived static buckets", () => {
@@ -254,6 +263,18 @@ test("loadSimulatorConfig rejects invalid trigger_damage_jobs selector strings",
   });
 
   assert.throws(() => loadSimulatorConfigFromDir(root), /invalid trigger_damage_jobs target selector.*effect\.applies_v/i);
+});
+
+test("loadSimulatorConfig rejects stacking metadata on extra skill attacks", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    same_effect_stacking: "max",
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /extra_skill_attack does not support same_effect_stacking/i);
 });
 
 test("loadSimulatorConfig rejects trigger_damage_jobs with typoed keys", () => {
