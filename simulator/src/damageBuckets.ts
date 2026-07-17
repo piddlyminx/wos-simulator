@@ -1,159 +1,119 @@
 import type { DamageKind } from "./types";
 
-export type BucketRole = "dealer" | "taker";
-export type BucketValueType = "raw" | "pct" | "factor";
+export type BucketJobSide = "dealer" | "taker";
 export type BucketUpdate = "assign_factor" | "add_pct_factor" | "multiply_pct_factor";
 export type BucketPlacement = "numerator" | "denominator";
-type BucketFamily = "troops" | "player" | "passive" | "active" | "type" | "source" | "aggregate";
 
-export interface DamageAggregationBucketSpec {
-  path: string;
-  valueType: BucketValueType;
+export interface BucketSpec {
+  name: string;
+  jobSide: BucketJobSide;
   update: BucketUpdate;
   placement: BucketPlacement;
-  appliesTo?: DamageKind;
+  damageKind?: DamageKind;
+  /** This bucket may be named by an EffectIntentDefinition. */
+  effectBucket?: true;
 }
-
-export interface BucketSpec extends DamageAggregationBucketSpec {
-  family: Exclude<BucketFamily, "aggregate">;
-  role: BucketRole;
-}
-
-export interface AggregateBucketSpec extends DamageAggregationBucketSpec {
-  family: "aggregate";
-}
-
-// The result of evaluating any bucket set is represented as this ordinary one-value bucket.
-// It has no dealer/taker role because its input set has already resolved that distinction.
-export const EVALUATED_DAMAGE_BUCKET = {
-  path: "aggregate.factor",
-  family: "aggregate",
-  valueType: "factor",
-  update: "assign_factor",
-  placement: "numerator"
-} as const satisfies AggregateBucketSpec;
 
 // Closed pools: every contributor is known while preparing the battle, so these
 // buckets are aggregated once into StaticDamageProfile factors.
 export const STATIC_BUCKETS = [
-  { path: "troops.baseAttack", family: "troops", role: "dealer", valueType: "raw", update: "assign_factor", placement: "numerator" },
-  { path: "troops.baseLethality", family: "troops", role: "dealer", valueType: "raw", update: "assign_factor", placement: "numerator" },
-  { path: "troops.baseHealth", family: "troops", role: "taker", valueType: "raw", update: "assign_factor", placement: "denominator" },
-  { path: "troops.baseDefense", family: "troops", role: "taker", valueType: "raw", update: "assign_factor", placement: "denominator" },
-  { path: "player.attack", family: "player", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "player.lethality", family: "player", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "player.health", family: "player", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "player.defense", family: "player", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "passive.attack.up", family: "passive", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "passive.attack.down", family: "passive", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "passive.lethality.up", family: "passive", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "passive.lethality.down", family: "passive", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "passive.health.up", family: "passive", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "passive.health.down", family: "passive", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "passive.defense.up", family: "passive", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "passive.defense.down", family: "passive", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" }
+  { name: "troops.baseAttack", jobSide: "dealer", update: "assign_factor", placement: "numerator" },
+  { name: "troops.baseLethality", jobSide: "dealer", update: "assign_factor", placement: "numerator" },
+  { name: "troops.baseHealth", jobSide: "taker", update: "assign_factor", placement: "denominator" },
+  { name: "troops.baseDefense", jobSide: "taker", update: "assign_factor", placement: "denominator" },
+  { name: "player.attack", jobSide: "dealer", update: "add_pct_factor", placement: "numerator" },
+  { name: "player.lethality", jobSide: "dealer", update: "add_pct_factor", placement: "numerator" },
+  { name: "player.health", jobSide: "taker", update: "add_pct_factor", placement: "denominator" },
+  { name: "player.defense", jobSide: "taker", update: "add_pct_factor", placement: "denominator" },
+  { name: "passive.attack.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "passive.attack.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "passive.lethality.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "passive.lethality.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "passive.health.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "passive.health.down", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "passive.defense.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "passive.defense.down", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true }
 ] as const satisfies readonly BucketSpec[];
 
 // Open pools: runtime effects can feed these buckets while the battle is running.
 // Array order is the numeric slot order used by the fast damage scratch.
 export const DYNAMIC_BUCKETS = [
-  { path: "active.hero.attack.down", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.hero.attack.up", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.hero.damage.down", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.hero.damage.up", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.hero.damageTaken.down", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.hero.damageTaken.up", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.hero.defense.down", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.hero.defense.up", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.hero.health.down", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.hero.health.up", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.hero.lethality.down", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.hero.lethality.up", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.troop.attack.down", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.troop.attack.up", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.troop.damage.down", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.troop.damage.up", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.troop.damageTaken.down", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.troop.damageTaken.up", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.troop.defense.down", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.troop.defense.up", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.troop.health.down", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "active.troop.health.up", family: "active", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.troop.lethality.down", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator" },
-  { path: "active.troop.lethality.up", family: "active", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator" },
-  { path: "source.extraSkill", family: "source", role: "dealer", valueType: "raw", update: "assign_factor", placement: "numerator", appliesTo: "skill" },
-  { path: "troops.count", family: "troops", role: "dealer", valueType: "raw", update: "assign_factor", placement: "numerator" },
-  { path: "type.all.damage.down", family: "type", role: "dealer", valueType: "pct", update: "multiply_pct_factor", placement: "denominator" },
-  { path: "type.all.damage.up", family: "type", role: "dealer", valueType: "pct", update: "multiply_pct_factor", placement: "numerator" },
-  { path: "type.normal.damage.down", family: "type", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "normal" },
-  { path: "type.normal.damage.up", family: "type", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "normal" },
-  { path: "type.normal.damageTaken.down", family: "type", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "normal" },
-  { path: "type.normal.damageTaken.up", family: "type", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "normal" },
-  { path: "type.skill.damage.down", family: "type", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "skill" },
-  { path: "type.skill.damage.up", family: "type", role: "dealer", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "skill" },
-  { path: "type.skill.damageTaken.down", family: "type", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "denominator", appliesTo: "skill" },
-  { path: "type.skill.damageTaken.up", family: "type", role: "taker", valueType: "pct", update: "add_pct_factor", placement: "numerator", appliesTo: "skill" }
+  { name: "active.hero.attack.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.hero.attack.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.hero.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.hero.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.hero.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.hero.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.hero.defense.down", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.hero.defense.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.hero.health.down", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.hero.health.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.hero.lethality.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.hero.lethality.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.attack.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.troop.attack.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.troop.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.troop.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.defense.down", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.defense.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.troop.health.down", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.health.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.troop.lethality.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "active.troop.lethality.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "source.extraSkill", jobSide: "dealer", update: "assign_factor", placement: "numerator", damageKind: "skill" },
+  { name: "troops.count", jobSide: "dealer", update: "assign_factor", placement: "numerator" },
+  { name: "type.all.damage.down", jobSide: "dealer", update: "multiply_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "type.all.damage.up", jobSide: "dealer", update: "multiply_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "type.normal.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", damageKind: "normal", effectBucket: true },
+  { name: "type.normal.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", damageKind: "normal", effectBucket: true },
+  { name: "type.normal.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", damageKind: "normal", effectBucket: true },
+  { name: "type.normal.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", damageKind: "normal", effectBucket: true },
+  { name: "type.skill.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", damageKind: "skill", effectBucket: true },
+  { name: "type.skill.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", damageKind: "skill", effectBucket: true },
+  { name: "type.skill.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", damageKind: "skill", effectBucket: true },
+  { name: "type.skill.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", damageKind: "skill", effectBucket: true }
 ] as const satisfies readonly BucketSpec[];
 
-export type StaticBucketSpec = (typeof STATIC_BUCKETS)[number];
-export type DynamicBucketSpec = (typeof DYNAMIC_BUCKETS)[number];
-export type StaticDamageBucket = StaticBucketSpec["path"];
-export type AtomicBucket = DynamicBucketSpec["path"];
-export type BucketName = AtomicBucket;
-export type StaticRawBucket = Extract<StaticBucketSpec, { valueType: "raw" }>["path"];
-export type StaticPlayerBucket = Extract<StaticBucketSpec, { family: "player" }>["path"];
-export type PassiveBucket = Extract<StaticBucketSpec, { family: "passive" }>["path"];
-export type BucketPath = StaticDamageBucket | AtomicBucket;
+export type StaticBucketSpec = (typeof STATIC_BUCKETS)[number] & BucketSpec;
+export type DynamicBucketSpec = (typeof DYNAMIC_BUCKETS)[number] & BucketSpec;
+export type StaticDamageBucket = StaticBucketSpec["name"];
+export type DynamicDamageBucket = DynamicBucketSpec["name"];
+export type StaticRawBucket = Extract<StaticBucketSpec, { update: "assign_factor" }>["name"];
+export type PassiveBucket = Extract<StaticBucketSpec, { effectBucket: true }>["name"];
+export type StaticPlayerBucket = Exclude<StaticDamageBucket, StaticRawBucket | PassiveBucket>;
+export type DynamicEffectBucket = Extract<DynamicBucketSpec, { effectBucket: true }>["name"];
 
-type NativeBucketSpec = StaticBucketSpec | DynamicBucketSpec;
-type BucketDefinitionFields = {
-  family: NativeBucketSpec["family"];
-  role: NativeBucketSpec["role"];
-  valueType: NativeBucketSpec["valueType"];
-  update: NativeBucketSpec["update"];
-  placement: NativeBucketSpec["placement"];
-  appliesTo?: DamageKind;
-};
-export type BucketDefinition =
-  | (BucketDefinitionFields & { path: StaticDamageBucket; phase: "static" })
-  | (BucketDefinitionFields & { path: AtomicBucket; phase: "dynamic" });
+export const STATIC_BUCKET_INDEX = Object.fromEntries(
+  STATIC_BUCKETS.map((bucket, index) => [bucket.name, index])
+) as Readonly<Record<StaticDamageBucket, number>>;
+export const DYNAMIC_BUCKET_INDEX = Object.fromEntries(
+  DYNAMIC_BUCKETS.map((bucket, index) => [bucket.name, index])
+) as Readonly<Record<DynamicDamageBucket, number>>;
 
-export const ATOMIC_BUCKETS = DYNAMIC_BUCKETS.map((bucket) => bucket.path) as AtomicBucket[];
-export const ATOMIC_BUCKET_INDEX = Object.fromEntries(
-  ATOMIC_BUCKETS.map((bucket, index) => [bucket, index])
-) as Readonly<Record<AtomicBucket, number>>;
+export const STATIC_EFFECT_BUCKETS = STATIC_BUCKETS
+  .filter((bucket): bucket is Extract<StaticBucketSpec, { effectBucket: true }> => "effectBucket" in bucket)
+  .map((bucket) => bucket.name) as PassiveBucket[];
 export const DYNAMIC_EFFECT_BUCKETS = DYNAMIC_BUCKETS
-  .filter((bucket) => bucket.family === "active" || bucket.family === "type")
-  .map((bucket) => bucket.path) as AtomicBucket[];
-export const PASSIVE_BUCKETS = STATIC_BUCKETS
-  .filter((bucket): bucket is Extract<StaticBucketSpec, { family: "passive" }> => bucket.family === "passive")
-  .map((bucket) => bucket.path) as PassiveBucket[];
+  .filter((bucket): bucket is Extract<DynamicBucketSpec, { effectBucket: true }> => "effectBucket" in bucket)
+  .map((bucket) => bucket.name) as DynamicEffectBucket[];
 
-const ALL_BUCKET_DEFINITIONS: BucketDefinition[] = [
-  ...STATIC_BUCKETS.map((bucket) => ({ ...bucket, phase: "static" as const })),
-  ...DYNAMIC_BUCKETS.map((bucket) => ({ ...bucket, phase: "dynamic" as const }))
-];
-
-export const BUCKET_DEFINITIONS = Object.fromEntries(
-  ALL_BUCKET_DEFINITIONS.map((definition) => [definition.path, definition])
-) as Record<BucketPath, BucketDefinition>;
-
-export function bucketDefinition(path: string): BucketDefinition | undefined {
-  return BUCKET_DEFINITIONS[path as BucketPath];
+export function staticBucketDefinition(name: string): StaticBucketSpec | undefined {
+  const index = STATIC_BUCKET_INDEX[name as StaticDamageBucket];
+  return index === undefined ? undefined : STATIC_BUCKETS[index];
 }
 
-export function isPassiveBucket(bucket: string): bucket is PassiveBucket {
-  const definition = BUCKET_DEFINITIONS[bucket as PassiveBucket];
-  return definition?.phase === "static" && definition.family === "passive";
+export function dynamicBucketDefinition(name: string): DynamicBucketSpec | undefined {
+  const index = DYNAMIC_BUCKET_INDEX[name as DynamicDamageBucket];
+  return index === undefined ? undefined : DYNAMIC_BUCKETS[index];
 }
 
-export function passiveBucketRole(bucket: string): BucketRole | undefined {
-  return isPassiveBucket(bucket) ? BUCKET_DEFINITIONS[bucket].role : undefined;
+export function isPassiveBucket(name: string): name is PassiveBucket {
+  return staticBucketDefinition(name)?.effectBucket === true;
 }
 
-// The one and only bucket-value conversion. A raw bucket contributes its value clamped
-// non-negative; a pct bucket contributes its percentage delta or the corresponding factor.
-// Every consumer (static profile, dynamic scratch, recorders) must use these.
+// Bucket updates encode both their input representation and their aggregation rule.
 export function rawBucketFactor(raw: number): number {
   return Math.max(0, raw);
 }

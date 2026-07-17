@@ -1,5 +1,15 @@
 import type { DamageResult } from "./damage";
-import { ATOMIC_BUCKET_INDEX, ATOMIC_BUCKETS, BUCKET_DEFINITIONS, pctBucketFactor, rawBucketFactor, type AtomicBucket, type StaticDamageBucket, type StaticPlayerBucket, type StaticRawBucket } from "./damageBuckets";
+import {
+  DYNAMIC_BUCKET_INDEX,
+  DYNAMIC_BUCKETS,
+  dynamicBucketDefinition,
+  pctBucketFactor,
+  rawBucketFactor,
+  type DynamicDamageBucket,
+  type StaticDamageBucket,
+  type StaticPlayerBucket,
+  type StaticRawBucket
+} from "./damageBuckets";
 import { sourceLabel } from "./effects";
 import { selectPassiveContributions, unitBaseStats, unitPlayerBonuses, type PassiveContribution } from "./staticDamageProfile";
 import { UNIT_TYPES } from "./types";
@@ -29,9 +39,9 @@ type NumericBucketId = number;
 interface DamageFactorTerm {
   id: string;
   bucket: NumericBucketId;
-  bucketName: AtomicBucket;
+  bucketName: DynamicDamageBucket;
   placement: GroupPlacement;
-  appliesTo?: DamageJob["kind"];
+  damageKind?: DamageJob["kind"];
 }
 
 export interface DamageRecordingResult {
@@ -373,7 +383,7 @@ class BasicDamageJobRecorder implements DamageJobRecorder {
 class FullDamageJobRecorder implements DamageJobRecorder {
   private readonly appliedEffects: DamageEquationTrace["appliedEffects"] = [];
   private readonly contributors: DamageBucketTrace["contributors"][] = Array.from(
-    { length: ATOMIC_BUCKETS.length },
+    { length: DYNAMIC_BUCKETS.length },
     () => []
   );
   private readonly rejectedEffects: DamageEquationTrace["rejectedEffects"] = [];
@@ -445,18 +455,18 @@ class FullDamageJobRecorder implements DamageJobRecorder {
   }
 }
 
-const DEFAULT_FACTOR_TERMS = ATOMIC_BUCKETS.map((bucket) => factorTerm(bucket));
+const DEFAULT_FACTOR_TERMS = DYNAMIC_BUCKETS.map((definition) => factorTerm(definition.name));
 const DEFAULT_NUMERATOR_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "numerator");
 const DEFAULT_DENOMINATOR_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "denominator");
 
-function factorTerm(bucket: AtomicBucket): DamageFactorTerm {
-  const definition = BUCKET_DEFINITIONS[bucket];
+function factorTerm(bucket: DynamicDamageBucket): DamageFactorTerm {
+  const definition = dynamicBucketDefinition(bucket)!;
   return {
     id: bucket,
-    bucket: ATOMIC_BUCKET_INDEX[bucket],
+    bucket: DYNAMIC_BUCKET_INDEX[bucket],
     bucketName: bucket,
     placement: definition.placement,
-    appliesTo: definition.appliesTo
+    damageKind: "damageKind" in definition ? definition.damageKind : undefined
   };
 }
 
@@ -476,7 +486,7 @@ function buildStaticProfileDescription(
     }
   };
   for (const contribution of selectPassiveContributions(setupEffects)) {
-    addPassiveTerm(description[contribution.role][contribution.side][contribution.unit], contribution, detailed);
+    addPassiveTerm(description[contribution.jobSide][contribution.side][contribution.unit], contribution, detailed);
   }
   return description;
 }
@@ -486,6 +496,7 @@ function buildSideEntries(fighter: ResolvedFighter, role: "dealer" | "taker"): R
 }
 
 function buildStaticEntry(fighter: ResolvedFighter, unit: UnitType, role: "dealer" | "taker"): StaticProfileEntry {
+  if (fighter.initialTroops[unit] <= 0) return { buckets: {} };
   const stats = unitBaseStats(fighter, unit);
   const bonuses = unitPlayerBonuses(fighter, unit);
   const buckets: StaticProfileEntry["buckets"] = {};
@@ -582,10 +593,10 @@ function buildAggregationGroups(
   const groups: Record<string, DamageAggregationGroupTrace> = {};
   addStaticAggregationGroups(groups, staticEntries);
   for (const term of [...DEFAULT_NUMERATOR_TERMS, ...DEFAULT_DENOMINATOR_TERMS]) {
-    if (term.appliesTo && term.appliesTo !== job.kind) continue;
-    const definition = BUCKET_DEFINITIONS[term.bucketName];
+    if (term.damageKind && term.damageKind !== job.kind) continue;
+    const definition = dynamicBucketDefinition(term.bucketName)!;
     const factor = factors[term.bucket];
-    groups[term.id] = definition.valueType === "raw"
+    groups[term.id] = definition.update === "assign_factor"
       ? {
           id: term.id,
           mode: "raw",
@@ -675,11 +686,11 @@ function toTraceBuckets(
   staticEntries: StaticProfileEntry[]
 ): Record<string, DamageBucketTrace> {
   const traced = Object.fromEntries(
-    ATOMIC_BUCKETS.map((bucket, index) => {
-      const definition = BUCKET_DEFINITIONS[bucket];
+    DYNAMIC_BUCKETS.map((definition, index) => {
+      const bucket = definition.name;
       const factor = factors[index];
       const bucketContributors = contributors[index] ?? [];
-      return definition.valueType === "raw"
+      return definition.update === "assign_factor"
         ? [bucket, { raw: factor, factor, contributors: [...bucketContributors] }]
         : [bucket, { totalPct: pctFromFactor(factor), factor, contributors: [...bucketContributors] }];
     })

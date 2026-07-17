@@ -37,12 +37,18 @@ import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" 
 
 import { UNIT_TYPES } from "./types";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types";
-import { bucketDefinition, DYNAMIC_EFFECT_BUCKETS, isPassiveBucket, PASSIVE_BUCKETS } from "./damageBuckets";
+import {
+  DYNAMIC_EFFECT_BUCKETS,
+  STATIC_EFFECT_BUCKETS,
+  dynamicBucketDefinition,
+  isPassiveBucket,
+  staticBucketDefinition
+} from "./damageBuckets";
 import { normalizeUnitType } from "./normalize";
 
 const KNOWN_EFFECT_TYPES = new Set([
   ...DYNAMIC_EFFECT_BUCKETS,
-  ...PASSIVE_BUCKETS,
+  ...STATIC_EFFECT_BUCKETS,
   "extra_skill_attack",
   "dodge",
   "no_attack",
@@ -291,8 +297,8 @@ function validateStaticBucketEffect(
   skillId: string,
   effectId: string
 ): void {
-  const definition = bucketDefinition(effect.type);
-  if (definition?.phase !== "static") return;
+  const definition = staticBucketDefinition(effect.type);
+  if (!definition) return;
 
   const path = `${file}:${skillId}.${effectId}`;
   if (!isPassiveBucket(effect.type)) {
@@ -313,8 +319,8 @@ function validateStaticBucketEffect(
 }
 
 function validateNativeEffectValue(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
-  const definition = bucketDefinition(effect.type);
-  if ((!definition || definition.valueType !== "pct") && !isPassiveBucket(effect.type)) return;
+  const definition = dynamicBucketDefinition(effect.type) ?? staticBucketDefinition(effect.type);
+  if (definition?.effectBucket !== true) return;
   const values = Array.isArray(effect.value) ? effect.value : [effect.value];
   for (const value of values) {
     if (value === undefined) continue;

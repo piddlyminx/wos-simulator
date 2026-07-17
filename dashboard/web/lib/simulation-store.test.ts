@@ -14,6 +14,7 @@ import type {
   SimulateApiResult,
 } from "@/lib/simulate-run";
 import type { SurfaceSweepPayload, SurfaceSweepResult } from "@/lib/simulator/surface";
+import type { TournamentRequestPayload, TournamentResult } from "@/lib/tournament";
 import {
   buildSimulationRunTitle,
   buildSimulationShareUrl,
@@ -134,15 +135,52 @@ const surfaceResult: SurfaceSweepResult = {
   winrateMatrix: [0.5, 0.75, 0.25, 0.5],
 };
 
-test("saved run helpers route bear snapshots to the bear page", () => {
+const tournamentRequest: TournamentRequestPayload = {
+  groups: [{
+    label: "Test batch",
+    infantryMains: ["Hector"],
+    lancerMains: ["Mia"],
+    marksmanMains: ["Bradley"],
+    joiners: ["Jessie", "Seo-yoon", "Lumak", "Ling"],
+    ratios: ["50,20,30"],
+    allowRepeatedJoiners: false,
+    excludeMainHeroesFromJoiners: true,
+  }],
+  totalTroops: 100_000,
+  rounds: 2,
+  seedRounds: 1,
+  reps: 1,
+  jobs: 1,
+  seed: 1234,
+  freezeRate: 0.2,
+  freezeLossesGte: null,
+  startFreezeRound: 2,
+  minPoolSize: 2,
+  topN: 10,
+  finalsTopM: 0,
+  finalsReps: 1,
+  finalsMaxSameMainLineup: 10,
+};
+
+const tournamentResult: TournamentResult = {
+  generatedTeams: 2,
+  swiss: {
+    offense: { rows: [], totalRows: 0 },
+    defense: { rows: [], totalRows: 0 },
+  },
+};
+
+test("saved run helpers route snapshots to their owning pages", () => {
   assert.equal(buildSimulationShareUrl("abc123", "simulate"), "/simulate?run=abc123");
   assert.equal(buildSimulationShareUrl("abc123", "bear_simulate"), "/bear?run=abc123");
   assert.equal(buildSimulationShareUrl("abc123", "ratio_explorer"), "/simulate?run=abc123");
+  assert.equal(buildSimulationShareUrl("abc123", "tournament"), "/tournament?run=abc123");
   assert.match(buildSimulationRunTitle(bearRequest, "bear_simulate"), /^Bear: /);
   assert.match(buildSimulationRunTitle(surfaceRequest, "ratio_explorer"), /^Ratio Explorer: /);
+  assert.equal(buildSimulationRunTitle(tournamentRequest, "tournament"), "Tournament: Test batch (2 rounds)");
 });
 
-test("simulation store filters and pages PvP, bear, and ratio explorer run histories separately", async () => {
+test("simulation store filters and pages each run history separately", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
   process.env.SIM_RUNS_DIR = dir;
   const store = await import(`./simulation-store.ts?case=${Date.now()}`);
@@ -151,11 +189,13 @@ test("simulation store filters and pages PvP, bear, and ratio explorer run histo
   const bear = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
   const bearOpt = await store.saveSimulationRun("bear_optimize_ratio", bearOptimizeRequest, bearOptimizeResult);
   const surface = await store.saveSimulationRun("ratio_explorer", surfaceRequest, surfaceResult);
+  const tournament = await store.saveSimulationRun("tournament", tournamentRequest, tournamentResult);
 
   assert.equal(pvp.share_url.startsWith("/simulate?run="), true);
   assert.equal(bear.share_url.startsWith("/bear?run="), true);
   assert.equal(bearOpt.share_url.startsWith("/bear?run="), true);
   assert.equal(surface.share_url.startsWith("/simulate?run="), true);
+  assert.equal(tournament.share_url.startsWith("/tournament?run="), true);
 
   const pvpPage = await store.listSimulationRunsPage({
     limit: 10,
@@ -186,6 +226,13 @@ test("simulation store filters and pages PvP, bear, and ratio explorer run histo
     kinds: ["ratio_explorer"],
   });
   assert.deepEqual(ratioExplorerPage.runs.map((run: SavedSimulationRunListItem) => run.kind), ["ratio_explorer"]);
+
+  const tournamentPage = await store.listSimulationRunsPage({
+    limit: 10,
+    kinds: ["tournament"],
+  });
+  assert.deepEqual(tournamentPage.runs.map((run: SavedSimulationRunListItem) => run.kind), ["tournament"]);
+  assert.equal(tournamentPage.runs[0]?.share_url.startsWith("/tournament?run="), true);
 });
 
 test("simulation run listing does not read the saved result payload", async () => {

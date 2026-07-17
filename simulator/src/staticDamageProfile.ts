@@ -1,10 +1,9 @@
 import type { ActiveEffect, DamageBucketTrace, ResolvedFighter, SideId, StatBlock, UnitType } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
 import {
-  BUCKET_DEFINITIONS,
   isPassiveBucket,
-  passiveBucketRole,
-  type BucketRole,
+  staticBucketDefinition,
+  type BucketJobSide,
   type PassiveBucket,
   type StaticPlayerBucket
 } from "./damageBuckets";
@@ -44,7 +43,7 @@ export class DamageAggregationError extends Error {
  * recorder-side description of it can never disagree.
  */
 export interface PassiveContribution {
-  role: BucketRole;
+  jobSide: BucketJobSide;
   side: SideId;
   unit: UnitType;
   bucket: PassiveBucket;
@@ -92,7 +91,7 @@ function applyPlayerBucket(factors: StaticDamageBucketFactors, bucket: StaticPla
   if (factor <= 0) {
     const stat = bucket.slice("player.".length);
     throw new DamageAggregationError({
-      groupId: `player.${BUCKET_DEFINITIONS[bucket].role}.${stat}`,
+      groupId: `player.${staticBucketDefinition(bucket)!.jobSide}.${stat}`,
       netPct: totalPct,
       factor,
       contributors: [{ effectId: `input:${stat}`, source: "input_stats", valuePct: totalPct, bucket }]
@@ -105,11 +104,11 @@ export function selectPassiveContributions(activeEffects: ActiveEffect[]): Passi
   for (const effect of activeEffects) {
     const bucket = effect.intent.type;
     if (!isPassiveBucket(bucket)) continue;
-    const role = passiveBucketRole(bucket)!;
+    const jobSide = staticBucketDefinition(bucket)!.jobSide;
     const side = effect.appliesTo.side;
     for (const unit of UNIT_TYPES) {
       if (!unitMaskHas(effect.appliesTo.units, unit)) continue;
-      const contribution: PassiveContribution = { role, side, unit, bucket, effect, valuePct: effect.getCurrentValuePct(1) };
+      const contribution: PassiveContribution = { jobSide, side, unit, bucket, effect, valuePct: effect.getCurrentValuePct(1) };
       contributions.push(contribution);
     }
   }
@@ -120,6 +119,7 @@ function buildSideFactors(fighter: ResolvedFighter): Record<UnitType, StaticDama
   return Object.fromEntries(
     UNIT_TYPES.map((unit) => {
       const factors = createStaticDamageBucketFactors();
+      if (fighter.initialTroops[unit] <= 0) return [unit, factors];
       const stats = unitBaseStats(fighter, unit);
       const bonuses = unitPlayerBonuses(fighter, unit);
       applyStaticDamageBucketValue(factors, "troops.baseAttack", stats.attack);
@@ -135,15 +135,20 @@ function buildSideFactors(fighter: ResolvedFighter): Record<UnitType, StaticDama
   ) as Record<UnitType, StaticDamageBucketFactors>;
 }
 
-/** Base stats a static entry reads for a unit; units with no troops resolve to neutral 1s. */
+/** Base stats for a live unit. Missing details indicate an invalid resolved fighter. */
 export function unitBaseStats(fighter: ResolvedFighter, unit: UnitType): StatBlock {
-  return fighter.troopDetails[unit]?.stats ?? FALLBACK_STATS;
+  const troop = fighter.troopDetails[unit];
+  if (!troop) {
+    throw new Error(`Resolved fighter ${fighter.side} has ${fighter.initialTroops[unit]} ${unit} troops but no troop details`);
+  }
+  return troop.stats;
 }
 
-/** Player stat bonuses a static entry reads for a unit; missing units contribute nothing. */
+/** Player stat bonuses for a live unit. Resolved fighters must contain every unit key. */
 export function unitPlayerBonuses(fighter: ResolvedFighter, unit: UnitType): StatBlock {
-  return fighter.statBonuses[unit] ?? EMPTY_STATS;
+  const bonuses = fighter.statBonuses[unit];
+  if (!bonuses) {
+    throw new Error(`Resolved fighter ${fighter.side} has ${fighter.initialTroops[unit]} ${unit} troops but no stat bonuses`);
+  }
+  return bonuses;
 }
-
-const FALLBACK_STATS: StatBlock = { attack: 1, defense: 1, lethality: 1, health: 1 };
-const EMPTY_STATS: StatBlock = { attack: 0, defense: 0, lethality: 0, health: 0 };

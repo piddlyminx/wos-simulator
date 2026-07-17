@@ -50,10 +50,6 @@ export function prepareBattle(input: BattleInput, config: SimulatorConfig): Comp
 // The pre_battle phase: activate every chance-free static-passive skill effect plus the
 // input passives. Needs no runtime, RNG, or effect index — these effects only ever feed
 // the static damage profile and the recorders' description of it.
-
-// The pre_battle phase: activate every chance-free static-passive skill effect plus the
-// input passives. Needs no runtime, RNG, or effect index — these effects only ever feed
-// the static damage profile and the recorders' description of it.
 export function activatePreBattleEffects(runtimeSkills: RuntimeSkills, input: BattleInput): ActiveEffect[] {
   const effects: ActiveEffect[] = [];
   for (const skill of runtimeSkills.preBattle) {

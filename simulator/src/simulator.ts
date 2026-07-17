@@ -53,7 +53,6 @@ import { processExtraSkillAttacks } from "./extraAttacks";
 export { prepareBattle, type CompiledBattle } from "./prepare";
 import { emptyTroops, resolveFighter } from "./fighterResolution";
 import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile";
-import { bucketDefinition } from "./damageBuckets";
 
 const DEFAULT_MAX_ROUNDS = 1500;
 const BEAR_ROUNDS = 10;
@@ -171,7 +170,7 @@ function buildBattleResult(run: BattleRun, resolved?: BattleResult["resolved"]):
 }
 
 // Build the pre-loop runtime: record the prepared pre_battle phase, then fire battle_start
-// with this run's seed. Static-phase effects never enter the per-job index.
+// with this run's seed. Pre-battle effects never enter the per-job index.
 function setupRuntime(
   fighters: Record<SideId, ResolvedFighter>,
   seed: string | number,

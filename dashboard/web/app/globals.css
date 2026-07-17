@@ -61,7 +61,8 @@ body {
   margin: 0;
 }
 
-.simulate-workspace {
+.simulate-workspace,
+.sim-modal-scope {
   --sim-page: var(--main-bg);
   --sim-panel: var(--sidebar-bg);
   --sim-panel-2: var(--sidebar-hover);
@@ -74,6 +75,9 @@ body {
   --sim-blue: var(--sidebar-active);
   --sim-green: #a6e3a1;
   --sim-yellow: #f9e2af;
+}
+
+.simulate-workspace {
   --sim-action-dock-height: 9rem;
   color: var(--sim-text);
   display: flex;

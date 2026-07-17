@@ -1,6 +1,6 @@
 import type { ActiveEffect, ActiveEffectGroup, DamageJob, DamageKind, SideId, UnitType } from "./types";
 import { unitsFromMask } from "./types";
-import { ATOMIC_BUCKET_INDEX, bucketDefinition, type AtomicBucket } from "./damageBuckets";
+import { DYNAMIC_BUCKET_INDEX, dynamicBucketDefinition, type DynamicDamageBucket } from "./damageBuckets";
 
 /**
  * Runtime lookup structure for live effects, designed around the damage hot path.
@@ -78,8 +78,7 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
 
 export function isRuntimeIndexableEffect(effect: ActiveEffect): boolean {
   if (effect.kind === "control" || effect.kind === "extra_attack" || effect.kind === "battle_order") return true;
-  const definition = bucketDefinition(effect.intent.type);
-  return definition !== undefined && definition.valueType === "pct" && definition.phase !== "static";
+  return dynamicBucketDefinition(effect.intent.type)?.effectBucket === true;
 }
 
 export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): void {
@@ -105,19 +104,19 @@ export function damageJobShapeSlot(
 }
 
 const JOB_SHAPE_CACHE = new Map<number, Uint8Array>();
-export function damageBucketIndex(bucket: AtomicBucket): number {
-  return ATOMIC_BUCKET_INDEX[bucket];
+export function damageBucketIndex(bucket: DynamicDamageBucket): number {
+  return DYNAMIC_BUCKET_INDEX[bucket];
 }
 
-export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?: AtomicBucket): Uint8Array {
-  const runtimeDefinition = bucketOverride === undefined ? bucketDefinition(effect.intent.type) : undefined;
-  if (!bucketOverride && (!runtimeDefinition || runtimeDefinition.valueType !== "pct" || runtimeDefinition.phase === "static")) {
+export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?: DynamicDamageBucket): Uint8Array {
+  const runtimeDefinition = bucketOverride === undefined ? dynamicBucketDefinition(effect.intent.type) : undefined;
+  if (!bucketOverride && runtimeDefinition?.effectBucket !== true) {
     return EMPTY_JOB_SHAPE_SLOTS;
   }
-  const bucket = (bucketOverride ?? runtimeDefinition?.path) as AtomicBucket | undefined;
+  const bucket = (bucketOverride ?? runtimeDefinition?.name) as DynamicDamageBucket | undefined;
   if (!bucket) return EMPTY_JOB_SHAPE_SLOTS;
   const key =
-    (((ATOMIC_BUCKET_INDEX[bucket] * 2 + sideIndex(effect.appliesTo.side)) * 8 + (effect.appliesTo.units & 7)) * 2 + sideIndex(effect.appliesVs.side)) * 8 +
+    (((DYNAMIC_BUCKET_INDEX[bucket] * 2 + sideIndex(effect.appliesTo.side)) * 8 + (effect.appliesTo.units & 7)) * 2 + sideIndex(effect.appliesVs.side)) * 8 +
     (effect.appliesVs.units & 7);
   const cached = JOB_SHAPE_CACHE.get(key);
   if (cached) return cached;
@@ -128,15 +127,15 @@ export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?:
 
 const EMPTY_JOB_SHAPE_SLOTS = new Uint8Array();
 
-function buildShapeSlots(effect: ActiveEffect, bucket: AtomicBucket): Uint8Array {
-  const definition = bucketDefinition(bucket)!;
+function buildShapeSlots(effect: ActiveEffect, bucket: DynamicDamageBucket): Uint8Array {
+  const definition = dynamicBucketDefinition(bucket)!;
   const slots: number[] = [];
-  const jobKinds: DamageKind[] = definition.appliesTo ? [definition.appliesTo] : ["normal", "skill"];
+  const jobKinds: DamageKind[] = definition.damageKind ? [definition.damageKind] : ["normal", "skill"];
   for (const jobKind of jobKinds) {
     for (const appliesToUnit of unitsFromMask(effect.appliesTo.units)) {
       for (const appliesVsUnit of unitsFromMask(effect.appliesVs.units)) {
         slots.push(
-          definition.role === "dealer"
+          definition.jobSide === "dealer"
             ? damageJobShapeSlot(jobKind, effect.appliesTo.side, appliesToUnit, effect.appliesVs.side, appliesVsUnit)
             : damageJobShapeSlot(jobKind, effect.appliesVs.side, appliesVsUnit, effect.appliesTo.side, appliesToUnit)
         );

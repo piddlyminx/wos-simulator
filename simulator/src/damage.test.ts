@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { calculateDamageJob, createDamageScratch, evaluateDamageExpression } from "./damage";
-import { ATOMIC_BUCKETS, DYNAMIC_BUCKETS, STATIC_BUCKETS, type BucketPlacement, type BucketRole } from "./damageBuckets";
+import { DYNAMIC_BUCKETS, STATIC_BUCKETS, type BucketJobSide, type BucketPlacement } from "./damageBuckets";
 import { createEffectIndex, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, indexEffect } from "./effectIndex";
 import { activateEffect, evolvingActiveEffectValuePct, resolvedEffectScopeKey } from "./effects";
 import { buildStaticDamageBucketFactors, buildStaticDamageProfile } from "./staticDamageProfile";
@@ -88,7 +88,7 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
     if (!group) {
       group = {
         ordinal: groups.length,
-        bucketIndex: ATOMIC_BUCKETS.indexOf(activeEffect.intent.type as never),
+        bucketIndex: DYNAMIC_BUCKETS.findIndex((definition) => definition.name === activeEffect.intent.type),
         sameEffectStacking: activeEffect.sameEffectStacking
       };
       byResolvedGroup.set(key, group);
@@ -142,6 +142,26 @@ test("damage calculator uses centralized bucket definitions for player stat rout
   assert.equal(outcome.trace?.atomicBuckets["player.health"].totalPct, 100);
   assert.ok(outcome.kills > 0);
   assert.ok(outcome.kills < 1000);
+});
+
+test("static damage profile rejects live units without resolved troop details", () => {
+  const fighters = simpleFighters();
+  delete fighters.attacker.troopDetails.infantry;
+
+  assert.throws(
+    () => buildStaticDamageProfile(fighters, []),
+    /attacker has 1000 infantry troops but no troop details/
+  );
+});
+
+test("static damage profile rejects live units without resolved stat bonuses", () => {
+  const fighters = simpleFighters();
+  delete (fighters.attacker.statBonuses as Partial<typeof fighters.attacker.statBonuses>).infantry;
+
+  assert.throws(
+    () => buildStaticDamageProfile(fighters, []),
+    /attacker has 1000 infantry troops but no stat bonuses/
+  );
 });
 
 test("active stat-up effects multiply separately from player stat bonuses", () => {
@@ -260,12 +280,12 @@ test("static profile factoring is identical to evaluating its buckets unfactored
 
 function unfactoredStaticProduct(
   factors: Float64Array,
-  role: BucketRole,
+  jobSide: BucketJobSide,
   placement: BucketPlacement
 ): number {
   return STATIC_BUCKETS.reduce(
     (product, definition, index) =>
-      definition.role === role && definition.placement === placement ? product * factors[index] : product,
+      definition.jobSide === jobSide && definition.placement === placement ? product * factors[index] : product,
     1
   );
 }
@@ -277,8 +297,8 @@ function unfactoredDynamicProduct(
 ): number {
   return DYNAMIC_BUCKETS.reduce(
     (product, definition, index) => {
-      const appliesTo = "appliesTo" in definition ? definition.appliesTo : undefined;
-      return definition.placement === placement && (!appliesTo || appliesTo === kind)
+      const damageKind = "damageKind" in definition ? definition.damageKind : undefined;
+      return definition.placement === placement && (!damageKind || damageKind === kind)
         ? product * factors[index]
         : product;
     },

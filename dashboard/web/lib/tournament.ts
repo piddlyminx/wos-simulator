@@ -143,12 +143,14 @@ export const JOINER_POOL = [
   "Ling",
   "Patrick",
   "Mia",
+  "Sonya",
   "Reina",
   "Renee",
   "Ahmose",
   "Norah",
   "Philly",
   "Wayne",
+  "Hendrik",
   "Wu Ming",
 ] as const;
 

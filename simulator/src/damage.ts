@@ -10,19 +10,17 @@ import type {
 } from "./types";
 import { UNIT_TYPES } from "./types";
 import {
-  ATOMIC_BUCKETS,
-  ATOMIC_BUCKET_INDEX,
+  DYNAMIC_BUCKET_INDEX,
   DYNAMIC_BUCKETS,
-  EVALUATED_DAMAGE_BUCKET,
   STATIC_BUCKETS,
+  STATIC_BUCKET_INDEX,
   pctBucketDelta,
   pctBucketFactor,
   rawBucketFactor,
-  type AtomicBucket,
-  type AggregateBucketSpec,
-  type BucketRole,
+  type BucketJobSide,
   type BucketSpec,
-  type DamageAggregationBucketSpec,
+  type BucketUpdate,
+  type DynamicDamageBucket,
   type StaticDamageBucket
 } from "./damageBuckets";
 import { advanceEffectAttackDelay } from "./effects";
@@ -32,9 +30,9 @@ import type { BattleRecorder, DamageJobRecorder } from "./recorder";
 type NumericBucketId = number;
 interface DamageFactorTerm {
   bucket: NumericBucketId;
-  role?: BucketRole;
+  jobSide: BucketJobSide;
   placement: "numerator" | "denominator";
-  appliesTo?: DamageJob["kind"];
+  damageKind?: DamageJob["kind"];
 }
 
 interface NumericDamageBuckets {
@@ -72,7 +70,6 @@ export interface DamageResult {
   trace?: DamageEquationTrace;
 }
 
-const STATIC_BUCKET_IDS = Object.fromEntries(STATIC_BUCKETS.map((bucket, index) => [bucket.path, index])) as Record<StaticDamageBucket, NumericBucketId>;
 const DYNAMIC_FACTOR_TERMS = compileDamageTerms(DYNAMIC_BUCKETS);
 const STATIC_FACTOR_TERMS = compileDamageTerms(STATIC_BUCKETS);
 const DYNAMIC_EXPRESSIONS = {
@@ -80,13 +77,15 @@ const DYNAMIC_EXPRESSIONS = {
   skill: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "skill" })
 };
 const STATIC_EXPRESSIONS = {
-  dealer: compileDamageExpression(STATIC_FACTOR_TERMS, { role: "dealer" }),
-  taker: compileDamageExpression(STATIC_FACTOR_TERMS, { role: "taker" })
+  dealer: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "dealer" }),
+  taker: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "taker" })
 };
-const EVALUATED_EXPRESSION = compileDamageExpression(compileDamageTerms([EVALUATED_DAMAGE_BUCKET]), {});
+const EVALUATED_EXPRESSION: CompiledDamageExpression = {
+  numeratorSlots: Int32Array.of(0),
+  denominatorSlots: new Int32Array()
+};
 const BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(DYNAMIC_BUCKETS);
 const STATIC_BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(STATIC_BUCKETS);
-const EVALUATED_BUCKET_UPDATE_BY_INDEX = compileBucketUpdates([EVALUATED_DAMAGE_BUCKET]);
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
 
 /** sqrt of the smaller side's initial army; battle-invariant, so callers running many jobs should compute it once. */
@@ -228,36 +227,34 @@ function applyBucketEffectGroup(
   }
 }
 
-function compileDamageTerms(definitions: readonly (BucketSpec | AggregateBucketSpec)[]): DamageFactorTerm[] {
+function compileDamageTerms(definitions: readonly BucketSpec[]): DamageFactorTerm[] {
   return definitions.map((definition, bucket) => ({
     bucket,
-    role: "role" in definition ? definition.role : undefined,
+    jobSide: definition.jobSide,
     placement: definition.placement,
-    appliesTo: definition.appliesTo
+    damageKind: definition.damageKind
   }));
 }
 
 function compileDamageExpression(
   terms: DamageFactorTerm[],
   selection: {
-    role?: BucketRole;
+    jobSide?: BucketJobSide;
     kind?: DamageJob["kind"];
   }
 ): CompiledDamageExpression {
   const selected = terms
-    .filter((term) => selection.role === undefined || term.role === selection.role)
-    .filter((term) => selection.kind === undefined || !term.appliesTo || term.appliesTo === selection.kind);
+    .filter((term) => selection.jobSide === undefined || term.jobSide === selection.jobSide)
+    .filter((term) => selection.kind === undefined || !term.damageKind || term.damageKind === selection.kind);
   return {
     numeratorSlots: Int32Array.from(selected.filter((term) => term.placement === "numerator").map((term) => term.bucket)),
     denominatorSlots: Int32Array.from(selected.filter((term) => term.placement === "denominator").map((term) => term.bucket))
   };
 }
 
-function compileBucketUpdates(definitions: readonly DamageAggregationBucketSpec[]): Uint8Array {
+function compileBucketUpdates(definitions: readonly { update: BucketUpdate }[]): Uint8Array {
   return Uint8Array.from(
-    definitions.map(({ update, valueType }) =>
-      valueType === "factor" ? 3 : update === "assign_factor" ? 0 : update === "multiply_pct_factor" ? 1 : 2
-    )
+    definitions.map(({ update }) => update === "assign_factor" ? 0 : update === "multiply_pct_factor" ? 1 : 2)
   );
 }
 
@@ -265,12 +262,11 @@ function applyBucketValue(factors: Float64Array, bucket: number, value: number, 
   const update = updates[bucket];
   if (update === 0) factors[bucket] = rawBucketFactor(value);
   else if (update === 1) factors[bucket] *= pctBucketFactor(value);
-  else if (update === 2) factors[bucket] += pctBucketDelta(value);
-  else factors[bucket] = value;
+  else factors[bucket] += pctBucketDelta(value);
 }
 
-function applyDynamicDamageBucketValue(buckets: NumericDamageBuckets, bucket: AtomicBucket, value: number): number {
-  const bucketIndex = ATOMIC_BUCKET_INDEX[bucket];
+function applyDynamicDamageBucketValue(buckets: NumericDamageBuckets, bucket: DynamicDamageBucket, value: number): number {
+  const bucketIndex = DYNAMIC_BUCKET_INDEX[bucket];
   applyBucketValue(buckets.factors, bucketIndex, value, BUCKET_UPDATE_BY_INDEX);
   return buckets.factors[bucketIndex];
 }
@@ -282,7 +278,7 @@ function multiplySlots(initial: number, factors: Float64Array, slots: Int32Array
 }
 
 function createNumericDamageBuckets(): NumericDamageBuckets {
-  const factors = new Float64Array(ATOMIC_BUCKETS.length);
+  const factors = new Float64Array(DYNAMIC_BUCKETS.length);
   factors.fill(1);
   return { factors };
 }
@@ -304,14 +300,14 @@ export function applyStaticDamageBucketValue(
   bucket: StaticDamageBucket,
   value: number
 ): number {
-  const bucketIndex = STATIC_BUCKET_IDS[bucket];
+  const bucketIndex = STATIC_BUCKET_INDEX[bucket];
   applyBucketValue(factors, bucketIndex, value, STATIC_BUCKET_UPDATE_BY_INDEX);
   return factors[bucketIndex];
 }
 
-/** Selects one role's static buckets as an ordinary input to the standard evaluator. */
-export function staticDamageBucketSet(factors: StaticDamageBucketFactors, role: BucketRole): DamageBucketSet {
-  return { factors, expression: STATIC_EXPRESSIONS[role] };
+/** Selects one job side's static buckets as an ordinary input to the standard evaluator. */
+export function staticDamageBucketSet(factors: StaticDamageBucketFactors, jobSide: BucketJobSide): DamageBucketSet {
+  return { factors, expression: STATIC_EXPRESSIONS[jobSide] };
 }
 
 function resetDamageScratch(buckets: DamageScratch): DamageScratch {
@@ -331,9 +327,7 @@ function bucketSetValue(input: DamageBucketSet): number {
 }
 
 function createEvaluatedDamageBucket(factor: number): DamageBucketSet {
-  const factors = new Float64Array(1);
-  applyBucketValue(factors, 0, factor, EVALUATED_BUCKET_UPDATE_BY_INDEX);
-  return { factors, expression: EVALUATED_EXPRESSION };
+  return { factors: Float64Array.of(factor), expression: EVALUATED_EXPRESSION };
 }
 
 // Same reduction as evaluateDamageExpression over (dynamic, dealer static, taker static, scale),

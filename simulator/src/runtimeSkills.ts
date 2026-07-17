@@ -9,7 +9,7 @@ import type {
 import { unitsFromMask } from "./types";
 import { activateEffect, compiledTriggerForSkill, oppositeSide, resolvedEffectScopeKey } from "./effects";
 import { damageBucketIndex, damageJobShapeSlot, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS } from "./effectIndex";
-import { bucketDefinition } from "./damageBuckets";
+import { dynamicBucketDefinition } from "./damageBuckets";
 
 /**
  * Battle-preparation product: every skill bucketed by trigger phase, the prepared
@@ -18,28 +18,25 @@ import { bucketDefinition } from "./damageBuckets";
  * shared across all of its runs.
  */
 export interface RuntimeSkills {
-  all: ResolvedSkill[];
   // Chance-free static-passive skills activated once at prepare time, before any runtime exists.
   preBattle: ResolvedSkill[];
   battleStart: ResolvedSkill[];
-  roundStart: ResolvedSkill[];
   roundStartGlobal: ResolvedSkill[];
   roundStartPerUnit: ResolvedSkill[];
-  attackDeclared: ResolvedSkill[];
   attackDeclaredByJobShape: Array<ResolvedSkill[] | undefined>;
   effectGroups: ActiveEffectGroup[];
   damageGroupsByJobShape: ActiveEffectGroup[][];
   randomness: BattleRandomness;
 }
 
-export function hasChanceTrigger(skill: ResolvedSkill): boolean {
-  const probabilityPct = compiledTriggerForSkill(skill).probabilityPct;
-  return probabilityPct > 0 && probabilityPct < 100;
-}
-
 export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
   const all = fighters.flatMap((fighter) => [...(fighter.heroSkills ?? []), ...fighter.troopSkills]);
-  for (const skill of all) compiledTriggerForSkill(skill);
+  const preBattle: ResolvedSkill[] = [];
+  const battleStart: ResolvedSkill[] = [];
+  const roundStartGlobal: ResolvedSkill[] = [];
+  const roundStartPerUnit: ResolvedSkill[] = [];
+  const attackDeclaredByJobShape: Array<ResolvedSkill[] | undefined> = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS });
+  const chanceSkillIds: Record<SideId, string[]> = { attacker: [], defender: [] };
   const effectGroups: ActiveEffectGroup[] = [];
   const damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
   // One scope-key table per (side, config definition); duplicate main/joiner copies of the
@@ -48,20 +45,34 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
     attacker: new Map(),
     defender: new Map()
   };
+
   for (const skill of all) {
-    for (const intent of skill.effects) {
-      const definition = bucketDefinition(intent.type);
-      if (definition?.phase === "static") {
-        if (skill.trigger.type !== "pre_battle") {
-          throw new Error(`Static passive effect ${intent.id} must live in a pre_battle skill, not ${skill.trigger.type}`);
+    if (skill.trigger.type === "pre_battle") {
+      preBattle.push(skill);
+      continue;
+    }
+
+    const trigger = compiledTriggerForSkill(skill);
+    if (trigger.probabilityPct > 0 && trigger.probabilityPct < 100) chanceSkillIds[skill.side].push(skill.id);
+
+    if (skill.trigger.type === "battle_start") {
+      battleStart.push(skill);
+    } else if (skill.trigger.type === "turn") {
+      (hasPerUnitRoundTrigger(skill) ? roundStartPerUnit : roundStartGlobal).push(skill);
+    } else if (skill.trigger.type === "attack") {
+      for (const dealerUnit of unitsFromMask(trigger.source.units)) {
+        for (const takerUnit of unitsFromMask(trigger.target.units)) {
+          const slot = damageJobShapeSlot("normal", trigger.source.side, dealerUnit, trigger.target.side, takerUnit);
+          const matching = attackDeclaredByJobShape[slot];
+          if (matching) matching.push(skill);
+          else attackDeclaredByJobShape[slot] = [skill];
         }
-        if (intent.same_effect_stacking === "max") {
-          throw new Error(`Static passive effect ${intent.id} cannot use max stacking; passive effects are additive`);
-        }
-        continue;
       }
-      const isDynamicModifier = definition?.valueType === "pct";
-      if (!isDynamicModifier) continue;
+    }
+
+    for (const intent of skill.effects) {
+      const definition = dynamicBucketDefinition(intent.type);
+      if (definition?.effectBucket !== true) continue;
       const existingTable = groupTablesByDefinition[skill.side].get(intent.sourceDefinition);
       if (existingTable) {
         intent.effectGroupsByScopeKey = existingTable;
@@ -74,12 +85,12 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
         const candidate = activateEffect(skill, intent, 1, attackIntent);
         const scopeKey = resolvedEffectScopeKey(candidate.appliesTo, candidate.appliesVs);
         if (groupsByScopeKey[scopeKey]) continue;
-        const slots = damageShapeSlotsForEffect(candidate, definition.path);
+        const slots = damageShapeSlotsForEffect(candidate, definition.name);
         if (slots.length === 0) continue;
         if (candidate.sameEffectStacking === "max") assertDisjointResolvedGroupSlots(intent.id, slots, slotsForDefinition);
         const group: ActiveEffectGroup = {
           ordinal: effectGroups.length,
-          bucketIndex: damageBucketIndex(definition.path),
+          bucketIndex: damageBucketIndex(definition.name),
           sameEffectStacking: candidate.sameEffectStacking
         };
         groupsByScopeKey[scopeKey] = group;
@@ -93,50 +104,23 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
       intent.effectGroupsByScopeKey = groupsByScopeKey;
     }
   }
-  const preBattle = all.filter((skill) => skill.trigger.type === "pre_battle");
-  const battleStart = all.filter((skill) => skill.trigger.type === "battle_start");
-  const roundStart = all.filter((skill) => skill.trigger.type === "turn");
-  const attackDeclared = all.filter((skill) => skill.trigger.type === "attack");
-  const attackDeclaredByJobShape: Array<ResolvedSkill[] | undefined> = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS });
-  for (const skill of attackDeclared) {
-    const trigger = compiledTriggerForSkill(skill);
-    for (const dealerUnit of unitsFromMask(trigger.source.units)) {
-      for (const takerUnit of unitsFromMask(trigger.target.units)) {
-        const slot = damageJobShapeSlot("normal", trigger.source.side, dealerUnit, trigger.target.side, takerUnit);
-        const matching = attackDeclaredByJobShape[slot];
-        if (matching) matching.push(skill);
-        else attackDeclaredByJobShape[slot] = [skill];
-      }
-    }
-  }
   return {
-    all,
     preBattle,
     battleStart,
-    roundStart,
-    roundStartGlobal: roundStart.filter((skill) => !hasPerUnitRoundTrigger(skill)),
-    roundStartPerUnit: roundStart.filter((skill) => hasPerUnitRoundTrigger(skill)),
-    attackDeclared,
+    roundStartGlobal,
+    roundStartPerUnit,
     attackDeclaredByJobShape,
     effectGroups,
     damageGroupsByJobShape,
-    randomness: classifyRandomness(all)
+    randomness: {
+      deterministic: chanceSkillIds.attacker.length === 0 && chanceSkillIds.defender.length === 0,
+      chanceSkillIds
+    }
   };
 }
 
 function hasPerUnitRoundTrigger(skill: ResolvedSkill): boolean {
   return skill.trigger.type === "turn" && skill.trigger.source !== undefined;
-}
-
-function classifyRandomness(skills: ResolvedSkill[]): BattleRandomness {
-  const chanceSkillIds: Record<SideId, string[]> = { attacker: [], defender: [] };
-  for (const skill of skills) {
-    if (hasChanceTrigger(skill)) chanceSkillIds[skill.side].push(skill.id);
-  }
-  return {
-    deterministic: chanceSkillIds.attacker.length === 0 && chanceSkillIds.defender.length === 0,
-    chanceSkillIds
-  };
 }
 
 function assertDisjointResolvedGroupSlots(effectId: string, slots: Uint8Array, existingGroups: Iterable<Uint8Array>): void {

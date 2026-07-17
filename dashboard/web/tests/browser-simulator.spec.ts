@@ -32,6 +32,18 @@ test("numeric fields can be cleared before typing a replacement", async ({
   await expect(bearReplicates).toHaveValue("5000");
 
   await page.goto("/tournament");
+  const tournamentJoiners = page.locator("fieldset", {
+    has: page.getByText("Joiners", { exact: true }),
+  });
+  await expect(tournamentJoiners.getByRole("checkbox", { name: "Sonya" })).toBeVisible();
+  await expect(tournamentJoiners.getByRole("checkbox", { name: "Hendrik" })).toBeVisible();
+  await expect(page.getByRole("spinbutton", { name: "Top rows" })).toHaveValue("250");
+  await expect(page.getByRole("spinbutton", { name: "Rounds", exact: true })).toHaveValue("20");
+  await expect(page.getByRole("spinbutton", { name: "Freeze start" })).toHaveValue("8");
+  await expect(page.getByRole("spinbutton", { name: "Min pool" })).toHaveValue("500");
+  await expect(page.getByRole("spinbutton", { name: "Finals top" })).toHaveValue("500");
+  await expect(page.getByRole("spinbutton", { name: "Finals reps" })).toHaveValue("10");
+  await expect(page.getByText('Multiple ratios can be added separated by ";" or " ".')).toBeVisible();
   const totalTroops = page.getByRole("spinbutton", { name: "Total troops" });
   await totalTroops.fill("");
   await expect(totalTroops).toHaveValue("");
@@ -43,6 +55,141 @@ test("numeric fields can be cleared before typing a replacement", async ({
 test("server compute routes are removed", async ({ request }) => {
   await expect((await request.post("/api/simulate")).status()).toBe(404);
   await expect((await request.post("/api/simulate/optimize-ratio")).status()).toBe(404);
+});
+
+test("/tournament saves completed results and activates the share URL", async ({ page }) => {
+  await page.addInitScript(() => {
+    class MockTournamentWorker {
+      onmessage: ((event: MessageEvent) => void) | null = null;
+      onerror: ((event: ErrorEvent) => void) | null = null;
+
+      postMessage(message: { id: number; type: string }) {
+        if (message.type !== "tournament") return;
+        setTimeout(() => {
+          this.onmessage?.({
+            data: {
+              id: message.id,
+              type: "tournamentResult",
+              data: {
+                generatedTeams: 2,
+                swiss: {
+                  offense: { rows: [], totalRows: 0 },
+                  defense: { rows: [], totalRows: 0 },
+                },
+              },
+            },
+          } as MessageEvent);
+        }, 0);
+      }
+
+      terminate() {}
+    }
+
+    window.Worker = MockTournamentWorker as unknown as typeof Worker;
+  });
+
+  let savedPayload: { kind?: string } | null = null;
+  await page.route("**/api/simulate/runs", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.continue();
+      return;
+    }
+    savedPayload = route.request().postDataJSON();
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        saved_run_id: "browser-tournament",
+        saved_at: "2026-07-17T12:00:00.000Z",
+        saved_kind: "tournament",
+        share_url: "/tournament?run=browser-tournament",
+      }),
+    });
+  });
+
+  await page.goto("/tournament");
+  await page.getByRole("button", { name: "Run tournament" }).click();
+
+  await expect(page).toHaveURL(/\/tournament\?run=browser-tournament$/);
+  await expect(page.getByTestId("tournament-saved-run-banner")).toContainText("browser-tournament");
+  await expect(page.getByRole("button", { name: "Swiss offense" })).toBeVisible();
+  expect(savedPayload).toMatchObject({ kind: "tournament" });
+});
+
+test("/tournament loads a tournament from Recent tournaments", async ({ page }) => {
+  const savedTournament = {
+    version: 1,
+    id: "recent-tournament",
+    kind: "tournament",
+    created_at: "2026-07-17T11:00:00.000Z",
+    share_url: "/tournament?run=recent-tournament",
+    request: {
+      groups: [{
+        label: "Loaded batch",
+        infantryMains: ["Hector"],
+        lancerMains: ["Mia"],
+        marksmanMains: ["Bradley"],
+        joiners: ["Jessie", "Seo-yoon", "Lumak", "Ling"],
+        ratios: ["60,20,20"],
+        allowRepeatedJoiners: false,
+        excludeMainHeroesFromJoiners: true,
+      }],
+      totalTroops: 4242,
+      rounds: 3,
+      seedRounds: 1,
+      reps: 1,
+      jobs: 1,
+      seed: 99,
+      freezeRate: 0.2,
+      freezeLossesGte: null,
+      startFreezeRound: 2,
+      minPoolSize: 2,
+      topN: 10,
+      finalsTopM: 0,
+      finalsReps: 1,
+      finalsMaxSameMainLineup: 10,
+    },
+    result: {
+      generatedTeams: 2,
+      swiss: {
+        offense: { rows: [], totalRows: 0 },
+        defense: { rows: [], totalRows: 0 },
+      },
+    },
+  };
+
+  await page.route("**/api/simulate/runs**", async (route) => {
+    const url = new URL(route.request().url());
+    if (url.pathname.endsWith("/recent-tournament")) {
+      await route.fulfill({ contentType: "application/json", body: JSON.stringify(savedTournament) });
+      return;
+    }
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        runs: [{
+          id: savedTournament.id,
+          kind: savedTournament.kind,
+          created_at: savedTournament.created_at,
+          share_url: savedTournament.share_url,
+          title: "Tournament: Loaded batch (3 rounds)",
+        }],
+        has_more: false,
+        next_offset: 1,
+      }),
+    });
+  });
+
+  await page.goto("/tournament");
+  await page.getByRole("button", { name: "Recent tournaments" }).click();
+  const recentTournamentsDialog = page.getByRole("dialog", { name: "Recent tournaments" });
+  await expect(recentTournamentsDialog).toBeVisible();
+  await expect(recentTournamentsDialog.locator(".sim-modal")).toHaveCSS("background-color", "rgb(30, 30, 46)");
+  await page.getByRole("button", { name: /Tournament: Loaded batch/ }).click();
+
+  await expect(page).toHaveURL(/\/tournament\?run=recent-tournament$/);
+  await expect(page.getByRole("spinbutton", { name: "Total troops" })).toHaveValue("4242");
+  await expect(page.getByRole("spinbutton", { name: "Rounds", exact: true })).toHaveValue("3");
+  await expect(page.getByTestId("tournament-saved-run-banner")).toContainText("recent-tournament");
 });
 
 test("/simulate uses browser worker for simulation and saves afterward", async ({ page }) => {

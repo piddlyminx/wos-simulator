@@ -8,6 +8,10 @@ import type {
   SurfaceSweepPayload,
   SurfaceSweepResult,
 } from "@/lib/simulator/surface";
+import type {
+  TournamentRequestPayload,
+  TournamentResult,
+} from "@/lib/tournament";
 
 export type { OptimizeRatioResult } from "@/lib/optimize-ratio";
 
@@ -228,7 +232,8 @@ export type SavedSimulationKind =
   | "optimize_ratio"
   | "bear_simulate"
   | "bear_optimize_ratio"
-  | "ratio_explorer";
+  | "ratio_explorer"
+  | "tournament";
 
 export interface SimulationSaveMeta {
   saved_run_id: string;
@@ -248,14 +253,16 @@ export type SavedSimulationRequest =
   | OptimizeRatioRequestPayload
   | BearSimRequestPayload
   | BearOptimizeRatioRequestPayload
-  | SurfaceSweepPayload;
+  | SurfaceSweepPayload
+  | TournamentRequestPayload;
 
 export type SavedSimulationResult =
   | SimulateApiResult
   | OptimizeRatioResult
   | BearSimResult
   | BearOptimizeRatioResult
-  | SurfaceSweepResult;
+  | SurfaceSweepResult
+  | TournamentResult;
 
 export interface SavedSimulationRunDocument {
   version: 1;
@@ -281,7 +288,8 @@ export interface SavedSimulationRunListItem {
 const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
 export const PVP_SAVED_RUN_KINDS = ["simulate", "optimize_ratio", "ratio_explorer"] as const satisfies readonly SavedSimulationKind[];
 export const BEAR_SAVED_RUN_KINDS = ["bear_simulate", "bear_optimize_ratio"] as const satisfies readonly SavedSimulationKind[];
-export const ALL_SAVED_RUN_KINDS = [...PVP_SAVED_RUN_KINDS, ...BEAR_SAVED_RUN_KINDS] as const satisfies readonly SavedSimulationKind[];
+export const TOURNAMENT_SAVED_RUN_KINDS = ["tournament"] as const satisfies readonly SavedSimulationKind[];
+export const ALL_SAVED_RUN_KINDS = [...PVP_SAVED_RUN_KINDS, ...BEAR_SAVED_RUN_KINDS, ...TOURNAMENT_SAVED_RUN_KINDS] as const satisfies readonly SavedSimulationKind[];
 
 export function isSavedSimulationKind(value: unknown): value is SavedSimulationKind {
   return typeof value === "string" && (ALL_SAVED_RUN_KINDS as readonly string[]).includes(value);
@@ -299,10 +307,16 @@ export function isRatioExplorerSavedSimulationKind(kind: SavedSimulationKind): b
   return kind === "ratio_explorer";
 }
 
+export function isTournamentSavedSimulationKind(kind: SavedSimulationKind): boolean {
+  return kind === "tournament";
+}
+
 export function buildSimulationShareUrl(id: string, kind: SavedSimulationKind = "simulate"): string {
   const path = isBearSavedSimulationKind(kind)
     ? "/bear"
-    : "/simulate";
+    : isTournamentSavedSimulationKind(kind)
+      ? "/tournament"
+      : "/simulate";
   return `${path}?run=${encodeURIComponent(id)}`;
 }
 
@@ -334,6 +348,15 @@ export function buildSimulationRunTitle(
   request: SavedSimulationRequest,
   kind: SavedSimulationKind = "simulate",
 ): string {
+  if (isTournamentSavedSimulationKind(kind) && "groups" in request) {
+    const labels = request.groups
+      .map((group) => group.label.trim())
+      .filter(Boolean);
+    const groupLabel = labels.length > 0
+      ? labels.slice(0, 2).join(" + ")
+      : `${request.groups.length} ${request.groups.length === 1 ? "batch" : "batches"}`;
+    return `Tournament: ${groupLabel} (${request.rounds} rounds)`;
+  }
   if (isBearSavedSimulationKind(kind) && "player" in request) {
     return `Bear: ${sideHeroes(request.player)} (${sideRatio(request.player)})`;
   }

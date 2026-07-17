@@ -12,9 +12,9 @@ export const MAIN_POOL: Record<string, MainHeroRole> = {
   Sonya: "lanc",
   // Alonso: "mark",
   Bradley: "mark",
-  // Greg: "mark",
+  Greg: "mark",
   Hendrik: "mark",
-  Wayne: "mark"
+  // Wayne: "mark"
 };
 
 export const JOINER_POOL = [
@@ -30,7 +30,7 @@ export const JOINER_POOL = [
   "Renee",
   "Norah",
   "Philly",
-  "Wayne",
+  // "Wayne",
   "Wu Ming"
 ] as const;
 
