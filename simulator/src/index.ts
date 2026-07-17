@@ -1,7 +1,8 @@
 export { buildSimulatorConfig, loadSimulatorConfig } from "./config";
 export type { RawSimulatorConfig } from "./config";
-export { prepareBattle, runPrepared, simulateBattles } from "./simulator";
-export type { CompiledBattle } from "./simulator";
+export { prepareBattle } from "./prepare";
+export type { CompiledBattle } from "./prepare";
+export { runPrepared, simulateBattles } from "./simulator";
 export { BattleInputBuilder } from "./battleInputBuilder";
-export { applyHeroGenerationStats } from "./resolve";
+export { applyHeroGenerationStats } from "./fighterResolution";
 export type * from "./types";

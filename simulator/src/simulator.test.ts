@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { BattleInputBuilder } from "./battleInputBuilder";
 import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
-import { applyHeroGenerationStats, resolveFighter } from "./resolve";
+import { applyHeroGenerationStats, resolveFighter } from "./fighterResolution";
 import { prepareBattle, runPrepared, simulateBattles, simulateBearBattle, signedRemainingScore } from "./simulator";
 import type { AppliedEffect, BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulationOptions, SimulatorConfig, SkillFile, UnitType } from "./types";
 

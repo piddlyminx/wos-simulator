@@ -1,5 +1,5 @@
 import type { BattleInput, FighterInput, SideId, SimulatorConfig } from "./types";
-import { applyHeroGenerationStats } from "./resolve";
+import { applyHeroGenerationStats } from "./fighterResolution";
 
 /**
  * Ergonomic, order-independent constructor for a BattleInput.

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { loadSimulatorConfig } from "./config";
-import { resolveFighter } from "./resolve";
+import { resolveFighter } from "./fighterResolution";
 
 test("Gen8 heroes are registered with the shared S8 expedition stats", () => {
   const config = loadSimulatorConfig();

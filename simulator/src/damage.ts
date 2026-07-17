@@ -94,18 +94,20 @@ export function sqrtMinInitialArmy(fighters: Record<SideId, ResolvedFighter>): n
   return Math.sqrt(Math.max(1, Math.min(totalTroops(fighters.attacker.initialTroops), totalTroops(fighters.defender.initialTroops))));
 }
 
+export interface DamageJobOptions {
+  recorder: BattleRecorder;
+  effectIndex: EffectIndex;
+  staticDamageProfile: StaticDamageProfile;
+  scratch?: DamageScratch;
+  capToTakerTroops?: boolean;
+  usedEffects?: ActiveEffect[];
+  sqrtMinInitialArmy?: number;
+}
+
 export function calculateDamageJob(
   job: DamageJob,
   fighters: Record<SideId, ResolvedFighter>,
-  options: {
-    recorder: BattleRecorder;
-    effectIndex: EffectIndex;
-    staticDamageProfile: StaticDamageProfile;
-    scratch?: DamageScratch;
-    capToTakerTroops?: boolean;
-    usedEffects?: ActiveEffect[];
-    sqrtMinInitialArmy?: number;
-  }
+  options: DamageJobOptions
 ): DamageResult {
   if (!options?.effectIndex) throw new Error("calculateDamageJob requires an effectIndex");
   if (!options.recorder) throw new Error("calculateDamageJob requires a recorder");

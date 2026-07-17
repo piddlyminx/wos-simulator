@@ -13,31 +13,45 @@ import type {
   SideId,
   SimulationOptions,
   SimulatorConfig,
-  TriggerDamageJobSelector,
   UnitType
 } from "./types";
-import { ALL_UNIT_MASK, UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types";
-import { calculateDamageJob, createDamageScratch, sqrtMinInitialArmy, type DamageResult, type DamageScratch } from "./damage";
-import { createRecorder, NULL_RECORDER, type BattleRecorder } from "./recorder";
+import { UNIT_TYPES, unitMaskHas } from "./types";
+import { calculateDamageJob, sqrtMinInitialArmy, type DamageResult } from "./damage";
+import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
   advanceEffectAttackDelay,
   chancePasses,
   compiledTriggerForSkill,
-  constantActiveEffectValuePct,
   createSeededRng,
-  effectAttackUseLimit,
-  effectRoundWindow,
   hasAttackDurationConstraint,
   isEffectAttackReady,
   oppositeSide,
   skillMatchesTrigger,
   type Rng
 } from "./effects";
-import { createEffectIndex, damageJobShapeSlot, damageJobSlot, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
-import { normalizeUnitType } from "./normalize";
+import { damageJobShapeSlot, damageJobSlot, type EffectIndex } from "./effectIndex";
 import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
-import { emptyTroops, resolveFighter } from "./resolve";
+import { activatePreBattleEffects, buildResolved, prepareBattle, type CompiledBattle } from "./prepare";
+import {
+  addActiveEffect,
+  capJobToRemainingTarget,
+  chargeEffectUse,
+  chargeUsedEffects,
+  createRuntime,
+  emptyRoundTargetDamage,
+  processEffectSchedule,
+  targetExhausted,
+  triggerSkills,
+  type DamageJobResult,
+  type RunLoopOptions,
+  type Runtime
+} from "./runtime";
+import { processExtraSkillAttacks } from "./extraAttacks";
+
+// Re-exported so the public battle API stays importable from one module.
+export { prepareBattle, type CompiledBattle } from "./prepare";
+import { emptyTroops, resolveFighter } from "./fighterResolution";
 import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile";
 import { bucketDefinition } from "./damageBuckets";
 
@@ -45,30 +59,6 @@ const DEFAULT_MAX_ROUNDS = 1500;
 const BEAR_ROUNDS = 10;
 const BEAR_DEFENSE = 250/3;
 const BEAR_TROOP_ID = "bear_infantry";
-
-interface Runtime {
-  effectIndex: EffectIndex;
-  // Live troop counts, initialized from the fighters' immutable initialTroops.
-  troops: Record<SideId, Record<UnitType, number>>;
-  activateEffectsByRound: Array<ActiveEffect[] | undefined>;
-  expireEffectsByRound: Array<ActiveEffect[] | undefined>;
-  // Per-job scratch: effects that affected the job being calculated; drained by
-  // chargeUsedEffects (uses += 1 each) after every job in every mode.
-  usedEffects: ActiveEffect[];
-  staticDamageProfile: StaticDamageProfile;
-  damageScratch: DamageScratch;
-  rng: Rng;
-  skills: RuntimeSkills;
-  effectActivationCounts: Record<SideId, number>;
-  extraSkillAttackJobsByEffect: Record<string, number>;
-  attackControlCounts: { dodge: number; no_attack: number };
-  counters: {
-    attacks: Record<SideId, Record<UnitType, number>>;
-    received: Record<SideId, Record<UnitType, number>>;
-  };
-}
-
-type DamageJobCalculationOptions = Parameters<typeof calculateDamageJob>[2];
 
 interface BattleRun {
   fighters: Record<SideId, ResolvedFighter>;
@@ -81,14 +71,21 @@ interface BattleRun {
   score: number;
 }
 
-interface RunLoopOptions {
-  capRoundKills: boolean;
-  capJobKills: boolean;
-  commitLosses: boolean;
-  scoreSide?: {
-    dealerSide: SideId;
-    takerSide: SideId;
-  };
+interface CancelledAttack {
+  intent: AttackIntent;
+  control: Control;
+}
+
+interface ApplicableControls {
+  dodge?: Control;
+  no_attack?: Control;
+  attackDurationEffects: ActiveEffect[];
+}
+
+interface Control {
+  effect: ActiveEffect;
+  reason: "dodge" | "no_attack";
+  attackDurationEffects: ActiveEffect[];
 }
 
 function bearFighterInput(): FighterInput {
@@ -126,52 +123,6 @@ export function simulateBearBattle(
     ...buildBattleResult(run),
     score: run.score
   };
-}
-
-/**
- * A resolved battle ready to run many times with different seeds. Fighters, skills, the effect-group
- * graph, and the static damage profile are built once and reused; each run fires battle_start with
- * its own seed and builds a fresh Runtime. (Benchmarked 2026-07-17: a cloned battle-start template
- * was no faster than re-firing setup per run, so the simpler always-runtime path is used.)
- * A CompiledBattle is immutable: live effect lists, troop counts, and all other run state live on
- * each run's Runtime. (Sole post-prepare write: the idempotent per-intent activation cache in
- * effects.ts, populated on first activation.)
- */
-export interface CompiledBattle {
-  input: BattleInput;
-  config: SimulatorConfig;
-  fighters: Record<SideId, ResolvedFighter>;
-  // Pre-battle skill activations plus input passives: the inputs to the static damage
-  // profile, kept so each run's recorder can describe the profile's contributors.
-  preBattleEffects: ActiveEffect[];
-  staticProfile: StaticDamageProfile;
-  runtimeSkills: RuntimeSkills;
-  // Run-invariant result payload shared by reference across every run of this compiled battle.
-  resolved: BattleResult["resolved"];
-}
-
-export function prepareBattle(input: BattleInput, config: SimulatorConfig): CompiledBattle {
-  const attacker = resolveFighter(input.attacker, "attacker", config, input.engagement_type);
-  const defender = resolveFighter(input.defender, "defender", config, input.engagement_type);
-  const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
-  const runtimeSkills = buildRuntimeSkills([attacker, defender]);
-  const resolved = buildResolved(attacker, defender);
-  const preBattleEffects = activatePreBattleEffects(runtimeSkills, input);
-  const staticProfile = buildStaticDamageProfile(fighters, preBattleEffects);
-  return { input, config, fighters, preBattleEffects, staticProfile, runtimeSkills, resolved };
-}
-
-// The pre_battle phase: activate every chance-free static-passive skill effect plus the
-// input passives. Needs no runtime, RNG, or effect index — these effects only ever feed
-// the static damage profile and the recorders' description of it.
-function activatePreBattleEffects(runtimeSkills: RuntimeSkills, input: BattleInput): ActiveEffect[] {
-  const effects: ActiveEffect[] = [];
-  for (const skill of runtimeSkills.preBattle) {
-    for (const intent of skill.effects) effects.push(activateEffect(skill, intent, 0));
-  }
-  effects.push(...createInputPassiveEffects(input.attacker.passive, "attacker"));
-  effects.push(...createInputPassiveEffects(input.defender.passive, "defender"));
-  return effects;
 }
 
 export function runPrepared(compiled: CompiledBattle, seed?: string | number, options: SimulationOptions = {}): BattleResult {
@@ -407,17 +358,6 @@ function runLoop(
   };
 }
 
-interface CancelledAttack {
-  intent: AttackIntent;
-  control: Control;
-}
-
-interface DamageJobResult {
-  job: DamageJob;
-  result: DamageResult;
-  intent?: AttackIntent;
-}
-
 function triggerRoundStartSkills(
   round: number,
   runtime: Runtime,
@@ -488,136 +428,6 @@ function syntheticRoundIntent(
     previousReceivedAttackCount: runtime.counters.received[takerSide][takerUnit],
     projectedReceivedAttackCount: runtime.counters.received[takerSide][takerUnit]
   };
-}
-
-function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rng, skills: RuntimeSkills, staticDamageProfile: StaticDamageProfile): Runtime {
-  return {
-    troops: {
-      attacker: { ...fighters.attacker.initialTroops },
-      defender: { ...fighters.defender.initialTroops }
-    },
-    effectIndex: createEffectIndex(
-      skills.effectGroups,
-      skills.damageGroupsByJobShape
-    ),
-    activateEffectsByRound: [],
-    expireEffectsByRound: [],
-    usedEffects: [],
-    staticDamageProfile,
-    damageScratch: createDamageScratch(),
-    rng,
-    skills,
-    effectActivationCounts: { attacker: 0, defender: 0 },
-    extraSkillAttackJobsByEffect: {},
-    attackControlCounts: { dodge: 0, no_attack: 0 },
-    counters: {
-      attacks: { attacker: emptyTroops(), defender: emptyTroops() },
-      received: { attacker: emptyTroops(), defender: emptyTroops() }
-    }
-  };
-}
-
-function addActiveEffect(runtime: Runtime, effect: ActiveEffect): void {
-  if (!isRuntimeIndexableEffect(effect)) return;
-  const window = effectRoundWindow(effect);
-  if (!window) {
-    indexEffect(runtime.effectIndex, effect);
-    return;
-  }
-  if (window.expirationRound !== undefined) {
-    if (window.expirationRound <= window.activationRound) {
-      effect.expired = true;
-      return;
-    }
-    scheduleEffect(runtime.expireEffectsByRound, window.expirationRound, effect);
-  }
-  if (window.activationRound <= effect.createdRound) indexEffect(runtime.effectIndex, effect);
-  else scheduleEffect(runtime.activateEffectsByRound, window.activationRound, effect);
-}
-
-function scheduleEffect(schedule: Array<ActiveEffect[] | undefined>, round: number, effect: ActiveEffect): void {
-  const effects = schedule[round];
-  if (effects) effects.push(effect);
-  else schedule[round] = [effect];
-}
-
-function processEffectSchedule(runtime: Runtime, round: number): void {
-  const expiring = runtime.expireEffectsByRound[round];
-  if (expiring) {
-    for (const effect of expiring) expireActiveEffect(runtime, effect);
-    runtime.expireEffectsByRound[round] = undefined;
-  }
-  const activating = runtime.activateEffectsByRound[round];
-  if (activating) {
-    for (const effect of activating) {
-      if (!effect.expired) indexEffect(runtime.effectIndex, effect);
-    }
-    runtime.activateEffectsByRound[round] = undefined;
-  }
-}
-
-function createInputPassiveEffects(passive: FighterInput["passive"], side: SideId): ActiveEffect[] {
-  const effects: ActiveEffect[] = [];
-  if (!passive) return effects;
-  for (const stat of ["attack", "defense", "lethality", "health"] as const) {
-    for (const direction of ["up", "down"] as const) {
-      const valuePct = Number(passive[stat]?.[direction] ?? 0);
-      if (!Number.isFinite(valuePct) || valuePct <= 0) continue;
-      const bucket = `passive.${stat}.${direction}`;
-      const effect: ActiveEffect = {
-        source: {
-          kind: "input_stat",
-          side,
-          effectId: `input:${bucket}`
-        },
-        intent: {
-          id: `input:${bucket}`,
-          type: bucket,
-          value: valuePct
-        },
-        ownerSide: side,
-        kind: "modifier",
-        bucketIndex: -1,
-        initialValuePct: valuePct,
-        getCurrentValuePct: constantActiveEffectValuePct,
-        appliesTo: { side, units: ALL_UNIT_MASK },
-        appliesVs: { side: oppositeSide(side), units: ALL_UNIT_MASK },
-        createdRound: 0,
-        startRound: 0,
-        duration: {},
-        remainingAttackDelay: 0,
-        uses: 0,
-        sameEffectStacking: "add"
-      };
-      effects.push(effect);
-    }
-  }
-  return effects;
-}
-
-function triggerSkills(
-  triggerType: "battle_start" | "round_start" | "attack_declared",
-  round: number,
-  skills: ResolvedSkill[],
-  runtime: Runtime,
-  recorder: BattleRecorder,
-  intent?: AttackIntent
-): ActiveEffect[] {
-  const activated: ActiveEffect[] = [];
-  for (const skill of skills) {
-    if (!skillMatchesTrigger(skill, triggerType, round, intent)) continue;
-    recorder.recordSkillTriggerAttempt(skill);
-    if (!chancePasses(skill, runtime.rng)) continue;
-    recorder.recordSkillTriggered(skill);
-    for (const effectIntent of skill.effects) {
-      const effect = activateEffect(skill, effectIntent, round, intent);
-      addActiveEffect(runtime, effect);
-      activated.push(effect);
-      runtime.effectActivationCounts[skill.side] += 1;
-      recorder.recordSkillEffectActivated(skill);
-    }
-  }
-  return activated;
 }
 
 function resolveAttackIntents(
@@ -733,18 +543,6 @@ function controlEffectApplies(effect: ActiveEffect, job: DamageJob, control: "do
   return effect.appliesVs.side === appliesVsSide && unitMaskHas(effect.appliesVs.units, appliesVsUnit);
 }
 
-interface ApplicableControls {
-  dodge?: Control;
-  no_attack?: Control;
-  attackDurationEffects: ActiveEffect[];
-}
-
-interface Control {
-  effect: ActiveEffect;
-  reason: "dodge" | "no_attack";
-  attackDurationEffects: ActiveEffect[];
-}
-
 function normalJob(intent: AttackIntent, roundStartTroops: DamageJob["roundStartTroops"]): DamageJob {
   return {
     round: intent.round,
@@ -758,163 +556,6 @@ function normalJob(intent: AttackIntent, roundStartTroops: DamageJob["roundStart
   };
 }
 
-// Spawn, calculate, and charge the extra_skill_attack attacks riding on one normal attack.
-// Each applicable effect expands its trigger_damage_jobs into jobs that run immediately, in
-// place; the effect is charged one use only when at least one of its own jobs actually ran.
-// Spawning reads only round-start state and the effect's own gates, so running earlier
-// effects' jobs first cannot change what later effects spawn.
-function processExtraSkillAttacks(
-  normalAttack: DamageJob,
-  intent: AttackIntent,
-  runtime: Runtime,
-  fighters: Record<SideId, ResolvedFighter>,
-  damageJobOptions: DamageJobCalculationOptions,
-  roundTargetDamage: Record<SideId, Record<UnitType, number>>,
-  loopOptions: RunLoopOptions,
-  results: DamageJobResult[]
-): number {
-  if (runtime.effectIndex.extraAttacks.length === 0) return 0;
-  const { round, roundStartTroops } = normalAttack;
-  const recorder = damageJobOptions.recorder;
-  let score = 0;
-  // Snapshot the applicable effects: charging an effect below may expire it out of the live index.
-  const effects = runtime.effectIndex.extraAttacks.filter(
-    (effect) => extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && advanceEffectAttackDelay(effect)
-  );
-  for (const effect of effects) {
-    const sourceEffectId = effect.source.effectId ?? effect.intent.id;
-    let processedJobCount = 0;
-    for (const definition of effect.triggerDamageJobs ?? []) {
-      const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
-      const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
-      const multiplier = effect.getCurrentValuePct(round) / 100;
-      if (multiplier <= 0) continue;
-      for (const source of sources) {
-        if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
-        for (const target of targets) {
-          if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
-          const job: DamageJob = {
-            round,
-            kind: "skill",
-            roundStartTroops,
-            dealerSide: source.side,
-            dealerUnit: source.unit,
-            takerSide: target.side,
-            takerUnit: target.unit,
-            sourceEffectId,
-            sourceMultiplier: multiplier
-          };
-          recorder.recordSkillDamageJob(job, effect);
-          if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
-          recorder.recordScheduledDamageJob(job);
-          const result = calculateDamageJob(job, fighters, damageJobOptions);
-          if (loopOptions.capRoundKills) capJobToRemainingTarget(result, job, roundStartTroops, roundTargetDamage, recorder);
-          processedJobCount += 1;
-          runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
-          results.push({ job, result, intent });
-          if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-            score += result.kills;
-          }
-          chargeUsedEffects(runtime);
-        }
-      }
-    }
-    if (processedJobCount > 0) {
-      chargeEffectUse(runtime, effect);
-      recorder.recordExtraAttack(normalAttack, effect, processedJobCount);
-    }
-  }
-  return score;
-}
-
-function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {
-  return (
-    effect.appliesTo.side === normalAttack.dealerSide &&
-    unitMaskHas(effect.appliesTo.units, normalAttack.dealerUnit) &&
-    effect.appliesVs.side === normalAttack.takerSide &&
-    unitMaskHas(effect.appliesVs.units, normalAttack.takerUnit)
-  );
-}
-
-interface TriggerJobUnit {
-  side: SideId;
-  unit: UnitType;
-}
-
-function resolveTriggerJobSelector(
-  selector: TriggerDamageJobSelector,
-  role: "source" | "target",
-  effect: ActiveEffect,
-  normalAttack: DamageJob,
-  roundStartTroops: DamageJob["roundStartTroops"]
-): TriggerJobUnit[] {
-  if (selector === "use.source") return [{ side: normalAttack.dealerSide, unit: normalAttack.dealerUnit }];
-  if (selector === "use.target") return [{ side: normalAttack.takerSide, unit: normalAttack.takerUnit }];
-  if (selector === "effect.applies_to") return unitsFromMask(effect.appliesTo.units).map((unit) => ({ side: effect.appliesTo.side, unit }));
-  if (selector === "effect.applies_vs") return unitsFromMask(effect.appliesVs.units).map((unit) => ({ side: effect.appliesVs.side, unit }));
-  if (selector === "enemy.living") return livingUnits(normalAttack.takerSide, roundStartTroops);
-  if (selector === "self.living") return livingUnits(normalAttack.dealerSide, roundStartTroops);
-  const units = unitListFromSelector(selector);
-  if (!units) {
-    throw new Error(`trigger_damage_jobs ${role} selector is required and must be a supported selector, got ${JSON.stringify(selector)}`);
-  }
-  const fallbackSide = role === "source" ? normalAttack.dealerSide : normalAttack.takerSide;
-  return units.map((unit) => ({ side: fallbackSide, unit }));
-}
-
-function livingUnits(side: SideId, roundStartTroops: DamageJob["roundStartTroops"]): TriggerJobUnit[] {
-  return UNIT_TYPES.filter((unit) => (roundStartTroops[side][unit] ?? 0) > 0).map((unit) => ({ side, unit }));
-}
-
-function unitListFromSelector(selector: TriggerDamageJobSelector): UnitType[] | undefined {
-  if (Array.isArray(selector)) {
-    try {
-      return selector.map((entry) => normalizeUnitType(String(entry)));
-    } catch {
-      return undefined;
-    }
-  }
-  if (typeof selector === "string") {
-    try {
-      return [normalizeUnitType(selector)];
-    } catch {
-      return undefined;
-    }
-  }
-  return undefined;
-}
-
-function emptyRoundTargetDamage(): Record<SideId, Record<UnitType, number>> {
-  return { attacker: emptyTroops(), defender: emptyTroops() };
-}
-
-function targetExhausted(
-  job: DamageJob,
-  roundStartTroops: DamageJob["roundStartTroops"],
-  roundTargetDamage: Record<SideId, Record<UnitType, number>>
-): boolean {
-  const available = Math.max(0, roundStartTroops[job.takerSide][job.takerUnit] ?? 0);
-  return available <= 0 || roundTargetDamage[job.takerSide][job.takerUnit] >= available;
-}
-
-function capJobToRemainingTarget(
-  result: DamageResult,
-  job: DamageJob,
-  roundStartTroops: DamageJob["roundStartTroops"],
-  roundTargetDamage: Record<SideId, Record<UnitType, number>>,
-  recorder: BattleRecorder
-): void {
-  const available = Math.max(0, roundStartTroops[job.takerSide][job.takerUnit] ?? 0);
-  const alreadyDamaged = roundTargetDamage[job.takerSide][job.takerUnit];
-  const remaining = Math.max(0, available - alreadyDamaged);
-  result.kills = Math.min(result.kills, remaining);
-  roundTargetDamage[job.takerSide][job.takerUnit] += result.kills;
-  recorder.recordFinalKills(result);
-}
-
-// Apply the round's effects to fighter state: remove killed troops and bump attack/received
-// counters. Every declared attack (each damage job and each cancelled attack) counts as one
-// attack for its attacker unit and one received for its defender unit.
 function commitRound(cancelled: CancelledAttack[], results: DamageJobResult[], runtime: Runtime): void {
   commitRoundCounters(cancelled, results, runtime);
   const losses: Record<SideId, Record<UnitType, number>> = { attacker: emptyTroops(), defender: emptyTroops() };
@@ -939,27 +580,6 @@ function commitRoundCounters(cancelled: CancelledAttack[], results: DamageJobRes
   }
 }
 
-// Drain the per-job used-effects scratch, advancing each effect's uses counter. Runs in
-// every mode: uses drives attack-constraint expiry and step:"attack" value evolution.
-function chargeUsedEffects(runtime: Runtime): void {
-  if (runtime.usedEffects.length === 0) return;
-  for (const effect of runtime.usedEffects) chargeEffectUse(runtime, effect);
-  runtime.usedEffects.length = 0;
-}
-
-function chargeEffectUse(runtime: Runtime, effect: ActiveEffect): void {
-  effect.uses += 1;
-  const limit = effectAttackUseLimit(effect);
-  if (limit !== undefined && effect.uses >= limit) expireActiveEffect(runtime, effect);
-}
-
-function expireActiveEffect(runtime: Runtime, effect: ActiveEffect): void {
-  if (effect.expired) return;
-  expireEffectIndex(runtime.effectIndex, effect);
-}
-
-// A cancelled attack still charges the attacker's attack-constrained effects (the attack
-// happened, it just didn't land) plus the control that cancelled it, whatever its duration.
 function chargeCancelledAttack(
   job: DamageJob,
   winningControl: ActiveEffect,
@@ -1007,21 +627,4 @@ function snapshotTroops(troops: Record<SideId, Record<UnitType, number>>): Damag
 
 function ceilTroops(troops: Record<UnitType, number>): Record<UnitType, number> {
   return Object.fromEntries(UNIT_TYPES.map((unit) => [unit, Math.ceil(troops[unit] ?? 0)])) as Record<UnitType, number>;
-}
-
-function buildResolved(attacker: ResolvedFighter, defender: ResolvedFighter): BattleResult["resolved"] {
-  return {
-    attacker: {
-      troops: { ...attacker.initialTroops },
-      heroes: attacker.heroes,
-      troopSkillIds: attacker.troopSkills.map((skill) => skill.id),
-      diagnostics: attacker.diagnostics
-    },
-    defender: {
-      troops: { ...defender.initialTroops },
-      heroes: defender.heroes,
-      troopSkillIds: defender.troopSkills.map((skill) => skill.id),
-      diagnostics: defender.diagnostics
-    }
-  };
 }
