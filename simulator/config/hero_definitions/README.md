@@ -241,7 +241,7 @@ For percentage-bucket modifiers, every configured scalar/array entry must be a f
 
 At level 3 this resolves to 15. A scalar number gives the same value at every level. Numeric arrays are selected by level before effects reach the runtime.
 
-`dodge` and `no_attack` ignore `value`; their probability belongs on the skill trigger. `extra_skill_attack` is not covered by the percentage-bucket value validator: its resolved value is converted to a number, and a missing, non-finite, zero, or negative multiplier produces no damage jobs for entries that do not override it with `trigger_damage_jobs[].multiplier`.
+`dodge` and `no_attack` ignore `value`; their probability belongs on the skill trigger. `extra_skill_attack` is not covered by the percentage-bucket value validator: its resolved `value` is converted to a number, and a missing, non-finite, zero, or negative value produces no damage jobs.
 
 ## Modifier effect types
 
@@ -427,12 +427,9 @@ Each job has this shape:
 ```json
 {
   "source": "use.source",
-  "target": "enemy.living",
-  "multiplier": 50
+  "target": "enemy.living"
 }
 ```
-
-`multiplier` is optional. When present, it is a fixed percentage that overrides the parent effect's level-selected/evolving `value` for that job definition. It is a scalar number, not a per-level array. Zero or negative resolved multipliers skip the job definition without charging the extra-attack effect.
 
 Supported `source` and `target` selectors are:
 
@@ -451,9 +448,9 @@ If selectors produce multiple sources and targets, the simulator considers their
 
 The job selector determines the actual side as well as the unit. The runtime does not enforce that a generated source and target are opponents, so scopes misconfigured onto the same side can generate friendly-fire or same-side jobs.
 
-The extra-attack effect is charged once for the parent normal attack if at least one of its jobs runs, not once per emitted job. If every job has a non-positive multiplier, lacks living source/target troops, or is skipped because its target is already exhausted, the effect is not charged and can remain available.
+The extra-attack effect is charged once for the parent normal attack if at least one of its jobs runs. If its `value` is non-positive, every job lacks living source/target troops, or every job is skipped because its target is already exhausted, the effect is not charged and can remain available.
 
-All jobs emitted by one use read the parent extra-attack effect's same current multiplier; its use/evolution is charged only after those jobs finish. Other attack-limited **modifier** effects are different: each generated skill job is a separate modifier use, and modifiers are charged after each job, so a one-job modifier can expire before the second target in the same extra attack is calculated.
+All jobs emitted by one use read the parent extra-attack effect's same current `value`; its use/evolution is charged only after those jobs finish. Other attack-limited **modifier** effects are different: each generated skill job is a separate modifier use, and modifiers are charged after each job, so a one-job modifier can expire before the second target in the same extra attack is calculated.
 
 ### `dodge`
 

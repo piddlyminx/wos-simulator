@@ -26,12 +26,10 @@ export type SupportedTriggerDamageJobSelector =
   | "enemy.living"
   | "self.living";
 export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitType | UnitType[];
-export type TriggerDamageJobMultiplier = number;
 
 export interface TriggerDamageJobDefinition {
   source: TriggerDamageJobSelector;
   target: TriggerDamageJobSelector;
-  multiplier?: TriggerDamageJobMultiplier;
 }
 
 export function unitMask(units: UnitType | UnitType[]): UnitMask {

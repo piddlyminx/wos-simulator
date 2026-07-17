@@ -3,7 +3,6 @@ import { test } from "node:test";
 
 import { loadSimulatorConfig } from "../../simulator/src/config";
 import { prepareBattle, runPrepared } from "../../simulator/src/simulator";
-import { applyHeroGenerationStats } from "../../simulator/src/resolve";
 import { teamToBattleInput, teamToFighterInput } from "./teamInput";
 import type { HeroInputEntry } from "../../simulator/src/types";
 import type { Team } from "./types";
@@ -37,8 +36,11 @@ test("teamToBattleInput sets max rounds, seed, engagement type, and bakes hero g
   assert.equal(input.maxRounds, 600);
   assert.equal(input.seed, 123);
   assert.equal(input.engagement_type, "rally");
-  // No player stats supplied, so the fighter's stats come entirely from baked hero generation stats.
-  assert.deepEqual(input.attacker.stats, applyHeroGenerationStats(teamToFighterInput(sampleTeam, config), config).stats);
+  assert.deepEqual(input.attacker.stats, {
+    infantry: config.heroGenerationStats.S6,
+    lancer: config.heroGenerationStats.S3,
+    marksman: config.heroGenerationStats.S7
+  });
 });
 
 test("teamToBattleInput applies supplied player stats (plus baked generation stats) to both fighters", () => {
@@ -49,7 +51,11 @@ test("teamToBattleInput applies supplied player stats (plus baked generation sta
     marksman: { attack: 9, defense: 10, lethality: 11, health: 12 }
   };
   const input = teamToBattleInput(sampleTeam, sampleTeam, 123, config, playerStats);
-  const expected = applyHeroGenerationStats(teamToFighterInput(sampleTeam, config, playerStats), config).stats;
+  const expected = {
+    infantry: { attack: 541.43, defense: 542.43, lethality: 136.5, health: 137.5 },
+    lancer: { attack: 295.23, defense: 296.23, lethality: 77, health: 78 },
+    marksman: { attack: 659.52, defense: 660.52, lethality: 171.5, health: 172.5 }
+  };
 
   assert.deepEqual(input.attacker.stats, expected);
   assert.deepEqual(input.defender.stats, expected);

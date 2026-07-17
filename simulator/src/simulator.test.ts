@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { BattleInputBuilder } from "./battleInputBuilder";
 import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./resolve";
@@ -925,26 +926,56 @@ test("display-name hero aliases resolve to simulator hero definitions", () => {
   assert.equal(fighter.diagnostics.some((line) => line.includes("Missing hero definition")), false);
 });
 
-test("applyHeroGenerationStats bakes main hero generation stats into authoritative input stats", () => {
+test("applyHeroGenerationStats applies each main hero only to its troop type", () => {
   const config = minimalConfig({
-    Example: {
-      name: "Example",
+    InfantryHero: {
+      name: "InfantryHero",
       hero_generation: "S1",
+      troop_type: "infantry",
+      skills: {}
+    },
+    LancerHero: {
+      name: "LancerHero",
+      hero_generation: "S2",
+      troop_type: "lancer",
+      skills: {}
+    },
+    MarksmanHero: {
+      name: "MarksmanHero",
+      hero_generation: "S3",
+      troop_type: "marksman",
       skills: {}
     }
   });
   config.heroGenerationStats.S1 = { attack: 50, defense: 40, lethality: 30, health: 20 };
+  config.heroGenerationStats.S2 = { attack: 15, defense: 14, lethality: 13, health: 12 };
+  config.heroGenerationStats.S3 = { attack: 25, defense: 24, lethality: 23, health: 22 };
   const input = {
-    troops: { infantry_t1: 10 },
-    stats: { inf: { attack: 1, defense: 2, lethality: 3, health: 4 } },
-    heroes: { Example: { skill_1: 1 } }
+    troops: { infantry_t1: 10, lancer_t1: 10, marksman_t1: 10 },
+    stats: {
+      inf: { attack: 1, defense: 2, lethality: 3, health: 4 },
+      lanc: { attack: 5, defense: 6, lethality: 7, health: 8 },
+      mark: { attack: 9, defense: 10, lethality: 11, health: 12 }
+    },
+    heroes: {
+      InfantryHero: { skill_1: 1 },
+      LancerHero: { skill_1: 1 },
+      MarksmanHero: { skill_1: 1 }
+    }
   };
 
   const defaultFighter = resolveFighter(input, "attacker", config);
-  const bakedFighter = resolveFighter(applyHeroGenerationStats(input, config), "attacker", config);
+  const built = new BattleInputBuilder(config)
+    .fighter("attacker", input)
+    .fighter("defender", input)
+    .addHeroGenerationStats()
+    .build();
+  const bakedFighter = resolveFighter(built.attacker, "attacker", config);
 
   assert.deepEqual(defaultFighter.statBonuses.infantry, { attack: 1, defense: 2, lethality: 3, health: 4 });
   assert.deepEqual(bakedFighter.statBonuses.infantry, { attack: 51, defense: 42, lethality: 33, health: 24 });
+  assert.deepEqual(bakedFighter.statBonuses.lancer, { attack: 20, defense: 20, lethality: 20, health: 20 });
+  assert.deepEqual(bakedFighter.statBonuses.marksman, { attack: 34, defense: 34, lethality: 34, health: 34 });
 });
 
 test("array joiner heroes preserve duplicate skill instances", () => {
@@ -998,11 +1029,13 @@ test("joiner hero generation stats are not applied when main hero stats are enab
     Main: {
       name: "Main",
       hero_generation: "S1",
+      troop_type: "infantry",
       skills: {}
     },
     Joiner: {
       name: "Joiner",
       hero_generation: "S2",
+      troop_type: "infantry",
       skills: {
         JoinerBuff: {
           trigger: { type: "battle_start" },

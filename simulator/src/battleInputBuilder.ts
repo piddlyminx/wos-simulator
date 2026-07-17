@@ -7,8 +7,8 @@ import { applyHeroGenerationStats } from "./resolve";
  * This is build-time scaffolding only — it does not run a simulation. Its job is to produce a
  * BattleInput whose FighterInput.stats are the final, authoritative player stats, so the
  * simulator core never has to massage the input. For example, addHeroGenerationStats() bakes
- * the main heroes' generation stats into each fighter's stat block, which the simulator used to
- * apply itself via the (now removed) hero_generation_stats mechanic.
+ * each main hero's generation stats into that hero's troop-type stat block, which the simulator
+ * used to apply itself via the (now removed) hero_generation_stats mechanic.
  */
 export class BattleInputBuilder {
   private readonly fighters: Partial<Record<SideId, FighterInput>> = {};

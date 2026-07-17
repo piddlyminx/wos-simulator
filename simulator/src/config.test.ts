@@ -288,6 +288,17 @@ test("loadSimulatorConfig rejects trigger_damage_jobs with typoed keys", () => {
   assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key soruce/i);
 });
 
+test("loadSimulatorConfig rejects per-job extra skill damage multipliers", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", multiplier: 50 }]
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key multiplier/i);
+});
+
 test("loadSimulatorConfig requires trigger_damage_jobs source and target", () => {
   const missingSourceRoot = writeConfigWithTroopEffect({
     type: "extra_skill_attack",

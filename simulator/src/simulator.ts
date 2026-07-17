@@ -857,7 +857,7 @@ function processExtraSkillAttacks(
     for (const definition of effect.triggerDamageJobs ?? []) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
-      const multiplier = multiplierForTriggerDamageJob(definition.multiplier, effect, round);
+      const multiplier = effect.getCurrentValuePct(round) / 100;
       if (multiplier <= 0) continue;
       for (const source of sources) {
         if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
@@ -952,12 +952,6 @@ function unitListFromSelector(selector: TriggerDamageJobSelector): UnitType[] | 
     }
   }
   return undefined;
-}
-
-function multiplierForTriggerDamageJob(multiplier: number | undefined, effect: ActiveEffect, round: number): number {
-  const raw = multiplier === undefined ? effect.getCurrentValuePct(round) : multiplier;
-  const pct = Number(raw ?? 0);
-  return Number.isFinite(pct) ? pct / 100 : 0;
 }
 
 function emptyRoundTargetDamage(): Record<SideId, Record<UnitType, number>> {

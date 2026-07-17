@@ -111,22 +111,25 @@ function resolveInputStatBonuses(stats: FighterInput["stats"]): Record<UnitType,
   return byUnit;
 }
 
-// Build-time scaffolding: fold the summed generation-stat block of all MAIN heroes into
-// each unit's stat block, so the simulator can treat FighterInput.stats as authoritative.
-// Equivalent to the former in-resolver hero_generation_stats fold, but materialised into the
-// input rather than applied during resolution.
+// Build-time scaffolding: fold each MAIN hero's generation-stat block into the stat block for
+// that hero's troop type, so the simulator can treat FighterInput.stats as authoritative.
 export function applyHeroGenerationStats(input: FighterInput, config: SimulatorConfig): FighterInput {
-  let bonus = zeroStats();
+  const stats = resolveInputStatBonuses(input.stats);
   for (const instance of heroInputInstances(input)) {
     if (instance.role !== "main") continue;
     const resolvedHeroName = resolveHeroDefinitionKey(instance.name, config);
     const definition = resolvedHeroName ? config.heroDefinitions[resolvedHeroName] : undefined;
     if (!definition) continue;
-    bonus = addStats(bonus, normalizeStatBlock(config.heroGenerationStats[definition.hero_generation ?? ""] as Record<string, unknown>));
+    const generation = definition.hero_generation;
+    if (!generation) continue;
+    const generationStats = config.heroGenerationStats[generation];
+    if (!generationStats) continue;
+    if (!definition.troop_type) {
+      throw new Error(`Hero ${definition.name ?? instance.name} has hero_generation ${generation} but no troop_type`);
+    }
+    const unit = normalizeUnitType(String(definition.troop_type));
+    stats[unit] = addStats(stats[unit], normalizeStatBlock(generationStats as Record<string, unknown>));
   }
-  const byUnit = resolveInputStatBonuses(input.stats);
-  const stats: Record<string, StatBlock> = {};
-  for (const unit of UNIT_TYPES) stats[unit] = addStats(byUnit[unit], bonus);
   return { ...input, stats };
 }
 
