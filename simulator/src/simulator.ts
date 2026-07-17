@@ -48,6 +48,8 @@ const BEAR_TROOP_ID = "bear_infantry";
 
 interface Runtime {
   effectIndex: EffectIndex;
+  // Live troop counts, initialized from the fighters' immutable initialTroops.
+  troops: Record<SideId, Record<UnitType, number>>;
   activateEffectsByRound: Array<ActiveEffect[] | undefined>;
   expireEffectsByRound: Array<ActiveEffect[] | undefined>;
   // Per-job scratch: effects that affected the job being calculated; drained by
@@ -190,7 +192,7 @@ function buildBattleResult(run: BattleRun, resolved?: BattleResult["resolved"]):
   return {
     winner: run.winner,
     rounds: run.rounds,
-    remaining: { attacker: ceilTroops(fighters.attacker.troops), defender: ceilTroops(fighters.defender.troops) },
+    remaining: { attacker: ceilTroops(runtime.troops.attacker), defender: ceilTroops(runtime.troops.defender) },
     attacks: run.attacks,
     skillReport: run.skillReport,
     resolved: resolved ?? buildResolved(fighters.attacker, fighters.defender),
@@ -200,11 +202,6 @@ function buildBattleResult(run: BattleRun, resolved?: BattleResult["resolved"]):
     randomness: runtime.skills.randomness,
     trace: run.trace
   };
-}
-
-// Reuse a prepared fighter's immutable resolution; only the troop counts mutate during a run.
-function cloneFighterForRun(fighter: ResolvedFighter): ResolvedFighter {
-  return { ...fighter, troops: { ...fighter.initialTroops } };
 }
 
 // Build the full pre-loop runtime: fire battle_start, apply input passives, compile the static damage
@@ -217,7 +214,7 @@ function setupRuntime(
   runtimeSkills?: RuntimeSkills,
   prebuiltProfile?: StaticDamageProfile
 ): Runtime {
-  const runtime = createRuntime([fighters.attacker, fighters.defender], createSeededRng(seed), runtimeSkills);
+  const runtime = createRuntime(fighters, createSeededRng(seed), runtimeSkills);
   const setupEffects = [
     ...triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime, recorder),
     ...createInputPassiveEffects(input.attacker.passive, "attacker"),
@@ -233,7 +230,7 @@ function materializeStaticSetupEffects(
   input: BattleInput,
   runtimeSkills: RuntimeSkills
 ): ActiveEffect[] {
-  const runtime = createRuntime([fighters.attacker, fighters.defender], createSeededRng("simulator-static-profile"), runtimeSkills);
+  const runtime = createRuntime(fighters, createSeededRng("simulator-static-profile"), runtimeSkills);
   const staticSkills = runtimeSkills.battleStart.filter((skill) =>
     skill.effects.some((effect) => bucketDefinition(effect.type)?.phase === "static")
   );
@@ -271,8 +268,8 @@ function runBattle(
   prepared?: CompiledBattle,
   loopOptions: RunLoopOptions = { capRoundKills: true, capJobKills: true, commitLosses: true }
 ): BattleRun {
-  const attacker = prepared ? cloneFighterForRun(prepared.fighters.attacker) : resolveFighter(input.attacker, "attacker", config, input.engagement_type);
-  const defender = prepared ? cloneFighterForRun(prepared.fighters.defender) : resolveFighter(input.defender, "defender", config, input.engagement_type);
+  const attacker = prepared ? prepared.fighters.attacker : resolveFighter(input.attacker, "attacker", config, input.engagement_type);
+  const defender = prepared ? prepared.fighters.defender : resolveFighter(input.defender, "defender", config, input.engagement_type);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
   const recorder = recorderFor(options, fighters);
   const runtime = setupRuntime(fighters, input, input.seed ?? "simulator-default", recorder, prepared?.runtimeSkills, prepared?.staticProfile);
@@ -314,9 +311,9 @@ function runLoop(
   let rounds = 0;
   let score = 0;
   for (let round = 1; round <= maxRounds; round += 1) {
-    if (winnerFor(fighters)) break;
+    if (winnerFor(runtime.troops)) break;
     rounds = round;
-    const roundStartTroops = snapshotTroops(fighters);
+    const roundStartTroops = snapshotTroops(runtime.troops);
     processEffectSchedule(runtime, round);
     triggerRoundStartSkills(round, runtime, roundStartTroops, recorder);
 
@@ -379,7 +376,7 @@ function runLoop(
       score += processExtraSkillAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
     }
 
-    if (loopOptions.commitLosses) commitRound(cancelled, results, fighters, runtime);
+    if (loopOptions.commitLosses) commitRound(cancelled, results, runtime);
     else commitRoundCounters(cancelled, results, runtime);
 
     for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.control.effect, entry.control.reason);
@@ -387,7 +384,7 @@ function runLoop(
     recorder.recordRound(round, roundStartTroops, intents);
   }
 
-  const winner = winnerFor(fighters) ?? "draw";
+  const winner = winnerFor(runtime.troops) ?? "draw";
   return {
     fighters,
     runtime,
@@ -483,9 +480,13 @@ function syntheticRoundIntent(
   };
 }
 
-function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: RuntimeSkills): Runtime {
-  const skills = preparedSkills ?? buildRuntimeSkills(fighters);
+function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rng, preparedSkills?: RuntimeSkills): Runtime {
+  const skills = preparedSkills ?? buildRuntimeSkills([fighters.attacker, fighters.defender]);
   return {
+    troops: {
+      attacker: { ...fighters.attacker.initialTroops },
+      defender: { ...fighters.defender.initialTroops }
+    },
     effectIndex: createEffectIndex(
       skills.effectGroups,
       skills.damageGroupsByJobShape
@@ -905,7 +906,7 @@ function capJobToRemainingTarget(
 // Apply the round's effects to fighter state: remove killed troops and bump attack/received
 // counters. Every declared attack (each damage job and each cancelled attack) counts as one
 // attack for its attacker unit and one received for its defender unit.
-function commitRound(cancelled: CancelledAttack[], results: DamageJobResult[], fighters: Record<SideId, ResolvedFighter>, runtime: Runtime): void {
+function commitRound(cancelled: CancelledAttack[], results: DamageJobResult[], runtime: Runtime): void {
   commitRoundCounters(cancelled, results, runtime);
   const losses: Record<SideId, Record<UnitType, number>> = { attacker: emptyTroops(), defender: emptyTroops() };
   for (const { job, result } of results) {
@@ -913,7 +914,7 @@ function commitRound(cancelled: CancelledAttack[], results: DamageJobResult[], f
   }
   for (const side of ["attacker", "defender"] as SideId[]) {
     for (const unit of UNIT_TYPES) {
-      fighters[side].troops[unit] = Math.max(0, fighters[side].troops[unit] - losses[side][unit]);
+      runtime.troops[side][unit] = Math.max(0, runtime.troops[side][unit] - losses[side][unit]);
     }
   }
 }
@@ -968,9 +969,9 @@ function chargeCancelledAttack(
   chargeUsedEffects(runtime);
 }
 
-function winnerFor(fighters: Record<SideId, ResolvedFighter>): SideId | undefined {
-  const attackerAlive = total(fighters.attacker.troops) > 0;
-  const defenderAlive = total(fighters.defender.troops) > 0;
+function winnerFor(troops: Record<SideId, Record<UnitType, number>>): SideId | undefined {
+  const attackerAlive = total(troops.attacker) > 0;
+  const defenderAlive = total(troops.defender) > 0;
   if (attackerAlive && !defenderAlive) return "attacker";
   if (defenderAlive && !attackerAlive) return "defender";
   return undefined;
@@ -988,10 +989,10 @@ function total(troops: Record<UnitType, number>): number {
   return UNIT_TYPES.reduce((sum, unit) => sum + troops[unit], 0);
 }
 
-function snapshotTroops(fighters: Record<SideId, ResolvedFighter>): DamageJob["roundStartTroops"] {
+function snapshotTroops(troops: Record<SideId, Record<UnitType, number>>): DamageJob["roundStartTroops"] {
   return {
-    attacker: { ...fighters.attacker.troops },
-    defender: { ...fighters.defender.troops }
+    attacker: { ...troops.attacker },
+    defender: { ...troops.defender }
   };
 }
 

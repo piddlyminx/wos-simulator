@@ -108,7 +108,6 @@ test("damage calculator uses centralized bucket definitions for player stat rout
   const attacker: ResolvedFighter = {
     side: "attacker",
     name: "A",
-    troops: { infantry: 1000, lancer: 0, marksman: 0 },
     initialTroops: { infantry: 1000, lancer: 0, marksman: 0 },
     troopDetails: {
       infantry: { id: "infantry_t1", type: "infantry", tier: 1, fc: 0, count: 1000, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }
@@ -126,7 +125,6 @@ test("damage calculator uses centralized bucket definitions for player stat rout
     ...attacker,
     side: "defender",
     name: "D",
-    troops: { infantry: 0, lancer: 1000, marksman: 0 },
     initialTroops: { infantry: 0, lancer: 1000, marksman: 0 },
     troopDetails: {
       lancer: { id: "lancer_t1", type: "lancer", tier: 1, fc: 0, count: 1000, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }
@@ -645,7 +643,6 @@ function simpleFighters(): Record<"attacker" | "defender", ResolvedFighter> {
   const attacker: ResolvedFighter = {
     side: "attacker",
     name: "A",
-    troops: { infantry: 1000, lancer: 0, marksman: 0 },
     initialTroops: { infantry: 1000, lancer: 0, marksman: 0 },
     troopDetails: {
       infantry: { id: "infantry_t1", type: "infantry", tier: 1, fc: 0, count: 1000, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }
@@ -663,7 +660,6 @@ function simpleFighters(): Record<"attacker" | "defender", ResolvedFighter> {
     ...attacker,
     side: "defender",
     name: "D",
-    troops: { infantry: 0, lancer: 1000, marksman: 0 },
     initialTroops: { infantry: 0, lancer: 1000, marksman: 0 },
     troopDetails: {
       lancer: { id: "lancer_t1", type: "lancer", tier: 1, fc: 0, count: 1000, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }

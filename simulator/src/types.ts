@@ -231,10 +231,10 @@ export interface ResolvedHero {
   missing?: boolean;
 }
 
+// Immutable once resolved; live troop counts during a run belong to the runtime, not the fighter.
 export interface ResolvedFighter {
   side: SideId;
   name: string;
-  troops: Record<UnitType, number>;
   initialTroops: Record<UnitType, number>;
   troopDetails: Partial<Record<UnitType, ResolvedTroopLine>>;
   statBonuses: Record<UnitType, StatBlock>;

@@ -20,7 +20,6 @@ import { addStats, normalizeStatBlock, normalizeUnitType, valueAtLevel, zeroStat
 
 export function resolveFighter(input: FighterInput, side: SideId, config: SimulatorConfig, engagementType?: string): ResolvedFighter {
   const diagnostics: string[] = [];
-  const troops = emptyTroops();
   const initialTroops = emptyTroops();
   const troopDetails: Partial<Record<UnitType, ResolvedTroopLine>> = {};
   const weightedStats: Partial<Record<UnitType, { count: number; stats: StatBlock; tier: number; fc: number; ids: string[] }>> = {};
@@ -41,7 +40,6 @@ export function resolveFighter(input: FighterInput, side: SideId, config: Simula
       continue;
     }
     const stats = normalizeStatBlock(record.stats);
-    troops[type] += count;
     initialTroops[type] += count;
     const existing = weightedStats[type] ?? { count: 0, stats: zeroStats(), tier: 0, fc: 0, ids: [] };
     existing.count += count;
@@ -80,7 +78,6 @@ export function resolveFighter(input: FighterInput, side: SideId, config: Simula
   return {
     side,
     name: input.name ?? side,
-    troops,
     initialTroops,
     troopDetails,
     statBonuses,
