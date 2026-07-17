@@ -32,6 +32,10 @@ test("numeric fields can be cleared before typing a replacement", async ({
   await expect(bearReplicates).toHaveValue("5000");
 
   await page.goto("/tournament");
+  const tournamentInfantryMains = page.locator("fieldset", {
+    has: page.getByText("Infantry mains", { exact: true }),
+  });
+  await expect(tournamentInfantryMains.getByRole("checkbox", { name: "Logan" })).toBeVisible();
   const tournamentJoiners = page.locator("fieldset", {
     has: page.getByText("Joiners", { exact: true }),
   });
