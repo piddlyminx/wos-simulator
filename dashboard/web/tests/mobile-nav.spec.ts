@@ -798,7 +798,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
 
     const troopsSection = page.getByTestId("side-section-attacker-troops");
     await expect(troopsSection).toContainText("Infantry");
-    await expect(troopsSection).toContainText("1,000");
+    await expect(troopsSection).toContainText("50,000");
     await expect(troopsSection).toContainText("t11_fc10");
     await expect(troopsSection).toContainText("None");
     await expect(troopsSection).not.toContainText("0/0/0/0");
@@ -951,7 +951,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     const troopCount = page
       .locator('input[aria-label="infantry troop count"]')
       .first();
-    await expect(troopCount).toHaveValue("1000");
+    await expect(troopCount).toHaveValue("50000");
 
     await troopCount.click();
     await page.keyboard.type("10");

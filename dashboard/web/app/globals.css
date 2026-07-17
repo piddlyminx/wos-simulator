@@ -570,6 +570,145 @@ body {
   padding: 8px;
 }
 
+.sim-troop-ratio {
+  position: relative;
+  min-width: 0;
+  height: 22px;
+}
+
+.sim-troop-ratio-labels {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 6px;
+  padding: 0 5px;
+  pointer-events: none;
+  color: var(--sim-text);
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.sim-troop-ratio-labels span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sim-troop-ratio-labels span:nth-child(2) {
+  text-align: center;
+}
+
+.sim-troop-ratio-labels span:nth-child(3) {
+  text-align: right;
+}
+
+.sim-troop-ratio-track {
+  position: relative;
+  height: 22px;
+  overflow: visible;
+  border: 1px solid var(--sim-line);
+  background: var(--sim-panel);
+  border-radius: 7px;
+  touch-action: none;
+  user-select: none;
+}
+
+.sim-troop-ratio-fill {
+  position: absolute;
+  inset-block: 0;
+  pointer-events: none;
+}
+
+.sim-troop-ratio-fill-infantry {
+  left: 0;
+  border-radius: 6px 0 0 6px;
+  background: rgba(137, 180, 250, 0.3);
+}
+
+.sim-troop-ratio-fill-lancer {
+  background: rgba(166, 227, 161, 0.22);
+}
+
+.sim-troop-ratio-fill-marksman {
+  border-radius: 0 6px 6px 0;
+  background: rgba(249, 226, 175, 0.24);
+}
+
+.sim-troop-ratio-handle {
+  position: absolute;
+  z-index: 3;
+  top: -4px;
+  bottom: -4px;
+  width: 18px;
+  margin-left: -9px;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+
+.sim-troop-ratio-handle > span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 6px;
+  border: 1px solid var(--sim-line);
+  background: var(--sim-text);
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  transition: border-color 120ms ease, background-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.sim-troop-ratio-handle:hover > span,
+.sim-troop-ratio-handle:focus-visible > span,
+.sim-troop-ratio-handle[data-active="true"] > span {
+  border-color: var(--sim-blue);
+  background: var(--sim-blue);
+  box-shadow: 0 0 0 3px rgba(137, 180, 250, 0.2);
+}
+
+.sim-troop-ratio-segment {
+  position: absolute;
+  z-index: 2;
+  inset-block: 0;
+  min-width: 0;
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.sim-troop-ratio-segment:active {
+  cursor: grabbing;
+}
+
+.sim-troop-ratio-segment:hover,
+.sim-troop-ratio-segment:focus-visible,
+.sim-troop-ratio-segment[data-active="true"] {
+  background: rgba(166, 227, 161, 0.2);
+  box-shadow: inset 0 0 0 1px var(--sim-green);
+}
+
+.sim-troop-ratio-grip {
+  display: none;
+}
+
+.sim-troop-ratio[data-disabled="true"] {
+  opacity: 0.45;
+}
+
+.sim-troop-ratio[data-disabled="true"] .sim-troop-ratio-handle,
+.sim-troop-ratio[data-disabled="true"] .sim-troop-ratio-segment {
+  cursor: default;
+}
+
 .sim-unit-row + .sim-unit-row {
   margin-top: 6px;
 }

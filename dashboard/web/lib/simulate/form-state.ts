@@ -106,7 +106,7 @@ export interface SideState {
 
 export function defaultSide(): SideState {
   return {
-    troops: { infantry: 1000, lancer: 1000, marksman: 1000 },
+    troops: { infantry: 50000, lancer: 50000, marksman: 50000 },
     tiers: { infantry: "t11_fc10", lancer: "t11_fc10", marksman: "t11_fc10" },
     heroes: {
       infantry: { name: null, skills: [0, 0, 0, 0] },

@@ -62,7 +62,7 @@
       }
     },
     "CrystalShield": {
-      "description": "Infantry has a chance to reduce damage when under attack.",
+      "description": "The fire crystal energy attached to the surface makes the shield impregnable and grants it X% chance of offsetting 36 damage",
       "troop_type": "infantry",
       "requirements": [
         {

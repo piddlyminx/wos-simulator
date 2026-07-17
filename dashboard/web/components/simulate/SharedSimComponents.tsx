@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { EditableNumberInput } from "@/components/EditableNumberInput";
+import { TroopRatioInput } from "@/components/simulate/TroopRatioInput";
 import {
   HEROES,
   Skill4Stat,
@@ -452,6 +453,14 @@ export function SidePanel({
           testid={`side-section-${which}-troops`}
         >
           <div className="grid grid-cols-1 gap-2">
+            <TroopRatioInput
+              counts={state.troops}
+              onChange={(troops) => {
+                setState((prev) => ({ ...prev, troops }));
+              }}
+              label={title}
+              testId={`troop-ratio-${which}`}
+            />
             {CATEGORIES.map((cat) => (
               <TroopColumn
                 key={cat}
