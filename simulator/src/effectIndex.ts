@@ -23,8 +23,8 @@ import { ATOMIC_BUCKET_INDEX, bucketDefinition, type AtomicBucket } from "./dama
  * per-job classifier scan by ~3x on long battles while staying byte-identical on parity.
  *
  * The group objects (and the two group arrays) belong to the prepared battle and are
- * REUSED across runs: createEffectIndex/cloneEffectIndex reset each group's live `effects`
- * array in place. That is why runs of one CompiledBattle must stay serial.
+ * REUSED across runs: createEffectIndex resets each group's live `effects` array in
+ * place. That is why runs of one CompiledBattle must stay serial.
  */
 export interface EffectIndex {
   damageGroupsByJobShape: ActiveEffectGroup[][];
@@ -50,27 +50,6 @@ export function createEffectIndex(
   };
 }
 
-export function cloneEffectIndex(
-  index: EffectIndex,
-  preparedEffects: ActiveEffect[],
-  cloneEffect: (effect: ActiveEffect) => ActiveEffect
-): EffectIndex {
-  for (const group of index.effectGroups) group.effects.length = 0;
-  const clone: EffectIndex = {
-    damageGroupsByJobShape: index.damageGroupsByJobShape,
-    effectGroups: index.effectGroups,
-    controls: index.controls.map(cloneEffect),
-    extraAttacks: index.extraAttacks.map(cloneEffect),
-    battleOrder: index.battleOrder.map(cloneEffect)
-  };
-  for (const effect of preparedEffects) {
-    const group = effect.effectGroup;
-    if (!group || effect.effectGroupPosition === undefined) continue;
-    effect.effectGroupPosition = group.effects.length;
-    group.effects.push(effect);
-  }
-  return clone;
-}
 
 export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
   if (effect.kind === "control") {

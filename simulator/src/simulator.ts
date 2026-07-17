@@ -34,9 +34,9 @@ import {
   skillMatchesTrigger,
   type Rng
 } from "./effects";
-import { cloneEffectIndex, createEffectIndex, damageJobShapeSlot, damageJobSlot, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
+import { createEffectIndex, damageJobShapeSlot, damageJobSlot, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
 import { normalizeUnitType } from "./normalize";
-import { buildRuntimeSkills, hasChanceTrigger, type RuntimeSkills } from "./runtimeSkills";
+import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
 import { emptyTroops, resolveFighter } from "./resolve";
 import { buildStaticDamageProfile, type StaticDamageProfile } from "./staticDamageProfile";
 import { bucketDefinition } from "./damageBuckets";
@@ -48,16 +48,12 @@ const BEAR_TROOP_ID = "bear_infantry";
 
 interface Runtime {
   effectIndex: EffectIndex;
-  preparedEffects: ActiveEffect[];
   activateEffectsByRound: Array<ActiveEffect[] | undefined>;
   expireEffectsByRound: Array<ActiveEffect[] | undefined>;
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
   usedEffects: ActiveEffect[];
   staticDamageProfile?: StaticDamageProfile;
-  // Materialized battle_start + input passive effects; recorders derive their own static profile
-  // description from these, so the runtime carries no trace-shaped data.
-  setupEffects: ActiveEffect[];
   damageScratch: DamageScratch;
   rng: Rng;
   skills: RuntimeSkills;
@@ -131,22 +127,19 @@ export function simulateBearBattle(
 }
 
 /**
- * A resolved battle ready to run many times with different seeds. When battle-start is deterministic,
- * the entire pre-loop runtime (`template`) is seed-independent and built once; each run clones its
- * mutable state and reuses the skills + static profile by reference. The prepared damage-group
- * graph contains shared mutable activation arrays, so runs using one CompiledBattle must remain
- * synchronous and non-re-entrant. A future interleaved/async runner must clone that graph instead
- * of sharing it. For stochastic battle-start, the template is absent; resolved fighters, skills,
- * and the static profile are still reused while chance-bearing setup state is rebuilt per run.
+ * A resolved battle ready to run many times with different seeds. Fighters, skills, the effect-group
+ * graph, and the static damage profile are built once and reused; each run fires battle_start with
+ * its own seed and builds a fresh Runtime. (Benchmarked 2026-07-17: a cloned battle-start template
+ * was no faster than re-firing setup per run, so the simpler always-runtime path is used.)
+ * The prepared effect-group graph still contains shared live-effect arrays, so runs of one
+ * CompiledBattle must remain synchronous and non-re-entrant.
  */
 export interface CompiledBattle {
   input: BattleInput;
   config: SimulatorConfig;
   fighters: Record<SideId, ResolvedFighter>;
-  template?: Runtime;
   staticProfile: StaticDamageProfile;
   runtimeSkills: RuntimeSkills;
-  deterministicBattleStart: boolean;
   // Run-invariant result payload shared by reference across every run of this compiled battle.
   resolved: BattleResult["resolved"];
 }
@@ -157,17 +150,11 @@ export function prepareBattle(input: BattleInput, config: SimulatorConfig): Comp
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
   const runtimeSkills = buildRuntimeSkills([attacker, defender]);
   const resolved = buildResolved(attacker, defender);
-  const deterministicBattleStart = !runtimeSkills.battleStart.some(hasChanceTrigger);
-  if (deterministicBattleStart) {
-    // The entire pre-loop runtime is seed-independent, so build it once and clone it per run.
-    const template = setupRuntime(fighters, input, "simulator-prepare", NULL_RECORDER, runtimeSkills);
-    return { input, config, fighters, template, staticProfile: template.staticDamageProfile!, runtimeSkills, deterministicBattleStart, resolved };
-  }
-  // Chance-bearing battle-start effects must be rolled per run. Build only the deterministic
-  // setup effects that feed static buckets here; do not execute and discard the stochastic setup.
+  // Effects feeding static buckets are validated deterministic, so the profile is seed-independent
+  // even when other battle_start skills are stochastic; build it once here from just those effects.
   const staticEffects = materializeStaticSetupEffects(fighters, input, runtimeSkills);
   const staticProfile = buildStaticDamageProfile(fighters, staticEffects);
-  return { input, config, fighters, staticProfile, runtimeSkills, deterministicBattleStart, resolved };
+  return { input, config, fighters, staticProfile, runtimeSkills, resolved };
 }
 
 export function runPrepared(compiled: CompiledBattle, seed?: string | number, options: SimulationOptions = {}): BattleResult {
@@ -236,12 +223,8 @@ function setupRuntime(
     ...createInputPassiveEffects(input.attacker.passive, "attacker"),
     ...createInputPassiveEffects(input.defender.passive, "defender")
   ];
-  // Effects feeding static buckets are validated deterministic, so the profile is seed-independent
-  // and a prepared build can be reused even when other battle_start skills are stochastic.
   runtime.staticDamageProfile = prebuiltProfile ?? buildStaticDamageProfile(fighters, setupEffects);
-  runtime.setupEffects = setupEffects;
   recorder.recordStaticProfile(fighters, setupEffects);
-  runtime.preparedEffects = setupEffects.filter(isRuntimeIndexableEffect);
   return runtime;
 }
 
@@ -259,56 +242,6 @@ function materializeStaticSetupEffects(
     ...createInputPassiveEffects(input.attacker.passive, "attacker"),
     ...createInputPassiveEffects(input.defender.passive, "defender")
   ];
-}
-
-// Deterministic battle-start effects are materialized once in a prepared runtime. Replay only
-// their observation events for each run; combat state continues to come from the cloned template.
-function recordPreparedBattleStartSkills(runtime: Runtime, recorder: BattleRecorder): void {
-  for (const skill of runtime.skills.battleStart) {
-    if (!skillMatchesTrigger(skill, "battle_start", 0)) continue;
-    recorder.recordSkillTriggerAttempt(skill);
-    if (!chancePasses(skill, runtime.rng)) continue;
-    recorder.recordSkillTriggered(skill);
-    for (const _effect of skill.effects) recorder.recordSkillEffectActivated(skill);
-  }
-}
-
-function cloneRuntime(template: Runtime, rng: Rng): Runtime {
-  const effectClones = new Map<ActiveEffect, ActiveEffect>();
-  const preparedEffects = template.preparedEffects.map((effect) => {
-    const clone = { ...effect };
-    effectClones.set(effect, clone);
-    return clone;
-  });
-  const cloneEffect = (effect: ActiveEffect): ActiveEffect => {
-    const clone = effectClones.get(effect);
-    if (!clone) throw new Error(`prepared effect ${effect.intent.id} is missing from the runtime template`);
-    return clone;
-  };
-  const runtime: Runtime = {
-    effectIndex: cloneEffectIndex(template.effectIndex, preparedEffects, cloneEffect),
-    preparedEffects,
-    activateEffectsByRound: cloneEffectSchedule(template.activateEffectsByRound, cloneEffect),
-    expireEffectsByRound: cloneEffectSchedule(template.expireEffectsByRound, cloneEffect),
-    usedEffects: [],
-    staticDamageProfile: template.staticDamageProfile,
-    setupEffects: template.setupEffects,
-    damageScratch: createDamageScratch(),
-    rng,
-    skills: template.skills,
-    effectActivationCounts: { ...template.effectActivationCounts },
-    extraSkillAttackJobsByEffect: { ...template.extraSkillAttackJobsByEffect },
-    attackControlCounts: { ...template.attackControlCounts },
-    counters: {
-      attacks: { attacker: { ...template.counters.attacks.attacker }, defender: { ...template.counters.attacks.defender } },
-      received: { attacker: { ...template.counters.received.attacker }, defender: { ...template.counters.received.defender } }
-    }
-  };
-  return runtime;
-}
-
-function cloneEffectSchedule(schedule: Array<ActiveEffect[] | undefined>, cloneEffect: (effect: ActiveEffect) => ActiveEffect): Array<ActiveEffect[] | undefined> {
-  return schedule.map((effects) => effects?.map(cloneEffect));
 }
 
 function configWithBearTroop(config: SimulatorConfig): SimulatorConfig {
@@ -338,17 +271,6 @@ function runBattle(
   prepared?: CompiledBattle,
   loopOptions: RunLoopOptions = { capRoundKills: true, capJobKills: true, commitLosses: true }
 ): BattleRun {
-  if (prepared?.template) {
-    const fighters: Record<SideId, ResolvedFighter> = {
-      attacker: cloneFighterForRun(prepared.fighters.attacker),
-      defender: cloneFighterForRun(prepared.fighters.defender)
-    };
-    const recorder = recorderFor(options, fighters);
-    const runtime = cloneRuntime(prepared.template, createSeededRng(input.seed ?? "simulator-default"));
-    recorder.recordStaticProfile(fighters, runtime.setupEffects);
-    recordPreparedBattleStartSkills(runtime, recorder);
-    return runLoop(input, fighters, runtime, recorder, options, loopOptions);
-  }
   const attacker = prepared ? cloneFighterForRun(prepared.fighters.attacker) : resolveFighter(input.attacker, "attacker", config, input.engagement_type);
   const defender = prepared ? cloneFighterForRun(prepared.fighters.defender) : resolveFighter(input.defender, "defender", config, input.engagement_type);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
@@ -568,12 +490,10 @@ function createRuntime(fighters: ResolvedFighter[], rng: Rng, preparedSkills?: R
       skills.effectGroups,
       skills.damageGroupsByJobShape
     ),
-    preparedEffects: [],
     activateEffectsByRound: [],
     expireEffectsByRound: [],
     usedEffects: [],
     staticDamageProfile: undefined,
-    setupEffects: [],
     damageScratch: createDamageScratch(),
     rng,
     skills,
