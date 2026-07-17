@@ -255,11 +255,13 @@ export interface EffectSource {
   effectId?: string;
 }
 
-// Runtime modifiers with the same definition and resolved unit scopes share one stable
-// group. Modifier stacking follows this object association; job-producing and control
-// effects are indexed independently and never enter these groups.
+// Runtime modifiers with the same definition and resolved unit scopes share one stable,
+// immutable group descriptor. Live activations for a run are held per runtime in
+// EffectIndex.liveEffectsByGroup[ordinal]; job-producing and control effects are indexed
+// independently and never enter these groups.
 export interface ActiveEffectGroup {
-  effects: ActiveEffect[];
+  // Index into RuntimeSkills.effectGroups and every runtime's liveEffectsByGroup.
+  ordinal: number;
   bucketIndex: number;
   sameEffectStacking: SameEffectStacking;
 }

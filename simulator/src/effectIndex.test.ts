@@ -40,7 +40,7 @@ test("effect index returns bucket-tagged candidates from a direct job-shape look
     takerUnit: "lancer"
   };
 
-  assert.deepEqual(index.damageGroupsByJobShape[damageJobSlot(job)].flatMap((group) => group.effects), [effect]);
+  assert.deepEqual(index.damageGroupsByJobShape[damageJobSlot(job)].flatMap((group) => index.liveEffectsByGroup[group.ordinal]), [effect]);
 });
 
 test("static-profile bucket effects are not prepared into the runtime effect index", () => {
@@ -49,7 +49,7 @@ test("static-profile bucket effects are not prepared into the runtime effect ind
   const index = preparedIndex([passive, active]);
   indexEffect(index, active);
 
-  assert.deepEqual(index.damageGroupsByJobShape[damageJobSlot(job())].flatMap((group) => group.effects), [active]);
+  assert.deepEqual(index.damageGroupsByJobShape[damageJobSlot(job())].flatMap((group) => index.liveEffectsByGroup[group.ordinal]), [active]);
 });
 
 test("expiring a modifier swap-removes it once from its shared job-shape group", () => {
@@ -61,10 +61,10 @@ test("expiring a modifier swap-removes it once from its shared job-shape group",
   indexEffect(index, second);
 
   const group = index.damageGroupsByJobShape[damageJobSlot(job())][0];
-  assert.deepEqual(group.effects, [first, second]);
+  assert.deepEqual(index.liveEffectsByGroup[group.ordinal], [first, second]);
   expireEffectIndex(index, first);
 
-  assert.deepEqual(group.effects, [second]);
+  assert.deepEqual(index.liveEffectsByGroup[group.ordinal], [second]);
   assert.equal(second.effectGroupPosition, 0);
   assert.equal(first.effectGroup, undefined);
 });
@@ -100,7 +100,7 @@ function preparedIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectI
     let group = byResolvedGroup.get(key);
     if (!group) {
       group = {
-        effects: [],
+        ordinal: groups.length,
         bucketIndex: 0,
         sameEffectStacking: effect.sameEffectStacking
       };

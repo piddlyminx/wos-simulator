@@ -12,8 +12,9 @@ import { ATOMIC_BUCKET_INDEX, bucketDefinition, type AtomicBucket } from "./dama
  *   resolved unit scope) and registers it in damageGroupsByJobShape under every slot its
  *   scope can affect. Calculating a job then walks only its slot's groups; empty groups
  *   cost one length check, and no per-job classification happens at all.
- * - Activations push into their group's `effects` and record their dense position, so
- *   expiry is a single swap-remove regardless of how many slots reference the group.
+ * - Activations push into the runtime's liveEffectsByGroup[group.ordinal] list and record
+ *   their dense position, so expiry is a single swap-remove regardless of how many slots
+ *   reference the group.
  * - A group is also the unit of same-effect max stacking: the max is selected among the
  *   group's live effects, and preparation asserts that a max-stacking definition's
  *   differently-scoped groups never overlap on a slot.
@@ -22,13 +23,15 @@ import { ATOMIC_BUCKET_INDEX, bucketDefinition, type AtomicBucket } from "./dama
  * lists matched per use. This split was benchmarked, not assumed — the group index beat a
  * per-job classifier scan by ~3x on long battles while staying byte-identical on parity.
  *
- * The group objects (and the two group arrays) belong to the prepared battle and are
- * REUSED across runs: createEffectIndex resets each group's live `effects` array in
- * place. That is why runs of one CompiledBattle must stay serial.
+ * Group descriptors and the two group arrays belong to the prepared battle and are
+ * immutable; every run allocates its own liveEffectsByGroup lists, so a CompiledBattle
+ * carries no per-run state.
  */
 export interface EffectIndex {
   damageGroupsByJobShape: ActiveEffectGroup[][];
   effectGroups: ActiveEffectGroup[];
+  // This run's live activations, parallel to effectGroups (indexed by group.ordinal).
+  liveEffectsByGroup: ActiveEffect[][];
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
   battleOrder: ActiveEffect[];
@@ -40,10 +43,10 @@ export function createEffectIndex(
   effectGroups: ActiveEffectGroup[] = [],
   damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => [])
 ): EffectIndex {
-  for (const group of effectGroups) group.effects.length = 0;
   return {
     damageGroupsByJobShape,
     effectGroups,
+    liveEffectsByGroup: effectGroups.map(() => []),
     controls: [],
     extraAttacks: [],
     battleOrder: []
@@ -67,8 +70,9 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
 
   const group = effect.effectGroup;
   if (!group) throw new Error(`Runtime modifier ${effect.intent.id} has no prepared effect group`);
-  effect.effectGroupPosition = group.effects.length;
-  group.effects.push(effect);
+  const live = index.liveEffectsByGroup[group.ordinal];
+  effect.effectGroupPosition = live.length;
+  live.push(effect);
   effect.bucketIndex = group.bucketIndex;
 }
 
@@ -83,7 +87,7 @@ export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): voi
   if (effect.kind === "control") removeStable(index.controls, effect);
   else if (effect.kind === "extra_attack") removeStable(index.extraAttacks, effect);
   else if (effect.kind === "battle_order") removeStable(index.battleOrder, effect);
-  removeEffectGroupEntry(effect);
+  removeEffectGroupEntry(index, effect);
 }
 
 export function damageJobSlot(job: DamageJob): number {
@@ -155,17 +159,18 @@ function removeStable(effects: ActiveEffect[], effect: ActiveEffect): void {
   if (index >= 0) effects.splice(index, 1);
 }
 
-function removeEffectGroupEntry(effect: ActiveEffect): void {
+function removeEffectGroupEntry(index: EffectIndex, effect: ActiveEffect): void {
   const group = effect.effectGroup;
   const position = effect.effectGroupPosition;
   if (!group || position === undefined) return;
-  const lastPosition = group.effects.length - 1;
-  const moved = group.effects[lastPosition];
+  const live = index.liveEffectsByGroup[group.ordinal];
+  const lastPosition = live.length - 1;
+  const moved = live[lastPosition];
   if (position !== lastPosition) {
-    group.effects[position] = moved;
+    live[position] = moved;
     moved.effectGroupPosition = position;
   }
-  group.effects.pop();
+  live.pop();
   effect.effectGroup = undefined;
   effect.effectGroupPosition = undefined;
 }

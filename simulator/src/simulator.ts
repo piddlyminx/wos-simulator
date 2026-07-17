@@ -133,8 +133,9 @@ export function simulateBearBattle(
  * graph, and the static damage profile are built once and reused; each run fires battle_start with
  * its own seed and builds a fresh Runtime. (Benchmarked 2026-07-17: a cloned battle-start template
  * was no faster than re-firing setup per run, so the simpler always-runtime path is used.)
- * The prepared effect-group graph still contains shared live-effect arrays, so runs of one
- * CompiledBattle must remain synchronous and non-re-entrant.
+ * A CompiledBattle is immutable: live effect lists, troop counts, and all other run state live on
+ * each run's Runtime. (Sole post-prepare write: the idempotent per-intent activation cache in
+ * effects.ts, populated on first activation.)
  */
 export interface CompiledBattle {
   input: BattleInput;
@@ -959,7 +960,7 @@ function chargeCancelledAttack(
 ): void {
   const used = runtime.usedEffects;
   for (const group of runtime.effectIndex.damageGroupsByJobShape[damageJobSlot(job)]) {
-    for (const effect of group.effects) {
+    for (const effect of runtime.effectIndex.liveEffectsByGroup[group.ordinal]) {
       if (!advanceEffectAttackDelay(effect)) continue;
       if (hasAttackDurationConstraint(effect)) used.push(effect);
     }

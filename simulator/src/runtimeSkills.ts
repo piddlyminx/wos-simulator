@@ -73,7 +73,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
         if (slots.length === 0) continue;
         if (candidate.sameEffectStacking === "max") assertDisjointResolvedGroupSlots(intent.id, slots, slotsForDefinition);
         const group: ActiveEffectGroup = {
-          effects: [],
+          ordinal: effectGroups.length,
           bucketIndex: damageBucketIndex(definition.path),
           sameEffectStacking: candidate.sameEffectStacking
         };

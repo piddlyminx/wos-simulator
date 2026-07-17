@@ -87,7 +87,7 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
     let group = byResolvedGroup.get(key);
     if (!group) {
       group = {
-        effects: [],
+        ordinal: groups.length,
         bucketIndex: ATOMIC_BUCKETS.indexOf(activeEffect.intent.type as never),
         sameEffectStacking: activeEffect.sameEffectStacking
       };

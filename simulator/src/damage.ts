@@ -123,6 +123,7 @@ export function calculateDamageJob(
   const usedEffects = options.usedEffects ?? [];
   applyBucketEffects(
     options.effectIndex.damageGroupsByJobShape[damageJobSlot(job)],
+    options.effectIndex.liveEffectsByGroup,
     job.round,
     buckets,
     recording,
@@ -137,13 +138,14 @@ export function calculateDamageJob(
 
 function applyBucketEffects(
   groups: ActiveEffectGroup[],
+  liveEffectsByGroup: ActiveEffect[][],
   round: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
   for (const group of groups) {
-    const effects = group.effects;
+    const effects = liveEffectsByGroup[group.ordinal];
     if (effects.length === 0) continue;
     if (group.sameEffectStacking !== "max") {
       for (const effect of effects) {
