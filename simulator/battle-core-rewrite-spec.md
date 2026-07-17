@@ -78,7 +78,7 @@ Attack triggers use explicit source and target selectors:
 
 ```ts
 interface TriggerDefinition {
-  type: "battle_start" | "turn" | "attack";
+  type: "pre_battle" | "battle_start" | "turn" | "attack";
   probability?: number | number[];
   every?: number;
   source?: TriggerUnitSelector;
@@ -610,11 +610,16 @@ The battle should use simultaneous round damage. Both sides calculate damage
 from the same round-start troop snapshot. All damage outcomes are committed
 together after normal and extra skill attack for the round have been calculated.
 
+### 0. Pre-Battle (preparation)
+
+- Resolve fighters and skills from input.
+- Activate `pre_battle` skills (chance-free static passives) and input passives.
+- Build the static damage profile from those effects. Nothing here depends on the seed.
+
 ### 1. Battle Start
 
-- Build fighter state from input.
-- Build trigger responders from heroes and other configured mechanics.
-- Send `battle_start` trigger.
+- Build runtime state for this run's seed.
+- Send `battle_start` trigger (may be stochastic).
 - Register returned active effects.
 - Do not calculate damage.
 

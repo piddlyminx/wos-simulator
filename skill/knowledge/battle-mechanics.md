@@ -89,7 +89,8 @@ Both hydrate to `ResolvedSkill`, then `ActiveEffect`, then bucket candidates or 
 
 Skill triggers are handled in `effects.ts`:
 
-- `battle_start` fires during runtime setup.
+- `pre_battle` activates at preparation time (chance-free, static passives only; feeds the static damage profile).
+- `battle_start` fires during runtime setup and may be stochastic.
 - `turn` fires at round start and supports `every`.
 - `attack` fires when an attack is declared and can filter with `trigger.source` and `trigger.target`.
 

@@ -51,7 +51,7 @@
           ],
           "units": {
             "applies_to": "trigger.source",
-            "applies_vs":"trigger.target"
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "attacks": {
@@ -132,7 +132,7 @@
     "LethalPrecision": {
       "description": "Widget bonus: Increase Lethality by X% for all troops when attacking",
       "trigger": {
-        "type": "battle_start"
+        "type": "pre_battle"
       },
       "requirements": [
         {

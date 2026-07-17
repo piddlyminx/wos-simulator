@@ -87,7 +87,7 @@
     "SiegeInsight": {
       "description": "Widget bonus: Increase Attack by X% for all troops when defending",
       "trigger": {
-        "type": "battle_start"
+        "type": "pre_battle"
       },
       "requirements": [
         {

@@ -134,6 +134,7 @@ A trigger controls **when the skill is attempted**. If it matches, the simulator
 
 | Value | Behaviour |
 | --- | --- |
+| `pre_battle` | Activated once while preparing the battle, before any runtime exists. Chance-free by definition and restricted to static `passive.*` effects; these feed the static damage profile (in-game: widget passives baked into player bonus stats). |
 | `battle_start` | Is attempted once during battle setup, before round 1. `first`, `every`, `source`, and `target` do not gate this trigger type. |
 | `turn` | Is attempted at the start of matching simulator rounds. The simulator calls these rounds internally; JSON and game text commonly call them turns. Omitting `source` makes it global; defining `source` selects the separate per-unit path described below. |
 | `attack` | Is attempted when a matching **normal** attack is declared. Generated skill jobs do not evaluate it. Every intended normal attack's skill triggers are processed before any controls or damage jobs for the round. |
@@ -211,7 +212,7 @@ For a `turn` trigger:
 
 **Per-unit target-selection gotcha.** The runtime does not search for a troop satisfying `trigger.target`. It first chooses one opposing target using the current `attack_order` or the default order `infantry`, `lancer`, `marksman`, then checks that chosen target against the trigger selector. If the chosen target fails the selector, that source produces no effects; the runtime does not try the next living target. Thus `target: "enemy.lancer"` can produce no effect while enemy Infantry is alive, even when enemy Lancers are also alive.
 
-`battle_start` never has an attack-shaped intent. Its `source` and `target` fields are compiled but never used for matching; use effect scopes, not trigger selectors, to scope a battle-start effect.
+`pre_battle` and `battle_start` never have an attack-shaped intent. Its `source` and `target` fields are compiled but never used for matching; use effect scopes, not trigger selectors, to scope a battle-start effect.
 
 ## Effects
 
@@ -279,8 +280,8 @@ Percentages in one ordinary bucket add: two live `active.hero.damage.up` contrib
 
 `passive.*` effects are static profile inputs and must satisfy all of these rules:
 
-- trigger type is `battle_start`;
-- no trigger probability;
+- trigger type is `pre_battle`;
+- no trigger probability (`pre_battle` is chance-free by definition);
 - no `duration`;
 - no `value_evolution`;
 - no `same_effect_stacking: "max"` (passives add);
@@ -311,7 +312,7 @@ Supported values for either field include:
 
 `applies_vs: "all"` is deliberately rejected; use `"any"`. `units.side` is also rejected. Side belongs in relation-qualified selectors such as `enemy.any`.
 
-`trigger.source`/`trigger` resolve to the intent's dealer side and unit. `trigger.target`/`target` resolve to its taker side and unit. They are meaningful for `attack` triggers and valid per-unit `turn` intents. They are rejected on `battle_start` effects because no such intent exists.
+`trigger.source`/`trigger` resolve to the intent's dealer side and unit. `trigger.target`/`target` resolve to its taker side and unit. They are meaningful for `attack` triggers and valid per-unit `turn` intents. They are rejected on `pre_battle` and `battle_start` effects because no such intent exists.
 
 **Gotcha — global turn triggers have no concrete source or target.** On a `turn` trigger with no `trigger.source`, the activation has no attack intent. Trigger-relative effect selectors consequently retain their precompiled fallback: all units on that field's default side. The loader records an `ambiguousTurnTriggerSelectors` diagnostic but does not reject the definition.
 
@@ -505,7 +506,7 @@ The engine accepts some values not currently used by a hero. This inventory dist
 | `hero_generation` | `SR`, `S1`, `S1_natalia`, `S1_jeronimo`, `S2` through `S8` |
 | `troop_type` | `infantry`, `lancer`, `marksman` |
 | `requirements[].type/value` | `engagement_type` with `rally` or `garrison`, always beginning at level 1 |
-| `trigger.type` | `battle_start`, `turn`, `attack` |
+| `trigger.type` | `pre_battle`, `battle_start`, `turn`, `attack` |
 | `trigger.source` | omitted, `infantry`, `lancer`, `marksman`, `self.any`, `self.all`, `enemy.any` |
 | `trigger.target` | omitted or `self.any` |
 | `trigger.probability` | omitted or a five-level numeric percentage array |

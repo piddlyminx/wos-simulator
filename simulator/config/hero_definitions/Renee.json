@@ -102,7 +102,7 @@
     "DreamfangRally": {
       "description": "Widget bonus: Increase Lethality by X% for all troops when rallying",
       "trigger": {
-        "type": "battle_start"
+        "type": "pre_battle"
       },
       "requirements": [
         {

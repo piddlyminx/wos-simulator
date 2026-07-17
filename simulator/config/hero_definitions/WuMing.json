@@ -80,7 +80,7 @@
     "IronBastion": {
       "description": "Widget bonus: Increase Defense by X% for all troops when defending",
       "trigger": {
-        "type": "battle_start"
+        "type": "pre_battle"
       },
       "requirements": [
         {

@@ -172,6 +172,7 @@ function isLegacyConfigField(key: string): boolean {
 function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostics: ConfigDiagnostics): void {
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
     validateTriggerDefinition(skill.trigger, file, skillId);
+    if (skill.trigger.type === "pre_battle") validatePreBattleSkill(skill, file, skillId);
     for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
       const type = String((effect as { type?: unknown }).type ?? "");
       diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
@@ -241,13 +242,30 @@ function validateBattleStartEffectSelectors(
   skillId: string,
   effectId: string
 ): void {
-  if (trigger.type !== "battle_start") return;
+  if (trigger.type !== "battle_start" && trigger.type !== "pre_battle") return;
   for (const field of ["applies_to", "applies_vs"] as const) {
     const selector = effect.units?.[field];
     if (!isTriggerRelativeUnitSelector(selector)) continue;
     throw new Error(
-      `battle_start effect cannot use trigger-relative units.${field} selector ${JSON.stringify(selector)} at ${file}:${skillId}.${effectId}; use a concrete selector such as self.any`
+      `${trigger.type} effect cannot use trigger-relative units.${field} selector ${JSON.stringify(selector)} at ${file}:${skillId}.${effectId}; use a concrete selector such as self.any`
     );
+  }
+}
+
+// The pre_battle phase feeds the static damage profile before any runtime exists, so by
+// definition it is chance-free and carries only static passive-bucket effects.
+function validatePreBattleSkill(skill: SkillFile["skills"][string], file: string, skillId: string): void {
+  const path = `${file}:${skillId}`;
+  if (skill.trigger.probability !== undefined) {
+    throw new Error(`pre_battle skill cannot define trigger probability at ${path}; pre_battle is chance-free by definition`);
+  }
+  for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+    const type = String((effect as { type?: unknown }).type ?? "");
+    if (!isPassiveBucket(type)) {
+      throw new Error(
+        `pre_battle skill may only contain static passive-bucket effects; effect ${type} at ${path}.${effectId} must use a runtime trigger such as battle_start`
+      );
+    }
   }
 }
 
@@ -262,10 +280,10 @@ function validateNativeEffectUnits(effect: EffectIntentDefinition, file: string,
   );
 }
 
-// Static buckets are aggregated once per battle into the static damage profile, so any effect
-// that feeds one must itself be known at battle start, deterministic, immutable, and permanent.
-// Static buckets outside the passive family (troops/player) are input-derived and cannot be
-// produced by a skill at all.
+// Static buckets are aggregated once per battle into the static damage profile before any
+// runtime exists, so skill effects that feed them live in the pre_battle phase and must be
+// deterministic, immutable, and permanent. Static buckets outside the passive family
+// (troops/player) are input-derived and cannot be produced by a skill at all.
 function validateStaticBucketEffect(
   trigger: SkillFile["skills"][string]["trigger"],
   effect: EffectIntentDefinition,
@@ -280,11 +298,8 @@ function validateStaticBucketEffect(
   if (!isPassiveBucket(effect.type)) {
     throw new Error(`effect type ${effect.type} targets an input-derived static bucket and cannot be defined by a skill at ${path}`);
   }
-  if (trigger.type !== "battle_start") {
-    throw new Error(`effect targeting static bucket ${effect.type} must use a battle_start trigger at ${path}`);
-  }
-  if (trigger.probability !== undefined) {
-    throw new Error(`effect targeting static bucket ${effect.type} cannot define trigger probability at ${path}`);
+  if (trigger.type !== "pre_battle") {
+    throw new Error(`effect targeting static bucket ${effect.type} must use a pre_battle trigger at ${path}`);
   }
   if (effect.value_evolution !== undefined) {
     throw new Error(`effect targeting static bucket ${effect.type} cannot define value_evolution at ${path}`);

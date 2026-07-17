@@ -146,7 +146,7 @@
     "GuardiansVitality": {
       "description": "Widget bonus: Increase Health by X% for all troops when defending",
       "trigger": {
-        "type": "battle_start"
+        "type": "pre_battle"
       },
       "requirements": [
         {

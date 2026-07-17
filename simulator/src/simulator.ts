@@ -55,7 +55,7 @@ interface Runtime {
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
   usedEffects: ActiveEffect[];
-  staticDamageProfile?: StaticDamageProfile;
+  staticDamageProfile: StaticDamageProfile;
   damageScratch: DamageScratch;
   rng: Rng;
   skills: RuntimeSkills;
@@ -141,6 +141,9 @@ export interface CompiledBattle {
   input: BattleInput;
   config: SimulatorConfig;
   fighters: Record<SideId, ResolvedFighter>;
+  // Pre-battle skill activations plus input passives: the inputs to the static damage
+  // profile, kept so each run's recorder can describe the profile's contributors.
+  preBattleEffects: ActiveEffect[];
   staticProfile: StaticDamageProfile;
   runtimeSkills: RuntimeSkills;
   // Run-invariant result payload shared by reference across every run of this compiled battle.
@@ -153,11 +156,22 @@ export function prepareBattle(input: BattleInput, config: SimulatorConfig): Comp
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
   const runtimeSkills = buildRuntimeSkills([attacker, defender]);
   const resolved = buildResolved(attacker, defender);
-  // Effects feeding static buckets are validated deterministic, so the profile is seed-independent
-  // even when other battle_start skills are stochastic; build it once here from just those effects.
-  const staticEffects = materializeStaticSetupEffects(fighters, input, runtimeSkills);
-  const staticProfile = buildStaticDamageProfile(fighters, staticEffects);
-  return { input, config, fighters, staticProfile, runtimeSkills, resolved };
+  const preBattleEffects = activatePreBattleEffects(runtimeSkills, input);
+  const staticProfile = buildStaticDamageProfile(fighters, preBattleEffects);
+  return { input, config, fighters, preBattleEffects, staticProfile, runtimeSkills, resolved };
+}
+
+// The pre_battle phase: activate every chance-free static-passive skill effect plus the
+// input passives. Needs no runtime, RNG, or effect index — these effects only ever feed
+// the static damage profile and the recorders' description of it.
+function activatePreBattleEffects(runtimeSkills: RuntimeSkills, input: BattleInput): ActiveEffect[] {
+  const effects: ActiveEffect[] = [];
+  for (const skill of runtimeSkills.preBattle) {
+    for (const intent of skill.effects) effects.push(activateEffect(skill, intent, 0));
+  }
+  effects.push(...createInputPassiveEffects(input.attacker.passive, "attacker"));
+  effects.push(...createInputPassiveEffects(input.defender.passive, "defender"));
+  return effects;
 }
 
 export function runPrepared(compiled: CompiledBattle, seed?: string | number, options: SimulationOptions = {}): BattleResult {
@@ -205,41 +219,34 @@ function buildBattleResult(run: BattleRun, resolved?: BattleResult["resolved"]):
   };
 }
 
-// Build the full pre-loop runtime: fire battle_start, apply input passives, compile the static damage
-// profile. Static-phase effects never enter the per-job index.
+// Build the pre-loop runtime: record the prepared pre_battle phase, then fire battle_start
+// with this run's seed. Static-phase effects never enter the per-job index.
 function setupRuntime(
   fighters: Record<SideId, ResolvedFighter>,
-  input: BattleInput,
   seed: string | number,
   recorder: BattleRecorder,
-  runtimeSkills?: RuntimeSkills,
-  prebuiltProfile?: StaticDamageProfile
+  runtimeSkills: RuntimeSkills,
+  staticProfile: StaticDamageProfile,
+  preBattleEffects: ActiveEffect[]
 ): Runtime {
-  const runtime = createRuntime(fighters, createSeededRng(seed), runtimeSkills);
-  const setupEffects = [
-    ...triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime, recorder),
-    ...createInputPassiveEffects(input.attacker.passive, "attacker"),
-    ...createInputPassiveEffects(input.defender.passive, "defender")
-  ];
-  runtime.staticDamageProfile = prebuiltProfile ?? buildStaticDamageProfile(fighters, setupEffects);
-  recorder.recordStaticProfile(fighters, setupEffects);
+  const runtime = createRuntime(fighters, createSeededRng(seed), runtimeSkills, staticProfile);
+  recorder.recordStaticProfile(fighters, preBattleEffects);
+  recordPreBattleSkills(runtime, recorder);
+  triggerSkills("battle_start", 0, runtime.skills.battleStart, runtime, recorder);
   return runtime;
 }
 
-function materializeStaticSetupEffects(
-  fighters: Record<SideId, ResolvedFighter>,
-  input: BattleInput,
-  runtimeSkills: RuntimeSkills
-): ActiveEffect[] {
-  const runtime = createRuntime(fighters, createSeededRng("simulator-static-profile"), runtimeSkills);
-  const staticSkills = runtimeSkills.battleStart.filter((skill) =>
-    skill.effects.some((effect) => bucketDefinition(effect.type)?.phase === "static")
-  );
-  return [
-    ...triggerSkills("battle_start", 0, staticSkills, runtime, NULL_RECORDER),
-    ...createInputPassiveEffects(input.attacker.passive, "attacker"),
-    ...createInputPassiveEffects(input.defender.passive, "defender")
-  ];
+// Pre-battle effects are activated once at prepare time; each run replays their skill
+// observation events so skill reports and activation counts describe them per battle.
+function recordPreBattleSkills(runtime: Runtime, recorder: BattleRecorder): void {
+  for (const skill of runtime.skills.preBattle) {
+    recorder.recordSkillTriggerAttempt(skill);
+    recorder.recordSkillTriggered(skill);
+    for (const _effect of skill.effects) {
+      runtime.effectActivationCounts[skill.side] += 1;
+      recorder.recordSkillEffectActivated(skill);
+    }
+  }
 }
 
 function configWithBearTroop(config: SimulatorConfig): SimulatorConfig {
@@ -272,8 +279,11 @@ function runBattle(
   const attacker = prepared ? prepared.fighters.attacker : resolveFighter(input.attacker, "attacker", config, input.engagement_type);
   const defender = prepared ? prepared.fighters.defender : resolveFighter(input.defender, "defender", config, input.engagement_type);
   const fighters: Record<SideId, ResolvedFighter> = { attacker, defender };
+  const runtimeSkills = prepared?.runtimeSkills ?? buildRuntimeSkills([attacker, defender]);
+  const preBattleEffects = prepared?.preBattleEffects ?? activatePreBattleEffects(runtimeSkills, input);
+  const staticProfile = prepared?.staticProfile ?? buildStaticDamageProfile(fighters, preBattleEffects);
   const recorder = recorderFor(options, fighters);
-  const runtime = setupRuntime(fighters, input, input.seed ?? "simulator-default", recorder, prepared?.runtimeSkills, prepared?.staticProfile);
+  const runtime = setupRuntime(fighters, input.seed ?? "simulator-default", recorder, runtimeSkills, staticProfile, preBattleEffects);
   return runLoop(input, fighters, runtime, recorder, options, loopOptions);
 }
 
@@ -298,7 +308,6 @@ function runLoop(
     dodge: options.useEffectsOnDodge ?? true,
     no_attack: options.useEffectsOnNoAttack ?? true
   };
-  if (!runtime.staticDamageProfile) throw new Error("runLoop requires a runtime with a static damage profile");
   const damageJobOptions = {
     recorder,
     effectIndex: runtime.effectIndex,
@@ -481,8 +490,7 @@ function syntheticRoundIntent(
   };
 }
 
-function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rng, preparedSkills?: RuntimeSkills): Runtime {
-  const skills = preparedSkills ?? buildRuntimeSkills([fighters.attacker, fighters.defender]);
+function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rng, skills: RuntimeSkills, staticDamageProfile: StaticDamageProfile): Runtime {
   return {
     troops: {
       attacker: { ...fighters.attacker.initialTroops },
@@ -495,7 +503,7 @@ function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rng, prep
     activateEffectsByRound: [],
     expireEffectsByRound: [],
     usedEffects: [],
-    staticDamageProfile: undefined,
+    staticDamageProfile,
     damageScratch: createDamageScratch(),
     rng,
     skills,

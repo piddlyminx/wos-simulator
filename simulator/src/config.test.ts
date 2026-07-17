@@ -198,7 +198,7 @@ test("loadSimulatorConfig rejects effects targeting static buckets unless they a
       value: 10,
       duration: { turns: { count: 1 } }
     },
-    { type: "battle_start" }
+    { type: "pre_battle" }
   );
   const evolvingRoot = writeConfigWithTroopEffect(
     {
@@ -206,7 +206,7 @@ test("loadSimulatorConfig rejects effects targeting static buckets unless they a
       value: 10,
       value_evolution: { type: "fixed_decay", step: "round", value: 1 }
     },
-    { type: "battle_start" }
+    { type: "pre_battle" }
   );
   const emptyDurationRoot = writeConfigWithTroopEffect(
     {
@@ -214,14 +214,14 @@ test("loadSimulatorConfig rejects effects targeting static buckets unless they a
       value: 10,
       duration: {}
     },
-    { type: "battle_start" }
+    { type: "pre_battle" }
   );
   const probabilityRoot = writeConfigWithTroopEffect(
     {
       type: "passive.attack.up",
       value: 10
     },
-    { type: "battle_start", probability: 50 }
+    { type: "pre_battle", probability: 50 }
   );
   const maxStackingRoot = writeConfigWithTroopEffect(
     {
@@ -229,15 +229,31 @@ test("loadSimulatorConfig rejects effects targeting static buckets unless they a
       value: 10,
       same_effect_stacking: "max"
     },
+    { type: "pre_battle" }
+  );
+  const battleStartRoot = writeConfigWithTroopEffect(
+    {
+      type: "passive.attack.up",
+      value: 10
+    },
     { type: "battle_start" }
   );
+  const runtimeEffectRoot = writeConfigWithTroopEffect(
+    {
+      type: "active.hero.attack.up",
+      value: 10
+    },
+    { type: "pre_battle" }
+  );
 
-  assert.throws(() => loadSimulatorConfigFromDir(turnRoot), /static bucket passive\.attack\.up.*battle_start/i);
+  assert.throws(() => loadSimulatorConfigFromDir(turnRoot), /static bucket passive\.attack\.up.*pre_battle/i);
   assert.throws(() => loadSimulatorConfigFromDir(durationRoot), /static bucket passive\.attack\.up.*duration/i);
   assert.throws(() => loadSimulatorConfigFromDir(emptyDurationRoot), /static bucket passive\.attack\.up.*duration/i);
   assert.throws(() => loadSimulatorConfigFromDir(evolvingRoot), /static bucket passive\.attack\.up.*value_evolution/i);
-  assert.throws(() => loadSimulatorConfigFromDir(probabilityRoot), /static bucket passive\.attack\.up.*probability/i);
+  assert.throws(() => loadSimulatorConfigFromDir(probabilityRoot), /pre_battle skill.*probability/i);
   assert.throws(() => loadSimulatorConfigFromDir(maxStackingRoot), /static bucket passive\.attack\.up.*cannot use max stacking/i);
+  assert.throws(() => loadSimulatorConfigFromDir(battleStartRoot), /static bucket passive\.attack\.up.*pre_battle/i);
+  assert.throws(() => loadSimulatorConfigFromDir(runtimeEffectRoot), /pre_battle skill may only contain static passive-bucket effects/i);
 });
 
 test("loadSimulatorConfig rejects skill effects targeting input-derived static buckets", () => {

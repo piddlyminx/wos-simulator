@@ -1479,7 +1479,7 @@ test("requires_effect is ignored by native simulator effect activation", () => {
         name: "LegacyDependency",
         skills: {
           BothEffectsActivate: {
-            trigger: { type: "battle_start" },
+            trigger: { type: "pre_battle" },
             effects: {
               base: {
                 type: "passive.attack.up",
@@ -1501,7 +1501,7 @@ test("requires_effect is ignored by native simulator effect activation", () => {
   assert.equal(report?.effectActivations, 2);
 });
 
-test("fighter passive effects are added to the static profile after battle_start effects", () => {
+test("fighter passive effects are added to the static profile after pre_battle skill effects", () => {
   const result = runOnce(
     {
       maxRounds: 1,
@@ -1524,7 +1524,7 @@ test("fighter passive effects are added to the static profile after battle_start
         name: "BattleStart",
         skills: {
           StartsFirst: {
-            trigger: { type: "battle_start" },
+            trigger: { type: "pre_battle" },
             effects: {
               skillBuff: {
                 type: "passive.attack.up",
@@ -2392,12 +2392,12 @@ test("engagement_type requirements decide whether hero skills resolve", () => {
       skills: {
         RallyOnly: {
           requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
-          trigger: { type: "battle_start" },
+          trigger: { type: "pre_battle" },
           effects: { rally: { type: "passive.attack.up", value: 10 } }
         },
         GarrisonOnly: {
           requirements: [{ level: 1, type: "engagement_type", value: "garrison" }],
-          trigger: { type: "battle_start" },
+          trigger: { type: "pre_battle" },
           effects: { garrison: { type: "passive.defense.up", value: 10 } }
         }
       }
@@ -2438,12 +2438,12 @@ test("rally engagement resolves hero widget roles by owning side", () => {
       skills: {
         RallyOnly: {
           requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
-          trigger: { type: "battle_start" },
+          trigger: { type: "pre_battle" },
           effects: { rally: { type: "passive.attack.up", value: 10 } }
         },
         GarrisonOnly: {
           requirements: [{ level: 1, type: "engagement_type", value: "garrison" }],
-          trigger: { type: "battle_start" },
+          trigger: { type: "pre_battle" },
           effects: { garrison: { type: "passive.defense.up", value: 10 } }
         }
       }
@@ -2482,12 +2482,12 @@ test("runPrepared identifies stochastic battles from resolved chance triggers", 
       skills: {
         CoinFlip: {
           trigger: { type: "battle_start", probability: [50] },
-          effects: { buff: { type: "passive.attack.up", value: 10 } }
+          effects: { buff: { type: "active.hero.attack.up", value: 10 } }
         },
         RallyCoinFlip: {
           requirements: [{ level: 1, type: "engagement_type", value: "rally" }],
           trigger: { type: "battle_start", probability: [50] },
-          effects: { rally: { type: "passive.attack.up", value: 10 } }
+          effects: { rally: { type: "active.hero.attack.up", value: 10 } }
         }
       }
     }

@@ -60,7 +60,7 @@ Config lives under `simulator/config/`:
 
 `SkillFile.skills` entries have:
 
-- `trigger`: `battle_start`, `turn`, or `attack`, with optional `probability`, `every`, `source`, and `target`.
+- `trigger`: `pre_battle`, `battle_start`, `turn`, or `attack`, with optional `probability`, `every`, `source`, and `target` (`pre_battle` forbids `probability`).
 - `effects`: native effect intents keyed by id.
 - optional `requirements`: level, tier, fire-crystal, or engagement gates.
 

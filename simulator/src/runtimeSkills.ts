@@ -19,6 +19,8 @@ import { bucketDefinition } from "./damageBuckets";
  */
 export interface RuntimeSkills {
   all: ResolvedSkill[];
+  // Chance-free static-passive skills activated once at prepare time, before any runtime exists.
+  preBattle: ResolvedSkill[];
   battleStart: ResolvedSkill[];
   roundStart: ResolvedSkill[];
   roundStartGlobal: ResolvedSkill[];
@@ -50,6 +52,9 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
     for (const intent of skill.effects) {
       const definition = bucketDefinition(intent.type);
       if (definition?.phase === "static") {
+        if (skill.trigger.type !== "pre_battle") {
+          throw new Error(`Static passive effect ${intent.id} must live in a pre_battle skill, not ${skill.trigger.type}`);
+        }
         if (intent.same_effect_stacking === "max") {
           throw new Error(`Static passive effect ${intent.id} cannot use max stacking; passive effects are additive`);
         }
@@ -88,6 +93,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
       intent.effectGroupsByScopeKey = groupsByScopeKey;
     }
   }
+  const preBattle = all.filter((skill) => skill.trigger.type === "pre_battle");
   const battleStart = all.filter((skill) => skill.trigger.type === "battle_start");
   const roundStart = all.filter((skill) => skill.trigger.type === "turn");
   const attackDeclared = all.filter((skill) => skill.trigger.type === "attack");
@@ -105,6 +111,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
   }
   return {
     all,
+    preBattle,
     battleStart,
     roundStart,
     roundStartGlobal: roundStart.filter((skill) => !hasPerUnitRoundTrigger(skill)),
