@@ -61,6 +61,20 @@ test("server compute routes are removed", async ({ request }) => {
   await expect((await request.post("/api/simulate/optimize-ratio")).status()).toBe(404);
 });
 
+test("/tournament accepts hyphen ratios and blocks partially invalid input", async ({ page }) => {
+  await page.goto("/tournament");
+  const ratios = page.getByRole("textbox", { name: "Ratios" });
+  const runTournament = page.getByRole("button", { name: "Run tournament" });
+
+  await ratios.fill("50,20,30; 40-30-30 60-10-30");
+  await expect(page.getByText("3 ratios recognised.", { exact: false })).toBeVisible();
+  await expect(runTournament).toBeEnabled();
+
+  await ratios.fill("50,20,30; 40/30/30; 60-10-30");
+  await expect(page.getByText("Some ratio input was not recognised", { exact: false })).toBeVisible();
+  await expect(runTournament).toBeDisabled();
+});
+
 test("/tournament saves completed results and activates the share URL", async ({ page }) => {
   await page.addInitScript(() => {
     class MockTournamentWorker {

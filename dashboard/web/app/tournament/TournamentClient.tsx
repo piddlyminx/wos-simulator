@@ -21,6 +21,7 @@ import {
   estimateSwissBattles,
   estimateTournamentTeamCount,
   mainHeroesForRole,
+  parseTournamentRatioList,
   sortTournamentRows,
   tournamentRowsToCsv,
   type TournamentRequestPayload,
@@ -88,7 +89,7 @@ function groupPayload(group: BuilderGroup): TournamentTeamGroupPayload {
     lancerMains: group.lancerMains,
     marksmanMains: group.marksmanMains,
     joiners: group.joiners,
-    ratios: splitRatios(group.ratioText),
+    ratios: parseTournamentRatioList(group.ratioText).ratios,
     allowRepeatedJoiners: group.allowRepeatedJoiners,
     excludeMainHeroesFromJoiners: group.excludeMainHeroesFromJoiners,
   };
@@ -191,6 +192,10 @@ export default function TournamentClient({
   ]);
 
   const teamCount = useMemo(() => estimateTournamentTeamCount(payload.groups), [payload.groups]);
+  const hasInvalidRatios = useMemo(
+    () => groups.some((group) => parseTournamentRatioList(group.ratioText).error !== null),
+    [groups],
+  );
   const swissBattles = estimateSwissBattles(teamCount, payload);
   const finalsBattles = estimateFinalsBattles(teamCount, payload);
   const activeRows = useMemo(() => {
@@ -423,7 +428,7 @@ export default function TournamentClient({
             <button
               type="button"
               onClick={run}
-              disabled={running || teamCount < 2}
+              disabled={running || teamCount < 2 || hasInvalidRatios}
               className="rounded bg-sky-500 px-4 py-2 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Run tournament
@@ -569,6 +574,7 @@ function GroupCard({
   onChange: (patch: Partial<BuilderGroup>) => void;
   onRemove?: () => void;
 }) {
+  const ratioParse = parseTournamentRatioList(group.ratioText);
   return (
     <section className="rounded border p-4" style={{ borderColor: "var(--border-color)", backgroundColor: "#202033" }}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -582,7 +588,15 @@ function GroupCard({
         <MultiSelect label="Joiners" options={DEFAULT_JOINERS} selected={group.joiners} onChange={(joiners) => onChange({ joiners })} />
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-[1fr_auto_auto] md:items-end">
-        <TextField label="Ratios" value={group.ratioText} placeholder="60,40,0 70,30,0 59,39,2" onChange={(ratioText) => onChange({ ratioText, ratios: splitRatios(ratioText) })} />
+        <TextField
+          label="Ratios"
+          value={group.ratioText}
+          placeholder="60,40,0 70-30-0 59,39,2"
+          onChange={(ratioText) => onChange({
+            ratioText,
+            ratios: parseTournamentRatioList(ratioText).ratios,
+          })}
+        />
         <label className="flex items-center gap-2 rounded border px-3 py-2 text-sm" style={{ borderColor: "var(--border-color)" }}>
           <input type="checkbox" checked={group.allowRepeatedJoiners} onChange={(event) => onChange({ allowRepeatedJoiners: event.target.checked })} />
           Same joiner
@@ -592,7 +606,15 @@ function GroupCard({
           Exclude mains
         </label>
       </div>
-      <p className="mt-3 text-xs text-slate-400">Multiple ratios can be added separated by ";" or " ".</p>
+      <p className="mt-3 text-xs text-slate-400">
+        Multiple ratios can be added separated by ";" or " ". Use "," or "-" between values.
+        {ratioParse.error === null
+          ? ` ${ratioParse.ratios.length} ${ratioParse.ratios.length === 1 ? "ratio" : "ratios"} recognised.`
+          : null}
+      </p>
+      {ratioParse.error ? (
+        <p className="mt-2 text-xs text-red-300" role="alert">{ratioParse.error}</p>
+      ) : null}
     </section>
   );
 }
@@ -732,11 +754,6 @@ function rowsForTab(result: TournamentResult | null, tab: ResultTab): Tournament
   if (tab === "swissDefense") return result.swiss.defense.rows;
   if (tab === "finalsOffense") return result.finals?.offense.rows ?? [];
   return result.finals?.defense.rows ?? [];
-}
-
-function splitRatios(text: string): string[] {
-  return [...text.matchAll(/\d+(?:\.\d+)?\s*,\s*\d+(?:\.\d+)?\s*,\s*\d+(?:\.\d+)?/g)]
-    .map((match) => match[0].replace(/\s+/g, ""));
 }
 
 function clamp(value: number, min: number, max: number): number {

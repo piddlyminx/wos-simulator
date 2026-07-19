@@ -161,6 +161,45 @@ export function mainHeroesForRole(role: MainHeroRole): string[] {
     .map(([name]) => name);
 }
 
+export interface TournamentRatioListParseResult {
+  ratios: string[];
+  error: string | null;
+}
+
+export function parseTournamentRatioList(text: string): TournamentRatioListParseResult {
+  const ratioPattern = /(\d+(?:\.\d+)?)\s*([,-])\s*(\d+(?:\.\d+)?)\s*\2\s*(\d+(?:\.\d+)?)/g;
+  const ratios: string[] = [];
+  let cursor = 0;
+  let hasInvalidText = false;
+
+  for (const match of text.matchAll(ratioPattern)) {
+    const index = match.index ?? 0;
+    if (!/^[\s;]*$/.test(text.slice(cursor, index))) {
+      hasInvalidText = true;
+    }
+    ratios.push(`${match[1]},${match[3]},${match[4]}`);
+    cursor = index + match[0].length;
+  }
+
+  if (!/^[\s;]*$/.test(text.slice(cursor))) {
+    hasInvalidText = true;
+  }
+  if (ratios.length === 0) {
+    return {
+      ratios,
+      error: text.trim() === ""
+        ? "Enter at least one ratio."
+        : "No valid ratios found. Use inf,lanc,mark or inf-lanc-mark.",
+    };
+  }
+  return {
+    ratios,
+    error: hasInvalidText
+      ? "Some ratio input was not recognised. Use inf,lanc,mark or inf-lanc-mark, separated by semicolons or spaces."
+      : null,
+  };
+}
+
 export function parseRatio(text: string, total: number): Team["troops"] {
   const parts = text.split(",").map((part) => part.trim()).filter(Boolean);
   if (parts.length !== 3) throw new Error("Ratio must be inf,lanc,mark");
@@ -224,16 +263,28 @@ export function generateTournamentTeams(groups: TournamentTeamGroupPayload[], to
 
 export function estimateTournamentTeamCount(groups: TournamentTeamGroupPayload[]): number {
   return groups.reduce((sum, group) => {
-    const mainCount =
-      uniqueNonEmpty(group.infantryMains).length *
-      uniqueNonEmpty(group.lancerMains).length *
-      uniqueNonEmpty(group.marksmanMains).length;
     const ratioCount = uniqueNonEmpty(group.ratios).length;
-    const joinerCount = uniqueNonEmpty(group.joiners).length;
-    const comboCount = group.allowRepeatedJoiners
-      ? countCombinationsWithReplacement(joinerCount, 4)
-      : countCombinations(joinerCount, 4);
-    return sum + mainCount * ratioCount * comboCount;
+    const infantryMains = uniqueNonEmpty(group.infantryMains);
+    const lancerMains = uniqueNonEmpty(group.lancerMains);
+    const marksmanMains = uniqueNonEmpty(group.marksmanMains);
+    const joiners = uniqueNonEmpty(group.joiners);
+    let teamsPerRatio = 0;
+
+    for (const infantry of infantryMains) {
+      for (const lancer of lancerMains) {
+        for (const marksman of marksmanMains) {
+          const mains = new Set([infantry, lancer, marksman]);
+          const joinerCount = group.excludeMainHeroesFromJoiners
+            ? joiners.filter((joiner) => !mains.has(joiner)).length
+            : joiners.length;
+          teamsPerRatio += group.allowRepeatedJoiners
+            ? countCombinationsWithReplacement(joinerCount, 4)
+            : countCombinations(joinerCount, 4);
+        }
+      }
+    }
+
+    return sum + ratioCount * teamsPerRatio;
   }, 0);
 }
 
