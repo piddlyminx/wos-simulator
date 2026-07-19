@@ -130,7 +130,14 @@ def _extract_report_timestamp(candidates: list[dict]) -> tuple[str, float] | Non
             if match:
                 timestamp_str = f"{match.group(1)} {match.group(2)}:{match.group(3)}{match.group(4)}"
             else:
-                continue
+                # RapidOCR can prepend one stray digit to the hour box, e.g.
+                # ``303:19:05`` for the valid time ``03:19:05``. Restrict this
+                # repair to an otherwise complete three-digit-hour timestamp.
+                match = re.search(r'(\d{4}-\d{2}-\d{2})\s*(\d{3}:\d{2}:\d{2})', text)
+                if match:
+                    timestamp_str = f"{match.group(1)} {match.group(2)[-8:]}"
+                else:
+                    continue
         else:
             timestamp_str = f"{match.group(1)} {match.group(2)}"
         try:

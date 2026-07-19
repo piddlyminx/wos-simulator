@@ -122,6 +122,17 @@ class ReportCaptureContractTests(unittest.TestCase):
             ("2026-05-05 17:53:45", 1778003625),
         )
 
+    def test_report_timestamp_discards_stray_leading_hour_digit(self) -> None:
+        candidates = [
+            {"text": "2026-07-18", "x": 238, "y": 273},
+            {"text": "303:19:05", "x": 343, "y": 272},
+        ]
+
+        self.assertEqual(
+            _extract_report_timestamp(candidates),
+            ("2026-07-18 03:19:05", 1784344745),
+        )
+
     def test_report_end_detects_battle_details_button_template(self) -> None:
         template = cv2.imread(str(ROOT / "skill" / "templates" / "battle_details_button.png"), cv2.IMREAD_COLOR)
         self.assertIsNotNone(template)
