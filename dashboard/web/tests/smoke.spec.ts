@@ -545,6 +545,99 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
+  test("/bear upload — shared report modal imports only the selected side with its buffs", async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    page.on("console", (msg) => {
+      if (msg.type() === "error") errors.push(msg.text());
+    });
+    page.on("pageerror", (err) => errors.push(err.message));
+
+    await page.route("**/api/ocr-report", async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          attacker: {
+            troops: { infantry: 123, lancer: 234, marksman: 345 },
+            stats: {
+              infantry: { attack: 777 },
+              lancer: {},
+              marksman: {},
+            },
+          },
+          defender: {
+            troops: { infantry: 456, lancer: 567, marksman: 678 },
+            stats: {
+              // Flint skill 4 (15%) + city (10%) + pet (10%) are already
+              // included: (100 + 1000) * 1.35 - 100 = 1385.
+              infantry: { attack: 1385 },
+              lancer: {},
+              marksman: {},
+            },
+          },
+          warnings: [],
+        }),
+      });
+    });
+
+    const response = await page.goto("/bear");
+    expect(response?.status()).toBe(200);
+
+    await page.getByRole("button", { name: "Upload report" }).click();
+    const dialog = page.getByRole("dialog", { name: "Upload battle report" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("heading", { name: "Upload bear stats" })).toBeVisible();
+    await expect(dialog.getByAltText(/Example Stat Bonuses report/i)).toBeVisible();
+    await expect(dialog).toContainText(/absolute numbers, not percentages/i);
+    await expect(dialog).toContainText(/paste into this area/i);
+    await expect(dialog.getByLabel("Rally mode")).toHaveCount(0);
+
+    await dialog.getByRole("button", { name: "Import right stats" }).click();
+    await dialog.getByLabel("Right-side heroes infantry").selectOption("Flint");
+    await dialog
+      .getByLabel("Right-side heroes infantry skill 4 level")
+      .selectOption("5");
+    await dialog.getByTestId("upload-city-modifier-details-defender").click();
+    await dialog.getByTestId("upload-stat-modifier-defender-attack-10").click();
+    await dialog.getByTestId("upload-pet-modifier-defender-toggle").click();
+
+    await dialog.evaluate(() => {
+      const binary = atob(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WnS2GAAAAAASUVORK5CYII=",
+      );
+      const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+      const transfer = new DataTransfer();
+      transfer.items.add(new File([bytes], "report.png", { type: "image/png" }));
+      const event = new Event("paste", { bubbles: true, cancelable: true });
+      Object.defineProperty(event, "clipboardData", { value: transfer });
+      window.dispatchEvent(event);
+    });
+    await expect(dialog.getByAltText("battle report preview")).toBeVisible();
+
+    await dialog.getByRole("button", { name: /Parse and apply/i }).click();
+    await expect(dialog).toBeHidden();
+
+    await expect(page.getByLabel("infantry troop count")).toHaveValue("456");
+    await expect(page.getByLabel("infantry hero")).toHaveValue("Flint");
+    await expect(page.getByLabel("infantry skill 4")).toHaveValue("5");
+    await openSimRoleSection(page, "attacker", "stats");
+    await expect(page.getByLabel("Infantry Attack")).toHaveValue("1000");
+    await openSimRoleSection(page, "attacker", "buffs");
+    const buffs = simBuffSection(page, "attacker");
+    await buffs.getByTestId("city-modifier-details-attacker").click();
+    await expect(
+      buffs.getByTestId("stat-modifier-attacker-attack-10"),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(buffs.getByTestId("pet-modifier-attacker-toggle")).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    expect(errors).toHaveLength(0);
+  });
+
   test("/bear — saving an existing stat profile updates it from current stats", async ({
     page,
   }) => {

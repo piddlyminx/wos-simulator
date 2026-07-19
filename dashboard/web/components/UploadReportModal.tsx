@@ -83,6 +83,7 @@ export interface OcrResult {
 
 export interface UploadReportSubmission {
   ocr: OcrResult;
+  selectedReportSide: "left" | "right";
   heroes: {
     attacker: HeroSelection;
     defender: HeroSelection;
@@ -105,6 +106,10 @@ interface Props {
   onApply: (submission: UploadReportSubmission) => void;
   initialRallyMode?: boolean;
   initialSidesSwapped?: boolean;
+  initialSelectedReportSide?: "left" | "right";
+  rallyModeEditable?: boolean;
+  selectionMode?: "both" | "single";
+  title?: string;
 }
 
 const emptyHeroes = (): HeroSelection => ({
@@ -149,6 +154,10 @@ export default function UploadReportModal({
   onApply,
   initialRallyMode = false,
   initialSidesSwapped = false,
+  initialSelectedReportSide = "left",
+  rallyModeEditable = true,
+  selectionMode = "both",
+  title = "Upload report",
 }: Props) {
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
@@ -164,6 +173,8 @@ export default function UploadReportModal({
     useState<UploadActiveModifiers>(defaultActiveModifiers);
   const [defenderModifiers, setDefenderModifiers] =
     useState<UploadActiveModifiers>(defaultActiveModifiers);
+  const [selectedReportSide, setSelectedReportSide] =
+    useState<"left" | "right">(initialSelectedReportSide);
   // Reports always show "me" on the left. When the user is the defender, they
   // toggle this so the OCR left column is treated as defender, not attacker.
   // Initial value is read from the parent so the modal opens in the same order
@@ -177,8 +188,14 @@ export default function UploadReportModal({
     if (open) {
       setRallyMode(initialRallyMode);
       setSidesSwapped(initialSidesSwapped);
+      setSelectedReportSide(initialSelectedReportSide);
     }
-  }, [open, initialRallyMode, initialSidesSwapped]);
+  }, [
+    open,
+    initialRallyMode,
+    initialSidesSwapped,
+    initialSelectedReportSide,
+  ]);
 
   const reset = useCallback(() => {
     setImageDataUrl(null);
@@ -295,6 +312,7 @@ export default function UploadReportModal({
         : parsed;
       onApply({
         ocr,
+        selectedReportSide,
         heroes: {
           attacker: { ...attackerHeroes },
           defender: { ...defenderHeroes },
@@ -336,23 +354,25 @@ export default function UploadReportModal({
         <div
           className="sim-modal-header sticky top-0 z-10 flex flex-wrap items-center justify-between gap-2 border-b border-[var(--sim-line)] px-3 py-3 sm:px-4"
         >
-          <h3 className="sim-modal-title">Upload report</h3>
+          <h3 className="sim-modal-title">{title}</h3>
           <div className="flex items-center gap-2 flex-wrap">
-            <label
-              className="sim-toggle grid min-w-[9.5rem] cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-2.5 py-1.5 text-xs font-bold"
-              data-active={rallyMode}
-              title="Rally mode: skill 4 is applied, so OCR stats are scaled down before filling the main form."
-            >
-              <input
-                className="sim-switch-input"
-                type="checkbox"
-                checked={rallyMode}
-                onChange={(e) => setRallyMode(e.target.checked)}
-                aria-label="Rally mode"
-              />
-              <span className="sim-switch" aria-hidden="true" />
-              <span>Rally mode</span>
-            </label>
+            {rallyModeEditable && (
+              <label
+                className="sim-toggle grid min-w-[9.5rem] cursor-pointer grid-cols-[auto_minmax(0,1fr)] items-center gap-2 px-2.5 py-1.5 text-xs font-bold"
+                data-active={rallyMode}
+                title="Rally mode: skill 4 is applied, so OCR stats are scaled down before filling the main form."
+              >
+                <input
+                  className="sim-switch-input"
+                  type="checkbox"
+                  checked={rallyMode}
+                  onChange={(e) => setRallyMode(e.target.checked)}
+                  aria-label="Rally mode"
+                />
+                <span className="sim-switch" aria-hidden="true" />
+                <span>Rally mode</span>
+              </label>
+            )}
             <button
               type="button"
               onClick={handleClose}
@@ -462,55 +482,102 @@ export default function UploadReportModal({
             </div>
           )}
 
-          <div className="flex flex-col md:flex-row items-stretch gap-2">
-            <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 3 : 1 }}>
-              <HeroPickerPanel
-                title="Attacker heroes"
-                which="attacker"
-                heroes={attackerHeroes}
-                onChange={setAttackerHeroes}
-                skill4={attackerSkill4}
-                onSkill4Change={setAttackerSkill4}
-                activeModifiers={attackerModifiers}
-                onActiveModifiersChange={setAttackerModifiers}
-                rallyMode={rallyMode}
-              />
-            </div>
-            <div
-              className="flex md:flex-col items-center justify-center"
-              style={{ order: 2 }}
-            >
-              <button
-                type="button"
-                onClick={() => setSidesSwapped((v) => !v)}
-                className="sim-edit-chip min-h-[36px] px-3 py-2 text-xs font-bold"
-                style={{
-                  backgroundColor: sidesSwapped
-                    ? "rgba(137, 180, 250, 0.15)"
-                    : "var(--sim-panel)",
-                  color: sidesSwapped ? "var(--sim-blue)" : "var(--sim-text)",
-                }}
-                title="Swap attacker and defender. Use this when you were the defender in the report — battle reports always show 'me' on the left."
-                aria-label="Swap attacker and defender"
-                aria-pressed={sidesSwapped}
+          {selectionMode === "single" ? (
+            <div className="flex flex-col gap-3">
+              <div
+                className="sim-segmented grid grid-cols-2"
+                aria-label="Report side to import"
+                role="group"
               >
-                ⇆ Swap
-              </button>
+                {(["left", "right"] as const).map((side) => (
+                  <button
+                    key={side}
+                    type="button"
+                    onClick={() => setSelectedReportSide(side)}
+                    aria-pressed={selectedReportSide === side}
+                    data-active={selectedReportSide === side}
+                  >
+                    Import {side} stats
+                  </button>
+                ))}
+              </div>
+              {selectedReportSide === "left" ? (
+                <HeroPickerPanel
+                  title="Left-side heroes"
+                  which="attacker"
+                  heroes={attackerHeroes}
+                  onChange={setAttackerHeroes}
+                  skill4={attackerSkill4}
+                  onSkill4Change={setAttackerSkill4}
+                  activeModifiers={attackerModifiers}
+                  onActiveModifiersChange={setAttackerModifiers}
+                  rallyMode={rallyMode}
+                />
+              ) : (
+                <HeroPickerPanel
+                  title="Right-side heroes"
+                  which="defender"
+                  heroes={defenderHeroes}
+                  onChange={setDefenderHeroes}
+                  skill4={defenderSkill4}
+                  onSkill4Change={setDefenderSkill4}
+                  activeModifiers={defenderModifiers}
+                  onActiveModifiersChange={setDefenderModifiers}
+                  rallyMode={rallyMode}
+                />
+              )}
             </div>
-            <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 1 : 3 }}>
-              <HeroPickerPanel
-                title="Defender heroes"
-                which="defender"
-                heroes={defenderHeroes}
-                onChange={setDefenderHeroes}
-                skill4={defenderSkill4}
-                onSkill4Change={setDefenderSkill4}
-                activeModifiers={defenderModifiers}
-                onActiveModifiersChange={setDefenderModifiers}
-                rallyMode={rallyMode}
-              />
+          ) : (
+            <div className="flex flex-col md:flex-row items-stretch gap-2">
+              <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 3 : 1 }}>
+                <HeroPickerPanel
+                  title="Attacker heroes"
+                  which="attacker"
+                  heroes={attackerHeroes}
+                  onChange={setAttackerHeroes}
+                  skill4={attackerSkill4}
+                  onSkill4Change={setAttackerSkill4}
+                  activeModifiers={attackerModifiers}
+                  onActiveModifiersChange={setAttackerModifiers}
+                  rallyMode={rallyMode}
+                />
+              </div>
+              <div
+                className="flex md:flex-col items-center justify-center"
+                style={{ order: 2 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setSidesSwapped((v) => !v)}
+                  className="sim-edit-chip min-h-[36px] px-3 py-2 text-xs font-bold"
+                  style={{
+                    backgroundColor: sidesSwapped
+                      ? "rgba(137, 180, 250, 0.15)"
+                      : "var(--sim-panel)",
+                    color: sidesSwapped ? "var(--sim-blue)" : "var(--sim-text)",
+                  }}
+                  title="Swap attacker and defender. Use this when you were the defender in the report — battle reports always show 'me' on the left."
+                  aria-label="Swap attacker and defender"
+                  aria-pressed={sidesSwapped}
+                >
+                  ⇆ Swap
+                </button>
+              </div>
+              <div className="flex-1 min-w-0" style={{ order: sidesSwapped ? 1 : 3 }}>
+                <HeroPickerPanel
+                  title="Defender heroes"
+                  which="defender"
+                  heroes={defenderHeroes}
+                  onChange={setDefenderHeroes}
+                  skill4={defenderSkill4}
+                  onSkill4Change={setDefenderSkill4}
+                  activeModifiers={defenderModifiers}
+                  onActiveModifiersChange={setDefenderModifiers}
+                  rallyMode={rallyMode}
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           {error && (
             <div

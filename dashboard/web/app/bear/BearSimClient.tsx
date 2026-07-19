@@ -6,8 +6,9 @@ import { EditableNumberInput } from "@/components/EditableNumberInput";
 import OptimizeRatioScatterChart from "@/components/OptimizeRatioScatterChart";
 import PlayerStatProfileModal from "@/components/PlayerStatProfileModal";
 import SimulateOutcomeChart from "@/components/SimulateOutcomeChart";
-import type { OcrResult, UploadActiveModifiers } from "@/components/UploadReportModal";
-import type { TroopCategory } from "@/lib/heroes-catalogue";
+import UploadReportModal, {
+  type UploadReportSubmission,
+} from "@/components/UploadReportModal";
 import {
   DEFAULT_OPTIMIZE_REPLICATES,
   DEFAULT_OPTIMIZE_SEARCH_MODE,
@@ -142,51 +143,6 @@ const keepFocusSelectionOnMouseUp: MouseEventHandler<HTMLDivElement> = (event) =
   event.preventDefault();
   inputSelectedOnFocus = null;
 };
-
-function defaultActiveModifiers(): UploadActiveModifiers {
-  return {
-    statModifiers: {
-      attack: 0,
-      defense: 0,
-      lethality: 0,
-      health: 0,
-      enemy_attack: 0,
-      enemy_defense: 0,
-    },
-    petModifiers: {
-      attack: 0,
-      defense: 0,
-      lethality: 0,
-      health: 0,
-      enemy_defense: 0,
-      enemy_lethality: 0,
-      enemy_health: 0,
-    },
-  };
-}
-
-function activeModifiersFromSide(side: SideState): UploadActiveModifiers {
-  return {
-    statModifiers: { ...side.statModifiers },
-    petModifiers: { ...side.petModifiers },
-  };
-}
-
-function skill4LevelsFromSide(side: SideState): Record<TroopCategory, number> {
-  return {
-    infantry: side.heroes.infantry.skills[3],
-    lancer: side.heroes.lancer.skills[3],
-    marksman: side.heroes.marksman.skills[3],
-  };
-}
-
-function heroSelectionFromSide(side: SideState): Record<TroopCategory, string | null> {
-  return {
-    infantry: side.heroes.infantry.name,
-    lancer: side.heroes.lancer.name,
-    marksman: side.heroes.marksman.name,
-  };
-}
 
 function bearRequest(player: SideState, replicates: number, profileName: string | null): BearSimRequestPayload {
   return {
@@ -1084,25 +1040,31 @@ export default function BearSimClient({
         />
       )}
 
-      <BearUploadModal
+      <UploadReportModal
         open={uploadOpen}
         onClose={() => setUploadOpen(false)}
-        onApply={(ocr, side) => {
-          const selected = side === "left" ? ocr.attacker : ocr.defender;
+        onApply={(submission: UploadReportSubmission) => {
+          const selectedRole =
+            submission.selectedReportSide === "left" ? "attacker" : "defender";
+          const opponentRole = selectedRole === "attacker" ? "defender" : "attacker";
           setPlayer((prev) =>
             mergeSideFromOcr(
               prev,
-              selected,
-              heroSelectionFromSide(prev),
-              RALLY_MODE,
-              "attacker",
-              skill4LevelsFromSide(prev),
-              activeModifiersFromSide(prev),
-              defaultActiveModifiers(),
+              submission.ocr[selectedRole],
+              submission.heroes[selectedRole],
+              submission.rallyMode,
+              selectedRole,
+              submission.skill4Levels[selectedRole],
+              submission.activeModifiers[selectedRole],
+              submission.activeModifiers[opponentRole],
             ),
           );
-          setUploadWarnings(ocr.warnings ?? []);
+          setUploadWarnings(submission.ocr.warnings ?? []);
         }}
+        initialRallyMode={RALLY_MODE}
+        rallyModeEditable={false}
+        selectionMode="single"
+        title="Upload bear stats"
       />
 
       {recentRunsOpen && (
@@ -1256,85 +1218,6 @@ function TopBearRatiosTable({ rows, selectedKey, onSelect }: { rows: BearOptimiz
           })}
         </tbody>
       </table>
-    </div>
-  );
-}
-
-function BearUploadModal({ open, onClose, onApply }: { open: boolean; onClose: () => void; onApply: (ocr: OcrResult, side: "left" | "right") => void }) {
-  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [selectedSide, setSelectedSide] = useState<"left" | "right">("left");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  if (!open) return null;
-
-  function loadFile(file: File) {
-    if (!file.type.startsWith("image/")) {
-      setError(`Unsupported file type: ${file.type || "unknown"}`);
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      setImageDataUrl(dataUrl);
-      const commaIdx = dataUrl.indexOf(",");
-      setImageBase64(commaIdx >= 0 ? dataUrl.slice(commaIdx + 1) : dataUrl);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async function submit() {
-    if (!imageBase64) return;
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/ocr-report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image_base64: imageBase64 }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || `OCR request failed (${res.status})`);
-      onApply(data as OcrResult, selectedSide);
-      onClose();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3" style={{ backgroundColor: "rgba(0,0,0,0.6)" }} role="dialog" aria-modal="true" onClick={onClose}>
-      <div className="sim-modal w-full max-w-2xl p-4" onClick={(event) => event.stopPropagation()}>
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <h3 className="sim-modal-title">Upload bear stats</h3>
-          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[32px] px-3 py-1 text-xs font-bold">Close</button>
-        </div>
-        <div className="sim-segmented mb-3 grid-cols-2">
-          {(["left", "right"] as const).map((side) => (
-            <button key={side} type="button" onClick={() => setSelectedSide(side)} className="px-3 py-2 text-xs font-bold" data-active={selectedSide === side}>
-              Import {side} stats
-            </button>
-          ))}
-        </div>
-        <button type="button" onClick={() => fileInputRef.current?.click()} className="sim-upload-dropzone flex min-h-40 w-full flex-col items-center justify-center gap-2 p-4 text-center">
-          {imageDataUrl ? <img src={imageDataUrl} alt="OCR preview" className="max-h-64 max-w-full object-contain" /> : <span className="text-sm font-bold">Click to choose a Stat Bonuses screenshot</span>}
-        </button>
-        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(event) => {
-          const file = event.target.files?.[0];
-          if (file) loadFile(file);
-        }} />
-        {error && <p className="mt-3 text-xs" style={{ color: "#f38ba8" }}>{error}</p>}
-        <div className="mt-4 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="sim-edit-chip min-h-[40px] px-3 py-2 text-xs font-bold">Cancel</button>
-          <button type="button" onClick={submit} disabled={loading || !imageBase64} className="sim-run-button min-h-[40px] px-3 py-2 text-xs font-bold" style={{ opacity: loading || !imageBase64 ? 0.5 : 1 }}>
-            {loading ? "Parsing..." : "Parse and apply"}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
