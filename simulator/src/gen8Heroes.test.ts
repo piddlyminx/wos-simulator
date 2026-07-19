@@ -69,7 +69,14 @@ test("Gen8 combat skill values and active effect buckets match their definitions
   assert.deepEqual(gatot.GoldenGuard.effects["GoldenGuard/1"].value, [6, 12, 18, 24, 30]);
   assert.equal(gatot.GoldenGuard.effects["GoldenGuard/1"].type, "active.hero.defense.up");
   assert.deepEqual(gatot.KingsBestowal.effects["KingsBestowal/1"].value, [6, 12, 18, 24, 30]);
-  assert.equal(gatot.KingsBestowal.effects["KingsBestowal/1"].type, "active.hero.damageTaken.down");
+  assert.deepEqual(gatot.KingsBestowal.effects["KingsBestowal/1"], {
+    type: "active.hero.shield",
+    value: [6, 12, 18, 24, 30],
+    value_formula: { type: "percent_of", source: "trigger.total_kills" },
+    units: { applies_to: "trigger.source", applies_vs: "enemy.any" },
+    duration: { turns: { delay: 1, count: 1 } },
+    same_effect_stacking: "max"
+  });
   assert.deepEqual(gatot.RoyalLegion.effects["RoyalLegion/1"].value, [5, 10, 15, 20, 25]);
   assert.equal(gatot.RoyalLegion.effects["RoyalLegion/1"].type, "active.hero.attack.down");
 

@@ -2,6 +2,7 @@ import type {
   ActiveEffectGroup,
   AttackIntent,
   BattleRandomness,
+  ResolvedEffectIntentDefinition,
   ResolvedFighter,
   ResolvedSkill,
   SideId
@@ -23,10 +24,21 @@ export interface RuntimeSkills {
   battleStart: ResolvedSkill[];
   roundStartGlobal: ResolvedSkill[];
   roundStartPerUnit: ResolvedSkill[];
-  attackDeclaredByJobShape: Array<ResolvedSkill[] | undefined>;
+  attackDeclaredByJobShape: Array<PreparedAttackSkill[] | undefined>;
   effectGroups: ActiveEffectGroup[];
   damageGroupsByJobShape: ActiveEffectGroup[][];
   randomness: BattleRandomness;
+}
+
+export interface DeferredEffectPlan {
+  skill: ResolvedSkill;
+  intent: ResolvedEffectIntentDefinition;
+}
+
+export interface PreparedAttackSkill {
+  skill: ResolvedSkill;
+  immediateEffects: ResolvedEffectIntentDefinition[];
+  deferredEffects?: DeferredEffectPlan[];
 }
 
 export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
@@ -35,7 +47,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
   const battleStart: ResolvedSkill[] = [];
   const roundStartGlobal: ResolvedSkill[] = [];
   const roundStartPerUnit: ResolvedSkill[] = [];
-  const attackDeclaredByJobShape: Array<ResolvedSkill[] | undefined> = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS });
+  const attackDeclaredByJobShape: Array<PreparedAttackSkill[] | undefined> = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS });
   const chanceSkillIds: Record<SideId, string[]> = { attacker: [], defender: [] };
   const effectGroups: ActiveEffectGroup[] = [];
   const damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
@@ -60,12 +72,21 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
     } else if (skill.trigger.type === "turn") {
       (hasPerUnitRoundTrigger(skill) ? roundStartPerUnit : roundStartGlobal).push(skill);
     } else if (skill.trigger.type === "attack") {
+      const immediateEffects = skill.effects.filter((intent) => intent.value_formula === undefined);
+      const deferredIntents = skill.effects.filter((intent) => intent.value_formula !== undefined);
+      const prepared: PreparedAttackSkill = {
+        skill,
+        immediateEffects,
+        ...(deferredIntents.length > 0
+          ? { deferredEffects: deferredIntents.map((intent) => ({ skill, intent })) }
+          : {})
+      };
       for (const dealerUnit of unitsFromMask(trigger.source.units)) {
         for (const takerUnit of unitsFromMask(trigger.target.units)) {
           const slot = damageJobShapeSlot("normal", trigger.source.side, dealerUnit, trigger.target.side, takerUnit);
           const matching = attackDeclaredByJobShape[slot];
-          if (matching) matching.push(skill);
-          else attackDeclaredByJobShape[slot] = [skill];
+          if (matching) matching.push(prepared);
+          else attackDeclaredByJobShape[slot] = [prepared];
         }
       }
     }

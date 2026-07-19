@@ -186,6 +186,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       validateBattleStartEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
+      validateEffectValueFormula(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "attack_order") validateAttackOrderEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectDuration(effect as EffectIntentDefinition, file, skillId, effectId);
       validateStaticBucketEffect(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
@@ -330,6 +331,40 @@ function validateNativeEffectValue(effect: EffectIntentDefinition, file: string,
     if (value < 0) {
       throw new Error(`negative native bucket effect ${effect.type} value is not supported at ${file}:${skillId}.${effectId}; use positive magnitudes`);
     }
+  }
+}
+
+function validateEffectValueFormula(
+  trigger: SkillFile["skills"][string]["trigger"],
+  effect: EffectIntentDefinition,
+  file: string,
+  skillId: string,
+  effectId: string
+): void {
+  if (effect.value_formula === undefined) return;
+  const path = `${file}:${skillId}.${effectId}.value_formula`;
+  if (trigger.type !== "attack") {
+    throw new Error(`effect value_formula requires an attack trigger at ${path}`);
+  }
+  if (effect.value_evolution !== undefined) {
+    throw new Error(`effect cannot combine value_formula with value_evolution at ${path}`);
+  }
+  if (effect.value === undefined) {
+    throw new Error(`effect value_formula requires a numeric percentage coefficient in value at ${path}`);
+  }
+  const formula = effect.value_formula as unknown;
+  if (!formula || typeof formula !== "object" || Array.isArray(formula)) {
+    throw new Error(`effect value_formula must be an object at ${path}`);
+  }
+  const record = formula as Record<string, unknown>;
+  for (const key of Object.keys(record)) {
+    if (key !== "type" && key !== "source") throw new Error(`unknown value_formula key ${key} at ${path}`);
+  }
+  if (record.type !== "percent_of") {
+    throw new Error(`effect value_formula type must be "percent_of" at ${path}`);
+  }
+  if (!new Set(["trigger.normal_kills", "trigger.skill_kills", "trigger.total_kills"]).has(String(record.source))) {
+    throw new Error(`invalid value_formula source ${JSON.stringify(record.source)} at ${path}`);
   }
 }
 

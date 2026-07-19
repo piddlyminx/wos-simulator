@@ -8,7 +8,7 @@ import type {
   SimulatorConfig
 } from "./types";
 import { ALL_UNIT_MASK } from "./types";
-import { constantActiveEffectValuePct, activateEffect, oppositeSide } from "./effects";
+import { constantActiveEffectValue, activateEffect, oppositeSide } from "./effects";
 import type { StaticDamageProfile } from "./damage";
 import { buildStaticDamageProfile } from "./staticDamageProfile";
 import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
@@ -82,8 +82,8 @@ function createInputPassiveEffects(passive: FighterInput["passive"], side: SideI
         ownerSide: side,
         kind: "modifier",
         bucketIndex: -1,
-        initialValuePct: valuePct,
-        getCurrentValuePct: constantActiveEffectValuePct,
+        initialValue: valuePct,
+        getCurrentValue: constantActiveEffectValue,
         appliesTo: { side, units: ALL_UNIT_MASK },
         appliesVs: { side: oppositeSide(side), units: ALL_UNIT_MASK },
         createdRound: 0,

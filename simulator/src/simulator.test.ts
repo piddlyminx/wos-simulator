@@ -1111,7 +1111,12 @@ test("cancelled attacks report the winning control as an applied effect", () => 
   const controlEvent = cancelledAttack.appliedEffects![0];
   assert.equal(hasEffectKind(controlEvent, "control"), true);
   assert.equal("kind" in controlEvent && controlEvent.kind === "control" && controlEvent.reason, "no_attack");
-  assert.deepEqual({ effectId: controlEvent.effectId, sourceSide: controlEvent.sourceSide, bucket: controlEvent.bucket, valuePct: controlEvent.valuePct }, {
+  assert.deepEqual({
+    effectId: controlEvent.effectId,
+    sourceSide: controlEvent.sourceSide,
+    bucket: controlEvent.bucket,
+    valuePct: "valuePct" in controlEvent ? controlEvent.valuePct : undefined
+  }, {
     effectId: "cancel",
     sourceSide: "attacker",
     bucket: "no_attack",
@@ -1922,6 +1927,94 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
   assert.equal(skillJobs[0]?.dealerUnit, normalJobs[0]?.dealerUnit);
   assert.equal(skillJobs[0]?.takerSide, normalJobs[0]?.takerSide);
   assert.equal(skillJobs[0]?.takerUnit, normalJobs[0]?.takerUnit);
+});
+
+test("deferred shields use finalized normal plus linked skill kills and reapply to every hit next turn", () => {
+  const result = runOnce(
+    {
+      maxRounds: 2,
+      attacker: {
+        troops: { infantry_t1: 100000 },
+        heroes: { ShieldCollector: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 100000 },
+        heroes: { MultiHit: { skill_1: 1 } }
+      }
+    },
+    minimalConfig({
+      ShieldCollector: {
+        name: "ShieldCollector",
+        troop_type: "infantry",
+        skills: {
+          CollectDamage: {
+            trigger: { type: "attack", source: "infantry" },
+            effects: {
+              linkedHit: {
+                type: "extra_skill_attack",
+                value: 50,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { attacks: { count: 1 } }
+              },
+              shield: {
+                type: "active.hero.shield",
+                value: 100,
+                value_formula: { type: "percent_of", source: "trigger.total_kills" },
+                units: { applies_to: "trigger.source", applies_vs: "enemy.any" },
+                duration: { turns: { delay: 1, count: 1 } },
+                same_effect_stacking: "max"
+              }
+            }
+          }
+        }
+      },
+      MultiHit: {
+        name: "MultiHit",
+        troop_type: "infantry",
+        skills: {
+          PersistentExtraHit: {
+            trigger: { type: "battle_start" },
+            effects: {
+              defenderHit: {
+                type: "extra_skill_attack",
+                value: 50,
+                units: { applies_to: "self.infantry", applies_vs: "enemy.any" },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }],
+                duration: { turns: { count: 3 } }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const roundOneCluster = result.attacks.filter(
+    (attack) => attack.round === 1 && attack.dealerSide === "attacker" && attack.dealerUnit === "infantry"
+  );
+  assert.equal(roundOneCluster.some((attack) => attack.kind === "normal"), true);
+  assert.equal(roundOneCluster.some((attack) => attack.kind === "skill" && attack.sourceEffectId === "linkedHit"), true);
+  const expectedShield = roundOneCluster.reduce((sum, attack) => sum + attack.kills, 0);
+
+  const roundOneIncoming = result.attacks.filter(
+    (attack) => attack.round === 1 && attack.dealerSide === "defender" && attack.takerSide === "attacker"
+  );
+  assert.equal(roundOneIncoming.some((attack) => (attack.appliedEffects ?? []).some((effect) => hasEffectKind(effect, "shield"))), false);
+
+  const roundTwoIncoming = result.attacks.filter(
+    (attack) => attack.round === 2 && attack.dealerSide === "defender" && attack.takerSide === "attacker"
+  );
+  assert.deepEqual(roundTwoIncoming.map((attack) => attack.kind).sort(), ["normal", "skill"]);
+  for (const attack of roundTwoIncoming) {
+    const shield = (attack.appliedEffects ?? []).find((effect) => hasEffectKind(effect, "shield"));
+    assert.notEqual(shield, undefined);
+    const shieldValue = shield && "value" in shield ? shield.value : NaN;
+    assert.ok(Math.abs(shieldValue - expectedShield) < 1e-9);
+    assert.ok(Math.abs((attack.trace?.offsetDamage ?? NaN) - expectedShield) < 1e-9);
+    assert.ok(Math.abs((attack.trace?.rawDamage ?? NaN) - Math.max(0, (attack.trace?.damageBeforeOffsets ?? 0) - expectedShield)) < 1e-9);
+  }
 });
 
 test("cancelled normal attacks do not consume extra skill attack uses", () => {

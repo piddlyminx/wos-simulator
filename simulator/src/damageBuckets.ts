@@ -1,8 +1,8 @@
 import type { DamageKind } from "./types";
 
 export type BucketJobSide = "dealer" | "taker";
-export type BucketUpdate = "assign_factor" | "add_pct_factor" | "multiply_pct_factor";
-export type BucketPlacement = "numerator" | "denominator";
+export type BucketUpdate = "assign_factor" | "add_pct_factor" | "multiply_pct_factor" | "add_raw";
+export type BucketPlacement = "numerator" | "denominator" | "post_subtract";
 
 export interface BucketSpec {
   name: string;
@@ -50,6 +50,7 @@ export const DYNAMIC_BUCKETS = [
   { name: "active.hero.health.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "active.hero.lethality.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "active.hero.lethality.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.hero.shield", jobSide: "taker", update: "add_raw", placement: "post_subtract", effectBucket: true },
   { name: "active.troop.attack.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "active.troop.attack.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
   { name: "active.troop.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
@@ -124,4 +125,8 @@ export function pctBucketDelta(totalPct: number): number {
 
 export function pctBucketFactor(totalPct: number): number {
   return 1 + pctBucketDelta(totalPct);
+}
+
+export function bucketNeutralValue(update: BucketUpdate): number {
+  return update === "add_raw" ? 0 : 1;
 }

@@ -323,7 +323,7 @@ function traceEffect(effect: DetailedAppliedEffect, attack: AttackOutcome, uses:
     used: true,
     uses_count: uses,
     trigger_count: uses,
-    value: effect.kind === "modifier" ? effect.valuePct : 0,
+    value: effect.kind === "shield" ? effect.value : effect.kind === "modifier" ? effect.valuePct : 0,
     for_units: [traceUnit(attack.dealerUnit)],
     vs_units: [traceUnit(attack.takerUnit)],
   };
@@ -332,7 +332,7 @@ function traceEffect(effect: DetailedAppliedEffect, attack: AttackOutcome, uses:
 // Modifiers keep their damage bucket as the display key; controls show their cancel reason;
 // order/extra-attack events show their kind.
 function effectKindKey(effect: DetailedAppliedEffect): string {
-  if (effect.kind === "modifier") return effect.bucket;
+  if (effect.kind === "modifier" || effect.kind === "shield") return effect.bucket;
   if (effect.kind === "control") return effect.reason;
   return effect.kind;
 }

@@ -18,7 +18,7 @@ import {
 } from "./effects";
 import { createEffectIndex, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
 import { createDamageScratch, type DamageResult, type DamageScratch, type StaticDamageProfile } from "./damage";
-import type { RuntimeSkills } from "./runtimeSkills";
+import type { DeferredEffectPlan, PreparedAttackSkill, RuntimeSkills } from "./runtimeSkills";
 import type { BattleRecorder } from "./recorder";
 import { emptyTroops } from "./fighterResolution";
 
@@ -149,6 +149,64 @@ export function triggerSkills(
     }
   }
   return activated;
+}
+
+// Attack-triggered effects with a value_formula are gated here with the rest of
+// their skill, but materialized only after the normal attack and its immediate
+// extra-skill jobs have produced finalized kill counts.
+export function triggerAttackSkills(
+  round: number,
+  preparedSkills: PreparedAttackSkill[],
+  runtime: Runtime,
+  recorder: BattleRecorder,
+  intent: AttackIntent
+): DeferredEffectPlan[] | undefined {
+  let deferred: DeferredEffectPlan[] | undefined;
+  for (const prepared of preparedSkills) {
+    const { skill } = prepared;
+    if (!skillMatchesTrigger(skill, "attack_declared", round, intent)) continue;
+    recorder.recordSkillTriggerAttempt(skill);
+    if (!chancePasses(skill, runtime.rng)) continue;
+    recorder.recordSkillTriggered(skill);
+    for (const effectIntent of prepared.immediateEffects) {
+      const effect = activateEffect(skill, effectIntent, round, intent);
+      addActiveEffect(runtime, effect);
+      runtime.effectActivationCounts[skill.side] += 1;
+      recorder.recordSkillEffectActivated(skill);
+    }
+    if (prepared.deferredEffects) {
+      if (deferred) deferred.push(...prepared.deferredEffects);
+      else deferred = prepared.deferredEffects.slice();
+    }
+  }
+  return deferred;
+}
+
+export function materializeDeferredEffects(
+  plans: DeferredEffectPlan[] | undefined,
+  round: number,
+  intent: AttackIntent,
+  normalKills: number,
+  skillKills: number,
+  runtime: Runtime,
+  recorder: BattleRecorder
+): void {
+  if (!plans) return;
+  for (const { skill, intent: effectIntent } of plans) {
+    const formula = effectIntent.value_formula!;
+    const basis = formula.source === "trigger.normal_kills"
+      ? normalKills
+      : formula.source === "trigger.skill_kills"
+        ? skillKills
+        : normalKills + skillKills;
+    const coefficientPct = Number(effectIntent.value);
+    const resolvedValue = basis * coefficientPct / 100;
+    if (!Number.isFinite(resolvedValue) || resolvedValue <= 0) continue;
+    const effect = activateEffect(skill, effectIntent, round, intent, resolvedValue);
+    addActiveEffect(runtime, effect);
+    runtime.effectActivationCounts[skill.side] += 1;
+    recorder.recordSkillEffectActivated(skill);
+  }
 }
 
 export function emptyRoundTargetDamage(): Record<SideId, Record<UnitType, number>> {

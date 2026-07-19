@@ -14,6 +14,7 @@ import {
   DYNAMIC_BUCKETS,
   STATIC_BUCKETS,
   STATIC_BUCKET_INDEX,
+  bucketNeutralValue,
   pctBucketDelta,
   pctBucketFactor,
   rawBucketFactor,
@@ -31,7 +32,7 @@ type NumericBucketId = number;
 interface DamageFactorTerm {
   bucket: NumericBucketId;
   jobSide: BucketJobSide;
-  placement: "numerator" | "denominator";
+  placement: "numerator" | "denominator" | "post_subtract";
   damageKind?: DamageJob["kind"];
 }
 
@@ -42,6 +43,7 @@ interface NumericDamageBuckets {
 interface CompiledDamageExpression {
   numeratorSlots: Int32Array;
   denominatorSlots: Int32Array;
+  postSubtractSlots: Int32Array;
 }
 
 export interface DamageBucketSet {
@@ -82,10 +84,13 @@ const STATIC_EXPRESSIONS = {
 };
 const EVALUATED_EXPRESSION: CompiledDamageExpression = {
   numeratorSlots: Int32Array.of(0),
-  denominatorSlots: new Int32Array()
+  denominatorSlots: new Int32Array(),
+  postSubtractSlots: new Int32Array()
 };
 const BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(DYNAMIC_BUCKETS);
 const STATIC_BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(STATIC_BUCKETS);
+const DYNAMIC_NEUTRAL_VALUES = Float64Array.from(DYNAMIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
+const STATIC_NEUTRAL_VALUES = Float64Array.from(STATIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
 
 /** sqrt of the smaller side's initial army; battle-invariant, so callers running many jobs should compute it once. */
@@ -131,10 +136,12 @@ export function calculateDamageJob(
     usedEffects
   );
 
-  const rawDamage = evaluateDamageExpressionForJob(job, buckets, staticProfile);
-  const uncappedKills = Math.max(0, rawDamage);
+  const damageBeforeOffsets = evaluateDamageExpressionForJob(job, buckets, staticProfile);
+  const offsetDamage = sumSlots(buckets.factors, DYNAMIC_EXPRESSIONS[job.kind].postSubtractSlots);
+  const rawDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
+  const uncappedKills = rawDamage;
   const kills = options.capToTakerTroops === false ? uncappedKills : Math.min(takerTroops, uncappedKills);
-  return recording.finish({ job, factors: buckets.factors, armyTerm, rawDamage, kills });
+  return recording.finish({ job, factors: buckets.factors, armyTerm, damageBeforeOffsets, offsetDamage, rawDamage, kills });
 }
 
 function applyBucketEffects(
@@ -167,7 +174,7 @@ function applyBucketEffects(
     for (const effect of effects) {
       if (!advanceEffectAttackDelay(effect)) continue;
       eligible.push(effect);
-      if (!selected || effect.getCurrentValuePct(round) > selected.getCurrentValuePct(round)) selected = effect;
+      if (!selected || effect.getCurrentValue(round) > selected.getCurrentValue(round)) selected = effect;
     }
     if (selected) {
       applyBucketEffectGroup(selected, eligible, round, buckets, recording, usedEffects);
@@ -176,18 +183,18 @@ function applyBucketEffects(
 }
 
 // Apply the selected candidate's value to its bucket and emit the observation to the recorder;
-// returns the applied percentage. Shared by the single-candidate and max-group paths.
+// returns the applied value. Shared by the single-candidate and max-group paths.
 function applySelectedBucket(
   selected: ActiveEffect,
   round: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder
 ): number {
-  const appliedValuePct = selected.getCurrentValuePct(round);
+  const appliedValue = selected.getCurrentValue(round);
   const bucketIndex = selected.bucketIndex;
-  applyBucketValue(buckets.factors, bucketIndex, appliedValuePct, BUCKET_UPDATE_BY_INDEX);
-  recording.recordModifier(selected, appliedValuePct);
-  return appliedValuePct;
+  applyBucketValue(buckets.factors, bucketIndex, appliedValue, BUCKET_UPDATE_BY_INDEX);
+  recording.recordEffect(selected, appliedValue);
+  return appliedValue;
 }
 
 // Lone-candidate fast path (the common case): no max-stacking group, so no temporary [candidate]
@@ -199,8 +206,8 @@ function applyBucketEffect(
   recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
-  const appliedValuePct = applySelectedBucket(effect, round, buckets, recording);
-  if (appliedValuePct !== 0) {
+  const appliedValue = applySelectedBucket(effect, round, buckets, recording);
+  if (appliedValue !== 0) {
     usedEffects.push(effect);
   } else {
     recording.recordRejected(effect, "same_effect_max_superseded");
@@ -215,8 +222,8 @@ function applyBucketEffectGroup(
   recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
-  const appliedValuePct = applySelectedBucket(selected, round, buckets, recording);
-  if (appliedValuePct !== 0) {
+  const appliedValue = applySelectedBucket(selected, round, buckets, recording);
+  if (appliedValue !== 0) {
     // The whole max-stacking group is charged: suppressed siblings deplete alongside the winner.
     for (const effect of effects) {
       usedEffects.push(effect);
@@ -248,13 +255,14 @@ function compileDamageExpression(
     .filter((term) => selection.kind === undefined || !term.damageKind || term.damageKind === selection.kind);
   return {
     numeratorSlots: Int32Array.from(selected.filter((term) => term.placement === "numerator").map((term) => term.bucket)),
-    denominatorSlots: Int32Array.from(selected.filter((term) => term.placement === "denominator").map((term) => term.bucket))
+    denominatorSlots: Int32Array.from(selected.filter((term) => term.placement === "denominator").map((term) => term.bucket)),
+    postSubtractSlots: Int32Array.from(selected.filter((term) => term.placement === "post_subtract").map((term) => term.bucket))
   };
 }
 
 function compileBucketUpdates(definitions: readonly { update: BucketUpdate }[]): Uint8Array {
   return Uint8Array.from(
-    definitions.map(({ update }) => update === "assign_factor" ? 0 : update === "multiply_pct_factor" ? 1 : 2)
+    definitions.map(({ update }) => update === "assign_factor" ? 0 : update === "multiply_pct_factor" ? 1 : update === "add_pct_factor" ? 2 : 3)
   );
 }
 
@@ -262,7 +270,8 @@ function applyBucketValue(factors: Float64Array, bucket: number, value: number, 
   const update = updates[bucket];
   if (update === 0) factors[bucket] = rawBucketFactor(value);
   else if (update === 1) factors[bucket] *= pctBucketFactor(value);
-  else factors[bucket] += pctBucketDelta(value);
+  else if (update === 2) factors[bucket] += pctBucketDelta(value);
+  else factors[bucket] += value;
 }
 
 function applyDynamicDamageBucketValue(buckets: NumericDamageBuckets, bucket: DynamicDamageBucket, value: number): number {
@@ -277,9 +286,15 @@ function multiplySlots(initial: number, factors: Float64Array, slots: Int32Array
   return product;
 }
 
+function sumSlots(values: Float64Array, slots: Int32Array): number {
+  let sum = 0;
+  for (const slot of slots) sum += values[slot];
+  return sum;
+}
+
 function createNumericDamageBuckets(): NumericDamageBuckets {
   const factors = new Float64Array(DYNAMIC_BUCKETS.length);
-  factors.fill(1);
+  factors.set(DYNAMIC_NEUTRAL_VALUES);
   return { factors };
 }
 
@@ -290,7 +305,7 @@ export function createDamageScratch(): DamageScratch {
 /** Creates neutral factors for the closed/static bucket pool. */
 export function createStaticDamageBucketFactors(): StaticDamageBucketFactors {
   const factors = new Float64Array(STATIC_BUCKETS.length);
-  factors.fill(1);
+  factors.set(STATIC_NEUTRAL_VALUES);
   return factors;
 }
 
@@ -311,7 +326,7 @@ export function staticDamageBucketSet(factors: StaticDamageBucketFactors, jobSid
 }
 
 function resetDamageScratch(buckets: DamageScratch): DamageScratch {
-  buckets.factors.fill(1);
+  buckets.factors.set(DYNAMIC_NEUTRAL_VALUES);
   return buckets;
 }
 

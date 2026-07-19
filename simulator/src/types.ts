@@ -2,7 +2,7 @@ export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
 export type DamageKind = "normal" | "skill";
 export type UnitMask = number;
-export type ActiveEffectKind = "modifier" | "extra_attack" | "control" | "battle_order";
+export type ActiveEffectKind = "modifier" | "shield" | "extra_attack" | "control" | "battle_order";
 export type SameEffectStacking = "add" | "max";
 
 export const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
@@ -86,12 +86,20 @@ export interface EffectIntentDefinition {
   id: string;
   type: string;
   value?: unknown;
+  value_formula?: PercentOfValueFormula;
   value_evolution?: { type?: string; step?: string; value?: number };
   units?: Record<string, unknown>;
   trigger_damage_jobs?: TriggerDamageJobDefinition[];
   duration?: EffectDuration;
   same_effect_stacking?: SameEffectStacking;
   reason?: string;
+}
+
+export type TriggerValueSource = "trigger.normal_kills" | "trigger.skill_kills" | "trigger.total_kills";
+
+export interface PercentOfValueFormula {
+  type: "percent_of";
+  source: TriggerValueSource;
 }
 
 export interface ResolvedEffectIntentDefinition extends EffectIntentDefinition {
@@ -274,11 +282,11 @@ export interface ActiveEffect {
   intent: EffectIntentDefinition;
   ownerSide: SideId;
   kind: ActiveEffectKind;
-  // Numeric slot in the runtime damage scratch. Dynamic modifiers receive it
+  // Numeric slot in the runtime damage scratch. Dynamic damage effects receive it
   // when indexed; non-damage effects keep -1.
   bucketIndex: number;
-  initialValuePct: number;
-  getCurrentValuePct(round: number): number;
+  initialValue: number;
+  getCurrentValue(round: number): number;
   // Resolved ActiveEffect usage gates. Native applies_vs config accepts "any",
   // trigger-relative selectors, or concrete unit selectors; it does not accept "all".
   appliesTo: ResolvedUnitScope;
@@ -348,14 +356,23 @@ export interface DamageBucketTrace {
   totalPct?: number;
   factor: number;
   raw?: number;
-  contributors: Array<{ effectId: string; source: string; sourceSide?: SideId; valuePct: number; bucket: string; sameEffectStacking?: SameEffectStacking }>;
+  contributors: Array<{
+    effectId: string;
+    source: string;
+    sourceSide?: SideId;
+    valuePct?: number;
+    value?: number;
+    bucket: string;
+    sameEffectStacking?: SameEffectStacking;
+  }>;
 }
 
 export interface DamageAggregationGroupTrace {
   id: string;
   mode: string;
-  placement: "numerator" | "denominator";
+  placement: "numerator" | "denominator" | "post_subtract";
   inputBuckets: string[];
+  raw?: number;
   totalPct?: number;
   factor: number;
   contributors: DamageBucketTrace["contributors"];
@@ -366,45 +383,60 @@ export interface DamageEquationTrace {
   armyTerm: number;
   atomicBuckets: Record<string, DamageBucketTrace>;
   aggregationGroups: Record<string, DamageAggregationGroupTrace>;
-  appliedEffects: AppliedModifierEffect[];
+  appliedEffects: Array<AppliedModifierEffect | AppliedShieldEffect>;
   rejectedEffects: Array<{ effectId: string; reason: string }>;
+  damageBeforeOffsets: number;
+  offsetDamage: number;
   rawDamage: number;
   finalKills: number;
 }
 
-export interface AppliedEffectSummary {
+interface AppliedEffectIdentity {
   effectId: string;
   sourceSide: SideId;
   bucket: string;
+}
+
+export interface AppliedPercentageEffectSummary extends AppliedEffectIdentity {
   valuePct: number;
 }
 
-interface DetailedAppliedEffectBase extends AppliedEffectSummary {
+export interface AppliedShieldEffectSummary extends AppliedEffectIdentity {
+  value: number;
+}
+
+interface DetailedPercentageEffectBase extends AppliedPercentageEffectSummary {
   source: string;
 }
 
-export interface AppliedModifierEffect extends DetailedAppliedEffectBase {
+export interface AppliedModifierEffect extends DetailedPercentageEffectBase {
   kind: "modifier";
   sameEffectStacking: SameEffectStacking;
 }
 
-export interface AppliedControlEffect extends DetailedAppliedEffectBase {
+export interface AppliedShieldEffect extends AppliedShieldEffectSummary {
+  kind: "shield";
+  source: string;
+  sameEffectStacking: SameEffectStacking;
+}
+
+export interface AppliedControlEffect extends DetailedPercentageEffectBase {
   kind: "control";
   reason: "dodge" | "no_attack";
 }
 
-export interface AppliedOrderEffect extends DetailedAppliedEffectBase {
+export interface AppliedOrderEffect extends DetailedPercentageEffectBase {
   kind: "battle_order";
   chosenTarget: UnitType;
 }
 
-export interface AppliedExtraAttackEffect extends DetailedAppliedEffectBase {
+export interface AppliedExtraAttackEffect extends DetailedPercentageEffectBase {
   kind: "extra_attack";
   spawnedJobCount: number;
 }
 
-export type DetailedAppliedEffect = AppliedModifierEffect | AppliedControlEffect | AppliedOrderEffect | AppliedExtraAttackEffect;
-export type AppliedEffect = AppliedEffectSummary | DetailedAppliedEffect;
+export type DetailedAppliedEffect = AppliedModifierEffect | AppliedShieldEffect | AppliedControlEffect | AppliedOrderEffect | AppliedExtraAttackEffect;
+export type AppliedEffect = AppliedPercentageEffectSummary | AppliedShieldEffectSummary | DetailedAppliedEffect;
 
 export interface AttackOutcome {
   round: number;

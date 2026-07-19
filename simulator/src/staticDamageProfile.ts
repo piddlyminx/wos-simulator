@@ -108,7 +108,7 @@ export function selectPassiveContributions(activeEffects: ActiveEffect[]): Passi
     const side = effect.appliesTo.side;
     for (const unit of UNIT_TYPES) {
       if (!unitMaskHas(effect.appliesTo.units, unit)) continue;
-      const contribution: PassiveContribution = { jobSide, side, unit, bucket, effect, valuePct: effect.getCurrentValuePct(1) };
+      const contribution: PassiveContribution = { jobSide, side, unit, bucket, effect, valuePct: effect.getCurrentValue(1) };
       contributions.push(contribution);
     }
   }

@@ -31,7 +31,7 @@ import {
   type Rng
 } from "./effects";
 import { damageJobShapeSlot, damageJobSlot, type EffectIndex } from "./effectIndex";
-import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
+import { buildRuntimeSkills, type DeferredEffectPlan, type RuntimeSkills } from "./runtimeSkills";
 import { activatePreBattleEffects, buildResolved, prepareBattle, type CompiledBattle } from "./prepare";
 import {
   addActiveEffect,
@@ -40,8 +40,10 @@ import {
   chargeUsedEffects,
   createRuntime,
   emptyRoundTargetDamage,
+  materializeDeferredEffects,
   processEffectSchedule,
   targetExhausted,
+  triggerAttackSkills,
   triggerSkills,
   type DamageJobResult,
   type RunLoopOptions,
@@ -283,25 +285,27 @@ function runLoop(
 
     // Phase 1: fire all attack_declared triggers for every intended attack before
     // evaluating any controls or damage, per the battle-core spec.
-    const pendingNormalJobs: Array<{ intent: AttackIntent; job: DamageJob; control?: Control }> = [];
-    const declaredNormalJobs: Array<{ intent: AttackIntent; job: DamageJob }> = [];
+    const pendingNormalJobs: Array<{ intent: AttackIntent; job: DamageJob; deferredEffects?: DeferredEffectPlan[]; control?: Control }> = [];
+    const declaredNormalJobs: Array<{ intent: AttackIntent; job: DamageJob; deferredEffects?: DeferredEffectPlan[] }> = [];
     const roundTargetDamage = emptyRoundTargetDamage();
     for (const intent of intents) {
       const matchingTriggerSkills = runtime.skills.attackDeclaredByJobShape[
         damageJobShapeSlot("normal", intent.dealerSide, intent.dealerUnit, intent.takerSide, intent.takerUnit)
       ];
-      if (matchingTriggerSkills) triggerSkills("attack_declared", round, matchingTriggerSkills, runtime, recorder, intent);
+      const deferredEffects = matchingTriggerSkills
+        ? triggerAttackSkills(round, matchingTriggerSkills, runtime, recorder, intent)
+        : undefined;
       const job = normalJob(intent, roundStartTroops);
-      declaredNormalJobs.push({ intent, job });
+      declaredNormalJobs.push({ intent, job, deferredEffects });
     }
 
-    for (const { intent, job } of declaredNormalJobs) {
+    for (const { intent, job, deferredEffects } of declaredNormalJobs) {
       const controls = applicableControls(job, runtime);
       if (controls.no_attack || controls.dodge) {
         const control = controls.no_attack ?? controls.dodge!;
-        pendingNormalJobs.push({ intent, job, control });
+        pendingNormalJobs.push({ intent, job, deferredEffects, control });
       } else {
-        pendingNormalJobs.push({ intent, job });
+        pendingNormalJobs.push({ intent, job, deferredEffects });
       }
     }
 
@@ -309,7 +313,7 @@ function runLoop(
     // uses spawns extra DamageJobs that are calculated immediately after.
     // chargeUsedEffects runs after each job so subsequent normal jobs see the
     // correct uses count on any shared extra_skill_attack effects.
-    for (const { intent, job, control } of pendingNormalJobs) {
+    for (const { intent, job, deferredEffects, control } of pendingNormalJobs) {
       if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
 
       if (control) {
@@ -333,7 +337,11 @@ function runLoop(
       chargeUsedEffects(runtime);
 
       results.push({ job, result: normalResult, intent });
-      score += processExtraSkillAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+      const triggeredKills = processExtraSkillAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+      if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
+        score += triggeredKills;
+      }
+      materializeDeferredEffects(deferredEffects, round, intent, normalResult.kills, triggeredKills, runtime, recorder);
     }
 
     if (loopOptions.commitLosses) commitRound(cancelled, results, runtime);

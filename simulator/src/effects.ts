@@ -21,8 +21,8 @@ interface CompiledActivation {
   sourceSkill: ResolvedSkill;
   ownerSide: SideId;
   kind: ActiveEffectKind;
-  initialValuePct: number;
-  getCurrentValuePct: ActiveEffect["getCurrentValuePct"];
+  initialValue: number;
+  getCurrentValue: ActiveEffect["getCurrentValue"];
   valueEvolution?: EvolvingActiveEffect["valueEvolution"];
   triggerDamageJobs: ActiveEffect["triggerDamageJobs"];
   attackOrder?: readonly UnitType[];
@@ -139,8 +139,8 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
     sourceSkill: skill,
     ownerSide,
     kind: effectKind,
-    initialValuePct: finiteNumberOrZero(intent.value),
-    getCurrentValuePct: evolution ? evolvingActiveEffectValuePct : constantActiveEffectValuePct,
+    initialValue: finiteNumberOrZero(intent.value),
+    getCurrentValue: evolution ? evolvingActiveEffectValue : constantActiveEffectValue,
     valueEvolution: evolution ? { type: evolution.type, step: evolution.step, amount: finiteNumberOrZero(evolution.value) } : undefined,
     triggerDamageJobs: effectKind === "extra_attack" ? intent.trigger_damage_jobs : undefined,
     attackOrder:
@@ -161,7 +161,13 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
   return compiled;
 }
 
-export function activateEffect(skill: ResolvedSkill, intent: ResolvedEffectIntentDefinition, round: number, attackIntent?: AttackIntent): ActiveEffect {
+export function activateEffect(
+  skill: ResolvedSkill,
+  intent: ResolvedEffectIntentDefinition,
+  round: number,
+  attackIntent?: AttackIntent,
+  resolvedValue?: number
+): ActiveEffect {
   const compiled = compiledActivation(skill, intent);
   let appliesTo = compiled.staticAppliesTo;
   let appliesVs = compiled.staticAppliesVs;
@@ -178,8 +184,8 @@ export function activateEffect(skill: ResolvedSkill, intent: ResolvedEffectInten
     ownerSide: compiled.ownerSide,
     kind: compiled.kind,
     bucketIndex: -1,
-    initialValuePct: compiled.initialValuePct,
-    getCurrentValuePct: compiled.getCurrentValuePct,
+    initialValue: resolvedValue ?? compiled.initialValue,
+    getCurrentValue: compiled.getCurrentValue,
     appliesTo,
     appliesVs,
     triggerDamageJobs: compiled.triggerDamageJobs,
@@ -242,21 +248,21 @@ export function advanceEffectAttackDelay(effect: ActiveEffect): boolean {
   return false;
 }
 
-export function constantActiveEffectValuePct(this: ActiveEffect, _round: number): number {
-  return this.initialValuePct;
+export function constantActiveEffectValue(this: ActiveEffect, _round: number): number {
+  return this.initialValue;
 }
 
-export function evolvingActiveEffectValuePct(this: EvolvingActiveEffect, round: number): number {
+export function evolvingActiveEffectValue(this: EvolvingActiveEffect, round: number): number {
   const firstActiveRound = Math.max(1, this.startRound);
   const evolution = this.valueEvolution;
   const stepCount = evolution.step === "attack" ? this.uses : evolution.step === "round" || evolution.step === "turn" ? Math.max(0, round - firstActiveRound) : 0;
-  if (stepCount <= 0) return this.initialValuePct;
+  if (stepCount <= 0) return this.initialValue;
   if (evolution.type === "pct_decay") {
     const factor = Math.max(0, 1 - evolution.amount / 100);
-    return this.initialValuePct * factor ** stepCount;
+    return this.initialValue * factor ** stepCount;
   }
-  if (evolution.type === "fixed_decay") return Math.max(0, this.initialValuePct - stepCount * evolution.amount);
-  return this.initialValuePct;
+  if (evolution.type === "fixed_decay") return Math.max(0, this.initialValue - stepCount * evolution.amount);
+  return this.initialValue;
 }
 
 function finiteNumberOrZero(value: unknown): number {
@@ -332,6 +338,7 @@ function isRelationQualifiedSelector(value: unknown): value is string {
 }
 
 function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
+  if (intent.type === "active.hero.shield") return "shield";
   if (intent.type === "extra_skill_attack") return "extra_attack";
   if (intent.type === "dodge" || intent.type === "no_attack") return "control";
   if (intent.type === "attack_order") return "battle_order";

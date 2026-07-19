@@ -362,6 +362,53 @@ test("loadSimulatorConfig rejects effect.applies_vs jobs without concrete applie
   assert.throws(() => loadSimulatorConfigFromDir(allRoot), /applies_vs.*all/i);
 });
 
+test("loadSimulatorConfig accepts the deferred shield value formula schema", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.shield",
+    value: 30,
+    value_formula: { type: "percent_of", source: "trigger.total_kills" },
+    units: { applies_to: "trigger.source", applies_vs: "enemy.any" },
+    duration: { turns: { delay: 1, count: 1 } },
+    same_effect_stacking: "max"
+  }, { type: "attack", source: "infantry" });
+
+  assert.doesNotThrow(() => loadSimulatorConfigFromDir(root));
+});
+
+test("loadSimulatorConfig rejects malformed or non-attack value formulas", () => {
+  const badSource = writeConfigWithTroopEffect({
+    type: "active.hero.shield",
+    value: 30,
+    value_formula: { type: "percent_of", source: "trigger.damage" }
+  }, { type: "attack", source: "infantry" });
+  const typoedKey = writeConfigWithTroopEffect({
+    type: "active.hero.shield",
+    value: 30,
+    value_formula: { type: "percent_of", source: "trigger.total_kills", scale: 2 }
+  }, { type: "attack", source: "infantry" });
+  const wrongTrigger = writeConfigWithTroopEffect({
+    type: "active.hero.shield",
+    value: 30,
+    value_formula: { type: "percent_of", source: "trigger.total_kills" }
+  }, { type: "turn" });
+  const evolving = writeConfigWithTroopEffect({
+    type: "active.hero.shield",
+    value: 30,
+    value_formula: { type: "percent_of", source: "trigger.total_kills" },
+    value_evolution: { type: "fixed_decay", step: "turn", value: 1 }
+  }, { type: "attack", source: "infantry" });
+  const missingCoefficient = writeConfigWithTroopEffect({
+    type: "active.hero.shield",
+    value_formula: { type: "percent_of", source: "trigger.total_kills" }
+  }, { type: "attack", source: "infantry" });
+
+  assert.throws(() => loadSimulatorConfigFromDir(badSource), /invalid value_formula source.*trigger\.damage/i);
+  assert.throws(() => loadSimulatorConfigFromDir(typoedKey), /unknown value_formula key scale/i);
+  assert.throws(() => loadSimulatorConfigFromDir(wrongTrigger), /value_formula requires an attack trigger/i);
+  assert.throws(() => loadSimulatorConfigFromDir(evolving), /cannot combine value_formula with value_evolution/i);
+  assert.throws(() => loadSimulatorConfigFromDir(missingCoefficient), /requires a numeric percentage coefficient/i);
+});
+
 function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "turn" }): string {
   const root = join(tmpdir(), `wos-simulator-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });

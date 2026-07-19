@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { calculateDamageJob, createDamageScratch, evaluateDamageExpression } from "./damage";
 import { DYNAMIC_BUCKETS, STATIC_BUCKETS, type BucketJobSide, type BucketPlacement } from "./damageBuckets";
 import { createEffectIndex, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, indexEffect } from "./effectIndex";
-import { activateEffect, evolvingActiveEffectValuePct, resolvedEffectScopeKey } from "./effects";
+import { activateEffect, evolvingActiveEffectValue, resolvedEffectScopeKey } from "./effects";
 import { buildStaticDamageBucketFactors, buildStaticDamageProfile } from "./staticDamageProfile";
 import { createRecorder, type BattleRecorder } from "./recorder";
 import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types";
@@ -40,8 +40,8 @@ function effect(
     ownerSide,
     kind: "modifier",
     bucketIndex: -1,
-    initialValuePct: valuePct,
-    getCurrentValuePct() { return this.initialValuePct; },
+    initialValue: valuePct,
+    getCurrentValue() { return this.initialValue; },
     appliesTo: { side: ownerSide, units: ALL_UNIT_MASK },
     appliesVs: { side: ownerSide === "attacker" ? "defender" : "attacker", units: ALL_UNIT_MASK },
     createdRound: 1,
@@ -365,6 +365,61 @@ test("damage-taken buckets use the expected damage direction", () => {
   assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
 });
 
+test("a shield subtracts its full raw value from every normal and skill damage job", () => {
+  const fighters = simpleFighters();
+  const shield = {
+    ...effect("active.hero.shield", "defender", 25),
+    kind: "shield" as const,
+    intent: { id: "shield", type: "active.hero.shield", value: 25 },
+    sameEffectStacking: "max" as const
+  };
+  const normalBaseline = calculateIndexedDamageJob(job, fighters, [], { trace: true });
+  const firstNormal = calculateIndexedDamageJob(job, fighters, [shield], { trace: true });
+  const secondNormal = calculateIndexedDamageJob(job, fighters, [shield], { trace: true });
+  const skillJob = { ...job, kind: "skill" as const, sourceMultiplier: 1 };
+  const skillBaseline = calculateIndexedDamageJob(skillJob, fighters, [], { trace: true });
+  const skill = calculateIndexedDamageJob(skillJob, fighters, [shield], { trace: true });
+
+  assert.equal(firstNormal.kills, Math.max(0, normalBaseline.kills - 25));
+  assert.equal(secondNormal.kills, firstNormal.kills);
+  assert.equal(skill.kills, Math.max(0, skillBaseline.kills - 25));
+  assert.equal(firstNormal.trace?.damageBeforeOffsets, normalBaseline.kills);
+  assert.equal(firstNormal.trace?.offsetDamage, 25);
+  assert.equal(firstNormal.trace?.aggregationGroups["active.hero.shield"].placement, "post_subtract");
+  assert.deepEqual(firstNormal.appliedEffects, [{
+    kind: "shield",
+    effectId: "active.hero.shield/1",
+    bucket: "active.hero.shield",
+    value: 25,
+    source: "Example/Skill/active.hero.shield/1",
+    sourceSide: "defender",
+    sameEffectStacking: "max"
+  }]);
+});
+
+test("max-stacked shields use the largest resolved absolute value", () => {
+  const fighters = simpleFighters();
+  const smaller = {
+    ...effect("active.hero.shield", "defender", 10),
+    kind: "shield" as const,
+    sameEffectStacking: "max" as const
+  };
+  const larger = {
+    ...effect("active.hero.shield", "defender", 40),
+    kind: "shield" as const,
+    sameEffectStacking: "max" as const,
+    source: { ...smaller.source, effectId: smaller.source.effectId }
+  };
+  const baseline = calculateIndexedDamageJob(job, fighters, [], { trace: true });
+  const shielded = calculateIndexedDamageJob(job, fighters, [smaller, larger], { trace: true });
+
+  assert.equal(shielded.kills, Math.max(0, baseline.kills - 40));
+  assert.equal(shielded.trace?.offsetDamage, 40);
+  assert.equal(shielded.trace?.appliedEffects.length, 1);
+  assert.equal(shielded.trace?.appliedEffects[0]?.kind, "shield");
+  assert.equal(shielded.trace?.appliedEffects[0] && "value" in shielded.trace.appliedEffects[0] ? shielded.trace.appliedEffects[0].value : undefined, 40);
+});
+
 test("negative passive stat bonuses route to down buckets with positive factors", () => {
   const passiveHealthDown = {
     ...effect("passive.health.down", "defender", 105),
@@ -455,7 +510,7 @@ test("pct attack value evolution uses the effect use count for the current bucke
     },
     duration: { attacks: { count: 10 } },
     valueEvolution: { type: "pct_decay", step: "attack", amount: 15 },
-    getCurrentValuePct: evolvingActiveEffectValuePct,
+    getCurrentValue: evolvingActiveEffectValue,
     uses: 2
   };
 
@@ -479,7 +534,7 @@ test("pct turn value evolution starts decaying after the first active turn", () 
     createdRound: 0,
     startRound: 0,
     valueEvolution: { type: "pct_decay", step: "turn", amount: 15 },
-    getCurrentValuePct: evolvingActiveEffectValuePct,
+    getCurrentValue: evolvingActiveEffectValue,
     duration: { attacks: { count: 10 } }
   };
 
@@ -507,7 +562,7 @@ test("max-stacked attack-duration effects charge the whole eligible group and ou
     },
     duration: { attacks: { count: 3 } },
     valueEvolution: { type: "pct_decay", step: "attack", amount: 50 },
-    getCurrentValuePct: evolvingActiveEffectValuePct,
+    getCurrentValue: evolvingActiveEffectValue,
     uses: 1,
     sameEffectStacking: "max" as const
   };

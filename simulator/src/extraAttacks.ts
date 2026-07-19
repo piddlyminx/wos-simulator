@@ -22,7 +22,8 @@ import {
 } from "./runtime";
 
 // Spawn, calculate, and charge the extra_skill_attack attacks riding on one normal attack.
-// Each applicable effect expands its trigger_damage_jobs into jobs that run immediately, in
+// Returns the finalized kills from every generated job in this normal attack's
+// cluster. Each applicable effect expands its trigger_damage_jobs into jobs that run immediately, in
 // place; the effect is charged one use only when at least one of its own jobs actually ran.
 // Spawning reads only round-start state and the effect's own gates, so running earlier
 // effects' jobs first cannot change what later effects spawn.
@@ -39,7 +40,7 @@ export function processExtraSkillAttacks(
   if (runtime.effectIndex.extraAttacks.length === 0) return 0;
   const { round, roundStartTroops } = normalAttack;
   const recorder = damageJobOptions.recorder;
-  let score = 0;
+  let triggeredKills = 0;
   // Snapshot the applicable effects: charging an effect below may expire it out of the live index.
   const effects = runtime.effectIndex.extraAttacks.filter(
     (effect) => extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && advanceEffectAttackDelay(effect)
@@ -50,7 +51,7 @@ export function processExtraSkillAttacks(
     for (const definition of effect.triggerDamageJobs ?? []) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
-      const multiplier = effect.getCurrentValuePct(round) / 100;
+      const multiplier = effect.getCurrentValue(round) / 100;
       if (multiplier <= 0) continue;
       for (const source of sources) {
         if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
@@ -75,9 +76,7 @@ export function processExtraSkillAttacks(
           processedJobCount += 1;
           runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
           results.push({ job, result, intent });
-          if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-            score += result.kills;
-          }
+          triggeredKills += result.kills;
           chargeUsedEffects(runtime);
         }
       }
@@ -87,7 +86,7 @@ export function processExtraSkillAttacks(
       recorder.recordExtraAttack(normalAttack, effect, processedJobCount);
     }
   }
-  return score;
+  return triggeredKills;
 }
 
 function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {

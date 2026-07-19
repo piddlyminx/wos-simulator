@@ -17,6 +17,7 @@ import type {
   ActiveEffect,
   AppliedEffect,
   AppliedModifierEffect,
+  AppliedShieldEffect,
   AttackIntent,
   AttackOutcome,
   BattleTrace,
@@ -33,7 +34,7 @@ import type {
 } from "./types";
 
 type RejectedEffectReason = "same_effect_max_suppressed" | "same_effect_max_superseded";
-type GroupPlacement = "numerator" | "denominator";
+type GroupPlacement = "numerator" | "denominator" | "post_subtract";
 type NumericBucketId = number;
 
 interface DamageFactorTerm {
@@ -48,13 +49,15 @@ export interface DamageRecordingResult {
   job: DamageJob;
   factors: Float64Array;
   armyTerm: number;
+  damageBeforeOffsets: number;
+  offsetDamage: number;
   rawDamage: number;
   kills: number;
 }
 
 /** Per-damage-job observation sink selected by the enclosing battle recorder. */
 export interface DamageJobRecorder {
-  recordModifier(effect: ActiveEffect, valuePct: number): void;
+  recordEffect(effect: ActiveEffect, value: number): void;
   recordRejected(effect: ActiveEffect, reason: RejectedEffectReason): void;
   finish(result: DamageRecordingResult): DamageResult;
 }
@@ -119,7 +122,7 @@ const NO_APPLIED_EFFECTS: AppliedEffect[] = [];
 const EMPTY_SKILL_REPORT: Record<SideId, SkillReportEntry[]> = { attacker: [], defender: [] };
 
 const NULL_DAMAGE_JOB_RECORDER: DamageJobRecorder = {
-  recordModifier() {},
+  recordEffect() {},
   recordRejected() {},
   finish({ kills }) {
     return { kills };
@@ -299,7 +302,7 @@ export class BasicInfoRecorder implements BattleRecorder {
     round: number,
     detail: { kind: "control"; reason: "dodge" | "no_attack" } | { kind: "battle_order"; chosenTarget: UnitType } | { kind: "extra_attack"; spawnedJobCount: number }
   ): AppliedEffect {
-    const summary = appliedEffectSummary(effect, effect.getCurrentValuePct(round));
+    const summary = appliedEffectSummary(effect, effect.getCurrentValue(round));
     return this.detailedAttackEffects
       ? { ...summary, source: sourceLabel(effect), ...detail }
       : summary;
@@ -366,8 +369,8 @@ class BasicDamageJobRecorder implements DamageJobRecorder {
 
   constructor(private readonly staticApplied?: StaticAppliedIndex) {}
 
-  recordModifier(effect: ActiveEffect, valuePct: number): void {
-    if (valuePct !== 0) this.appliedEffects.push(appliedEffectSummary(effect, valuePct));
+  recordEffect(effect: ActiveEffect, value: number): void {
+    if (value !== 0) this.appliedEffects.push(appliedEffectSummary(effect, value));
   }
   recordRejected(_effect: ActiveEffect, _reason: RejectedEffectReason): void {}
 
@@ -393,25 +396,22 @@ class FullDamageJobRecorder implements DamageJobRecorder {
     private readonly staticDescription?: StaticProfileDescription
   ) {}
 
-  recordModifier(effect: ActiveEffect, valuePct: number): void {
-    if (valuePct === 0) return;
-    this.contributors[effect.bucketIndex]?.push({
+  recordEffect(effect: ActiveEffect, value: number): void {
+    if (value === 0) return;
+    const identity = {
       effectId: effectId(effect),
       source: sourceLabel(effect),
       sourceSide: effect.ownerSide,
-      valuePct,
       bucket: effect.intent.type,
       sameEffectStacking: effect.sameEffectStacking
-    });
-    this.appliedEffects.push({
-      kind: "modifier",
-      effectId: effectId(effect),
-      bucket: effect.intent.type,
-      valuePct,
-      source: sourceLabel(effect),
-      sourceSide: effect.ownerSide,
-      sameEffectStacking: effect.sameEffectStacking
-    });
+    };
+    if (effect.kind === "shield") {
+      this.contributors[effect.bucketIndex]?.push({ ...identity, value });
+      this.appliedEffects.push({ kind: "shield", ...identity, value });
+    } else {
+      this.contributors[effect.bucketIndex]?.push({ ...identity, valuePct: value });
+      this.appliedEffects.push({ kind: "modifier", ...identity, valuePct: value });
+    }
   }
 
   recordRejected(effect: ActiveEffect, reason: RejectedEffectReason): void {
@@ -437,6 +437,8 @@ class FullDamageJobRecorder implements DamageJobRecorder {
         aggregationGroups: buildAggregationGroups(job, result.factors, this.contributors, staticEntries),
         appliedEffects,
         rejectedEffects: this.rejectedEffects,
+        damageBeforeOffsets: result.damageBeforeOffsets,
+        offsetDamage: result.offsetDamage,
         rawDamage: result.rawDamage,
         finalKills: result.kills
       }
@@ -445,19 +447,20 @@ class FullDamageJobRecorder implements DamageJobRecorder {
 
   // Dynamic modifiers first, then the prebuilt static passive fragments for the job's
   // participants — the same order the per-job walk used to produce.
-  private appliedEffectsFor(job: DamageJob): AppliedModifierEffect[] {
+  private appliedEffectsFor(job: DamageJob): Array<AppliedModifierEffect | AppliedShieldEffect> {
     const statics = this.staticApplied;
     if (!statics) return this.appliedEffects;
     const dealer = statics.dealer[job.dealerSide][job.dealerUnit];
     const taker = statics.taker[job.takerSide][job.takerUnit];
     if (dealer.length === 0 && taker.length === 0) return this.appliedEffects;
-    return [...this.appliedEffects, ...dealer, ...taker] as AppliedModifierEffect[];
+    return [...this.appliedEffects, ...dealer, ...taker] as Array<AppliedModifierEffect | AppliedShieldEffect>;
   }
 }
 
 const DEFAULT_FACTOR_TERMS = DYNAMIC_BUCKETS.map((definition) => factorTerm(definition.name));
 const DEFAULT_NUMERATOR_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "numerator");
 const DEFAULT_DENOMINATOR_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "denominator");
+const DEFAULT_OFFSET_TERMS = DEFAULT_FACTOR_TERMS.filter((term) => term.placement === "post_subtract");
 
 function factorTerm(bucket: DynamicDamageBucket): DamageFactorTerm {
   const definition = dynamicBucketDefinition(bucket)!;
@@ -568,7 +571,7 @@ function passiveAppliedEffects(entry: StaticProfileEntry, detailed: boolean): Ap
       const summary = {
         effectId: contributor.effectId,
         bucket,
-        valuePct: contributor.valuePct,
+        valuePct: contributor.valuePct!,
         sourceSide: contributor.sourceSide!
       };
       applied.push(detailed
@@ -592,11 +595,21 @@ function buildAggregationGroups(
 ): Record<string, DamageAggregationGroupTrace> {
   const groups: Record<string, DamageAggregationGroupTrace> = {};
   addStaticAggregationGroups(groups, staticEntries);
-  for (const term of [...DEFAULT_NUMERATOR_TERMS, ...DEFAULT_DENOMINATOR_TERMS]) {
+  for (const term of [...DEFAULT_NUMERATOR_TERMS, ...DEFAULT_DENOMINATOR_TERMS, ...DEFAULT_OFFSET_TERMS]) {
     if (term.damageKind && term.damageKind !== job.kind) continue;
     const definition = dynamicBucketDefinition(term.bucketName)!;
     const factor = factors[term.bucket];
-    groups[term.id] = definition.update === "assign_factor"
+    groups[term.id] = definition.update === "add_raw"
+      ? {
+          id: term.id,
+          mode: "sum_raw",
+          placement: term.placement,
+          inputBuckets: [term.bucketName],
+          raw: factor,
+          factor: 1,
+          contributors: contributors[term.bucket] ?? []
+        }
+      : definition.update === "assign_factor"
       ? {
           id: term.id,
           mode: "raw",
@@ -690,7 +703,9 @@ function toTraceBuckets(
       const bucket = definition.name;
       const factor = factors[index];
       const bucketContributors = contributors[index] ?? [];
-      return definition.update === "assign_factor"
+      return definition.update === "add_raw"
+        ? [bucket, { raw: factor, factor: 1, contributors: [...bucketContributors] }]
+        : definition.update === "assign_factor"
         ? [bucket, { raw: factor, factor, contributors: [...bucketContributors] }]
         : [bucket, { totalPct: pctFromFactor(factor), factor, contributors: [...bucketContributors] }];
     })
@@ -710,13 +725,13 @@ function effectId(effect: ActiveEffect): string {
   return effect.source.effectId ?? effect.intent.id;
 }
 
-function appliedEffectSummary(effect: ActiveEffect, valuePct: number): AppliedEffect {
-  return {
+function appliedEffectSummary(effect: ActiveEffect, value: number): AppliedEffect {
+  const identity = {
     effectId: effectId(effect),
     sourceSide: effect.ownerSide,
-    bucket: effect.intent.type,
-    valuePct
+    bucket: effect.intent.type
   };
+  return effect.kind === "shield" ? { ...identity, value } : { ...identity, valuePct: value };
 }
 
 function counterDeltas(
