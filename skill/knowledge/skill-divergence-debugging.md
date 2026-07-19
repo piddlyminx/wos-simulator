@@ -115,6 +115,6 @@ A permanent change should:
 
 - Do not restore fatigue because a hero testcase misses.
 - Do not add a global class-advantage multiplier; class advantage is troop-skill data.
-- Do not rename stochastic cases `_nc` unless hydrated skills confirm no chance triggers.
+- Do not add `_nc` to testcase filenames. The test runner determines whether a case is stochastic from the hydrated skills; the filename does not.
 - Do not change formula, parser, and skill data in the same commit unless the evidence demands it.
 - Do not use old battle reports after account stats, hero levels, buffs, or troop tiers changed.

@@ -7,6 +7,7 @@ Use this index to choose the smallest useful reading set before changing the Typ
 - Treat `simulator/src/types.ts` and `simulator/src/damageBuckets.ts` as the source of truth for simulator shapes and effect buckets.
 - Start simulator investigations from controls and traces. Do not change global damage math because one hero testcase diverges.
 - Keep captured game observations separate from simulator analysis: `wosctl run-testcase` appends `game_report_result`; TypeScript testcase runs produce parity reports and run snapshots.
+- Do not add `_nc` to testcase filenames. The test runner determines whether a case is stochastic from the hydrated skills; the filename does not.
 - Class advantage is troop-skill data in `simulator/config/troop_skills.json`, not a hardcoded formula coefficient.
 - Hero fixtures are full current account kits unless the change is an explicit simulator-only ablation.
 - Do not parse incomplete battle-report captures. Capture/parsing failures must be visible and diagnosable.

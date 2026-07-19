@@ -126,4 +126,4 @@ Use explicit metadata so future agents do not overinterpret the testcase:
 }
 ```
 
-Avoid `_nc` filenames unless hydrated skill data confirms there are no chance triggers.
+Do not add `_nc` to testcase filenames. The test runner determines whether a case is stochastic from the hydrated skills; the filename does not.

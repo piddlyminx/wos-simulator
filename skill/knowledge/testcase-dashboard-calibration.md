@@ -78,7 +78,7 @@ It is not an issue tracker. Do not list active issues in `KNOWLEDGE_INDEX.md`.
 
 ## Stochastic Cases
 
-A testcase is stochastic when hydrated simulator skills contain chance triggers, even if a filename says `_nc`.
+A testcase is stochastic when hydrated simulator skills contain chance triggers. Do not add `_nc` to testcase filenames; the test runner determines stochasticity, not the filename.
 
 For stochastic cases:
 

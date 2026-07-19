@@ -16,7 +16,7 @@ Map those roles to local instance/account names through gitignored config or tas
 - Capture fresh stat bonuses for both accounts in the same session.
 - Capture current hero skill levels before hero fixtures.
 - Use current troop ids, tiers, fire-crystal levels, and counts.
-- Do not label a fixture `_nc` unless hydrated TypeScript skills contain no chance triggers.
+- Do not add `_nc` to testcase filenames. The test runner determines whether a case is stochastic from the hydrated skills; the filename does not.
 - Store individual game observations under `game_report_result`.
 - Prefer paired no-hero controls with identical troop composition.
 - Compare with `npx tsx scripts/run_testcases.ts`, not with `wosctl run-testcase`.
