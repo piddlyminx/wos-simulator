@@ -1,0 +1,48 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-26T02:40:04.650Z",
+  "options": {
+    "matching": "gwen",
+    "repeat": 100
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 3,
+    "testcasesFound": 3,
+    "executed": 0,
+    "warnings": 0,
+    "errors": 3,
+    "comparedToGame": 0,
+    "comparedToBaseline": 0
+  },
+  "warnings": [],
+  "errors": [
+    {
+      "file": "testcases/emulator_verified/gwen_norah_combo_nc.json",
+      "testcase_id": "gwen_norah_combo_nc",
+      "idx": 0,
+      "stage": "execute",
+      "reason": "Unsupported unit type: living",
+      "detailArtifact": "simulator_parity_2026-06-26T02-40-04.658Z/cases/000001.json"
+    },
+    {
+      "file": "testcases/emulator_verified/gwen_solo_nc.json",
+      "testcase_id": "gwen_solo",
+      "idx": 0,
+      "stage": "execute",
+      "reason": "Unsupported unit type: living",
+      "detailArtifact": "simulator_parity_2026-06-26T02-40-04.658Z/cases/000002.json"
+    },
+    {
+      "file": "testcases/emulator_verified/logan_gwen_combo_nc.json",
+      "testcase_id": "logan_gwen_combo_nc",
+      "idx": 0,
+      "stage": "execute",
+      "reason": "Unsupported unit type: living",
+      "detailArtifact": "simulator_parity_2026-06-26T02-40-04.658Z/cases/000003.json"
+    }
+  ],
+  "testcases": {},
+  "artifactRoot": "simulator_parity_2026-06-26T02-40-04.658Z"
+}

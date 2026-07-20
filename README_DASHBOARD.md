@@ -45,7 +45,7 @@ or keep it updated by running your usual testcase command, for example:
 
 ```bash
 cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-npx tsx scripts/run_testcases.ts --output-dir simulator/testcase_results --db-ingest
+npx tsx scripts/run_testcases.ts --output-dir simulator/testcase_results --save-snapshot --db-ingest
 ```
 
 ## Run Without Docker

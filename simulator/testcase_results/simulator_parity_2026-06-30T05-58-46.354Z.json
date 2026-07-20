@@ -1,0 +1,65 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-30T05:58:46.245Z",
+  "options": {
+    "workers": 12,
+    "matching": "simple_001",
+    "repeat": 100
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 1,
+    "testcasesFound": 1,
+    "executed": 1,
+    "warnings": 0,
+    "errors": 0,
+    "comparedToGame": 1,
+    "comparedToBaseline": 1
+  },
+  "warnings": [],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/simple_001_nc.json#0": {
+      "file": "testcases/emulator_verified/simple_001_nc.json",
+      "testcase_id": "simple_001",
+      "idx": 0,
+      "deterministic": false,
+      "sampleCount": 100,
+      "game": {
+        "n_candidate": 100,
+        "mu_candidate": -186,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -186,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "zero_var",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": {
+        "n_candidate": 100,
+        "mu_candidate": -186,
+        "sigma_candidate": 0,
+        "n_reference": 100,
+        "mu_reference": -186,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "zero_var",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "detailArtifact": "simulator_parity_2026-06-30T05-58-46.354Z/cases/000001.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-30T05-58-46.354Z"
+}

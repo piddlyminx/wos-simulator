@@ -1,0 +1,124 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-19T21:42:22.099Z",
+  "options": {
+    "matching": "renee",
+    "repeat": 100
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 2,
+    "testcasesFound": 2,
+    "executed": 2,
+    "warnings": 0,
+    "errors": 0,
+    "comparedToGame": 2,
+    "comparedToBaseline": 2
+  },
+  "warnings": [],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/hector_renee_wayne.json#0": {
+      "file": "testcases/emulator_verified/hector_renee_wayne.json",
+      "testcase_id": "determinism_test_normal",
+      "idx": 0,
+      "deterministic": false,
+      "sampleCount": 100,
+      "game": {
+        "n_candidate": 100,
+        "mu_candidate": 1607.98,
+        "sigma_candidate": 2.46,
+        "n_reference": 1,
+        "mu_reference": 1597,
+        "sigma_reference": 0,
+        "bias_raw": 10.98,
+        "bias_pct": 0.55,
+        "sem": 2.46,
+        "stat_type": "single_obs",
+        "stat": 4.4602,
+        "p": 0.000008,
+        "q": 0.000008,
+        "passes": false
+      },
+      "baseline": {
+        "n_candidate": 100,
+        "mu_candidate": 1607.98,
+        "sigma_candidate": 2.46,
+        "n_reference": 100,
+        "mu_reference": 1610.85,
+        "sigma_reference": 2.88,
+        "bias_raw": -2.87,
+        "bias_pct": -0.14,
+        "sem": 0.35,
+        "stat_type": "t",
+        "stat": -8.2437,
+        "p": 0,
+        "q": 0,
+        "passes": true
+      },
+      "detailArtifact": "simulator_parity_2026-06-19T21-42-22.376Z/cases/000001.json"
+    },
+    "testcases/emulator_verified/renee_solo_nc.json#0": {
+      "file": "testcases/emulator_verified/renee_solo_nc.json",
+      "testcase_id": "renee_solo_nc",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -563,
+        "sigma_candidate": 0,
+        "n_reference": 5,
+        "mu_reference": -554,
+        "sigma_reference": 0,
+        "bias_raw": -9,
+        "bias_pct": -0.48,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": false
+      },
+      "baseline": {
+        "n_candidate": 1,
+        "mu_candidate": -563,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -553,
+        "sigma_reference": 0,
+        "bias_raw": -10,
+        "bias_pct": -0.54,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "gameStatAdjustment": {
+        "value": 0.05,
+        "mode": "best_effort",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": -563,
+          "sigma_candidate": 0,
+          "n_reference": 5,
+          "mu_reference": -554,
+          "sigma_reference": 0,
+          "bias_raw": -9,
+          "bias_pct": -0.48,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "q": null,
+          "passes": true
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-06-19T21-42-22.376Z/cases/000002.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-19T21-42-22.376Z"
+}

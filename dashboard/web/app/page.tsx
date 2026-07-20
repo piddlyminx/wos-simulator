@@ -172,7 +172,7 @@ export default function HomePage() {
           style={{ border: "1px solid var(--border-color)" }}
         >
           No historical runs found. Run{" "}
-          <code>npx tsx scripts/run_testcases.ts --db-ingest</code> from the
+          <code>npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest</code> from the
           repo root to generate a current simulator run report.
         </div>
       </div>

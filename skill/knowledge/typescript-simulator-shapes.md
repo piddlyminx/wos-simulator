@@ -116,6 +116,6 @@ npx tsx scripts/run_testcases.ts --matching <pattern> --repeat 100
 npx tsx scripts/run_testcases.ts --matching <pattern> --workers 4 --human
 ```
 
-The runner writes a run snapshot by default and emits a `simulator-parity-summary`. Use `--no-run-snapshot` for stdout-only checks.
+The runner emits a `simulator-parity-summary` to stdout and does not write files by default. Pass `--save-snapshot` to persist a timestamped summary and per-case detail artifacts.
 
 Use `wosctl run-testcase` only to collect game reports into `game_report_result`; simulator comparison belongs to the TypeScript runner.

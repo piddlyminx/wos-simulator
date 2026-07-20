@@ -163,7 +163,6 @@ test.describe("simulator parity report helpers", () => {
         testcaseId: "case_a",
         idx: 0,
         detailArtifact: "run/cases/000001.json",
-        detailAvailable: false,
         deterministic: true,
         sampleCount: 1,
         game: expect.objectContaining({ passes: false, bias_pct: 11.1 }),
@@ -197,7 +196,6 @@ test.describe("simulator parity report helpers", () => {
     );
 
     expect(resolved?.row.testcaseId).toBe("case_b");
-    expect(resolved?.row.detailAvailable).toBe(true);
     expect(resolved?.case?.sampleCount).toBe(1);
     expect(parityReportDetailHref("run.json", resolved!.row)).toContain(
       "/parity/",

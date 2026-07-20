@@ -46,44 +46,61 @@ export default function ParityCaseSummary({
         <JsonBlock value={buildSimulatorSampleMetadata({ row, caseReport })} />
       </section>
 
-      <section>
-        <h3 className="mb-2 text-sm font-bold">Visibility</h3>
-        <JsonBlock value={caseReport?.visibility} />
-      </section>
+      {caseReport ? (
+        <>
+          <section>
+            <h3 className="mb-2 text-sm font-bold">Visibility</h3>
+            <JsonBlock value={caseReport.visibility} />
+          </section>
 
-      <section>
-        <h3 className="mb-2 text-sm font-bold">Final Stored Result</h3>
-        <JsonBlock
-          value={{
-            winner: caseReport?.result?.winner,
-            rounds: caseReport?.result?.rounds,
-            remaining: caseReport?.result?.remaining,
-          }}
-        />
-      </section>
+          <section>
+            <h3 className="mb-2 text-sm font-bold">Final Stored Result</h3>
+            <JsonBlock
+              value={{
+                winner: caseReport.result?.winner,
+                rounds: caseReport.result?.rounds,
+                remaining: caseReport.result?.remaining,
+              }}
+            />
+          </section>
 
-      {(caseReport?.diagnostics?.length || caseReport?.error) && (
-        <section>
-          <h3 className="mb-2 text-sm font-bold">Diagnostics</h3>
-          <JsonBlock
-            value={{
-              error: caseReport?.error,
-              diagnostics: caseReport?.diagnostics,
-            }}
-          />
+          {(caseReport.diagnostics?.length || caseReport.error) && (
+            <section>
+              <h3 className="mb-2 text-sm font-bold">Diagnostics</h3>
+              <JsonBlock
+                value={{
+                  error: caseReport.error,
+                  diagnostics: caseReport.diagnostics,
+                }}
+              />
+            </section>
+          )}
+
+          <details>
+            <summary className="cursor-pointer text-sm font-bold">
+              Stored run attacks ({attacks.length})
+            </summary>
+            <p className="my-2 text-xs opacity-60">
+              This is the single detailed result stored in the report, not every
+              repeat used to compute simulatorStats.
+            </p>
+            <JsonBlock value={attacks} />
+          </details>
+        </>
+      ) : (
+        <section
+          className="rounded p-4 text-sm"
+          style={{ border: "1px solid var(--border-color)" }}
+        >
+          <h3 className="mb-1 font-bold">
+            Detailed battle artifact not available
+          </h3>
+          <p className="opacity-60">
+            This page is showing the comparison data retained in the top-level
+            parity summary.
+          </p>
         </section>
       )}
-
-      <details>
-        <summary className="cursor-pointer text-sm font-bold">
-          Stored run attacks ({attacks.length})
-        </summary>
-        <p className="my-2 text-xs opacity-60">
-          This is the single detailed result stored in the report, not every
-          repeat used to compute simulatorStats.
-        </p>
-        <JsonBlock value={attacks} />
-      </details>
     </div>
   );
 }

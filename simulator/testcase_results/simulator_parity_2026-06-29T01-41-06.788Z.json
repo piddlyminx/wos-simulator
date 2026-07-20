@@ -1,0 +1,218 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-29T01:41:06.744Z",
+  "options": {
+    "matching": "wos451_gordon_s",
+    "repeat": 1,
+    "workers": 1
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 4,
+    "testcasesFound": 4,
+    "executed": 4,
+    "warnings": 4,
+    "errors": 0,
+    "comparedToGame": 4,
+    "comparedToBaseline": 0
+  },
+  "warnings": [
+    {
+      "file": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json",
+      "testcase_id": "wos451_gordon_s11_lancer_damage_up_bucket",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000001.json"
+    },
+    {
+      "file": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json",
+      "testcase_id": "wos451_gordon_s11_lancer_damage_up_control",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000002.json"
+    },
+    {
+      "file": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json",
+      "testcase_id": "wos451_gordon_s21_lancer_damage_up_bucket",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000003.json"
+    },
+    {
+      "file": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json",
+      "testcase_id": "wos451_gordon_s21_lancer_damage_up_control",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000004.json"
+    }
+  ],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": {
+      "file": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json",
+      "testcase_id": "wos451_gordon_s11_lancer_damage_up_bucket",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -1540,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -1517,
+        "sigma_reference": 0,
+        "bias_raw": -23,
+        "bias_pct": -0.66,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": false
+      },
+      "baseline": null,
+      "gameStatAdjustment": {
+        "value": 0.05,
+        "mode": "best_effort",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": -1541,
+          "sigma_candidate": 0,
+          "n_reference": 1,
+          "mu_reference": -1517,
+          "sigma_reference": 0,
+          "bias_raw": -24,
+          "bias_pct": -0.69,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "q": null,
+          "passes": true
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000001.json"
+    },
+    "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json#0": {
+      "file": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json",
+      "testcase_id": "wos451_gordon_s11_lancer_damage_up_control",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -2739,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -2739,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": null,
+      "gameStatAdjustment": {
+        "value": 0.05,
+        "mode": "deterministic_exact",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": -2740,
+          "sigma_candidate": 0,
+          "n_reference": 1,
+          "mu_reference": -2739,
+          "sigma_reference": 0,
+          "bias_raw": -1,
+          "bias_pct": -0.03,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "q": null,
+          "passes": true
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000002.json"
+    },
+    "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": {
+      "file": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json",
+      "testcase_id": "wos451_gordon_s21_lancer_damage_up_bucket",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -1034,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -1017,
+        "sigma_reference": 0,
+        "bias_raw": -17,
+        "bias_pct": -0.69,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": false
+      },
+      "baseline": null,
+      "gameStatAdjustment": {
+        "value": 0.05,
+        "mode": "best_effort",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": -1036,
+          "sigma_candidate": 0,
+          "n_reference": 1,
+          "mu_reference": -1017,
+          "sigma_reference": 0,
+          "bias_raw": -19,
+          "bias_pct": -0.77,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "q": null,
+          "passes": true
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000003.json"
+    },
+    "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json#0": {
+      "file": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json",
+      "testcase_id": "wos451_gordon_s21_lancer_damage_up_control",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -1917,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -1917,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000004.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-29T01-41-06.788Z"
+}

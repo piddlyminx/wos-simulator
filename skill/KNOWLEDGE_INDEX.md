@@ -20,7 +20,7 @@ Use this index to choose the smallest useful reading set before changing the Typ
 - Effects: skill files define `trigger` plus native bucket effects, `extra_skill_attack`, `dodge`, `no_attack`, or `attack_order`; runtime effects become `ActiveEffect`.
 - Damage: `DamageJob` uses `kind: "normal" | "skill"`; `calculateDamageJob` combines static profile buckets, dynamic indexed effects, and `source.extraSkill`.
 - Tracing: trace mode records `AttackOutcome.trace` with `atomicBuckets`, `aggregationGroups`, `appliedEffects`, `rejectedEffects`, `rawDamage`, and `finalKills`.
-- Testcases: `scripts/run_testcases.ts` drives `simulator/src/tooling/testcases.ts`, supports `--matching`, `--repeat`, `--workers`, `--calibration-report`, and writes run snapshots unless `--no-run-snapshot` is set.
+- Testcases: `scripts/run_testcases.ts` drives `simulator/src/tooling/testcases.ts`, supports `--matching`, `--repeat`, `--workers`, `--calibration-report`, and writes run snapshots only when `--save-snapshot` is set.
 
 ## Task Routing
 

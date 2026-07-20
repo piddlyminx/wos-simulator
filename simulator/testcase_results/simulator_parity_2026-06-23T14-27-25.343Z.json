@@ -1,0 +1,91 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-23T14:27:25.333Z",
+  "options": {
+    "matching": "wos444_edith",
+    "repeat": 100
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 2,
+    "testcasesFound": 2,
+    "executed": 2,
+    "warnings": 2,
+    "errors": 0,
+    "comparedToGame": 2,
+    "comparedToBaseline": 0
+  },
+  "warnings": [
+    {
+      "file": "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json",
+      "testcase_id": "wos444_edith_s11_mark_damage_taken_control_nc",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-23T14-27-25.343Z/cases/000001.json"
+    },
+    {
+      "file": "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json",
+      "testcase_id": "wos444_edith_s12_lancer_damage_dealt_control_nc",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-23T14-27-25.343Z/cases/000002.json"
+    }
+  ],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json#0": {
+      "file": "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json",
+      "testcase_id": "wos444_edith_s11_mark_damage_taken_control_nc",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 2578,
+        "sigma_candidate": 0,
+        "n_reference": 2,
+        "mu_reference": 2578,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-06-23T14-27-25.343Z/cases/000001.json"
+    },
+    "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json#0": {
+      "file": "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json",
+      "testcase_id": "wos444_edith_s12_lancer_damage_dealt_control_nc",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 2332,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 2332,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-06-23T14-27-25.343Z/cases/000002.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-23T14-27-25.343Z"
+}

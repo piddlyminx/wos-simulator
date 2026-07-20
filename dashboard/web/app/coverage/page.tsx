@@ -40,7 +40,7 @@ export default function CoveragePage() {
           >
             DB misconfiguration: missing tables:{" "}
             <strong>{missingTables.join(", ")}</strong>. Run{" "}
-            <code>npx tsx scripts/run_testcases.ts --db-ingest</code> to apply
+            <code>npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest</code> to apply
             migrations and seed the hero catalogue.
           </div>
         )}
@@ -150,7 +150,7 @@ export default function CoveragePage() {
         >
           DB misconfiguration: missing tables:{" "}
           <strong>{missingTables.join(", ")}</strong>. Run{" "}
-          <code>npx tsx scripts/run_testcases.ts --db-ingest</code> to apply
+          <code>npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest</code> to apply
           migrations and seed the hero catalogue.
         </div>
       )}

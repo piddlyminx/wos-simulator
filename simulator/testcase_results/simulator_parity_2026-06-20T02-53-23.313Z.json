@@ -1,0 +1,84 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-20T02:53:23.291Z",
+  "options": {
+    "matching": "ahmose",
+    "repeat": 100
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 1,
+    "testcasesFound": 1,
+    "executed": 1,
+    "warnings": 0,
+    "errors": 0,
+    "comparedToGame": 1,
+    "comparedToBaseline": 1
+  },
+  "warnings": [],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/ahmose_solo_nc.json#0": {
+      "file": "testcases/emulator_verified/ahmose_solo_nc.json",
+      "testcase_id": "ahmose_solo",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 2636,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 2633,
+        "sigma_reference": 0,
+        "bias_raw": 3,
+        "bias_pct": 0.06,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": false
+      },
+      "baseline": {
+        "n_candidate": 1,
+        "mu_candidate": 2638,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 2638,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "gameStatAdjustment": {
+        "value": -0.05,
+        "mode": "best_effort",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": 2638,
+          "sigma_candidate": 0,
+          "n_reference": 1,
+          "mu_reference": 2633,
+          "sigma_reference": 0,
+          "bias_raw": 5,
+          "bias_pct": 0.11,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "q": null,
+          "passes": true
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-06-20T02-53-23.313Z/cases/000001.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-20T02-53-23.313Z"
+}

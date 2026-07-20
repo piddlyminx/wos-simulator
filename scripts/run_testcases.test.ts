@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync, type SpawnSyncReturns } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { cpus, tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -11,7 +11,7 @@ import type { TestcaseRunReport } from "../simulator/src/tooling/testcases";
 
 const repoRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 
-test("cli writes compact summary and per-case detail artifacts by default", () => {
+test("cli --save-snapshot writes compact summary and per-case detail artifacts", () => {
   const outputDir = tempDir("simulator-parity-output");
 
   const result = spawnSync(
@@ -26,6 +26,7 @@ test("cli writes compact summary and per-case detail artifacts by default", () =
       "1",
       "--output-dir",
       outputDir,
+      "--save-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
@@ -62,7 +63,7 @@ test("cli writes compact summary and per-case detail artifacts by default", () =
   assert.ok(detail.result);
 });
 
-test("cli --no-run-snapshot writes compact stdout only and creates no artifacts", () => {
+test("cli writes compact stdout only and creates no artifacts by default", () => {
   const outputDir = tempDir("simulator-parity-stdout");
 
   const result = spawnSync(
@@ -77,7 +78,6 @@ test("cli --no-run-snapshot writes compact stdout only and creates no artifacts"
       "1",
       "--output-dir",
       outputDir,
-      "--no-run-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
@@ -85,6 +85,7 @@ test("cli --no-run-snapshot writes compact stdout only and creates no artifacts"
   assert.equal(result.status, 0, result.stderr);
   const report = JSON.parse(result.stdout);
   assert.equal(report.reportKind, "simulator-parity-summary");
+  assert.equal(report.options.workers, Math.max(1, Math.floor(cpus().length * 3 / 4)));
   assert.equal(report.counts.executed, 1);
   assert.equal("details" in report, false);
   assert.equal(result.stdout.includes("\"result\""), false);
@@ -188,7 +189,6 @@ test("cli --workers runs testcase cases through worker pool", () => {
       "2",
       "--output-dir",
       outputDir,
-      "--no-run-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
@@ -220,6 +220,7 @@ test("cli --db-ingest writes the generated report into a dashboard sqlite databa
       "1",
       "--output-dir",
       outputDir,
+      "--save-snapshot",
       "--db-ingest",
       "--db-path",
       dbPath,
@@ -234,7 +235,7 @@ test("cli --db-ingest writes the generated report into a dashboard sqlite databa
   assert.match(stderrReport.dbIngest.report_file, /^simulator_parity_.*\.json$/);
 });
 
-test("cli --db-ingest requires a persisted run snapshot", () => {
+test("cli --db-ingest requires --save-snapshot", () => {
   const outputDir = tempDir("simulator-parity-db-no-snapshot");
 
   const result = spawnSync(
@@ -250,14 +251,13 @@ test("cli --db-ingest requires a persisted run snapshot", () => {
       "--output-dir",
       outputDir,
       "--db-ingest",
-      "--no-run-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
 
   assert.equal(result.status, 1);
   assert.deepEqual(JSON.parse(result.stderr), {
-    error: "--db-ingest requires a run snapshot; remove --no-run-snapshot",
+    error: "--db-ingest requires --save-snapshot",
   });
 });
 
@@ -272,7 +272,6 @@ test("cli rejects unknown arguments", () => {
       "1000",
       "--matching",
       "renee",
-      "--no-run-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
@@ -292,7 +291,6 @@ test("cli rejects missing option values", () => {
       "--repeat",
       "--matching",
       "renee",
-      "--no-run-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
@@ -313,7 +311,6 @@ test("cli rejects invalid numeric option values", () => {
       "banana",
       "--matching",
       "renee",
-      "--no-run-snapshot",
     ],
     { cwd: repoRoot, encoding: "utf8" },
   );
@@ -338,7 +335,6 @@ test("cli --human writes a readable testcase summary table", () => {
       "1",
       "--output-dir",
       outputDir,
-      "--no-run-snapshot",
       "--human",
     ],
     { cwd: repoRoot, encoding: "utf8" },
@@ -369,7 +365,6 @@ test("cli --human compares with the latest prior summary", () => {
       "1",
       "--output-dir",
       outputDir,
-      "--no-run-snapshot",
       "--human",
     ],
     { cwd: repoRoot, encoding: "utf8" },
@@ -732,6 +727,7 @@ function runCliWithFixedDate(outputDir: string, preloadPath: string, fixedDate: 
       "1",
       "--output-dir",
       outputDir,
+      "--save-snapshot",
     ],
     {
       cwd: repoRoot,

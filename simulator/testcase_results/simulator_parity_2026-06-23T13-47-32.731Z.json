@@ -1,0 +1,144 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-23T13:47:32.714Z",
+  "options": {
+    "matching": "wos444_",
+    "repeat": 100
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 3,
+    "testcasesFound": 3,
+    "executed": 3,
+    "warnings": 3,
+    "errors": 0,
+    "comparedToGame": 3,
+    "comparedToBaseline": 0
+  },
+  "warnings": [
+    {
+      "file": "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json",
+      "testcase_id": "wos444_bradley_s3_all_troops_damage_control_nc",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000001.json"
+    },
+    {
+      "file": "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json",
+      "testcase_id": "wos444_edith_s11_mark_damage_taken_control_nc",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000002.json"
+    },
+    {
+      "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json",
+      "testcase_id": "wos444_gordon_s22_all_enemy_damage_dealt_control_nc",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000003.json"
+    }
+  ],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#0": {
+      "file": "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json",
+      "testcase_id": "wos444_bradley_s3_all_troops_damage_control_nc",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 5764,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 5848,
+        "sigma_reference": 0,
+        "bias_raw": -84,
+        "bias_pct": -0.82,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": false
+      },
+      "baseline": null,
+      "gameStatAdjustment": {
+        "value": 0.05,
+        "mode": "best_effort",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": 5763,
+          "sigma_candidate": 0,
+          "n_reference": 1,
+          "mu_reference": 5848,
+          "sigma_reference": 0,
+          "bias_raw": -85,
+          "bias_pct": -0.83,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "q": null,
+          "passes": true
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000001.json"
+    },
+    "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json#0": {
+      "file": "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json",
+      "testcase_id": "wos444_edith_s11_mark_damage_taken_control_nc",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 2578,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 2578,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000002.json"
+    },
+    "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#0": {
+      "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json",
+      "testcase_id": "wos444_gordon_s22_all_enemy_damage_dealt_control_nc",
+      "idx": 0,
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 7656,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 7656,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "q": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000003.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-23T13-47-32.731Z"
+}

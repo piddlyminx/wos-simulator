@@ -212,21 +212,17 @@ export default function ParityReportTable({
                     className={`${compactTd} max-w-44 truncate`}
                     title={row.file}
                   >
-                    {row.detailAvailable ? (
-                      <Link
-                        href={
-                          runId
-                            ? runDetailHref(runId, row)
-                            : detailHref(reportId, row)
-                        }
-                        className="underline hover:opacity-80"
-                        style={{ color: "var(--sidebar-active)" }}
-                      >
-                        {caseLabel}
-                      </Link>
-                    ) : (
-                      <span>{caseLabel}</span>
-                    )}
+                    <Link
+                      href={
+                        runId
+                          ? runDetailHref(runId, row)
+                          : detailHref(reportId, row)
+                      }
+                      className="underline hover:opacity-80"
+                      style={{ color: "var(--sidebar-active)" }}
+                    >
+                      {caseLabel}
+                    </Link>
                   </td>
                   <td className={compactTd}>{row.idx}</td>
                   <td

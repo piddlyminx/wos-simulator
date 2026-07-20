@@ -82,7 +82,7 @@ export default async function ParityPage({
             className="mt-2 block overflow-x-auto rounded p-3 text-xs"
             style={{ backgroundColor: "var(--sidebar-bg)" }}
           >
-            npx tsx scripts/run_testcases.ts --repeat 100 --db-ingest
+            npx tsx scripts/run_testcases.ts --repeat 100 --save-snapshot --db-ingest
           </code>
         </div>
       ) : (

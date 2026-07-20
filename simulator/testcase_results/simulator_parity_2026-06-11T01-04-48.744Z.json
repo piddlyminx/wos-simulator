@@ -1,0 +1,58 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-06-11T01:04:48.579Z",
+  "options": {
+    "matching": "ambusher_no_marksmen",
+    "repeat": 50
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 1,
+    "testcasesFound": 1,
+    "executed": 1,
+    "warnings": 1,
+    "errors": 0,
+    "comparedToGame": 1,
+    "comparedToBaseline": 0
+  },
+  "warnings": [
+    {
+      "file": "testcases/emulator_verified/ambusher_no_marksmen.json",
+      "testcase_id": "ambusher_no_marksmen",
+      "idx": 0,
+      "stage": "baseline_comparison",
+      "reason": "No matching baseline snapshot row",
+      "detailArtifact": "simulator_parity_2026-06-11T01-04-48.744Z/cases/000001.json"
+    }
+  ],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/ambusher_no_marksmen.json#0": {
+      "file": "testcases/emulator_verified/ambusher_no_marksmen.json",
+      "testcase_id": "ambusher_no_marksmen",
+      "idx": 0,
+      "deterministic": false,
+      "sampleCount": 50,
+      "game": {
+        "n_candidate": 50,
+        "mu_candidate": -103845.1,
+        "sigma_candidate": 1808.2,
+        "n_reference": 1,
+        "mu_reference": -105686,
+        "sigma_reference": 0,
+        "bias_raw": 1840.9,
+        "bias_pct": 0.6,
+        "sem": 1808.2,
+        "stat_type": "single_obs",
+        "stat": 1.0181,
+        "p": 0.30863,
+        "q": 0.30863,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-06-11T01-04-48.744Z/cases/000001.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-06-11T01-04-48.744Z"
+}

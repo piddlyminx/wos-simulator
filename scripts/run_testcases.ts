@@ -25,20 +25,22 @@ import { WorkerThreadBatchWorker } from "./workerThreadBatchWorker";
 export async function main(argv = process.argv.slice(2)): Promise<void> {
   try {
     const options = parseArgs(argv);
+    if (options.dbIngest && !options.saveSnapshot) {
+      throw new Error("--db-ingest requires --save-snapshot");
+    }
     const previousReport = options.human ? loadLatestRunReport(options.outputDir) : undefined;
     const config = loadSimulatorConfig();
     const report = await runCliTestcases(options, config);
     const stdout = formatStdout(report, options, previousReport);
-    if (options.noRunSnapshot) {
-      if (options.dbIngest) throw new Error("--db-ingest requires a run snapshot; remove --no-run-snapshot");
-      writeStdout(stdout);
-    } else {
+    if (options.saveSnapshot) {
       const snapshot = writeRunSnapshot(report, options.outputDir);
       const dbIngest = options.dbIngest
         ? ingestReport(snapshot.summaryPath, { dbPath: options.dbPath })
         : undefined;
       writeStdout(stdout);
       console.error(JSON.stringify({ ...snapshot, ...(dbIngest ? { dbIngest } : {}) }, null, 2));
+    } else {
+      writeStdout(stdout);
     }
     const failed = report.counts.errors > 0;
     process.exitCode = failed ? 1 : 0;
@@ -79,24 +81,24 @@ async function runCliTestcases(options: CliOptions, config: ReturnType<typeof lo
 interface CliOptions {
   testcaseOptions: TestcaseRunOptions;
   outputDir: string;
-  noRunSnapshot: boolean;
+  saveSnapshot: boolean;
   dbIngest: boolean;
   dbPath?: string;
   human: boolean;
   printFailing: boolean;
-  workers: number;
 }
 
 function parseArgs(args: string[]): CliOptions {
-  const testcaseOptions: TestcaseRunOptions = {};
+  const testcaseOptions: TestcaseRunOptions = {
+    workers: Math.max(1, Math.floor(cpus().length * 3 / 4)),
+  };
   const options: CliOptions = {
     testcaseOptions,
     outputDir: defaultOutputDir(),
-    noRunSnapshot: false,
+    saveSnapshot: false,
     dbIngest: false,
     human: false,
     printFailing: false,
-    workers: Math.max(1, cpus().length/2)
   };
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -108,7 +110,7 @@ function parseArgs(args: string[]): CliOptions {
     else if (arg === "--seed") testcaseOptions.seed = readOptionValue(args, ++index, arg);
     else if (arg === "--workers") testcaseOptions.workers = readPositiveIntegerOption(args, ++index, arg);
     else if (arg === "--output-dir") options.outputDir = resolve(readOptionValue(args, ++index, arg));
-    else if (arg === "--no-run-snapshot") options.noRunSnapshot = true;
+    else if (arg === "--save-snapshot") options.saveSnapshot = true;
     else if (arg === "--db-ingest") options.dbIngest = true;
     else if (arg === "--db-path") options.dbPath = resolve(readOptionValue(args, ++index, arg));
     else if (arg === "--human") options.human = true;

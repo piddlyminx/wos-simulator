@@ -24,6 +24,12 @@ services:
       - ${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}:/data/simulations
       - ./test_results:/data/test_results:rw
       - ./skill:/repo/skill:ro
+      - type: bind
+        source: ./simulator/testcase_results
+        target: /repo/simulator/testcase_results
+        read_only: true
+        bind:
+          create_host_path: false
     expose:
       - "3000"
     healthcheck:
