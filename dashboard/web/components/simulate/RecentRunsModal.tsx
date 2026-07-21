@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import type {
   SavedSimulationKind,
   SavedSimulationRunListItem,
@@ -54,6 +56,64 @@ export function RecentRunsModal({
   title?: string;
   emptyMessage?: string;
 }) {
+  const [busyRunId, setBusyRunId] = useState<string | null>(null);
+  const [cleaning, setCleaning] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [actionMessage, setActionMessage] = useState<string | null>(null);
+
+  async function setKept(run: SavedSimulationRunListItem): Promise<void> {
+    setBusyRunId(run.id);
+    setActionError(null);
+    setActionMessage(null);
+    try {
+      const response = await fetch(
+        `/api/simulate/runs/${encodeURIComponent(run.id)}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ kept: !run.kept }),
+        },
+      );
+      const data = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        throw new Error(data.error || `Run update failed with ${response.status}`);
+      }
+      await onRefresh();
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to update run");
+    } finally {
+      setBusyRunId(null);
+    }
+  }
+
+  async function cleanUpRuns(): Promise<void> {
+    if (!window.confirm(
+      "Delete old unkept runs according to the saved-run retention settings? Kept runs will not be removed.",
+    )) return;
+    setCleaning(true);
+    setActionError(null);
+    setActionMessage(null);
+    try {
+      const response = await fetch("/api/simulate/runs", { method: "DELETE" });
+      const data = (await response.json()) as {
+        deleted_runs?: number;
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error || `Cleanup failed with ${response.status}`);
+      }
+      const deleted = data.deleted_runs ?? 0;
+      setActionMessage(
+        deleted === 1 ? "Removed 1 old run." : `Removed ${deleted} old runs.`,
+      );
+      await onRefresh();
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : "Failed to clean up runs");
+    } finally {
+      setCleaning(false);
+    }
+  }
+
   return (
     <div
       className="sim-modal-scope fixed inset-0 z-50 flex items-end justify-center px-3 py-4 sm:items-center"
@@ -75,6 +135,15 @@ export function RecentRunsModal({
           <div className="flex items-center gap-2">
             <button
               type="button"
+              onClick={() => void cleanUpRuns()}
+              disabled={cleaning}
+              className="sim-edit-chip min-h-[32px] px-3 py-1 text-xs font-bold"
+              style={{ opacity: cleaning ? 0.6 : 1 }}
+            >
+              {cleaning ? "Cleaning…" : "Clean up"}
+            </button>
+            <button
+              type="button"
               onClick={onRefresh}
               className="sim-edit-chip min-h-[32px] px-3 py-1 text-xs font-bold"
             >
@@ -92,6 +161,19 @@ export function RecentRunsModal({
         </div>
 
         <div className="max-h-[65vh] overflow-y-auto p-3">
+          {actionError ? (
+            <p
+              className="px-1 pb-2 text-xs"
+              style={{ color: "#f38ba8" }}
+              aria-live="polite"
+            >
+              {actionError}
+            </p>
+          ) : actionMessage ? (
+            <p className="px-1 pb-2 text-xs opacity-60" aria-live="polite">
+              {actionMessage}
+            </p>
+          ) : null}
           {loading ? (
             <p className="px-1 py-4 text-xs opacity-60">Loading recent runs…</p>
           ) : error ? (
@@ -105,21 +187,44 @@ export function RecentRunsModal({
           ) : (
             <div className="flex flex-col gap-2">
               {runs.map((run) => (
-                <button
+                <div
                   key={run.id}
-                  type="button"
-                  onClick={() => onChoose(run)}
-                  className="sim-tool-panel p-3 text-left"
+                  className="sim-tool-panel flex items-center gap-2 p-2"
                 >
-                  <span className="block truncate text-xs font-bold">
-                    {run.title}
-                  </span>
-                  <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] opacity-55">
-                    <span>{savedRunKindLabel(run.kind)}</span>
-                    <span>{formatSavedRunTimestamp(run.created_at)}</span>
-                    <span className="truncate">{run.id}</span>
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => onChoose(run)}
+                    className="min-w-0 flex-1 p-1 text-left"
+                  >
+                    <span className="block truncate text-xs font-bold">
+                      {run.title}
+                    </span>
+                    <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] opacity-55">
+                      <span>{savedRunKindLabel(run.kind)}</span>
+                      <span>{formatSavedRunTimestamp(run.created_at)}</span>
+                      <span className="truncate">{run.id}</span>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void setKept(run)}
+                    disabled={busyRunId === run.id}
+                    aria-label={`${run.kept ? "Allow cleanup for" : "Keep"} saved run ${run.id}`}
+                    title={
+                      run.kept
+                        ? "Allow automatic cleanup"
+                        : "Exclude from automatic cleanup"
+                    }
+                    className="sim-edit-chip min-h-[32px] shrink-0 px-2 py-1 text-[10px] font-bold"
+                    style={{ opacity: busyRunId === run.id ? 0.6 : 1 }}
+                  >
+                    {busyRunId === run.id
+                      ? "Saving…"
+                      : run.kept
+                        ? "Kept"
+                        : "Keep"}
+                  </button>
+                </div>
               ))}
               {hasMore && (
                 <button

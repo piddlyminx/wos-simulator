@@ -106,12 +106,28 @@ Override via the `DB_PATH` environment variable if needed:
 DB_PATH=/absolute/path/to/dashboard.sqlite npm run dev
 ```
 
-Saved `/simulate` share links are stored outside git. By default the app writes
-JSON snapshots to `../../tmp/simulate-runs`; override with `SIM_RUNS_DIR` when
-you want a different host path or a mounted Docker volume:
+Saved simulation share links are stored outside git. By default the app writes
+gzip-compressed snapshots plus small listing metadata files to
+`../../tmp/simulate-runs`; override with `SIM_RUNS_DIR` when you want a
+different host path or a mounted Docker volume:
 
 ```bash
 SIM_RUNS_DIR=/absolute/path/to/simulate-runs npm run dev
+```
+
+New snapshots use matching `<uuid>.json.gz` and `<uuid>.meta.json` files. The
+store continues to read existing `<uuid>.json` snapshots. Runs marked **Keep**
+in a Recent runs picker also have a small `<uuid>.keep` marker and are excluded
+from cleanup.
+
+Unkept runs are cleaned up at most once per day when they are older than 30
+days or the store exceeds 500 MB. The first automatic cleanup after upgrading
+only creates its daily marker, providing a day to mark existing runs as kept.
+Use the picker’s **Clean up** action to apply the policy immediately. Override
+either limit, or set it to `0` to disable that limit:
+
+```bash
+SIM_RUNS_RETENTION_DAYS=60 SIM_RUNS_MAX_STORAGE_MB=1000 npm run dev
 ```
 
 The saved-run directory is protected with `proper-lockfile`, so it can also be

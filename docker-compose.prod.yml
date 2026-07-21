@@ -19,6 +19,8 @@ services:
       NODE_ENV: production
       DB_PATH: /data/test_results/dashboard.sqlite
       SIM_RUNS_DIR: /data/simulations
+      SIM_RUNS_RETENTION_DAYS: ${SIM_RUNS_RETENTION_DAYS:-30}
+      SIM_RUNS_MAX_STORAGE_MB: ${SIM_RUNS_MAX_STORAGE_MB:-500}
       SIMULATOR_PYTHON: /opt/sim-venv/bin/python
     volumes:
       - ${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}:/data/simulations

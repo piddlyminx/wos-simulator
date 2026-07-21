@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 
-import { listSimulationRunsPage, saveSimulationRun } from "@/lib/simulation-store";
+import {
+  cleanupSimulationRuns,
+  listSimulationRunsPage,
+  saveSimulationRun,
+} from "@/lib/simulation-store";
 import type {
   SavedSimulationKind,
   SavedSimulationRequest,
@@ -58,6 +62,19 @@ export async function POST(req: Request) {
       saved_kind: saved.kind,
       share_url: saved.share_url,
     });
+  } catch (err) {
+    return NextResponse.json(
+      {
+        error: err instanceof Error ? err.message : String(err),
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE() {
+  try {
+    return NextResponse.json(await cleanupSimulationRuns());
   } catch (err) {
     return NextResponse.json(
       {

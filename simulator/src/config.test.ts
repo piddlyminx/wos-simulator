@@ -420,6 +420,17 @@ test("loadSimulatorConfig rejects malformed or non-attack value formulas", () =>
   assert.throws(() => loadSimulatorConfigFromDir(missingCoefficient), /requires a numeric percentage coefficient/i);
 });
 
+test("loadSimulatorConfig rejects missing required effects", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.troop.damageTaken.down",
+    value: 10,
+    requires_effect: "MissingShield/1",
+    units: { applies_to: ["infantry"], applies_vs: "any" }
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /requires_effect references missing effect MissingShield\/1/i);
+});
+
 function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "turn" }): string {
   const root = join(tmpdir(), `wos-simulator-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });

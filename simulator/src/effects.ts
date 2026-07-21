@@ -338,7 +338,7 @@ function isRelationQualifiedSelector(value: unknown): value is string {
 }
 
 function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
-  if (intent.type === "active.hero.shield") return "shield";
+  if (intent.type === "active.hero.shield" || intent.type === "active.troop.shield") return "shield";
   if (intent.type === "extra_skill_attack") return "extra_attack";
   if (intent.type === "dodge" || intent.type === "no_attack") return "control";
   if (intent.type === "attack_order") return "battle_order";

@@ -229,6 +229,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
 | `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means the effect is permanent. |
 | `same_effect_stacking` | `add` or `max` | Controls overlap between live activations of the same modifier definition and scope. Omitted means `add`. |
+| `requires_effect` | Effect ID string | Applies a runtime damage modifier only while the named effect is applicable to the same damage job. |
 | `value_evolution` | Evolution object | Optionally changes the effect value as rounds or uses advance. |
 | `trigger_damage_jobs` | Non-empty array of job definitions | Required for `extra_skill_attack`; describes the actual skill-damage jobs it emits. |
 
@@ -253,6 +254,7 @@ Modifier names identify a damage-equation bucket. The general forms are:
 | `passive.<stat>.<direction>` | `stat`: `attack`, `lethality`, `health`, `defense`; `direction`: `up`, `down` | Permanent deterministic battle-start stat modifiers folded into the static damage profile. |
 | `active.hero.<property>.<direction>` | `property`: `attack`, `lethality`, `health`, `defense`, `damage`, `damageTaken`; `direction`: `up`, `down` | Runtime modifier in a hero-labelled bucket. All combinations are supported even if the current hero files use only a subset. |
 | `active.troop.<property>.<direction>` | Same values as `active.hero` | Runtime modifier in a separate troop-labelled bucket. Supported by the engine but not currently used in hero definitions. A hero effect placed here is still reported as hero-sourced; only its equation bucket changes. |
+| `active.hero.shield`, `active.troop.shield` | Non-negative raw value | Taker-side protection subtracted after the percentage damage equation. |
 | `type.all.damage.<direction>` | `up`, `down` | Modifier applied to both normal and skill damage. |
 | `type.normal.damage.<direction>` | `up`, `down` | Dealer-side modifier for normal attacks only. |
 | `type.normal.damageTaken.<direction>` | `up`, `down` | Taker-side modifier for normal attacks only. |
@@ -275,6 +277,14 @@ For example, `active.hero.damage.down` with `applies_to: "enemy.any"` reduces da
 **Gotcha — `.down` is denominator-based, not subtractive.** A 20% `.down` contribution divides damage by `1.20`; it does not multiply damage by `0.80`. Likewise, reducing a taker's health or defense by 20% contributes a `1.20` numerator factor. This makes equal `.up` and `.down` magnitudes mathematical opposites in factor placement, but not ordinary `+20%`/`-20%` percentage arithmetic.
 
 Percentages in one ordinary bucket add: two live `active.hero.damage.up` contributions of 10 and 20 produce that bucket's `1 + 0.10 + 0.20 = 1.30` factor. Distinct buckets multiply in the final equation. `type.all.damage.up/down` is the exception: its contributions multiply as individual percentage factors rather than adding into one percentage total.
+
+Shield buckets are raw rather than percentage factors. Their applicable values are summed and the result is subtracted after the ordinary numerator/denominator expression: `max(0, damageBeforeOffsets - offsetDamage)`.
+
+### Conditional runtime modifiers
+
+`requires_effect` names another effect in the same skill file. The dependent modifier contributes only when a live instance of the required effect is applicable to that exact damage-job shape. It is not enough for the required effect to be active elsewhere: an effect scoped to Marksman attacking Infantry does not enable the dependent modifier for a Lancer attacking that Infantry.
+
+Both effects must be runtime damage modifiers, effect IDs must resolve uniquely, and dependency chains are rejected. Checking a dependency does not consume it; normal effect-use charging consumes the required effect after the completed damage job.
 
 ### Passive restrictions
 

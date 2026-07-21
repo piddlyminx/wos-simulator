@@ -176,6 +176,15 @@ function isLegacyConfigField(key: string): boolean {
 }
 
 function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostics: ConfigDiagnostics): void {
+  const effectDefinitions = new Map<string, EffectIntentDefinition[]>();
+  for (const skill of Object.values(skillFile.skills ?? {})) {
+    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+      const definitions = effectDefinitions.get(effectId);
+      const definition = { id: effectId, ...effect } as EffectIntentDefinition;
+      if (definitions) definitions.push(definition);
+      else effectDefinitions.set(effectId, [definition]);
+    }
+  }
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
     validateTriggerDefinition(skill.trigger, file, skillId);
     if (skill.trigger.type === "pre_battle") validatePreBattleSkill(skill, file, skillId);
@@ -186,6 +195,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       validateBattleStartEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
+      validateRequiredEffect(effect as EffectIntentDefinition, effectDefinitions, file, skillId, effectId);
       validateEffectValueFormula(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "attack_order") validateAttackOrderEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectDuration(effect as EffectIntentDefinition, file, skillId, effectId);
@@ -201,6 +211,39 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
         });
       }
     }
+  }
+}
+
+function validateRequiredEffect(
+  effect: EffectIntentDefinition,
+  effectDefinitions: Map<string, EffectIntentDefinition[]>,
+  file: string,
+  skillId: string,
+  effectId: string
+): void {
+  if (effect.requires_effect === undefined) return;
+  const path = `${file}:${skillId}.${effectId}.requires_effect`;
+  if (typeof effect.requires_effect !== "string" || effect.requires_effect.trim().length === 0) {
+    throw new Error(`requires_effect must name a non-empty effect ID at ${path}`);
+  }
+  if (effect.requires_effect === effectId) {
+    throw new Error(`effect cannot require itself at ${path}`);
+  }
+  if (dynamicBucketDefinition(effect.type)?.effectBucket !== true) {
+    throw new Error(`requires_effect is only supported for runtime damage modifiers at ${path}`);
+  }
+  const required = effectDefinitions.get(effect.requires_effect) ?? [];
+  if (required.length === 0) {
+    throw new Error(`requires_effect references missing effect ${effect.requires_effect} at ${path}`);
+  }
+  if (required.length > 1) {
+    throw new Error(`requires_effect references ambiguous effect ${effect.requires_effect} at ${path}`);
+  }
+  if (required[0].requires_effect !== undefined) {
+    throw new Error(`requires_effect chains are not supported at ${path}`);
+  }
+  if (dynamicBucketDefinition(required[0].type)?.effectBucket !== true) {
+    throw new Error(`requires_effect must reference a runtime damage modifier at ${path}`);
   }
 }
 

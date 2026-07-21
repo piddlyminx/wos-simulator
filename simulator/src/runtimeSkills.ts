@@ -51,6 +51,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
   const chanceSkillIds: Record<SideId, string[]> = { attacker: [], defender: [] };
   const effectGroups: ActiveEffectGroup[] = [];
   const damageGroupsByJobShape: ActiveEffectGroup[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
+  const groupMetadata = new Map<ActiveEffectGroup, { ownerSide: SideId; effectId: string; requiresEffectId?: string }>();
   // One scope-key table per (side, config definition); duplicate main/joiner copies of the
   // same config effect share it, so their activations land in the same groups.
   const groupTablesByDefinition: Record<SideId, Map<object, Array<ActiveEffectGroup | undefined>>> = {
@@ -114,6 +115,11 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
           bucketIndex: damageBucketIndex(definition.name),
           sameEffectStacking: candidate.sameEffectStacking
         };
+        groupMetadata.set(group, {
+          ownerSide: skill.side,
+          effectId: intent.id,
+          ...(intent.requires_effect === undefined ? {} : { requiresEffectId: intent.requires_effect })
+        });
         groupsByScopeKey[scopeKey] = group;
         groupsForDefinition.push(group);
         slotsForDefinition.push(slots);
@@ -125,6 +131,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
       intent.effectGroupsByScopeKey = groupsByScopeKey;
     }
   }
+  linkRequiredEffectGroups(effectGroups, damageGroupsByJobShape, groupMetadata);
   return {
     preBattle,
     battleStart,
@@ -138,6 +145,36 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
       chanceSkillIds
     }
   };
+}
+
+function linkRequiredEffectGroups(
+  effectGroups: ActiveEffectGroup[],
+  damageGroupsByJobShape: ActiveEffectGroup[][],
+  metadata: Map<ActiveEffectGroup, { ownerSide: SideId; effectId: string; requiresEffectId?: string }>
+): void {
+  for (const group of effectGroups) {
+    const dependent = metadata.get(group);
+    if (!dependent?.requiresEffectId) continue;
+    const byJobShape: Array<number[] | undefined> = [];
+    let linked = false;
+    for (let slot = 0; slot < damageGroupsByJobShape.length; slot += 1) {
+      const jobGroups = damageGroupsByJobShape[slot];
+      if (!jobGroups.includes(group)) continue;
+      const requiredOrdinals = jobGroups
+        .filter((candidate) => {
+          const required = metadata.get(candidate);
+          return required?.ownerSide === dependent.ownerSide && required.effectId === dependent.requiresEffectId;
+        })
+        .map((candidate) => candidate.ordinal);
+      if (requiredOrdinals.length === 0) continue;
+      byJobShape[slot] = requiredOrdinals;
+      linked = true;
+    }
+    if (!linked) {
+      throw new Error(`Effect ${dependent.effectId} requires effect ${dependent.requiresEffectId}, but no applicable runtime effect group was prepared`);
+    }
+    group.requiredGroupOrdinalsByJobShape = byJobShape;
+  }
 }
 
 function hasPerUnitRoundTrigger(skill: ResolvedSkill): boolean {

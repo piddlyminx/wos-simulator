@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { appendFile, mkdtemp } from "node:fs/promises";
+import { appendFile, mkdtemp, readdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -233,6 +233,12 @@ test("simulation store filters and pages each run history separately", async () 
   });
   assert.deepEqual(tournamentPage.runs.map((run: SavedSimulationRunListItem) => run.kind), ["tournament"]);
   assert.equal(tournamentPage.runs[0]?.share_url.startsWith("/tournament?run="), true);
+
+  const files = await readdir(dir);
+  assert.equal(files.includes(`${pvp.id}.json.gz`), true);
+  assert.equal(files.includes(`${pvp.id}.meta.json`), true);
+  assert.equal(files.includes(`${pvp.id}.json`), false);
+  assert.deepEqual((await store.readSimulationRun(pvp.id))?.result, pvpResult);
 });
 
 test("simulation run listing does not read the saved result payload", async () => {
@@ -240,14 +246,68 @@ test("simulation run listing does not read the saved result payload", async () =
   process.env.SIM_RUNS_DIR = dir;
   const store = await import(`./simulation-store.ts?case=${Date.now()}`);
 
-  const saved = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const id = "legacy-run-1234";
+  await writeFile(
+    path.join(dir, `${id}.json`),
+    `${JSON.stringify({
+      version: 1,
+      id,
+      kind: "simulate",
+      created_at: new Date().toISOString(),
+      request: pvpRequest,
+      result: pvpResult,
+    }, null, 2)}\n`,
+    "utf8",
+  );
+  assert.deepEqual((await store.readSimulationRun(id))?.result, pvpResult);
   await appendFile(
-    path.join(dir, `${saved.id}.json`),
+    path.join(dir, `${id}.json`),
     "this makes the result payload invalid JSON",
     "utf8",
   );
 
   const page = await store.listSimulationRunsPage({ limit: 20 });
   assert.equal(page.runs.length, 1);
-  assert.equal(page.runs[0]?.id, saved.id);
+  assert.equal(page.runs[0]?.id, id);
+});
+
+test("cleanup enforces age and size limits but preserves kept runs", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
+  process.env.SIM_RUNS_DIR = dir;
+  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
+
+  const disposable = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const kept = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
+  assert.equal(await store.setSimulationRunKept(kept.id, true), true);
+
+  const pageBefore = await store.listSimulationRunsPage({ limit: 20 });
+  assert.equal(pageBefore.runs.find((run: SavedSimulationRunListItem) => run.id === kept.id)?.kept, true);
+  const cleanup = await store.cleanupSimulationRuns({
+    retentionDays: 30,
+    maxStorageBytes: 0,
+    now: Date.now() + 31 * 24 * 60 * 60 * 1000,
+  });
+
+  assert.equal(cleanup.deleted_runs, 1);
+  assert.equal(cleanup.kept_runs, 1);
+  assert.equal(await store.readSimulationRun(disposable.id), null);
+  assert.equal((await store.readSimulationRun(kept.id))?.kept, true);
+
+  const overLimit = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const sizeCleanup = await store.cleanupSimulationRuns({
+    retentionDays: 0,
+    maxStorageBytes: 1,
+  });
+  assert.equal(sizeCleanup.deleted_runs, 1);
+  assert.equal(await store.readSimulationRun(overLimit.id), null);
+  assert.equal((await store.readSimulationRun(kept.id))?.kept, true);
+
+  assert.equal(await store.setSimulationRunKept(kept.id, false), false);
+  const finalCleanup = await store.cleanupSimulationRuns({
+    retentionDays: 30,
+    maxStorageBytes: 0,
+    now: Date.now() + 31 * 24 * 60 * 60 * 1000,
+  });
+  assert.equal(finalCleanup.deleted_runs, 1);
+  assert.equal(await store.readSimulationRun(kept.id), null);
 });

@@ -221,8 +221,10 @@ docker compose rm -sf app
 - The container also mounts `dashboard/`, `simulator/`, `skill/`, and
   `shared/fighters_data/` so OCR routes can call the skill parser and CLI
   testcase runs can write parity reports.
-- Saved `/simulate` runs are written to the host-backed `SIM_RUNS_DIR` path,
-  not to the git-tracked repo tree.
+- Saved simulation runs are gzip-compressed in the host-backed `SIM_RUNS_DIR`
+  path, not the git-tracked repo tree. Unkept runs default to 30-day / 500-MB
+  retention, configurable with `SIM_RUNS_RETENTION_DAYS` and
+  `SIM_RUNS_MAX_STORAGE_MB`.
 - The Docker image installs Python, `tabulate`, `Pillow`, `pytesseract`, and
   `tesseract-ocr`, so the dashboard's helper routes work inside the container
   without using the host Python environment.

@@ -1522,44 +1522,91 @@ test("overlapping attack-duration extra skill effects are consumed independently
   assert.equal(roundTwoSkillOutcomes.every((outcome) => !(outcome.appliedEffects ?? []).some((event) => hasEffectKind(event, "extra_attack"))), true);
 });
 
-test("requires_effect is ignored by native simulator effect activation", () => {
+test("requires_effect gates a modifier to damage jobs where the required effect is applicable", () => {
   const result = runOnce(
     {
-      maxRounds: 0,
+      maxRounds: 1,
       attacker: {
-        troops: { infantry_t1: 10 },
-        heroes: { LegacyDependency: { skill_1: 1 } }
+        troops: { infantry_t1: 1000, marksman_t1: 1000 },
+        heroes: {}
       },
       defender: {
-        troops: { infantry_t1: 10 },
-        heroes: {}
+        troops: { infantry_t1: 10000 },
+        heroes: { Guard: { skill_1: 1, skill_2: 1 } }
       }
     },
     minimalConfig({
-      LegacyDependency: {
-        name: "LegacyDependency",
+      Guard: {
+        name: "Guard",
+        troop_type: "infantry",
         skills: {
-          BothEffectsActivate: {
-            trigger: { type: "pre_battle" },
+          CrystalShield: {
+            trigger: { type: "attack", probability: 100, source: "enemy.marksman", target: "self.infantry" },
             effects: {
-              base: {
-                type: "passive.attack.up",
-                value: 10
+              shield: {
+                type: "active.troop.shield",
+                value: 36,
+                units: { applies_to: "trigger.target", applies_vs: "trigger.source" },
+                duration: { attacks: { count: 1 } }
+              }
+            }
+          },
+          BodyOfLight: {
+            trigger: { type: "battle_start" },
+            effects: {
+              defense: {
+                type: "active.troop.defense.up",
+                value: 4,
+                units: { applies_to: ["infantry"], applies_vs: "any" }
               },
-              legacyDependent: {
-                ...({ requires_effect: "missing-effect" } as Record<string, unknown>),
-                type: "passive.defense.up",
-                value: 10
+              conditionalReduction: {
+                type: "active.troop.damageTaken.down",
+                value: 10,
+                requires_effect: "shield",
+                units: { applies_to: ["infantry"], applies_vs: "any" }
               }
             }
           }
         }
       }
-    })
+    }),
+    { mode: "trace" }
   );
 
-  const report = result.skillReport.attacker.find((entry) => entry.skillId === "BothEffectsActivate");
-  assert.equal(report?.effectActivations, 2);
+  const infantryAttack = result.attacks.find((attack) =>
+    attack.kind === "normal" && attack.dealerSide === "attacker" && attack.dealerUnit === "infantry"
+  );
+  const marksmanAttack = result.attacks.find((attack) =>
+    attack.kind === "normal" && attack.dealerSide === "attacker" && attack.dealerUnit === "marksman"
+  );
+  const infantryEffects = new Set((infantryAttack?.appliedEffects ?? []).map((effect) => effect.effectId));
+  const marksmanEffects = new Set((marksmanAttack?.appliedEffects ?? []).map((effect) => effect.effectId));
+
+  assert.equal(infantryEffects.has("defense"), true);
+  assert.equal(infantryEffects.has("conditionalReduction"), false);
+  assert.equal(infantryEffects.has("shield"), false);
+  assert.equal(marksmanEffects.has("defense"), true);
+  assert.equal(marksmanEffects.has("conditionalReduction"), true);
+  assert.equal(marksmanEffects.has("shield"), true);
+  assert.equal(marksmanAttack?.trace?.atomicBuckets["active.troop.damageTaken.down"].totalPct, 10);
+  assert.equal(marksmanAttack?.trace?.offsetDamage, 36);
+  assert.equal(marksmanAttack?.kills, Math.max(0, (marksmanAttack?.trace?.damageBeforeOffsets ?? 0) - 36));
+});
+
+test("Body of Light resolves FC8 and FC10 values from the Infantry troop level", () => {
+  const config = loadSimulatorConfig();
+  const expectations = [
+    { troopId: "infantry_t10_fc8", level: 1, defense: 4, conditionalReduction: 10 },
+    { troopId: "infantry_t10_fc10", level: 2, defense: 6, conditionalReduction: 15 }
+  ] as const;
+
+  for (const expected of expectations) {
+    const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
+    const bodyOfLight = fighter.troopSkills.find((skill) => skill.id === "BodyOfLight");
+    assert.equal(bodyOfLight?.level, expected.level);
+    assert.equal(bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/1")?.value, expected.defense);
+    assert.equal(bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/2")?.value, expected.conditionalReduction);
+  }
 });
 
 test("fighter passive effects are added to the static profile after pre_battle skill effects", () => {

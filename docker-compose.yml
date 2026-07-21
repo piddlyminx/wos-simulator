@@ -22,6 +22,8 @@ services:
       NODE_ENV: development
       DB_PATH: /repo/test_results/dashboard.sqlite
       SIM_RUNS_DIR: /data/simulations
+      SIM_RUNS_RETENTION_DAYS: ${SIM_RUNS_RETENTION_DAYS:-30}
+      SIM_RUNS_MAX_STORAGE_MB: ${SIM_RUNS_MAX_STORAGE_MB:-500}
       # Watcher polling for WSL2/SMB/NFS-backed mounts where native inotify can
       # miss host-side edits.
       NEXT_WATCH_POLL_INTERVAL_MS: ${NEXT_WATCH_POLL_INTERVAL_MS:-1000}

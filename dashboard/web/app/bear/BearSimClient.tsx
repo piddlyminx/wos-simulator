@@ -626,6 +626,7 @@ export default function BearSimClient({
         id,
         kind,
         created_at: createdAt,
+        kept: false,
         share_url: shareUrl,
         title,
       },

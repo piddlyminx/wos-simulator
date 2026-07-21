@@ -847,6 +847,7 @@ export default function SimulateClient({
       id,
       kind,
       created_at: createdAt,
+      kept: false,
       share_url: shareUrl,
       title,
     });

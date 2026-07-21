@@ -269,6 +269,7 @@ export interface SavedSimulationRunDocument {
   id: string;
   kind: SavedSimulationKind;
   created_at: string;
+  kept?: boolean;
   request: SavedSimulationRequest;
   result: SavedSimulationResult;
 }
@@ -281,6 +282,7 @@ export interface SavedSimulationRunListItem {
   id: string;
   kind: SavedSimulationKind;
   created_at: string;
+  kept: boolean;
   share_url: string;
   title: string;
 }

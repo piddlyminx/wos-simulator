@@ -24,7 +24,7 @@ import {
   type DynamicDamageBucket,
   type StaticDamageBucket
 } from "./damageBuckets";
-import { advanceEffectAttackDelay } from "./effects";
+import { advanceEffectAttackDelay, isEffectAttackReady } from "./effects";
 import { damageJobShapeSlot, damageJobSlot, type EffectIndex } from "./effectIndex";
 import type { BattleRecorder, DamageJobRecorder } from "./recorder";
 
@@ -127,10 +127,12 @@ export function calculateDamageJob(
   applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
 
   const usedEffects = options.usedEffects ?? [];
+  const jobSlot = damageJobSlot(job);
   applyBucketEffects(
-    options.effectIndex.damageGroupsByJobShape[damageJobSlot(job)],
+    options.effectIndex.damageGroupsByJobShape[jobSlot],
     options.effectIndex.liveEffectsByGroup,
     job.round,
+    jobSlot,
     buckets,
     recording,
     usedEffects
@@ -148,11 +150,14 @@ function applyBucketEffects(
   groups: ActiveEffectGroup[],
   liveEffectsByGroup: ActiveEffect[][],
   round: number,
+  jobSlot: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
   for (const group of groups) {
+    const dependency = group.requiredGroupOrdinalsByJobShape;
+    if (dependency && !requiredEffectIsApplicable(dependency, liveEffectsByGroup, round, jobSlot)) continue;
     const effects = liveEffectsByGroup[group.ordinal];
     if (effects.length === 0) continue;
     if (group.sameEffectStacking !== "max") {
@@ -180,6 +185,22 @@ function applyBucketEffects(
       applyBucketEffectGroup(selected, eligible, round, buckets, recording, usedEffects);
     }
   }
+}
+
+function requiredEffectIsApplicable(
+  dependency: Array<number[] | undefined>,
+  liveEffectsByGroup: ActiveEffect[][],
+  round: number,
+  jobSlot: number
+): boolean {
+  const requiredOrdinals = dependency[jobSlot];
+  if (!requiredOrdinals) return false;
+  for (const ordinal of requiredOrdinals) {
+    for (const effect of liveEffectsByGroup[ordinal]) {
+      if (isEffectAttackReady(effect) && effect.getCurrentValue(round) !== 0) return true;
+    }
+  }
+  return false;
 }
 
 // Apply the selected candidate's value to its bucket and emit the observation to the recorder;

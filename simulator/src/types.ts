@@ -86,6 +86,8 @@ export interface EffectIntentDefinition {
   id: string;
   type: string;
   value?: unknown;
+  /** Apply this modifier only while the named effect is applicable to the same damage job. */
+  requires_effect?: string;
   value_formula?: PercentOfValueFormula;
   value_evolution?: { type?: string; step?: string; value?: number };
   units?: Record<string, unknown>;
@@ -276,6 +278,9 @@ export interface ActiveEffectGroup {
   ordinal: number;
   bucketIndex: number;
   sameEffectStacking: SameEffectStacking;
+  // Prepared dependency lookup indexed by damage-job shape. An empty slot means the
+  // required effect cannot apply to that job, so this group must not contribute.
+  requiredGroupOrdinalsByJobShape?: Array<number[] | undefined>;
 }
 
 export interface ActiveEffect {

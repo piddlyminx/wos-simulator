@@ -340,6 +340,7 @@ export default function TournamentClient({
       id: meta.saved_run_id,
       kind: "tournament",
       created_at: meta.saved_at,
+      kept: false,
       request,
       result: computedResult,
       share_url: meta.share_url,
@@ -352,6 +353,7 @@ export default function TournamentClient({
       id: saved.id,
       kind: saved.kind,
       created_at: saved.created_at,
+      kept: false,
       share_url: saved.share_url,
       title,
     }, ...current.filter((item) => item.id !== saved.id)]);

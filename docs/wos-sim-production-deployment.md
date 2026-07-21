@@ -91,21 +91,31 @@ or preserve:
 
 ## Saved Run Storage
 
-`SIM_RUNS_DIR` stores saved simulation runs as UUID-named JSON documents written
-with temp-file plus atomic rename semantics. In production,
+`SIM_RUNS_DIR` stores saved simulation runs as UUID-named gzip snapshots with
+small metadata sidecars, both written with temp-file plus atomic rename
+semantics. Existing uncompressed JSON snapshots remain readable. In production,
 `docker-compose.prod.yml` bind-mounts this directory from:
 
 ```text
 ${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}
 ```
 
-If an operator backs up or syncs this directory outside the app, only completed
-JSON run documents should be treated as durable records. Ignore transient write
-files:
+Each new run consists of `<uuid>.json.gz` and `<uuid>.meta.json`. A
+`<uuid>.keep` marker excludes the run from retention cleanup. Back up or sync
+all three suffixes and ignore transient write files:
 
 ```text
 *.tmp
-*.json.*.tmp
+```
+
+Automatic cleanup runs at most daily, with a one-day grace period when no
+cleanup marker exists yet. By default it removes unkept runs older than 30 days
+and then the oldest unkept runs while storage exceeds 500 MB. Configure the
+limits in the Compose environment; `0` disables the corresponding limit:
+
+```text
+SIM_RUNS_RETENTION_DAYS=30
+SIM_RUNS_MAX_STORAGE_MB=500
 ```
 
 Player stat presets are private browser data stored by `/simulate` in

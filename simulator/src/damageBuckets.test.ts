@@ -50,10 +50,12 @@ test("damage scratch stores one numeric value per dynamic bucket with metadata-d
   assert.equal("rawSet" in scratch, false);
 });
 
-test("hero shields are raw post-subtract offsets applying to normal and skill damage", () => {
-  const shield = dynamicBucketDefinition("active.hero.shield");
-  assert.equal(shield?.jobSide, "taker");
-  assert.equal(shield?.update, "add_raw");
-  assert.equal(shield?.placement, "post_subtract");
-  assert.equal(shield?.damageKind, undefined);
+test("hero and troop shields are raw post-subtract offsets applying to normal and skill damage", () => {
+  for (const bucket of ["active.hero.shield", "active.troop.shield"] as const) {
+    const shield = dynamicBucketDefinition(bucket);
+    assert.equal(shield?.jobSide, "taker", bucket);
+    assert.equal(shield?.update, "add_raw", bucket);
+    assert.equal(shield?.placement, "post_subtract", bucket);
+    assert.equal(shield?.damageKind, undefined, bucket);
+  }
 });

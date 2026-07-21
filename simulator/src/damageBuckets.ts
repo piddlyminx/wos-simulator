@@ -63,6 +63,7 @@ export const DYNAMIC_BUCKETS = [
   { name: "active.troop.health.up", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "active.troop.lethality.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "active.troop.lethality.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "active.troop.shield", jobSide: "taker", update: "add_raw", placement: "post_subtract", effectBucket: true },
   { name: "source.extraSkill", jobSide: "dealer", update: "assign_factor", placement: "numerator", damageKind: "skill" },
   { name: "troops.count", jobSide: "dealer", update: "assign_factor", placement: "numerator" },
   { name: "type.all.damage.down", jobSide: "dealer", update: "multiply_pct_factor", placement: "denominator", effectBucket: true },

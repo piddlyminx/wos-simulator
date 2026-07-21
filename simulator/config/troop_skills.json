@@ -87,7 +87,7 @@
       },
       "effects": {
         "CrystalShield/1": {
-          "type": "active.troop.defense.up",
+          "type": "active.troop.shield",
           "value": [
             36,
             36
@@ -105,13 +105,18 @@
       }
     },
     "BodyOfLight": {
-      "description": "Increase Infantry Defense by 4%, and reduce extra damage while Crystal Shield is active.",
+      "description": "Increase Infantry Defense by X%, and reduce an extra Y% damage while Crystal Shield is active.",
       "troop_type": "infantry",
       "requirements": [
         {
           "level": 1,
           "type": "fc",
           "value": 8
+        },
+        {
+          "level": 2,
+          "type": "fc",
+          "value": 10
         }
       ],
       "trigger": {
@@ -121,7 +126,8 @@
         "BodyOfLight/1": {
           "type": "active.troop.defense.up",
           "value": [
-            4
+            4,
+            6
           ],
           "units": {
             "applies_to": [
@@ -131,10 +137,12 @@
           }
         },
         "BodyOfLight/2": {
-          "type": "active.troop.defense.up",
+          "type": "active.troop.damageTaken.down",
           "value": [
-            10
+            10,
+            15
           ],
+          "requires_effect": "CrystalShield/1",
           "units": {
             "applies_to": [
               "infantry"
