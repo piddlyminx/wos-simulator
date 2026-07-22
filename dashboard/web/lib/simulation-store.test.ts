@@ -235,13 +235,14 @@ test("simulation store filters and pages each run history separately", async () 
   assert.equal(tournamentPage.runs[0]?.share_url.startsWith("/tournament?run="), true);
 
   const files = await readdir(dir);
+  assert.equal(files.includes(".runs-index.json"), true);
   assert.equal(files.includes(`${pvp.id}.json.gz`), true);
   assert.equal(files.includes(`${pvp.id}.meta.json`), true);
   assert.equal(files.includes(`${pvp.id}.json`), false);
   assert.deepEqual((await store.readSimulationRun(pvp.id))?.result, pvpResult);
 });
 
-test("simulation run listing does not read the saved result payload", async () => {
+test("simulation run index persists without rereading legacy result files", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
   process.env.SIM_RUNS_DIR = dir;
   const store = await import(`./simulation-store.ts?case=${Date.now()}`);
@@ -252,23 +253,37 @@ test("simulation run listing does not read the saved result payload", async () =
     `${JSON.stringify({
       version: 1,
       id,
-      kind: "simulate",
+      kind: "tournament",
       created_at: new Date().toISOString(),
-      request: pvpRequest,
-      result: pvpResult,
+      request: tournamentRequest,
+      result: tournamentResult,
     }, null, 2)}\n`,
     "utf8",
   );
-  assert.deepEqual((await store.readSimulationRun(id))?.result, pvpResult);
+  assert.deepEqual((await store.readSimulationRun(id))?.result, tournamentResult);
   await appendFile(
     path.join(dir, `${id}.json`),
     "this makes the result payload invalid JSON",
     "utf8",
   );
 
-  const page = await store.listSimulationRunsPage({ limit: 20 });
+  const page = await store.listSimulationRunsPage({
+    limit: 20,
+    kinds: ["tournament"],
+  });
   assert.equal(page.runs.length, 1);
   assert.equal(page.runs[0]?.id, id);
+
+  // A fresh server process can list from the persisted index without opening
+  // any of the large legacy run bodies again.
+  await writeFile(path.join(dir, `${id}.json`), "not JSON", "utf8");
+  const freshStore = await import(`./simulation-store.ts?case=${Date.now()}-fresh`);
+  const indexedPage = await freshStore.listSimulationRunsPage({
+    limit: 20,
+    kinds: ["tournament"],
+  });
+  assert.equal(indexedPage.runs.length, 1);
+  assert.equal(indexedPage.runs[0]?.id, id);
 });
 
 test("cleanup enforces age and size limits but preserves kept runs", async () => {

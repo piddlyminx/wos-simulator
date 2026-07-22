@@ -609,7 +609,7 @@ function GroupCard({
         </label>
       </div>
       <p className="mt-3 text-xs text-slate-400">
-        Multiple ratios can be added separated by ";" or " ". Use "," or "-" between values.
+        Multiple ratios can be added separated by &quot;;&quot; or &quot; &quot;. Use &quot;,&quot; or &quot;-&quot; between values.
         {ratioParse.error === null
           ? ` ${ratioParse.ratios.length} ${ratioParse.ratios.length === 1 ? "ratio" : "ratios"} recognised.`
           : null}

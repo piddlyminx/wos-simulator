@@ -101,8 +101,12 @@ ${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}
 ```
 
 Each new run consists of `<uuid>.json.gz` and `<uuid>.meta.json`. A
-`<uuid>.keep` marker excludes the run from retention cleanup. Back up or sync
-all three suffixes and ignore transient write files:
+`<uuid>.keep` marker excludes the run from retention cleanup. The store also
+maintains `.runs-index.json`, a small persistent listing index that avoids
+opening every snapshot when a Recent runs picker loads. Existing stores build
+the index automatically on their first list request. Back up or sync all three
+run suffixes and the index; the index can be regenerated from the run files if
+needed. Ignore transient write files:
 
 ```text
 *.tmp

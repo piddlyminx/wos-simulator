@@ -118,7 +118,10 @@ SIM_RUNS_DIR=/absolute/path/to/simulate-runs npm run dev
 New snapshots use matching `<uuid>.json.gz` and `<uuid>.meta.json` files. The
 store continues to read existing `<uuid>.json` snapshots. Runs marked **Keep**
 in a Recent runs picker also have a small `<uuid>.keep` marker and are excluded
-from cleanup.
+from cleanup. A persistent `.runs-index.json` contains only listing metadata so
+the recent-run pickers do not need to open every snapshot. The index is built
+automatically the first time an existing store is listed, then updated on save,
+Keep, and cleanup operations.
 
 Unkept runs are cleaned up at most once per day when they are older than 30
 days or the store exceeds 500 MB. The first automatic cleanup after upgrading

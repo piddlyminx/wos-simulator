@@ -23,18 +23,21 @@ const LIST_READ_BATCH_SIZE = 32;
 const LIST_HEADER_CHUNK_SIZE = 64 * 1024;
 const LIST_HEADER_LIMIT = 256 * 1024;
 const RESULT_FIELD_MARKER = /,\r?\n  "result":/;
+const RUN_INDEX_VERSION = 1;
+const RUN_INDEX_FILE = ".runs-index.json";
 const AUTO_CLEANUP_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const DEFAULT_RETENTION_DAYS = 30;
 const DEFAULT_MAX_STORAGE_MB = 500;
 const gzipAsync = promisify(gzip);
 const gunzipAsync = promisify(gunzip);
 
-const listItemCache = new Map<
-  string,
-  { modifiedAt: number; kept: boolean; item: SavedSimulationRunListItem }
->();
-
 let autoCleanupPromise: Promise<void> | null = null;
+let runIndexCache: {
+  ino: number;
+  modifiedAt: number;
+  size: number;
+  index: SimulationRunIndex;
+} | null = null;
 
 export const SIM_RUNS_DIR =
   process.env.SIM_RUNS_DIR ??
@@ -74,6 +77,22 @@ interface RunCandidate {
   compressed: boolean;
 }
 
+interface SimulationRunIndexRecord {
+  id: string;
+  kind: SavedSimulationKind;
+  created_at: string;
+  title: string;
+  kept: boolean;
+  storage: "gzip" | "json";
+  modified_at_ms: number;
+  size_bytes: number;
+}
+
+interface SimulationRunIndex {
+  version: typeof RUN_INDEX_VERSION;
+  runs: SimulationRunIndexRecord[];
+}
+
 function assertRunId(id: string): void {
   if (!ID_RE.test(id)) {
     throw new Error(`Invalid saved simulation id: ${id}`);
@@ -98,6 +117,10 @@ function metadataPath(id: string): string {
 function keepPath(id: string): string {
   assertRunId(id);
   return path.join(SIM_RUNS_DIR, `${id}.keep`);
+}
+
+function runIndexPath(): string {
+  return path.join(SIM_RUNS_DIR, RUN_INDEX_FILE);
 }
 
 function withShareUrl(
@@ -149,6 +172,72 @@ function assertSavedSimulationListDoc(
     throw new Error("Saved simulation document is malformed");
   }
   return doc as Omit<SavedSimulationRunDocument, "result">;
+}
+
+function assertSimulationRunIndex(value: unknown): SimulationRunIndex {
+  if (!value || typeof value !== "object") {
+    throw new Error("Saved-run index is missing");
+  }
+  const index = value as Partial<SimulationRunIndex>;
+  if (index.version !== RUN_INDEX_VERSION || !Array.isArray(index.runs)) {
+    throw new Error("Saved-run index is malformed");
+  }
+  for (const record of index.runs) {
+    if (
+      !record ||
+      typeof record !== "object" ||
+      typeof record.id !== "string" ||
+      !ID_RE.test(record.id) ||
+      !isSavedSimulationKind(record.kind) ||
+      typeof record.created_at !== "string" ||
+      typeof record.title !== "string" ||
+      typeof record.kept !== "boolean" ||
+      (record.storage !== "gzip" && record.storage !== "json") ||
+      typeof record.modified_at_ms !== "number" ||
+      !Number.isFinite(record.modified_at_ms) ||
+      typeof record.size_bytes !== "number" ||
+      !Number.isFinite(record.size_bytes) ||
+      record.size_bytes < 0
+    ) {
+      throw new Error("Saved-run index is malformed");
+    }
+  }
+  return index as SimulationRunIndex;
+}
+
+function sortIndexRecords(
+  records: SimulationRunIndexRecord[],
+): SimulationRunIndexRecord[] {
+  return records.sort(
+    (a, b) =>
+      b.created_at.localeCompare(a.created_at) || b.id.localeCompare(a.id),
+  );
+}
+
+function recordToListItem(
+  record: SimulationRunIndexRecord,
+): SavedSimulationRunListItem {
+  return {
+    id: record.id,
+    kind: record.kind,
+    created_at: record.created_at,
+    kept: record.kept,
+    share_url: buildSimulationShareUrl(record.id, record.kind),
+    title: record.title,
+  };
+}
+
+function candidateForRecord(record: SimulationRunIndexRecord): RunCandidate {
+  const compressed = record.storage === "gzip";
+  return {
+    id: record.id,
+    headerPath: compressed ? metadataPath(record.id) : legacyRunPath(record.id),
+    dataPath: compressed
+      ? compressedRunPath(record.id)
+      : legacyRunPath(record.id),
+    modifiedAt: record.modified_at_ms,
+    compressed,
+  };
 }
 
 async function readSimulationRunListItem(
@@ -283,6 +372,136 @@ async function writeAtomic(filePath: string, data: string | Buffer): Promise<voi
   await fs.rename(tempPath, filePath);
 }
 
+async function readSimulationRunIndex(): Promise<SimulationRunIndex | null> {
+  try {
+    const stats = await fs.stat(runIndexPath());
+    if (
+      runIndexCache?.ino === stats.ino &&
+      runIndexCache.modifiedAt === stats.mtimeMs &&
+      runIndexCache.size === stats.size
+    ) {
+      return runIndexCache.index;
+    }
+    const index = assertSimulationRunIndex(
+      JSON.parse(await fs.readFile(runIndexPath(), "utf8")),
+    );
+    runIndexCache = {
+      ino: stats.ino,
+      modifiedAt: stats.mtimeMs,
+      size: stats.size,
+      index,
+    };
+    return index;
+  } catch (err) {
+    const nodeErr = err as NodeJS.ErrnoException;
+    if (nodeErr?.code === "ENOENT" || err instanceof SyntaxError) return null;
+    if (err instanceof Error && err.message.startsWith("Saved-run index is ")) {
+      return null;
+    }
+    throw err;
+  }
+}
+
+async function writeSimulationRunIndex(index: SimulationRunIndex): Promise<void> {
+  sortIndexRecords(index.runs);
+  const serialized = `${JSON.stringify(index)}\n`;
+  await writeAtomic(runIndexPath(), serialized);
+  const stats = await fs.stat(runIndexPath());
+  runIndexCache = {
+    ino: stats.ino,
+    modifiedAt: stats.mtimeMs,
+    size: stats.size,
+    index,
+  };
+}
+
+async function candidateSize(candidate: RunCandidate): Promise<number> {
+  const paths = candidate.compressed
+    ? [candidate.dataPath, candidate.headerPath, keepPath(candidate.id)]
+    : [candidate.dataPath, keepPath(candidate.id)];
+  const sizes = await Promise.all(
+    paths.map(async (filePath) => {
+      try {
+        return (await fs.stat(filePath)).size;
+      } catch {
+        return 0;
+      }
+    }),
+  );
+  return sizes.reduce((sum, size) => sum + size, 0);
+}
+
+async function buildSimulationRunIndexUnlocked(): Promise<SimulationRunIndex> {
+  const { candidates, keptIds } = await collectRunCandidates();
+  const records: SimulationRunIndexRecord[] = [];
+  for (
+    let start = 0;
+    start < candidates.length;
+    start += LIST_READ_BATCH_SIZE
+  ) {
+    const batch = candidates.slice(start, start + LIST_READ_BATCH_SIZE);
+    const batchRecords = await Promise.all(
+      batch.map(async (candidate) => {
+        try {
+          const item = await readSimulationRunListItem(
+            candidate,
+            keptIds.has(candidate.id),
+          );
+          return {
+            id: item.id,
+            kind: item.kind,
+            created_at: item.created_at,
+            title: item.title,
+            kept: item.kept,
+            storage: candidate.compressed ? "gzip" as const : "json" as const,
+            modified_at_ms: candidate.modifiedAt,
+            size_bytes: await candidateSize(candidate),
+          };
+        } catch {
+          return null;
+        }
+      }),
+    );
+    for (const record of batchRecords) {
+      if (record) records.push(record);
+    }
+  }
+  return { version: RUN_INDEX_VERSION, runs: sortIndexRecords(records) };
+}
+
+async function loadOrBuildSimulationRunIndex(): Promise<SimulationRunIndex> {
+  const existing = await readSimulationRunIndex();
+  if (existing) return existing;
+  mkdirSync(SIM_RUNS_DIR, { recursive: true });
+  return withDirectoryLock(SIM_RUNS_DIR, async () => {
+    const current = await readSimulationRunIndex();
+    if (current) return current;
+    const built = await buildSimulationRunIndexUnlocked();
+    await writeSimulationRunIndex(built);
+    return built;
+  });
+}
+
+export async function rebuildSimulationRunIndex(): Promise<number> {
+  mkdirSync(SIM_RUNS_DIR, { recursive: true });
+  return withDirectoryLock(SIM_RUNS_DIR, async () => {
+    const built = await buildSimulationRunIndexUnlocked();
+    await writeSimulationRunIndex(built);
+    return built.runs.length;
+  });
+}
+
+async function updateExistingSimulationRunIndex(
+  update: (records: SimulationRunIndexRecord[]) => SimulationRunIndexRecord[],
+): Promise<void> {
+  const index = await readSimulationRunIndex();
+  if (!index) return;
+  await writeSimulationRunIndex({
+    version: RUN_INDEX_VERSION,
+    runs: update([...index.runs]),
+  });
+}
+
 export async function saveSimulationRun(
   kind: SavedSimulationKind,
   request: SavedSimulationRequest,
@@ -312,8 +531,25 @@ export async function saveSimulationRun(
     await writeAtomic(compressedRunPath(id), compressed);
     try {
       await writeAtomic(metadataPath(id), metadata);
+      const stats = await fs.stat(metadataPath(id));
+      await updateExistingSimulationRunIndex((records) => [
+        {
+          id,
+          kind,
+          created_at: doc.created_at,
+          title: buildSimulationRunTitle(request, kind),
+          kept: false,
+          storage: "gzip",
+          modified_at_ms: stats.mtimeMs,
+          size_bytes: compressed.length + Buffer.byteLength(metadata),
+        },
+        ...records.filter((record) => record.id !== id),
+      ]);
     } catch (err) {
-      await fs.rm(compressedRunPath(id), { force: true });
+      await Promise.all([
+        fs.rm(compressedRunPath(id), { force: true }),
+        fs.rm(metadataPath(id), { force: true }),
+      ]);
       throw err;
     }
   });
@@ -363,7 +599,20 @@ export async function setSimulationRunKept(
   assertRunId(id);
   mkdirSync(SIM_RUNS_DIR, { recursive: true });
   return withDirectoryLock(SIM_RUNS_DIR, async () => {
-    if (!(await readSimulationRun(id))) return null;
+    const index = await readSimulationRunIndex();
+    const indexed = index?.runs.find((record) => record.id === id);
+    const exists = indexed
+      ? true
+      : (await fileExists(compressedRunPath(id))) ||
+        (await fileExists(legacyRunPath(id)));
+    if (!exists) return null;
+    let previousMarkerSize = 0;
+    try {
+      previousMarkerSize = (await fs.stat(keepPath(id))).size;
+    } catch (err) {
+      const nodeErr = err as NodeJS.ErrnoException;
+      if (nodeErr?.code !== "ENOENT") throw err;
+    }
     if (kept) {
       await writeAtomic(
         keepPath(id),
@@ -372,7 +621,23 @@ export async function setSimulationRunKept(
     } else {
       await fs.rm(keepPath(id), { force: true });
     }
-    listItemCache.delete(id);
+    if (indexed) {
+      const markerSize = kept ? (await fs.stat(keepPath(id))).size : 0;
+      await updateExistingSimulationRunIndex((records) =>
+        records.map((record) =>
+          record.id === id
+            ? {
+                ...record,
+                kept,
+                size_bytes: Math.max(
+                  0,
+                  record.size_bytes + markerSize - previousMarkerSize,
+                ),
+              }
+            : record,
+        ),
+      );
+    }
     return kept;
   });
 }
@@ -392,62 +657,17 @@ export async function listSimulationRunsPage(
     options.kinds && options.kinds.length > 0
       ? new Set(options.kinds)
       : null;
-  const { candidates, keptIds } = await collectRunCandidates();
-  candidates
-    .sort(
-      (a, b) =>
-        b.modifiedAt - a.modifiedAt || b.id.localeCompare(a.id),
-    );
-
-  const requiredCount = offset + limit + 1;
-  const matchingRuns: SavedSimulationRunListItem[] = [];
-  let start = 0;
-  while (start < candidates.length && matchingRuns.length < requiredCount) {
-    const batchSize = Math.min(
-      LIST_READ_BATCH_SIZE,
-      requiredCount - matchingRuns.length,
-    );
-    const batch = candidates.slice(start, start + batchSize);
-    start += batch.length;
-    const batchRuns = await Promise.all(
-      batch.map(async (candidate) => {
-        const kept = keptIds.has(candidate.id);
-        const cached = listItemCache.get(candidate.id);
-        if (
-          cached?.modifiedAt === candidate.modifiedAt &&
-          cached.kept === kept
-        ) return cached.item;
-        try {
-          const item = await readSimulationRunListItem(candidate, kept);
-          listItemCache.set(candidate.id, {
-            modifiedAt: candidate.modifiedAt,
-            kept,
-            item,
-          });
-          return item;
-        } catch {
-          // Ignore partial or stale scratch files so one bad save does not
-          // break the recent-run picker.
-          return null;
-        }
-      }),
-    );
-    for (const run of batchRuns) {
-      if (run && (!kindSet || kindSet.has(run.kind))) matchingRuns.push(run);
-    }
-  }
-
-  const sorted = matchingRuns.sort((a, b) =>
-    b.created_at.localeCompare(a.created_at),
-  );
-  const pageRuns = sorted.slice(offset, offset + limit);
-  const page = {
-    runs: pageRuns,
-    has_more: sorted.length > offset + pageRuns.length,
-    next_offset: offset + pageRuns.length,
-  };
+  const index = await loadOrBuildSimulationRunIndex();
+  const matching = kindSet
+    ? index.runs.filter((record) => kindSet.has(record.kind))
+    : index.runs;
+  const pageRecords = matching.slice(offset, offset + limit);
   scheduleSimulationRunCleanup();
-  return page;
+  return {
+    runs: pageRecords.map(recordToListItem),
+    has_more: matching.length > offset + pageRecords.length,
+    next_offset: offset + pageRecords.length,
+  };
 }
 
 function numericEnv(name: string, fallback: number): number {
@@ -468,29 +688,13 @@ export function simulationRunRetentionPolicy(): {
   };
 }
 
-async function candidateSize(candidate: RunCandidate): Promise<number> {
-  const paths = candidate.compressed
-    ? [candidate.dataPath, candidate.headerPath, keepPath(candidate.id)]
-    : [candidate.dataPath, keepPath(candidate.id)];
-  const sizes = await Promise.all(
-    paths.map(async (filePath) => {
-      try {
-        return (await fs.stat(filePath)).size;
-      } catch {
-        return 0;
-      }
-    }),
-  );
-  return sizes.reduce((sum, size) => sum + size, 0);
-}
-
-async function removeCandidate(candidate: RunCandidate): Promise<void> {
+async function removeIndexRecord(record: SimulationRunIndexRecord): Promise<void> {
+  const candidate = candidateForRecord(record);
   await Promise.all([
     fs.rm(candidate.dataPath, { force: true }),
-    fs.rm(metadataPath(candidate.id), { force: true }),
-    fs.rm(keepPath(candidate.id), { force: true }),
+    fs.rm(metadataPath(record.id), { force: true }),
+    fs.rm(keepPath(record.id), { force: true }),
   ]);
-  listItemCache.delete(candidate.id);
 }
 
 export async function cleanupSimulationRuns(
@@ -505,67 +709,53 @@ export async function cleanupSimulationRuns(
     const cutoff = retentionDays > 0
       ? now - retentionDays * 24 * 60 * 60 * 1000
       : Number.NEGATIVE_INFINITY;
-    const { candidates, keptIds } = await collectRunCandidates();
-    const records: Array<{
-      candidate: RunCandidate;
-      kept: boolean;
-      createdAt: number;
-      size: number;
-    }> = [];
-    for (
-      let start = 0;
-      start < candidates.length;
-      start += LIST_READ_BATCH_SIZE
-    ) {
-      const batch = candidates.slice(start, start + LIST_READ_BATCH_SIZE);
-      const batchRecords = await Promise.all(
-        batch.map(async (candidate) => {
-          try {
-            const item = await readSimulationRunListItem(
-              candidate,
-              keptIds.has(candidate.id),
-            );
-            const createdAt = Date.parse(item.created_at);
-            return {
-              candidate,
-              kept: keptIds.has(candidate.id),
-              createdAt: Number.isFinite(createdAt)
-                ? createdAt
-                : candidate.modifiedAt,
-              size: await candidateSize(candidate),
-            };
-          } catch {
-            return null;
-          }
-        }),
+    const index =
+      (await readSimulationRunIndex()) ??
+      (await buildSimulationRunIndexUnlocked());
+    const oldestFirst = [...index.runs].sort((a, b) => {
+      const aCreated = Date.parse(a.created_at);
+      const bCreated = Date.parse(b.created_at);
+      return (
+        (Number.isFinite(aCreated) ? aCreated : a.modified_at_ms) -
+        (Number.isFinite(bCreated) ? bCreated : b.modified_at_ms)
       );
-      for (const record of batchRecords) {
-        if (record) records.push(record);
-      }
-    }
-    records.sort((a, b) => a.createdAt - b.createdAt);
+    });
 
-    let remainingBytes = records.reduce((sum, record) => sum + record.size, 0);
-    let remainingRuns = records.length;
+    let remainingBytes = oldestFirst.reduce(
+      (sum, record) => sum + record.size_bytes,
+      0,
+    );
     let deletedBytes = 0;
     let deletedRuns = 0;
-    for (const record of records) {
+    const deletedIds = new Set<string>();
+    for (const record of oldestFirst) {
       if (record.kept) continue;
-      const expired = retentionDays > 0 && record.createdAt < cutoff;
+      const createdAt = Date.parse(record.created_at);
+      const effectiveCreatedAt = Number.isFinite(createdAt)
+        ? createdAt
+        : record.modified_at_ms;
+      const expired = retentionDays > 0 && effectiveCreatedAt < cutoff;
       const overLimit = maxStorageBytes > 0 && remainingBytes > maxStorageBytes;
       if (!expired && !overLimit) continue;
-      await removeCandidate(record.candidate);
-      remainingBytes -= record.size;
-      remainingRuns -= 1;
-      deletedBytes += record.size;
+      await removeIndexRecord(record);
+      deletedIds.add(record.id);
+      remainingBytes -= record.size_bytes;
+      deletedBytes += record.size_bytes;
       deletedRuns += 1;
     }
+    const remainingRecords = index.runs.filter(
+      (record) => !deletedIds.has(record.id),
+    );
+    await writeSimulationRunIndex({
+      version: RUN_INDEX_VERSION,
+      runs: remainingRecords,
+    });
 
     return {
       deleted_runs: deletedRuns,
       deleted_bytes: deletedBytes,
-      kept_runs: records.filter((record) => record.kept).length,
-      remaining_runs: remainingRuns,
+      kept_runs: remainingRecords.filter((record) => record.kept).length,
+      remaining_runs: remainingRecords.length,
       remaining_bytes: remainingBytes,
     };
   });
