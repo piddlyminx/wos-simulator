@@ -150,6 +150,37 @@ test("Gatot source-Attack shields reproduce the observed army-size threshold", (
   }
 });
 
+test("Gatot turn shields split protection across mixed enemy formations", () => {
+  const input: BattleInput = {
+    maxRounds: 1500,
+    seed: "10024f8d-b3e3-423a-832c-5176cfbbbd7d",
+    attacker: {
+      troops: { infantry_t6: 5000 },
+      stats: { infantry: { attack: 295.3, defense: 293.3, lethality: 10, health: 10 } },
+      heroes: { Gatot: { skill_1: 1, skill_2: 3, skill_3: 3 } }
+    },
+    defender: {
+      troops: { infantry_t6: 1000, lancer_t6: 10 },
+      stats: {
+        infantry: { attack: 326.1, defense: 330.1, lethality: 18.2, health: 18.2 },
+        lancer: { attack: 284.8, defense: 288.8, lethality: 18.2, health: 18.2 }
+      },
+      heroes: {
+        Gatot: { skill_1: 2, skill_2: 2, skill_3: 2 },
+        Gordon: { skill_1: 3, skill_2: 3, skill_3: 3 }
+      }
+    }
+  };
+
+  const result = simulateBattles(input, loadSimulatorConfig(), { mode: "fast" })[0]!;
+
+  assert.deepEqual(
+    { winner: result.winner, rounds: result.rounds, leftInfantry: result.remaining.attacker.infantry },
+    { winner: "attacker", rounds: 1153, leftInfantry: 4557 }
+  );
+  assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
+});
+
 function gatotInfantryBattle(left: number, right: number, maxRounds = 1500): BattleInput {
   return {
     maxRounds,

@@ -16,7 +16,7 @@ import type {
   UnitType
 } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import { calculateDamageJob, sqrtMinInitialArmy, type DamageResult } from "./damage";
+import { buildInitialFormationAttackWeights, calculateDamageJob, sqrtMinInitialArmy, type DamageResult } from "./damage";
 import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
@@ -260,6 +260,7 @@ function runLoop(
     dodge: options.useEffectsOnDodge ?? true,
     no_attack: options.useEffectsOnNoAttack ?? true
   };
+  const initialArmyScale = sqrtMinInitialArmy(fighters);
   const damageJobOptions = {
     recorder,
     effectIndex: runtime.effectIndex,
@@ -267,7 +268,8 @@ function runLoop(
     scratch: runtime.damageScratch,
     capToTakerTroops: loopOptions.capJobKills,
     usedEffects: runtime.usedEffects,
-    sqrtMinInitialArmy: sqrtMinInitialArmy(fighters)
+    sqrtMinInitialArmy: initialArmyScale,
+    initialFormationAttackWeights: buildInitialFormationAttackWeights(fighters, initialArmyScale)
   };
 
   let rounds = 0;

@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { calculateDamageJob, createDamageScratch, evaluateDamageExpression } from "./damage";
+import {
+  buildInitialFormationAttackWeights,
+  calculateDamageJob,
+  createDamageScratch,
+  evaluateDamageExpression
+} from "./damage";
 import { DYNAMIC_BUCKETS, STATIC_BUCKETS, type BucketJobSide, type BucketPlacement } from "./damageBuckets";
 import { createEffectIndex, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, indexEffect } from "./effectIndex";
 import { activateEffect, evolvingActiveEffectValue, resolvedEffectScopeKey } from "./effects";
@@ -365,7 +370,7 @@ test("damage-taken buckets use the expected damage direction", () => {
   assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
 });
 
-test("a shield subtracts its full raw value from every normal and skill damage job", () => {
+test("a durationless shield subtracts its full raw value from every normal and skill damage job", () => {
   const fighters = simpleFighters();
   const shield = {
     ...effect("active.hero.shield", "defender", 25),
@@ -395,6 +400,84 @@ test("a shield subtracts its full raw value from every normal and skill damage j
     sourceSide: "defender",
     sameEffectStacking: "max"
   }]);
+});
+
+test("a turn-duration shield is apportioned by each dealer formation's initial attack weight", () => {
+  const fighters = simpleFighters();
+  fighters.attacker.initialTroops = { infantry: 1000, lancer: 10, marksman: 0 };
+  fighters.attacker.troopDetails.lancer = {
+    id: "lancer_t1",
+    type: "lancer",
+    tier: 1,
+    fc: 0,
+    count: 10,
+    stats: { attack: 100, defense: 100, lethality: 100, health: 100 }
+  };
+  fighters.defender.initialTroops = { infantry: 0, lancer: 1010, marksman: 0 };
+  fighters.defender.troopDetails.lancer!.count = 1010;
+
+  const weights = buildInitialFormationAttackWeights(fighters);
+  assert.deepEqual(weights.bySide.attacker, { infantry: 1005, lancer: 101, marksman: 0 });
+  assert.equal(weights.totalBySide.attacker, 1106);
+
+  const shield = {
+    ...effect("active.hero.shield", "defender", 25),
+    kind: "shield" as const,
+    duration: { turns: { count: 1 } },
+    intent: { id: "turn-shield", type: "active.hero.shield", value: 25 },
+    sameEffectStacking: "max" as const
+  };
+  const roundStartTroops = {
+    attacker: { infantry: 1000, lancer: 10, marksman: 0 },
+    defender: { infantry: 0, lancer: 1010, marksman: 0 }
+  };
+  const infantryJob = { ...job, roundStartTroops };
+  const lancerJob = { ...job, roundStartTroops, dealerUnit: "lancer" as const };
+
+  const infantry = calculateIndexedDamageJob(infantryJob, fighters, [shield], {
+    trace: true,
+    initialFormationAttackWeights: weights
+  });
+  const lancer = calculateIndexedDamageJob(lancerJob, fighters, [shield], {
+    trace: true,
+    initialFormationAttackWeights: weights
+  });
+
+  assert.ok(Math.abs((infantry.trace?.offsetDamage ?? 0) - 25 * 1005 / 1106) < 1e-12);
+  assert.ok(Math.abs((lancer.trace?.offsetDamage ?? 0) - 25 * 101 / 1106) < 1e-12);
+  assert.ok(Math.abs((infantry.trace?.offsetDamage ?? 0) + (lancer.trace?.offsetDamage ?? 0) - 25) < 1e-12);
+  const infantryApplied = infantry.appliedEffects?.[0] && "value" in infantry.appliedEffects[0]
+    ? infantry.appliedEffects[0].value
+    : 0;
+  const lancerApplied = lancer.appliedEffects?.[0] && "value" in lancer.appliedEffects[0]
+    ? lancer.appliedEffects[0].value
+    : 0;
+  assert.ok(Math.abs(infantryApplied - 25 * 1005 / 1106) < 1e-12);
+  assert.ok(Math.abs(lancerApplied - 25 * 101 / 1106) < 1e-12);
+});
+
+test("an attack-duration shield keeps its full value in a mixed-formation army", () => {
+  const fighters = simpleFighters();
+  fighters.attacker.initialTroops = { infantry: 1000, lancer: 10, marksman: 0 };
+  fighters.attacker.troopDetails.lancer = {
+    id: "lancer_t1",
+    type: "lancer",
+    tier: 1,
+    fc: 0,
+    count: 10,
+    stats: { attack: 100, defense: 100, lethality: 100, health: 100 }
+  };
+  const shield = {
+    ...effect("active.troop.shield", "defender", 25, "troop_skill"),
+    kind: "shield" as const,
+    duration: { attacks: { count: 1 } },
+    intent: { id: "attack-shield", type: "active.troop.shield", value: 25 },
+    sameEffectStacking: "max" as const
+  };
+
+  const outcome = calculateIndexedDamageJob(job, fighters, [shield], { trace: true });
+
+  assert.equal(outcome.trace?.offsetDamage, 25);
 });
 
 test("max-stacked shields use the largest resolved absolute value", () => {
