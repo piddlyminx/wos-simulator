@@ -68,6 +68,7 @@ _SHARPEN = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32)
 # ── Singletons (lazy-loaded) ──────────────────────────────────────────────────
 _onnx_sess: ort.InferenceSession | None = None
 _rapid_ocr: RapidOCR | None = None
+_fast_rapid_ocr: RapidOCR | None = None
 
 
 def _get_onnx() -> ort.InferenceSession:
@@ -82,6 +83,18 @@ def _get_rapid() -> RapidOCR:
     if _rapid_ocr is None:
         _rapid_ocr = RapidOCR()
     return _rapid_ocr
+
+
+def _get_fast_rapid() -> RapidOCR:
+    global _fast_rapid_ocr
+    if _fast_rapid_ocr is None:
+        from rapidocr import ModelType
+
+        _fast_rapid_ocr = RapidOCR(
+            use_angle_cls=False,
+            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 160},
+        )
+    return _fast_rapid_ocr
 
 
 # ── Low-level helpers ──────────────────────────────────────────────────────────
@@ -104,12 +117,30 @@ def _require_template_anchor(
     min_score: float = MIN_HEADER_TEMPLATE_SCORE,
 ) -> tuple[int, int]:
     x, y, score = _match_template(img_bgr, tpl_bgr)
-    if score < min_score:
-        raise RuntimeError(
-            f"{label} template match below threshold in {source_path}: "
-            f"score={score:.3f}, threshold={min_score:.3f}"
+    if score >= min_score:
+        return x, y
+
+    # Shared/compressed screenshots can preserve readable header text while
+    # lowering the exact glyph-template score.  Require an independent OCR
+    # anchor rather than lowering the live-capture threshold globally.
+    from capture_report_top_bottom import _find_text_box
+
+    ocr_box = _find_text_box(img_bgr, label)
+    if ocr_box is not None:
+        logger.info(
+            "%s template score %.3f below %.3f; using OCR anchor y=%d confidence=%.3f",
+            label,
+            score,
+            min_score,
+            ocr_box[0],
+            ocr_box[2],
         )
-    return x, y
+        return 0, ocr_box[0]
+
+    raise RuntimeError(
+        f"{label} template match below threshold in {source_path} and OCR did not "
+        f"confirm the header: score={score:.3f}, threshold={min_score:.3f}"
+    )
 
 
 def _safe_crop(img: np.ndarray, x1: int, y1: int, x2: int, y2: int) -> np.ndarray:
@@ -145,6 +176,30 @@ def _ocr_crnn(gray: np.ndarray, sharpen: bool = False) -> str:
             chars.append(IDX2CHAR[idx])
         prev = idx
     return "".join(chars)
+
+
+def _ocr_integer_tesseract(gray: np.ndarray) -> tuple[str, int]:
+    """Read one outcome integer with an independent OCR engine."""
+    import pytesseract
+
+    enlarged = cv2.resize(gray, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+    candidates = [enlarged]
+    _, thresholded = cv2.threshold(enlarged, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    candidates.append(thresholded)
+    config = "--psm 7 -c tessedit_char_whitelist=0123456789,"
+    for candidate in candidates:
+        text = pytesseract.image_to_string(candidate, config=config).strip()
+        cleaned = re.sub(r"[^0-9]", "", text)
+        if cleaned:
+            return text, int(cleaned)
+    return "", 0
+
+
+def _outcome_balances(outcome: dict[str, int], side: str) -> bool:
+    return outcome[f"{side}_troops"] == sum(
+        outcome[f"{side}_{field}"]
+        for field in ("losses", "injured", "lightly_injured", "survivors")
+    )
 
 
 # ── Parsing helpers ────────────────────────────────────────────────────────────
@@ -184,6 +239,66 @@ def _read_name(img_bgr: np.ndarray, x1: int, y1: int, x2: int, y2: int) -> str:
     if result and result[0]:
         return " ".join(r[1] for r in result[0])
     return ""
+
+
+def _split_combined_names(text: str) -> tuple[str, str] | None:
+    """Split two adjacent player names using their alliance-tag boundaries."""
+    names = [
+        re.sub(r"\s*[:|]+\s*$", "", match.group(0).strip())
+        for match in re.finditer(r"\[[^\]]+\][^\[]+", text)
+    ]
+    if len(names) != 2 or not all(name for name in names):
+        return None
+    return names[0], names[1]
+
+
+def _repair_alliance_tag(text: str) -> str:
+    """Repair common OCR substitutions for the closing alliance-tag bracket."""
+    return re.sub(r"^\[([A-Za-z0-9]{2,4})[J)](?=[A-Z])", r"[\1]", text.strip())
+
+
+def _names_from_ocr_lines(lines: list, crop_width: int) -> tuple[str, str] | None:
+    sides: dict[str, list[tuple[float, str]]] = {"left": [], "right": []}
+    for box, text, _confidence in lines:
+        cleaned = str(text).strip()
+        if not cleaned:
+            continue
+        xs = [point[0] for point in box]
+        cx = sum(xs) / len(xs)
+        side = "left" if cx < crop_width / 2 else "right"
+        sides[side].append((min(xs), cleaned))
+
+    if sides["left"] and sides["right"]:
+        left = " ".join(text for _, text in sorted(sides["left"]))
+        right = " ".join(text for _, text in sorted(sides["right"]))
+        return _repair_alliance_tag(left), _repair_alliance_tag(right)
+
+    combined = " ".join(str(item[1]).strip() for item in lines if str(item[1]).strip())
+    split = _split_combined_names(combined)
+    if split is not None:
+        return _repair_alliance_tag(split[0]), _repair_alliance_tag(split[1])
+    return None
+
+
+def _read_names(img_bgr: np.ndarray, y1: int, y2: int) -> tuple[str, str]:
+    """Read both names in one OCR inference, falling back per side if ambiguous."""
+    x1, x2 = _LEFT_NAME_X[0], _RIGHT_NAME_X[1]
+    crop = _safe_crop(img_bgr, x1, y1, x2, y2)
+    if crop.size:
+        # Colour preserves the thin closing bracket better than sharpening on
+        # current report renders. Retry sharpened only if side separation is
+        # ambiguous, then retain the original per-side server fallback.
+        for candidate in (crop, cv2.filter2D(crop, -1, _SHARPEN)):
+            result = _get_fast_rapid()(candidate)
+            if result and result[0]:
+                names = _names_from_ocr_lines(result[0], crop.shape[1])
+                if names is not None:
+                    return names
+
+    return (
+        _read_name(img_bgr, _LEFT_NAME_X[0], y1, _LEFT_NAME_X[1], y2),
+        _read_name(img_bgr, _RIGHT_NAME_X[0], y1, _RIGHT_NAME_X[1], y2),
+    )
 
 
 def _detect_roles(img_bgr: np.ndarray, anchor_y: int) -> tuple[str, str]:
@@ -227,8 +342,7 @@ def parse_battle_report(
 
     # ── Names ──────────────────────────────────────────────────────────────────
     ny1, ny2 = anchor + _NAME_Y[0], anchor + _NAME_Y[1]
-    left_name  = _read_name(top, _LEFT_NAME_X[0],  ny1, _LEFT_NAME_X[1],  ny2)
-    right_name = _read_name(top, _RIGHT_NAME_X[0], ny1, _RIGHT_NAME_X[1], ny2)
+    left_name, right_name = _read_names(top, ny1, ny2)
 
     # ── Outcome rows (CRNN) ───────────────────────────────────────────────────
     outcome: dict[str, int] = {}
@@ -250,6 +364,43 @@ def parse_battle_report(
                 "ocr_text": raw_text,
                 "value": value,
             })
+
+    # The report rows must conserve the deployed troop total.  The fast CRNN
+    # can confuse punctuation and compressed WhatsApp glyphs; only pay for an
+    # independent Tesseract pass when that invariant exposes a bad read.
+    for side, (sx1, sx2) in (("left", _LEFT_OUTCOME_X), ("right", _RIGHT_OUTCOME_X)):
+        if _outcome_balances(outcome, side):
+            continue
+        crnn_values = {
+            field: outcome[f"{side}_{field}"]
+            for field in _OUTCOME_ROWS
+        }
+        fallback_values: dict[str, int] = {}
+        fallback_debug: dict[str, str] = {}
+        for field, (off_y1, off_y2) in _OUTCOME_ROWS.items():
+            sy1, sy2 = anchor + off_y1, anchor + off_y2
+            gray = _crop_gray(top, sx1, sy1, sx2, sy2)
+            raw_text, value = _ocr_integer_tesseract(gray)
+            fallback_values[field] = value
+            fallback_debug[field] = raw_text
+        fallback_balances = fallback_values["troops"] == sum(
+            fallback_values[field]
+            for field in ("losses", "injured", "lightly_injured", "survivors")
+        )
+        if not fallback_balances:
+            raise RuntimeError(
+                f"Inconsistent {side} battle outcome OCR: CRNN={crnn_values}, "
+                f"Tesseract={fallback_values}, raw={fallback_debug}. "
+                "Troops must equal losses + injured + lightly injured + survivors."
+            )
+        for field, value in fallback_values.items():
+            outcome[f"{side}_{field}"] = value
+        outcome_debug.append({
+            "side": side,
+            "fallback": "tesseract",
+            "raw": fallback_debug,
+            "values": fallback_values,
+        })
     _write_debug_json(debug_outdir, "outcome_crnn_debug.json", outcome_debug)
 
     # ── Unified troop/stat screenshot ──────────────────────────────────────────
@@ -278,6 +429,19 @@ def parse_battle_report(
                 if troop_type in TROOP_TYPES:
                     troop_power[f"{side}_{troop_type}"] = int(troop.get("count") or 0)
             troop_details[side] = parsed_stats[side].get("troops", [])
+
+        for side in ("left", "right"):
+            detail_total = sum(
+                int(troop.get("count") or 0)
+                for troop in troop_details[side]
+            )
+            outcome_total = outcome[f"{side}_troops"]
+            if detail_total != outcome_total:
+                raise RuntimeError(
+                    f"{side} outcome troop total {outcome_total} does not match "
+                    f"the independently parsed troop slots total {detail_total}; "
+                    "refusing to emit inconsistent report data"
+                )
 
     # ── Winner ─────────────────────────────────────────────────────────────────
     l_surv = outcome.get("left_survivors", 0)

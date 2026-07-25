@@ -15,6 +15,7 @@ import {
 import type { MouseEvent } from "react";
 import type { RefObject } from "react";
 import type { SimulateOutcomeRun } from "@/lib/simulate-run";
+import { formatBattleOutcome } from "@/lib/simulate/trace-format";
 
 interface Props {
   outcomes: number[];
@@ -32,6 +33,10 @@ interface ChartPoint {
   high: number;
   count: number;
   seed: string | number | null;
+  representative: SimulateOutcomeRun | null;
+  attackerWins: number;
+  defenderWins: number;
+  draws: number;
 }
 
 interface PinnedPoint {
@@ -108,10 +113,12 @@ export default function SimulateOutcomeChart({
     buckets[Math.max(0, idx)].push(run);
   }
 
-  function medianSeed(bucketRuns: SimulateOutcomeRun[]): string | number | null {
+  function representativeRun(
+    bucketRuns: SimulateOutcomeRun[],
+  ): SimulateOutcomeRun | null {
     if (!bucketRuns.length) return null;
     const sorted = [...bucketRuns].sort((a, b) => a.outcome - b.outcome);
-    return sorted[Math.floor((sorted.length - 1) / 2)]?.seed ?? null;
+    return sorted[Math.floor((sorted.length - 1) / 2)] ?? null;
   }
 
   function pinPoint(point: ChartPoint, x: number, y: number) {
@@ -140,12 +147,21 @@ export default function SimulateOutcomeChart({
     const low = binStart + i * binWidth;
     const high = low + binWidth;
     const mid = Math.round((low + high) / 2);
+    const representative = representativeRun(bucketRuns);
     return {
       bucket: mid,
       low,
       high,
       count: bucketRuns.length,
-      seed: medianSeed(bucketRuns),
+      seed: representative?.seed ?? null,
+      representative,
+      attackerWins: bucketRuns.filter(
+        (run) => winnerForRun(run) === "attacker",
+      ).length,
+      defenderWins: bucketRuns.filter(
+        (run) => winnerForRun(run) === "defender",
+      ).length,
+      draws: bucketRuns.filter((run) => winnerForRun(run) === "draw").length,
     };
   });
   const peakPoint =
@@ -253,7 +269,7 @@ export default function SimulateOutcomeChart({
             wrapperStyle={{ pointerEvents: "auto" }}
             content={({ active, payload, label }) => {
               const point = payload?.[0]?.payload as
-                | { count: number; seed: string | number | null }
+                | ChartPoint
                 | undefined;
               if (!active || !point) return null;
               return (
@@ -266,9 +282,9 @@ export default function SimulateOutcomeChart({
                   }}
                 >
                   <div className="font-mono">
-                    survivors ~= {compactNumber(Number(label))}
+                    survivor margin ~= {compactNumber(Number(label))}
                   </div>
-                  <div className="opacity-70">{point.count} runs</div>
+                  <OutcomeBreakdown point={point} />
                   {point.seed !== null && onShowExample && (
                     <ShowExampleButton
                       seed={point.seed}
@@ -395,11 +411,44 @@ function PinnedTooltip({
       onClick={(event) => event.stopPropagation()}
     >
       <div className="font-mono">
-        survivors ~= {compactNumber(point.bucket)}
+        survivor margin ~= {compactNumber(point.bucket)}
       </div>
-      <div className="opacity-70">{point.count} runs</div>
+      <OutcomeBreakdown point={point} />
       <ShowExampleButton seed={point.seed} onShowExample={onShowExample} />
     </div>
+  );
+}
+
+function winnerForRun(
+  run: SimulateOutcomeRun,
+): "attacker" | "defender" | "draw" {
+  if (run.winner) return run.winner;
+  if (run.outcome > 0) return "attacker";
+  if (run.outcome < 0) return "defender";
+  return "draw";
+}
+
+function OutcomeBreakdown({ point }: { point: ChartPoint }) {
+  const parts = [
+    point.attackerWins > 0 ? `${point.attackerWins} attacker wins` : null,
+    point.defenderWins > 0 ? `${point.defenderWins} defender wins` : null,
+    point.draws > 0 ? `${point.draws} draws` : null,
+  ].filter((part): part is string => part !== null);
+  const representative = point.representative;
+  return (
+    <>
+      <div className="opacity-70">{parts.join(" / ")}</div>
+      {representative && (
+        <div className="mt-1 opacity-70">
+          Representative:{" "}
+          {formatBattleOutcome(
+            representative.winner,
+            representative.survivors,
+            representative.outcome,
+          )}
+        </div>
+      )}
+    </>
   );
 }
 

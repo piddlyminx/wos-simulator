@@ -7,12 +7,13 @@ Left is always the report owner's side, right is opponent's side.
 
 Uses a whitelist of known hero names (data/hero_names.txt) to filter OCR noise.
 """
-import sys, json
+import sys, json, re
 from pathlib import Path
 import cv2
 import numpy as np
 
 _rapid = None
+_fast_rapid = None
 _sharpen_kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32)
 
 # ── Hero name whitelist ────────────────────────────────────────────────────────
@@ -59,13 +60,33 @@ def _get_rapid():
     return _rapid
 
 
-def _ocr_region(img, x_offset: int = 0, y_offset: int = 0, debug_path: Path | None = None) -> list:
+def _get_fast_rapid():
+    global _fast_rapid
+    if _fast_rapid is None:
+        from ocr import RapidOCR
+        from rapidocr import ModelType
+
+        _fast_rapid = RapidOCR(
+            use_angle_cls=False,
+            params={"Det.model_type": ModelType.MOBILE, "Det.limit_side_len": 160},
+        )
+    return _fast_rapid
+
+
+def _ocr_region(
+    img,
+    x_offset: int = 0,
+    y_offset: int = 0,
+    debug_path: Path | None = None,
+    *,
+    fast: bool = False,
+) -> list:
     """Run RapidOCR on an image region with sharpening. Offsets are added to x/y."""
     sharpened = cv2.filter2D(img, -1, _sharpen_kernel)
     if debug_path is not None:
         debug_path.parent.mkdir(parents=True, exist_ok=True)
         cv2.imwrite(str(debug_path), sharpened)
-    result = _get_rapid()(sharpened)
+    result = (_get_fast_rapid() if fast else _get_rapid())(sharpened)
     if not result or not result[0]:
         return []
     items = []
@@ -80,7 +101,7 @@ def _ocr_region(img, x_offset: int = 0, y_offset: int = 0, debug_path: Path | No
     return items
 
 
-def _ocr_full(img, debug_dir: Path | None = None, label: str = ""):
+def _ocr_halves(img, debug_dir: Path | None = None, label: str = ""):
     """Run RapidOCR on left and right halves separately, then merge.
 
     Splitting avoids cross-column text-box interference where the attacker name
@@ -96,9 +117,8 @@ def _ocr_full(img, debug_dir: Path | None = None, label: str = ""):
     return left_items + right_items
 
 
-def _extract_heroes_from_image(img, debug_dir: Path | None = None, label: str = ""):
-    """Extract hero names from a single BD screenshot using whitelist matching."""
-    raw_items = _ocr_full(img, debug_dir=debug_dir, label=label)
+def _pair_hero_candidates(raw_items: list) -> list[dict]:
+    """Convert OCR items into left/right hero pairs."""
     if not raw_items:
         return []
 
@@ -149,7 +169,53 @@ def _extract_heroes_from_image(img, debug_dir: Path | None = None, label: str = 
     return pairs
 
 
-def parse_battle_details(bd_top_path, bd_bottom_path, debug_outdir: str | None = None):
+def _full_pass_is_complete(raw_items: list, pairs: list[dict]) -> bool:
+    """Accept the fast pass only when every visible hero row is accounted for."""
+    if not pairs or any(set(pair) != {"left_hero", "right_hero"} for pair in pairs):
+        return False
+    visible_row_labels = sum("hero" in str(item["text"]).lower() for item in raw_items)
+    return not visible_row_labels or len(pairs) >= visible_row_labels
+
+
+def _extract_heroes_from_image_with_meta(
+    img,
+    debug_dir: Path | None = None,
+    label: str = "",
+) -> tuple[list[dict], bool]:
+    """Extract heroes and report whether the end-of-hero-list marker is visible."""
+    full_debug = debug_dir / f"{label}_full_ocr_input.png" if debug_dir is not None else None
+    raw_items = _ocr_region(img, debug_path=full_debug, fast=True)
+    reached_summary = any(
+        "attacker" == re.sub(r"[^a-z]", "", str(item["text"]).lower())
+        for item in raw_items
+    )
+    pairs = _pair_hero_candidates(raw_items)
+    if _full_pass_is_complete(raw_items, pairs):
+        return pairs, reached_summary
+
+    # Cross-column text can occasionally suppress one side.  Preserve the
+    # slower, independent-half OCR route as an accuracy fallback only.
+    fallback_items = _ocr_halves(img, debug_dir=debug_dir, label=label)
+    reached_summary = reached_summary or any(
+        "attacker" == re.sub(r"[^a-z]", "", str(item["text"]).lower())
+        for item in fallback_items
+    )
+    return _pair_hero_candidates(fallback_items), reached_summary
+
+
+def _extract_heroes_from_image(img, debug_dir: Path | None = None, label: str = ""):
+    """Extract heroes with one full-image OCR pass and a split-half fallback."""
+    pairs, _ = _extract_heroes_from_image_with_meta(img, debug_dir=debug_dir, label=label)
+    return pairs
+
+
+def parse_battle_details(
+    bd_top_path,
+    bd_bottom_path,
+    debug_outdir: str | None = None,
+    *,
+    require_complete: bool = False,
+):
     """Parse two Battle Details screenshots. Returns list of hero pairs."""
     img_top = cv2.imread(str(bd_top_path))
     img_bot = cv2.imread(str(bd_bottom_path))
@@ -160,9 +226,25 @@ def parse_battle_details(bd_top_path, bd_bottom_path, debug_outdir: str | None =
         raise FileNotFoundError(f"Cannot read {bd_bottom_path}")
 
     debug_dir = Path(debug_outdir) if debug_outdir else None
-    all_pairs = []
-    for label, img in [("bd_top", img_top), ("bd_bot", img_bot)]:
-        all_pairs.extend(_extract_heroes_from_image(img, debug_dir=debug_dir, label=label))
+    all_pairs, reached_summary = _extract_heroes_from_image_with_meta(
+        img_top,
+        debug_dir=debug_dir,
+        label="bd_top",
+    )
+    if not reached_summary:
+        bottom_pairs, bottom_reached_summary = _extract_heroes_from_image_with_meta(
+            img_bot,
+            debug_dir=debug_dir,
+            label="bd_bot",
+        )
+        all_pairs.extend(bottom_pairs)
+        reached_summary = bottom_reached_summary
+
+    if require_complete and not reached_summary:
+        raise RuntimeError(
+            "Battle Details screenshots do not reach the Attacker/Defender summary boundary; "
+            "refusing to treat a partial hero list as complete"
+        )
 
     # Deduplicate: each hero name appears at most once per side
     seen_left = set()
@@ -188,7 +270,10 @@ def parse_battle_details(bd_top_path, bd_bottom_path, debug_outdir: str | None =
             entry["right_hero"] = rh
         unique.append(entry)
 
-    result = {"hero_pairs": unique}
+    result = {
+        "hero_pairs": unique,
+        "summary_boundary_reached": reached_summary,
+    }
     if debug_dir is not None:
         debug_dir.mkdir(parents=True, exist_ok=True)
         (debug_dir / "battle_details_parser_debug.json").write_text(json.dumps(result, indent=2) + "\n")

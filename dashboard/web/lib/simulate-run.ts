@@ -76,6 +76,11 @@ export interface SimulateSkillSummary {
 export interface SimulateOutcomeRun {
   outcome: number;
   seed: string | number;
+  winner?: "attacker" | "defender" | "draw";
+  survivors?: {
+    attacker: number;
+    defender: number;
+  };
 }
 
 export type SimulateTraceUnit = "inf" | "lanc" | "mark";
@@ -111,6 +116,11 @@ export interface SimulateTraceRound {
 export interface SimulateTrace {
   seed: string | number;
   outcome: number;
+  winner?: "attacker" | "defender" | "draw";
+  survivors?: {
+    attacker: number;
+    defender: number;
+  };
   rounds: SimulateTraceRound[];
   skill_kills: Record<"attacker" | "defender", Record<string, Record<string, { triggers: number; kills: number }>>>;
   effect_usage: Record<"attacker" | "defender", Record<string, Record<string, number>>>;
@@ -125,9 +135,23 @@ export interface SimulateApiResult {
   summary: {
     mean: number;
     std: number;
-    best: { value: number; winner: "attacker" | "defender" | "draw" };
-    worst: { value: number; winner: "attacker" | "defender" | "draw" };
+    best: {
+      value: number;
+      winner: "attacker" | "defender" | "draw";
+      survivors?: { attacker: number; defender: number };
+    };
+    worst: {
+      value: number;
+      winner: "attacker" | "defender" | "draw";
+      survivors?: { attacker: number; defender: number };
+    };
     attacker_win_rate: number;
+    draw_rate?: number;
+    mean_survivors?: {
+      attacker: number;
+      defender: number;
+    };
+    avg_rounds?: number;
     avg_skill_activations: number;
     avg_skill_kills: number;
     avg_attacker_activations: number;

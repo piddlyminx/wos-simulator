@@ -87,7 +87,7 @@
       },
       "effects": {
         "CrystalShield/1": {
-          "type": "active.troop.shield",
+          "type": "active.troop.damageTaken.down",
           "value": [
             36,
             36
@@ -357,7 +357,7 @@
       },
       "effects": {
         "Volley/1": {
-          "type": "extra_skill_attack",
+          "type": "active.troop.damage.up",
           "value": [
             100
           ],
@@ -369,13 +369,7 @@
             "attacks": {
               "count": 1
             }
-          },
-          "trigger_damage_jobs": [
-            {
-              "source": "use.source",
-              "target": "effect.applies_vs"
-            }
-          ]
+          }
         }
       }
     },

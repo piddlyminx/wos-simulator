@@ -19,6 +19,7 @@ import {
   skill4ActiveForSide,
   skill4PercentAt,
   skillSlotEnabled,
+  troopTypeForSelection,
 } from "@/lib/heroes-catalogue";
 import { HeroBaseStats, heroBaseStats } from "@/lib/hero-base-stats";
 import {
@@ -979,6 +980,45 @@ function TroopColumn({
   const skill4Level = heroSlot.skills[3];
   const skill4Active = rallyMode && skill4 && skill4ActiveForSide(hero, which);
   const skill4Pct = skill4Active ? skill4PercentAt(skill4Level) : 0;
+  const selectedTier = state.tiers[cat];
+  const selectedCustomTroopType =
+    !TROOP_TIERS.includes(selectedTier) &&
+    troopTypeForSelection(cat, selectedTier) !== null;
+  const [customTroopTypeDraft, setCustomTroopTypeDraft] = useState<
+    string | null
+  >(null);
+  const fallbackTierRef = useRef(
+    TROOP_TIERS.includes(selectedTier)
+      ? selectedTier
+      : (TROOP_TIERS[0] ?? "t1"),
+  );
+  const customTroopTypeActive =
+    customTroopTypeDraft !== null || selectedCustomTroopType;
+  const customTroopTypeValue = customTroopTypeDraft ?? selectedTier;
+
+  useEffect(() => {
+    if (TROOP_TIERS.includes(selectedTier)) {
+      fallbackTierRef.current = selectedTier;
+    }
+  }, [selectedTier]);
+
+  const commitCustomTroopType = () => {
+    const troopType = customTroopTypeValue.trim();
+    if (troopTypeForSelection(cat, troopType)) {
+      setState((prev) => ({
+        ...prev,
+        tiers: { ...prev.tiers, [cat]: troopType },
+      }));
+      setCustomTroopTypeDraft(troopType);
+      return;
+    }
+
+    setState((prev) => ({
+      ...prev,
+      tiers: { ...prev.tiers, [cat]: fallbackTierRef.current },
+    }));
+    setCustomTroopTypeDraft(null);
+  };
 
   return (
     <div
@@ -1013,26 +1053,48 @@ function TroopColumn({
         />
       </label>
       <label>
-        <span className="sim-field-label">Tier</span>
-        <select
-          name={`${which}.troops.${cat}.tier`}
-          value={state.tiers[cat]}
-          onChange={(e) => {
-            const v = e.target.value;
-            setState((prev) => ({
-              ...prev,
-              tiers: { ...prev.tiers, [cat]: v },
-            }));
-          }}
-          className="sim-input font-mono text-xs"
-          aria-label={`${cat} troop tier`}
-        >
-          {TROOP_TIERS.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
+        <span className="sim-field-label">
+          {customTroopTypeActive ? "Troop type" : "Tier"}
+        </span>
+        {customTroopTypeActive ? (
+          <input
+            autoFocus
+            name={`${which}.troops.${cat}.tier`}
+            value={customTroopTypeValue}
+            onChange={(event) => {
+              setCustomTroopTypeDraft(event.target.value);
+            }}
+            onBlur={commitCustomTroopType}
+            className="sim-input font-mono text-xs"
+            aria-label={`${cat} custom troop type`}
+            placeholder="t6_fc10"
+          />
+        ) : (
+          <select
+            name={`${which}.troops.${cat}.tier`}
+            value={selectedTier}
+            onChange={(event) => {
+              const value = event.target.value;
+              if (value === "__other__") {
+                setCustomTroopTypeDraft("");
+                return;
+              }
+              setState((prev) => ({
+                ...prev,
+                tiers: { ...prev.tiers, [cat]: value },
+              }));
+            }}
+            className="sim-input font-mono text-xs"
+            aria-label={`${cat} troop tier`}
+          >
+            {TROOP_TIERS.map((tier) => (
+              <option key={tier} value={tier}>
+                {tier}
+              </option>
+            ))}
+            <option value="__other__">Other</option>
+          </select>
+        )}
       </label>
       <label className="sim-hero-field">
         <span className="sim-field-label">Hero</span>

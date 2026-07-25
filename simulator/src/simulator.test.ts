@@ -1545,7 +1545,7 @@ test("requires_effect gates a modifier to damage jobs where the required effect 
             trigger: { type: "attack", probability: 100, source: "enemy.marksman", target: "self.infantry" },
             effects: {
               shield: {
-                type: "active.troop.shield",
+                type: "active.troop.damageTaken.down",
                 value: 36,
                 units: { applies_to: "trigger.target", applies_vs: "trigger.source" },
                 duration: { attacks: { count: 1 } }
@@ -1589,24 +1589,33 @@ test("requires_effect gates a modifier to damage jobs where the required effect 
   assert.equal(marksmanEffects.has("defense"), true);
   assert.equal(marksmanEffects.has("conditionalReduction"), true);
   assert.equal(marksmanEffects.has("shield"), true);
-  assert.equal(marksmanAttack?.trace?.atomicBuckets["active.troop.damageTaken.down"].totalPct, 10);
-  assert.equal(marksmanAttack?.trace?.offsetDamage, 36);
-  assert.equal(marksmanAttack?.kills, Math.max(0, (marksmanAttack?.trace?.damageBeforeOffsets ?? 0) - 36));
+  assert.equal(marksmanAttack?.trace?.atomicBuckets["active.troop.damageTaken.down"].totalPct, 46);
+  assert.equal(marksmanAttack?.trace?.aggregationGroups["active.troop.damageTaken.down"].factor, 1.46);
+  assert.equal(marksmanAttack?.trace?.offsetDamage, 0);
+  assert.equal(marksmanAttack?.kills, marksmanAttack?.trace?.damageBeforeOffsets);
 });
 
-test("Body of Light resolves FC8 and FC10 values from the Infantry troop level", () => {
+test("Crystal Shield and Body of Light resolve additive FC8 and FC10 damage reductions", () => {
   const config = loadSimulatorConfig();
   const expectations = [
-    { troopId: "infantry_t10_fc8", level: 1, defense: 4, conditionalReduction: 10 },
-    { troopId: "infantry_t10_fc10", level: 2, defense: 6, conditionalReduction: 15 }
+    { troopId: "infantry_t10_fc8", level: 1, defense: 4, conditionalReduction: 10, combinedReduction: 46 },
+    { troopId: "infantry_t10_fc10", level: 2, defense: 6, conditionalReduction: 15, combinedReduction: 51 }
   ] as const;
 
   for (const expected of expectations) {
     const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
+    const crystalShield = fighter.troopSkills.find((skill) => skill.id === "CrystalShield");
     const bodyOfLight = fighter.troopSkills.find((skill) => skill.id === "BodyOfLight");
+    const crystalReduction = crystalShield?.effects.find((effect) => effect.id === "CrystalShield/1");
+    const conditionalReduction = bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/2");
+
+    assert.equal(crystalReduction?.type, "active.troop.damageTaken.down");
+    assert.equal(crystalReduction?.value, 36);
     assert.equal(bodyOfLight?.level, expected.level);
     assert.equal(bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/1")?.value, expected.defense);
-    assert.equal(bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/2")?.value, expected.conditionalReduction);
+    assert.equal(conditionalReduction?.type, "active.troop.damageTaken.down");
+    assert.equal(conditionalReduction?.value, expected.conditionalReduction);
+    assert.equal(crystalReduction!.value + conditionalReduction!.value, expected.combinedReduction);
   }
 });
 
@@ -1869,7 +1878,7 @@ test("same-round cap does not leave exhausted units targetable through floating 
   const result = runOnce(input, config);
 
   assert.equal(result.winner, "attacker");
-  assert.equal(result.remaining.attacker.marksman, 1349);
+  assert.equal(result.remaining.attacker.marksman, 1348);
   assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
 });
 

@@ -4,9 +4,12 @@ import {
   TROOP_TIERS,
   TroopCategory,
   getHero,
+  isTroopTypeForCategory,
   skill4ActiveForSide,
   skill4PercentAt,
   skillSlotEnabled,
+  troopKey,
+  troopTypeForSelection,
 } from "@/lib/heroes-catalogue";
 import { heroBaseStats } from "@/lib/hero-base-stats";
 import type { OptimizeRatioPoint } from "@/lib/optimize-ratio";
@@ -181,12 +184,16 @@ export function toApiPayload(
   rallyMode: boolean,
   statProfileNames?: Record<Side, string | null>,
 ): SimulateRequestPayload {
+  const troopType = (category: TroopCategory, tierOrType: string): string =>
+    troopTypeForSelection(category, tierOrType) ??
+    troopKey(category, tierOrType);
+
   const mkSide = (side: Side, s: SideState): SimulateSidePayload => ({
     troops: s.troops,
     troop_types: {
-      infantry: `infantry_${s.tiers.infantry}`,
-      lancer: `lancer_${s.tiers.lancer}`,
-      marksman: `marksman_${s.tiers.marksman}`,
+      infantry: troopType("infantry", s.tiers.infantry),
+      lancer: troopType("lancer", s.tiers.lancer),
+      marksman: troopType("marksman", s.tiers.marksman),
     },
     heroes: {
       infantry: {
@@ -255,11 +262,14 @@ function parseTier(
   category: TroopCategory,
   troopType: string | undefined,
 ): string {
+  if (!troopType || !isTroopTypeForCategory(troopType, category)) {
+    return TROOP_TIERS[0] ?? "t1";
+  }
   const prefix = `${category}_`;
-  if (troopType?.startsWith(prefix)) {
+  if (troopType.startsWith(prefix)) {
     return troopType.slice(prefix.length);
   }
-  return TROOP_TIERS[0] ?? "t1";
+  return troopType;
 }
 
 function parseStatTuple(
@@ -479,7 +489,7 @@ export function optimizeRowKey(point: OptimizeRatioPoint): string {
 export function signedSurvivors(value: number): string {
   if (value === 0) return "0 (draw)";
   const who = value > 0 ? "attacker" : "defender";
-  return `${compactNumber(Math.abs(value))} (${who})`;
+  return `${Math.round(Math.abs(value)).toLocaleString()} (${who})`;
 }
 
 /**
@@ -703,7 +713,7 @@ export function mergeSideFromOcr(
     }
     const troopType = ocrSide.troop_types?.[cat] ?? undefined;
     const tier = parseTier(cat, troopType);
-    if (troopType && TROOP_TIERS.includes(tier)) {
+    if (troopType && isTroopTypeForCategory(troopType, cat)) {
       nextTiers[cat] = tier;
     }
     const statRow = ocrSide.stats?.[cat] ?? {};

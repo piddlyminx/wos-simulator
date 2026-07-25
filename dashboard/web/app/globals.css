@@ -1552,6 +1552,18 @@ body {
     padding: 8px 12px;
   }
 
+  .sim-top-actions[data-results-active="true"] {
+    position: static;
+    order: 45;
+    margin-bottom: 12px;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .sim-top-actions[data-results-active="true"] .sim-mode-command {
+    box-shadow: none;
+  }
+
   .sim-mode-command {
     gap: 6px;
     padding: 7px 8px;

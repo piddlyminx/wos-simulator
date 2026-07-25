@@ -44,6 +44,33 @@ Troop tier and fire-crystal level are separate fields. Do not collapse them if d
 
 Captured report data belongs in testcase JSON as game observations, normally under `game_report_result`.
 
+Battle execution, report capture, and testcase materialization are independent operations:
+
+```bash
+./scripts/wosctl run-battle testcase_spec/example.json
+./scripts/wosctl --instance <attacker> report --tab war --index 1 --output captures/report.json
+./scripts/wosctl create-testcase testcase_spec/example.json --report captures/report.json
+```
+
+For a report that is already in the inbox, the capture and materialization steps can be composed without running a battle:
+
+```bash
+./scripts/wosctl create-testcase testcase_spec/example.json --tab war --index 2
+```
+
+Saved screenshots can be parsed and materialized without emulator access:
+
+```bash
+./scripts/wosctl report-images captures/saved-report --output captures/saved-report.json
+./scripts/wosctl create-testcase testcase_spec/example.json --images captures/saved-report
+```
+
+The image directory must contain three complete views: Battle Overview/outcome, troop slots plus all Stat Bonuses, and Battle Details through the Attacker/Defender summary boundary. Generic filenames are classified by content. Existing capture directories using `report_top`, `report_stats`, `bd_top`, and `bd_bot` names are also accepted; `report_bottom` is validated when present. Supported formats are PNG, JPG, JPEG, and WEBP.
+
+For screenshots from accounts that are not configured emulators, provide explicit non-empty hero skill dictionaries in the testcase spec. Explicit spec skills are used offline; empty hero dictionaries retain the normal saved/emulator skill-enrichment behavior.
+
+`create-testcase` must validate attacker/defender roles, troop identities/counts, usable stats, and reported hero names against the spec before writing. A mismatch is an error and must not become ground truth.
+
 Do not add simulator output to captured testcase files. Run parity separately:
 
 ```bash

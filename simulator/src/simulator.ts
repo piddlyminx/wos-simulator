@@ -357,16 +357,16 @@ function runLoop(
   };
 }
 
-// Formation "Attack" for Gatot S2. I'm sure there's a good reason for this to be the way it is,
-//  but it either eludes me for now or there is a mistake here
+// Formation "Attack" for Gatot S2. Runtime troop counts carry fractional casualties,
+// but Gatot counts the partially damaged final troop as living until it is defeated.
 function sourceAttackProtectionBasis(job: DamageJob, fighters: Record<SideId, ResolvedFighter>): number {
-  const troopCount = Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0);
+  const livingTroopCount = Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0));
   const fighter = fighters[job.dealerSide];
   const base = unitBaseStats(fighter, job.dealerUnit);
   const bonuses = unitPlayerBonuses(fighter, job.dealerUnit);
   const attack = base.attack * (1 + bonuses.attack / 100);
   const health = base.health * (1 + bonuses.health / 100);
-  return health > 0 ? Math.sqrt(troopCount) * attack / health : 0;
+  return health > 0 ? Math.sqrt(livingTroopCount) * attack / health : 0;
 }
 
 function triggerRoundStartSkills(

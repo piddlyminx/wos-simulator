@@ -18,6 +18,15 @@ test("Gwen Blastmaster uses a turn delay and a one-attack duration", () => {
   });
 });
 
+test("Volley raises the triggering attack's damage instead of scheduling an extra skill attack", () => {
+  const effect = loadSimulatorConfig().troopSkills.skills.Volley.effects["Volley/1"];
+
+  assert.equal(effect.type, "active.troop.damage.up");
+  assert.deepEqual(effect.value, [100]);
+  assert.deepEqual(effect.duration, { attacks: { count: 1 } });
+  assert.equal("trigger_damage_jobs" in effect, false);
+});
+
 test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-relative effect selectors", () => {
   const root = writeConfigWithTroopEffect({
     type: "active.hero.lethality.up",

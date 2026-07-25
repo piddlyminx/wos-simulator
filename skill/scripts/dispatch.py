@@ -123,6 +123,7 @@ _HERO_PICKER_AREA   = (0, 560, 720, 380)  # x, y, w, h: scrollable hero-grid are
 _HERO_PICKER_UNCHANGED_MEAN_THRESHOLD = 1.5
 _HERO_PICKER_DIAG_DIR = Path("/tmp/wosctl_hero_picker_diag")
 _TEMPLATE_MISS_DIAG_DIR = _SKILL_DIR / "tmp" / "wosctl_template_misses"
+_LOAD_PRESET7_REGION = (470, 80, 555, 165)
 
 # Hero slot tap positions (on deploy screen, blank preset)
 _HERO_SLOTS = [(165, 420), (360, 420), (555, 420)]
@@ -163,7 +164,7 @@ class WosTroopAvailabilityError(WosDispatchError):
 
 
 class WosPresetTroopShortageError(WosTroopAvailabilityError):
-    """Raised when a saved preset shows the red troop-shortage badge."""
+    """Raised when a saved preset is valid but currently needs healed troops."""
 
 
 # ─── Internal helpers ──────────────────────────────────────────────────────────
@@ -245,62 +246,165 @@ def _find_template_in_hero_picker_area(
     return True, (cx + x_offset, cy + y_offset)
 
 
-def _verify_preset7_selected(emulator: WosEmulator) -> None:
+def _find_preset7_on_load_screen(
+    img: np.ndarray,
+    template_path: str,
+    *,
+    threshold: float,
+) -> tuple[bool, tuple[int, int], float]:
+    """Match only inside slot 7 so badges on other presets cannot interfere."""
+    x1, y1, x2, y2 = _LOAD_PRESET7_REGION
+    crop = img[y1:y2, x1:x2]
+    template = cv2.imread(template_path, cv2.IMREAD_COLOR)
+    if template is None:
+        raise FileNotFoundError(f"Template not found: {template_path}")
+    if crop.size == 0 or crop.shape[0] < template.shape[0] or crop.shape[1] < template.shape[1]:
+        return False, (0, 0), 0.0
+    result = cv2.matchTemplate(crop, template, cv2.TM_CCOEFF_NORMED)
+    _, score, _, loc = cv2.minMaxLoc(result)
+    th, tw = template.shape[:2]
+    center = (x1 + loc[0] + tw // 2, y1 + loc[1] + th // 2)
+    return score >= threshold, center, float(score)
+
+
+def _verify_preset7_selected(emulator: WosEmulator, *, load_screen: bool = False) -> None:
     """Fail unless deploy preset slot 7 is visibly selected."""
     img = emulator.screencap_bgr()
-    found, _ = find_template(img, TPL_FLAG_7_SELECTED, threshold=0.70)
+    if load_screen:
+        found, _, _ = _find_preset7_on_load_screen(
+            img,
+            TPL_FLAG_7_SELECTED,
+            threshold=0.70,
+        )
+    else:
+        found, _ = find_template(img, TPL_FLAG_7_SELECTED, threshold=0.70)
     if not found:
         raise WosDispatchError("Preset 7 did not show selected state after tap")
 
 
-def _select_preset7(emulator: WosEmulator, label: str = "Preset7") -> None:
-    img = emulator.screencap_bgr()
-    matched_template = None
-    templates = (
-        ((TPL_FLAG_7_ALERT, 0.85), (TPL_FLAG_7, 0.85))
-        if label == "LoadPreset7"
-        else ((TPL_FLAG_7, 0.85), (TPL_FLAG_7_ALERT, 0.85))
+def _preset_badge_colour(img: np.ndarray, flag_center: tuple[int, int]) -> str | None:
+    """Return the temporary readiness badge colour attached to a preset flag.
+
+    The badge sits above/right of the flag.  Restricting colour detection to
+    that small region avoids confusing the deploy screen's other red/yellow
+    controls with preset readiness.
+    """
+    cx, cy = flag_center
+    h, w = img.shape[:2]
+    x1, x2 = max(0, cx + 7), min(w, cx + 34)
+    y1, y2 = max(0, cy - 36), min(h, cy - 4)
+    roi = img[y1:y2, x1:x2]
+    if roi.size == 0:
+        return None
+
+    hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
+    red = (
+        (((hsv[:, :, 0] <= 10) | (hsv[:, :, 0] >= 170))
+         & (hsv[:, :, 1] >= 150)
+         & (hsv[:, :, 2] >= 170))
     )
-    for template_path, threshold in templates:
-        found, (cx, cy) = find_template(img, template_path, threshold=threshold)
-        if found:
-            matched_template = Path(template_path).name
-            if label == "LoadPreset7" and template_path == TPL_FLAG_7_ALERT:
-                screenshot_path = f"/tmp/wosctl_{label}_preset7_troop_shortage.png"
-                cv2.imwrite(screenshot_path, img)
-                flag_score = _template_score(img, TPL_FLAG_7)
-                alert_score = _template_score(img, TPL_FLAG_7_ALERT)
-                selected_score = _template_score(img, TPL_FLAG_7_SELECTED)
-                raise WosPresetTroopShortageError(
-                    f"{label}: preset 7 has red troop-shortage badge; "
-                    f"not enough available troops for the saved preset "
-                    f"(flag_7 score={flag_score:.3f} threshold=0.850; "
-                    f"flag_7_alert score={alert_score:.3f} threshold=0.850; "
-                    f"selected score={selected_score:.3f} threshold=0.700; "
-                    f"screenshot={screenshot_path})"
+    yellow = (
+        ((hsv[:, :, 0] >= 15)
+         & (hsv[:, :, 0] <= 40)
+         & (hsv[:, :, 1] >= 130)
+         & (hsv[:, :, 2] >= 170))
+    )
+    if int(np.count_nonzero(red)) >= 24:
+        return "red"
+    if int(np.count_nonzero(yellow)) >= 24:
+        return "yellow"
+    return None
+
+
+def _select_preset7(
+    emulator: WosEmulator,
+    label: str = "Preset7",
+) -> None:
+    load_deadline = time.monotonic() + 120
+    yellow_logged = False
+
+    while True:
+        img = emulator.screencap_bgr()
+        matched_template = None
+        badge_state = None
+        flag_score = 0.0
+        selected_score = 0.0
+        if label == "LoadPreset7":
+            found, (cx, cy), flag_score = _find_preset7_on_load_screen(
+                img,
+                TPL_FLAG_7,
+                threshold=0.70,
+            )
+            if found:
+                matched_template = Path(TPL_FLAG_7).name
+                badge_state = _preset_badge_colour(img, (cx, cy))
+        else:
+            found, (cx, cy) = find_template(img, TPL_FLAG_7, threshold=0.85)
+            if found:
+                matched_template = Path(TPL_FLAG_7).name
+
+        if label == "LoadPreset7" and badge_state == "red":
+            screenshot_path = f"/tmp/wosctl_{label}_preset7_troop_shortage.png"
+            cv2.imwrite(screenshot_path, img)
+            _, _, selected_score = _find_preset7_on_load_screen(
+                img,
+                TPL_FLAG_7_SELECTED,
+                threshold=0.70,
+            )
+            raise WosPresetTroopShortageError(
+                f"{label}: preset 7 is temporarily unavailable because its red badge "
+                f"shows that troops need healing "
+                f"(anchored flag_7 score={flag_score:.3f} threshold=0.700; "
+                f"anchored selected score={selected_score:.3f} threshold=0.700; "
+                f"screenshot={screenshot_path})"
+            )
+        if matched_template is None:
+            if label == "LoadPreset7":
+                selected, _, selected_score = _find_preset7_on_load_screen(
+                    img,
+                    TPL_FLAG_7_SELECTED,
+                    threshold=0.70,
                 )
-            break
-    if matched_template is None:
-        selected, _ = find_template(img, TPL_FLAG_7_SELECTED, threshold=0.70)
-        if selected:
-            logger.info("%s: preset 7 already selected", label)
-            return
-        screenshot_path = f"/tmp/wosctl_{label}_preset7_not_found.png"
-        cv2.imwrite(screenshot_path, img)
-        flag_score = _template_score(img, TPL_FLAG_7)
-        alert_score = _template_score(img, TPL_FLAG_7_ALERT)
-        selected_score = _template_score(img, TPL_FLAG_7_SELECTED)
-        raise WosDispatchError(
-            f"{label}: preset 7 flag not found "
-            f"(flag_7 score={flag_score:.3f} threshold=0.850; "
-            f"flag_7_alert score={alert_score:.3f} threshold=0.850; "
-            f"selected score={selected_score:.3f} threshold=0.700; "
-            f"screenshot={screenshot_path})"
-        )
-    logger.info("%s: tapping (%d,%d) via %s", label, cx, cy, matched_template)
-    emulator.tap(cx, cy)
-    time.sleep(0.8)
-    _verify_preset7_selected(emulator)
+            else:
+                selected, _ = find_template(img, TPL_FLAG_7_SELECTED, threshold=0.70)
+            if selected:
+                logger.info("%s: preset 7 already selected", label)
+                return
+            screenshot_path = f"/tmp/wosctl_{label}_preset7_not_found.png"
+            cv2.imwrite(screenshot_path, img)
+            if label != "LoadPreset7":
+                flag_score = _template_score(img, TPL_FLAG_7)
+                selected_score = _template_score(img, TPL_FLAG_7_SELECTED)
+            raise WosDispatchError(
+                f"{label}: preset 7 flag not found "
+                f"(flag_7 score={flag_score:.3f}; "
+                f"selected score={selected_score:.3f} threshold=0.700; "
+                f"screenshot={screenshot_path})"
+            )
+
+        if label == "LoadPreset7" and badge_state == "yellow":
+            if not yellow_logged:
+                logger.info(
+                    "%s: preset 7 has a temporary yellow hero-availability badge; "
+                    "waiting for its heroes to return",
+                    label,
+                )
+                yellow_logged = True
+            if time.monotonic() >= load_deadline:
+                screenshot_path = f"/tmp/wosctl_{label}_preset7_heroes_unavailable.png"
+                cv2.imwrite(screenshot_path, img)
+                raise WosDispatchError(
+                    f"{label}: preset 7 heroes did not become available within 120s; "
+                    f"preset remains valid (screenshot={screenshot_path})"
+                )
+            time.sleep(2)
+            continue
+
+        logger.info("%s: tapping (%d,%d) via %s", label, cx, cy, matched_template)
+        emulator.tap(cx, cy)
+        time.sleep(0.8)
+        _verify_preset7_selected(emulator, load_screen=label == "LoadPreset7")
+        return
 
 
 def _save_preset7(emulator: WosEmulator) -> None:
@@ -314,13 +418,23 @@ def _save_preset7(emulator: WosEmulator) -> None:
 
 
 def _deploy_preset7(emulator: WosEmulator) -> dict:
+    started = time.monotonic()
     logger.info("deploy_army: loading preset slot 7")
     _select_preset7(emulator, "LoadPreset7")
     logger.info("deploy_army: tapping Deploy button")
     _find_and_tap(emulator, TPL_DEPLOY_BTN, "Deploy")
-    time.sleep(3)
-    logger.info("deploy_army: ✅ preset 7 army dispatched")
-    return {"ok": True, "preset": 7, "time": time.time()}
+    deadline = time.monotonic() + 3
+    while time.monotonic() < deadline:
+        time.sleep(0.2)
+        img = emulator.screencap_bgr()
+        still_open, _ = find_template(img, TPL_DEPLOY_BTN, threshold=0.80)
+        if not still_open:
+            break
+    else:
+        raise WosDispatchError("Deploy screen did not close after tapping Deploy")
+    elapsed = time.monotonic() - started
+    logger.info("deploy_army: ✅ preset 7 army dispatched in %.2fs", elapsed)
+    return {"ok": True, "preset": 7, "time": time.time(), "elapsed_sec": elapsed}
 
 
 def _hero_template_path(hero_name: str) -> str:
@@ -967,6 +1081,45 @@ def find_empty_tile(emulator: WosEmulator) -> tuple[int, int]:
     raise WosDispatchError("find_empty_tile: no empty tile found after 3 probe passes")
 
 
+def open_empty_tile_at(
+    emulator: WosEmulator,
+    world_x: int,
+    world_y: int,
+    *,
+    attempts: int = 3,
+) -> bool:
+    """Open Occupy for a previously used tile, or return False if it is busy."""
+    from navigation import goto_coord
+
+    goto_coord(emulator, world_x, world_y)
+    for attempt in range(1, attempts + 1):
+        emulator.tap(360, 640)
+        time.sleep(1)
+        img = emulator.screencap_bgr()
+        found, (cx, cy) = find_template(img, TPL_OCCUPY)
+        if found:
+            logger.info(
+                "open_empty_tile_at: reusing world X=%d Y=%d on attempt %d",
+                world_x,
+                world_y,
+                attempt,
+            )
+            emulator.tap(cx, cy)
+            time.sleep(2)
+            return True
+        if attempt < attempts:
+            emulator.shell("input keyevent 4")
+            time.sleep(0.3)
+
+    logger.info(
+        "open_empty_tile_at: world X=%d Y=%d is not currently occupiable",
+        world_x,
+        world_y,
+    )
+    emulator.shell("input keyevent 4")
+    return False
+
+
 def attack_when_ready(
     emulator: WosEmulator,
     world_x: int,
@@ -1015,31 +1168,53 @@ def attack_when_ready(
         logger.info("attack_when_ready: Attack button found — tapping Attack")
         _find_and_tap(emulator, TPL_ATTACK, "Attack")
         time.sleep(3)
-        return deploy_army(emulator, army_spec, preset_mode=preset_mode)
+        return deploy_army(
+            emulator,
+            army_spec,
+            preset_mode=preset_mode,
+        )
 
     raise WosDispatchError(
         f"attack_when_ready: Attack button not found at X={world_x} Y={world_y} after {timeout_sec}s"
     )
 
 
-def wait_for_battle_complete(emulator: WosEmulator, after: float, timeout_sec: int = 300, poll_sec: int = 5) -> bool:
+def wait_for_battle_complete(
+    emulator: WosEmulator,
+    after: float,
+    timeout_sec: int = 300,
+    poll_sec: int = 5,
+) -> float:
     """
     Wait until a new war report appears after the given timestamp.
 
     Delegates polling to wait_for_new_report (which has its own poll loop).
-    Returns True when battle is complete.
+    Returns the new report timestamp when battle is complete.
     Raises WosDispatchError on timeout.
     """
     from report_reader import wait_for_new_report
     logger.info("wait_for_battle_complete: waiting for new war report after %.0f", after)
-    found = wait_for_new_report(emulator, tab="war", after=after, timeout_sec=timeout_sec, poll_sec=poll_sec)
-    if not found:
-        logger.warning("wait_for_battle_complete: no new war report detected within %ds — proceeding anyway", timeout_sec)
-    return True
+    report_timestamp = wait_for_new_report(
+        emulator,
+        tab="war",
+        after=after,
+        timeout_sec=timeout_sec,
+        poll_sec=poll_sec,
+    )
+    if report_timestamp is None:
+        raise WosDispatchError(
+            f"No new war report detected within {timeout_sec}s; "
+            "refusing to capture an older report as this testcase result"
+        )
+    return report_timestamp
 
 
 # ─── Main entry point ──────────────────────────────────────────────────────────
-def deploy_army(emulator: WosEmulator, army_spec: dict, preset_mode: Optional[str] = None) -> dict:
+def deploy_army(
+    emulator: WosEmulator,
+    army_spec: dict,
+    preset_mode: Optional[str] = None,
+) -> dict:
     """
     Deploy an army from the already-open troop deploy screen.
 
@@ -1220,7 +1395,15 @@ def deploy_army(emulator: WosEmulator, army_spec: dict, preset_mode: Optional[st
     # ── Step 7: Tap Deploy ────────────────────────────────────────────────────
     logger.info("deploy_army: tapping Deploy button")
     _find_and_tap(emulator, TPL_DEPLOY_BTN, "Deploy")
-    time.sleep(3)
+    deadline = time.monotonic() + 3
+    while time.monotonic() < deadline:
+        time.sleep(0.2)
+        img = emulator.screencap_bgr()
+        still_open, _ = find_template(img, TPL_DEPLOY_BTN, threshold=0.80)
+        if not still_open:
+            break
+    else:
+        raise WosDispatchError("Deploy screen did not close after tapping Deploy")
 
     logger.info("deploy_army: ✅ army dispatched")
     return {"ok": True, "heroes": list(heroes.keys()), "troops": troops, "time": time.time()}

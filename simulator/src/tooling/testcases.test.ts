@@ -224,10 +224,10 @@ test("no-hero simple testcase loads, runs, compares to game result, and exposes 
 
 test("runTestcases applies possible stat rounding correction to exact deterministic misses", () => {
   const config = loadSimulatorConfig();
-  const report = runTestcases({ matching: "norah_s2_inf_only_B" }, config);
+  const report = runTestcases({ matching: "determinism_test_normal" }, config);
   const summary = Object.values(report.testcases)[0];
 
-  assert.equal(summary?.testcase_id, "norah_s2_inf_only_B");
+  assert.equal(summary?.testcase_id, "determinism_test_normal");
   assert.equal(summary?.deterministic, true);
   assert.equal(summary?.game?.passes, true);
   assert.equal(summary?.game?.bias_raw, 0);

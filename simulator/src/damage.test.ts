@@ -109,6 +109,25 @@ test("damage calculator requires indexed effect candidates", () => {
   assert.throws(() => calculateDamageJob(job, simpleFighters(), { trace: true } as never), /effectIndex/i);
 });
 
+test("damage calculator counts every positive fractional remainder as one living troop", () => {
+  const fractionalJob: DamageJob = {
+    ...job,
+    roundStartTroops: {
+      attacker: { infantry: 0.01, lancer: 0, marksman: 0 },
+      defender: { infantry: 0, lancer: 1000, marksman: 0 }
+    }
+  };
+
+  const outcome = calculateIndexedDamageJob(
+    fractionalJob,
+    simpleFighters(),
+    [],
+    { trace: true, sqrtMinInitialArmy: 100, capToTakerTroops: false }
+  );
+
+  assert.equal(outcome.trace?.armyTerm, 100);
+});
+
 test("damage calculator uses centralized bucket definitions for player stat routing", () => {
   const attacker: ResolvedFighter = {
     side: "attacker",

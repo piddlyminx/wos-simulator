@@ -73,19 +73,19 @@ export function SimulateResultsPanel({
         Results ({result.replicates} replicates)
       </h3>
       <div
-        className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3 mb-4"
+        className="mb-4 grid grid-cols-2 gap-2 sm:gap-3 xl:grid-cols-4"
         data-tour="simulate-results-summary"
       >
         {summaryCards?.map((card) => (
           <div
             key={card.label}
-            className="sim-tool-panel flex flex-col gap-0.5 px-3 py-2 sm:min-w-40"
+            className="sim-tool-panel flex min-w-0 flex-col gap-0.5 px-3 py-2"
           >
             <span className="text-[10px] sm:text-xs uppercase tracking-wider opacity-50">
               {card.label}
             </span>
             <span
-              className="font-mono text-sm font-bold"
+              className="break-words font-mono text-sm font-bold leading-snug"
               style={{ color: "var(--sim-blue)" }}
             >
               {card.value}
@@ -97,9 +97,9 @@ export function SimulateResultsPanel({
         Survivor distribution
       </h4>
       <p className="text-xs opacity-60 mb-2">
-        Positive = attacker wins with that many survivors; negative = defender
-        wins. The axis is centered on 0 and spans the larger army size on both
-        sides.
+        X-axis: attacker survivors minus defender survivors. Draws can appear on
+        either side of zero. Open a point for its outcome breakdown and an exact
+        example.
       </p>
       <div data-tour="simulate-outcome-chart">
         <SimulateOutcomeChart

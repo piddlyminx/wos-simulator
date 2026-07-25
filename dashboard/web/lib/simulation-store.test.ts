@@ -55,6 +55,7 @@ const pvpResult: SimulateApiResult = {
     best: { value: 0, winner: "draw" },
     worst: { value: 0, winner: "draw" },
     attacker_win_rate: 0,
+    avg_rounds: 1,
     avg_skill_activations: 0,
     avg_skill_kills: 0,
     avg_attacker_activations: 0,

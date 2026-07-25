@@ -36,6 +36,7 @@ interface HeroSpec {
 }
 
 const SIMULATOR_CONFIG = loadSimulatorConfig();
+const TROOP_TYPE_CATALOGUE = SIMULATOR_CONFIG.troopStats;
 
 function isTroopCategory(value: string | undefined): value is TroopCategory {
   return value === "infantry" || value === "lancer" || value === "marksman";
@@ -179,16 +180,34 @@ export function skillSlotEnabled(
 
 export const TROOP_TIERS: string[] = (() => {
   const out: string[] = [];
-  for (let t = 1; t <= 10; t++) {
-    out.push(`t${t}`);
-    for (let fc = 1; fc <= 10; fc++) out.push(`t${t}_fc${fc}`);
-  }
+  for (let t = 1; t <= 10; t++) out.push(`t${t}`);
+  for (let fc = 1; fc <= 10; fc++) out.push(`t10_fc${fc}`);
   out.push("t11");
   for (let fc = 5; fc <= 10; fc++) out.push(`t11_fc${fc}`);
   return out;
 })();
 
+export const TROOP_TYPES: readonly string[] = Object.freeze(
+  Object.keys(TROOP_TYPE_CATALOGUE),
+);
+
+export function isTroopTypeForCategory(
+  troopType: string,
+  category: TroopCategory,
+): boolean {
+  return TROOP_TYPE_CATALOGUE[troopType]?.type === category;
+}
+
 export function troopKey(category: TroopCategory, tier: string): string {
   // Normalize "marksman" -> "marksman" (simulator uses "marksman_tN" keys).
   return `${category}_${tier}`;
+}
+
+export function troopTypeForSelection(
+  category: TroopCategory,
+  selection: string,
+): string | null {
+  if (isTroopTypeForCategory(selection, category)) return selection;
+  const troopType = troopKey(category, selection);
+  return isTroopTypeForCategory(troopType, category) ? troopType : null;
 }

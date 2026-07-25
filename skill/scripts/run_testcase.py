@@ -1,14 +1,12 @@
-"""
-run_testcase.py — End-to-end battle testcase runner.
+"""Battle execution, report capture, and testcase materialization operations.
 
-Flow:
-1. Find an empty tile near the defender's city
-2. Deploy defender army to that tile; wait for it to arrive (~30s)
-3. On attacker instance: navigate to tile, wait for Attack button (defender arrived)
-4. Deploy attacker army
-5. Wait for battle to complete (march overlay shows Returning/gone)
-6. Capture war report from attacker
-7. Write emulator result into wos-simulator testcase JSON
+The public operations are deliberately separable:
+
+* ``run_battle`` runs a battle and stops after detecting its new inbox report.
+* ``capture_existing_report`` captures an already-existing report.
+* ``create_testcase_from_report`` materializes a previously parsed report JSON.
+* ``create_testcase_from_existing_report`` composes those two operations.
+* ``run_testcase`` composes all three for the original end-to-end workflow.
 
 Spec format (tile coords NOT required — found dynamically):
 {
@@ -48,10 +46,13 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import sys
 import time
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 # ─── Paths ─────────────────────────────────────────────────────────────────────
 _SCRIPT_DIR  = Path(__file__).resolve().parent
@@ -71,6 +72,30 @@ _STAT_FIELDS = ["attack", "defense", "lethality", "health"]
 
 _HERO_SKILLS_FILE = _SKILL_DIR / "data" / "player_hero_skills.json"
 _TESTCASES = _SIM_DIR / "testcases" / "emulator_verified"
+
+
+@dataclass
+class BattleExecution:
+    """Live battle result at the point where its new inbox report is detected."""
+
+    spec_path: str
+    spec: dict
+    attacker_instance: str
+    defender_instance: str
+    attacker_emulator: Any
+    defender_emulator: Any
+    world_coord: dict[str, int]
+    report_timestamp: float
+
+
+def _write_json_atomic(path: Path, payload: object) -> None:
+    """Replace a testcase only after the complete JSON is safely written."""
+    tmp_path = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp_path.write_text(json.dumps(payload, indent=2) + "\n")
+        tmp_path.replace(path)
+    finally:
+        tmp_path.unlink(missing_ok=True)
 
 
 def _load_hero_skills_for_instance(instance_name: str) -> dict:
@@ -135,6 +160,33 @@ def _validate_hero_names(spec_heroes: dict, actual_heroes: dict, side: str) -> N
     raise RuntimeError("; ".join(parts))
 
 
+def _resolve_report_heroes(
+    hero_list: list,
+    spec_heroes: dict,
+    instance_name: str,
+    side: str,
+) -> dict:
+    """Resolve report hero names using explicit spec skills before live enrichment."""
+    names = [
+        name
+        for name in hero_list
+        if name.lower() not in ("vacant", "none", "")
+    ]
+    _validate_hero_names(spec_heroes, {name: {} for name in names}, side)
+
+    resolved: dict[str, dict] = {}
+    unresolved: list[str] = []
+    for name in names:
+        explicit = spec_heroes.get(name)
+        if isinstance(explicit, dict) and explicit:
+            resolved[name] = explicit
+        else:
+            unresolved.append(name)
+    if unresolved:
+        resolved.update(_enrich_heroes(unresolved, instance_name))
+    return resolved
+
+
 def _wosctl(*args: str, timeout: int = 180) -> dict:
     """Run wosctl and return parsed JSON output."""
     import subprocess
@@ -156,12 +208,25 @@ def _wosctl(*args: str, timeout: int = 180) -> dict:
         raise RuntimeError(f"wosctl non-JSON output:\nSTDOUT: {result.stdout[:500]}\nSTDERR: {result.stderr[:200]}")
 
 
-def _capture_war_report(emulator, *, debug: bool = False) -> dict:
+def _capture_war_report(
+    emulator,
+    *,
+    debug: bool = False,
+    inbox_open: bool = False,
+) -> dict:
     """Capture the latest war report in-process so testcase progress stays visible."""
-    from report_reader import read_battle_report
+    from report_reader import read_battle_report, read_battle_report_from_open_inbox
 
     logger.info("Reading latest war report via report_reader")
-    report = read_battle_report(emulator, tab="war", index=1, debug=debug)
+    if inbox_open:
+        report = read_battle_report_from_open_inbox(
+            emulator,
+            tab="war",
+            index=1,
+            debug=debug,
+        )
+    else:
+        report = read_battle_report(emulator, tab="war", index=1, debug=debug)
     logger.info("Latest war report captured and parsed")
     return report
 
@@ -179,15 +244,13 @@ def _map_stats(stat_bonuses: dict, side: str = "") -> dict:
 
 
 
-def run_testcase(
+def execute_battle(
     spec_path: str,
-    dry_run: bool = False,
-    debug: bool = False,
     preset_mode: str | None = None,
-) -> dict:
+    preferred_world_coord: dict[str, int] | None = None,
+) -> BattleExecution:
     spec       = json.loads(Path(spec_path).read_text())
     test_id    = spec["test_id"]
-    description = spec.get("description", "")
     emulator   = spec["emulator"]
     def_instance = emulator["defender"]["instance"]
     atk_instance = emulator["attacker"]["instance"]
@@ -198,15 +261,11 @@ def run_testcase(
     if preset_mode:
         logger.info("Repeat preset mode: %s", preset_mode)
 
-    if dry_run:
-        logger.info("[DRY RUN] Skipping all emulator steps")
-        return {"ok": True, "dry_run": True, "test_id": test_id}
-
     # Import emulator / dispatch / navigation
     from dispatch import (
-        find_empty_tile, attack_when_ready, wait_for_battle_complete,
+        find_empty_tile, open_empty_tile_at, attack_when_ready, wait_for_battle_complete,
         deploy_army, TROOP_DISPLAY_NAMES, recall_camp, WosDispatchError,
-        WosTroopAvailabilityError, WosPresetTroopShortageError,
+        WosTroopAvailabilityError,
     )
     from emulator import resolve_instance, WosEmulator
 
@@ -220,30 +279,15 @@ def run_testcase(
     def_cfg = load_player_alliance_config(def_instance)
     atk_cfg = load_player_alliance_config(atk_instance)
 
-    def _manual_preset_mode_after_shortage() -> str | None:
-        return "save" if preset_mode == "load" else preset_mode
-
     def _raise_after_heal_shortage(role: str, exc: WosTroopAvailabilityError) -> None:
         raise WosDispatchError(
-            f"{role} troop shortage remains after healing; manual deployment could not meet the spec: {exc}"
+            f"{role} army is still unavailable after healing; the saved preset remains valid, "
+            f"but this run cannot meet the spec yet: {exc}"
         ) from exc
 
     def _deploy_after_heal(role: str, emulator: WosEmulator, army_spec: dict) -> dict:
         try:
             return deploy_army(emulator, army_spec, preset_mode=preset_mode)
-        except WosPresetTroopShortageError as exc:
-            logger.warning(
-                "%s preset 7 still shows the troop-shortage badge after healing — rebuilding from spec",
-                role,
-            )
-            try:
-                return deploy_army(
-                    emulator,
-                    army_spec,
-                    preset_mode=_manual_preset_mode_after_shortage(),
-                )
-            except WosTroopAvailabilityError as manual_exc:
-                _raise_after_heal_shortage(role, manual_exc)
         except WosTroopAvailabilityError as exc:
             _raise_after_heal_shortage(role, exc)
 
@@ -261,10 +305,22 @@ def run_testcase(
         ensure_in_alliance(atk_emulator, atk_cfg["battle_alliance"])
 
     # ── Step 2: Find empty tile near defender's city ──────────────────────────
-    logger.info("Finding empty tile near %s city...", def_instance)
-    world_x, world_y = find_empty_tile(def_emulator)
+    world_x = world_y = None
+    if preferred_world_coord is not None:
+        candidate_x = int(preferred_world_coord["x"])
+        candidate_y = int(preferred_world_coord["y"])
+        logger.info(
+            "Trying the previous repetition's tile at world=X:%d Y:%d...",
+            candidate_x,
+            candidate_y,
+        )
+        if open_empty_tile_at(def_emulator, candidate_x, candidate_y):
+            world_x, world_y = candidate_x, candidate_y
+
+    if world_x is None or world_y is None:
+        logger.info("Finding empty tile near %s city...", def_instance)
+        world_x, world_y = find_empty_tile(def_emulator)
     logger.info("Empty tile: world=X:%d Y:%d", world_x, world_y)
-    SCREEN_CENTRE = (360, 640)
 
     # ── Step 3: Deploy defender army to that tile ─────────────────────────────
     # Army selection screen is already open at this point (from find_empty_tile), so we can deploy directly without navigation.
@@ -342,18 +398,6 @@ def run_testcase(
                 poll_sec=5,
                 preset_mode=preset_mode,
             )
-        except WosPresetTroopShortageError:
-            logger.warning(
-                "Attacker preset 7 still shows the troop-shortage badge after healing — rebuilding from spec"
-            )
-            try:
-                atk_result = deploy_army(
-                    atk_emulator,
-                    atk_army_spec,
-                    preset_mode=_manual_preset_mode_after_shortage(),
-                )
-            except WosTroopAvailabilityError as manual_exc:
-                _raise_after_heal_shortage("Attacker", manual_exc)
         except WosTroopAvailabilityError as retry_exc:
             _raise_after_heal_shortage("Attacker", retry_exc)
     if not atk_result.get("ok"):
@@ -362,27 +406,73 @@ def run_testcase(
 
     # ── Step 7: Wait for battle to complete ───────────────────────────────────
     # Use pre-battle timestamp to correctly detect NEW reports only.
-    wait_for_battle_complete(atk_emulator, after=pre_battle_ts, timeout_sec=600, poll_sec=5)
-    logger.info("Battle complete!")
+    report_timestamp = wait_for_battle_complete(
+        atk_emulator,
+        after=pre_battle_ts,
+        timeout_sec=600,
+        poll_sec=5,
+    )
+    logger.info("Battle complete; detected report timestamp %.0f", report_timestamp)
+    return BattleExecution(
+        spec_path=spec_path,
+        spec=spec,
+        attacker_instance=atk_instance,
+        defender_instance=def_instance,
+        attacker_emulator=atk_emulator,
+        defender_emulator=def_emulator,
+        world_coord={"x": world_x, "y": world_y},
+        report_timestamp=report_timestamp,
+    )
 
-    # Recall any existing camp troops
-    recall_camp(def_emulator)
-    recall_camp(atk_emulator)
 
-    # ── Step 8: Capture war report (first in list) ────────────────────────────
-    logger.info("Capturing war report (first in list)...")
-    report = _capture_war_report(atk_emulator, debug=debug)
+def _recall_after_battle(execution: BattleExecution) -> None:
+    """Make both armies available again after report detection/capture."""
+    from dispatch import recall_camp
+
+    recall_camp(execution.defender_emulator)
+    recall_camp(execution.attacker_emulator)
+
+
+def create_testcase_from_report(
+    spec_path: str,
+    report: dict,
+    *,
+    world_coord: dict[str, int] | None = None,
+) -> dict:
+    """Validate one parsed battle report and append it to its testcase file."""
+    spec = json.loads(Path(spec_path).read_text())
+    test_id = spec["test_id"]
+    description = spec.get("description", "")
+    emulator = spec["emulator"]
+    def_instance = emulator["defender"]["instance"]
+    atk_instance = emulator["attacker"]["instance"]
+
+    if not isinstance(report, dict):
+        raise RuntimeError("Parsed report JSON must be an object")
     if "left" not in report or "right" not in report:
-        raise RuntimeError(f"Could not capture war report: {report}")
+        raise RuntimeError(f"Parsed report does not contain both battle sides: {report}")
 
-    # ── Step 9: Build emulator result ─────────────────────────────────────────
     left, right = report["left"], report["right"]
-    atk_rep = left  if left["role"]  == "attacker" else right
-    def_rep = right if right["role"] == "defender" else left
+    if not isinstance(left, dict) or not isinstance(right, dict):
+        raise RuntimeError("Parsed report left/right battle sides must be objects")
+    sides = {left.get("role"): left, right.get("role"): right}
+    atk_rep = sides.get("attacker")
+    def_rep = sides.get("defender")
+    if atk_rep is None or def_rep is None:
+        raise RuntimeError(
+            "Parsed report must contain one attacker and one defender "
+            f"(left_role={left.get('role')!r}, right_role={right.get('role')!r})"
+        )
+
+    for role, side in (("attacker", atk_rep), ("defender", def_rep)):
+        survivors = side.get("survivors")
+        if not isinstance(survivors, int) or isinstance(survivors, bool) or survivors < 0:
+            raise RuntimeError(
+                f"Parsed report has invalid or missing {role} survivors: {survivors!r}"
+            )
 
     emulator_result = {
         "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-        "tile": {"x": world_x, "y": world_y},
         "attacker": atk_rep.get("survivors", 0),
         "defender": def_rep.get("survivors", 0),
         "attacker_stats": _map_stats(atk_rep.get("stat_bonuses", {}), side="attacker"),
@@ -390,6 +480,8 @@ def run_testcase(
         "attacker_heroes": atk_rep.get("heroes", []),
         "defender_heroes": def_rep.get("heroes", []),
     }
+    if world_coord is not None:
+        emulator_result["tile"] = dict(world_coord)
 
     # ── Step 10: Build/update simulator testcase JSON ─────────────────────────
     _TESTCASES.mkdir(parents=True, exist_ok=True)
@@ -408,10 +500,18 @@ def run_testcase(
             existing_tc.pop("sim_result", None)
 
     # Build this run's parameters for comparison
-    atk_heroes = _enrich_heroes(atk_rep.get("heroes", []) or [], atk_instance)
-    def_heroes = _enrich_heroes(def_rep.get("heroes", []) or [], def_instance)
-    _validate_hero_names(spec["attacker"].get("heroes", {}), atk_heroes, "Attacker")
-    _validate_hero_names(spec["defender"].get("heroes", {}), def_heroes, "Defender")
+    atk_heroes = _resolve_report_heroes(
+        atk_rep.get("heroes", []) or [],
+        spec["attacker"].get("heroes", {}),
+        atk_instance,
+        "Attacker",
+    )
+    def_heroes = _resolve_report_heroes(
+        def_rep.get("heroes", []) or [],
+        spec["defender"].get("heroes", {}),
+        def_instance,
+        "Defender",
+    )
     this_run_stats = emulator_result["attacker_stats"]
     this_run_def_stats = emulator_result["defender_stats"]
     # Use ACTUAL troop counts from war report, not the spec — the player may not
@@ -541,21 +641,113 @@ def run_testcase(
         tc["game_report_result"] = []
     tc["game_report_result"].append(game_result)
 
-    out_path.write_text(json.dumps(existing_list, indent=2))
+    _write_json_atomic(out_path, existing_list)
     logger.info("Testcase written to: %s", out_path)
 
-    result_payload = {
+    result_payload: dict[str, object] = {
         "ok": True,
         "test_id": test_id,
-        "world_coord": {"x": world_x, "y": world_y},
         "result": report.get("result", "unknown"),
         "attacker_survivors": emulator_result["attacker"],
         "defender_survivors": emulator_result["defender"],
         "saved_to": str(out_path),
     }
+    if world_coord is not None:
+        result_payload["world_coord"] = dict(world_coord)
     if report.get("debug_dir"):
         result_payload["debug_dir"] = report["debug_dir"]
     return result_payload
+
+
+def run_battle(
+    spec_path: str,
+    dry_run: bool = False,
+    preset_mode: str | None = None,
+    preferred_world_coord: dict[str, int] | None = None,
+) -> dict:
+    """Run only the live battle and wait until its new report is detected."""
+    spec = json.loads(Path(spec_path).read_text())
+    if dry_run:
+        return {"ok": True, "dry_run": True, "test_id": spec["test_id"]}
+
+    execution = execute_battle(
+        spec_path,
+        preset_mode=preset_mode,
+        preferred_world_coord=preferred_world_coord,
+    )
+    _recall_after_battle(execution)
+    return {
+        "ok": True,
+        "test_id": spec["test_id"],
+        "world_coord": execution.world_coord,
+        "report_timestamp": execution.report_timestamp,
+        "report": {"instance": execution.attacker_instance, "tab": "war", "index": 1},
+    }
+
+
+def capture_existing_report(
+    spec_path: str,
+    *,
+    tab: str = "war",
+    index: int = 1,
+    debug: bool = False,
+) -> dict:
+    """Capture and parse a selected report from the spec attacker's inbox."""
+    from emulator import resolve_instance
+    from report_reader import read_battle_report
+
+    spec = json.loads(Path(spec_path).read_text())
+    attacker_instance = spec["emulator"]["attacker"]["instance"]
+    emulator = resolve_instance(attacker_instance)
+    return read_battle_report(emulator, tab=tab, index=index, debug=debug)
+
+
+def create_testcase_from_existing_report(
+    spec_path: str,
+    *,
+    tab: str = "war",
+    index: int = 1,
+    debug: bool = False,
+) -> dict:
+    """Capture a selected existing inbox report and append it as a testcase observation."""
+    report = capture_existing_report(spec_path, tab=tab, index=index, debug=debug)
+    return create_testcase_from_report(spec_path, report)
+
+
+def run_testcase(
+    spec_path: str,
+    dry_run: bool = False,
+    debug: bool = False,
+    preset_mode: str | None = None,
+    preferred_world_coord: dict[str, int] | None = None,
+) -> dict:
+    """Run battle → capture its detected report → append testcase observation."""
+    spec = json.loads(Path(spec_path).read_text())
+    if dry_run:
+        logger.info("[DRY RUN] Skipping all emulator steps")
+        return {"ok": True, "dry_run": True, "test_id": spec["test_id"]}
+
+    execution = execute_battle(
+        spec_path,
+        preset_mode=preset_mode,
+        preferred_world_coord=preferred_world_coord,
+    )
+    report_detected_at = time.monotonic()
+    try:
+        logger.info("Capturing the newly detected war report directly from the open inbox...")
+        report = _capture_war_report(execution.attacker_emulator, debug=debug, inbox_open=True)
+        logger.info(
+            "New report captured and fully parsed in %.2fs from detection",
+            time.monotonic() - report_detected_at,
+        )
+    finally:
+        _recall_after_battle(execution)
+
+    return create_testcase_from_report(
+        spec_path,
+        report,
+        world_coord=execution.world_coord,
+    )
 
 
 if __name__ == "__main__":

@@ -25,9 +25,12 @@ Commands:
   goto beast_cage          Navigate to the Beast Cage screen
   goto pet <name>          Navigate to a specific pet's details page
   goto pet_refine <name>   Navigate to the Refine tab of a specific pet
+  run-battle <file>   Run a battle spec and stop after its report is detected
   run-testcase <file> Run a battle spec end-to-end: emulators → report → testcase JSON
+  create-testcase <file> Capture/select a report and append it to a testcase
   memories <map>      Clear visible memories labels using a CSV or JSON map
   report              Read and parse a battle report from an inbox tab
+  report-images <dir> Parse a battle report from an existing screenshot bundle
   reports             Capture and parse multiple consecutive battle reports
   capture-hero-skills  Capture and save all hero skill levels
   ensure-alliance <tag> Ensure the player is in the specified alliance
@@ -36,7 +39,8 @@ Commands:
   shell <cmd...>      Run an adb shell command and print output
 
 Global options:
-  --instance <name>  Instance name as shown in MuMuManager. Required except for status and run-testcase.
+  --instance <name>  Instance name as shown in MuMuManager. Not used by status,
+                     report-images, or spec-driven commands.
 """
 from __future__ import annotations
 
@@ -735,7 +739,26 @@ def cmd_screencap(instance_name: str, out_path: str) -> int:
         )
 
 
-def cmd_report(instance_name: str, tab: str, index: int, debug: bool = False) -> int:
+def _emit_report_result(data: dict, output: str = "") -> int:
+    if output:
+        from report_reader import _save_report_json
+
+        saved = _save_report_json(data, Path(output))
+        response = dict(data)
+        response["saved_to"] = str(saved.resolve())
+        _emit(response)
+    else:
+        _emit(data)
+    return 0
+
+
+def cmd_report(
+    instance_name: str,
+    tab: str,
+    index: int,
+    debug: bool = False,
+    output: str = "",
+) -> int:
     try:
         from report_reader import normalize_mail_tab, read_battle_report
 
@@ -760,8 +783,7 @@ def cmd_report(instance_name: str, tab: str, index: int, debug: bool = False) ->
 
     try:
         data = read_battle_report(emulator, tab=normalized_tab, index=index, debug=debug)
-        _emit(data)
-        return 0
+        return _emit_report_result(data, output)
     except ValueError as exc:
         return _fail(
             str(exc),
@@ -779,6 +801,22 @@ def cmd_report(instance_name: str, tab: str, index: int, debug: bool = False) ->
             instance_name=instance_name,
             tab=tab,
             index=index,
+            cause=exc,
+        )
+
+
+def cmd_report_images(image_dir: str, output: str = "", debug: bool = False) -> int:
+    """Parse an existing screenshot bundle without accessing an emulator."""
+    try:
+        from report_reader import parse_saved_report_images
+
+        data = parse_saved_report_images(image_dir, debug=debug)
+        return _emit_report_result(data, output)
+    except Exception as exc:
+        return _fail(
+            f"report-images failed: {exc}",
+            command="report-images",
+            images=image_dir,
             cause=exc,
         )
 
@@ -1012,12 +1050,19 @@ def cmd_run_testcase(spec: str, dry_run: bool = False, repeat: int = 1, debug: b
         lock_context = lock_instances(instance_names, _SKILL_DIR / "tmp" / "wosctl_locks")
         with lock_context:
             results: list[dict] = []
+            preferred_world_coord: dict[str, int] | None = None
             for run_number in range(1, repeat + 1):
                 preset_mode = None
                 if repeat > 1:
                     preset_mode = "save" if run_number == 1 else "load"
                 try:
-                    result = run_testcase(spec, dry_run=dry_run, debug=debug, preset_mode=preset_mode)
+                    result = run_testcase(
+                        spec,
+                        dry_run=dry_run,
+                        debug=debug,
+                        preset_mode=preset_mode,
+                        preferred_world_coord=preferred_world_coord,
+                    )
                 except Exception as exc:
                     return _fail(
                         str(exc),
@@ -1035,6 +1080,7 @@ def cmd_run_testcase(spec: str, dry_run: bool = False, repeat: int = 1, debug: b
 
                 result["run_number"] = run_number
                 results.append(result)
+                preferred_world_coord = result.get("world_coord")
 
             _emit({
                 "ok": True,
@@ -1056,6 +1102,151 @@ def cmd_run_testcase(spec: str, dry_run: bool = False, repeat: int = 1, debug: b
         )
 
 
+def cmd_run_battle(spec: str, dry_run: bool = False, repeat: int = 1) -> int:
+    """Run one or more battles without parsing reports or writing testcases."""
+    try:
+        instance_names = testcase_instance_names(spec)
+    except Exception as exc:
+        return _fail(str(exc), command="run-battle", spec=spec, cause=exc)
+
+    try:
+        from run_testcase import run_battle
+    except Exception as exc:
+        return _fail(f"run-battle import failed: {exc}", command="run-battle", cause=exc)
+
+    try:
+        with lock_instances(instance_names, _SKILL_DIR / "tmp" / "wosctl_locks"):
+            results: list[dict] = []
+            preferred_world_coord: dict[str, int] | None = None
+            for run_number in range(1, repeat + 1):
+                preset_mode = None
+                if repeat > 1:
+                    preset_mode = "save" if run_number == 1 else "load"
+                try:
+                    result = run_battle(
+                        spec,
+                        dry_run=dry_run,
+                        preset_mode=preset_mode,
+                        preferred_world_coord=preferred_world_coord,
+                    )
+                except Exception as exc:
+                    return _fail(
+                        str(exc),
+                        command="run-battle",
+                        spec=spec,
+                        repeat=repeat,
+                        completed=len(results),
+                        results=results,
+                        cause=exc,
+                    )
+
+                if repeat == 1:
+                    _emit(result)
+                    return 0
+
+                result["run_number"] = run_number
+                results.append(result)
+                preferred_world_coord = result.get("world_coord")
+
+            _emit({
+                "ok": True,
+                "command": "run-battle",
+                "spec": spec,
+                "repeat": repeat,
+                "completed": len(results),
+                "results": results,
+            })
+            return 0
+    except InstanceLockError as exc:
+        return _fail(str(exc), command="run-battle", spec=spec, error_type="instance_locked", cause=exc)
+    except Exception as exc:
+        return _fail(f"run-battle failed: {exc}", command="run-battle", spec=spec, cause=exc)
+
+
+def cmd_create_testcase(
+    spec: str,
+    *,
+    report_path: str = "",
+    image_dir: str = "",
+    tab: str = "war",
+    index: int = 1,
+    debug: bool = False,
+) -> int:
+    """Append a testcase observation from saved JSON, images, or an inbox report."""
+    try:
+        instance_names = testcase_instance_names(spec)
+    except Exception as exc:
+        return _fail(str(exc), command="create-testcase", spec=spec, cause=exc)
+
+    try:
+        from report_reader import normalize_mail_tab
+        from run_testcase import capture_existing_report, create_testcase_from_report
+
+        normalized_tab = normalize_mail_tab(tab) if not (report_path or image_dir) else tab
+    except ValueError as exc:
+        return _fail(
+            str(exc),
+            exit_code=2,
+            error_type="usage_error",
+            command="create-testcase",
+            spec=spec,
+            tab=tab,
+            index=index,
+        )
+    except Exception as exc:
+        return _fail(f"create-testcase import failed: {exc}", command="create-testcase", cause=exc)
+
+    if not (report_path or image_dir) and not 1 <= index <= 5:
+        return _fail(
+            "report index must be between 1 and 5",
+            exit_code=2,
+            error_type="usage_error",
+            command="create-testcase",
+            spec=spec,
+            tab=tab,
+            index=index,
+        )
+
+    try:
+        if report_path:
+            report = json.loads(Path(report_path).read_text())
+            report_source: object = str(Path(report_path).resolve())
+        elif image_dir:
+            from report_reader import parse_saved_report_images
+
+            report = parse_saved_report_images(image_dir, debug=debug)
+            report_source = {
+                "images": str(Path(image_dir).expanduser().resolve()),
+            }
+        else:
+            with lock_instances(instance_names, _SKILL_DIR / "tmp" / "wosctl_locks"):
+                report = capture_existing_report(
+                    spec,
+                    tab=normalized_tab,
+                    index=index,
+                    debug=debug,
+                )
+            report_source = {"tab": normalized_tab, "index": index}
+
+        result = create_testcase_from_report(spec, report)
+        result["report_source"] = report_source
+        _emit(result)
+        return 0
+    except InstanceLockError as exc:
+        return _fail(str(exc), command="create-testcase", spec=spec, error_type="instance_locked", cause=exc)
+    except Exception as exc:
+        return _fail(
+            f"create-testcase failed: {exc}",
+            command="create-testcase",
+            spec=spec,
+            report=report_path or None,
+            images=image_dir or None,
+            tab=normalized_tab,
+            index=index,
+            cause=exc,
+        )
+
+
 # ─── Argument parsing ──────────────────────────────────────────────────────────
 def build_parser() -> argparse.ArgumentParser:
     parser = JsonArgumentParser(
@@ -1067,7 +1258,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--instance", "-i",
         default=None,
         metavar="<name>",
-        help="Instance name as shown in MuMuManager (required except for status and run-testcase)",
+        help="Instance name as shown in MuMuManager (not used by status, report-images, or spec-driven commands)",
     )
     parser.add_argument(
         "--debug",
@@ -1088,7 +1279,21 @@ def build_parser() -> argparse.ArgumentParser:
     report_p = sub.add_parser("report", help="Read and parse a battle report from an inbox tab")
     report_p.add_argument("--tab", required=True, help="Inbox tab to read from: war, reports, or starred")
     report_p.add_argument("--index", type=int, default=1, help="1-based report index within the visible list (default: 1)")
+    report_p.add_argument("--output", default="", metavar="PATH",
+                          help="Save the parsed report JSON for later create-testcase use")
     report_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
+    report_images_p = sub.add_parser(
+        "report-images",
+        help="Parse a battle report from existing saved screenshots",
+    )
+    report_images_p.add_argument(
+        "images",
+        help="Directory containing overview, stat/troop, and complete Battle Details screenshots",
+    )
+    report_images_p.add_argument("--output", default="", metavar="PATH",
+                                 help="Save the parsed report JSON for later create-testcase use")
+    report_images_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
     reports_p = sub.add_parser("reports", help="Capture and parse multiple consecutive battle reports")
     reports_p.add_argument("--tab", required=True, help="Inbox tab to read from: war, reports, or starred")
@@ -1116,6 +1321,28 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Run the same spec N times, appending one game observation per successful run")
     tc_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
+    battle_p = sub.add_parser("run-battle", help="Run a battle and stop after its new report is detected")
+    battle_p.add_argument("spec", help="Path to battle spec JSON")
+    battle_p.add_argument("--dry-run", action="store_true", help="Skip emulator steps")
+    battle_p.add_argument("--repeat", type=_positive_int, default=1, metavar="N",
+                          help="Run the same battle N times, using presets after the first deployment")
+
+    create_tc_p = sub.add_parser(
+        "create-testcase",
+        help="Append a testcase observation from saved JSON, images, or an inbox report",
+    )
+    create_tc_p.add_argument("spec", help="Path to battle spec JSON")
+    create_source = create_tc_p.add_mutually_exclusive_group()
+    create_source.add_argument("--report", default="", metavar="PATH",
+                               help="Parsed report JSON from a report command; skips inbox capture")
+    create_source.add_argument("--images", default="", metavar="DIR",
+                               help="Parse saved report screenshots; skips emulator access")
+    create_tc_p.add_argument("--tab", default="war",
+                             help="Existing inbox tab when neither --report nor --images is supplied (default: war)")
+    create_tc_p.add_argument("--index", type=int, default=1,
+                             help="1-based inbox index when neither saved source is supplied (default: 1)")
+    create_tc_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
     shell_p = sub.add_parser("shell", help="Run an ADB shell command")
     shell_p.add_argument("cmd", nargs=argparse.REMAINDER, help="Shell command")
 
@@ -1138,14 +1365,30 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
 
-    if args.command == "run-testcase":
+    if args.command in {"report-images", "run-battle", "run-testcase", "create-testcase"}:
         add_stderr_logging()
 
     if args.command == "status":
         return cmd_status(args.instance)
 
+    if args.command == "report-images":
+        return cmd_report_images(args.images, output=args.output, debug=args.debug)
+
     if args.command == "run-testcase":
         return cmd_run_testcase(args.spec, dry_run=args.dry_run, repeat=args.repeat, debug=args.debug)
+
+    if args.command == "run-battle":
+        return cmd_run_battle(args.spec, dry_run=args.dry_run, repeat=args.repeat)
+
+    if args.command == "create-testcase":
+        return cmd_create_testcase(
+            args.spec,
+            report_path=args.report,
+            image_dir=args.images,
+            tab=args.tab,
+            index=args.index,
+            debug=args.debug,
+        )
 
     try:
         instance_name = _require_instance_name(args.instance)
@@ -1161,7 +1404,13 @@ def main() -> int:
                 return cmd_goto(instance_name, args.destination, getattr(args, "pet_name", ""), getattr(args, "coord_y", ""))
 
             if args.command == "report":
-                return cmd_report(instance_name, args.tab, args.index, debug=args.debug)
+                return cmd_report(
+                    instance_name,
+                    args.tab,
+                    args.index,
+                    debug=args.debug,
+                    output=args.output,
+                )
 
             if args.command == "reports":
                 return cmd_reports(

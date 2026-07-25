@@ -146,13 +146,15 @@ export function calculateDamageJob(
   if (!options.staticDamageProfile) throw new Error("calculateDamageJob requires a staticDamageProfile");
   const recording = options.recorder.startDamageJob();
   const staticProfile = options.staticDamageProfile;
-  const dealerTroops = job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0;
+  // Fractional casualties carry between rounds, but every positive remainder is
+  // still one living troop and contributes fully to the next attack.
+  const dealerTroops = Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0));
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
   const sqrtMinArmy = options.sqrtMinInitialArmy ?? sqrtMinInitialArmy(fighters);
   const initialFormationAttackWeights = options.initialFormationAttackWeights
     ?? buildInitialFormationAttackWeights(fighters, sqrtMinArmy);
   const turnShieldShare = initialFormationAttackShare(initialFormationAttackWeights, job.dealerSide, job.dealerUnit);
-  const armyTerm = Math.ceil(Math.sqrt(Math.max(0, dealerTroops)) * sqrtMinArmy);
+  const armyTerm = Math.ceil(Math.sqrt(dealerTroops) * sqrtMinArmy);
   const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
   applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);

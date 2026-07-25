@@ -145,6 +145,7 @@ const SAVED_SIMULATION_RESULT = {
     best: { value: 140, winner: "attacker" },
     worst: { value: -45, winner: "defender" },
     attacker_win_rate: 0.71,
+    avg_rounds: 7.4,
     avg_skill_activations: 8.6,
     avg_skill_kills: 133.2,
     avg_attacker_activations: 4.7,
@@ -966,6 +967,9 @@ test.describe("Dashboard smoke tests", () => {
       page.locator("h3").filter({ hasText: /Results \(222 replicates\)/ }),
     ).toBeVisible();
     await expect(page.locator("body")).toContainText("82 (attacker)");
+    await expect(
+      page.getByText("Average rounds", { exact: true }).locator(".."),
+    ).toContainText("7.4");
     const chart = page.getByTestId("simulate-outcome-chart");
     await expect(chart).toHaveAttribute("data-axis-limit", "1666");
     await expect(chart).toHaveAttribute("data-axis-reversed", "true");

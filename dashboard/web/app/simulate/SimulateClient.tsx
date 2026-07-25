@@ -114,6 +114,10 @@ import {
   type Side,
   type SideState,
 } from "@/lib/simulate/form-state";
+import {
+  formatBattleOutcome,
+  formatMeanSurvivorCount,
+} from "@/lib/simulate/trace-format";
 
 type SimWorkspaceTab = Side | "setup" | "results";
 const SIDE_LABELS: Record<Side, string> = {
@@ -1065,7 +1069,11 @@ export default function SimulateClient({
         loadedPresetNames,
       );
       const job = runWorkerSimulation(payload, (done, total) =>
-        setSimulateProgress({ done, total }),
+        setSimulateProgress((current) =>
+          current?.done === done && current.total === total
+            ? current
+            : { done, total },
+        ),
       );
       const computed = await job.promise;
       setResult(computed);
@@ -1146,7 +1154,11 @@ export default function SimulateClient({
         optimize_side: optimizeSide,
       } satisfies OptimizeRatioRequestPayload;
       const job = runWorkerOptimizeRatio(payload, (done, total) =>
-        setOptimizeProgress({ done, total }),
+        setOptimizeProgress((current) =>
+          current?.done === done && current.total === total
+            ? current
+            : { done, total },
+        ),
       );
       const computed = await job.promise;
       setSelectedOptimizeRowKey(null);
@@ -1275,22 +1287,58 @@ export default function SimulateClient({
   const summaryCards = useMemo(() => {
     if (!result) return null;
     const s = result.summary;
+    const hasDraws = (s.draw_rate ?? 0) > 0;
     return [
-      { label: "Mean survivors", value: signedSurvivors(s.mean) },
+      {
+        label: "Mean survivors",
+        value: hasDraws && s.mean_survivors
+          ? `Attacker ${formatMeanSurvivorCount(
+              s.mean_survivors.attacker,
+            )} / Defender ${formatMeanSurvivorCount(
+              s.mean_survivors.defender,
+            )}`
+          : signedSurvivors(s.mean),
+      },
       { label: "Std dev", value: compactNumber(s.std) },
       {
         label: "Attacker winrate",
         value: `${(s.attacker_win_rate * 100).toFixed(1)}%`,
       },
-      { label: "Best outcome", value: signedSurvivors(s.best.value) },
-      { label: "Worst outcome", value: signedSurvivors(s.worst.value) },
+      ...(!hasDraws
+        ? []
+        : [
+            {
+              label: "Draw rate",
+              value: `${((s.draw_rate ?? 0) * 100).toFixed(1)}%`,
+            },
+          ]),
+      {
+        label: "Best outcome",
+        value: hasDraws
+          ? formatBattleOutcome(
+              s.best.winner,
+              s.best.survivors,
+              s.best.value,
+            )
+          : signedSurvivors(s.best.value),
+      },
+      {
+        label: "Worst outcome",
+        value: hasDraws
+          ? formatBattleOutcome(
+              s.worst.winner,
+              s.worst.survivors,
+              s.worst.value,
+            )
+          : signedSurvivors(s.worst.value),
+      },
       {
         label: "Avg activations / battle",
         value: s.avg_skill_activations.toFixed(1),
       },
       {
-        label: "Avg skill kills / battle",
-        value: s.avg_skill_kills.toFixed(1),
+        label: "Average rounds",
+        value: s.avg_rounds?.toFixed(1) ?? "—",
       },
     ];
   }, [result]);
@@ -1821,6 +1869,7 @@ export default function SimulateClient({
       <div
         ref={actionDockRef}
         className="sim-top-actions sim-mode-actions"
+        data-results-active={!wideSimLayout && mobileTab === "results"}
         data-testid="sim-action-dock"
       >
         <RunModeCommandBar

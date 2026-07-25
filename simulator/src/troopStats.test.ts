@@ -77,10 +77,13 @@ test("troop record construction normalizes legacy stat keys once", () => {
   assert.equal(Object.isFrozen(record.stats), true);
 });
 
-test("Fire Crystal scaling reproduces validated independently-rounded stats", () => {
+test("Fire Crystal scaling preserves the validated early levels and applies the FC8-FC10 continuation", () => {
   assert.equal(fireCrystalMultiplier(0), 1);
   assert.equal(fireCrystalMultiplier(1), 1.04);
   assert.equal(fireCrystalMultiplier(5), 1.04 * 1.05 ** 4);
+  assert.equal(fireCrystalMultiplier(7), 1.04 * 1.05 ** 6);
+  assert.equal(fireCrystalMultiplier(8), 1.04 * 1.05 ** 6 * 1.04);
+  assert.equal(fireCrystalMultiplier(10), 1.04 * 1.05 ** 6 * 1.04 ** 3);
 
   assert.deepEqual(generateTroopStats("infantry", 3, 1).stats, {
     attack: 137,
@@ -93,6 +96,12 @@ test("Fire Crystal scaling reproduces validated independently-rounded stats", ()
     defense: 10,
     lethality: 10,
     health: 448
+  });
+  assert.deepEqual(generateTroopStats("infantry", 1, 10).stats, {
+    attack: 99,
+    defense: 10,
+    lethality: 10,
+    health: 296
   });
 });
 
@@ -110,22 +119,22 @@ test("T11 uses the fitted Labyrinth base and inferred FC5-FC10 continuation", ()
     health: 2090
   });
   assert.deepEqual(generateTroopStats("infantry", 11, 10).stats, {
-    attack: 889,
+    attack: 864,
     defense: 10,
     lethality: 10,
-    health: 2667
+    health: 2591
   });
   assert.deepEqual(generateTroopStats("lancer", 11, 10).stats, {
-    attack: 2667,
+    attack: 2591,
     defense: 10,
     lethality: 10,
-    health: 889
+    health: 864
   });
   assert.deepEqual(generateTroopStats("marksman", 11, 10).stats, {
-    attack: 3556,
+    attack: 3455,
     defense: 10,
     lethality: 10,
-    health: 666
+    health: 647
   });
 });
 

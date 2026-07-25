@@ -36,6 +36,12 @@ interface SimulateBatchSkillTally {
 
 export interface SimulateBatchResult extends SimulateBatchTask {
   outcome: number;
+  rounds: number;
+  winner: "attacker" | "defender" | "draw";
+  survivors: {
+    attacker: number;
+    defender: number;
+  };
   perSideSkills: Record<"attacker" | "defender", SimulateBatchSkillTally[]>;
 }
 
@@ -53,6 +59,8 @@ export async function runSimulation(request: SimulateRequestPayload, options: Ru
   const outcomeRuns: SimulateOutcomeRun[] = ordered.map((row) => ({
     outcome: row.outcome,
     seed: row.seed,
+    winner: row.winner,
+    survivors: row.survivors,
   }));
   return { ...aggregateSimulationRows(ordered), outcome_runs: outcomeRuns };
 }
@@ -87,8 +95,7 @@ export function runSimulationTrace(
 }
 
 export function signedOutcome(result: BattleResult): number {
-  const attacker = totalSide(result.remaining.attacker);
-  const defender = totalSide(result.remaining.defender);
+  const { attacker, defender } = survivorCounts(result);
   if (attacker > 0 && defender === 0) return attacker;
   if (defender > 0 && attacker === 0) return -defender;
   return attacker - defender;
@@ -104,6 +111,9 @@ function compactBattleResult(task: SimulateBatchTask, result: BattleResult): Sim
   return {
     ...task,
     outcome: signedOutcome(result),
+    rounds: result.rounds,
+    winner: result.winner,
+    survivors: survivorCounts(result),
     perSideSkills: {
       attacker: compactSkills(result, "attacker"),
       defender: compactSkills(result, "defender"),
@@ -124,9 +134,22 @@ function aggregateSimulationRows(rows: SimulateBatchResult[]): SimulateApiResult
   const replicates = Math.max(1, rows.length);
   const mean = outcomes.reduce((sum, value) => sum + value, 0) / replicates;
   const variance = outcomes.reduce((sum, value) => sum + (value - mean) ** 2, 0) / replicates;
-  const best = Math.max(...outcomes);
-  const worst = Math.min(...outcomes);
-  const attackerWins = outcomes.filter((value) => value > 0).length;
+  const bestRow = rows.reduce(
+    (best, row) => (compareOutcomeRows(row, best) > 0 ? row : best),
+    rows[0],
+  );
+  const worstRow = rows.reduce(
+    (worst, row) => (compareOutcomeRows(row, worst) < 0 ? row : worst),
+    rows[0],
+  );
+  const attackerWins = rows.filter((row) => row.winner === "attacker").length;
+  const draws = rows.filter((row) => row.winner === "draw").length;
+  const meanSurvivors = {
+    attacker:
+      rows.reduce((sum, row) => sum + row.survivors.attacker, 0) / replicates,
+    defender:
+      rows.reduce((sum, row) => sum + row.survivors.defender, 0) / replicates,
+  };
   const perSide = {
     attacker: aggregateSkills(rows, "attacker"),
     defender: aggregateSkills(rows, "defender"),
@@ -140,9 +163,20 @@ function aggregateSimulationRows(rows: SimulateBatchResult[]): SimulateApiResult
     summary: {
       mean,
       std: Math.sqrt(variance),
-      best: { value: best, winner: winnerFor(best) },
-      worst: { value: worst, winner: winnerFor(worst) },
+      best: {
+        value: bestRow.outcome,
+        winner: bestRow.winner,
+        survivors: bestRow.survivors,
+      },
+      worst: {
+        value: worstRow.outcome,
+        winner: worstRow.winner,
+        survivors: worstRow.survivors,
+      },
       attacker_win_rate: attackerWins / replicates,
+      draw_rate: draws / replicates,
+      mean_survivors: meanSurvivors,
+      avg_rounds: rows.reduce((sum, row) => sum + row.rounds, 0) / replicates,
       avg_skill_activations: avgAttActivations + avgDefActivations,
       avg_skill_kills: avgAttKills + avgDefKills,
       avg_attacker_activations: avgAttActivations,
@@ -176,30 +210,52 @@ type SkillGroupLabels = Partial<Record<"attacker" | "defender", Partial<Record<U
 
 export function battleResultToTrace(result: BattleResult, seed: string | number, skillGroupLabels: SkillGroupLabels = {}): SimulateTrace {
   const attacksByRound = attacksGroupedByRound(result);
-  const rounds = (result.trace?.rounds ?? []).map((roundTrace) => {
+  const resultRounds = result.trace?.rounds ?? [];
+  const rounds: SimulateTrace["rounds"] = [];
+
+  if (resultRounds.length > 0) {
+    rounds.push({
+      round: 0,
+      attacker: emptySideRound(resultRounds[0].roundStartTroops.attacker),
+      defender: emptySideRound(resultRounds[0].roundStartTroops.defender),
+    });
+  }
+
+  for (const [index, roundTrace] of resultRounds.entries()) {
+    const nextTroops = resultRounds[index + 1]?.roundStartTroops ?? result.remaining;
     const sideRounds = {
-      attacker: emptySideRound(roundTrace.roundStartTroops.attacker),
-      defender: emptySideRound(roundTrace.roundStartTroops.defender),
+      attacker: emptySideRound(nextTroops.attacker),
+      defender: emptySideRound(nextTroops.defender),
+    };
+    const remainingTroops = {
+      attacker: { ...roundTrace.roundStartTroops.attacker },
+      defender: { ...roundTrace.roundStartTroops.defender },
     };
     for (const attack of attacksByRound.get(roundTrace.round) ?? []) {
       const sourceUnit = traceUnit(attack.dealerUnit);
       const targetUnit = traceUnit(attack.takerUnit);
-      sideRounds[attack.dealerSide].kills[sourceUnit][targetUnit] += attack.kills;
+      const before = remainingTroops[attack.takerSide][attack.takerUnit] ?? 0;
+      const after = Math.max(0, before - attack.kills);
+      sideRounds[attack.dealerSide].kills[sourceUnit][targetUnit] +=
+        visibleTroopCount(before) - visibleTroopCount(after);
+      remainingTroops[attack.takerSide][attack.takerUnit] = after;
       for (const effect of uniqueEffects(attack.appliedEffects ?? [])) {
         const sourceSide = effect.sourceSide ?? attack.dealerSide;
         sideRounds[sourceSide].effects.push(traceEffect(effect, attack, 1));
       }
     }
-    return { round: roundTrace.round, attacker: sideRounds.attacker, defender: sideRounds.defender };
-  });
+    rounds.push({ round: roundTrace.round, attacker: sideRounds.attacker, defender: sideRounds.defender });
+  }
 
   return {
     seed,
     outcome: signedOutcome(result),
+    winner: result.winner,
+    survivors: survivorCounts(result),
     rounds,
     skill_kills: skillKills(result, skillGroupLabels),
     effect_usage: effectUsage(result),
-    total_kills: totalKills(result),
+    total_kills: totalTraceKills(rounds),
   };
 }
 
@@ -253,10 +309,21 @@ function emptyKillMatrix(): Record<SimulateTraceUnit, Record<SimulateTraceUnit, 
   };
 }
 
-function totalKills(result: BattleResult): SimulateTrace["total_kills"] {
+function visibleTroopCount(value: number): number {
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  return Math.ceil(value);
+}
+
+function totalTraceKills(rounds: SimulateTrace["rounds"]): SimulateTrace["total_kills"] {
   const totals = { attacker: emptyKillMatrix(), defender: emptyKillMatrix() };
-  for (const attack of result.attacks) {
-    totals[attack.dealerSide][traceUnit(attack.dealerUnit)][traceUnit(attack.takerUnit)] += attack.kills;
+  for (const round of rounds) {
+    for (const side of ["attacker", "defender"] as const) {
+      for (const source of ["inf", "lanc", "mark"] as const) {
+        for (const target of ["inf", "lanc", "mark"] as const) {
+          totals[side][source][target] += round[side].kills[source][target];
+        }
+      }
+    }
   }
   return totals;
 }
@@ -368,8 +435,26 @@ function totalSide(side: Record<string, number>): number {
   return Object.values(side).reduce((sum, value) => sum + Math.ceil(value), 0);
 }
 
-function winnerFor(value: number): "attacker" | "defender" | "draw" {
-  if (value > 0) return "attacker";
-  if (value < 0) return "defender";
-  return "draw";
+function survivorCounts(result: BattleResult): {
+  attacker: number;
+  defender: number;
+} {
+  return {
+    attacker: totalSide(result.remaining.attacker),
+    defender: totalSide(result.remaining.defender),
+  };
+}
+
+function compareOutcomeRows(
+  left: SimulateBatchResult,
+  right: SimulateBatchResult,
+): number {
+  const winnerRank = {
+    attacker: 2,
+    draw: 1,
+    defender: 0,
+  } as const;
+  const categorical =
+    winnerRank[left.winner] - winnerRank[right.winner];
+  return categorical || left.outcome - right.outcome;
 }

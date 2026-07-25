@@ -27,20 +27,20 @@ _SAFE_LOCK_CHAR = re.compile(r"[^a-z0-9_.-]+")
 
 
 def testcase_instance_names(spec_path: str | os.PathLike[str]) -> list[str]:
-    """Return unique instance names driven by a run-testcase spec."""
+    """Return unique instance names driven by a battle/testcase spec."""
     spec = json.loads(Path(spec_path).read_text())
     emulator = spec.get("emulator")
     if not isinstance(emulator, dict):
-        raise InstanceLockError("run-testcase spec is missing an 'emulator' object")
+        raise InstanceLockError("battle spec is missing an 'emulator' object")
 
     names: list[str] = []
     for role in sorted(emulator):
         role_config = emulator[role]
         if not isinstance(role_config, dict):
-            raise InstanceLockError(f"run-testcase emulator.{role} must be an object")
+            raise InstanceLockError(f"battle spec emulator.{role} must be an object")
         name = str(role_config.get("instance", "")).strip()
         if not name:
-            raise InstanceLockError(f"run-testcase emulator.{role}.instance is required")
+            raise InstanceLockError(f"battle spec emulator.{role}.instance is required")
         if name.casefold() not in {existing.casefold() for existing in names}:
             names.append(name)
     return sorted(names, key=str.casefold)

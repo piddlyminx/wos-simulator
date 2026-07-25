@@ -33,3 +33,22 @@ test("createProgressThrottle flushes the latest progress immediately", () => {
 
   assert.deepEqual(calls, [[2, 10]]);
 });
+
+test("createProgressThrottle does not emit duplicate progress states", () => {
+  const calls: Array<[number, number]> = [];
+  const scheduled: Array<() => void> = [];
+  const progress = createProgressThrottle(
+    (done, total) => calls.push([done, total]),
+    (flush) => {
+      scheduled.push(flush);
+      return scheduled.length;
+    },
+  );
+
+  progress.update(2, 10);
+  scheduled.shift()?.();
+  progress.update(2, 10);
+  scheduled.shift()?.();
+
+  assert.deepEqual(calls, [[2, 10]]);
+});

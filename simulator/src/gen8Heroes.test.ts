@@ -126,7 +126,7 @@ test("Gatot source-Attack shields reproduce the observed army-size threshold", (
   const config = loadSimulatorConfig();
   const expectations = [
     { left: 4900, right: 1000, winner: "draw", rounds: 1500, leftLosses: 3, rightLosses: 4 },
-    { left: 5100, right: 1000, winner: "attacker", rounds: 1374, leftLosses: 3, rightLosses: 1000 },
+    { left: 5100, right: 1000, winner: "attacker", rounds: 1380, leftLosses: 3, rightLosses: 1000 },
     { left: 10000, right: 2000, winner: "attacker", rounds: 452, leftLosses: 7, rightLosses: 2000 },
     { left: 20000, right: 4000, winner: "attacker", rounds: 337, leftLosses: 14, rightLosses: 4000 }
   ] as const;
@@ -176,7 +176,7 @@ test("Gatot turn shields split protection across mixed enemy formations", () => 
 
   assert.deepEqual(
     { winner: result.winner, rounds: result.rounds, leftInfantry: result.remaining.attacker.infantry },
-    { winner: "attacker", rounds: 1153, leftInfantry: 4557 }
+    { winner: "attacker", rounds: 1155, leftInfantry: 4556 }
   );
   assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
 });

@@ -6,9 +6,18 @@ import type { SimulateRequestPayload } from "@/lib/simulate-run";
 import type { SimulateBatchResult, SimulateBatchTask } from "./simulate";
 import { aggregateBattleResults, battleResultToTrace, runSimulation, runSimulationBatchDirect, signedOutcome } from "./simulate";
 
-function result(attacker: number, defender: number, activations = 0): BattleResult {
+function result(
+  attacker: number,
+  defender: number,
+  activations = 0,
+  winner: BattleResult["winner"] = attacker > defender
+    ? "attacker"
+    : defender > attacker
+      ? "defender"
+      : "draw",
+): BattleResult {
   return {
-    winner: attacker > defender ? "attacker" : defender > attacker ? "defender" : "draw",
+    winner,
     rounds: 1,
     remaining: {
       attacker: { infantry: attacker, lancer: 0, marksman: 0 },
@@ -62,6 +71,12 @@ function batchResult(task: SimulateBatchTask, battle: BattleResult): SimulateBat
   return {
     ...task,
     outcome: signedOutcome(battle),
+    rounds: battle.rounds,
+    winner: battle.winner,
+    survivors: {
+      attacker: battle.remaining.attacker.infantry,
+      defender: battle.remaining.defender.infantry,
+    },
     perSideSkills: {
       attacker: battle.skillReport.attacker.map((row) => ({
         name: row.skillName,
@@ -84,13 +99,47 @@ test("signedOutcome uses positive attacker survivors and negative defender survi
 });
 
 test("aggregateBattleResults produces SimulateApiResult summary", () => {
-  const aggregate = aggregateBattleResults([result(10, 0, 2), result(0, 4, 0)]);
+  const first = result(10, 0, 2);
+  const second = result(0, 4, 0);
+  first.rounds = 4;
+  second.rounds = 7;
+  const aggregate = aggregateBattleResults([first, second]);
   assert.equal(aggregate.replicates, 2);
   assert.deepEqual(aggregate.outcomes, [10, -4]);
   assert.equal(aggregate.summary.mean, 3);
+  assert.equal(aggregate.summary.avg_rounds, 5.5);
   assert.equal(aggregate.summary.attacker_win_rate, 0.5);
   assert.equal(aggregate.per_side_skills.attacker[0].name, "S1");
   assert.equal(aggregate.per_side_skills.attacker[0].avg_activations, 1);
+});
+
+test("aggregateBattleResults keeps draws distinct when both armies survive", () => {
+  const aggregate = aggregateBattleResults([
+    result(10, 7, 0, "draw"),
+  ]);
+
+  assert.deepEqual(aggregate.outcomes, [3]);
+  assert.equal(aggregate.summary.attacker_win_rate, 0);
+  assert.equal(aggregate.summary.draw_rate, 1);
+  assert.deepEqual(aggregate.summary.mean_survivors, {
+    attacker: 10,
+    defender: 7,
+  });
+  assert.deepEqual(aggregate.summary.best, {
+    value: 3,
+    winner: "draw",
+    survivors: { attacker: 10, defender: 7 },
+  });
+});
+
+test("aggregateBattleResults ranks a win above a draw with a larger margin", () => {
+  const aggregate = aggregateBattleResults([
+    result(100, 1, 0, "draw"),
+    result(1, 0, 0, "attacker"),
+  ]);
+
+  assert.equal(aggregate.summary.best.winner, "attacker");
+  assert.equal(aggregate.summary.worst.winner, "draw");
 });
 
 test("runSimulation preserves replicate order from batched workers", async () => {
@@ -107,6 +156,10 @@ test("runSimulation preserves replicate order from batched workers", async () =>
   assert.deepEqual(aggregate.outcome_runs?.map((run) => run.seed), [
     "batch-test:0",
     "batch-test:1",
+  ]);
+  assert.deepEqual(aggregate.outcome_runs?.map((run) => run.winner), [
+    "attacker",
+    "defender",
   ]);
 });
 
@@ -161,9 +214,62 @@ test("battleResultToTrace maps a full simulator trace into dashboard detail rows
   };
   const trace = battleResultToTrace(sample, "seed-1");
   assert.equal(trace.seed, "seed-1");
+  assert.equal(trace.winner, "attacker");
+  assert.deepEqual(trace.survivors, { attacker: 9, defender: 0 });
   assert.equal(trace.rounds[0].attacker.troops.mark, 30);
-  assert.equal(trace.rounds[0].attacker.kills.mark.inf, 4);
+  assert.equal(trace.rounds[0].round, 0);
+  assert.equal(trace.rounds[0].attacker.kills.mark.inf, 0);
+  assert.equal(trace.rounds[1].round, 1);
+  assert.equal(trace.rounds[1].defender.troops.inf, 0);
+  assert.equal(trace.rounds[1].attacker.kills.mark.inf, 4);
+  assert.equal(trace.total_kills.attacker.mark.inf, 4);
   assert.deepEqual(trace.skill_kills.attacker.Greg.S1, { triggers: 1, kills: 4 });
+});
+
+test("battleResultToTrace credits the final visible fractional casualty to its attack", () => {
+  const sample = result(11_777.654944379115, 0);
+  sample.attacks = [{
+    round: 1,
+    kind: "normal",
+    dealerSide: "attacker",
+    dealerUnit: "marksman",
+    takerSide: "defender",
+    takerUnit: "infantry",
+    kills: 0.00710142498961322,
+    appliedEffects: [],
+  }];
+  sample.trace = {
+    resolved: sample.resolved,
+    rounds: [{
+      round: 1,
+      roundStartTroops: {
+        attacker: { infantry: 0, lancer: 0, marksman: 11_777.847952239897 },
+        defender: { infantry: 0.00710142498961322, lancer: 0, marksman: 0 },
+      },
+      intents: [],
+      jobs: [{
+        round: 1,
+        kind: "normal",
+        roundStartTroops: {
+          attacker: { infantry: 0, lancer: 0, marksman: 11_777.847952239897 },
+          defender: { infantry: 0.00710142498961322, lancer: 0, marksman: 0 },
+        },
+        dealerSide: "attacker",
+        dealerUnit: "marksman",
+        takerSide: "defender",
+        takerUnit: "infantry",
+      }],
+    }],
+  };
+
+  const trace = battleResultToTrace(sample, "fractional-final");
+
+  assert.equal(trace.rounds.length, 2);
+  assert.equal(trace.rounds[0].defender.troops.inf, 0.00710142498961322);
+  assert.equal(trace.rounds[0].attacker.kills.mark.inf, 0);
+  assert.equal(trace.rounds[1].defender.troops.inf, 0);
+  assert.equal(trace.rounds[1].attacker.kills.mark.inf, 1);
+  assert.equal(trace.total_kills.attacker.mark.inf, 1);
 });
 
 test("battleResultToTrace groups applied effects by source side, not attacking side", () => {
@@ -208,9 +314,9 @@ test("battleResultToTrace groups applied effects by source side, not attacking s
 
   const trace = battleResultToTrace(sample, "seed-1");
 
-  assert.equal(trace.rounds[0].attacker.effects[0].hero, "Edith");
-  assert.equal(trace.rounds[0].defender.effects[0].hero, "Natalia");
-  const controlRow = trace.rounds[0].defender.effects.find((effect) => effect.effect_type === "no_attack");
+  assert.equal(trace.rounds[1].attacker.effects[0].hero, "Edith");
+  assert.equal(trace.rounds[1].defender.effects[0].hero, "Natalia");
+  const controlRow = trace.rounds[1].defender.effects.find((effect) => effect.effect_type === "no_attack");
   assert.notEqual(controlRow, undefined);
   assert.equal(controlRow!.value, 0);
   assert.equal(trace.effect_usage.defender.Marksmen["Natalia/RitualDeciphering/def-stun/def-stun"], 1);

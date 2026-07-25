@@ -23,10 +23,13 @@ status
 ensure-ready
 goto
 report
+report-images
 reports
 memories
 screencap
+run-battle
 run-testcase
+create-testcase
 shell
 capture-hero-skills
 ensure-alliance
@@ -34,7 +37,7 @@ recall-camp
 heal
 ```
 
-`--instance/-i` is required for emulator actions except `status` and `run-testcase`.
+`--instance/-i` is required for emulator actions except `status`, offline `report-images`, and the spec-driven `run-battle`, `run-testcase`, and `create-testcase` commands. Spec-driven commands take attacker and defender instance names from the spec.
 
 ## Stable Examples
 
@@ -52,6 +55,8 @@ Report capture:
 
 ```bash
 ./scripts/wosctl --instance <instance-name> report --tab war --index 1
+./scripts/wosctl --instance <instance-name> report --tab war --index 1 --output captures/my-report.json
+./scripts/wosctl report-images captures/saved-report --output captures/saved-report.json
 ./scripts/wosctl --instance <instance-name> reports --tab reports --count 5
 ./scripts/wosctl --instance <instance-name> reports --tab starred --count 3 --full-json
 ```
@@ -59,12 +64,19 @@ Report capture:
 Testcase collection:
 
 ```bash
+./scripts/wosctl run-battle testcase_spec/example.json
+./scripts/wosctl run-battle testcase_spec/example.json --repeat 10
+./scripts/wosctl create-testcase testcase_spec/example.json --tab war --index 1
+./scripts/wosctl create-testcase testcase_spec/example.json --report captures/my-report.json
+./scripts/wosctl create-testcase testcase_spec/example.json --images captures/saved-report
 ./scripts/wosctl run-testcase testcase_spec/example.json
 ./scripts/wosctl run-testcase testcase_spec/example.json --repeat 10
 ./scripts/wosctl run-testcase testcase_spec/example.json --dry-run
 ```
 
-`run-testcase` collects game observations only. It appends one observation per successful run under `game_report_result`; it does not run the TypeScript simulator or write `sim_result`.
+`run-battle` stops after a new report is detected. `create-testcase` can capture any selected existing inbox report, consume previously parsed report JSON, or parse saved screenshots. `run-testcase` is the convenience composition of run, capture, and create.
+
+Only `create-testcase` and `run-testcase` append observations under `game_report_result`. None of these commands runs the TypeScript simulator or writes `sim_result`.
 
 Simulator comparison is separate and runs from the repo root:
 

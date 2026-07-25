@@ -121,7 +121,11 @@ export function generateTroopStatsCatalogue(): TroopStatsCatalogue {
 
 export function fireCrystalMultiplier(fc: number): number {
   assertIntegerInRange("Fire Crystal level", fc, 0, MAX_FIRE_CRYSTAL_LEVEL);
-  return fc === 0 ? 1 : 1.04 * 1.05 ** (fc - 1);
+  // FC1 starts at 1.04; FC2-FC7 grow by 1.05 per level, then FC8-FC10
+  // grow by 1.04 per level.
+  if (fc === 0) return 1;
+  if (fc <= 7) return 1.04 * 1.05 ** (fc - 1);
+  return 1.04 * 1.05 ** 6 * 1.04 ** (fc - 7);
 }
 
 function baseStats(type: UnitType, tier: number): AttackHealth {

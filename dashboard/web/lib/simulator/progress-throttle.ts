@@ -2,6 +2,8 @@ type ProgressCallback = (done: number, total: number) => void;
 type ScheduleCallback = (flush: () => void) => number;
 type CancelScheduleCallback = (id: number) => void;
 
+const PROGRESS_UPDATE_INTERVAL_MS = 100;
+
 interface PendingProgress {
   done: number;
   total: number;
@@ -19,36 +21,45 @@ export function createProgressThrottle(
   cancelSchedule: CancelScheduleCallback = defaultCancelSchedule,
 ): ProgressThrottle {
   let pending: PendingProgress | null = null;
-  let frameId: number | null = null;
+  let scheduledId: number | null = null;
+  let lastEmitted: PendingProgress | null = null;
 
-  function flush(): void {
-    if (frameId !== null) {
-      cancelSchedule(frameId);
-      frameId = null;
-    }
+  function emitLatest(): void {
     if (!pending) return;
     const latest = pending;
     pending = null;
+    if (
+      lastEmitted?.done === latest.done &&
+      lastEmitted.total === latest.total
+    ) {
+      return;
+    }
+    lastEmitted = latest;
     onProgress(latest.done, latest.total);
+  }
+
+  function flush(): void {
+    if (scheduledId !== null) {
+      cancelSchedule(scheduledId);
+      scheduledId = null;
+    }
+    emitLatest();
   }
 
   return {
     update(done, total) {
       pending = { done, total };
-      if (frameId !== null) return;
-      frameId = schedule(() => {
-        frameId = null;
-        if (!pending) return;
-        const latest = pending;
-        pending = null;
-        onProgress(latest.done, latest.total);
+      if (scheduledId !== null) return;
+      scheduledId = schedule(() => {
+        scheduledId = null;
+        emitLatest();
       });
     },
     flush,
     cancel() {
-      if (frameId !== null) {
-        cancelSchedule(frameId);
-        frameId = null;
+      if (scheduledId !== null) {
+        cancelSchedule(scheduledId);
+        scheduledId = null;
       }
       pending = null;
     },
@@ -56,16 +67,9 @@ export function createProgressThrottle(
 }
 
 function defaultSchedule(flush: () => void): number {
-  if (typeof requestAnimationFrame === "function") {
-    return requestAnimationFrame(flush);
-  }
-  return setTimeout(flush, 16) as unknown as number;
+  return setTimeout(flush, PROGRESS_UPDATE_INTERVAL_MS) as unknown as number;
 }
 
 function defaultCancelSchedule(id: number): void {
-  if (typeof cancelAnimationFrame === "function") {
-    cancelAnimationFrame(id);
-    return;
-  }
   clearTimeout(id);
 }

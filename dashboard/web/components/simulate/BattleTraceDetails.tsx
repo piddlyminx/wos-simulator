@@ -1,11 +1,12 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, memo, useState } from "react";
 import type { SimulateTrace, SimulateTraceUnit } from "@/lib/simulate-run";
+import { type Side } from "@/lib/simulate/form-state";
 import {
-  signedSurvivors,
-  type Side,
-} from "@/lib/simulate/form-state";
+  formatBattleOutcome,
+  formatTraceTroopCount,
+} from "@/lib/simulate/trace-format";
 
 const SIDE_LABELS: Record<Side, string> = {
   attacker: "Attacker",
@@ -72,14 +73,13 @@ function formatTraceNumber(value: number): string {
   return Math.round(value).toLocaleString();
 }
 
-export function BattleTraceDetails({
+export const BattleTraceDetails = memo(function BattleTraceDetails({
   trace,
   attackerOnLeft,
 }: {
   trace: SimulateTrace;
   attackerOnLeft: boolean;
 }) {
-  const [expandedRound, setExpandedRound] = useState<number | null>(null);
   const leftSide: Side = attackerOnLeft ? "attacker" : "defender";
   const rightSide: Side = attackerOnLeft ? "defender" : "attacker";
 
@@ -89,7 +89,13 @@ export function BattleTraceDetails({
         <div>
           <h4 className="text-xs font-bold opacity-70">Example battle trace</h4>
           <p className="text-xs opacity-60">
-            Seed {trace.seed}; outcome {signedSurvivors(trace.outcome)}.
+            Seed {trace.seed}; outcome{" "}
+            {formatBattleOutcome(
+              trace.winner,
+              trace.survivors,
+              trace.outcome,
+            )}
+            .
           </p>
         </div>
       </div>
@@ -116,45 +122,14 @@ export function BattleTraceDetails({
           </thead>
           <tbody>
             {trace.rounds.map((round) => {
-              const expanded = expandedRound === round.round;
               return (
-                <Fragment key={round.round}>
-                  <tr
-                    onClick={() => setExpandedRound(expanded ? null : round.round)}
-                    className="cursor-pointer"
-                    style={{ borderBottom: "1px solid var(--sim-line)" }}
-                  >
-                    {[...TRACE_UNITS].reverse().map((unit) => (
-                      <td
-                        key={`${round.round}-${leftSide}-${unit}`}
-                        className="px-2 py-2 text-right"
-                      >
-                        {formatTraceNumber(round[leftSide].troops[unit] ?? 0)}
-                      </td>
-                    ))}
-                    <td className="px-2 py-2 text-center font-bold">
-                      {round.round}
-                    </td>
-                    {TRACE_UNITS.map((unit) => (
-                      <td
-                        key={`${round.round}-${rightSide}-${unit}`}
-                        className="px-2 py-2 text-right"
-                      >
-                        {formatTraceNumber(round[rightSide].troops[unit] ?? 0)}
-                      </td>
-                    ))}
-                  </tr>
-                  {expanded && (
-                    <tr>
-                      <td colSpan={7} className="px-2 py-3">
-                        <RoundTraceDetails
-                          round={round}
-                          attackerOnLeft={attackerOnLeft}
-                        />
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
+                <TraceRoundRow
+                  key={round.round}
+                  round={round}
+                  leftSide={leftSide}
+                  rightSide={rightSide}
+                  attackerOnLeft={attackerOnLeft}
+                />
               );
             })}
           </tbody>
@@ -163,7 +138,58 @@ export function BattleTraceDetails({
       <TraceTotals trace={trace} attackerOnLeft={attackerOnLeft} />
     </div>
   );
-}
+});
+
+const TraceRoundRow = memo(function TraceRoundRow({
+  round,
+  leftSide,
+  rightSide,
+  attackerOnLeft,
+}: {
+  round: SimulateTrace["rounds"][number];
+  leftSide: Side;
+  rightSide: Side;
+  attackerOnLeft: boolean;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <Fragment>
+      <tr
+        onClick={() => setExpanded((current) => !current)}
+        className="cursor-pointer"
+        style={{ borderBottom: "1px solid var(--sim-line)" }}
+      >
+        {[...TRACE_UNITS].reverse().map((unit) => (
+          <td
+            key={`${round.round}-${leftSide}-${unit}`}
+            className="px-2 py-2 text-right"
+          >
+            {formatTraceTroopCount(round[leftSide].troops[unit] ?? 0)}
+          </td>
+        ))}
+        <td className="px-2 py-2 text-center font-bold">{round.round}</td>
+        {TRACE_UNITS.map((unit) => (
+          <td
+            key={`${round.round}-${rightSide}-${unit}`}
+            className="px-2 py-2 text-right"
+          >
+            {formatTraceTroopCount(round[rightSide].troops[unit] ?? 0)}
+          </td>
+        ))}
+      </tr>
+      {expanded && (
+        <tr>
+          <td colSpan={7} className="px-2 py-3">
+            <RoundTraceDetails
+              round={round}
+              attackerOnLeft={attackerOnLeft}
+            />
+          </td>
+        </tr>
+      )}
+    </Fragment>
+  );
+});
 
 function SkillKillSummary({
   trace,
