@@ -7,7 +7,7 @@ import { UNIT_TYPES } from "./types";
 test("generated catalogue contains only supported standard troop ids", () => {
   const catalogue = generateTroopStatsCatalogue();
 
-  assert.equal(Object.keys(catalogue).length, 216);
+  assert.equal(Object.keys(catalogue).length, 351);
   assert.equal(Object.keys(catalogue).every((id) =>
     /^(infantry|lancer|marksman)_t\d+(?:_fc\d+)?$/.test(id)
   ), true);
@@ -15,11 +15,12 @@ test("generated catalogue contains only supported standard troop ids", () => {
 
   for (const type of UNIT_TYPES) {
     assert.ok(catalogue[`${type}_t1`]);
+    assert.ok(catalogue[`${type}_t1_fc10`]);
+    assert.ok(catalogue[`${type}_t9_fc10`]);
     assert.ok(catalogue[`${type}_t10_fc10`]);
     assert.ok(catalogue[`${type}_t11`]);
     assert.ok(catalogue[`${type}_t11_fc5`]);
     assert.ok(catalogue[`${type}_t11_fc10`]);
-    assert.equal(catalogue[`${type}_t1_fc6`], undefined);
     assert.equal(catalogue[`${type}_t11_fc4`], undefined);
   }
 });

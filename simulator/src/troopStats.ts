@@ -41,6 +41,8 @@ const T11_INFANTRY_BASE: AttackHealth = { Attack: 551, Health: 1653 };
 
 const MAX_TIER = 11;
 const MAX_FIRE_CRYSTAL_LEVEL = 10;
+const ALL_FIRE_CRYSTAL_LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
+const T11_FIRE_CRYSTAL_LEVELS = [0, 5, 6, 7, 8, 9, 10] as const;
 
 export function generateTroopStats(type: UnitType, tier: number, fc = 0): TroopStatsRecord {
   assertIntegerInRange("tier", tier, 1, MAX_TIER);
@@ -110,9 +112,7 @@ function baseStats(type: UnitType, tier: number): AttackHealth {
 }
 
 function supportedFireCrystalLevels(tier: number): readonly number[] {
-  if (tier <= 9) return [0, 1, 2, 3, 4, 5];
-  if (tier === 10) return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  return [0, 5, 6, 7, 8, 9, 10];
+  return tier <= 10 ? ALL_FIRE_CRYSTAL_LEVELS : T11_FIRE_CRYSTAL_LEVELS;
 }
 
 function assertIntegerInRange(label: string, value: number, min: number, max: number): void {

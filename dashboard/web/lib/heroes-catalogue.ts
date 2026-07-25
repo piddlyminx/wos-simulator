@@ -179,9 +179,10 @@ export function skillSlotEnabled(
 
 export const TROOP_TIERS: string[] = (() => {
   const out: string[] = [];
-  for (let t = 1; t <= 9; t++) out.push(`t${t}`);
-  out.push("t10");
-  for (let fc = 1; fc <= 10; fc++) out.push(`t10_fc${fc}`);
+  for (let t = 1; t <= 10; t++) {
+    out.push(`t${t}`);
+    for (let fc = 1; fc <= 10; fc++) out.push(`t${t}_fc${fc}`);
+  }
   out.push("t11");
   for (let fc = 5; fc <= 10; fc++) out.push(`t11_fc${fc}`);
   return out;
