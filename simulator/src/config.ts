@@ -1,4 +1,3 @@
-import troopStatsJson from "../config/troop_stats.json" with { type: "json" };
 import heroGenerationStatsJson from "../config/hero_generation_stats.json" with { type: "json" };
 import troopSkillsJson from "../config/troop_skills.json" with { type: "json" };
 import Ahmose from "../config/hero_definitions/Ahmose.json" with { type: "json" };
@@ -45,6 +44,7 @@ import {
   staticBucketDefinition
 } from "./damageBuckets";
 import { normalizeUnitType } from "./normalize";
+import { generateTroopStatsCatalogue } from "./troopStats";
 
 const KNOWN_EFFECT_TYPES = new Set([
   ...DYNAMIC_EFFECT_BUCKETS,
@@ -92,16 +92,14 @@ const DEFAULT_HERO_DEFINITIONS = {
 } as unknown as Record<string, SkillFile>;
 
 export interface RawSimulatorConfig {
-  troopStats: SimulatorConfig["troopStats"];
   heroGenerationStats: SimulatorConfig["heroGenerationStats"];
   troopSkills: SkillFile;
   heroDefinitions: Record<string, SkillFile>;
-  fileLabel?: (kind: "troop_stats" | "hero_generation_stats" | "troop_skills" | "hero_definition", key?: string) => string;
+  fileLabel?: (kind: "hero_generation_stats" | "troop_skills" | "hero_definition", key?: string) => string;
 }
 
 export function loadSimulatorConfig(): SimulatorConfig {
   return buildSimulatorConfig({
-    troopStats: troopStatsJson as SimulatorConfig["troopStats"],
     heroGenerationStats: heroGenerationStatsJson as SimulatorConfig["heroGenerationStats"],
     troopSkills: troopSkillsJson as SkillFile,
     heroDefinitions: DEFAULT_HERO_DEFINITIONS
@@ -116,7 +114,6 @@ export function buildSimulatorConfig(raw: RawSimulatorConfig): SimulatorConfig {
     ambiguousTurnTriggerSelectors: []
   };
 
-  scanLegacyFields(raw.troopStats, raw.fileLabel?.("troop_stats") ?? "config/troop_stats.json", "$", diagnostics);
   scanLegacyFields(raw.heroGenerationStats, raw.fileLabel?.("hero_generation_stats") ?? "config/hero_generation_stats.json", "$", diagnostics);
   scanLegacyFields(raw.troopSkills, raw.fileLabel?.("troop_skills") ?? "config/troop_skills.json", "$", diagnostics);
 
@@ -147,7 +144,7 @@ export function buildSimulatorConfig(raw: RawSimulatorConfig): SimulatorConfig {
   }
 
   return {
-    troopStats: raw.troopStats,
+    troopStats: generateTroopStatsCatalogue(),
     heroGenerationStats: raw.heroGenerationStats,
     heroDefinitions: raw.heroDefinitions,
     heroAliasIndex,

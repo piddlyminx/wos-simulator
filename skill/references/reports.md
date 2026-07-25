@@ -38,7 +38,7 @@ warnings and parser confidence
 parser version
 ```
 
-Troop tier and fire-crystal level are separate fields. Do not collapse them if downstream code needs to map reports to current `troop_stats.json` ids or TypeScript `FighterInput.troops`.
+Troop tier and fire-crystal level are separate fields. Do not collapse them if downstream code needs to map reports to generated simulator troop ids or TypeScript `FighterInput.troops`.
 
 ## Testcase Boundary
 

@@ -273,7 +273,6 @@ function configWithPatchedEffect(heroName: string, effectId: string, candidateTy
   }
   if (!patched) throw new Error(`Missing ${heroName}/${effectId}`);
   return buildSimulatorConfig({
-    troopStats: baseConfig.troopStats,
     heroGenerationStats: baseConfig.heroGenerationStats,
     troopSkills: baseConfig.troopSkills,
     heroDefinitions

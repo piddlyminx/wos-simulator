@@ -515,7 +515,7 @@ Initial simulator acceptance is operational rather than accuracy-gated.
 ### A. Config Loads
 
 - `loadSimulatorConfig()` loads:
-  - `simulator/config/troop_stats.json`
+  - `simulator/src/troopStats.ts`
   - `simulator/config/hero_generation_stats.json`
   - every file under `simulator/config/hero_definitions`
   - `simulator/config/troop_skills.json`
@@ -539,7 +539,7 @@ For every selected testcase:
 - Every testcase entry can be adapted into a `BattleInput`.
 - Every referenced hero is either loaded from simulator config or reported as a clear
   unsupported/missing hero diagnostic.
-- Troops are resolved from testcase troop ids and `simulator/config/troop_stats.json`.
+- Troops are resolved from testcase troop ids and the generated catalogue in `simulator/src/troopStats.ts`.
 - Fighter stat bonuses from testcase `stats` blocks are applied to the correct
   attack/lethality/health/defense buckets.
 - Troop skills are resolved from troop tier/Fire Crystal requirements.

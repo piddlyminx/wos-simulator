@@ -12,13 +12,11 @@ export function loadSimulatorConfigFromDir(configDir: string): SimulatorConfig {
     heroDefinitions[file.slice(0, -".json".length)] = readJson(join(heroDir, file)) as SkillFile;
   }
   const raw: RawSimulatorConfig = {
-    troopStats: readJson(join(root, "troop_stats.json")) as SimulatorConfig["troopStats"],
     heroGenerationStats: readJson(join(root, "hero_generation_stats.json")) as SimulatorConfig["heroGenerationStats"],
     troopSkills: readJson(join(root, "troop_skills.json")) as SkillFile,
     heroDefinitions,
     fileLabel(kind, key) {
       if (kind === "hero_definition") return relative(process.cwd(), join(heroDir, `${key}.json`));
-      if (kind === "troop_stats") return relative(process.cwd(), join(root, "troop_stats.json"));
       if (kind === "hero_generation_stats") return relative(process.cwd(), join(root, "hero_generation_stats.json"));
       return relative(process.cwd(), join(root, "troop_skills.json"));
     }

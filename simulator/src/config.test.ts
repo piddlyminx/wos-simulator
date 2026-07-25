@@ -48,20 +48,9 @@ test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-rela
 test("loadSimulatorConfig rejects legacy fields in simulator config", () => {
   const root = join(tmpdir(), `wos-simulator-config-${Date.now()}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });
-  writeFileSync(
-    join(root, "troop_stats.json"),
-    JSON.stringify({
-      infantry_t1: {
-        id: "infantry_t1",
-        type: "infantry",
-        tier: 1,
-        fc: 0,
-        legacy: true,
-        stats: { Attack: 1, Defense: 1, Lethality: 1, Health: 1 }
-      }
-    })
-  );
-  writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));
+  writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({
+    S1: { attack: 1, defense: 1, lethality: 1, health: 1, legacy: true }
+  }));
   writeFileSync(join(root, "troop_skills.json"), JSON.stringify({ name: "Troop Skills", skills: {} }));
   writeFileSync(join(root, "hero_definitions", "Example.json"), JSON.stringify({ name: "Example", hero_generation: "S1", skills: {} }));
 
@@ -101,18 +90,6 @@ test("simulator config source does not reference legacy effect metadata names", 
 test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {
   const root = join(tmpdir(), `wos-simulator-config-alias-${Date.now()}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });
-  writeFileSync(
-    join(root, "troop_stats.json"),
-    JSON.stringify({
-      infantry_t1: {
-        id: "infantry_t1",
-        type: "infantry",
-        tier: 1,
-        fc: 0,
-        stats: { Attack: 1, Defense: 1, Lethality: 1, Health: 1 }
-      }
-    })
-  );
   writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));
   writeFileSync(join(root, "troop_skills.json"), JSON.stringify({ name: "Troop Skills", skills: {} }));
   writeFileSync(join(root, "hero_definitions", "Alpha.json"), JSON.stringify({ name: "Same Hero", hero_generation: "S1", skills: {} }));
@@ -434,18 +411,6 @@ test("loadSimulatorConfig rejects missing required effects", () => {
 function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "turn" }): string {
   const root = join(tmpdir(), `wos-simulator-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });
-  writeFileSync(
-    join(root, "troop_stats.json"),
-    JSON.stringify({
-      infantry_t1: {
-        id: "infantry_t1",
-        type: "infantry",
-        tier: 1,
-        fc: 0,
-        stats: { Attack: 1, Defense: 1, Lethality: 1, Health: 1 }
-      }
-    })
-  );
   writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));
   writeFileSync(
     join(root, "troop_skills.json"),

@@ -20,7 +20,7 @@ Army deployment also allows at most one main hero per troop class on a side. A t
 
 Use current simulator shapes:
 
-- `FighterInput.troops`: troop ids from `simulator/config/troop_stats.json`.
+- `FighterInput.troops`: troop ids from the generated catalogue in `simulator/src/troopStats.ts`.
 - `FighterInput.stats`: unit keys (`infantry`, `lancer`, `marksman`) with player stat bonuses.
 - `FighterInput.heroes`: main heroes with captured skill levels.
 - `FighterInput.joiner_heroes`: joiner heroes, if the fixture uses them.

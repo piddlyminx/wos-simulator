@@ -39,7 +39,7 @@ Ignore `archived/v1/**` for current simulator behavior. Those Python files are h
 ```ts
 {
   name?: string;
-  troops: Record<string, number>;        // troop ids from simulator/config/troop_stats.json
+  troops: Record<string, number>;        // troop ids from the generated simulator troop catalogue
   stats?: Record<string, Partial<StatBlock>>; // unit keys: infantry, lancer, marksman
   passive?: PassiveEffects;
   heroes?: HeroInputCollection;          // main heroes
@@ -53,7 +53,7 @@ Use `BattleInputBuilder` when building inputs in app code that should bake main-
 
 Config lives under `simulator/config/`:
 
-- `troop_stats.json`: troop id to `{ type, tier, fc?, stats }`.
+- `simulator/src/troopStats.ts`: generates troop ids and `{ type, tier, fc, stats }` records.
 - `hero_generation_stats.json`: named stat blocks referenced by hero definitions.
 - `troop_skills.json`: `SkillFile` for troop/class skills.
 - `hero_definitions/*.json`: one `SkillFile` per hero.
