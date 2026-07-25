@@ -35,11 +35,12 @@ const MARKSMAN_BASE_STATS: readonly AttackHealth[] = [
   { Attack: 1888, Health: 354 }
 ];
 
+// T11 FC0 is the Labyrinth-only troop calibrated from observed battle reports.
+// Player T11 troops begin at FC5; FC5-FC10 use the same FC continuation model.
+const T11_INFANTRY_BASE: AttackHealth = { Attack: 551, Health: 1653 };
+
 const MAX_TIER = 11;
 const MAX_FIRE_CRYSTAL_LEVEL = 10;
-// T11 and FC6+ are the low-complexity continuations inferred from the
-// validated T1-T10 / FC0-FC5 surface.
-const T11_TIER_MULTIPLIER = 1.18;
 
 export function generateTroopStats(type: UnitType, tier: number, fc = 0): TroopStatsRecord {
   assertIntegerInRange("tier", tier, 1, MAX_TIER);
@@ -82,23 +83,30 @@ export function fireCrystalMultiplier(fc: number): number {
 }
 
 function baseStats(type: UnitType, tier: number): AttackHealth {
-  const sourceTier = Math.min(tier, 10);
-  const infantry = INFANTRY_BASE_STATS[sourceTier - 1];
-  let base: AttackHealth;
-
-  if (type === "infantry") {
-    base = infantry;
-  } else if (type === "lancer") {
-    base = { Attack: infantry.Health, Health: infantry.Attack };
-  } else {
-    base = MARKSMAN_BASE_STATS[sourceTier - 1];
+  if (tier === 11) {
+    if (type === "infantry") return T11_INFANTRY_BASE;
+    if (type === "lancer") {
+      return {
+        Attack: T11_INFANTRY_BASE.Health,
+        Health: T11_INFANTRY_BASE.Attack
+      };
+    }
+    return {
+      Attack: Math.round(T11_INFANTRY_BASE.Health * 4 / 3),
+      Health: Math.round(T11_INFANTRY_BASE.Attack * 3 / 4)
+    };
   }
 
-  if (tier <= 10) return base;
-  return {
-    Attack: Math.round(base.Attack * T11_TIER_MULTIPLIER),
-    Health: Math.round(base.Health * T11_TIER_MULTIPLIER)
-  };
+  const sourceTier = Math.min(tier, 10);
+  const infantry = INFANTRY_BASE_STATS[sourceTier - 1];
+
+  if (type === "infantry") {
+    return infantry;
+  }
+  if (type === "lancer") {
+    return { Attack: infantry.Health, Health: infantry.Attack };
+  }
+  return MARKSMAN_BASE_STATS[sourceTier - 1];
 }
 
 function supportedFireCrystalLevels(tier: number): readonly number[] {

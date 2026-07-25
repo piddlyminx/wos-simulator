@@ -43,24 +43,36 @@ test("Fire Crystal scaling reproduces validated independently-rounded stats", ()
   });
 });
 
-test("T11 and FC6+ stats use the inferred tier and Fire Crystal continuation", () => {
-  assert.deepEqual(generateTroopStats("infantry", 11, 10).stats, {
-    Attack: 899,
+test("T11 uses the fitted Labyrinth base and inferred FC5-FC10 continuation", () => {
+  assert.deepEqual(generateTroopStats("infantry", 11).stats, {
+    Attack: 551,
     Defense: 10,
     Lethality: 10,
-    Health: 2696
+    Health: 1653
+  });
+  assert.deepEqual(generateTroopStats("infantry", 11, 5).stats, {
+    Attack: 697,
+    Defense: 10,
+    Lethality: 10,
+    Health: 2090
+  });
+  assert.deepEqual(generateTroopStats("infantry", 11, 10).stats, {
+    Attack: 889,
+    Defense: 10,
+    Lethality: 10,
+    Health: 2667
   });
   assert.deepEqual(generateTroopStats("lancer", 11, 10).stats, {
-    Attack: 2696,
+    Attack: 2667,
     Defense: 10,
     Lethality: 10,
-    Health: 899
+    Health: 889
   });
   assert.deepEqual(generateTroopStats("marksman", 11, 10).stats, {
-    Attack: 3595,
+    Attack: 3556,
     Defense: 10,
     Lethality: 10,
-    Health: 674
+    Health: 666
   });
 });
 
