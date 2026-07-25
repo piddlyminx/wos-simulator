@@ -55,11 +55,10 @@ import { processExtraSkillAttacks } from "./extraAttacks";
 export { prepareBattle, type CompiledBattle } from "./prepare";
 import { emptyTroops, resolveFighter } from "./fighterResolution";
 import { buildStaticDamageProfile, unitBaseStats, unitPlayerBonuses, type StaticDamageProfile } from "./staticDamageProfile";
+import { BEAR_TROOP_ID } from "./troopStats";
 
 const DEFAULT_MAX_ROUNDS = 1500;
 const BEAR_ROUNDS = 10;
-const BEAR_DEFENSE = 250/3;
-const BEAR_TROOP_ID = "bear_infantry";
 
 interface BattleRun {
   fighters: Record<SideId, ResolvedFighter>;
@@ -114,7 +113,7 @@ export function simulateBearBattle(
     maxRounds: BEAR_ROUNDS,
     engagement_type: "rally"
   };
-  const run = runBattle(input, configWithBearTroop(config), options, undefined, {
+  const run = runBattle(input, config, options, undefined, {
     capRoundKills: false,
     capJobKills: false,
     commitLosses: false,
@@ -199,26 +198,6 @@ function recordPreBattleSkills(runtime: Runtime, recorder: BattleRecorder): void
       recorder.recordSkillEffectActivated(skill);
     }
   }
-}
-
-function configWithBearTroop(config: SimulatorConfig): SimulatorConfig {
-  return {
-    ...config,
-    troopStats: {
-      ...config.troopStats,
-      [BEAR_TROOP_ID]: {
-        id: BEAR_TROOP_ID,
-        type: "infantry",
-        tier: 1,
-        stats: {
-          attack: 0,
-          defense: BEAR_DEFENSE,
-          lethality: 0,
-          health: 10
-        }
-      }
-    }
-  };
 }
 
 function runBattle(

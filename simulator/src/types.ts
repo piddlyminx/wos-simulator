@@ -62,11 +62,11 @@ export interface PassiveEffectBucket {
 export type PassiveEffects = Partial<Record<MainStat, PassiveEffectBucket>>;
 
 export interface TroopStatsRecord {
-  id: string;
-  type: UnitType | string;
-  tier: number;
-  fc?: number;
-  stats: Record<string, number>;
+  readonly id: string;
+  readonly type: UnitType;
+  readonly tier: number;
+  readonly fc: number;
+  readonly stats: Readonly<StatBlock>;
 }
 
 export type TroopStatsCatalogue = Record<string, TroopStatsRecord>;

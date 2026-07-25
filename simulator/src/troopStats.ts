@@ -1,5 +1,6 @@
 import { UNIT_TYPES } from "./types";
-import type { TroopStatsCatalogue, TroopStatsRecord, UnitType } from "./types";
+import type { StatBlock, TroopStatsCatalogue, TroopStatsRecord, UnitType } from "./types";
+import { normalizeStatBlock, normalizeUnitType } from "./normalize";
 
 type AttackHealth = Readonly<{
   Attack: number;
@@ -39,34 +40,61 @@ const MARKSMAN_BASE_STATS: readonly AttackHealth[] = [
 // Player T11 troops begin at FC5; FC5-FC10 use the same FC continuation model.
 const T11_INFANTRY_BASE: AttackHealth = { Attack: 551, Health: 1653 };
 
+export const BEAR_TROOP_ID = "bear_infantry";
 const MAX_TIER = 11;
 const MAX_FIRE_CRYSTAL_LEVEL = 10;
 const ALL_FIRE_CRYSTAL_LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 const T11_FIRE_CRYSTAL_LEVELS = [0, 5, 6, 7, 8, 9, 10] as const;
+const generatedRecords = new Map<string, TroopStatsRecord>();
+let generatedCatalogue: TroopStatsCatalogue | undefined;
+
+interface TroopStatsRecordInput {
+  id: string;
+  type: UnitType | string;
+  tier: number;
+  fc?: number;
+  stats: StatBlock | Record<string, unknown>;
+}
+
+export function createTroopStatsRecord(input: TroopStatsRecordInput): TroopStatsRecord {
+  return Object.freeze({
+    id: input.id,
+    type: normalizeUnitType(input.type),
+    tier: input.tier,
+    fc: input.fc ?? 0,
+    stats: Object.freeze(normalizeStatBlock(input.stats as Record<string, unknown>))
+  });
+}
 
 export function generateTroopStats(type: UnitType, tier: number, fc = 0): TroopStatsRecord {
   assertIntegerInRange("tier", tier, 1, MAX_TIER);
   assertIntegerInRange("Fire Crystal level", fc, 0, MAX_FIRE_CRYSTAL_LEVEL);
 
+  const id = `${type}_t${tier}${fc === 0 ? "" : `_fc${fc}`}`;
+  const cached = generatedRecords.get(id);
+  if (cached) return cached;
+
   const base = baseStats(type, tier);
   const multiplier = fireCrystalMultiplier(fc);
-  const id = `${type}_t${tier}${fc === 0 ? "" : `_fc${fc}`}`;
-
-  return {
+  const record = createTroopStatsRecord({
     id,
     type,
     tier,
     fc,
     stats: {
-      Attack: Math.round(base.Attack * multiplier),
-      Defense: 10,
-      Lethality: 10,
-      Health: Math.round(base.Health * multiplier)
+      attack: Math.round(base.Attack * multiplier),
+      defense: 10,
+      lethality: 10,
+      health: Math.round(base.Health * multiplier)
     }
-  };
+  });
+  generatedRecords.set(id, record);
+  return record;
 }
 
 export function generateTroopStatsCatalogue(): TroopStatsCatalogue {
+  if (generatedCatalogue) return generatedCatalogue;
+
   const catalogue: TroopStatsCatalogue = {};
   for (const type of UNIT_TYPES) {
     for (let tier = 1; tier <= MAX_TIER; tier += 1) {
@@ -76,7 +104,19 @@ export function generateTroopStatsCatalogue(): TroopStatsCatalogue {
       }
     }
   }
-  return catalogue;
+  catalogue[BEAR_TROOP_ID] = createTroopStatsRecord({
+    id: BEAR_TROOP_ID,
+    type: "infantry",
+    tier: 1,
+    stats: {
+      attack: 0,
+      defense: 250 / 3,
+      lethality: 0,
+      health: 10
+    }
+  });
+  generatedCatalogue = Object.freeze(catalogue);
+  return generatedCatalogue;
 }
 
 export function fireCrystalMultiplier(fc: number): number {

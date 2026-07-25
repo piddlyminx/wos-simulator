@@ -8,7 +8,8 @@ import { loadSimulatorConfig } from "./config";
 import { createSeededRng, chancePasses } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./fighterResolution";
 import { prepareBattle, runPrepared, simulateBattles, simulateBearBattle, signedRemainingScore } from "./simulator";
-import type { AppliedEffect, BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulationOptions, SimulatorConfig, SkillFile, UnitType } from "./types";
+import { BEAR_TROOP_ID, createTroopStatsRecord, generateTroopStatsCatalogue } from "./troopStats";
+import type { AppliedEffect, BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulationOptions, SimulatorConfig, SkillFile, TroopStatsCatalogue, UnitType } from "./types";
 
 function hasEffectKind(effect: AppliedEffect, kind: string): boolean {
   return "kind" in effect && effect.kind === kind;
@@ -2972,13 +2973,31 @@ function overlappingExtraAttackConfig(heroName: string): SimulatorConfig {
   });
 }
 
+const MINIMAL_TROOP_STATS: TroopStatsCatalogue = Object.freeze({
+  infantry_t1: createTroopStatsRecord({
+    id: "infantry_t1",
+    type: "infantry",
+    tier: 1,
+    stats: { attack: 100, defense: 100, lethality: 100, health: 100 }
+  }),
+  lancer_t1: createTroopStatsRecord({
+    id: "lancer_t1",
+    type: "lancer",
+    tier: 1,
+    stats: { attack: 100, defense: 100, lethality: 100, health: 100 }
+  }),
+  marksman_t1: createTroopStatsRecord({
+    id: "marksman_t1",
+    type: "marksman",
+    tier: 1,
+    stats: { attack: 100, defense: 100, lethality: 100, health: 100 }
+  }),
+  [BEAR_TROOP_ID]: generateTroopStatsCatalogue()[BEAR_TROOP_ID]
+});
+
 function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): SimulatorConfig {
   return {
-    troopStats: {
-      infantry_t1: { id: "infantry_t1", type: "infantry", tier: 1, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } },
-      lancer_t1: { id: "lancer_t1", type: "lancer", tier: 1, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } },
-      marksman_t1: { id: "marksman_t1", type: "marksman", tier: 1, stats: { attack: 100, defense: 100, lethality: 100, health: 100 } }
-    },
+    troopStats: MINIMAL_TROOP_STATS,
     heroGenerationStats: {},
     heroDefinitions,
     troopSkills: { name: "troop skills", skills: {} },

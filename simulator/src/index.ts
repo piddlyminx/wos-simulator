@@ -1,6 +1,6 @@
 export { buildSimulatorConfig, loadSimulatorConfig } from "./config";
 export type { RawSimulatorConfig } from "./config";
-export { fireCrystalMultiplier, generateTroopStats, generateTroopStatsCatalogue } from "./troopStats";
+export { createTroopStatsRecord, fireCrystalMultiplier, generateTroopStats, generateTroopStatsCatalogue } from "./troopStats";
 export { prepareBattle } from "./prepare";
 export type { CompiledBattle } from "./prepare";
 export { runPrepared, simulateBattles } from "./simulator";

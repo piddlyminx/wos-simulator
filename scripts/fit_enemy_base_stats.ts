@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { loadSimulatorConfigFromDir } from "../simulator/src/config-node";
 import { prepareBattle, runPrepared, signedRemainingScore } from "../simulator/src/simulator";
+import { createTroopStatsRecord } from "../simulator/src/troopStats";
 import { UNIT_TYPES } from "../simulator/src/types";
 import type { BattleInput, FighterInput, SimulatorConfig, StatBlock, TroopStatsCatalogue, UnitType } from "../simulator/src/types";
 
@@ -63,6 +64,11 @@ export interface FindBestOptions {
   lancerHealth: SearchRange;
   scoreCandidate: (candidate: EnemyBaseStats, report: ParsedLabReport) => number;
   objective?: FitObjective;
+}
+
+export interface FittedEnemyConfig {
+  readonly config: SimulatorConfig;
+  setBaseStats(base: EnemyBaseStats): void;
 }
 
 type EnemySide = "attacker" | "defender";
@@ -146,24 +152,25 @@ export function findBestEnemyBaseStats(reports: ParsedLabReport[], options: Find
   return { best, evaluatedCandidates };
 }
 
-export function buildConfigWithEnemyStats(config: SimulatorConfig, base: EnemyBaseStats): SimulatorConfig {
-  const stats = buildEnemyTroopStats(base);
-  const troopStats: TroopStatsCatalogue = { ...config.troopStats };
-  for (const unit of UNIT_TYPES) {
-    troopStats[ENEMY_TROOP_IDS[unit]] = {
-      id: ENEMY_TROOP_IDS[unit],
-      type: unit,
-      tier: 10,
-      fc: 0,
-      stats: {
-        Attack: stats[unit].attack,
-        Defense: stats[unit].defense,
-        Lethality: stats[unit].lethality,
-        Health: stats[unit].health,
-      },
-    };
-  }
-  return { ...config, troopStats };
+export function createFittedEnemyConfig(baseConfig: SimulatorConfig): FittedEnemyConfig {
+  const troopStats: TroopStatsCatalogue = { ...baseConfig.troopStats };
+  const config = { ...baseConfig, troopStats };
+
+  return {
+    config,
+    setBaseStats(base) {
+      const stats = buildEnemyTroopStats(base);
+      for (const unit of UNIT_TYPES) {
+        troopStats[ENEMY_TROOP_IDS[unit]] = createTroopStatsRecord({
+          id: ENEMY_TROOP_IDS[unit],
+          type: unit,
+          tier: 10,
+          fc: 0,
+          stats: stats[unit],
+        });
+      }
+    },
+  };
 }
 
 export function buildBattleInput(report: ParsedLabReport, enemySide: EnemySide, seed: string | number): BattleInput {
@@ -337,16 +344,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function simulateCandidate(baseConfig: SimulatorConfig, enemySide: EnemySide, replicates: number): (candidate: EnemyBaseStats, report: ParsedLabReport) => number {
   let lastKey = "";
-  let lastConfig = baseConfig;
+  const fitted = createFittedEnemyConfig(baseConfig);
   return (candidate, report) => {
     const key = `${candidate.lancerAttack}:${candidate.lancerHealth}`;
     if (key !== lastKey) {
-      lastConfig = buildConfigWithEnemyStats(baseConfig, candidate);
+      fitted.setBaseStats(candidate);
       lastKey = key;
     }
     let total = 0;
     const seedBase = basename(report.file);
-    const prepared = prepareBattle(buildBattleInput(report, enemySide, `${seedBase}:0`), lastConfig);
+    const prepared = prepareBattle(buildBattleInput(report, enemySide, `${seedBase}:0`), fitted.config);
     for (let index = 0; index < replicates; index += 1) {
       total += signedRemainingScore(runPrepared(prepared, `${seedBase}:${index}`, { mode: "fast" }));
     }

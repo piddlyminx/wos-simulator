@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { buildEnemyTroopStats, findBestEnemyBaseStats, parseOutcomeFromFilename } from "./fit_enemy_base_stats";
+import { loadSimulatorConfig } from "../simulator/src/config";
+import {
+  buildEnemyTroopStats,
+  createFittedEnemyConfig,
+  findBestEnemyBaseStats,
+  parseOutcomeFromFilename
+} from "./fit_enemy_base_stats";
 import type { ParsedLabReport } from "./fit_enemy_base_stats";
 
 test("parseOutcomeFromFilename reads signed survivor count from lab report filename", () => {
@@ -15,6 +21,27 @@ test("buildEnemyTroopStats keeps the requested regular-troop stat ratios", () =>
   assert.deepEqual(stats.infantry, { attack: 240, defense: 10, lethality: 10, health: 720 });
   assert.deepEqual(stats.lancer, { attack: 720, defense: 10, lethality: 10, health: 240 });
   assert.deepEqual(stats.marksman, { attack: 960, defense: 10, lethality: 10, health: 180 });
+});
+
+test("createFittedEnemyConfig reuses one private catalogue across candidates", () => {
+  const base = loadSimulatorConfig();
+  const fitted = createFittedEnemyConfig(base);
+  const privateCatalogue = fitted.config.troopStats;
+
+  assert.notStrictEqual(privateCatalogue, base.troopStats);
+  assert.equal(Object.keys(privateCatalogue).length, Object.keys(base.troopStats).length);
+
+  fitted.setBaseStats({ lancerAttack: 720, lancerHealth: 240 });
+  const firstInfantry = privateCatalogue.lab_enemy_infantry_t10;
+  assert.equal(Object.keys(privateCatalogue).length, Object.keys(base.troopStats).length + 3);
+  assert.equal(firstInfantry.stats.attack, 240);
+
+  fitted.setBaseStats({ lancerAttack: 900, lancerHealth: 300 });
+  assert.strictEqual(fitted.config.troopStats, privateCatalogue);
+  assert.notStrictEqual(privateCatalogue.lab_enemy_infantry_t10, firstInfantry);
+  assert.equal(privateCatalogue.lab_enemy_infantry_t10.stats.attack, 300);
+  assert.equal(Object.keys(privateCatalogue).length, Object.keys(base.troopStats).length + 3);
+  assert.equal(base.troopStats.lab_enemy_infantry_t10, undefined);
 });
 
 test("findBestEnemyBaseStats derives lancer attack from lancer health while fitting reports", () => {

@@ -1,14 +1,32 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { fireCrystalMultiplier, generateTroopStats, generateTroopStatsCatalogue } from "./troopStats";
+import {
+  BEAR_TROOP_ID,
+  createTroopStatsRecord,
+  fireCrystalMultiplier,
+  generateTroopStats,
+  generateTroopStatsCatalogue
+} from "./troopStats";
 import { UNIT_TYPES } from "./types";
 
-test("generated catalogue contains only supported standard troop ids", () => {
+test("generated catalogue contains supported standard troop ids and the built-in Bear", () => {
   const catalogue = generateTroopStatsCatalogue();
 
-  assert.equal(Object.keys(catalogue).length, 351);
-  assert.equal(Object.keys(catalogue).every((id) =>
+  assert.equal(Object.keys(catalogue).length, 352);
+  assert.deepEqual(catalogue[BEAR_TROOP_ID], {
+    id: BEAR_TROOP_ID,
+    type: "infantry",
+    tier: 1,
+    fc: 0,
+    stats: {
+      attack: 0,
+      defense: 250 / 3,
+      lethality: 0,
+      health: 10
+    }
+  });
+  assert.equal(Object.keys(catalogue).filter((id) => id !== BEAR_TROOP_ID).every((id) =>
     /^(infantry|lancer|marksman)_t\d+(?:_fc\d+)?$/.test(id)
   ), true);
   assert.equal(Object.keys(catalogue).some((id) => id.includes("boss")), false);
@@ -25,55 +43,89 @@ test("generated catalogue contains only supported standard troop ids", () => {
   }
 });
 
+test("generated troop records and canonical stats are immutable process-local singletons", () => {
+  const firstCatalogue = generateTroopStatsCatalogue();
+  const secondCatalogue = generateTroopStatsCatalogue();
+  const firstRecord = generateTroopStats("infantry", 9, 10);
+  const secondRecord = generateTroopStats("infantry", 9, 10);
+
+  assert.strictEqual(secondCatalogue, firstCatalogue);
+  assert.strictEqual(secondRecord, firstRecord);
+  assert.strictEqual(firstCatalogue.infantry_t9_fc10, firstRecord);
+  assert.strictEqual(secondRecord.stats, firstRecord.stats);
+  assert.equal(Object.isFrozen(firstCatalogue), true);
+  assert.equal(Object.isFrozen(firstRecord), true);
+  assert.equal(Object.isFrozen(firstRecord.stats), true);
+});
+
+test("troop record construction normalizes legacy stat keys once", () => {
+  const record = createTroopStatsRecord({
+    id: "test_infantry",
+    type: "inf",
+    tier: 1,
+    stats: { Attack: 100, Defense: 90, Lethality: 80, Health: 70 }
+  });
+
+  assert.deepEqual(record, {
+    id: "test_infantry",
+    type: "infantry",
+    tier: 1,
+    fc: 0,
+    stats: { attack: 100, defense: 90, lethality: 80, health: 70 }
+  });
+  assert.equal(Object.isFrozen(record), true);
+  assert.equal(Object.isFrozen(record.stats), true);
+});
+
 test("Fire Crystal scaling reproduces validated independently-rounded stats", () => {
   assert.equal(fireCrystalMultiplier(0), 1);
   assert.equal(fireCrystalMultiplier(1), 1.04);
   assert.equal(fireCrystalMultiplier(5), 1.04 * 1.05 ** 4);
 
   assert.deepEqual(generateTroopStats("infantry", 3, 1).stats, {
-    Attack: 137,
-    Defense: 10,
-    Lethality: 10,
-    Health: 413
+    attack: 137,
+    defense: 10,
+    lethality: 10,
+    health: 413
   });
   assert.deepEqual(generateTroopStats("marksman", 10, 5).stats, {
-    Attack: 2387,
-    Defense: 10,
-    Lethality: 10,
-    Health: 448
+    attack: 2387,
+    defense: 10,
+    lethality: 10,
+    health: 448
   });
 });
 
 test("T11 uses the fitted Labyrinth base and inferred FC5-FC10 continuation", () => {
   assert.deepEqual(generateTroopStats("infantry", 11).stats, {
-    Attack: 551,
-    Defense: 10,
-    Lethality: 10,
-    Health: 1653
+    attack: 551,
+    defense: 10,
+    lethality: 10,
+    health: 1653
   });
   assert.deepEqual(generateTroopStats("infantry", 11, 5).stats, {
-    Attack: 697,
-    Defense: 10,
-    Lethality: 10,
-    Health: 2090
+    attack: 697,
+    defense: 10,
+    lethality: 10,
+    health: 2090
   });
   assert.deepEqual(generateTroopStats("infantry", 11, 10).stats, {
-    Attack: 889,
-    Defense: 10,
-    Lethality: 10,
-    Health: 2667
+    attack: 889,
+    defense: 10,
+    lethality: 10,
+    health: 2667
   });
   assert.deepEqual(generateTroopStats("lancer", 11, 10).stats, {
-    Attack: 2667,
-    Defense: 10,
-    Lethality: 10,
-    Health: 889
+    attack: 2667,
+    defense: 10,
+    lethality: 10,
+    health: 889
   });
   assert.deepEqual(generateTroopStats("marksman", 11, 10).stats, {
-    Attack: 3556,
-    Defense: 10,
-    Lethality: 10,
-    Health: 666
+    attack: 3556,
+    defense: 10,
+    lethality: 10,
+    health: 666
   });
 });
 

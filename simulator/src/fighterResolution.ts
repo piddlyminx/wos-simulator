@@ -32,14 +32,8 @@ export function resolveFighter(input: FighterInput, side: SideId, config: Simula
       diagnostics.push(`Unsupported troop id ${troopId}`);
       continue;
     }
-    let type: UnitType;
-    try {
-      type = normalizeUnitType(String(record.type));
-    } catch {
-      diagnostics.push(`Unsupported troop type ${record.type} for ${troopId}`);
-      continue;
-    }
-    const stats = normalizeStatBlock(record.stats);
+    const type = record.type;
+    const stats = record.stats;
     initialTroops[type] += count;
     const existing = weightedStats[type] ?? { count: 0, stats: zeroStats(), tier: 0, fc: 0, ids: [] };
     existing.count += count;
