@@ -5,6 +5,7 @@ import {
   MAX_ADAPTIVE_FINAL_REPLICATES,
   MAX_ADAPTIVE_PRELIMINARY_REPLICATES,
   recommendedOptimizeStep,
+  type OptimizeRankBy,
   type OptimizeSearchMode,
   type OptimizeSide,
 } from "@/lib/optimize-ratio";
@@ -49,10 +50,11 @@ export function RunModeCommandBar({
   optimizeInfantryMinPct,
   optimizeInputsValid,
   optimizeLoading,
+  optimizeRankBy,
   optimizeReplicates,
   optimizeSearchMode,
+  optimizeSide,
   optimizeStepInput,
-  optimizedSideLabel,
   optimizedTotalTroops,
   replicates,
   resolvedInfantryBounds,
@@ -67,6 +69,7 @@ export function RunModeCommandBar({
   setAdaptivePhase2Replicates,
   setOptimizeInfantryMaxPct,
   setOptimizeInfantryMinPct,
+  setOptimizeRankBy,
   setOptimizeReplicates,
   setOptimizeSearchMode,
   setOptimizeSide,
@@ -92,10 +95,11 @@ export function RunModeCommandBar({
   optimizeInfantryMinPct: number;
   optimizeInputsValid: boolean;
   optimizeLoading: boolean;
+  optimizeRankBy: OptimizeRankBy;
   optimizeReplicates: number;
   optimizeSearchMode: OptimizeSearchMode;
+  optimizeSide: OptimizeSide;
   optimizeStepInput: string;
-  optimizedSideLabel: string;
   optimizedTotalTroops: number;
   replicates: number;
   resolvedInfantryBounds: { minPct: number; maxPct: number };
@@ -110,6 +114,7 @@ export function RunModeCommandBar({
   setAdaptivePhase2Replicates: (value: number) => void;
   setOptimizeInfantryMaxPct: (value: number) => void;
   setOptimizeInfantryMinPct: (value: number) => void;
+  setOptimizeRankBy: (value: OptimizeRankBy) => void;
   setOptimizeReplicates: (value: number) => void;
   setOptimizeSearchMode: (value: OptimizeSearchMode) => void;
   setOptimizeSide: Dispatch<SetStateAction<OptimizeSide>>;
@@ -166,22 +171,49 @@ export function RunModeCommandBar({
                       : ` Auto step ${resolvedOptimizeStep.toLocaleString()} troops.`}
                 </p>
               </div>
-              <label className="sim-mode-option-row">
-                <span className="sim-field-label">Optimise side</span>
-                <button
-                  type="button"
-                  className="sim-mode-secondary-button"
-                  onClick={() =>
-                    setOptimizeSide((side) =>
-                      side === "attacker" ? "defender" : "attacker",
-                    )
-                  }
-                  aria-label={`Optimise ${optimizedSideLabel.toLowerCase()} ratio. Click to switch side.`}
-                >
-                  <span>{optimizedSideLabel}</span>
-                  <span aria-hidden="true">⇄</span>
-                </button>
-              </label>
+              <div
+                className="sim-mode-option-row sim-mode-search-row"
+                role="group"
+                aria-labelledby="optimize-side-label"
+              >
+                <span id="optimize-side-label" className="sim-field-label">
+                  Optimise side
+                </span>
+                <div className="sim-segmented">
+                  {(["attacker", "defender"] as OptimizeSide[]).map((side) => (
+                    <button
+                      key={side}
+                      type="button"
+                      onClick={() => setOptimizeSide(side)}
+                      className="capitalize"
+                      data-active={optimizeSide === side}
+                    >
+                      {side}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div
+                className="sim-mode-option-row sim-mode-search-row"
+                role="group"
+                aria-labelledby="optimize-rank-by-label"
+              >
+                <span id="optimize-rank-by-label" className="sim-field-label">
+                  Rank by
+                </span>
+                <div className="sim-segmented">
+                  {(["win_rate", "margin"] as OptimizeRankBy[]).map((rankBy) => (
+                    <button
+                      key={rankBy}
+                      type="button"
+                      onClick={() => setOptimizeRankBy(rankBy)}
+                      data-active={optimizeRankBy === rankBy}
+                    >
+                      {rankBy === "win_rate" ? "Win rate" : "Margin"}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div
                 className="sim-mode-option-row sim-mode-search-row"
                 role="group"

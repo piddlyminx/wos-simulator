@@ -62,6 +62,7 @@ test("savedRunToFormState hydrates optimize settings from a single parser", () =
     top_n: 10,
     search_mode: "grid",
     optimize_side: "defender",
+    rank_by: "margin",
   } satisfies OptimizeRatioRequestPayload);
 
   const state = savedRunToFormState(saved);
@@ -76,6 +77,7 @@ test("savedRunToFormState hydrates optimize settings from a single parser", () =
   assert.equal(state.optimizeInfantryMaxPct, 75);
   assert.equal(state.optimizeSearchMode, "grid");
   assert.equal(state.optimizeSide, "defender");
+  assert.equal(state.optimizeRankBy, "margin");
   assert.equal(state.optimizeResult?.saved_kind, "optimize_ratio");
 });
 
@@ -94,6 +96,7 @@ test("savedRunToFormState ignores legacy optimize simulate replicates", () => {
 
   assert.equal(state.replicates, 1000);
   assert.equal(state.optimizeReplicates, 20);
+  assert.equal(state.optimizeRankBy, "win_rate");
 });
 
 test("savedRunToFormState hydrates surface settings and clamps them", () => {

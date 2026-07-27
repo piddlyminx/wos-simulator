@@ -322,7 +322,7 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
     {
       id: "optimise-results",
       title: "Best ratio result",
-      text: "The best result is ranked by win rate for the optimised side, with average margin as a sanity check. Average margin is the average remaining survivors: positive for attacker, negative for defender. A tiny win-rate gain with a worse margin may not be worth using.",
+      text: "The best result uses the ranking priority selected in Optimise options, with the other metric breaking ties. Average margin is the average remaining survivors: positive for attacker, negative for defender. A tiny win-rate gain with a worse margin may not be worth using.",
       target: "[data-tour='optimize-results-summary']",
       fallbackTarget: "[data-tour='results-panel']",
       placement: wideLayout ? "top" : "bottom",

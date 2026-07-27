@@ -624,6 +624,19 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(optionsPanel).toBeVisible();
     await expect(optionsPanel).toContainText("Infantry search band");
     await expect(optionsPanel).toContainText("Adaptive search starts");
+    const sideSelector = optionsPanel.getByRole("group", {
+      name: "Optimise side",
+    });
+    const attackerOption = sideSelector.getByRole("button", {
+      name: "Attacker",
+    });
+    const defenderOption = sideSelector.getByRole("button", {
+      name: "Defender",
+    });
+    await expect(attackerOption).toHaveAttribute("data-active", "true");
+    await defenderOption.click();
+    await expect(defenderOption).toHaveAttribute("data-active", "true");
+    await expect(attackerOption).toHaveAttribute("data-active", "false");
   });
 
   test("simulate desktop optimise command uses run mode tabs and chevron options", async ({
@@ -699,6 +712,16 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     expect((simulateBox?.x ?? 0) + (simulateBox?.width ?? 0)).toBeLessThanOrEqual(
       (dockBox?.x ?? 0) + (dockBox?.width ?? 0) - 10,
     );
+
+    await page.getByTestId("sim-tab-results").click();
+    const resultsDock = page.getByTestId("sim-action-dock");
+    await expect(resultsDock).toHaveCSS("position", "fixed");
+    const resultsDockBox = await resultsDock.boundingBox();
+    expect(resultsDockBox).not.toBeNull();
+    const resultsDockBottom =
+      (resultsDockBox?.y ?? 0) + (resultsDockBox?.height ?? 0);
+    expect(Math.abs(resultsDockBottom - IPHONE_SE.height)).toBeLessThanOrEqual(1);
+
     await expectNoVisibleElementOverflow(page);
   });
 

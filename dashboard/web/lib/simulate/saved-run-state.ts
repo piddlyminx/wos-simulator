@@ -4,10 +4,12 @@ import {
   ADAPTIVE_PHASE2_REPLICATES,
   DEFAULT_INFANTRY_MAX_PCT,
   DEFAULT_INFANTRY_MIN_PCT,
+  DEFAULT_OPTIMIZE_RANK_BY,
   DEFAULT_OPTIMIZE_REPLICATES,
   DEFAULT_OPTIMIZE_SEARCH_MODE,
   DEFAULT_OPTIMIZE_SIDE,
   type OptimizeRatioResult,
+  type OptimizeRankBy,
   type OptimizeSearchMode,
   type OptimizeSide,
   resolveAdaptiveSearchSettings,
@@ -64,6 +66,7 @@ export interface SavedRunFormState {
   adaptiveFinalReplicates: number;
   optimizeInfantryMinPct: number;
   optimizeInfantryMaxPct: number;
+  optimizeRankBy: OptimizeRankBy;
   optimizeSearchMode: OptimizeSearchMode;
   optimizeSide: OptimizeSide;
   surfacePointsPerEdge: number;
@@ -93,6 +96,7 @@ export function defaultSavedRunFormState(
     adaptiveFinalReplicates: ADAPTIVE_FINAL_REPLICATES,
     optimizeInfantryMinPct: DEFAULT_INFANTRY_MIN_PCT,
     optimizeInfantryMaxPct: DEFAULT_INFANTRY_MAX_PCT,
+    optimizeRankBy: DEFAULT_OPTIMIZE_RANK_BY,
     optimizeSearchMode: DEFAULT_OPTIMIZE_SEARCH_MODE,
     optimizeSide: DEFAULT_OPTIMIZE_SIDE,
     surfacePointsPerEdge: DEFAULT_SURFACE_POINTS_PER_EDGE,
@@ -214,6 +218,8 @@ export function savedRunToFormState(
       optimizeRequest.infantry_max_pct,
       DEFAULT_INFANTRY_MAX_PCT,
     ),
+    optimizeRankBy:
+      optimizeRequest.rank_by === "margin" ? "margin" : DEFAULT_OPTIMIZE_RANK_BY,
     optimizeSearchMode:
       optimizeRequest.search_mode === "grid" ? "grid" : DEFAULT_OPTIMIZE_SEARCH_MODE,
     optimizeSide:

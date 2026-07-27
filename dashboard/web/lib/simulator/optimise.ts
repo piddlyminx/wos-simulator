@@ -8,6 +8,7 @@ import {
   ADAPTIVE_MAX_PHASE2_SEEDS,
   DEFAULT_INFANTRY_MAX_PCT,
   DEFAULT_INFANTRY_MIN_PCT,
+  DEFAULT_OPTIMIZE_RANK_BY,
   DEFAULT_OPTIMIZE_REPLICATES,
   DEFAULT_TOP_RESULTS,
   MAX_OPTIMIZE_BATTLES,
@@ -15,12 +16,21 @@ import {
   resolveAdaptiveSearchSettings,
   type OptimizeRatioPoint,
   type OptimizeRatioResult,
+  type OptimizeRankBy,
   type OptimizeSide,
 } from "@/lib/optimize-ratio";
 import { toBattleInput } from "./adapters";
 
 export type Composition = [number, number, number];
-type RankableOptimizeRow = Pick<OptimizeRatioPoint, "win_rate" | "avg_margin" | "avg_attacker_left" | "avg_defender_left">;
+type RankableOptimizeRow = Pick<
+  OptimizeRatioPoint,
+  | "win_rate"
+  | "avg_margin"
+  | "conservative_win_rate"
+  | "conservative_margin"
+  | "avg_attacker_left"
+  | "avg_defender_left"
+>;
 type OptimizeBattleRunner = (
   input: BattleInput,
   config: SimulatorConfig,
@@ -102,15 +112,27 @@ export function wilsonLowerBound(wins: number, n: number): number {
   return (centre - spread) / denominator;
 }
 
-export function rankOptimizeRows<T extends RankableOptimizeRow>(rows: readonly T[], optimizeSide: OptimizeSide = "attacker", marginKey: keyof T = "avg_margin"): T[] {
+export function rankOptimizeRows<T extends RankableOptimizeRow>(
+  rows: readonly T[],
+  optimizeSide: OptimizeSide = "attacker",
+  rankBy: OptimizeRankBy = DEFAULT_OPTIMIZE_RANK_BY,
+  winRateKey: keyof T = "win_rate",
+  marginKey: keyof T = "avg_margin",
+): T[] {
   return [...rows].sort((a, b) => {
+    const aWinRate = Number(a[winRateKey]);
+    const bWinRate = Number(b[winRateKey]);
     const aMargin = Number(a[marginKey]);
     const bMargin = Number(b[marginKey]);
     const aOwn = optimizeSide === "attacker" ? a.avg_attacker_left : a.avg_defender_left;
     const bOwn = optimizeSide === "attacker" ? b.avg_attacker_left : b.avg_defender_left;
     const aOpp = optimizeSide === "attacker" ? a.avg_defender_left : a.avg_attacker_left;
     const bOpp = optimizeSide === "attacker" ? b.avg_defender_left : b.avg_attacker_left;
-    return b.win_rate - a.win_rate || bMargin - aMargin || bOwn - aOwn || aOpp - bOpp;
+    const primaryDifference =
+      rankBy === "margin" ? bMargin - aMargin : bWinRate - aWinRate;
+    const secondaryDifference =
+      rankBy === "margin" ? bWinRate - aWinRate : bMargin - aMargin;
+    return primaryDifference || secondaryDifference || bOwn - aOwn || aOpp - bOpp;
   });
 }
 
@@ -224,9 +246,19 @@ async function runAdaptiveOptimize(
     options,
   );
   const optimizeSide = normalizeOptimizeSide(request.optimize_side);
-  const topByWin = rankOptimizeRows(phase1, optimizeSide).slice(0, 10);
-  const topByMargin = [...phase1].sort((a, b) => b.avg_margin - a.avg_margin).slice(0, 10);
-  const phase2Compositions = adaptiveNeighbours(dedupeResults([...topByWin, ...topByMargin]), total, infantryMinPct, infantryMaxPct);
+  const rankBy = normalizeOptimizeRankBy(request.rank_by);
+  const topByWin = rankOptimizeRows(phase1, optimizeSide, "win_rate").slice(0, 10);
+  const topByMargin = rankOptimizeRows(phase1, optimizeSide, "margin").slice(0, 10);
+  const phase1Seeds =
+    rankBy === "margin"
+      ? dedupeResults([...topByMargin, ...topByWin])
+      : dedupeResults([...topByWin, ...topByMargin]);
+  const phase2Compositions = adaptiveNeighbours(
+    phase1Seeds,
+    total,
+    infantryMinPct,
+    infantryMaxPct,
+  );
   const phase2Battles = phase2Compositions.length * adaptiveSettings.adaptive_phase2_replicates;
   const phase2EstimatedTotalBattles =
     phase1Battles +
@@ -246,13 +278,29 @@ async function runAdaptiveOptimize(
     adaptiveSettings.adaptive_phase2_replicates,
     options
   );
-  const topByConservativeWin = [...phase2]
-    .sort((a, b) => (b.conservative_win_rate ?? 0) - (a.conservative_win_rate ?? 0) || (b.conservative_margin ?? 0) - (a.conservative_margin ?? 0))
+  const topByConservativeWin = rankOptimizeRows(
+    phase2,
+    optimizeSide,
+    "win_rate",
+    "conservative_win_rate",
+    "conservative_margin",
+  )
     .slice(0, ADAPTIVE_MAX_PHASE2_SEEDS);
-  const topByConservativeMargin = [...phase2]
-    .sort((a, b) => (b.conservative_margin ?? 0) - (a.conservative_margin ?? 0) || (b.conservative_win_rate ?? 0) - (a.conservative_win_rate ?? 0))
+  const topByConservativeMargin = rankOptimizeRows(
+    phase2,
+    optimizeSide,
+    "margin",
+    "conservative_win_rate",
+    "conservative_margin",
+  )
     .slice(0, ADAPTIVE_MAX_PHASE2_SEEDS);
-  const finalists = dedupeResults([...topByConservativeWin, ...topByConservativeMargin]).slice(0, ADAPTIVE_MAX_FINALISTS).map(resultKey);
+  const finalistCandidates =
+    rankBy === "margin"
+      ? [...topByConservativeMargin, ...topByConservativeWin]
+      : [...topByConservativeWin, ...topByConservativeMargin];
+  const finalists = dedupeResults(finalistCandidates)
+    .slice(0, ADAPTIVE_MAX_FINALISTS)
+    .map(resultKey);
   const finalistBattles = finalists.length * adaptiveSettings.adaptive_final_replicates;
   const actualTotalBattles = phase1Battles + phase2Battles + finalistBattles;
   options.onProgress?.(phase1Battles + phase2Battles, actualTotalBattles);
@@ -446,7 +494,8 @@ function finalizeOptimizeResult(
   }
 ): OptimizeRatioResult {
   const optimizeSide = normalizeOptimizeSide(request.optimize_side);
-  const ranked = rankOptimizeRows(args.finalRows, optimizeSide);
+  const rankBy = normalizeOptimizeRankBy(request.rank_by);
+  const ranked = rankOptimizeRows(args.finalRows, optimizeSide, rankBy);
   if (ranked.length === 0) throw new Error("No optimizer finalists were evaluated.");
   const best = { ...ranked[0], rank: 1, is_best: true };
   const topResults = ranked.slice(0, args.topN).map((row, index) => ({
@@ -466,6 +515,7 @@ function finalizeOptimizeResult(
   return {
     total_troops: args.total,
     optimized_side: optimizeSide,
+    rank_by: rankBy,
     search_mode: request.search_mode === "grid" ? "grid" : "adaptive",
     grid_step: args.step,
     compositions_tested: args.compositionsTested,
@@ -548,6 +598,10 @@ function normalisePct(rawValue: number, defaultValue: number): number {
 
 function normalizeOptimizeSide(side: unknown): OptimizeSide {
   return side === "defender" ? "defender" : "attacker";
+}
+
+function normalizeOptimizeRankBy(rankBy: unknown): OptimizeRankBy {
+  return rankBy === "margin" ? "margin" : DEFAULT_OPTIMIZE_RANK_BY;
 }
 
 function totalSide(side: Record<string, number>): number {

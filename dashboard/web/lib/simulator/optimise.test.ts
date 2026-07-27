@@ -24,9 +24,17 @@ test("wilsonLowerBound keeps one lucky win below certainty", () => {
 
 test("rankOptimizeRows sorts by win rate then margin", () => {
   const ranked = rankOptimizeRows([
-    { win_rate: 0.5, avg_margin: 10, avg_attacker_left: 5, avg_defender_left: 0 },
+    { win_rate: 0.6, avg_margin: 10, avg_attacker_left: 5, avg_defender_left: 0 },
     { win_rate: 0.5, avg_margin: 20, avg_attacker_left: 2, avg_defender_left: 0 },
   ], "attacker");
+  assert.equal(ranked[0].win_rate, 0.6);
+});
+
+test("rankOptimizeRows can sort by margin before win rate", () => {
+  const ranked = rankOptimizeRows([
+    { win_rate: 0.6, avg_margin: 10, avg_attacker_left: 5, avg_defender_left: 0 },
+    { win_rate: 0.5, avg_margin: 20, avg_attacker_left: 2, avg_defender_left: 0 },
+  ], "attacker", "margin");
   assert.equal(ranked[0].avg_margin, 20);
 });
 
@@ -41,6 +49,7 @@ test("runOptimizeRatio evaluates candidate battles in fast simulator mode", asyn
   });
 
   assert.equal(result.best.infantry_count, 10);
+  assert.equal(result.rank_by, "win_rate");
   assert.ok(calls.length > 0);
   assert.deepEqual(calls.map((options) => options.mode), calls.map(() => "fast"));
 });

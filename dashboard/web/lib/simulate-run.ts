@@ -1,5 +1,6 @@
 import type { TroopCategory } from "@/lib/heroes-catalogue";
 import type {
+  OptimizeRankBy,
   OptimizeRatioResult,
   OptimizeSearchMode,
   OptimizeSide,
@@ -249,6 +250,7 @@ export interface OptimizeRatioRequestPayload
   top_n: number;
   search_mode?: OptimizeSearchMode;
   optimize_side?: OptimizeSide;
+  rank_by?: OptimizeRankBy;
 }
 
 export type SavedSimulationKind =

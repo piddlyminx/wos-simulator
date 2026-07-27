@@ -46,6 +46,7 @@ import {
   estimateCompositionCount,
   MAX_OPTIMIZE_BATTLES,
   MAX_OPTIMIZE_COMPOSITIONS,
+  OptimizeRankBy,
   OptimizeRatioResult,
   OptimizeSearchMode,
   OptimizeSide,
@@ -562,6 +563,9 @@ export default function SimulateClient({
   const [optimizeInfantryMaxPct, setOptimizeInfantryMaxPct] = useState(
     () => initialState.optimizeInfantryMaxPct,
   );
+  const [optimizeRankBy, setOptimizeRankBy] = useState<OptimizeRankBy>(
+    () => initialState.optimizeRankBy,
+  );
   const [optimizeSearchMode, setOptimizeSearchMode] = useState<OptimizeSearchMode>(
     () => initialState.optimizeSearchMode,
   );
@@ -770,6 +774,7 @@ export default function SimulateClient({
       setAdaptiveFinalReplicates(savedState.adaptiveFinalReplicates);
       setOptimizeInfantryMinPct(savedState.optimizeInfantryMinPct);
       setOptimizeInfantryMaxPct(savedState.optimizeInfantryMaxPct);
+      setOptimizeRankBy(savedState.optimizeRankBy);
       setOptimizeSearchMode(savedState.optimizeSearchMode);
       setOptimizeSide(savedState.optimizeSide);
       setResult(null);
@@ -891,6 +896,7 @@ export default function SimulateClient({
       setAdaptiveFinalReplicates(plainState.adaptiveFinalReplicates);
       setOptimizeInfantryMinPct(plainState.optimizeInfantryMinPct);
       setOptimizeInfantryMaxPct(plainState.optimizeInfantryMaxPct);
+      setOptimizeRankBy(plainState.optimizeRankBy);
       setOptimizeSearchMode(plainState.optimizeSearchMode);
       setOptimizeSide(plainState.optimizeSide);
       setRunMode("simulate");
@@ -1152,6 +1158,7 @@ export default function SimulateClient({
         top_n: DEFAULT_TOP_RESULTS,
         search_mode: optimizeSearchMode,
         optimize_side: optimizeSide,
+        rank_by: optimizeRankBy,
       } satisfies OptimizeRatioRequestPayload;
       const job = runWorkerOptimizeRatio(payload, (done, total) =>
         setOptimizeProgress((current) =>
@@ -1869,7 +1876,6 @@ export default function SimulateClient({
       <div
         ref={actionDockRef}
         className="sim-top-actions sim-mode-actions"
-        data-results-active={!wideSimLayout && mobileTab === "results"}
         data-testid="sim-action-dock"
       >
         <RunModeCommandBar
@@ -1883,10 +1889,11 @@ export default function SimulateClient({
           optimizeInfantryMinPct={optimizeInfantryMinPct}
           optimizeInputsValid={optimizeInputsValid}
           optimizeLoading={optimizeLoading}
+          optimizeRankBy={optimizeRankBy}
           optimizeReplicates={optimizeReplicates}
           optimizeSearchMode={optimizeSearchMode}
+          optimizeSide={optimizeSide}
           optimizeStepInput={optimizeStepInput}
-          optimizedSideLabel={optimizedSideLabel}
           optimizedTotalTroops={optimizedTotalTroops}
           replicates={replicates}
           resolvedInfantryBounds={resolvedInfantryBounds}
@@ -1901,6 +1908,7 @@ export default function SimulateClient({
           setAdaptivePhase2Replicates={setAdaptivePhase2Replicates}
           setOptimizeInfantryMaxPct={setOptimizeInfantryMaxPct}
           setOptimizeInfantryMinPct={setOptimizeInfantryMinPct}
+          setOptimizeRankBy={setOptimizeRankBy}
           setOptimizeReplicates={setOptimizeReplicates}
           setOptimizeSearchMode={setOptimizeSearchMode}
           setOptimizeSide={setOptimizeSide}

@@ -182,7 +182,8 @@ export function OptimizeResultsPanel({
             simulations across {result.compositions_tested.toLocaleString()}{" "}
             candidates, with {result.replicates_per_ratio.toLocaleString()}{" "}
             replicates for each finalist. Infantry was constrained to{" "}
-            {result.infantry_min_pct}%–{result.infantry_max_pct}%.
+            {result.infantry_min_pct}%–{result.infantry_max_pct}%. Ranked by{" "}
+            {result.rank_by === "margin" ? "margin" : "win rate"} first.
           </p>
         </div>
         <button
@@ -201,7 +202,7 @@ export function OptimizeResultsPanel({
         data-tour="optimize-results-summary"
       >
         <ResultCard
-          label="Best win rate"
+          label="Win rate"
           value={`${result.best.win_rate_pct.toFixed(1)}%`}
         />
         <ResultCard label="Best mix" value={formatComposition(result.best)} />

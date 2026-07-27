@@ -8,6 +8,7 @@ export const DEFAULT_INFANTRY_MIN_PCT = 30;
 export const DEFAULT_INFANTRY_MAX_PCT = 70;
 export const DEFAULT_OPTIMIZE_SEARCH_MODE = "adaptive" as const;
 export const DEFAULT_OPTIMIZE_SIDE = "attacker" as const;
+export const DEFAULT_OPTIMIZE_RANK_BY = "win_rate" as const;
 export const ADAPTIVE_PHASE1_REPLICATES = 20;
 export const ADAPTIVE_PHASE2_REPLICATES = 20;
 export const ADAPTIVE_FINAL_REPLICATES = 200;
@@ -19,6 +20,7 @@ export const ADAPTIVE_MAX_FINALISTS = 40;
 
 export type OptimizeSearchMode = "adaptive" | "grid";
 export type OptimizeSide = "attacker" | "defender";
+export type OptimizeRankBy = "win_rate" | "margin";
 
 export interface AdaptiveSearchSettings {
   adaptive_phase1_replicates: number;
@@ -51,6 +53,7 @@ export interface OptimizeRatioPoint {
 export interface OptimizeRatioResult {
   total_troops: number;
   optimized_side?: OptimizeSide;
+  rank_by?: OptimizeRankBy;
   search_mode?: OptimizeSearchMode;
   grid_step: number;
   compositions_tested: number;
