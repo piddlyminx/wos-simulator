@@ -1861,3 +1861,70 @@ approved accounts under unchanged stats and heroes, so no observation was
 created and no testcase file was added. This discriminator now requires either
 an approved second account or an existing matched report pair with complete
 stats and Gatot levels.
+
+## 27. Successful-hit trigger gate
+
+The production implementation creates Gatot's next-turn shield whenever the
+source infantry formation declares and completes an attack, even if the attack
+is fully absorbed and records zero casualties. A mechanically bounded
+alternative tested whether “each time they attack” actually requires the attack
+to penetrate for positive normal or linked skill kills before the deferred
+shield is created.
+
+The temporary candidate changed only the deferred-effect gate:
+
+```text
+production: create the shield after every completed infantry attack
+candidate:  create the shield only when normal kills + linked skill kills > 0
+```
+
+It did not change the configured `[6, 12, 18, 24, 30]` values, shield
+magnitude, duration, distribution, post-subtraction placement, or the ordinary
+damage equation. Production and the temporary candidate were run over the
+complete inventory with 100 replicates per stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Rule | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Production attack-completion trigger | 23 / 7 | 24 / 4 | 47 / 11 / 2 |
+| Positive-kills trigger gate | 10 / 20 | 19 / 9 | 29 / 29 / 2 |
+
+The clean threshold series rejects the candidate decisively. Its zero-damage
+rounds are part of the stable shield exchange, so suppressing the next shield
+causes protection to collapse:
+
+| Observation | Game | Production | Positive-kills gate |
+|---|---:|---:|---:|
+| 4,900 vs 1,000 | Draw at round 1,500 | Draw at round 1,500 | Attacker wins at round 225 |
+| 5,100 vs 1,000 | Attacker wins at round 1,381 | Attacker wins at round 1,380 | Attacker wins at round 218 |
+| 10,000 vs 2,000 | Attacker wins at round 452 | Attacker wins at round 452 | Attacker wins at round 220 |
+| Section 3: 5,000 infantry vs 1,000 infantry + 10 lancers | A 4,573 at round 1,151 | A 4,551 at round 1,157 | A 4,917 at round 217 |
+
+The mixed-formation anchors also regress, including reversal of the recorded
+section-15 `2,000 infantry + 1,000 marksman` attacker win. The section-16 and
+section-25 pressure cases barely change because their defender's attacks
+continue to penetrate while the shield matters.
+
+The candidate is rejected and the temporary implementation was removed.
+Gatot's S2 trigger must continue to create its next-turn shield after a
+completed infantry attack regardless of whether that attack produced positive
+casualties.
+
+## 28. Approved evidence-source status
+
+[WOS-466](/WOS/issues/WOS-466) searched the existing reports, artifacts, and
+configured accounts for the missing section-25 winner-boundary observation. It
+found no approved matched source. Existing related artifacts use forbidden
+accounts, and WIP is the only configured non-forbidden account.
+
+[WOS-467](/WOS/issues/WOS-467) is the active authorization path. Its required
+action is for the account owner to approve and configure one additional
+non-forbidden account that can battle with WIP, or identify an already approved
+source. Until that resolves, the exact `2,000 T6 infantry + 2,000 T6 marksmen`
+versus `5,000 T6 infantry` midpoint under the section-25 stat block cannot be
+captured safely. No forbidden account was used and no observation was added to
+the general testcase corpus.
