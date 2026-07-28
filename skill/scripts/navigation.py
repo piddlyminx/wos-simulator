@@ -235,6 +235,13 @@ def _goto_nav_screen(
             time.sleep(3)
 
         elif state == "unknown":
+            img = emulator.screencap_bgr()
+            found, _ = find_template(img, TEMPLATE_QUIT_DIALOG)
+            if found:
+                logger.info("goto_%s: quit confirmation dialog found → pressing back to dismiss", target)
+                emulator.back()
+                time.sleep(1)
+                continue
             logger.info("goto_%s: unknown → pressing back", target)
             emulator.back()
             time.sleep(1)
