@@ -1854,13 +1854,13 @@ hard case should not drive this allocation change; if it instead reproduces a
 large attacker win, sole-live promotion becomes a stronger candidate but still
 needs a three-formation control to address the section-15 regression.
 
-[WOS-465](/WOS/issues/WOS-465) could not run that capture safely. The configured
-instances exposed only one non-forbidden account, WIP; the other configured
-accounts were forbidden by the task safety rules. A matched battle requires two
-approved accounts under unchanged stats and heroes, so no observation was
-created and no testcase file was added. This discriminator now requires either
-an approved second account or an existing matched report pair with complete
-stats and Gatot levels.
+[WOS-465](/WOS/issues/WOS-465) did not produce the requested capture. A later
+status update incorrectly described `minxxx` as forbidden and treated WIP as the
+only permitted configured account. The issue's explicit account policy permits
+both WIP and `minxxx`; only Piddlyminx is forbidden. No observation was created
+and no testcase file was added by that attempt. The midpoint remains a useful
+discriminator, but it is not a blocker for the other corpus-wide hypothesis
+work recorded here.
 
 ## 27. Successful-hit trigger gate
 
@@ -1916,15 +1916,67 @@ casualties.
 
 ## 28. Approved evidence-source status
 
-[WOS-466](/WOS/issues/WOS-466) searched the existing reports, artifacts, and
-configured accounts for the missing section-25 winner-boundary observation. It
-found no approved matched source. Existing related artifacts use forbidden
-accounts, and WIP is the only configured non-forbidden account.
+[WOS-466](/WOS/issues/WOS-466) searched the existing reports and artifacts for
+the missing section-25 winner-boundary observation and did not find a matched
+existing source. The subsequent conclusion that WIP was the only permitted
+configured account was incorrect: the task explicitly permits WIP and
+`minxxx`, and forbids only Piddlyminx.
 
-[WOS-467](/WOS/issues/WOS-467) is the active authorization path. Its required
-action is for the account owner to approve and configure one additional
-non-forbidden account that can battle with WIP, or identify an already approved
-source. Until that resolves, the exact `2,000 T6 infantry + 2,000 T6 marksmen`
-versus `5,000 T6 infantry` midpoint under the section-25 stat block cannot be
-captured safely. No forbidden account was used and no observation was added to
-the general testcase corpus.
+[WOS-467](/WOS/issues/WOS-467) remains a parallel account/capture coordination
+path, not a blocker for this investigation. Other corpus-wide hypothesis work
+must continue while any live capture is pending. No forbidden account was used
+and no observation was added to the general testcase corpus.
+
+## 29. Fractional source-count screen
+
+The production S2 magnitude counts every positive fractional infantry remainder
+as one living troop:
+
+```text
+production source = sqrt(ceil(current source infantry)) * Attack / Health
+candidate source  = sqrt(current fractional source infantry) * Attack / Health
+```
+
+The exact-fractional candidate was a coefficient-free test of whether Gatot's
+shield source should decay continuously with fractional casualties. It changed
+only `sourceAttackProtectionBasis`; the ordinary damage equation, configured
+S2 percentages, source stats, duration, allocation, and post-subtraction
+placement were unchanged.
+
+Production and the temporary candidate were run over the complete inventory
+with 100 replicates per stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Source-count quantization | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Production whole-living-troop count | 23 / 7 | 24 / 4 | 47 / 11 / 2 |
+| Exact fractional count | 23 / 7 | 11 / 17 | 34 / 24 / 2 |
+
+The decisive regression is the section-8 series, where Gatot protects one T1
+FC10 infantry against T9 marksmen. As fractional damage accumulates below the
+first visible casualty, the candidate continuously reduces that infantry's S2
+shield. Production instead keeps the final positive remainder mechanically
+alive and preserves the full one-infantry source term.
+
+Selected results:
+
+| Observation | Game | Production | Exact fractional count |
+|---|---:|---:|---:|
+| 33,510 T9 marksmen vs one infantry | A 33,481 @ 157 | A mean 33,486 @ 130 | A mean 33,502 @ 43 |
+| 12,000 T9 marksmen vs one infantry | A 11,791 @ 1,121 | A mean 11,837 @ 872 | A mean 11,943 @ 309 |
+| 10,000 T9 marksmen vs one infantry | Draw, A 9,720 / D 1 @ 1,500 | Exact draw match @ 1,500 | Attacker mean 9,907 @ 499 |
+| Section 3 tiny-lancer distribution | A 4,573 @ 1,151 | A 4,551 @ 1,157 | A 4,552 @ 1,154 |
+| Section 16 hard pressure case | A 396 | A 623 | A 623 |
+
+The candidate slightly improves the section-3 duration and changes a few
+deterministic survivors by one to three troops, but it does not improve the
+section-16 hard pressure case at all and destroys thirteen additional
+stochastic observations. The temporary code was removed.
+
+Gatot's source count must continue to use `ceil(current infantry)` under the
+current fractional-casualty model: a positive partial remainder contributes as
+one living infantry to S2 until that troop is fully defeated.
