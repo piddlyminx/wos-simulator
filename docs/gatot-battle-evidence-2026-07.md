@@ -1980,3 +1980,58 @@ stochastic observations. The temporary code was removed.
 Gatot's source count must continue to use `ceil(current infantry)` under the
 current fractional-casualty model: a positive partial remainder contributes as
 one living infantry to S2 until that troop is fully defeated.
+
+## 30. Source-count resolution at next-turn activation
+
+Production resolves the S2 source basis when infantry attack, using that
+creation round's immutable round-start troop snapshot. A bounded timing
+alternative tested whether the source count is instead resolved after the
+creation round's casualties are committed, immediately before the shield's
+next-turn activation:
+
+```text
+production count = ceil(source infantry at creation-round start)
+candidate count  = ceil(source infantry after creation-round losses)
+```
+
+The temporary candidate queued only `trigger.source_attack` formula effects
+until after `commitRound`, then used the surviving source formation from
+`runtime.troops`. Kill-derived deferred effects retained their existing path.
+The candidate did not change the ordinary damage equation, configured S2
+percentages, Attack/Health stat basis, duration, allocation, stacking, or
+post-subtraction placement.
+
+Production and the temporary candidate were run over the complete inventory
+with 100 replicates per stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Source-count timing | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Production creation-round snapshot | 23 / 7 | 24 / 4 | 47 / 11 / 2 |
+| Post-commit activation state | 22 / 8 | 24 / 4 | 46 / 12 / 2 |
+
+Selected deterministic results:
+
+| Observation | Game | Production | Post-commit activation state |
+|---|---:|---:|---:|
+| Section 3 tiny-lancer distribution | A 4,573 @ 1,151 | A 4,551 @ 1,157 | A 4,552 @ 1,154 |
+| Section 10 Bradley mixed battle | D 2,296 @ 875 | D 2,597 @ 708 | D 2,611 @ 704 |
+| Section 15 triple formation | D 3,064 @ 238 | D 3,139 @ 230 | D 3,146 @ 229 |
+| Section 15, 2k infantry + 1k marksman | A 1,281 @ 907 | A 1,312 @ 824 | A 1,304 @ 824 |
+| Section 16 hard pressure case | A 396 | A 623 | A 627 |
+| Section 25, 3k infantry + 1k marksman | A 554 | A 732 @ 235 | A 736 @ 234 |
+
+Resolving after committed losses weakens each side's following shield wherever
+the source infantry took casualties in the creation round. It slightly improves
+the section-3 duration and section-15 attacker survivor count, but worsens the
+clean triple-formation and Bradley controls. It also moves the section-25
+infantry-heavy endpoint outside the survivor threshold and moves the section-16
+hard case farther from the game.
+
+The candidate is rejected and the temporary implementation was removed.
+Gatot's S2 source count must continue to use the source infantry's
+creation-round-start snapshot under the current evidence.
