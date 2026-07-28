@@ -1506,3 +1506,51 @@ S2's source Attack should continue to exclude live Attack up/down effects unless
 future independent evidence directly contradicts the threshold series. This
 also rules out runtime Attack feedback as an explanation for the section-16
 pressure discrepancy.
+
+## 21. Whole-casualty shield quantization
+
+The raw Gatot shield is normally retained as a fractional value. A separate
+coefficient-free screen tested whether the game first quantizes each newly
+created shield to a whole-casualty capacity. The candidate applied `floor`,
+nearest-integer `round`, or `ceil` consistently to the complete S2 shield at
+activation, before any mixed-formation share was applied. The configured S2
+percentage, source basis, duration, distribution, and damage equation were
+unchanged.
+
+Each candidate used the full evidence runner with 100 replicates per stochastic
+observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Corpus result | Fractional production | Floor | Nearest | Ceiling |
+|---|---:|---:|---:|---:|
+| Deterministic OK | 18 | 4 | 8 | 7 |
+| Deterministic not OK | 7 | 21 | 17 | 18 |
+| Stochastic OK | 24 | 12 | 11 | 10 |
+| Stochastic not OK | 4 | 16 | 17 | 18 |
+| Total OK / not OK / not assessed | 42 / 11 / 2 | 16 / 37 / 2 | 19 / 34 / 2 | 17 / 36 / 2 |
+
+Flooring makes Gatot materially too weak: section 1's `4,900 vs 1,000` draw
+becomes an attacker win at round `793`, the section-3 tiny-lancer battle finishes
+at round `707` instead of the game's `1,151`, and the hard section-16 pressure
+case worsens from `623` to `852` attacker survivors.
+
+Nearest and ceiling rounding make the shield too strong at critical thresholds.
+Both turn section 1's `5,100 vs 1,000` attacker win at round `1,381` into a draw
+with `996` defenders. Nearest moves the section-3 result to attacker `4,478` at
+round `1,352`; ceiling prevents the attacker from winning that battle at all.
+Ceiling also moves the decisive section-15.3 `2,000 infantry + 1,000 marksman`
+case from attacker `1,312` to attacker `2,241`, against the game's `1,281`.
+
+Ceiling happens to move the unresolved section-16 hard case from `623` to `369`
+attacker survivors, close to the game's `396`. That single improvement cannot
+support the mechanic because the same global rule destroys the established
+threshold, distribution, and stochastic corpus. It is an example of why the
+matched pressure result cannot be fitted in isolation.
+
+All three whole-casualty quantization candidates are rejected and the temporary
+switch was removed. Gatot's raw shield should remain fractional through
+activation and formation allocation under the current evidence.
