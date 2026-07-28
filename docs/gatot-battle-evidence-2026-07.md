@@ -1554,3 +1554,61 @@ matched pressure result cannot be fitted in isolation.
 All three whole-casualty quantization candidates are rejected and the temporary
 switch was removed. Gatot's raw shield should remain fractional through
 activation and formation allocation under the current evidence.
+
+## 22. Activation and expiry timing screen
+
+The production duration (`delay: 1`, `count: 1`) schedules each attack-created
+shield for exactly the following round. Four global timing variants were tested
+without changing the S2 percentage, source basis, mixed-formation allocation,
+post-subtraction placement, or ordinary damage equation:
+
+1. `delay: 0`, `count: 1`: active for the remainder of the creation round only.
+2. `delay: 0`, `count: 2`: active for the remainder of the creation round and
+   the following round.
+3. `delay: 1`, `count: 2`: active for the following two rounds.
+4. `delay: 2`, `count: 1`: active for one round after an additional round of lag.
+
+Each candidate used the complete evidence runner with 100 replicates per
+stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Timing | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Production: next round only | 18 / 7 | 24 / 4 | 42 / 11 / 2 |
+| Creation-round remainder only | 3 / 22 | 6 / 22 | 9 / 44 / 2 |
+| Creation-round remainder + next round | 19 / 6 | 21 / 7 | 40 / 13 / 2 |
+| Following two rounds | 19 / 6 | 24 / 4 | 43 / 10 / 2 |
+| One round with two-round lag | 13 / 12 | 21 / 7 | 34 / 19 / 2 |
+
+Immediate-only activation is strongly rejected. Because Gatot's shield is
+materialized after its source attack, this variant can affect only later damage
+jobs in that same round and expires before the next round. It breaks every
+section-1 threshold case, every section-2 Health case, the section-3 tiny-lancer
+case, and most stochastic observations.
+
+Keeping the immediate shield through the next round recovers the deterministic
+threshold family but adds three stochastic failures. Delaying activation by an
+extra round also weakens the established threshold behavior: deterministic
+passes fall from 18 to 13, including a winner mismatch in the section-2 Health
+series.
+
+Retaining each shield for two full future rounds changes very little because
+the skill activates every round and same-effect `max` stacking selects one of
+the overlapping copies. It turns only the marginal section-15.3
+`1,000 infantry + 1,000 marksman` round-tolerance result from fail to pass
+(`272` to `273` simulator rounds against `278` game rounds; tolerance `5.6`).
+It does not resolve the decisive `2,000 infantry + 1,000 marksman` duration
+miss (`825` simulator rounds against `907`), and moves the section-16 hard
+pressure result only from `623` to `617` attacker survivors against `396`.
+The two-round persistence also conflicts with the skill's explicit “for 1
+turn” wording, so the single marginal threshold improvement is not sufficient
+evidence to adopt it.
+
+All timing variants are rejected and were removed. The production
+`delay: 1`, `count: 1` duration remains the best-supported interpretation:
+Gatot creates the shield after attacking, it applies throughout the next round,
+and it expires before the following round.
