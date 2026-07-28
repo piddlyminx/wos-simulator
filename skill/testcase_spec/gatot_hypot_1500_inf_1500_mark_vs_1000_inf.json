@@ -1,0 +1,23 @@
+{
+  "test_id": "gatot_hypot_1500_inf_1500_mark_vs_1000_inf",
+  "description": "Deterministic Gatot S2 mixed-formation distribution probe. minxxx attacks with no heroes and 1,500 T6 infantry + 1,500 T6 marksmen; WIP defends with Gatot 1/1/1 and 1,000 T6 infantry. The current hypot-share candidate predicts a defender win near 476 survivors.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1500,
+      "marksman_t6": 1500
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Gatot": {}
+    },
+    "troops": {
+      "infantry_t6": 1000
+    }
+  }
+}

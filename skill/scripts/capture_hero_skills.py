@@ -33,8 +33,6 @@ DATA_DIR   = SKILL_DIR / "data"
 TESSDATA_DIR = SKILL_DIR / "tessdata"
 TESSDATA_ENG_URL = "https://github.com/tesseract-ocr/tessdata/raw/main/eng.traineddata"
 SKILL_DIGIT_ONNX_MODEL = SKILL_DIR / "models" / "hero_skill_digit.onnx"
-HERO_NAME_ONNX_MODEL = SKILL_DIR / "models" / "hero_name.onnx"
-HERO_NAME_LABELS_FILE = SKILL_DIR / "models" / "hero_name_labels.json"
 
 TPL_HEROES_NAV   = str(TEMPLATES / "nav_heroes_button.png")
 TPL_SKILLS_BTN   = str(TEMPLATES / "hero_skills_button.png")
@@ -63,8 +61,6 @@ ARROW_THRESHOLD  = 0.70
 NEXT_FRAME_TIMEOUT_SEC = 2.5
 NEXT_FRAME_POLL_SEC = 0.05
 _skill_digit_onnx_session = None
-_hero_name_onnx_session = None
-_hero_name_onnx_labels: list[str] | None = None
 
 
 def _load_hero_names() -> list[str]:
@@ -163,47 +159,6 @@ def _get_skill_digit_onnx_session():
     if _skill_digit_onnx_session is None:
         _skill_digit_onnx_session = _onnx_session(SKILL_DIGIT_ONNX_MODEL)
     return _skill_digit_onnx_session
-
-
-def _hero_name_features(crop: np.ndarray) -> np.ndarray:
-    mask = _white_text_mask(crop, HERO_NAME_THRESHOLD)
-    return (mask.astype(np.float32).reshape(1, -1) / 255.0)
-
-
-def _get_hero_name_onnx_session():
-    global _hero_name_onnx_session, _hero_name_onnx_labels
-    if os.environ.get("WOS_HERO_NAME_ONNX", "").lower() in {"0", "false", "no"}:
-        return None, None
-    if not HERO_NAME_ONNX_MODEL.exists() or not HERO_NAME_LABELS_FILE.exists():
-        return None, None
-    if _hero_name_onnx_session is None:
-        _hero_name_onnx_session = _onnx_session(HERO_NAME_ONNX_MODEL)
-    if _hero_name_onnx_labels is None:
-        _hero_name_onnx_labels = json.loads(HERO_NAME_LABELS_FILE.read_text())
-    return _hero_name_onnx_session, _hero_name_onnx_labels
-
-
-def _classify_hero_name_onnx(img: np.ndarray, known_names: list[str]) -> str:
-    x, y, w, h = HERO_NAME_TESSERACT_CROP
-    crop = _crop(img, x, y, w, h)
-    if crop.size == 0:
-        return ""
-    session, labels = _get_hero_name_onnx_session()
-    if session is None or not labels:
-        return ""
-
-    input_name = session.get_inputs()[0].name
-    logits = session.run(None, {input_name: _hero_name_features(crop)})[0][0]
-    pred_idx = int(np.argmax(logits))
-    if pred_idx >= len(labels):
-        return ""
-    top_two = np.partition(logits, -2)[-2:]
-    if float(top_two[-1] - top_two[-2]) < 1.0:
-        return ""
-    name = str(labels[pred_idx])
-    if known_names and name not in known_names:
-        return ""
-    return name
 
 
 def _classify_skill_level_onnx(img: np.ndarray, x: int, y: int, w: int, h: int) -> int | None:
@@ -420,10 +375,6 @@ def _ocr_hero_name(img: np.ndarray, known_names: list[str], debug_dir: str | Non
 
     If debug_dir is set, saves the crop image and OCR results to that directory.
     """
-    classified_name = _classify_hero_name_onnx(img, known_names)
-    if classified_name:
-        return classified_name
-
     fast_name = _ocr_hero_name_tesseract(img, known_names)
     if fast_name:
         return fast_name
@@ -533,6 +484,30 @@ def _read_hero_frame(
     return name, entry
 
 
+def _reidentify_duplicate_hero_frame(
+    img: np.ndarray,
+    known_names: list[str],
+    seen_names: set[str],
+    debug_dir: str | None = None,
+    debug_idx: int = 0,
+) -> tuple[str, dict | None] | None:
+    """Retry a duplicate identity against only the unseen canonical names.
+
+    Fuzzy OCR can occasionally resolve a noisy frame to an already-seen hero.
+    Restricting the retry to unseen names prevents that duplicate from silently
+    overwriting the earlier hero's captured skills.
+    """
+    unseen_names = [name for name in known_names if name not in seen_names]
+    if not unseen_names:
+        return None
+    return _read_hero_frame(
+        img,
+        unseen_names,
+        debug_dir=debug_dir,
+        debug_idx=debug_idx,
+    )
+
+
 def _wait_for_readable_next_frame(
     emulator,
     known_names: list[str],
@@ -593,6 +568,7 @@ def capture_hero_skills(emulator, instance_name: str, debug_dir: str | None = No
     time.sleep(1.0)
 
     first_hero_name = None
+    seen_names: set[str] = set()
     max_heroes = 60  # safety cap
     next_frame: tuple[np.ndarray, tuple[str, dict | None] | None] | None = None
 
@@ -612,29 +588,52 @@ def capture_hero_skills(emulator, instance_name: str, debug_dir: str | None = No
             cv2.imwrite(str(debug_path / f"{i:03d}_full.png"), img)
 
         if parsed is None:
-            logger.warning("Could not read a complete hero frame on iteration %d, skipping", i)
-        else:
-            name, entry = parsed
+            raise RuntimeError(
+                f"Could not identify a complete hero frame on iteration {i}; "
+                "refusing to advance to the next hero"
+            )
+
+        name, entry = parsed
+        current_name = name
+        logger.info("Hero %d: %s", i, name)
+
+        # Detect if we've looped back to start.
+        if i > 0 and name == first_hero_name:
+            logger.info("Detected loop back to first hero (%s), stopping", name)
+            break
+        if i == 0:
+            first_hero_name = name
+
+        # Re-read a duplicate non-loop identity with seen names excluded.
+        if name in seen_names:
+            retry = _reidentify_duplicate_hero_frame(
+                img,
+                known_names,
+                seen_names,
+                debug_dir=debug_dir,
+                debug_idx=i,
+            )
+            if retry is None or retry[0] in seen_names:
+                raise RuntimeError(
+                    f"Hero frame {i} was identified as duplicate {name!r} and "
+                    "could not be uniquely reidentified; refusing to advance"
+                )
+            name, entry = retry
             current_name = name
-            logger.info("Hero %d: %s", i, name)
+            logger.info("Reidentified duplicate %s as %s", parsed[0], name)
 
-            # Detect if we've looped back to start
-            if i > 0 and name == first_hero_name:
-                logger.info("Detected loop back to first hero (%s), stopping", name)
-                break
-            if i == 0:
-                first_hero_name = name
+        seen_names.add(name)
 
-            # Skip heroes where skill_1 is locked (level 0)
-            if entry is None:
-                logger.info("Skipping %s — skill_1 is locked", name)
-            else:
-                results[name] = entry
-                logger.info("  %s: %s", name, entry)
-                if debug_dir:
-                    (debug_path / f"{i:03d}_skills.json").write_text(
-                        json.dumps({"hero": name, "skills": entry}, indent=2)
-                    )
+        # Skip heroes where skill_1 is locked (level 0)
+        if entry is None:
+            logger.info("Skipping %s — skill_1 is locked", name)
+        else:
+            results[name] = entry
+            logger.info("  %s: %s", name, entry)
+            if debug_dir:
+                (debug_path / f"{i:03d}_skills.json").write_text(
+                    json.dumps({"hero": name, "skills": entry}, indent=2)
+                )
 
         # Tap next arrow
         found, (ax, ay) = _match_template(img, TPL_NEXT_ARROW, ARROW_THRESHOLD)

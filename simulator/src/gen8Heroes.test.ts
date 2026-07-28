@@ -176,9 +176,84 @@ test("Gatot turn shields split protection across mixed enemy formations", () => 
 
   assert.deepEqual(
     { winner: result.winner, rounds: result.rounds, leftInfantry: result.remaining.attacker.infantry },
-    { winner: "attacker", rounds: 1155, leftInfantry: 4556 }
+    { winner: "attacker", rounds: 1157, leftInfantry: 4551 }
   );
   assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
+});
+
+test("Gatot turn-shield dilution reproduces the mixed-formation family and marksman outcome flip", () => {
+  const config = loadSimulatorConfig();
+  const expectations = [
+    {
+      infantry: 1000,
+      lancer: 1000,
+      marksman: 0,
+      winner: "defender",
+      rounds: 265,
+      attackerSurvivors: 0,
+      defenderSurvivors: 4990
+    },
+    {
+      infantry: 1000,
+      lancer: 0,
+      marksman: 1000,
+      winner: "defender",
+      rounds: 272,
+      attackerSurvivors: 0,
+      defenderSurvivors: 4564
+    },
+    {
+      infantry: 2000,
+      lancer: 1000,
+      marksman: 0,
+      winner: "defender",
+      rounds: 522,
+      attackerSurvivors: 0,
+      defenderSurvivors: 4330
+    },
+    {
+      infantry: 1000,
+      lancer: 1000,
+      marksman: 1000,
+      winner: "defender",
+      rounds: 230,
+      attackerSurvivors: 0,
+      defenderSurvivors: 3139
+    },
+    {
+      infantry: 2000,
+      lancer: 0,
+      marksman: 1000,
+      winner: "attacker",
+      rounds: 824,
+      attackerSurvivors: 1312,
+      defenderSurvivors: 0
+    }
+  ] as const;
+
+  for (const expected of expectations) {
+    const result = simulateBattles(
+      gatotMixedBattle(expected.infantry, expected.lancer, expected.marksman),
+      config,
+      { mode: "fast" }
+    )[0]!;
+    const attackerSurvivors = Object.values(result.remaining.attacker).reduce((sum, count) => sum + count, 0);
+    const defenderSurvivors = Object.values(result.remaining.defender).reduce((sum, count) => sum + count, 0);
+    assert.deepEqual(
+      {
+        winner: result.winner,
+        rounds: result.rounds,
+        attackerSurvivors,
+        defenderSurvivors
+      },
+      {
+        winner: expected.winner,
+        rounds: expected.rounds,
+        attackerSurvivors: expected.attackerSurvivors,
+        defenderSurvivors: expected.defenderSurvivors
+      }
+    );
+  }
 });
 
 function gatotInfantryBattle(left: number, right: number, maxRounds = 1500): BattleInput {
@@ -194,6 +269,27 @@ function gatotInfantryBattle(left: number, right: number, maxRounds = 1500): Bat
       troops: { infantry_t6: right },
       stats: { infantry: { attack: 326.1, defense: 330.1, lethality: 18.2, health: 18.2 } },
       heroes: { Gatot: { skill_1: 2, skill_2: 2, skill_3: 2 } }
+    }
+  };
+}
+
+function gatotMixedBattle(infantry: number, lancer: number, marksman: number): BattleInput {
+  return {
+    maxRounds: 1500,
+    seed: `gatot-mixed-${infantry}-${lancer}-${marksman}`,
+    attacker: {
+      troops: { infantry_t6: infantry, lancer_t6: lancer, marksman_t6: marksman },
+      stats: {
+        infantry: { attack: 326.1, defense: 330.1, lethality: 18.2, health: 18.2 },
+        lancer: { attack: 78.1, defense: 82.1, lethality: 18.2, health: 18.2 },
+        marksman: { attack: 78.1, defense: 82.1, lethality: 18.2, health: 18.2 }
+      },
+      heroes: { Gatot: { skill_1: 2, skill_2: 2, skill_3: 2 } }
+    },
+    defender: {
+      troops: { infantry_t6: 5000 },
+      stats: { infantry: { attack: 295.3, defense: 293.3, lethality: 10, health: 10 } },
+      heroes: { Gatot: { skill_1: 1, skill_2: 3, skill_3: 3 } }
     }
   };
 }

@@ -421,7 +421,7 @@ test("a durationless shield subtracts its full raw value from every normal and s
   }]);
 });
 
-test("a turn-duration shield is apportioned by each dealer formation's initial attack weight", () => {
+test("a turn-duration shield dilutes each dealer formation's initial attack-weight share", () => {
   const fighters = simpleFighters();
   fighters.attacker.initialTroops = { infantry: 1000, lancer: 10, marksman: 0 };
   fighters.attacker.troopDetails.lancer = {
@@ -462,17 +462,21 @@ test("a turn-duration shield is apportioned by each dealer formation's initial a
     initialFormationAttackWeights: weights
   });
 
-  assert.ok(Math.abs((infantry.trace?.offsetDamage ?? 0) - 25 * 1005 / 1106) < 1e-12);
-  assert.ok(Math.abs((lancer.trace?.offsetDamage ?? 0) - 25 * 101 / 1106) < 1e-12);
-  assert.ok(Math.abs((infantry.trace?.offsetDamage ?? 0) + (lancer.trace?.offsetDamage ?? 0) - 25) < 1e-12);
+  const infantryNormalizedShare = 1005 / 1106;
+  const lancerNormalizedShare = 101 / 1106;
+  const infantryShare = infantryNormalizedShare / Math.hypot(1, infantryNormalizedShare);
+  const lancerShare = lancerNormalizedShare / Math.hypot(1, lancerNormalizedShare);
+  assert.ok(Math.abs((infantry.trace?.offsetDamage ?? 0) - 25 * infantryShare) < 1e-12);
+  assert.ok(Math.abs((lancer.trace?.offsetDamage ?? 0) - 25 * lancerShare) < 1e-12);
+  assert.ok((infantry.trace?.offsetDamage ?? 0) + (lancer.trace?.offsetDamage ?? 0) < 25);
   const infantryApplied = infantry.appliedEffects?.[0] && "value" in infantry.appliedEffects[0]
     ? infantry.appliedEffects[0].value
     : 0;
   const lancerApplied = lancer.appliedEffects?.[0] && "value" in lancer.appliedEffects[0]
     ? lancer.appliedEffects[0].value
     : 0;
-  assert.ok(Math.abs(infantryApplied - 25 * 1005 / 1106) < 1e-12);
-  assert.ok(Math.abs(lancerApplied - 25 * 101 / 1106) < 1e-12);
+  assert.ok(Math.abs(infantryApplied - 25 * infantryShare) < 1e-12);
+  assert.ok(Math.abs(lancerApplied - 25 * lancerShare) < 1e-12);
 });
 
 test("an attack-duration shield keeps its full value in a mixed-formation army", () => {

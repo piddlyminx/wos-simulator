@@ -105,8 +105,8 @@ export function sqrtMinInitialArmy(fighters: Record<SideId, ResolvedFighter>): n
 
 /**
  * Each formation's initial ordinary attack-size term. Turn-duration shields use these fixed
- * weights to reserve a share for every formation on the attacking side; a share does not grow
- * or spill over as the battle removes troops or formations.
+ * weights to derive a formation share on the attacking side; a share does not grow or spill
+ * over as the battle removes troops or formations.
  */
 export function buildInitialFormationAttackWeights(
   fighters: Record<SideId, ResolvedFighter>,
@@ -313,7 +313,15 @@ function initialFormationAttackShare(
   unit: UnitType
 ): number {
   const total = weights.totalBySide[side];
-  return total > 0 ? weights.bySide[side][unit] / total : 1;
+  if (total <= 0) return 1;
+  const normalizedShare = weights.bySide[side][unit] / total;
+  const formationCount = UNIT_TYPES.filter((candidate) => weights.bySide[side][candidate] > 0).length;
+  // A sole incoming formation receives the complete turn shield. With multiple formations,
+  // damp each normalized attack-size share independently; the reservations intentionally sum
+  // to less than one shield instead of reallocating the dilution to another formation.
+  return formationCount > 1
+    ? normalizedShare / Math.hypot(1, normalizedShare)
+    : normalizedShare;
 }
 
 function initialFormationAttackWeightsFor(

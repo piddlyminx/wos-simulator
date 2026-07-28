@@ -164,7 +164,7 @@ No Crystal Shield.
 |---|---:|---:|---:|---:|
 | Game | 1,151 | 4,573 | 0 | 0 |
 | Historical simulator | 1,153 | 4,557 | 0 | 0 |
-| Current simulator | 1,155 | 4,556 | 0 | 0 |
+| Current simulator | 1,157 | 4,551 | 0 | 0 |
 
 ### What this battle establishes
 
@@ -181,7 +181,11 @@ For each attacking formation:
 weight(unit) =
     ceil(sqrt(initial formation count) * sqrt(smaller initial total army))
 
-share(unit) = weight(unit) / sum(all attacking formation weights)
+normalized_share(unit) = weight(unit) / sum(all attacking formation weights)
+
+share(unit) =
+    1                                                  if it is the only formation
+    normalized_share / hypot(1, normalized_share)     otherwise
 ```
 
 For the 1,000 infantry + 10 lancer side:
@@ -189,12 +193,15 @@ For the 1,000 infantry + 10 lancer side:
 ```text
 infantry weight = 1005
 lancer weight   = 101
-shares           = 1005/1106 and 101/1106
+normalized shares = 1005/1106 and 101/1106
 ```
 
-This battle is the primary evidence for the implemented distribution. The exact
-weight formula remains a model inference rather than independently confirmed
-game documentation.
+The independent `hypot` dilution was added after the section 15 mixed-formation
+series. It deliberately allows the reservations for multiple incoming formations
+to sum to less than one full shield; the unused portion is not reallocated. This
+battle remains the primary check that a tiny secondary formation is not given an
+independent full shield. Both the weight and dilution formulas remain model
+inferences rather than independently confirmed game documentation.
 
 ## 4. Stochastic FC9 Gatot versus Gatot series
 
@@ -540,9 +547,10 @@ No Crystal Shield.
 | Source/input interpretation | Outcome | Rounds | Defender infantry survivors | Attacker infantry death |
 |---|---|---:|---:|---:|
 | Game | Defender wins | 875 | 2,296 | Round 868 |
-| Current simulator | Defender wins | 688 | 2,769 | Round 681 |
+| Simulator before mixed-share dilution | Defender wins | 688 | 2,769 | Round 681 |
+| Current simulator with mixed-share dilution | Defender wins | 708 | 2,597 | not regenerated |
 
-### Initial current-simulator arithmetic
+### Pre-dilution simulator arithmetic
 
 Current shield values:
 
@@ -636,8 +644,10 @@ sqrt(ceil(current source infantry))
 - Raw `active.hero.shield` offset.
 - Applied after the complete damage expression as `post_subtract`.
 - `same_effect_stacking: max`.
-- A turn shield is not consumed by one attack; its allocated value applies to
-  each eligible damage job according to the fixed formation share.
+- A turn shield is not consumed by one attack. With one incoming formation its
+  full value applies. With multiple incoming formations, each fixed normalized
+  attack-weight share `r` receives `r / hypot(1, r)` of the shield; reservations
+  intentionally sum to less than one full shield and do not spill over.
 
 Primary evidence:
 
@@ -947,7 +957,8 @@ No Crystal Shield.
 | Source | Outcome | Rounds | Defender infantry survivors | Notes |
 |---|---|---:|---:|---|
 | Game | Defender wins | 238 | 3,064 | Attacker infantry alive for 207 of the 238 rounds; the remaining 31 rounds are spent killing the exposed 1,000 lancers + 1,000 marksmen. |
-| Current simulator | Defender wins | 226 | 3,303 | Reproduced from the stated inputs with Gatot `2/2/2` (attacker) and `1/3/3` (defender). |
+| Simulator before mixed-share dilution | Defender wins | 226 | 3,303 | Reproduced from the stated inputs with Gatot `2/2/2` (attacker) and `1/3/3` (defender). |
+| Current simulator with mixed-share dilution | Defender wins | 230 | 3,139 | Same inputs; closer to the game result. |
 
 This battle has no secondary heroes on either side.
 
@@ -974,10 +985,11 @@ No Crystal Shield.
 | Source | Outcome | Rounds | Attacker survivors |
 |---|---|---:|---:|
 | Game | Attacker wins | 366 | 851 |
-| Current simulator | Attacker wins | 441 | 641 |
+| Simulator before mixed-share dilution | Attacker wins | 441 | 641 |
+| Current simulator with mixed-share dilution | Attacker wins | 436 | 655 |
 
-The attacker wins in both game and simulator. The simulator figures (441 rounds, 641
-survivors) are the run page's reported result.
+The attacker wins in the game and both simulator candidates. The pre-dilution
+figures (441 rounds, 641 survivors) are the run page's reported result.
 
 ### 15.3 Backline-variation family (same players and Gatot skills)
 
@@ -987,10 +999,11 @@ no Crystal Shield. Attacker infantry bonuses `326.1/330.1/18.2/18.2`; attacker l
 and marksman bonuses `78.1/82.1/18.2/18.2`; defender infantry bonuses
 `295.3/293.3/10/10`. Only the attacking backline composition changes.
 
-"Survivors" is the winner's remaining troops. Simulator values reproduced from the
-stated inputs.
+"Survivors" is the winner's remaining troops. The simulator values in this table
+are the pre-dilution results reproduced from the stated inputs; section 15.5 gives
+the current candidate.
 
-| Attacker composition | Game outcome | Game survivors | Game rounds | Sim outcome | Sim survivors | Sim rounds |
+| Attacker composition | Game outcome | Game survivors | Game rounds | Pre-dilution sim outcome | Pre-dilution sim survivors | Pre-dilution sim rounds |
 |---|---|---:|---:|---|---:|---:|
 | 1,000 inf + 1,000 lancer | Defender wins | 4,973 | 266 | Defender wins | 4,990 | 265 |
 | 1,000 inf + 1,000 marksman | Defender wins | 4,491 | 278 | Defender wins | 4,796 | 267 |
@@ -1003,7 +1016,7 @@ disagree on the winner (simulator: defender wins; game: attacker wins). The othe
 rows agree on the winner and differ on survivors and rounds as tabulated.
 Interpretation is in 15.4.
 
-### 15.4 What this series establishes
+### 15.4 What this series established for the pre-dilution candidate
 
 Confirmed (game observations and simulator-vs-game comparisons):
 
@@ -1026,7 +1039,7 @@ Confirmed (game observations and simulator-vs-game comparisons):
   simulator's `3/161` vs the game's `3/145` corresponds to ~5 attacker-troops of
   threshold offset (~0.1%), not a systematic bias.
 
-Simulator-internal behaviour (traced from the current implementation). Game reports
+Simulator-internal behaviour (traced from the pre-dilution implementation). Game reports
 give only totals and never a per-attacking-formation casualty breakdown, so these
 describe what the simulator computes, not independently confirmed game behaviour:
 
@@ -1069,3 +1082,58 @@ they are not re-tried):
   battles further from game (1,000 inf + 1,000 marksman defender survivors 4,796 ->
   4,991 against the game's 4,491), so within the simulator marksmen belong in
   `min_army` at full weight.
+
+### 15.5 Independent mixed-share dilution candidate
+
+The guided follow-up kept the established Gatot source magnitude, raw
+post-subtraction placement, and initial formation weights. It changed only the
+conversion from a normalized formation weight to the shield reservation applied
+to that formation's attack:
+
+```text
+r = weight(unit) / sum(weight(all attacking formations))
+
+applied_share =
+    1                 when there is one attacking formation
+    r / hypot(1, r)   when there is more than one
+```
+
+This has no fitted battle-specific coefficient. It is applied to both armies and
+all battles. Because each formation is diluted independently, the reservations
+sum to less than one shield when several formations attack, and unused protection
+does not spill between attacks.
+
+Current deterministic results:
+
+| Attacker composition | Game | Current simulator |
+|---|---|---|
+| 1,000 inf + 1,000 lancer | Defender 4,973 in 266 | Defender 4,990 in 265 |
+| 1,000 inf + 1,000 marksman | Defender 4,491 in 278 | Defender 4,564 in 272 |
+| 2,000 inf + 1,000 lancer | Defender 4,338 in 545 | Defender 4,330 in 522 |
+| 1,000 inf + 1,000 lancer + 1,000 marksman | Defender 3,064 in 238 | Defender 3,139 in 230 |
+| 2,000 inf + 1,000 marksman | Attacker 1,281 in 907 | Attacker 1,312 in 824 |
+| Section 3: 5,000 inf vs 1,000 inf + 10 lancer | Attacker 4,573 in 1,151 | Attacker 4,551 in 1,157 |
+
+Round-two values in the two marksman threshold battles show the mechanism:
+
+| Attacker | Attack | Pre-shield | Pre-dilution allocation | Diluted allocation | Damage bypassing |
+|---|---|---:|---:|---:|---:|
+| 1,000 inf + 1,000 marksman | infantry | 4.482 | 7.613 | 6.809 | 0 |
+| 1,000 inf + 1,000 marksman | marksman | 8.290 | 7.613 | 6.809 | 1.481 |
+| 2,000 inf + 1,000 marksman | infantry | 7.773 | 8.918 | 7.695 | 0.078 |
+| 2,000 inf + 1,000 marksman | marksman | 10.153 | 6.308 | 5.828 | 4.325 |
+
+For 1,000 infantry, the marksmen deal about 432 casualties before the front line
+falls, versus about 200 under the pre-dilution implementation; the defender still
+wins. With 2,000 infantry, the larger fixed army scale raises marksman damage, the
+defender's shrinking infantry formation generates a progressively smaller shield,
+and the feedback loop crosses the opposite threshold: the attacker wins with
+approximately 312 infantry and all 1,000 marksmen.
+
+This is a substantially better deterministic mixed-formation candidate, not a
+confirmed internal game formula. The Bradley cases remain materially discrepant:
+section 10 improves from 688 rounds / 2,769 defenders to 708 / 2,597, against
+the game's 875 / 2,296; section 15.2 moves only slightly from 441 rounds / 641
+attackers to 436 / 655, against 366 / 851. Those cases still contain independent
+Bradley/application uncertainties and should not be treated as clean Gatot-only
+validation.
