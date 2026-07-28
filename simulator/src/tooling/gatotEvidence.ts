@@ -168,6 +168,12 @@ const EMULATOR_DEFENDER_INFANTRY_STATS: StatBlock = {
   lethality: 157.5,
   health: 170.9
 };
+const PRESSURE_SERIES_DEFENDER_INFANTRY_STATS: StatBlock = {
+  attack: 486.6,
+  defense: 491.9,
+  lethality: 157.5,
+  health: 170.9
+};
 
 interface LancerCalibrationProfile {
   attacker: StatBlock;
@@ -315,7 +321,8 @@ function emulatorGatotProbeInput(
   id: string,
   attackerInfantry: number,
   attackerMarksmen: number,
-  defenderInfantry: number
+  defenderInfantry: number,
+  defenderStats = EMULATOR_DEFENDER_INFANTRY_STATS
 ) {
   return (config: SimulatorConfig): BattleInput =>
     buildBattle(
@@ -333,7 +340,7 @@ function emulatorGatotProbeInput(
       },
       {
         troops: { infantry_t6: defenderInfantry },
-        stats: { infantry: EMULATOR_DEFENDER_INFANTRY_STATS },
+        stats: { infantry: defenderStats },
         heroes: { Gatot: skills(1, 1, 1) }
       },
       config
@@ -448,6 +455,54 @@ const section16EmulatorProbes = [
     winner: "defender",
     attackerSurvivors: 0,
     defenderSurvivors: 2513
+  }
+] as const;
+
+const section25PressureSeries = [
+  {
+    id: "s25-2000-inf-2000-marksman-vs-2000-inf",
+    attackerInfantry: 2000,
+    attackerMarksmen: 2000,
+    defenderInfantry: 2000,
+    winner: "attacker",
+    attackerSurvivors: 3441,
+    defenderSurvivors: 0
+  },
+  {
+    id: "s25-2000-inf-2000-marksman-vs-3000-inf",
+    attackerInfantry: 2000,
+    attackerMarksmen: 2000,
+    defenderInfantry: 3000,
+    winner: "attacker",
+    attackerSurvivors: 2959,
+    defenderSurvivors: 0
+  },
+  {
+    id: "s25-2000-inf-2000-marksman-vs-4000-inf",
+    attackerInfantry: 2000,
+    attackerMarksmen: 2000,
+    defenderInfantry: 4000,
+    winner: "attacker",
+    attackerSurvivors: 2365,
+    defenderSurvivors: 0
+  },
+  {
+    id: "s25-1000-inf-3000-marksman-vs-5000-inf",
+    attackerInfantry: 1000,
+    attackerMarksmen: 3000,
+    defenderInfantry: 5000,
+    winner: "defender",
+    attackerSurvivors: 0,
+    defenderSurvivors: 2110
+  },
+  {
+    id: "s25-3000-inf-1000-marksman-vs-5000-inf",
+    attackerInfantry: 3000,
+    attackerMarksmen: 1000,
+    defenderInfantry: 5000,
+    winner: "attacker",
+    attackerSurvivors: 554,
+    defenderSurvivors: 0
   }
 ] as const;
 
@@ -699,6 +754,32 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
         row.defenderInfantry
       ),
       notes: "Captured from the minxxx/WIP emulator verification run; game round count was not recorded."
+    })
+  ),
+  ...section25PressureSeries.map((row) =>
+    observation({
+      id: row.id,
+      section: "25",
+      caseLabel:
+        `${row.attackerInfantry.toLocaleString("en-US")} T6 infantry` +
+        ` + ${row.attackerMarksmen.toLocaleString("en-US")} T6 marksmen` +
+        ` vs ${row.defenderInfantry.toLocaleString("en-US")} T6 infantry; defender Gatot S2 level 1`,
+      game: {
+        winner: row.winner,
+        survivors: {
+          attacker: row.attackerSurvivors,
+          defender: row.defenderSurvivors
+        }
+      },
+      buildInput: emulatorGatotProbeInput(
+        row.id,
+        row.attackerInfantry,
+        row.attackerMarksmen,
+        row.defenderInfantry,
+        PRESSURE_SERIES_DEFENDER_INFANTRY_STATS
+      ),
+      notes:
+        "Captured as one matched pressure series; defender displayed Attack/Defense were 486.6/491.9 rather than section 16's 483.6/478.9. Game round count was not recorded."
     })
   )
 ];

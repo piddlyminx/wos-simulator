@@ -1721,3 +1721,61 @@ fixture must combine Gatot with a reliably triggered genuine
 `extra_skill_attack` and report enough paired controls to isolate whether the
 skill job receives a second shield reservation; until then this interaction
 remains unresolved rather than fitted.
+
+## 25. Matched defender-pressure and attacker-composition series
+
+[WOS-462](/WOS/issues/WOS-462) captured five additional deterministic battles
+with one common observed setup. The attacker had no heroes and used T6 infantry
+plus T6 marksmen. The defender used T6 infantry and Gatot `1/1/1`, so S2 was
+level 1. Game round counts were not exposed by the report parser.
+
+The displayed stat blocks were:
+
+| Side/unit | Attack | Defense | Lethality | Health |
+|---|---:|---:|---:|---:|
+| Attacker infantry | `271.7%` | `259.5%` | `208.4%` | `209.6%` |
+| Attacker marksman | `270.0%` | `265.0%` | `214.9%` | `210.0%` |
+| Defender infantry | `486.6%` | `491.9%` | `157.5%` | `170.9%` |
+
+The defender Attack and Defense differ from section 16's recorded
+`483.6% / 478.9%`. The observations were therefore added as a separate series
+instead of silently combining them with section 16.
+
+Production results from:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --matching 's25-' --replicates 1
+```
+
+| Attacker | Defender | Game | Production simulator | Survivor difference |
+|---|---:|---|---|---:|
+| 2,000 infantry + 2,000 marksmen | 2,000 infantry | A 3,441 | A 3,444 @ round 92 | A `+3` |
+| 2,000 infantry + 2,000 marksmen | 3,000 infantry | A 2,959 | A 2,966 @ round 114 | A `+7` |
+| 2,000 infantry + 2,000 marksmen | 4,000 infantry | A 2,365 | A 2,378 @ round 135 | A `+13` |
+| 1,000 infantry + 3,000 marksmen | 5,000 infantry | D 2,110 | D 2,033 @ round 109 | D `-77` |
+| 3,000 infantry + 1,000 marksmen | 5,000 infantry | A 554 | A 732 @ round 235 | A `+178` |
+
+All five cases pass the evidence runner's deterministic survivor threshold.
+More importantly, the matched 2,000/3,000/4,000 defender-pressure curve is much
+more precise than the acceptance threshold: the absolute survivor errors grow
+only from 3 to 13 troops. This rejects the premise that the production
+fixed-hypot shield necessarily develops a broad pressure-dependent error before
+the 5,000-defender threshold.
+
+The 5,000-defender composition endpoints are less exact. Production
+underestimates surviving defenders by 77 in the marksman-heavy battle and
+overestimates surviving attackers by 178 in the infantry-heavy battle. Their
+winners still match. The current evidence does not show whether that residual
+comes from shield allocation, ordinary mixed-formation dynamics, or being near
+a winner threshold.
+
+The exact midpoint remains missing under this stat block. A one-off production
+simulation for 2,000 infantry + 2,000 marksmen versus 5,000 infantry predicts a
+defender win with 172 infantry at round 202. The section-16 game result of 396
+attacker survivors cannot be used as its matched observation because that
+report recorded the materially different defender Attack/Defense block. This
+midpoint is now the highest-value single live discriminator: it decides whether
+the smooth 2,000–4,000 pressure agreement continues through the winner boundary
+or breaks specifically at 5,000 defenders. No production mechanic was changed
+from this series alone.

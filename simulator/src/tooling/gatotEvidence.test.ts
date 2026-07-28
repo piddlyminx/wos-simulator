@@ -10,8 +10,8 @@ import {
 } from "./gatotEvidence";
 
 test("Gatot evidence inventory contains every distinct game observation", () => {
-  assert.equal(GATOT_GAME_OBSERVATIONS.length, 55);
-  assert.equal(new Set(GATOT_GAME_OBSERVATIONS.map((entry) => entry.id)).size, 55);
+  assert.equal(GATOT_GAME_OBSERVATIONS.length, 60);
+  assert.equal(new Set(GATOT_GAME_OBSERVATIONS.map((entry) => entry.id)).size, 60);
 
   const sectionCounts = Object.fromEntries(
     [...new Set(GATOT_GAME_OBSERVATIONS.map((entry) => entry.section))].map((section) => [
@@ -33,7 +33,8 @@ test("Gatot evidence inventory contains every distinct game observation", () => 
     "15.2": 1,
     "15.3": 4,
     "15.1 / 15.3": 1,
-    "16": 4
+    "16": 4,
+    "25": 5
   });
 
   const notRunnable = GATOT_GAME_OBSERVATIONS.filter((entry) => !entry.buildInput);
@@ -53,6 +54,26 @@ test("Gatot evidence inventory contains every distinct game observation", () => 
   const section16 = GATOT_GAME_OBSERVATIONS.filter((entry) => entry.section === "16");
   assert.equal(section16.length, 4);
   assert.ok(section16.every((entry) => entry.buildInput && entry.game.rounds === undefined));
+
+  const section25 = GATOT_GAME_OBSERVATIONS.filter((entry) => entry.section === "25");
+  assert.equal(section25.length, 5);
+  assert.ok(section25.every((entry) => entry.buildInput && entry.game.rounds === undefined));
+});
+
+test("Section 25 preserves the observed defender stat change", () => {
+  const config = loadSimulatorConfig();
+  const observation = GATOT_GAME_OBSERVATIONS.find(
+    (entry) => entry.id === "s25-2000-inf-2000-marksman-vs-3000-inf"
+  );
+  assert.ok(observation?.buildInput);
+
+  const input = observation.buildInput(config);
+  assert.deepEqual(input.defender.stats?.infantry, {
+    attack: 486.6,
+    defense: 491.9,
+    lethality: 157.5,
+    health: 170.9
+  });
 });
 
 test("Section 9 preserves its two observed stat profiles", () => {
