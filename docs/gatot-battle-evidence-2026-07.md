@@ -1779,3 +1779,77 @@ midpoint is now the highest-value single live discriminator: it decides whether
 the smooth 2,000–4,000 pressure agreement continues through the winner boundary
 or breaks specifically at 5,000 defenders. No production mechanic was changed
 from this series alone.
+
+## 26. Live-formation reservation screens
+
+The section-25 endpoint pattern motivated a bounded shield-allocation question:
+should a formation keep its fixed initial reservation after the other attacking
+formations have died, or should protection be recomputed for the formations
+that are still alive?
+
+An event-order alternative was checked first and found to be inert rather than a
+new candidate. Production already evaluates Gatot's source count from
+`DamageJob.roundStartTroops`, so the shield uses the round-start infantry
+snapshot rather than a count reduced by earlier same-round jobs. This is
+distinct from section 23's rejected battle-start snapshot and should not be
+re-screened as an untested timing hypothesis.
+
+Two live-formation allocation candidates were then implemented temporarily:
+
+1. **Live renormalization:** retain every formation's fixed initial weight, but
+   divide by the weights of currently living formations. One survivor receives
+   the full shield and two survivors of an initial three-formation army split
+   the reservation between themselves.
+2. **Sole-live promotion:** retain production shares while at least two
+   formations live; grant the full shield only when exactly one formation
+   remains.
+
+Both use only existing formation state and initial weights. Neither changes the
+configured `[6, 12, 18, 24, 30]` values, source magnitude, duration,
+post-subtraction placement, or ordinary damage equation.
+
+Each candidate and restored production were run over the complete inventory with
+100 replicates per stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Rule | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Production fixed reservations | 23 / 7 | 24 / 4 | 47 / 11 / 2 |
+| Live renormalization | 24 / 6 | 24 / 4 | 48 / 10 / 2 |
+| Sole-live promotion | 24 / 6 | 24 / 4 | 48 / 10 / 2 |
+
+Selected deterministic results:
+
+| Observation | Game | Production | Live renormalization | Sole-live promotion |
+|---|---:|---:|---:|---:|
+| Section 16, 2k infantry + 2k marksmen vs 5k infantry | A 396 | A 623 | A 565 | A 565 |
+| Section 25, 1k infantry + 3k marksmen vs 5k infantry | D 2,110 | D 2,033 | D 2,093 | D 2,093 |
+| Section 25, 3k infantry + 1k marksmen vs 5k infantry | A 554 | A 732 | A 725 | A 725 |
+| Section 15.1 triple formation | D 3,064 | D 3,139 | D 3,224 | D 3,183 |
+| Section 10 Bradley mixed battle | D 2,296 | D 2,597 | D 2,610 | D 2,610 |
+
+Both candidates improve the automated count only because section 16's old hard
+case moves inside the broad 2% survivor tolerance. The residual remains 169
+attackers, so neither reproduces that observation closely. They materially
+improve the new marksman-heavy endpoint from 77 to 17 missing defenders and
+slightly improve the infantry-heavy endpoint from 178 to 171 excess attackers.
+
+The same mechanism worsens clean contrary evidence. In the three-formation
+section-15 battle, production already leaves 75 too many defenders; live
+renormalization increases that error to 160 and sole-live promotion to 119.
+The Bradley battle also moves 13 defenders farther from its game result. A
+one-case threshold-count improvement therefore overstates the evidence for the
+candidates.
+
+Both temporary implementations were removed. Live-formation promotion remains a
+plausible but unsupported interaction rather than a production change. The
+matched 4,000/5,000 boundary capture requested in
+[WOS-465](/WOS/issues/WOS-465) is discriminating: if the current-stat midpoint
+agrees with production's defender-172 prediction, the older differently-statted
+hard case should not drive this allocation change; if it instead reproduces a
+large attacker win, sole-live promotion becomes a stronger candidate but still
+needs a three-formation control to address the section-15 regression.
