@@ -1,6 +1,6 @@
 # Gatot, Crystal Shield, Volley, and FC Troop Battle Evidence
 
-Last consolidated: 2026-07-26
+Last consolidated: 2026-07-28
 
 This document collects the concrete battle specifications and results discussed
 between 2026-07-22 and 2026-07-26. It also records which conclusions are
@@ -23,6 +23,17 @@ how the game works.
   sooner.
 - The FC9 and T9 cases contain stochastic troop skills. A single game result
   must be judged against a distribution, not only a simulator mean.
+- The automated evidence check treats a deterministic case as **OK** only when
+  the winner matches, each survivor difference is within `2%` of the two
+  armies' combined initial troop count, and the round difference is within the
+  greater of `3` rounds or `2%` of the recorded game rounds.
+- It treats a stochastic case as **OK** when the recorded winner occurs in at
+  least `5%` of replicates and every recorded survivor and round value lies
+  inside the central `99%` interval for replicates with that winner. This
+  conditions survivor and duration comparisons on reproducing the same battle
+  outcome rather than mixing attacker and defender wins.
+- Missing values are ignored by the automated assessment, and observations
+  without enough information to run are reported as **not assessed**.
 - Stats below are the values supplied or visibly displayed in the reports.
   Their conversion into underlying mechanical bonuses is now an open question:
   a displayed `10%` Lethality/Health value may correspond to a `5%` underlying
@@ -458,33 +469,35 @@ battles, not a deterministic threshold curve.
 
 This series was collected to constrain T1 FC10 lancer durability without Gatot.
 
-### Common specification
+### Shared formation specification
 
 Attacker:
 
 - T9 lancers.
 - No heroes.
-- Displayed bonuses:
-  - Attack `208.8%`
-  - Defense `207.1%`
-  - Lethality `167.5%`
-  - Health `167.6%`
 - Ambusher is active.
 
 Defender:
 
 - 146 T1 FC10 lancers.
 - No heroes.
-- Displayed bonuses:
-  - Attack `1179.0%`
-  - Defense `1202.9%`
-  - Lethality `1362.1%`
-  - Health `1134.5%`
 - Crystal Lance and Incandescent Field are active.
 
 Each troop type is one formation-level attacking unit. Individual soldiers do
 not make independent attacks. A formation may nevertheless attack more than
 once in a round through troop skills.
+
+### Observed stat profiles
+
+The first two battles and the remaining four battles used different displayed
+stat profiles. They must not be run under one common stat block.
+
+| Battles | Side | Attack | Defense | Lethality | Health |
+|---|---|---:|---:|---:|---:|
+| 3,000 and 2,201 T9 start | T9 attacker | `208.8%` | `207.1%` | `167.5%` | `167.6%` |
+| 3,000 and 2,201 T9 start | FC10 defender | `1179.0%` | `1202.9%` | `1362.1%` | `1134.5%` |
+| 1,500, 1,950, 2,100, and 2,200 T9 start | T9 attacker | `208.8%` | `179.2%` | `154.7%` | `154.8%` |
+| 1,500, 1,950, 2,100, and 2,200 T9 start | FC10 defender | `1306.9%` | `1333.2%` | `1508.3%` | `1258.0%` |
 
 ### Game results
 
@@ -506,6 +519,8 @@ every-round Gatot activation to use as a counter.
 - The series did not cleanly distinguish a one-point T1 FC10 lancer Health
   difference because multiple stochastic skills strongly affect the endpoint.
 - It is supporting calibration evidence, not a precise solved stat measurement.
+- The evidence runner preserves the two observed displayed-stat profiles rather
+  than applying the first profile to all six battles.
 - The current catalogue uses T1 FC10 lancer Attack `296`, Health `99`, obtained
   by swapping the generated T1 FC10 infantry Attack/Health pair.
 
@@ -1137,3 +1152,253 @@ the game's 875 / 2,296; section 15.2 moves only slightly from 441 rounds / 641
 attackers to 436 / 655, against 366 / 851. Those cases still contain independent
 Bradley/application uncertainties and should not be treated as clean Gatot-only
 validation.
+
+## 16. Live emulator pressure probes
+
+These deterministic battles were run after capturing the current minxxx and WIP
+hero skill levels and displayed troop stats. The attacker has no heroes. The
+defender uses Gatot `1/1/1`; therefore S2 is level 1. No game round counts were
+recorded.
+
+Attacker displayed stats:
+
+| Type | Attack | Defense | Lethality | Health |
+|---|---:|---:|---:|---:|
+| Infantry | `271.7%` | `259.5%` | `208.4%` | `209.6%` |
+| Marksman | `270.0%` | `265.0%` | `214.9%` | `210.0%` |
+
+Defender infantry displayed stats:
+
+| Attack | Defense | Lethality | Health |
+|---:|---:|---:|---:|
+| `483.6%` | `478.9%` | `157.5%` | `170.9%` |
+
+Results:
+
+| Attacker | Defender | Game survivors | Fixed-hypot simulator | Tested pressure-aware alternative |
+|---|---|---:|---:|---:|
+| 1,500 infantry + 1,500 marksmen | 1,000 infantry | A 2,777 / D 0 | A 2,779 / D 0 | A 2,777 / D 0 |
+| 2,000 infantry + 2,000 marksmen | 1,000 infantry | A 3,809 / D 0 | A 3,810 / D 0 | A 3,809 / D 0 |
+| 2,000 infantry + 2,000 marksmen | 5,000 infantry | A 396 / D 0 | A 623 / D 0 | A 472 / D 0 |
+| 7,500 infantry | 5,000 infantry | A 0 / D 2,513 | A 0 / D 2,514 | A 0 / D 2,514 |
+
+The matched 2,000 + 2,000 pair is discriminating evidence. The attacking
+composition and displayed stats are unchanged, while the defender grows from
+1,000 to 5,000 infantry. Fixed hypot is almost exact in the first battle but
+leaves 227 too many attackers in the second. A pressure-aware interpolation was
+tested and reduced that miss to 76, but the particular interpolation was not
+established by an independent observation and has therefore not been retained as
+the implemented rule.
+
+## 17. Coefficient-free distribution sweep
+
+An exploratory screen tested 1,120 shield-distribution candidates against all 25
+runnable deterministic observations. It deliberately used only mechanically
+recognisable inputs and powers:
+
+- initial or current attacking-formation troop count;
+- count powers `0`, `1/2`, `1`, `2`, and `3`;
+- no stat term, or base/effective Attack, Lethality, `Attack × Lethality`,
+  effective Defense, effective Health, or `Defense × Health`;
+- stat powers `1/2`, `1`, and `2`;
+- normalized shares, fixed hypot shares, hypot with the unallocated remainder
+  assigned to infantry, or hypot shares renormalized to sum to one.
+
+The combination `sqrt(current troops) × effective Attack × effective
+Lethality` was included; for formations hitting the same target, this is the
+variable numerator of their ordinary pre-shield damage rather than merely an
+Attack-stat proxy.
+
+The acceptance test was the same as the evidence runner. The “core” count below
+excludes section 10 (Bradley) and section 15.2 (secondary heroes), because those
+contain independent application uncertainties. This leaves 23 cleaner
+deterministic observations.
+
+| Rule | Core failures | All failures | Winner mismatches |
+|---|---:|---:|---:|
+| Implemented fixed hypot | 5 / 23 | 7 / 25 | 0 |
+| Fixed hypot, remainder assigned to infantry | 4 / 23 | 6 / 25 | 0 |
+| `sqrt(current troops) × sqrt(effective Defense)`, normalized | 3 / 23 | 5 / 25 | 0 |
+| Same weights, hypot remainder assigned to infantry | 3 / 23 | 5 / 25 | 0 |
+| `sqrt(initial troops) × sqrt(effective Defense)`, renormalized hypot | 3 / 23 | 5 / 25 | 0 |
+| `sqrt(current troops) × sqrt(effective Health)`, renormalized hypot | 3 / 23 | 5 / 25 | 0 |
+
+No screened rule had fewer than three core failures while also preserving every
+winner. In particular, none reproduced both decisive section 15.3 marksman
+battles within the survivor and round tolerances.
+
+Selected outcomes show why the infantry-remainder adjustment is useful but not
+sufficient:
+
+| Observation | Game | Fixed hypot | Remainder to infantry | Best-ranked screen result |
+|---|---:|---:|---:|---:|
+| 1,000 infantry + 1,000 marksmen vs 5,000 infantry | D 4,491 @ 278 | D 4,564 @ 272 | D 4,564 @ 272 | D 4,661 @ 273 |
+| 2,000 infantry + 1,000 marksmen vs 5,000 infantry | A 1,281 @ 907 | A 1,312 @ 824 | A 1,302 @ 829 | A 1,717 @ 780 |
+| 2,000 infantry + 2,000 marksmen vs 5,000 infantry | A 396 | A 623 | A 456 | A 376 |
+
+The remainder rule leaves the first marksman case unchanged, modestly improves
+the second, and reduces the new emulator miss from 227 survivors to 60. This is
+consistent with much of the additional infantry allocation being unused when
+the infantry attack is already smaller than its assigned shield.
+
+The best numerical candidates were driven by the attacking formation's Defense
+or Health, while Attack, Lethality, and `Attack × Lethality` candidates did not
+produce a credible improvement. Defense/Health may be proxying for troop type,
+but making Gatot's shield allocation depend on an enemy formation's defensive
+stats has no independent mechanical support, so these candidates have not been
+adopted.
+
+The strongest candidates were also run over all 28 runnable stochastic
+observations with three paired replicates. Every candidate produced identical
+results: the stochastic Gatot observations contain only one incoming formation,
+where every distribution rule assigns the full shield, while the section 9
+lancer observations do not contain Gatot. More replicates therefore cannot
+distinguish these distribution candidates.
+
+### Extended allocation-function screen
+
+A second two-stage screen retained the same 280 weight recipes but expanded the
+allocation functions. It first evaluated 6,720 combinations on the four most
+discriminating mixed cases, then ran the best five weight recipes for every
+allocation function, plus the global leaders, against all 25 deterministic
+observations.
+
+The pointwise functions were linear, softsign, `1 - exp(-r)`, hypot, `tanh(r)`,
+the cubic norm `r / cbrt(1 + r^3)`, `atan(r)`, and `log(1 + r)`. Each nonlinear
+function was tested raw, renormalized to sum to one, and with its unused
+remainder assigned to infantry.
+
+It also tested cross-formation norm and concentration rules:
+
+```text
+L2:                   share_i = r_i / sqrt(sum(r_j^2))
+L3:                   share_i = r_i / cbrt(sum(r_j^3))
+sqrt concentration:   share_i = r_i * sqrt(sum(r_j^2))
+concentration:        share_i = r_i * sum(r_j^2)
+power normalized 2:   share_i = r_i^2 / sum(r_j^2)
+power normalized 3:   share_i = r_i^3 / sum(r_j^3)
+```
+
+Here `1 / sum(r_j^2)` is the inverse Simpson concentration, or effective number
+of formations. The first two rules force the squared or cubed applied shares to
+sum to one; the next two reduce total application as formations become more
+evenly distributed; the final two preserve one full shield while concentrating
+it toward the largest weight.
+
+| Candidate | All failures | Winner mismatches | Selected decisive results |
+|---|---:|---:|---|
+| Implemented fixed hypot | 7 / 25 | 0 | 1k+1k marks: D 4,564 @ 272; 2k+1k marks: A 1,312 @ 824; emulator hard case: A 623 |
+| Fixed hypot, remainder to infantry | 6 / 25 | 0 | D 4,564 @ 272; A 1,302 @ 829; A 456 |
+| Raw `log(1+r)`, approximately `sqrt(current troops)` weights | 4 / 25 | 0 | D 4,618 @ 274; A 2,023 @ 660; A 644 |
+| Raw cubic norm, `sqrt(current troops) * sqrt(effective Defense)` weights | 4 / 25 | 0 | D 4,610 @ 274; A 1,764 @ 763; A 435 |
+| Same cubic weights, remainder to infantry | 4 / 25 | 0 | D 4,610 @ 274; A 1,761 @ 769; A 376 |
+| Best L2 normalization | 6 / 25 | 2 | D 4,373 @ 281; defender wins with 1,478 @ 851; A 304 |
+| Best L3 normalization | 6 / 25 | 2 | D 4,373 @ 281; defender wins with 1,555 @ 843; A 301 |
+| Best inverse-Simpson-derived bounded rule | 5 / 25 | 0 | D 4,458 @ 278; A 2,334 @ 545; A 758 |
+
+The four-failure candidates improve the threshold count, but neither reconciles
+the decisive 2,000 infantry + 1,000 marksmen case: the game has 1,281 attackers
+at round 907, while the logarithmic and cubic candidates leave 2,023 at round
+660 and 1,764 at round 763 respectively. The cubic remainder rule fits the new
+emulator hard case well but still misses that older duration/survivor anchor.
+
+L2/L3 normalization is particularly inconsistent with the evidence. With two
+equal formations, L2 applies `0.707` shield to each attack, totalling `1.414`
+shield applications; its best screened candidates reverse two recorded winners.
+The concentration and power-normalized variants also fail to improve the
+cross-case result.
+
+The mechanically direct damage-scaling interpretation was then tested
+separately, rather than relying on whichever L2 weight happened to score best:
+
+```text
+share_i = sqrt(formation troops_i) / sqrt(sum(all formation troops))
+```
+
+This mirrors the ordinary damage army term: splitting 2,000 otherwise identical
+troops into two 1,000-troop formations changes the combined term from
+`sqrt(2000)` to `2 * sqrt(1000)`, a factor of `sqrt(2)`, and the proposed shield
+shares likewise sum to `sqrt(2)`. Initial-count, current-count, exact ceiled army
+term, and effective-damage-numerator variants were run.
+
+The direct interpretation is too strong. The initial-count version has seven
+threshold failures and reverses three recorded winners. It predicts 4,988
+defenders at round 262 for the 1,000 infantry + 1,000 marksmen case, 4,065
+defenders at round 532 for the 2,000 infantry + 1,000 marksmen case, and 313
+defenders for the new 2,000 + 2,000 emulator case. The corresponding game
+results are 4,491 defenders at round 278, 1,281 attacking survivors at round
+907, and 396 attacking survivors. Current-count and damage-numerator versions
+are still more protective. Therefore the observed formation damage
+amplification is real, but Gatot's offset cannot receive the full matching L2
+amplification under the current shield-magnitude formula.
+
+The screen narrows the next question rather than solving it: a simple static
+formation weight is not enough to reconcile the section 15.3 duration flip.
+Further discrimination needs either round-by-round live evidence or candidates
+that change how shield is consumed or carried between attacks, rather than
+another fitted static weight.
+
+## 18. Per-turn shield-pool and carry experiments
+
+Two mechanically distinct consumption candidates were implemented behind a
+temporary simulation option, tested against the complete evidence inventory,
+and then removed. The production implementation remained the fixed-hypot rule
+throughout.
+
+The candidates were:
+
+1. **Shared pool:** each turn starts with one full Gatot shield. Incoming normal
+   and skill hits consume that capacity in battle-job order, and unused capacity
+   carries to the next hit in the same turn.
+2. **Fixed-hypot carry:** each normal attacking formation unlocks only its
+   existing fixed-hypot reservation. Any part not absorbed by that hit carries
+   forward to the next hit in the same turn. Skill hits can consume carried
+   capacity but do not unlock another reservation.
+
+Both candidates used only existing battle quantities: the calculated Gatot
+shield, the established fixed formation reservations, the pre-offset damage of
+each job, and turn boundaries. Neither introduced a fitted coefficient.
+
+The full evidence command used 100 replicates for each stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+The same runner was executed with each temporary candidate selected. Results:
+
+| Case | Game | Fixed hypot | Shared pool | Fixed-hypot carry |
+|---|---|---|---|---|
+| Section 3: 5,000 inf vs 1,000 inf + 10 lancer | A 4,573 @ 1,151 | A 4,551 @ 1,157 | A 4,996 @ 1,037 | A 4,996 @ 1,037 |
+| Section 15.3: 1,000 inf + 1,000 marks vs 5,000 inf | D 4,491 @ 278 | D 4,564 @ 272 | D 4,988 @ 262 | D 4,984 @ 262 |
+| Section 15.3: 2,000 inf + 1,000 marks vs 5,000 inf | A 1,281 @ 907 | A 1,312 @ 824 | **D 4,023 @ 560** | **D 1,317 @ 771** |
+| Section 16: 2,000 inf + 2,000 marks vs 1,000 inf | A 3,809 | A 3,810 | A 3,809 | A 3,810 |
+| Section 16: 2,000 inf + 2,000 marks vs 5,000 inf | A 396 | A 623 | A 376 | A 621 |
+
+Corpus summaries:
+
+| Candidate | Deterministic OK | Deterministic not OK | Total OK | Total not OK | Not assessed |
+|---|---:|---:|---:|---:|---:|
+| Fixed hypot | 18 | 7 | 42 | 11 | 2 |
+| Shared pool | 18 | 7 | 42 | 11 | 2 |
+| Fixed-hypot carry | 17 | 8 | 41 | 12 | 2 |
+
+The shared pool is strongly supported by the isolated section-16 pressure pair:
+it is exact for the 1,000-defender case and misses the 5,000-defender case by
+only 20 attackers instead of 227. It is nevertheless rejected as a global
+mechanic because it breaks the established tiny-lancer distribution case,
+grossly overprotects Gatot in several section-15 mixed battles, and reverses the
+recorded 2,000-infantry + 1,000-marksman winner.
+
+Fixed-hypot carry is also rejected. It does not materially change the hard
+section-16 result because the early infantry hit exhausts its reservation there,
+while it still overprotects the shield holder in section 3 and reverses the
+decisive section-15 winner.
+
+These results establish that neither a single fungible turn pool nor simple
+unused-reservation carry can be the global rule. The section-16 pressure effect
+is real, but any viable candidate must depend on something that differs across
+defensive pressure without granting the same extra protection in the older
+mixed-formation family. The matched 2,000/3,000/4,000 defender-pressure captures
+requested in [WOS-462](/WOS/issues/WOS-462) are the next discriminating evidence.

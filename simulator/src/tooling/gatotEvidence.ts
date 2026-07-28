@@ -36,13 +36,27 @@ interface NumericSummary {
   max: number;
 }
 
+interface PredictionSummary extends NumericSummary {
+  lowerBound: number;
+  upperBound: number;
+}
+
+interface MatchingOutcomeSummary {
+  sampleCount: number;
+  attackerSurvivors: PredictionSummary;
+  defenderSurvivors: PredictionSummary;
+  rounds: PredictionSummary;
+}
+
 export interface GatotEvidenceResult {
   observation: GatotGameObservation;
   sampleCount: number;
+  initialTroopCount?: number;
   winnerCounts?: Record<EvidenceWinner, number>;
   attackerSurvivors?: NumericSummary;
   defenderSurvivors?: NumericSummary;
   rounds?: NumericSummary;
+  matchingGameOutcome?: MatchingOutcomeSummary;
   error?: string;
 }
 
@@ -53,6 +67,10 @@ export interface GatotEvidenceRunOptions {
 
 const DEFAULT_REPLICATES = 100;
 const MAX_ROUNDS = 1500;
+const DETERMINISTIC_RELATIVE_TOLERANCE = 0.02;
+const DETERMINISTIC_MINIMUM_ROUND_TOLERANCE = 3;
+const STOCHASTIC_MINIMUM_WINNER_PROBABILITY = 0.05;
+const STOCHASTIC_PREDICTION_INTERVAL_TAIL = 0.005;
 
 const T6_THRESHOLD_ATTACKER_STATS: StatBlock = {
   attack: 285.3,
@@ -108,17 +126,61 @@ const FC10_INFANTRY_STATS: StatBlock = {
   lethality: 1942.2,
   health: 2139.7
 };
-const T9_LANCER_STATS: StatBlock = {
+const SECTION9_FIRST_TWO_T9_LANCER_STATS: StatBlock = {
   attack: 208.8,
   defense: 207.1,
   lethality: 167.5,
   health: 167.6
 };
-const FC10_LANCER_STATS: StatBlock = {
+const SECTION9_FIRST_TWO_FC10_LANCER_STATS: StatBlock = {
   attack: 1179,
   defense: 1202.9,
   lethality: 1362.1,
   health: 1134.5
+};
+const SECTION9_LAST_FOUR_T9_LANCER_STATS: StatBlock = {
+  attack: 208.8,
+  defense: 179.2,
+  lethality: 154.7,
+  health: 154.8
+};
+const SECTION9_LAST_FOUR_FC10_LANCER_STATS: StatBlock = {
+  attack: 1306.9,
+  defense: 1333.2,
+  lethality: 1508.3,
+  health: 1258
+};
+const EMULATOR_ATTACKER_INFANTRY_STATS: StatBlock = {
+  attack: 271.7,
+  defense: 259.5,
+  lethality: 208.4,
+  health: 209.6
+};
+const EMULATOR_ATTACKER_MARKSMAN_STATS: StatBlock = {
+  attack: 270,
+  defense: 265,
+  lethality: 214.9,
+  health: 210
+};
+const EMULATOR_DEFENDER_INFANTRY_STATS: StatBlock = {
+  attack: 483.6,
+  defense: 478.9,
+  lethality: 157.5,
+  health: 170.9
+};
+
+interface LancerCalibrationProfile {
+  attacker: StatBlock;
+  defender: StatBlock;
+}
+
+const SECTION9_FIRST_TWO_PROFILE: LancerCalibrationProfile = {
+  attacker: SECTION9_FIRST_TWO_T9_LANCER_STATS,
+  defender: SECTION9_FIRST_TWO_FC10_LANCER_STATS
+};
+const SECTION9_LAST_FOUR_PROFILE: LancerCalibrationProfile = {
+  attacker: SECTION9_LAST_FOUR_T9_LANCER_STATS,
+  defender: SECTION9_LAST_FOUR_FC10_LANCER_STATS
 };
 
 const GATOT_123 = skills(1, 2, 3);
@@ -205,18 +267,18 @@ function singleFc10InfantryInput(id: string, marksmanTier: 6 | 9, marksmen: numb
     );
 }
 
-function lancerCalibrationInput(id: string, attackerCount: number) {
+function lancerCalibrationInput(id: string, attackerCount: number, profile: LancerCalibrationProfile) {
   return (config: SimulatorConfig): BattleInput =>
     buildBattle(
       id,
       {
         troops: { lancer_t9: attackerCount },
-        stats: { lancer: T9_LANCER_STATS },
+        stats: { lancer: profile.attacker },
         heroes: {}
       },
       {
         troops: { lancer_t1_fc10: 146 },
-        stats: { lancer: FC10_LANCER_STATS },
+        stats: { lancer: profile.defender },
         heroes: {}
       },
       config
@@ -244,6 +306,35 @@ function gatotMixedInput(id: string, infantry: number, lancer: number, marksman:
         troops: { infantry_t6: 5000 },
         stats: { infantry: T6_WEAK_INFANTRY_STATS },
         heroes: { Gatot: GATOT_133 }
+      },
+      config
+    );
+}
+
+function emulatorGatotProbeInput(
+  id: string,
+  attackerInfantry: number,
+  attackerMarksmen: number,
+  defenderInfantry: number
+) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: {
+          infantry_t6: attackerInfantry,
+          ...(attackerMarksmen > 0 ? { marksman_t6: attackerMarksmen } : {})
+        },
+        stats: {
+          infantry: EMULATOR_ATTACKER_INFANTRY_STATS,
+          ...(attackerMarksmen > 0 ? { marksman: EMULATOR_ATTACKER_MARKSMAN_STATS } : {})
+        },
+        heroes: {}
+      },
+      {
+        troops: { infantry_t6: defenderInfantry },
+        stats: { infantry: EMULATOR_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 1, 1) }
       },
       config
     );
@@ -305,12 +396,12 @@ const section8 = [
 ] as const;
 
 const section9 = [
-  { start: 3000, winner: "attacker", attackerSurvivors: 2201, defenderSurvivors: 0 },
-  { start: 2201, winner: "attacker", attackerSurvivors: 1233, defenderSurvivors: 0 },
-  { start: 1500, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 85 },
-  { start: 1950, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 45 },
-  { start: 2100, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 37 },
-  { start: 2200, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 20 }
+  { start: 3000, winner: "attacker", attackerSurvivors: 2201, defenderSurvivors: 0, profile: SECTION9_FIRST_TWO_PROFILE },
+  { start: 2201, winner: "attacker", attackerSurvivors: 1233, defenderSurvivors: 0, profile: SECTION9_FIRST_TWO_PROFILE },
+  { start: 1500, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 85, profile: SECTION9_LAST_FOUR_PROFILE },
+  { start: 1950, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 45, profile: SECTION9_LAST_FOUR_PROFILE },
+  { start: 2100, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 37, profile: SECTION9_LAST_FOUR_PROFILE },
+  { start: 2200, winner: "defender", attackerSurvivors: 0, defenderSurvivors: 20, profile: SECTION9_LAST_FOUR_PROFILE }
 ] as const;
 
 const section15Mixed = [
@@ -319,6 +410,45 @@ const section15Mixed = [
   { infantry: 2000, lancer: 1000, marksman: 0, winner: "defender", survivors: 4338, rounds: 545 },
   { infantry: 1000, lancer: 1000, marksman: 1000, winner: "defender", survivors: 3064, rounds: 238 },
   { infantry: 2000, lancer: 0, marksman: 1000, winner: "attacker", survivors: 1281, rounds: 907 }
+] as const;
+
+const section16EmulatorProbes = [
+  {
+    id: "s16-1500-inf-1500-marksman-vs-1000-inf",
+    attackerInfantry: 1500,
+    attackerMarksmen: 1500,
+    defenderInfantry: 1000,
+    winner: "attacker",
+    attackerSurvivors: 2777,
+    defenderSurvivors: 0
+  },
+  {
+    id: "s16-2000-inf-2000-marksman-vs-1000-inf",
+    attackerInfantry: 2000,
+    attackerMarksmen: 2000,
+    defenderInfantry: 1000,
+    winner: "attacker",
+    attackerSurvivors: 3809,
+    defenderSurvivors: 0
+  },
+  {
+    id: "s16-2000-inf-2000-marksman-vs-5000-inf",
+    attackerInfantry: 2000,
+    attackerMarksmen: 2000,
+    defenderInfantry: 5000,
+    winner: "attacker",
+    attackerSurvivors: 396,
+    defenderSurvivors: 0
+  },
+  {
+    id: "s16-7500-inf-vs-5000-inf",
+    attackerInfantry: 7500,
+    attackerMarksmen: 0,
+    defenderInfantry: 5000,
+    winner: "defender",
+    attackerSurvivors: 0,
+    defenderSurvivors: 2513
+  }
 ] as const;
 
 export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
@@ -463,7 +593,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
         winner: row.winner,
         survivors: { attacker: row.attackerSurvivors, defender: row.defenderSurvivors }
       },
-      buildInput: lancerCalibrationInput(id, row.start),
+      buildInput: lancerCalibrationInput(id, row.start, row.profile),
       notes: "No direct game round count was supplied; only activation-based estimates exist for one row."
     });
   }),
@@ -544,11 +674,41 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       buildInput: gatotMixedInput(id, row.infantry, row.lancer, row.marksman),
       ...(isTriple ? { notes: "One observation cross-referenced in sections 15.1 and 15.3; counted once." } : {})
     });
-  })
+  }),
+  ...section16EmulatorProbes.map((row) =>
+    observation({
+      id: row.id,
+      section: "16",
+      caseLabel:
+        `${row.attackerInfantry.toLocaleString("en-US")} T6 infantry` +
+        (row.attackerMarksmen > 0
+          ? ` + ${row.attackerMarksmen.toLocaleString("en-US")} T6 marksmen`
+          : "") +
+        ` vs ${row.defenderInfantry.toLocaleString("en-US")} T6 infantry; defender Gatot S2 level 1`,
+      game: {
+        winner: row.winner,
+        survivors: {
+          attacker: row.attackerSurvivors,
+          defender: row.defenderSurvivors
+        }
+      },
+      buildInput: emulatorGatotProbeInput(
+        row.id,
+        row.attackerInfantry,
+        row.attackerMarksmen,
+        row.defenderInfantry
+      ),
+      notes: "Captured from the minxxx/WIP emulator verification run; game round count was not recorded."
+    })
+  )
 ];
 
 function totalSurvivors(result: BattleResult, side: SideId): number {
   return Object.values(result.remaining[side]).reduce((sum, count) => sum + count, 0);
+}
+
+function totalInputTroops(fighter: FighterInput): number {
+  return Object.values(fighter.troops ?? {}).reduce((sum, count) => sum + Number(count || 0), 0);
 }
 
 function summarize(values: number[]): NumericSummary {
@@ -557,6 +717,25 @@ function summarize(values: number[]): NumericSummary {
     mean: values.reduce((sum, value) => sum + value, 0) / values.length,
     min: Math.min(...values),
     max: Math.max(...values)
+  };
+}
+
+function quantile(values: readonly number[], probability: number): number {
+  if (values.length === 0) throw new Error("Cannot calculate a quantile for an empty sample");
+  const sorted = [...values].sort((left, right) => left - right);
+  const position = (sorted.length - 1) * probability;
+  const lowerIndex = Math.floor(position);
+  const upperIndex = Math.ceil(position);
+  const lower = sorted[lowerIndex]!;
+  const upper = sorted[upperIndex]!;
+  return lower + (upper - lower) * (position - lowerIndex);
+}
+
+function summarizePrediction(values: number[]): PredictionSummary {
+  return {
+    ...summarize(values),
+    lowerBound: quantile(values, STOCHASTIC_PREDICTION_INTERVAL_TAIL),
+    upperBound: quantile(values, 1 - STOCHASTIC_PREDICTION_INTERVAL_TAIL)
   };
 }
 
@@ -579,16 +758,34 @@ export function runGatotEvidence(options: GatotEvidenceRunOptions = {}): GatotEv
     if (!entry.buildInput) return { observation: entry, sampleCount: 0 };
     const sampleCount = entry.stochastic ? replicates : 1;
     try {
-      const results = simulateBattles(entry.buildInput(config), config, { mode: "fast", count: sampleCount });
+      const input = entry.buildInput(config);
+      const initialTroopCount = totalInputTroops(input.attacker) + totalInputTroops(input.defender);
+      const results = simulateBattles(input, config, { mode: "fast", count: sampleCount });
       const winnerCounts: Record<EvidenceWinner, number> = { attacker: 0, defender: 0, draw: 0 };
       for (const result of results) winnerCounts[result.winner] += 1;
+      const matchingResults = results.filter((result) => result.winner === entry.game.winner);
       return {
         observation: entry,
         sampleCount,
+        initialTroopCount,
         winnerCounts,
         attackerSurvivors: summarize(results.map((result) => totalSurvivors(result, "attacker"))),
         defenderSurvivors: summarize(results.map((result) => totalSurvivors(result, "defender"))),
-        rounds: summarize(results.map((result) => result.rounds))
+        rounds: summarize(results.map((result) => result.rounds)),
+        ...(matchingResults.length > 0
+          ? {
+              matchingGameOutcome: {
+                sampleCount: matchingResults.length,
+                attackerSurvivors: summarizePrediction(
+                  matchingResults.map((result) => totalSurvivors(result, "attacker"))
+                ),
+                defenderSurvivors: summarizePrediction(
+                  matchingResults.map((result) => totalSurvivors(result, "defender"))
+                ),
+                rounds: summarizePrediction(matchingResults.map((result) => result.rounds))
+              }
+            }
+          : {})
       };
     } catch (error) {
       return {
@@ -665,11 +862,138 @@ function survivorDifference(result: GatotEvidenceResult): string {
   } / D ${game.defender === undefined ? "—" : formatSigned(result.defenderSurvivors.mean - game.defender)}`;
 }
 
+type AssessmentStatus = "OK" | "NOT OK" | "NOT ASSESSED";
+
+interface EvidenceAssessment {
+  status: AssessmentStatus;
+  reasons: string[];
+}
+
+function metricLabel(metric: "attackerSurvivors" | "defenderSurvivors" | "rounds"): string {
+  if (metric === "attackerSurvivors") return "attacker survivors";
+  if (metric === "defenderSurvivors") return "defender survivors";
+  return "rounds";
+}
+
+function recordedMetrics(
+  result: GatotEvidenceResult
+): Array<{
+  metric: "attackerSurvivors" | "defenderSurvivors" | "rounds";
+  gameValue: number;
+  simulated: NumericSummary;
+}> {
+  const metrics: Array<{
+    metric: "attackerSurvivors" | "defenderSurvivors" | "rounds";
+    gameValue: number;
+    simulated: NumericSummary;
+  }> = [];
+  const game = result.observation.game;
+  if (game.survivors.attacker !== undefined && result.attackerSurvivors) {
+    metrics.push({
+      metric: "attackerSurvivors",
+      gameValue: game.survivors.attacker,
+      simulated: result.attackerSurvivors
+    });
+  }
+  if (game.survivors.defender !== undefined && result.defenderSurvivors) {
+    metrics.push({
+      metric: "defenderSurvivors",
+      gameValue: game.survivors.defender,
+      simulated: result.defenderSurvivors
+    });
+  }
+  if (game.rounds !== undefined && result.rounds) {
+    metrics.push({ metric: "rounds", gameValue: game.rounds, simulated: result.rounds });
+  }
+  return metrics;
+}
+
+function assessEvidenceResult(result: GatotEvidenceResult): EvidenceAssessment {
+  if (!result.observation.buildInput) return { status: "NOT ASSESSED", reasons: ["not runnable"] };
+  if (result.error) return { status: "NOT OK", reasons: [`simulation error: ${result.error}`] };
+  if (!result.winnerCounts || !result.attackerSurvivors || !result.defenderSurvivors || !result.rounds) {
+    return { status: "NOT OK", reasons: ["simulation result is incomplete"] };
+  }
+
+  const gameWinner = result.observation.game.winner;
+  if (!result.observation.stochastic) {
+    const reasons: string[] = [];
+    if (!result.initialTroopCount || result.initialTroopCount <= 0) {
+      return { status: "NOT OK", reasons: ["initial troop count is unavailable"] };
+    }
+    if (result.winnerCounts[gameWinner] !== result.sampleCount) {
+      reasons.push(`winner is ${simulatedWinner(result)}, game is ${winnerLabel(gameWinner)}`);
+    }
+    for (const { metric, gameValue, simulated } of recordedMetrics(result)) {
+      const absoluteDifference = Math.abs(simulated.mean - gameValue);
+      if (metric === "rounds") {
+        const allowedDifference = Math.max(
+          DETERMINISTIC_MINIMUM_ROUND_TOLERANCE,
+          Math.abs(gameValue) * DETERMINISTIC_RELATIVE_TOLERANCE
+        );
+        if (absoluteDifference > allowedDifference) {
+          reasons.push(
+            `rounds differ by ${formatNumber(absoluteDifference)}; allowed ${formatNumber(allowedDifference)}`
+          );
+        }
+        continue;
+      }
+      const relativeDifference = absoluteDifference / result.initialTroopCount;
+      if (relativeDifference > DETERMINISTIC_RELATIVE_TOLERANCE) {
+        reasons.push(
+          `${metricLabel(metric)} differ by ${formatNumber(
+            100 * relativeDifference
+          )}% of initial battlefield troops`
+        );
+      }
+    }
+    return { status: reasons.length === 0 ? "OK" : "NOT OK", reasons };
+  }
+
+  const matching = result.matchingGameOutcome;
+  const winnerProbability = result.winnerCounts[gameWinner] / result.sampleCount;
+  const reasons: string[] = [];
+  if (winnerProbability < STOCHASTIC_MINIMUM_WINNER_PROBABILITY) {
+    reasons.push(
+      `${winnerLabel(gameWinner)} occurs in ${formatNumber(100 * winnerProbability)}% of simulations`
+    );
+  }
+  if (!matching) {
+    reasons.push("recorded winner never occurs");
+    return { status: "NOT OK", reasons };
+  }
+
+  const conditionalMetrics = {
+    attackerSurvivors: matching.attackerSurvivors,
+    defenderSurvivors: matching.defenderSurvivors,
+    rounds: matching.rounds
+  };
+  for (const { metric, gameValue } of recordedMetrics(result)) {
+    const values = conditionalMetrics[metric];
+    const lower = values.lowerBound;
+    const upper = values.upperBound;
+    if (gameValue < lower || gameValue > upper) {
+      reasons.push(
+        `${metricLabel(metric)} ${formatNumber(gameValue)} outside conditional ${formatNumber(
+          100 * (1 - 2 * STOCHASTIC_PREDICTION_INTERVAL_TAIL)
+        )}% interval ${formatNumber(lower)}–${formatNumber(upper)}`
+      );
+    }
+  }
+  return { status: reasons.length === 0 ? "OK" : "NOT OK", reasons };
+}
+
 function statusAndNotes(result: GatotEvidenceResult): string {
   const pieces: string[] = [];
   if (result.observation.notRunnableReason) pieces.push(`Not runnable: ${result.observation.notRunnableReason}`);
   else if (result.error) pieces.push(`Error: ${result.error}`);
-  else pieces.push(result.observation.stochastic ? `Stochastic; n=${result.sampleCount}` : "Deterministic");
+  else {
+    const assessment = assessEvidenceResult(result);
+    pieces.push(
+      `${assessment.status}; ${result.observation.stochastic ? `stochastic; n=${result.sampleCount}` : "deterministic"}`
+    );
+    if (assessment.reasons.length > 0) pieces.push(assessment.reasons.join("; "));
+  }
   if (result.observation.notes) pieces.push(result.observation.notes);
   return pieces.join(" ").replaceAll("|", "\\|");
 }
@@ -711,6 +1035,71 @@ export function renderGatotEvidenceMarkdown(results: readonly GatotEvidenceResul
     );
   }
 
+  const assessments = results.map((result) => ({
+    result,
+    assessment: assessEvidenceResult(result)
+  }));
+  const countsFor = (stochastic: boolean, status: AssessmentStatus) =>
+    assessments.filter(
+      ({ result, assessment }) =>
+        result.observation.stochastic === stochastic && assessment.status === status
+    ).length;
+  const totalFor = (stochastic: boolean) =>
+    assessments.filter(({ result }) => result.observation.stochastic === stochastic).length;
+  const outsideThreshold = assessments.filter(({ assessment }) => assessment.status === "NOT OK");
+
+  lines.push(
+    "",
+    "## Threshold summary",
+    "",
+    `- Deterministic: **OK** requires the recorded winner, survivor differences within ${formatNumber(
+      100 * DETERMINISTIC_RELATIVE_TOLERANCE
+    )}% of the two armies' combined initial troop count, and round differences within the greater of ${formatNumber(
+      DETERMINISTIC_MINIMUM_ROUND_TOLERANCE
+    )} rounds or ${formatNumber(
+      100 * DETERMINISTIC_RELATIVE_TOLERANCE
+    )}% of the game round count.`,
+    `- Stochastic: **OK** requires the recorded winner in at least ${formatNumber(
+      100 * STOCHASTIC_MINIMUM_WINNER_PROBABILITY
+    )}% of replicates and every recorded survivor/round value inside the central ${formatNumber(
+      100 * (1 - 2 * STOCHASTIC_PREDICTION_INTERVAL_TAIL)
+    )}% interval among replicates with that winner.`,
+    "- Unrecorded values are ignored. Non-runnable observations are not assessed.",
+    "",
+    "| Case type | OK | Not OK | Not assessed | Total |",
+    "|---|---:|---:|---:|---:|",
+    `| Deterministic | ${countsFor(false, "OK")} | ${countsFor(false, "NOT OK")} | ${countsFor(
+      false,
+      "NOT ASSESSED"
+    )} | ${totalFor(false)} |`,
+    `| Stochastic | ${countsFor(true, "OK")} | ${countsFor(true, "NOT OK")} | ${countsFor(
+      true,
+      "NOT ASSESSED"
+    )} | ${totalFor(true)} |`,
+    `| **Total** | ${assessments.filter(({ assessment }) => assessment.status === "OK").length} | ${
+      outsideThreshold.length
+    } | ${assessments.filter(({ assessment }) => assessment.status === "NOT ASSESSED").length} | ${
+      assessments.length
+    } |`
+  );
+
+  if (outsideThreshold.length > 0) {
+    lines.push(
+      "",
+      "### Outside threshold",
+      "",
+      "| Section | Case | Reason |",
+      "|---|---|---|"
+    );
+    for (const { result, assessment } of outsideThreshold) {
+      lines.push(
+        `| ${result.observation.section} | ${result.observation.caseLabel.replaceAll("|", "\\|")} | ${assessment.reasons
+          .join("; ")
+          .replaceAll("|", "\\|")} |`
+      );
+    }
+  }
+
   return `${lines.join("\n")}\n`;
 }
 
@@ -741,7 +1130,7 @@ function parseCliArgs(args: string[]): CliOptions {
 
 function usage(): string {
   return [
-    "Usage: npm run check:gatot-evidence -- [--replicates N] [--matching TEXT]",
+    "Usage: npx tsx src/tooling/gatotEvidence.ts [--replicates N] [--matching TEXT]",
     "",
     `Stochastic observations use ${DEFAULT_REPLICATES} replicates by default.`,
     "Each case has a stable base seed; replicate i uses the simulator's documented '<seed>#<i>' derivation.",
