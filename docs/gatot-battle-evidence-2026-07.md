@@ -1402,3 +1402,46 @@ is real, but any viable candidate must depend on something that differs across
 defensive pressure without granting the same extra protection in the older
 mixed-formation family. The matched 2,000/3,000/4,000 defender-pressure captures
 requested in [WOS-462](/WOS/issues/WOS-462) are the next discriminating evidence.
+
+## 19. Displayed-stat rounding bound for the matched pressure pair
+
+The section-16 mismatch is not explained by the displayed stats being rounded to
+one decimal place.
+
+The two matched 2,000-infantry + 2,000-marksman battles share twelve displayed
+stat inputs:
+
+- attacker infantry Attack, Defense, Lethality, and Health;
+- attacker marksman Attack, Defense, Lethality, and Health;
+- defender infantry Attack, Defense, Lethality, and Health.
+
+Each value was independently moved to both endpoints of its one-decimal display
+interval (`displayed − 0.05` and `displayed + 0.05`). All `2^12 = 4,096`
+combinations were run against both the 1,000- and 5,000-defender observations,
+using the same underlying endpoint choice in both matched battles.
+
+| Result | 1,000 defenders | 5,000 defenders |
+|---|---:|---:|
+| Game attacker survivors | 3,809 | 396 |
+| Unadjusted simulator | 3,810 | 623 |
+| Exhaustive endpoint range | 3,810–3,811 | 612–631 |
+| 10,000 deterministic interior samples | 3,810–3,811 | 614–629 |
+| Best joint endpoint | 3,810 | 612 |
+
+The best hard-case endpoint is the mechanically favourable corner where every
+attacker stat is `−0.05` and every defender stat is `+0.05`. It still leaves 216
+too many attackers. The existing testcase runner's one-axis rounding correction
+finds the same hard-case minimum of 612.
+
+One-at-a-time sensitivity also shows why the easy observation is stable. Every
+single endpoint perturbation leaves it at 3,810 survivors. In the hard battle,
+the largest individual movements come from marksman Lethality and defender
+Health, and each moves the result by only about three troops from the 623
+baseline.
+
+The endpoint screen was supplemented with 10,000 deterministic interior samples
+(LCG seed `460`); none escaped the endpoint range. Together with the narrow
+one-at-a-time sensitivities and the testcase runner's directional scan, this
+rules out displayed-stat rounding as a credible route from 623 to 396. Future
+Gatot hypotheses should treat the matched pressure discrepancy as a mechanic or
+observation question, not consume more time tuning rounded report inputs.
