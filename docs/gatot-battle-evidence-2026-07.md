@@ -1445,3 +1445,64 @@ one-at-a-time sensitivities and the testcase runner's directional scan, this
 rules out displayed-stat rounding as a credible route from 623 to 396. Future
 Gatot hypotheses should treat the matched pressure discrepancy as a mechanic or
 observation question, not consume more time tuning rounded report inputs.
+
+## 20. Current modified Attack as the S2 source basis
+
+Gatot S2 says its protection is equal to Infantry Attack multiplied by the
+configured percentage. A mechanically direct interpretation is that “Attack”
+means the formation's current modified Attack, including live Attack-up and
+Attack-down effects, rather than the current implementation's base troop Attack
+plus player Attack bonus only.
+
+This was tested as a temporary global candidate. For every Gatot activation, the
+existing source basis was additionally multiplied by the applicable live
+`active.hero.attack.up` and `active.troop.attack.up` factors and divided by the
+applicable `active.hero.attack.down` and `active.troop.attack.down` factors. The
+same-effect `add|max` behavior was respected. No coefficient, battle-specific
+condition, damage-equation change, or configured skill value was introduced.
+
+The complete evidence runner was executed for the production baseline and the
+temporary candidate with 100 replicates per stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Corpus result | Production basis | Current-modified-Attack basis |
+|---|---:|---:|
+| Deterministic OK | 18 | 5 |
+| Deterministic not OK | 7 | 20 |
+| Stochastic OK | 24 | 19 |
+| Stochastic not OK | 4 | 9 |
+| Total OK / not OK / not assessed | 42 / 11 / 2 | 24 / 29 / 2 |
+
+The deterministic threshold series rejects the candidate particularly strongly.
+Royal Legion already supplies asymmetric live Attack reductions in those
+Gatot-vs-Gatot battles. Feeding those modifiers back into each side's next-turn
+shield moved every recorded section-1 result outside tolerance:
+
+| Section-1 case | Game | Production basis | Current-modified-Attack basis |
+|---|---|---|---|
+| 4,900 vs 1,000 | Draw at 1,500 | Draw at 1,500 | Attacker at 689 |
+| 4,950 vs 1,000 | Draw at 1,500 | Draw at 1,500 | Attacker at 674 |
+| 5,000 vs 1,000 | Draw at 1,500 | Draw at 1,500 | Attacker at 661 |
+| 5,050 vs 1,000 | Draw at 1,500 | Draw at 1,500 | Attacker at 649 |
+| 5,100 vs 1,000 | Attacker at 1,381 | Attacker at 1,380 | Attacker at 637 |
+
+The section-3 tiny-lancer battle also moved from attacker `4,551` at round
+`1,157`, close to the game result `4,573` at round `1,151`, to attacker `4,703`
+at round `638`. The decisive section-15.3 `2,000 infantry + 1,000 marksman`
+observation reversed from the correct attacker winner to a defender win.
+
+The section-16 pressure cases were unchanged. Their defender has Gatot S2 level
+1, but the hero-less attacker supplies no live Attack-down effect against the
+defender's shield source. The hard `2,000 infantry + 2,000 marksman` versus
+`5,000 infantry` case therefore remained at `623` simulated attacker survivors
+against `396` in the game.
+
+The candidate is rejected and the temporary implementation was removed. Gatot
+S2's source Attack should continue to exclude live Attack up/down effects unless
+future independent evidence directly contradicts the threshold series. This
+also rules out runtime Attack feedback as an explanation for the section-16
+pressure discrepancy.
