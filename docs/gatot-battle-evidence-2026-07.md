@@ -1652,3 +1652,72 @@ removed. The result rules out a battle-long fixed source count. It also shows
 that interpolating between current and initial count could fit the isolated
 section-16 endpoint, but such an interpolation would require a separately
 supported mechanic rather than a fitted exponent or coefficient.
+
+## 24. Normal-versus-skill damage-job shield reservation
+
+The production implementation gives every applicable `DamageJob` an independent
+fixed-hypot Gatot reservation. A normal job and each genuine
+`extra_skill_attack` job therefore receive the same formation share of the turn
+shield independently. Section 18 tested the carry endpoint of a
+source-formation/turn alternative: a normal job unlocked one fixed-hypot
+reservation and any unused capacity could carry into later jobs. That candidate
+was rejected globally.
+
+This follow-up tested the remaining no-carry endpoint:
+
+1. **Independent per job (production):** every normal or genuine skill job gets
+   the source formation's fixed-hypot reservation.
+2. **Source formation per turn, no carry:** the reservation belongs to the
+   source formation's normal job. Genuine skill jobs do not receive another
+   reservation, and unused protection from the normal job is not carried.
+3. **Source formation per turn, unused carry:** the section-18 fixed-hypot carry
+   candidate, retained here as the other bounded endpoint of the family.
+
+The no-carry candidate changed only whether `kind: "skill"` jobs received the
+turn-shield share. It did not change the configured S2 values
+`[6, 12, 18, 24, 30]`, source magnitude, duration, formation weights,
+post-subtraction placement, ordinary damage equation, or any coefficient.
+
+Both production and the temporary no-carry candidate were run across the
+complete evidence inventory with 100 replicates per stochastic observation:
+
+```text
+cd simulator
+npx --yes tsx src/tooling/gatotEvidence.ts --replicates 100
+```
+
+| Reservation rule | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Independent per job (production) | 18 / 7 | 24 / 4 | 42 / 11 / 2 |
+| Source formation per turn, no carry | 18 / 7 | 24 / 4 | 42 / 11 / 2 |
+| Source formation per turn, unused carry (section 18) | 17 / 8 | 24 / 4 | 41 / 12 / 2 |
+
+The complete rendered production and no-carry reports were byte-for-byte
+identical. The current game-observation inventory therefore does not contain a
+case that can distinguish whether a Gatot turn shield independently protects a
+genuine skill job.
+
+The existing synthetic trace fixture does distinguish the semantics. Under
+production, its round-two incoming normal and linked genuine skill jobs both
+record the same shield offset. Under the no-carry candidate, the normal job
+keeps the offset and the skill job records no shield; the focused assertion
+`deferred shields use finalized normal plus linked skill kills and reapply to
+every hit next turn` fails at the missing skill-job shield. This confirms that
+the candidate was active and that the corpus equality was caused by absent
+discriminating evidence, not by an inert code path.
+
+No member of this family justifies a production change:
+
+- the no-carry rule is observationally tied with production on the full live
+  corpus;
+- the unused-carry rule is already rejected by section 18 because it breaks the
+  tiny-lancer distribution case and reverses the decisive section-15 winner;
+- the synthetic fixture specifies current simulator behavior but is not game
+  evidence.
+
+The temporary no-carry code was removed. Production remains independent
+fixed-hypot reservation per normal and genuine skill damage job. A future live
+fixture must combine Gatot with a reliably triggered genuine
+`extra_skill_attack` and report enough paired controls to isolate whether the
+skill job receives a second shield reservation; until then this interaction
+remains unresolved rather than fitted.
