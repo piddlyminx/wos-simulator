@@ -1853,3 +1853,11 @@ agrees with production's defender-172 prediction, the older differently-statted
 hard case should not drive this allocation change; if it instead reproduces a
 large attacker win, sole-live promotion becomes a stronger candidate but still
 needs a three-formation control to address the section-15 regression.
+
+[WOS-465](/WOS/issues/WOS-465) could not run that capture safely. The configured
+instances exposed only one non-forbidden account, WIP; the other configured
+accounts were forbidden by the task safety rules. A matched battle requires two
+approved accounts under unchanged stats and heroes, so no observation was
+created and no testcase file was added. This discriminator now requires either
+an approved second account or an existing matched report pair with complete
+stats and Gatot levels.
