@@ -1612,3 +1612,43 @@ All timing variants are rejected and were removed. The production
 `delay: 1`, `count: 1` duration remains the best-supported interpretation:
 Gatot creates the shield after attacking, it applies throughout the next round,
 and it expires before the following round.
+
+## 23. Initial source-count snapshot
+
+The production S2 magnitude uses the source infantry formation's current
+round-start troop count. A coefficient-free alternative tested whether the
+count component is snapshotted from the formation's initial troop count for the
+whole battle:
+
+```text
+production source = sqrt(ceil(current source infantry)) * Attack / Health
+candidate source  = sqrt(initial source infantry) * Attack / Health
+```
+
+This changed no configured S2 value, stat term, shield allocation, duration,
+post-subtraction placement, or ordinary damage term. The full evidence runner
+was again executed with 100 replicates per stochastic observation.
+
+| Source-count rule | Deterministic OK / not OK | Stochastic OK / not OK | Total OK / not OK / not assessed |
+|---|---:|---:|---:|
+| Production current count | 18 / 7 | 24 / 4 | 42 / 11 / 2 |
+| Initial count snapshot | 6 / 19 | 19 / 9 | 25 / 28 / 2 |
+
+The initial snapshot moves the section-16 hard pressure case past the game
+result in the expected direction: simulated attacker survivors fall from `623`
+to `136`, while the game has `396`. That directional response confirms that
+shield decay with source casualties materially controls this pressure case,
+but a fixed initial snapshot is far too protective globally.
+
+The candidate breaks the established threshold behavior. Section 1's
+`5,100 vs 1,000` attacker win becomes a draw, the `10,000 vs 2,000` duration
+misses by `283` rounds, and the section-3 tiny-lancer attacker win becomes a
+draw. It also worsens the decisive section-15.3 `2,000 infantry + 1,000
+marksman` result from `1,312` attackers at round `824` to `2,262` at round
+`1,153`, against `1,281` at round `907` in the game.
+
+The initial-count snapshot is rejected and the temporary implementation was
+removed. The result rules out a battle-long fixed source count. It also shows
+that interpolating between current and initial count could fit the isolated
+section-16 endpoint, but such an interpolation would require a separately
+supported mechanic rather than a fitted exponent or coefficient.
