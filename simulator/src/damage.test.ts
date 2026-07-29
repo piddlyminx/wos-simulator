@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
-  buildInitialFormationAttackWeights,
   calculateDamageJob,
   createDamageScratch,
   evaluateDamageExpression
@@ -126,6 +125,26 @@ test("damage calculator counts every positive fractional remainder as one living
   );
 
   assert.equal(outcome.trace?.armyTerm, 100);
+});
+
+test("damage calculator does not ceil a whole army term due to floating-point residue", () => {
+  const exactSquareJob: DamageJob = {
+    ...job,
+    roundStartTroops: {
+      attacker: { infantry: 200, lancer: 0, marksman: 0 },
+      defender: { infantry: 0, lancer: 1000, marksman: 0 }
+    }
+  };
+
+  const outcome = calculateIndexedDamageJob(
+    exactSquareJob,
+    simpleFighters(),
+    [],
+    { trace: true, sqrtMinInitialArmy: Math.sqrt(200), capToTakerTroops: false }
+  );
+
+  assert.equal(Math.sqrt(200) * Math.sqrt(200), 200.00000000000003);
+  assert.equal(outcome.trace?.armyTerm, 200);
 });
 
 test("damage calculator uses centralized bucket definitions for player stat routing", () => {
@@ -421,7 +440,7 @@ test("a durationless shield subtracts its full raw value from every normal and s
   }]);
 });
 
-test("a turn-duration shield dilutes each dealer formation's initial attack-weight share", () => {
+test("a turn-duration shield carries unused protection to the next damage job", () => {
   const fighters = simpleFighters();
   fighters.attacker.initialTroops = { infantry: 1000, lancer: 10, marksman: 0 };
   fighters.attacker.troopDetails.lancer = {
@@ -435,48 +454,37 @@ test("a turn-duration shield dilutes each dealer formation's initial attack-weig
   fighters.defender.initialTroops = { infantry: 0, lancer: 1010, marksman: 0 };
   fighters.defender.troopDetails.lancer!.count = 1010;
 
-  const weights = buildInitialFormationAttackWeights(fighters);
-  assert.deepEqual(weights.bySide.attacker, { infantry: 1005, lancer: 101, marksman: 0 });
-  assert.equal(weights.totalBySide.attacker, 1106);
-
-  const shield = {
-    ...effect("active.hero.shield", "defender", 25),
-    kind: "shield" as const,
-    duration: { turns: { count: 1 } },
-    intent: { id: "turn-shield", type: "active.hero.shield", value: 25 },
-    sameEffectStacking: "max" as const
-  };
   const roundStartTroops = {
     attacker: { infantry: 1000, lancer: 10, marksman: 0 },
     defender: { infantry: 0, lancer: 1010, marksman: 0 }
   };
   const infantryJob = { ...job, roundStartTroops };
   const lancerJob = { ...job, roundStartTroops, dealerUnit: "lancer" as const };
+  const infantryBaseline = calculateIndexedDamageJob(infantryJob, fighters, [], { trace: true });
+  const lancerBaseline = calculateIndexedDamageJob(lancerJob, fighters, [], { trace: true });
+  const shieldValue = infantryBaseline.kills + 25;
+  const shield = {
+    ...effect("active.hero.shield", "defender", shieldValue),
+    kind: "shield" as const,
+    duration: { turns: { count: 1 } },
+    intent: { id: "turn-shield", type: "active.hero.shield", value: shieldValue },
+    sameEffectStacking: "max" as const
+  };
 
-  const infantry = calculateIndexedDamageJob(infantryJob, fighters, [shield], {
-    trace: true,
-    initialFormationAttackWeights: weights
-  });
-  const lancer = calculateIndexedDamageJob(lancerJob, fighters, [shield], {
-    trace: true,
-    initialFormationAttackWeights: weights
-  });
+  const infantry = calculateIndexedDamageJob(infantryJob, fighters, [shield], { trace: true });
+  const lancer = calculateIndexedDamageJob(lancerJob, fighters, [shield], { trace: true });
 
-  const infantryNormalizedShare = 1005 / 1106;
-  const lancerNormalizedShare = 101 / 1106;
-  const infantryShare = infantryNormalizedShare / Math.hypot(1, infantryNormalizedShare);
-  const lancerShare = lancerNormalizedShare / Math.hypot(1, lancerNormalizedShare);
-  assert.ok(Math.abs((infantry.trace?.offsetDamage ?? 0) - 25 * infantryShare) < 1e-12);
-  assert.ok(Math.abs((lancer.trace?.offsetDamage ?? 0) - 25 * lancerShare) < 1e-12);
-  assert.ok((infantry.trace?.offsetDamage ?? 0) + (lancer.trace?.offsetDamage ?? 0) < 25);
+  assert.equal(infantry.kills, 0);
+  assert.equal(infantry.trace?.offsetDamage, infantryBaseline.kills);
+  assert.equal(lancer.trace?.offsetDamage, Math.min(25, lancerBaseline.kills));
+  assert.equal(lancer.kills, Math.max(0, lancerBaseline.kills - 25));
   const infantryApplied = infantry.appliedEffects?.[0] && "value" in infantry.appliedEffects[0]
     ? infantry.appliedEffects[0].value
     : 0;
   const lancerApplied = lancer.appliedEffects?.[0] && "value" in lancer.appliedEffects[0]
     ? lancer.appliedEffects[0].value
     : 0;
-  assert.ok(Math.abs(infantryApplied - 25 * infantryShare) < 1e-12);
-  assert.ok(Math.abs(lancerApplied - 25 * lancerShare) < 1e-12);
+  assert.equal(infantryApplied + lancerApplied, Math.min(shieldValue, infantryBaseline.kills + lancerBaseline.kills));
 });
 
 test("an attack-duration shield keeps its full value in a mixed-formation army", () => {

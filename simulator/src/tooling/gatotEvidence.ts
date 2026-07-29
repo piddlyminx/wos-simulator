@@ -10,7 +10,8 @@ import type {
   HeroSkillLevels,
   SideId,
   SimulatorConfig,
-  StatBlock
+  StatBlock,
+  UnitType
 } from "../types";
 
 export type EvidenceWinner = SideId | "draw";
@@ -24,6 +25,12 @@ export interface GatotGameObservation {
     winner: EvidenceWinner;
     survivors: { attacker?: number; defender?: number };
     rounds?: number;
+    /**
+     * Per-formation kills credited on Battle Details. These sum to the
+     * opponent's Injured count; use their proportions as damage attribution,
+     * not as the complete casualty total (Lightly Injured is uncredited).
+     */
+    attackerCreditedKills?: Partial<Record<UnitType, number>>;
   };
   buildInput?: (config: SimulatorConfig) => BattleInput;
   notRunnableReason?: string;
@@ -173,6 +180,66 @@ const PRESSURE_SERIES_DEFENDER_INFANTRY_STATS: StatBlock = {
   defense: 491.9,
   lethality: 157.5,
   health: 170.9
+};
+const LATEST_MIDPOINT_ATTACKER_INFANTRY_STATS: StatBlock = {
+  attack: 285.7,
+  defense: 279.5,
+  lethality: 218.4,
+  health: 219.6
+};
+const LATEST_MIDPOINT_ATTACKER_MARKSMAN_STATS: StatBlock = {
+  attack: 284,
+  defense: 286,
+  lethality: 224.9,
+  health: 220
+};
+const LATEST_WAYNE_ATTACKER_MARKSMAN_STATS: StatBlock = {
+  attack: 383.9,
+  defense: 385.9,
+  lethality: 224.9,
+  health: 220
+};
+const LATEST_WIP_WAYNE_ATTACKER_MARKSMAN_STATS: StatBlock = {
+  attack: 369.6,
+  defense: 365.9,
+  lethality: 202.3,
+  health: 183.7
+};
+const LATEST_WIP_NO_HERO_LANCER_STATS: StatBlock = {
+  attack: 197.8,
+  defense: 195.1,
+  lethality: 161.5,
+  health: 161.6
+};
+const LATEST_WIP_NO_HERO_MARKSMAN_STATS: StatBlock = {
+  attack: 197.8,
+  defense: 194.1,
+  lethality: 148.8,
+  health: 154.7
+};
+const LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS: StatBlock = {
+  attack: 472.6,
+  defense: 471.9,
+  lethality: 147.5,
+  health: 160.9
+};
+const LATEST_MINXXX_GATOT_DEFENDER_INFANTRY_STATS: StatBlock = {
+  attack: 533.8,
+  defense: 527.5,
+  lethality: 218.4,
+  health: 219.6
+};
+const LOW_PRESSURE_MINXXX_GATOT_DEFENDER_INFANTRY_STATS: StatBlock = {
+  attack: 530.8,
+  defense: 527.5,
+  lethality: 218.4,
+  health: 219.6
+};
+const SECTION40_BRIDGE_ATTACKER_MARKSMAN_STATS: StatBlock = {
+  attack: 281,
+  defense: 286,
+  lethality: 224.9,
+  health: 220
 };
 
 interface LancerCalibrationProfile {
@@ -347,6 +414,239 @@ function emulatorGatotProbeInput(
     );
 }
 
+function latestMidpointInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { infantry_t6: 2000, marksman_t6: 2000 },
+        stats: {
+          infantry: LATEST_MIDPOINT_ATTACKER_INFANTRY_STATS,
+          marksman: LATEST_MIDPOINT_ATTACKER_MARKSMAN_STATS
+        },
+        heroes: {}
+      },
+      {
+        troops: { infantry_t6: 5000 },
+        stats: { infantry: PRESSURE_SERIES_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      config
+    );
+}
+
+function latestBilateralPressureInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { infantry_t6: 2000, marksman_t6: 2000 },
+        stats: {
+          infantry: LATEST_MINXXX_GATOT_DEFENDER_INFANTRY_STATS,
+          marksman: LATEST_MIDPOINT_ATTACKER_MARKSMAN_STATS
+        },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      {
+        troops: { infantry_t6: 5000 },
+        stats: { infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      config
+    );
+}
+
+function latestBilateralBreakInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { infantry_t6: 800, marksman_t6: 800 },
+        stats: {
+          infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS,
+          marksman: LATEST_WIP_NO_HERO_MARKSMAN_STATS
+        },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      {
+        troops: { infantry_t6: 1100 },
+        stats: { infantry: LATEST_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      config
+    );
+}
+
+function latestWayneExtraSkillInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { marksman_t6: 750 },
+        stats: { marksman: LATEST_WAYNE_ATTACKER_MARKSMAN_STATS },
+        heroes: { Wayne: skills(1) }
+      },
+      {
+        troops: { infantry_t6: 3000 },
+        stats: { infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      config
+    );
+}
+
+function latestWayneLevel3ScopeInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { marksman_t6: 500 },
+        stats: { marksman: LATEST_WIP_WAYNE_ATTACKER_MARKSMAN_STATS },
+        heroes: { Wayne: skills(3, 3, 3) }
+      },
+      {
+        troops: { infantry_t6: 5000 },
+        stats: { infantry: LATEST_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      config
+    );
+}
+
+function latestDistributionProbeInput(id: string, lancers: number, marksmen: number) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { lancer_t6: lancers, marksman_t6: marksmen },
+        stats: {
+          lancer: LATEST_WIP_NO_HERO_LANCER_STATS,
+          marksman: LATEST_WIP_NO_HERO_MARKSMAN_STATS
+        },
+        heroes: {}
+      },
+      {
+        troops: { infantry_t6: 1100 },
+        stats: { infantry: LATEST_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      config
+    );
+}
+
+function latestLowPressurePoolProbeInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { lancer_t6: 1000, marksman_t6: 400 },
+        stats: {
+          lancer: LATEST_WIP_NO_HERO_LANCER_STATS,
+          marksman: LATEST_WIP_NO_HERO_MARKSMAN_STATS
+        },
+        heroes: {}
+      },
+      {
+        troops: { infantry_t6: 500 },
+        stats: { infantry: LOW_PRESSURE_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      config
+    );
+}
+
+function latestSection15BridgeInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { infantry_t6: 2000, marksman_t6: 1000 },
+        stats: {
+          infantry: LOW_PRESSURE_MINXXX_GATOT_DEFENDER_INFANTRY_STATS,
+          marksman: SECTION40_BRIDGE_ATTACKER_MARKSMAN_STATS
+        },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      {
+        troops: { infantry_t6: 5000 },
+        stats: { infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      config
+    );
+}
+
+function latestThreeFormationPoolChecklistInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: {
+          infantry_t6: 300,
+          lancer_t6: 200,
+          marksman_t6: 600
+        },
+        stats: {
+          infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS,
+          lancer: LATEST_WIP_NO_HERO_LANCER_STATS,
+          marksman: LATEST_WIP_NO_HERO_MARKSMAN_STATS
+        },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      {
+        troops: { infantry_t6: 500 },
+        stats: { infantry: LOW_PRESSURE_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      config
+    );
+}
+
+function latestWayneShieldScopeInput(id: string) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { infantry_t6: 200 },
+        stats: { infantry: LOW_PRESSURE_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      {
+        troops: { infantry_t6: 450 },
+        stats: { infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS },
+        heroes: {
+          Gatot: skills(1, 1, 1),
+          Wayne: skills(3, 3, 3)
+        }
+      },
+      config
+    );
+}
+
+function latestReciprocalShieldMagnitudeInput(
+  id: string,
+  attackerInfantry: number,
+  defenderInfantry: number
+) {
+  return (config: SimulatorConfig): BattleInput =>
+    buildBattle(
+      id,
+      {
+        troops: { infantry_t6: attackerInfantry },
+        stats: {
+          infantry: { attack: 472.7, defense: 472, lethality: 150.6, health: 164 }
+        },
+        heroes: { Gatot: skills(1, 1, 1) }
+      },
+      {
+        troops: { infantry_t6: defenderInfantry },
+        stats: { infantry: LOW_PRESSURE_MINXXX_GATOT_DEFENDER_INFANTRY_STATS },
+        heroes: { Gatot: skills(1, 3, 1) }
+      },
+      config
+    );
+}
+
 function observation(
   value: Omit<GatotGameObservation, "stochastic"> & { stochastic?: boolean }
 ): GatotGameObservation {
@@ -466,7 +766,9 @@ const section25PressureSeries = [
     defenderInfantry: 2000,
     winner: "attacker",
     attackerSurvivors: 3441,
-    defenderSurvivors: 0
+    defenderSurvivors: 0,
+    rounds: 92,
+    attackerCreditedKills: { infantry: 83, marksman: 617 }
   },
   {
     id: "s25-2000-inf-2000-marksman-vs-3000-inf",
@@ -475,7 +777,9 @@ const section25PressureSeries = [
     defenderInfantry: 3000,
     winner: "attacker",
     attackerSurvivors: 2959,
-    defenderSurvivors: 0
+    defenderSurvivors: 0,
+    rounds: 115,
+    attackerCreditedKills: { infantry: 110, marksman: 940 }
   },
   {
     id: "s25-2000-inf-2000-marksman-vs-4000-inf",
@@ -484,7 +788,9 @@ const section25PressureSeries = [
     defenderInfantry: 4000,
     winner: "attacker",
     attackerSurvivors: 2365,
-    defenderSurvivors: 0
+    defenderSurvivors: 0,
+    rounds: 136,
+    attackerCreditedKills: { infantry: 114, marksman: 1286 }
   },
   {
     id: "s25-1000-inf-3000-marksman-vs-5000-inf",
@@ -493,7 +799,9 @@ const section25PressureSeries = [
     defenderInfantry: 5000,
     winner: "defender",
     attackerSurvivors: 0,
-    defenderSurvivors: 2110
+    defenderSurvivors: 2110,
+    rounds: 109,
+    attackerCreditedKills: { infantry: 9, marksman: 1003 }
   },
   {
     id: "s25-3000-inf-1000-marksman-vs-5000-inf",
@@ -502,7 +810,9 @@ const section25PressureSeries = [
     defenderInfantry: 5000,
     winner: "attacker",
     attackerSurvivors: 554,
-    defenderSurvivors: 0
+    defenderSurvivors: 0,
+    rounds: 241,
+    attackerCreditedKills: { infantry: 173, marksman: 1577 }
   }
 ] as const;
 
@@ -769,7 +1079,9 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
         survivors: {
           attacker: row.attackerSurvivors,
           defender: row.defenderSurvivors
-        }
+        },
+        rounds: row.rounds,
+        attackerCreditedKills: row.attackerCreditedKills
       },
       buildInput: emulatorGatotProbeInput(
         row.id,
@@ -779,9 +1091,247 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
         PRESSURE_SERIES_DEFENDER_INFANTRY_STATS
       ),
       notes:
-        "Captured as one matched pressure series; defender displayed Attack/Defense were 486.6/491.9 rather than section 16's 483.6/478.9. Game round count was not recorded."
+        "Captured as one matched minxxx-attacker/WIP-defender pressure series. Defender WIP Infantry stats were 486.6/491.9/157.5/170.9. Battle Details supplies exact rounds and attacker Infantry/Marksman kill credits."
     })
-  )
+  ),
+  observation({
+    id: "s31-current-2000-inf-2000-marksman-vs-5000-inf",
+    section: "31",
+    caseLabel:
+      "2,000 T6 infantry + 2,000 T6 marksmen vs 5,000 T6 infantry; current displayed stats; defender Gatot S2 level 1",
+    game: {
+      winner: "attacker",
+      survivors: { attacker: 2291, defender: 0 },
+      rounds: 148,
+      attackerCreditedKills: { infantry: 139, marksman: 1611 }
+    },
+    buildInput: latestMidpointInput("s31-current-2000-inf-2000-marksman-vs-5000-inf"),
+    notes:
+      "Captured 2026-07-28 from minxxx attacking WIP, Mail ID 2734688471638830. Battle Details records 148 Gatot S2 triggers; with one uncontrolled defender formation this is one trigger per battle round. Displayed stats differ materially from sections 16 and 25, so this is a separate observation rather than a continuation of either pressure series."
+  }),
+  observation({
+    id: "s32-current-750-marksman-wayne-vs-3000-inf",
+    section: "32",
+    caseLabel:
+      "750 T6 marksmen with Wayne S1 vs 3,000 T6 infantry; current displayed stats; defender Gatot S2 level 1",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 2738 }
+    },
+    buildInput: latestWayneExtraSkillInput("s32-current-750-marksman-wayne-vs-3000-inf"),
+    notes:
+      "Captured 2026-07-28 from minxxx attacking WIP, report timestamp 1785255283. Wayne S1 adds a deterministic ThunderStrike extra-skill attack every four turns. Displayed attacker stats are authoritative and must not be replaced by the config's full hero-generation block. Game round count was not recorded."
+  }),
+  observation({
+    id: "s33-current-500-marksman-wayne3-vs-5000-gatot3-inf",
+    section: "33",
+    caseLabel:
+      "500 T6 marksmen with Wayne 3/3/3 vs 5,000 T6 infantry; current displayed stats; defender Gatot S2 level 3",
+    stochastic: true,
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 4977 }
+    },
+    buildInput: latestWayneLevel3ScopeInput(
+      "s33-current-500-marksman-wayne3-vs-5000-gatot3-inf"
+    ),
+    notes:
+      "Captured 2026-07-28 from WIP attacking minxxx, report timestamp 1785256420. Wayne S1 adds a deterministic 60% ThunderStrike every four turns and Wayne S3 is stochastic. This observation distinguishes Gatot normal-only shielding from shielding genuine extra-skill jobs. Game round count was not recorded."
+  }),
+  observation({
+    id: "s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf",
+    section: "34",
+    caseLabel:
+      "2,100 T6 lancers + 2,100 T6 marksmen vs 1,100 T6 infantry; current displayed stats; defender Gatot S2 level 3",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 236 },
+      rounds: 179,
+      attackerCreditedKills: { lancer: 14, marksman: 289 }
+    },
+    buildInput: latestDistributionProbeInput(
+      "s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf",
+      2100,
+      2100
+    ),
+    notes:
+      "Captured 2026-07-28 from WIP attacking minxxx after WIP moved alliance, Mail ID 2734688471640946, report timestamp 1785258335. Attacker troops were T6 Lancers and Marksmen. Battle Details records 179 Gatot S2 triggers and credits 14 Lancer kills plus 289 Marksman kills."
+  }),
+  observation({
+    id: "s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf",
+    section: "35",
+    caseLabel:
+      "3,000 T6 lancers + 1,000 T6 marksmen vs 1,100 T6 infantry; current displayed stats; defender Gatot S2 level 3",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 314 },
+      rounds: 167,
+      attackerCreditedKills: { lancer: 45, marksman: 231 }
+    },
+    buildInput: latestDistributionProbeInput(
+      "s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf",
+      3000,
+      1000
+    ),
+    notes:
+      "Captured 2026-07-28 from WIP attacking minxxx after WIP moved alliance, Mail ID 2734688471644964, report timestamp 1785260326. Attacker troops were 3,000 T6 Lancers and 1,000 T6 Marksmen. Battle Details records 167 Gatot S2 triggers and credits 45 Lancer kills plus 231 Marksman kills."
+  }),
+  observation({
+    id: "s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf",
+    section: "36",
+    caseLabel:
+      "600 T6 lancers + 600 T6 marksmen vs 1,100 T6 infantry; current displayed stats; defender Gatot S2 level 3",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 1058 },
+      rounds: 36,
+      attackerCreditedKills: { lancer: 1, marksman: 14 }
+    },
+    buildInput: latestDistributionProbeInput(
+      "s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf",
+      600,
+      600
+    ),
+    notes:
+      "Captured 2026-07-28 from WIP attacking minxxx after WIP moved alliance, report timestamp 1785261214. Attacker troops were 600 T6 Lancers and 600 T6 Marksmen. Battle Details records 36 Gatot S2 triggers and credits 1 Lancer kill plus 14 Marksman kills."
+  }),
+  observation({
+    id: "s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf",
+    section: "37",
+    caseLabel:
+      "2,000 T6 infantry + 2,000 T6 marksmen with Gatot S2 level 3 vs 5,000 T6 infantry with Gatot S2 level 1; current displayed stats",
+    game: {
+      winner: "attacker",
+      survivors: { attacker: 3782, defender: 0 },
+      rounds: 125,
+      attackerCreditedKills: { infantry: 391, marksman: 1359 }
+    },
+    buildInput: latestBilateralPressureInput(
+      "s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf"
+    ),
+    notes:
+      "Captured 2026-07-28 from minxxx attacking WIP, report timestamp 1785263161. This is a bilateral Gatot probe using the accounts' saved 1/3/1 and 1/1/1 skill levels. Battle Details records round 125 and credits 391 Infantry kills plus 1,359 Marksman kills; those 1,750 credits equal the defender's Injured count, while the other 3,250 casualties are Lightly Injured. Full Marksman priority predicts A3782 exactly in aggregate, but its per-formation damage attribution is incompatible with those credited-kill proportions."
+  }),
+  observation({
+    id: "s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf",
+    section: "38",
+    caseLabel:
+      "800 T6 infantry + 800 T6 marksmen with Gatot S2 level 1 vs 1,100 T6 infantry with Gatot S2 level 3; current displayed stats",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 224 },
+      rounds: 343,
+      attackerCreditedKills: { infantry: 1, marksman: 306 }
+    },
+    buildInput: latestBilateralBreakInput(
+      "s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf"
+    ),
+    notes:
+      "Captured 2026-07-28 from WIP attacking minxxx, report timestamp 1785264150. Battle Details records round 343 and credits 1 Infantry kill plus 306 Marksman kills; those 307 credits equal the defender's Injured count, while the other 569 casualties are Lightly Injured. Across all 4,096 corners of the displayed stats' one-decimal rounding intervals, full Marksman priority predicts a defender win with 214–223 survivors, while fixed-hypot distribution predicts an attacker win with 866–869 survivors. The aggregate result alone favored full Marksman priority, but the credited-kill attribution decisively contradicts it."
+  }),
+  observation({
+    id: "s39-current-low-pressure-1000-lancer-400-marksman-vs-500-gatot3-inf",
+    section: "39",
+    caseLabel:
+      "1,000 T6 lancers + 400 T6 marksmen vs 500 T6 infantry; current displayed stats; defender Gatot S2 level 3; every initial hit below one complete shield",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 0, defender: 397 },
+      rounds: 101
+    },
+    buildInput: latestLowPressurePoolProbeInput(
+      "s39-current-low-pressure-1000-lancer-400-marksman-vs-500-gatot3-inf"
+    ),
+    notes:
+      "Captured 2026-07-29 from WIP attacking minxxx, report timestamp 1785314318. The Battle Runner deployment log is authoritative for 1,000 T6 Lancers plus 400 T6 Marksmen; the cropped report-avatar parser repeated its known Lancer-as-Infantry misclassification. Battle Details records 101 Gatot S2 triggers. Exact report stats give attack-order pool D397@101 versus fixed-hypot D346@103. Before capture, every ±0.05 displayed-stat corner predicted pool D398–399@100–101 and fixed-hypot D347@103, so this directly validates conserved pooling below the one-complete-shield break threshold."
+  }),
+  observation({
+    id: "s40-current-section15-bridge-2000-inf-1000-marksman-vs-5000-inf",
+    section: "40",
+    caseLabel:
+      "2,000 T6 infantry + 1,000 T6 marksmen with Gatot S2 level 3 vs 5,000 T6 infantry with Gatot S2 level 1; Section 15 bridge",
+    game: {
+      winner: "attacker",
+      survivors: { attacker: 2802, defender: 0 },
+      rounds: 189,
+      attackerCreditedKills: { infantry: 499, marksman: 1251 }
+    },
+    buildInput: latestSection15BridgeInput(
+      "s40-current-section15-bridge-2000-inf-1000-marksman-vs-5000-inf"
+    ),
+    notes:
+      "Captured 2026-07-29 from minxxx attacking WIP at 12:05:47 as the pre-registered direct bridge to the failed external Section 15 composition. The historical uncapped pool gives A2799@190; the smaller-initial-army count cap gives the exact A2802@189 report endpoint. Live credited Infantry/Marksman shares are 28.514/71.486% versus capped-pool 28.506/71.494%."
+  }),
+  observation({
+    id: "s41-current-three-formation-pool-checklist-300-inf-200-lancer-600-marksman-vs-500-inf",
+    section: "41",
+    caseLabel:
+      "300 T6 infantry + 200 T6 lancers + 600 T6 marksmen with Gatot S2 level 1 vs 500 T6 infantry with Gatot S2 level 3; three-formation pool checklist",
+    game: {
+      winner: "attacker",
+      survivors: { attacker: 939, defender: 0 },
+      rounds: 196,
+      attackerCreditedKills: { infantry: 1, lancer: 10, marksman: 164 }
+    },
+    buildInput: latestThreeFormationPoolChecklistInput(
+      "s41-current-three-formation-pool-checklist-300-inf-200-lancer-600-marksman-vs-500-inf"
+    ),
+    notes:
+      "Captured 2026-07-29 from WIP attacking minxxx as a pre-registered combined pool discriminator. Exact displayed stats and production pool predict A939@196; the two opposing all-favorable ±0.05 stat corners give A939–940@196. On round 2, unshielded Infantry/Lancer/Marksman damage is 0.818/1.106/2.670 against one 2.644 shield: Infantry and Lancer are fully blocked and the remaining 0.721 offsets Marksman. Live credited kills are I1/L10/M164 (0.571/5.714/93.714%) versus pool 0.310/6.322/93.368%; reverse pool predicts 26.077/43.162/30.761%. Fixed initial per-side shield capacities predict A930@282, fixed-hypot A950@186, and Infantry-only no-spill A1008@132. This directly validates one conserved pool spilling across both attack-order boundaries while its source magnitude shrinks."
+  }),
+  observation({
+    id: "s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf",
+    section: "42",
+    caseLabel:
+      "200 T6 infantry with Gatot S2 level 3 vs 450 T6 infantry with Gatot S2 level 1 and Wayne 3/3/3; extra-skill shield scope",
+    stochastic: true,
+    game: {
+      winner: "defender",
+      survivors: { attacker: 200, defender: 168 },
+      rounds: 1500
+    },
+    buildInput: latestWayneShieldScopeInput(
+      "s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf"
+    ),
+    notes:
+      "Captured 2026-07-29 from minxxx attacking WIP as a pre-registered extra-skill scope discriminator. Both Gatot shields triggered 1,500 times; WIP Wayne recorded 375 Thunder Strike and 234 Fleet triggers. Minxxx retained all 200 Infantry with zero casualties, decisively showing that Gatot shields genuine extra-skill damage. The smaller-initial-army shield-count cap reproduces WIP's exact 168 survivors across the sampled seeds and leaves minxxx at 199–200. The report awards WIP the max-round win while the simulator currently labels any live/live round-cap result a draw."
+  }),
+  observation({
+    id: "s43-current-reciprocal-shield-cap-450-inf-vs-200-inf",
+    section: "43",
+    caseLabel:
+      "450 T6 infantry with Gatot S2 level 1 vs 200 T6 infantry with Gatot S2 level 3; reciprocal shield-count cap",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 173, defender: 200 },
+      rounds: 1500
+    },
+    buildInput: latestReciprocalShieldMagnitudeInput(
+      "s43-current-reciprocal-shield-cap-450-inf-vs-200-inf",
+      450,
+      200
+    ),
+    notes:
+      "Captured 2026-07-29 from WIP attacking minxxx without Wayne. Both Gatot shields triggered 1,500 times. Capping each shield's living Infantry count at the smaller initial army reproduces the exact 173/200 endpoint; the uncapped model predicts 450/200. The report awards minxxx the max-round win while the simulator currently labels any live/live round-cap result a draw, an adjacent winner-adjudication issue."
+  }),
+  observation({
+    id: "s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf",
+    section: "44",
+    caseLabel:
+      "2,500 T6 infantry with Gatot S2 level 1 vs 500 T6 infantry with Gatot S2 level 3; reciprocal shield-count cap",
+    game: {
+      winner: "defender",
+      survivors: { attacker: 975, defender: 498 },
+      rounds: 1500
+    },
+    buildInput: latestReciprocalShieldMagnitudeInput(
+      "s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf",
+      2500,
+      500
+    ),
+    notes:
+      "Captured 2026-07-29 from WIP attacking minxxx. Both Gatot shields triggered 1,500 times; WIP lost 1,525 Infantry and minxxx lost 2. Capping each shield's living Infantry count at the smaller initial army reproduces the exact 975/498 endpoint; the uncapped model predicts 2,499/498. The report awards minxxx the max-round win while the simulator currently labels any live/live round-cap result a draw."
+  })
 ];
 
 function totalSurvivors(result: BattleResult, side: SideId): number {
@@ -841,7 +1391,10 @@ export function runGatotEvidence(options: GatotEvidenceRunOptions = {}): GatotEv
     try {
       const input = entry.buildInput(config);
       const initialTroopCount = totalInputTroops(input.attacker) + totalInputTroops(input.defender);
-      const results = simulateBattles(input, config, { mode: "fast", count: sampleCount });
+      const results = simulateBattles(input, config, {
+        mode: "fast",
+        count: sampleCount
+      });
       const winnerCounts: Record<EvidenceWinner, number> = { attacker: 0, defender: 0, draw: 0 };
       for (const result of results) winnerCounts[result.winner] += 1;
       const matchingResults = results.filter((result) => result.winner === entry.game.winner);

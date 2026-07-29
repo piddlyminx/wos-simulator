@@ -38,6 +38,8 @@ interface DamageFactorTerm {
 
 interface NumericDamageBuckets {
   factors: Float64Array;
+  turnShield?: ActiveEffect;
+  turnShieldGroup?: ActiveEffect[];
 }
 
 interface CompiledDamageExpression {
@@ -62,11 +64,6 @@ export interface StaticDamageProfileEntry {
 }
 
 export type StaticDamageProfile = Record<SideId, Record<UnitType, StaticDamageProfileEntry>>;
-
-export interface InitialFormationAttackWeights {
-  bySide: Record<SideId, Record<UnitType, number>>;
-  totalBySide: Record<SideId, number>;
-}
 
 // Lean result of a single damage job: kills plus whatever the selected recorder requested.
 // Usage charging happens via options.usedEffects (every mode); the heavy per-attack
@@ -98,31 +95,20 @@ const DYNAMIC_NEUTRAL_VALUES = Float64Array.from(DYNAMIC_BUCKETS.map(({ update }
 const STATIC_NEUTRAL_VALUES = Float64Array.from(STATIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
 
-/** sqrt of the smaller side's initial army; battle-invariant, so callers running many jobs should compute it once. */
-export function sqrtMinInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
-  return Math.sqrt(Math.max(1, Math.min(totalTroops(fighters.attacker.initialTroops), totalTroops(fighters.defender.initialTroops))));
+/** Smaller side's initial army; battle-invariant. */
+export function minInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
+  return Math.max(
+    1,
+    Math.min(
+      totalTroops(fighters.attacker.initialTroops),
+      totalTroops(fighters.defender.initialTroops)
+    )
+  );
 }
 
-/**
- * Each formation's initial ordinary attack-size term. Turn-duration shields use these fixed
- * weights to derive a formation share on the attacking side; a share does not grow or spill
- * over as the battle removes troops or formations.
- */
-export function buildInitialFormationAttackWeights(
-  fighters: Record<SideId, ResolvedFighter>,
-  sqrtMinArmy = sqrtMinInitialArmy(fighters)
-): InitialFormationAttackWeights {
-  const bySide = {
-    attacker: initialFormationAttackWeightsFor(fighters.attacker, sqrtMinArmy),
-    defender: initialFormationAttackWeightsFor(fighters.defender, sqrtMinArmy)
-  };
-  return {
-    bySide,
-    totalBySide: {
-      attacker: totalTroops(bySide.attacker),
-      defender: totalTroops(bySide.defender)
-    }
-  };
+/** sqrt of the smaller side's initial army; battle-invariant. */
+export function sqrtMinInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
+  return Math.sqrt(minInitialArmy(fighters));
 }
 
 export interface DamageJobOptions {
@@ -133,7 +119,6 @@ export interface DamageJobOptions {
   capToTakerTroops?: boolean;
   usedEffects?: ActiveEffect[];
   sqrtMinInitialArmy?: number;
-  initialFormationAttackWeights?: InitialFormationAttackWeights;
 }
 
 export function calculateDamageJob(
@@ -151,10 +136,7 @@ export function calculateDamageJob(
   const dealerTroops = Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0));
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
   const sqrtMinArmy = options.sqrtMinInitialArmy ?? sqrtMinInitialArmy(fighters);
-  const initialFormationAttackWeights = options.initialFormationAttackWeights
-    ?? buildInitialFormationAttackWeights(fighters, sqrtMinArmy);
-  const turnShieldShare = initialFormationAttackShare(initialFormationAttackWeights, job.dealerSide, job.dealerUnit);
-  const armyTerm = Math.ceil(Math.sqrt(dealerTroops) * sqrtMinArmy);
+  const armyTerm = ceilArmyTerm(Math.sqrt(dealerTroops) * sqrtMinArmy);
   const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
   applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
@@ -168,12 +150,18 @@ export function calculateDamageJob(
     jobSlot,
     buckets,
     recording,
-    usedEffects,
-    turnShieldShare
+    usedEffects
   );
 
   const damageBeforeOffsets = evaluateDamageExpressionForJob(job, buckets, staticProfile);
-  const offsetDamage = sumSlots(buckets.factors, DYNAMIC_EXPRESSIONS[job.kind].postSubtractSlots);
+  let offsetDamage = sumSlots(buckets.factors, DYNAMIC_EXPRESSIONS[job.kind].postSubtractSlots);
+  offsetDamage += applyTurnShield(
+    buckets,
+    job.round,
+    Math.max(0, damageBeforeOffsets - offsetDamage),
+    recording,
+    usedEffects
+  );
   const rawDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
   const uncappedKills = rawDamage;
   const kills = options.capToTakerTroops === false ? uncappedKills : Math.min(takerTroops, uncappedKills);
@@ -187,8 +175,7 @@ function applyBucketEffects(
   jobSlot: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[],
-  turnShieldShare: number
+  usedEffects: ActiveEffect[]
 ): void {
   for (const group of groups) {
     const dependency = group.requiredGroupOrdinalsByJobShape;
@@ -198,14 +185,14 @@ function applyBucketEffects(
     if (group.sameEffectStacking !== "max") {
       for (const effect of effects) {
         if (!advanceEffectAttackDelay(effect)) continue;
-        applyBucketEffect(effect, round, buckets, recording, usedEffects, turnShieldShare);
+        applyBucketEffect(effect, round, buckets, recording, usedEffects);
       }
       continue;
     }
     if (effects.length === 1) {
       const effect = effects[0];
       if (advanceEffectAttackDelay(effect)) {
-        applyBucketEffect(effect, round, buckets, recording, usedEffects, turnShieldShare);
+        applyBucketEffect(effect, round, buckets, recording, usedEffects);
       }
       continue;
     }
@@ -215,7 +202,7 @@ function applyBucketEffects(
     for (const effect of effects) {
       if (!advanceEffectAttackDelay(effect)) continue;
       eligible.push(effect);
-      const appliedValue = effectValueForDamageJob(effect, round, turnShieldShare);
+      const appliedValue = effect.getCurrentValue(round);
       if (!selected || appliedValue > selectedValue) {
         selected = effect;
         selectedValue = appliedValue;
@@ -264,12 +251,15 @@ function applyBucketEffect(
   round: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[],
-  turnShieldShare: number
+  usedEffects: ActiveEffect[]
 ): void {
+  if (isTurnShield(effect)) {
+    buckets.turnShield = effect;
+    return;
+  }
   const appliedValue = applySelectedBucket(
     effect,
-    effectValueForDamageJob(effect, round, turnShieldShare),
+    effect.getCurrentValue(round),
     buckets,
     recording
   );
@@ -288,6 +278,11 @@ function applyBucketEffectGroup(
   recording: DamageJobRecorder,
   usedEffects: ActiveEffect[]
 ): void {
+  if (isTurnShield(selected)) {
+    buckets.turnShield = selected;
+    buckets.turnShieldGroup = effects;
+    return;
+  }
   const appliedValue = applySelectedBucket(selected, selectedValue, buckets, recording);
   if (appliedValue !== 0) {
     // The whole max-stacking group is charged: suppressed siblings deplete alongside the winner.
@@ -300,39 +295,45 @@ function applyBucketEffectGroup(
   }
 }
 
-function effectValueForDamageJob(effect: ActiveEffect, round: number, turnShieldShare: number): number {
-  const value = effect.getCurrentValue(round);
-  return effect.kind === "shield" && effect.duration.turns !== undefined
-    ? value * turnShieldShare
-    : value;
+function isTurnShield(effect: ActiveEffect): boolean {
+  return effect.kind === "shield" && effect.duration.turns !== undefined;
 }
 
-function initialFormationAttackShare(
-  weights: InitialFormationAttackWeights,
-  side: SideId,
-  unit: UnitType
+function applyTurnShield(
+  buckets: NumericDamageBuckets,
+  round: number,
+  damage: number,
+  recording: DamageJobRecorder,
+  usedEffects: ActiveEffect[]
 ): number {
-  const total = weights.totalBySide[side];
-  if (total <= 0) return 1;
-  const normalizedShare = weights.bySide[side][unit] / total;
-  const formationCount = UNIT_TYPES.filter((candidate) => weights.bySide[side][candidate] > 0).length;
-  // A sole incoming formation receives the complete turn shield. With multiple formations,
-  // damp each normalized attack-size share independently; the reservations intentionally sum
-  // to less than one shield instead of reallocating the dilution to another formation.
-  return formationCount > 1
-    ? normalizedShare / Math.hypot(1, normalizedShare)
-    : normalizedShare;
+  const selected = buckets.turnShield;
+  if (!selected || damage <= 0) return 0;
+  const appliedValue = Math.min(selected.getCurrentValue(round), damage);
+  if (appliedValue <= 0) return 0;
+
+  applySelectedBucket(selected, appliedValue, buckets, recording);
+  const group = buckets.turnShieldGroup;
+  if (!group) {
+    selected.initialValue = Math.max(0, selected.initialValue - appliedValue);
+    usedEffects.push(selected);
+    return appliedValue;
+  }
+
+  for (const effect of group) {
+    effect.initialValue = Math.max(0, effect.initialValue - appliedValue);
+    usedEffects.push(effect);
+    if (effect !== selected) recording.recordRejected(effect, "same_effect_max_suppressed");
+  }
+  return appliedValue;
 }
 
-function initialFormationAttackWeightsFor(
-  fighter: ResolvedFighter,
-  sqrtMinArmy: number
-): Record<UnitType, number> {
-  return {
-    infantry: Math.ceil(Math.sqrt(Math.max(0, fighter.initialTroops.infantry ?? 0)) * sqrtMinArmy),
-    lancer: Math.ceil(Math.sqrt(Math.max(0, fighter.initialTroops.lancer ?? 0)) * sqrtMinArmy),
-    marksman: Math.ceil(Math.sqrt(Math.max(0, fighter.initialTroops.marksman ?? 0)) * sqrtMinArmy)
-  };
+/**
+ * Preserve the integer ceiling while ignoring a one-ULP overshoot from operations
+ * such as sqrt(200) * sqrt(200) = 200.00000000000003.
+ */
+function ceilArmyTerm(value: number): number {
+  if (value === 0) return 0;
+  return Math.ceil(value - Number.EPSILON * Math.max(1, value));
 }
 
 function compileDamageTerms(definitions: readonly BucketSpec[]): DamageFactorTerm[] {
@@ -396,7 +397,7 @@ function sumSlots(values: Float64Array, slots: Int32Array): number {
 function createNumericDamageBuckets(): NumericDamageBuckets {
   const factors = new Float64Array(DYNAMIC_BUCKETS.length);
   factors.set(DYNAMIC_NEUTRAL_VALUES);
-  return { factors };
+  return { factors, turnShield: undefined, turnShieldGroup: undefined };
 }
 
 export function createDamageScratch(): DamageScratch {
@@ -428,6 +429,8 @@ export function staticDamageBucketSet(factors: StaticDamageBucketFactors, jobSid
 
 function resetDamageScratch(buckets: DamageScratch): DamageScratch {
   buckets.factors.set(DYNAMIC_NEUTRAL_VALUES);
+  buckets.turnShield = undefined;
+  buckets.turnShieldGroup = undefined;
   return buckets;
 }
 

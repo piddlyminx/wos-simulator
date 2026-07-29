@@ -16,7 +16,7 @@ import type {
   UnitType
 } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import { buildInitialFormationAttackWeights, calculateDamageJob, sqrtMinInitialArmy, type DamageResult } from "./damage";
+import { calculateDamageJob, minInitialArmy, type DamageResult } from "./damage";
 import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
@@ -239,7 +239,7 @@ function runLoop(
     dodge: options.useEffectsOnDodge ?? true,
     no_attack: options.useEffectsOnNoAttack ?? true
   };
-  const initialArmyScale = sqrtMinInitialArmy(fighters);
+  const initialArmyCount = minInitialArmy(fighters);
   const damageJobOptions = {
     recorder,
     effectIndex: runtime.effectIndex,
@@ -247,8 +247,7 @@ function runLoop(
     scratch: runtime.damageScratch,
     capToTakerTroops: loopOptions.capJobKills,
     usedEffects: runtime.usedEffects,
-    sqrtMinInitialArmy: initialArmyScale,
-    initialFormationAttackWeights: buildInitialFormationAttackWeights(fighters, initialArmyScale)
+    sqrtMinInitialArmy: Math.sqrt(initialArmyCount)
   };
 
   let rounds = 0;
@@ -329,7 +328,7 @@ function runLoop(
           intent,
           normalResult.kills,
           triggeredKills,
-          sourceAttackProtectionBasis(job, fighters),
+          sourceAttackProtectionBasis(job, fighters, initialArmyCount),
           runtime,
           recorder
         );
@@ -357,10 +356,17 @@ function runLoop(
   };
 }
 
-// Formation "Attack" for Gatot S2. Runtime troop counts carry fractional casualties,
-// but Gatot counts the partially damaged final troop as living until it is defeated.
-function sourceAttackProtectionBasis(job: DamageJob, fighters: Record<SideId, ResolvedFighter>): number {
-  const livingTroopCount = Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0));
+// Runtime troop counts carry fractional casualties, but a partially damaged troop
+// remains alive and contributes to the shield until it is defeated.
+function sourceAttackProtectionBasis(
+  job: DamageJob,
+  fighters: Record<SideId, ResolvedFighter>,
+  initialArmyCount: number
+): number {
+  const livingTroopCount = Math.min(
+    Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0)),
+    initialArmyCount
+  );
   const fighter = fighters[job.dealerSide];
   const base = unitBaseStats(fighter, job.dealerUnit);
   const bonuses = unitPlayerBonuses(fighter, job.dealerUnit);

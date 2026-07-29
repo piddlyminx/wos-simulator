@@ -10,8 +10,8 @@ import {
 } from "./gatotEvidence";
 
 test("Gatot evidence inventory contains every distinct game observation", () => {
-  assert.equal(GATOT_GAME_OBSERVATIONS.length, 60);
-  assert.equal(new Set(GATOT_GAME_OBSERVATIONS.map((entry) => entry.id)).size, 60);
+  assert.equal(GATOT_GAME_OBSERVATIONS.length, 74);
+  assert.equal(new Set(GATOT_GAME_OBSERVATIONS.map((entry) => entry.id)).size, 74);
 
   const sectionCounts = Object.fromEntries(
     [...new Set(GATOT_GAME_OBSERVATIONS.map((entry) => entry.section))].map((section) => [
@@ -34,7 +34,21 @@ test("Gatot evidence inventory contains every distinct game observation", () => 
     "15.3": 4,
     "15.1 / 15.3": 1,
     "16": 4,
-    "25": 5
+    "25": 5,
+    "31": 1,
+    "32": 1,
+    "33": 1,
+    "34": 1,
+    "35": 1,
+    "36": 1,
+    "37": 1,
+    "38": 1,
+    "39": 1,
+    "40": 1,
+    "41": 1,
+    "42": 1,
+    "43": 1,
+    "44": 1
   });
 
   const notRunnable = GATOT_GAME_OBSERVATIONS.filter((entry) => !entry.buildInput);
@@ -57,7 +71,8 @@ test("Gatot evidence inventory contains every distinct game observation", () => 
 
   const section25 = GATOT_GAME_OBSERVATIONS.filter((entry) => entry.section === "25");
   assert.equal(section25.length, 5);
-  assert.ok(section25.every((entry) => entry.buildInput && entry.game.rounds === undefined));
+  assert.deepEqual(section25.map((entry) => entry.game.rounds), [92, 115, 136, 109, 241]);
+  assert.ok(section25.every((entry) => entry.buildInput));
 });
 
 test("Section 25 preserves the observed defender stat change", () => {

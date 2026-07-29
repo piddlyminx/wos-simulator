@@ -464,7 +464,7 @@ test("runPrepared carries fractional casualties between rounds and ceils final s
 
   assert.equal(totalRemaining(result.remaining.attacker) - totalRemaining(result.remaining.defender), -186);
   assert.equal(result.remaining.defender.lancer, 186);
-  assert.equal(result.trace?.rounds[1]?.roundStartTroops.defender.lancer.toFixed(6), "198.003308");
+  assert.equal(result.trace?.rounds[1]?.roundStartTroops.defender.lancer.toFixed(6), "198.013242");
 });
 
 test("runPrepared defaults to a 1500 round cap when no explicit maxRounds is provided", () => {
@@ -2042,7 +2042,7 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
   assert.equal(skillJobs[0]?.takerUnit, normalJobs[0]?.takerUnit);
 });
 
-test("deferred shields use finalized normal plus linked skill kills and reapply to every hit next turn", () => {
+test("deferred shields use finalized normal plus linked skill kills as one next-turn pool", () => {
   const result = runOnce(
     {
       maxRounds: 2,
@@ -2120,14 +2120,21 @@ test("deferred shields use finalized normal plus linked skill kills and reapply 
     (attack) => attack.round === 2 && attack.dealerSide === "defender" && attack.takerSide === "attacker"
   );
   assert.deepEqual(roundTwoIncoming.map((attack) => attack.kind).sort(), ["normal", "skill"]);
+  let appliedShield = 0;
+  let incomingDamage = 0;
   for (const attack of roundTwoIncoming) {
     const shield = (attack.appliedEffects ?? []).find((effect) => hasEffectKind(effect, "shield"));
-    assert.notEqual(shield, undefined);
-    const shieldValue = shield && "value" in shield ? shield.value : NaN;
-    assert.ok(Math.abs(shieldValue - expectedShield) < 1e-9);
-    assert.ok(Math.abs((attack.trace?.offsetDamage ?? NaN) - expectedShield) < 1e-9);
-    assert.ok(Math.abs((attack.trace?.rawDamage ?? NaN) - Math.max(0, (attack.trace?.damageBeforeOffsets ?? 0) - expectedShield)) < 1e-9);
+    const shieldValue = shield && "value" in shield ? shield.value : 0;
+    appliedShield += shieldValue;
+    incomingDamage += attack.trace?.damageBeforeOffsets ?? 0;
+    assert.ok(
+      Math.abs(
+        (attack.trace?.rawDamage ?? NaN) -
+          Math.max(0, (attack.trace?.damageBeforeOffsets ?? 0) - shieldValue)
+      ) < 1e-9
+    );
   }
+  assert.ok(Math.abs(appliedShield - Math.min(expectedShield, incomingDamage)) < 1e-9);
 });
 
 test("cancelled normal attacks do not consume extra skill attack uses", () => {
