@@ -2,11 +2,17 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  exactNumberTitle,
   formatBattleOutcome,
   formatMeanSurvivorCount,
   formatSurvivorCount,
   formatTraceTroopCount,
 } from "./trace-format";
+
+test("exact number titles preserve the underlying decimal", () => {
+  assert.equal(exactNumberTitle(12_345.6789), "Exact value: 12345.6789");
+  assert.equal(exactNumberTitle(Number.NaN), undefined);
+});
 
 test("trace troop counts show every positive fractional survivor as alive", () => {
   assert.equal(formatTraceTroopCount(0.0032), "1");

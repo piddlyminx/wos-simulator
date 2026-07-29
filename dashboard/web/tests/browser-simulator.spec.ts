@@ -240,6 +240,13 @@ test("/simulate uses browser worker for simulation and saves afterward", async (
   await page.getByRole("button", { name: /^Simulate$/i }).click();
   const chart = page.getByTestId("simulate-outcome-chart");
   await expect(chart).toBeVisible();
+  await expect(
+    page
+      .locator(
+        '[data-tour="simulate-results-summary"] [title^="Exact value:"]',
+      )
+      .first(),
+  ).toBeVisible();
   const outcomePoint = page.getByRole("button", { name: /pin outcome bucket/i }).first();
   await expect(outcomePoint).toBeVisible();
   await outcomePoint.click();
@@ -250,6 +257,13 @@ test("/simulate uses browser worker for simulation and saves afterward", async (
   await expect(page.getByTestId("simulate-pinned-tooltip")).toBeVisible();
   await page.getByRole("button", { name: /show example/i }).first().click();
   await expect(page.getByText("Example battle trace")).toBeVisible();
+  await expect(
+    page
+      .locator(
+        '[data-tour="simulate-trace-rounds"] td[title^="Exact value:"]',
+      )
+      .first(),
+  ).toBeVisible();
   expect(forbidden).toEqual([]);
 });
 

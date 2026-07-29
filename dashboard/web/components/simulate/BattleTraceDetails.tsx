@@ -4,6 +4,7 @@ import { Fragment, memo, useState } from "react";
 import type { SimulateTrace, SimulateTraceUnit } from "@/lib/simulate-run";
 import { type Side } from "@/lib/simulate/form-state";
 import {
+  exactNumberTitle,
   formatBattleOutcome,
   formatTraceTroopCount,
 } from "@/lib/simulate/trace-format";
@@ -49,10 +50,18 @@ export function SkillUseTable({
               style={{ borderBottom: "1px solid var(--sim-line)" }}
             >
               <td className="py-1 pr-2 opacity-80">{e.name}</td>
-              <td className="py-1 pr-2 text-right">
+              <td
+                className="py-1 pr-2 text-right"
+                title={exactNumberTitle(e.avg_activations)}
+              >
                 {e.avg_activations.toFixed(1)}
               </td>
-              <td className="py-1 text-right">{e.avg_kills.toFixed(1)}</td>
+              <td
+                className="py-1 text-right"
+                title={exactNumberTitle(e.avg_kills)}
+              >
+                {e.avg_kills.toFixed(1)}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -159,23 +168,31 @@ const TraceRoundRow = memo(function TraceRoundRow({
         className="cursor-pointer"
         style={{ borderBottom: "1px solid var(--sim-line)" }}
       >
-        {[...TRACE_UNITS].reverse().map((unit) => (
-          <td
-            key={`${round.round}-${leftSide}-${unit}`}
-            className="px-2 py-2 text-right"
-          >
-            {formatTraceTroopCount(round[leftSide].troops[unit] ?? 0)}
-          </td>
-        ))}
+        {[...TRACE_UNITS].reverse().map((unit) => {
+          const value = round[leftSide].troops[unit] ?? 0;
+          return (
+            <td
+              key={`${round.round}-${leftSide}-${unit}`}
+              className="px-2 py-2 text-right"
+              title={exactNumberTitle(value)}
+            >
+              {formatTraceTroopCount(value)}
+            </td>
+          );
+        })}
         <td className="px-2 py-2 text-center font-bold">{round.round}</td>
-        {TRACE_UNITS.map((unit) => (
-          <td
-            key={`${round.round}-${rightSide}-${unit}`}
-            className="px-2 py-2 text-right"
-          >
-            {formatTraceTroopCount(round[rightSide].troops[unit] ?? 0)}
-          </td>
-        ))}
+        {TRACE_UNITS.map((unit) => {
+          const value = round[rightSide].troops[unit] ?? 0;
+          return (
+            <td
+              key={`${round.round}-${rightSide}-${unit}`}
+              className="px-2 py-2 text-right"
+              title={exactNumberTitle(value)}
+            >
+              {formatTraceTroopCount(value)}
+            </td>
+          );
+        })}
       </tr>
       {expanded && (
         <tr>
@@ -225,10 +242,16 @@ function SkillKillSummary({
                   {Object.entries(skills).map(([skill, row]) => (
                     <Fragment key={skill}>
                       <span className="min-w-0 truncate">{skill}</span>
-                      <span className="text-right tabular-nums">
+                      <span
+                        className="text-right tabular-nums"
+                        title={exactNumberTitle(row.triggers)}
+                      >
                         {formatTraceNumber(row.triggers)}
                       </span>
-                      <span className="text-right tabular-nums">
+                      <span
+                        className="text-right tabular-nums"
+                        title={exactNumberTitle(row.kills)}
+                      >
                         {formatTraceNumber(row.kills)}
                       </span>
                     </Fragment>
@@ -263,14 +286,21 @@ function RoundTraceDetails({
           <div className="space-y-1">
             {TRACE_UNITS.map((unit) => {
               const kills = round[side].kills[unit] ?? {};
-              const parts = TRACE_UNITS.map(
-                (target) =>
-                  `${TRACE_UNIT_LABELS[target]} ${formatTraceNumber(kills[target] ?? 0)}`,
-              );
               return (
                 <div key={unit} className="opacity-75">
                   <span className="font-bold">{TRACE_UNIT_LABELS[unit]}:</span>{" "}
-                  {parts.join(" / ")}
+                  {TRACE_UNITS.map((target, index) => {
+                    const value = kills[target] ?? 0;
+                    return (
+                      <Fragment key={target}>
+                        {index > 0 ? " / " : null}
+                        {TRACE_UNIT_LABELS[target]}{" "}
+                        <span title={exactNumberTitle(value)}>
+                          {formatTraceNumber(value)}
+                        </span>
+                      </Fragment>
+                    );
+                  })}
                 </div>
               );
             })}
@@ -321,10 +351,18 @@ function TraceTotals({
             return (
               <div key={unit} className="mb-1 opacity-75">
                 <span className="font-bold">{TRACE_UNIT_LABELS[unit]} kills:</span>{" "}
-                {TRACE_UNITS.map(
-                  (target) =>
-                    `${TRACE_UNIT_LABELS[target]} ${formatTraceNumber(kills[target] ?? 0)}`,
-                ).join(" / ")}
+                {TRACE_UNITS.map((target, index) => {
+                  const value = kills[target] ?? 0;
+                  return (
+                    <Fragment key={target}>
+                      {index > 0 ? " / " : null}
+                      {TRACE_UNIT_LABELS[target]}{" "}
+                      <span title={exactNumberTitle(value)}>
+                        {formatTraceNumber(value)}
+                      </span>
+                    </Fragment>
+                  );
+                })}
               </div>
             );
           })}

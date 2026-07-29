@@ -37,6 +37,7 @@ import {
 export interface SummaryCard {
   label: string;
   value: string;
+  exactValue?: string;
 }
 
 export function SimulateResultsPanel({
@@ -87,6 +88,11 @@ export function SimulateResultsPanel({
             <span
               className="break-words font-mono text-sm font-bold leading-snug"
               style={{ color: "var(--sim-blue)" }}
+              title={
+                card.exactValue === undefined
+                  ? undefined
+                  : `Exact value: ${card.exactValue}`
+              }
             >
               {card.value}
             </span>

@@ -10,6 +10,11 @@ export function formatTraceTroopCount(value: number): string {
   return Math.ceil(value).toLocaleString();
 }
 
+export function exactNumberTitle(value: number): string | undefined {
+  if (!Number.isFinite(value)) return undefined;
+  return `Exact value: ${String(value)}`;
+}
+
 export function formatSurvivorCount(value: number): string {
   if (!Number.isFinite(value) || value <= 0) return "0";
   return Math.round(value).toLocaleString();

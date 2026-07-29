@@ -1305,11 +1305,21 @@ export default function SimulateClient({
               s.mean_survivors.defender,
             )}`
           : signedSurvivors(s.mean),
+        exactValue: hasDraws && s.mean_survivors
+          ? `Attacker ${String(
+              s.mean_survivors.attacker,
+            )} / Defender ${String(s.mean_survivors.defender)}`
+          : String(s.mean),
       },
-      { label: "Std dev", value: compactNumber(s.std) },
+      {
+        label: "Std dev",
+        value: compactNumber(s.std),
+        exactValue: String(s.std),
+      },
       {
         label: "Attacker winrate",
         value: `${(s.attacker_win_rate * 100).toFixed(1)}%`,
+        exactValue: `${String(s.attacker_win_rate * 100)}%`,
       },
       ...(!hasDraws
         ? []
@@ -1317,6 +1327,7 @@ export default function SimulateClient({
             {
               label: "Draw rate",
               value: `${((s.draw_rate ?? 0) * 100).toFixed(1)}%`,
+              exactValue: `${String((s.draw_rate ?? 0) * 100)}%`,
             },
           ]),
       {
@@ -1328,6 +1339,11 @@ export default function SimulateClient({
               s.best.value,
             )
           : signedSurvivors(s.best.value),
+        exactValue: s.best.survivors
+          ? `Outcome ${String(s.best.value)}; attacker survivors ${String(
+              s.best.survivors.attacker,
+            )}; defender survivors ${String(s.best.survivors.defender)}`
+          : String(s.best.value),
       },
       {
         label: "Worst outcome",
@@ -1338,14 +1354,22 @@ export default function SimulateClient({
               s.worst.value,
             )
           : signedSurvivors(s.worst.value),
+        exactValue: s.worst.survivors
+          ? `Outcome ${String(s.worst.value)}; attacker survivors ${String(
+              s.worst.survivors.attacker,
+            )}; defender survivors ${String(s.worst.survivors.defender)}`
+          : String(s.worst.value),
       },
       {
         label: "Avg activations / battle",
         value: s.avg_skill_activations.toFixed(1),
+        exactValue: String(s.avg_skill_activations),
       },
       {
         label: "Average rounds",
         value: s.avg_rounds?.toFixed(1) ?? "—",
+        exactValue:
+          s.avg_rounds === undefined ? undefined : String(s.avg_rounds),
       },
     ];
   }, [result]);
