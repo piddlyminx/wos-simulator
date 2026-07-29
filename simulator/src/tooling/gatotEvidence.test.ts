@@ -73,6 +73,11 @@ test("Gatot evidence inventory contains every distinct game observation", () => 
   assert.equal(section25.length, 5);
   assert.deepEqual(section25.map((entry) => entry.game.rounds), [92, 115, 136, 109, 241]);
   assert.ok(section25.every((entry) => entry.buildInput));
+
+  const maxRoundDraws = GATOT_GAME_OBSERVATIONS.filter((entry) =>
+    ["42", "43", "44"].includes(entry.section)
+  );
+  assert.ok(maxRoundDraws.every((entry) => entry.game.winner === "draw" && entry.game.rounds === 1500));
 });
 
 test("Section 25 preserves the observed defender stat change", () => {

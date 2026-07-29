@@ -1286,7 +1286,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       "200 T6 infantry with Gatot S2 level 3 vs 450 T6 infantry with Gatot S2 level 1 and Wayne 3/3/3; extra-skill shield scope",
     stochastic: true,
     game: {
-      winner: "defender",
+      winner: "draw",
       survivors: { attacker: 200, defender: 168 },
       rounds: 1500
     },
@@ -1294,7 +1294,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       "s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf"
     ),
     notes:
-      "Captured 2026-07-29 from minxxx attacking WIP as a pre-registered extra-skill scope discriminator. Both Gatot shields triggered 1,500 times; WIP Wayne recorded 375 Thunder Strike and 234 Fleet triggers. Minxxx retained all 200 Infantry with zero casualties, decisively showing that Gatot shields genuine extra-skill damage. The smaller-initial-army shield-count cap reproduces WIP's exact 168 survivors across the sampled seeds and leaves minxxx at 199–200. The report awards WIP the max-round win while the simulator currently labels any live/live round-cap result a draw."
+      "Captured 2026-07-29 from minxxx attacking WIP as a pre-registered extra-skill scope discriminator. Both Gatot shields triggered 1,500 times; WIP Wayne recorded 375 Thunder Strike and 234 Fleet triggers. Minxxx retained all 200 Infantry with zero casualties, decisively showing that Gatot shields genuine extra-skill damage. The smaller-initial-army shield-count cap reproduces WIP's exact 168 survivors across the sampled seeds and leaves minxxx at 199–200. The report UI awards WIP the max-round win; the evidence comparison normalizes live/live at the round cap to a draw."
   }),
   observation({
     id: "s43-current-reciprocal-shield-cap-450-inf-vs-200-inf",
@@ -1302,7 +1302,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
     caseLabel:
       "450 T6 infantry with Gatot S2 level 1 vs 200 T6 infantry with Gatot S2 level 3; reciprocal shield-count cap",
     game: {
-      winner: "defender",
+      winner: "draw",
       survivors: { attacker: 173, defender: 200 },
       rounds: 1500
     },
@@ -1312,7 +1312,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       200
     ),
     notes:
-      "Captured 2026-07-29 from WIP attacking minxxx without Wayne. Both Gatot shields triggered 1,500 times. Capping each shield's living Infantry count at the smaller initial army reproduces the exact 173/200 endpoint; the uncapped model predicts 450/200. The report awards minxxx the max-round win while the simulator currently labels any live/live round-cap result a draw, an adjacent winner-adjudication issue."
+      "Captured 2026-07-29 from WIP attacking minxxx without Wayne. Both Gatot shields triggered 1,500 times. Capping each shield's living Infantry count at the smaller initial army reproduces the exact 173/200 endpoint; the uncapped model predicts 450/200. The report UI awards minxxx the max-round win; the evidence comparison normalizes live/live at the round cap to a draw."
   }),
   observation({
     id: "s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf",
@@ -1320,7 +1320,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
     caseLabel:
       "2,500 T6 infantry with Gatot S2 level 1 vs 500 T6 infantry with Gatot S2 level 3; reciprocal shield-count cap",
     game: {
-      winner: "defender",
+      winner: "draw",
       survivors: { attacker: 975, defender: 498 },
       rounds: 1500
     },
@@ -1330,7 +1330,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       500
     ),
     notes:
-      "Captured 2026-07-29 from WIP attacking minxxx. Both Gatot shields triggered 1,500 times; WIP lost 1,525 Infantry and minxxx lost 2. Capping each shield's living Infantry count at the smaller initial army reproduces the exact 975/498 endpoint; the uncapped model predicts 2,499/498. The report awards minxxx the max-round win while the simulator currently labels any live/live round-cap result a draw."
+      "Captured 2026-07-29 from WIP attacking minxxx. Both Gatot shields triggered 1,500 times; WIP lost 1,525 Infantry and minxxx lost 2. Capping each shield's living Infantry count at the smaller initial army reproduces the exact 975/498 endpoint; the uncapped model predicts 2,499/498. The report UI awards minxxx the max-round win; the evidence comparison normalizes live/live at the round cap to a draw."
   })
 ];
 
