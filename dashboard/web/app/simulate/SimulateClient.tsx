@@ -118,6 +118,7 @@ import {
 import {
   formatBattleOutcome,
   formatMeanSurvivorCount,
+  shouldShowSplitMeanSurvivors,
 } from "@/lib/simulate/trace-format";
 
 type SimWorkspaceTab = Side | "setup" | "results";
@@ -1295,17 +1296,18 @@ export default function SimulateClient({
     if (!result) return null;
     const s = result.summary;
     const hasDraws = (s.draw_rate ?? 0) > 0;
+    const showSplitMeanSurvivors = shouldShowSplitMeanSurvivors(s.draw_rate);
     return [
       {
         label: "Mean survivors",
-        value: hasDraws && s.mean_survivors
+        value: showSplitMeanSurvivors && s.mean_survivors
           ? `Attacker ${formatMeanSurvivorCount(
               s.mean_survivors.attacker,
             )} / Defender ${formatMeanSurvivorCount(
               s.mean_survivors.defender,
             )}`
           : signedSurvivors(s.mean),
-        exactValue: hasDraws && s.mean_survivors
+        exactValue: showSplitMeanSurvivors && s.mean_survivors
           ? `Attacker ${String(
               s.mean_survivors.attacker,
             )} / Defender ${String(s.mean_survivors.defender)}`

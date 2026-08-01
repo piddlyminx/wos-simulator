@@ -37,6 +37,12 @@ export function formatMeanSurvivorCount(value: number): string {
   return formatSurvivorCount(value);
 }
 
+export function shouldShowSplitMeanSurvivors(
+  drawRate: number | undefined,
+): boolean {
+  return typeof drawRate === "number" && drawRate > 0.5;
+}
+
 export function formatBattleOutcome(
   winner: BattleWinner | undefined,
   survivors: SurvivorCounts | undefined,

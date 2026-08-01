@@ -7,6 +7,7 @@ import {
   formatMeanSurvivorCount,
   formatSurvivorCount,
   formatTraceTroopCount,
+  shouldShowSplitMeanSurvivors,
 } from "./trace-format";
 
 test("exact number titles preserve the underlying decimal", () => {
@@ -34,6 +35,14 @@ test("mean survivor summaries keep sub-one values visible", () => {
   assert.equal(formatMeanSurvivorCount(0.311), "0.31");
   assert.equal(formatMeanSurvivorCount(0.012), "0.012");
   assert.equal(formatMeanSurvivorCount(11_231.6), "11,232");
+});
+
+test("mean survivor summaries split by side only when draws are the majority", () => {
+  assert.equal(shouldShowSplitMeanSurvivors(undefined), false);
+  assert.equal(shouldShowSplitMeanSurvivors(0), false);
+  assert.equal(shouldShowSplitMeanSurvivors(0.5), false);
+  assert.equal(shouldShowSplitMeanSurvivors(0.500_001), true);
+  assert.equal(shouldShowSplitMeanSurvivors(1), true);
 });
 
 test("draw summaries identify both surviving armies", () => {
