@@ -40,9 +40,11 @@ def _load_hero_skills(repo_root: Path) -> list[tuple[str, int, str]]:
 
 def _active_testcase_files(repo_root: Path) -> list[Path]:
     """Return active testcase files (*.json, not .json.disabled or .json.stale_troops)."""
-    tc_dir = repo_root / "testcases" / "emulator_verified"
+    tc_dir = repo_root / "testcases"
+    if not tc_dir.is_dir():
+        return []
     return [
-        p for p in sorted(tc_dir.iterdir())
+        p for p in sorted(tc_dir.rglob("*.json"))
         if p.name.endswith(".json") and p.is_file()
     ]
 
@@ -74,10 +76,11 @@ def snapshot_coverage(run_id: str, conn: sqlite3.Connection, repo_root: Path) ->
     hero_skill_pairs = {(hero, skill_num): skill_name for hero, skill_num, skill_name in skills}
     heroes = sorted({hero for hero, _, _ in skills})
 
-    hero_tc_count: dict[str, int] = {h: 0 for h in heroes}
-    hero_outcome_count: dict[str, int] = {h: 0 for h in heroes}
-    hero_skill_covered: dict[tuple[str, int], bool] = {
-        (hero, skill_num): False for hero, skill_num, _ in skills
+    skill_testcase_count: dict[tuple[str, int], int] = {
+        (hero, skill_num): 0 for hero, skill_num, _ in skills
+    }
+    skill_outcome_count: dict[tuple[str, int], int] = {
+        (hero, skill_num): 0 for hero, skill_num, _ in skills
     }
 
     for tc_file in tc_files:
@@ -86,20 +89,25 @@ def snapshot_coverage(run_id: str, conn: sqlite3.Connection, repo_root: Path) ->
         except (json.JSONDecodeError, OSError):
             continue
 
-        heroes_in_file: set[str] = set()
+        if not isinstance(entries, list):
+            entries = [entries]
+
         for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            game_result = entry.get("game_report_result")
+            outcome_count = (
+                len(game_result)
+                if isinstance(game_result, list)
+                else 1 if isinstance(game_result, dict) else 0
+            )
             for hero in heroes:
                 if _hero_in_entry(entry, hero):
-                    heroes_in_file.add(hero)
-                    outcome_count = len(entry.get("game_report_result", []))
-                    hero_outcome_count[hero] += outcome_count
-                    for skill_num in {sn for h, sn in hero_skill_covered if h == hero}:
-                        if not hero_skill_covered[(hero, skill_num)]:
-                            if _skill_covered_in_entry(entry, hero, skill_num):
-                                hero_skill_covered[(hero, skill_num)] = True
-
-        for hero in heroes_in_file:
-            hero_tc_count[hero] += 1
+                    for skill_num in {sn for h, sn in skill_testcase_count if h == hero}:
+                        if _skill_covered_in_entry(entry, hero, skill_num):
+                            key = (hero, skill_num)
+                            skill_testcase_count[key] += 1
+                            skill_outcome_count[key] += outcome_count
 
     rows = 0
     with conn:
@@ -117,9 +125,9 @@ def snapshot_coverage(run_id: str, conn: sqlite3.Connection, repo_root: Path) ->
                     skill_num,
                     skill_name,
                     str(skill_num),
-                    hero_tc_count[hero],
-                    hero_outcome_count[hero],
-                    1 if hero_skill_covered[(hero, skill_num)] else 0,
+                    skill_testcase_count[(hero, skill_num)],
+                    skill_outcome_count[(hero, skill_num)],
+                    1 if skill_testcase_count[(hero, skill_num)] > 0 else 0,
                 ),
             )
             rows += 1

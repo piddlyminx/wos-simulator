@@ -379,9 +379,21 @@ function seedHeroes(db: DatabaseInstance, repoRoot: string): void {
   tx();
 }
 
-function snapshotCoverage(runId: string, db: DatabaseInstance, repoRoot: string): void {
+function activeTestcaseFiles(directory: string): string[] {
+  if (!existsSync(directory)) return [];
+  const files: string[] = [];
+  for (const name of readdirSync(directory).sort()) {
+    const filePath = resolve(directory, name);
+    const stats = statSync(filePath);
+    if (stats.isDirectory()) files.push(...activeTestcaseFiles(filePath));
+    else if (stats.isFile() && name.endsWith(".json")) files.push(filePath);
+  }
+  return files;
+}
+
+export function snapshotCoverage(runId: string, db: DatabaseInstance, repoRoot: string): void {
   const heroDir = resolve(repoRoot, "simulator/config/hero_definitions");
-  const testcaseDir = resolve(repoRoot, "testcases/emulator_verified");
+  const testcaseDir = resolve(repoRoot, "testcases");
   if (!existsSync(heroDir) || !existsSync(testcaseDir)) return;
 
   const skills: Array<{ hero: string; skillNum: number; skillName: string }> = [];
@@ -397,13 +409,14 @@ function snapshotCoverage(runId: string, db: DatabaseInstance, repoRoot: string)
   }
 
   const heroes = [...new Set(skills.map((skill) => skill.hero))].sort();
-  const heroTcCount = new Map(heroes.map((hero) => [hero, 0]));
-  const heroOutcomeCount = new Map(heroes.map((hero) => [hero, 0]));
-  const covered = new Map(skills.map((skill) => [`${skill.hero}:${skill.skillNum}`, false]));
+  const skillsByHero = new Map<string, typeof skills>();
+  for (const hero of heroes) {
+    skillsByHero.set(hero, skills.filter((skill) => skill.hero === hero));
+  }
+  const skillTestcaseCount = new Map(skills.map((skill) => [`${skill.hero}:${skill.skillNum}`, 0]));
+  const skillOutcomeCount = new Map(skills.map((skill) => [`${skill.hero}:${skill.skillNum}`, 0]));
 
-  for (const fileName of readdirSync(testcaseDir).filter((name) => name.endsWith(".json")).sort()) {
-    const filePath = resolve(testcaseDir, fileName);
-    if (!statSync(filePath).isFile()) continue;
+  for (const filePath of activeTestcaseFiles(testcaseDir)) {
     let entries: unknown;
     try {
       entries = JSON.parse(readFileSync(filePath, "utf8"));
@@ -411,20 +424,19 @@ function snapshotCoverage(runId: string, db: DatabaseInstance, repoRoot: string)
       continue;
     }
     const list = Array.isArray(entries) ? entries : [entries];
-    const heroesInFile = new Set<string>();
     for (const rawEntry of list) {
       const entry = objectRecord(rawEntry);
+      const entryOutcomeCount = arrayLength(entry.game_report_result);
       for (const hero of heroes) {
         if (!heroInEntry(entry, hero)) continue;
-        heroesInFile.add(hero);
-        heroOutcomeCount.set(hero, (heroOutcomeCount.get(hero) ?? 0) + arrayLength(entry.game_report_result));
-        for (const skill of skills.filter((value) => value.hero === hero)) {
+        for (const skill of skillsByHero.get(hero) ?? []) {
           const key = `${hero}:${skill.skillNum}`;
-          if (!covered.get(key) && skillCoveredInEntry(entry, hero, skill.skillNum)) covered.set(key, true);
+          if (!skillCoveredInEntry(entry, hero, skill.skillNum)) continue;
+          skillTestcaseCount.set(key, (skillTestcaseCount.get(key) ?? 0) + 1);
+          skillOutcomeCount.set(key, (skillOutcomeCount.get(key) ?? 0) + entryOutcomeCount);
         }
       }
     }
-    for (const hero of heroesInFile) heroTcCount.set(hero, (heroTcCount.get(hero) ?? 0) + 1);
   }
 
   const insert = db.prepare(`
@@ -439,9 +451,9 @@ function snapshotCoverage(runId: string, db: DatabaseInstance, repoRoot: string)
       skill.skillNum,
       skill.skillName,
       String(skill.skillNum),
-      heroTcCount.get(skill.hero) ?? 0,
-      heroOutcomeCount.get(skill.hero) ?? 0,
-      covered.get(`${skill.hero}:${skill.skillNum}`) ? 1 : 0,
+      skillTestcaseCount.get(`${skill.hero}:${skill.skillNum}`) ?? 0,
+      skillOutcomeCount.get(`${skill.hero}:${skill.skillNum}`) ?? 0,
+      (skillTestcaseCount.get(`${skill.hero}:${skill.skillNum}`) ?? 0) > 0 ? 1 : 0,
     );
   }
 }
@@ -685,7 +697,8 @@ function numberOrUndefined(value: unknown): number | undefined {
 }
 
 function arrayLength(value: unknown): number {
-  return Array.isArray(value) ? value.length : 0;
+  if (Array.isArray(value)) return value.length;
+  return value && typeof value === "object" ? 1 : 0;
 }
 
 function truthy(value: unknown): boolean {

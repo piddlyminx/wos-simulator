@@ -148,7 +148,7 @@ export interface HeroCoverageDelta {
 export interface HeroCoverageTimelinePoint {
   run_id: string;
   started_at: string;
-  testcase_count: number;     // total testcase_count for this hero in this run
+  testcase_count: number;     // total skill-testcase appearances for this hero in this run
   skills_total: number;       // total skills for this hero
   skills_covered: number;     // count of covered_bool=1 skills
   coverage_pct: number;       // skills_covered / skills_total * 100

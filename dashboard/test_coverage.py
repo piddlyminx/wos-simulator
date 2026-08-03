@@ -2,11 +2,12 @@
 
 import json
 import sqlite3
+import tempfile
 import unittest
 from pathlib import Path
 
 from dashboard.ingest import open_db
-from dashboard.coverage import snapshot_coverage, _load_hero_skills
+from dashboard.coverage import snapshot_coverage, _active_testcase_files, _load_hero_skills
 
 REPO_ROOT = Path(__file__).parent.parent
 
@@ -19,6 +20,63 @@ FAKE_RUN_ID = "00000000-0000-0000-0000-000000000001"
 
 
 class TestSnapshotCoverage(unittest.TestCase):
+
+    def test_active_testcases_are_discovered_recursively(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            nested = repo_root / "testcases" / "gatot_verified"
+            nested.mkdir(parents=True)
+            active = nested / "gatot.json"
+            active.write_text("[]")
+            (nested / "gatot.json.disabled").write_text("[]")
+
+            self.assertEqual(_active_testcase_files(repo_root), [active])
+
+    def test_coverage_counts_testcases_per_skill(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            repo_root = Path(temp_dir)
+            hero_dir = repo_root / "simulator" / "config" / "hero_definitions"
+            hero_dir.mkdir(parents=True)
+            (hero_dir / "TestHero.json").write_text(json.dumps({
+                "skills": {
+                    "one": {"name": "One"},
+                    "two": {"name": "Two"},
+                    "three": {"name": "Three"},
+                }
+            }))
+            testcase_dir = repo_root / "testcases" / "nested"
+            testcase_dir.mkdir(parents=True)
+            (testcase_dir / "cases.json").write_text(json.dumps([
+                {
+                    "attacker": {"heroes": {"TestHero": {"skill_1": 1, "skill_3": 1}}},
+                    "defender": {"heroes": {}},
+                    "game_report_result": [{"attacker": 1, "defender": 0}],
+                },
+                {
+                    "attacker": {"heroes": {"TestHero": {"skill_1": 1}}},
+                    "defender": {"heroes": {}},
+                    "game_report_result": [
+                        {"attacker": 1, "defender": 0},
+                        {"attacker": 1, "defender": 0},
+                    ],
+                },
+            ]))
+
+            snapshot_coverage(FAKE_RUN_ID, self.conn, repo_root)
+            rows = self.conn.execute(
+                """
+                SELECT skill_num, testcase_count, battle_outcome_count, covered_bool
+                FROM coverage_snapshots
+                WHERE run_id = ? AND hero = 'TestHero'
+                ORDER BY skill_num
+                """,
+                (FAKE_RUN_ID,),
+            ).fetchall()
+            self.assertEqual(rows, [
+                (1, 2, 3, 1),
+                (2, 0, 0, 0),
+                (3, 1, 1, 1),
+            ])
 
     def setUp(self):
         self.conn = open_db(":memory:")

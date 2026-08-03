@@ -88,6 +88,7 @@ WORKDIR /repo/dashboard/web
 COPY dashboard /repo/dashboard
 COPY simulator/src /repo/simulator/src
 COPY simulator/config /repo/simulator/config
+COPY testcases /repo/testcases
 
 ENV NODE_ENV=production
 

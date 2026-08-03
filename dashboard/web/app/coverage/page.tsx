@@ -12,6 +12,7 @@ import {
 import type { CoverageSnapshot } from "@/types/dashboard";
 import CoverageTrendChart from "@/components/CoverageTrendChart";
 import MetricCard from "@/components/MetricCard";
+import { applyLiveTestcaseCoverage } from "@/lib/live-coverage";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,7 @@ export default function CoveragePage() {
           className="text-lg font-bold mb-4"
           style={{ color: "var(--sidebar-active)" }}
         >
-          Coverage (Latest Run)
+          Coverage (Current Testcases)
         </h2>
         {missingTables.length > 0 && (
           <div
@@ -56,7 +57,9 @@ export default function CoveragePage() {
   }
 
   const skillIds = getDistinctSkillIds(latestRunId);
-  const matrixRows = getCoverageMatrix(latestRunId);
+  // Historical snapshots power trends and deltas, while the current matrix is
+  // refreshed from the active testcase tree on every request.
+  const matrixRows = applyLiveTestcaseCoverage(getCoverageMatrix(latestRunId));
   const coverageTrend = getCoverageTrend(50);
   const previousRun = getPreviousRun(latestRunId);
   const heroCoverageDeltas = previousRun
@@ -136,8 +139,11 @@ export default function CoveragePage() {
         className="text-lg font-bold mb-4"
         style={{ color: "var(--sidebar-active)" }}
       >
-        Coverage (Latest Run)
+        Coverage (Current Testcases)
       </h2>
+      <p className="mb-4 text-xs opacity-60">
+        The matrix is read from active testcase JSON on every request; trend and delta data remain tied to saved runs.
+      </p>
 
       {missingTables.length > 0 && (
         <div
@@ -182,7 +188,7 @@ export default function CoveragePage() {
           <div className="mb-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <MetricCard
               label="Total Skills"
-              value={String(skillIds.length)}
+              value={String(totalCells)}
               valueClassName="text-xl sm:text-2xl"
             />
             <MetricCard
@@ -210,6 +216,7 @@ export default function CoveragePage() {
                 style={{ backgroundColor: "#a6e3a1" }}
               />
               Covered
+              <span className="opacity-70">(number = testcases)</span>
             </span>
             <span className="flex items-center gap-1">
               <span
@@ -325,7 +332,7 @@ export default function CoveragePage() {
                           return (
                             <td key={sid} className="py-1 px-0.5 text-center">
                               <span
-                                className="inline-block w-4 h-4 rounded-sm"
+                                className="inline-flex min-w-6 h-5 rounded-sm"
                                 style={{
                                   backgroundColor: "var(--border-color)",
                                   opacity: 0.3,
@@ -339,14 +346,18 @@ export default function CoveragePage() {
                         return (
                           <td key={sid} className="py-1 px-0.5 text-center">
                             <span
-                              className="inline-block w-4 h-4 rounded-sm"
+                              className="inline-flex min-w-6 h-5 items-center justify-center rounded-sm px-1 text-[10px] font-bold"
                               style={{
                                 backgroundColor: covered
                                   ? "#a6e3a1"
                                   : "#f38ba8",
+                                color: covered ? "#1e1e2e" : "transparent",
                               }}
                               title={`${hero.name} / ${sid}: ${covered ? "covered" : "not covered"} (${snap.testcase_count} tc, ${snap.battle_outcome_count} battles)`}
-                            />
+                              aria-label={`${hero.name} skill ${sid}: ${covered ? `${snap.testcase_count} testcase${snap.testcase_count === 1 ? "" : "s"}` : "not covered"}`}
+                            >
+                              {covered ? snap.testcase_count : null}
+                            </span>
                           </td>
                         );
                       })}
