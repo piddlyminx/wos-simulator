@@ -1,0 +1,40 @@
+[
+  {
+    "test_id": "s9-2200-t9-lancers-vs-146-t1-fc10-lancers",
+    "description": "Gatot evidence section 9: 2,200 T9 lancers vs 146 T1 FC10 lancers",
+    "attacker": {
+      "troops": {
+        "lancer_t9": 2200
+      },
+      "stats": {
+        "lancer": {
+          "attack": 208.8,
+          "defense": 179.2,
+          "lethality": 154.7,
+          "health": 154.8
+        }
+      },
+      "heroes": {}
+    },
+    "defender": {
+      "troops": {
+        "lancer_t1_fc10": 146
+      },
+      "stats": {
+        "lancer": {
+          "attack": 1306.9,
+          "defense": 1333.2,
+          "lethality": 1508.3,
+          "health": 1258
+        }
+      },
+      "heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 20
+      }
+    ]
+  }
+]

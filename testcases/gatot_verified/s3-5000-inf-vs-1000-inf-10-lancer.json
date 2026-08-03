@@ -1,0 +1,64 @@
+[
+  {
+    "test_id": "s3-5000-inf-vs-1000-inf-10-lancer",
+    "description": "Gatot evidence section 3: 5,000 T6 infantry vs 1,000 T6 infantry + 10 T6 lancers",
+    "attacker": {
+      "troops": {
+        "infantry_t6": 5000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 295.3,
+          "defense": 293.3,
+          "lethality": 10,
+          "health": 10
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 10
+      },
+      "stats": {
+        "infantry": {
+          "attack": 326.1,
+          "defense": 330.1,
+          "lethality": 18.2,
+          "health": 18.2
+        },
+        "lancer": {
+          "attack": 284.8,
+          "defense": 288.8,
+          "lethality": 18.2,
+          "health": 18.2
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2
+        },
+        "Gordon": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 4573,
+        "defender": 0
+      }
+    ]
+  }
+]

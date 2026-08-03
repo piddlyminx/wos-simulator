@@ -428,7 +428,7 @@ function latestMidpointInput(id: string) {
       },
       {
         troops: { infantry_t6: 5000 },
-        stats: { infantry: PRESSURE_SERIES_DEFENDER_INFANTRY_STATS },
+        stats: { infantry: LATEST_MIDPOINT_DEFENDER_INFANTRY_STATS },
         heroes: { Gatot: skills(1, 1, 1) }
       },
       config
@@ -1230,7 +1230,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       "Captured 2026-07-28 from WIP attacking minxxx, report timestamp 1785264150. Battle Details records round 343 and credits 1 Infantry kill plus 306 Marksman kills; those 307 credits equal the defender's Injured count, while the other 569 casualties are Lightly Injured. Across all 4,096 corners of the displayed stats' one-decimal rounding intervals, full Marksman priority predicts a defender win with 214–223 survivors, while fixed-hypot distribution predicts an attacker win with 866–869 survivors. The aggregate result alone favored full Marksman priority, but the credited-kill attribution decisively contradicts it."
   }),
   observation({
-    id: "s39-current-low-pressure-1000-lancer-400-marksman-vs-500-gatot3-inf",
+    id: "s39-1000-lancer-400-marksman-vs-500-gatot3-inf",
     section: "39",
     caseLabel:
       "1,000 T6 lancers + 400 T6 marksmen vs 500 T6 infantry; current displayed stats; defender Gatot S2 level 3; every initial hit below one complete shield",
@@ -1240,13 +1240,13 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       rounds: 101
     },
     buildInput: latestLowPressurePoolProbeInput(
-      "s39-current-low-pressure-1000-lancer-400-marksman-vs-500-gatot3-inf"
+      "s39-1000-lancer-400-marksman-vs-500-gatot3-inf"
     ),
     notes:
       "Captured 2026-07-29 from WIP attacking minxxx, report timestamp 1785314318. The Battle Runner deployment log is authoritative for 1,000 T6 Lancers plus 400 T6 Marksmen; the cropped report-avatar parser repeated its known Lancer-as-Infantry misclassification. Battle Details records 101 Gatot S2 triggers. Exact report stats give attack-order pool D397@101 versus fixed-hypot D346@103. Before capture, every ±0.05 displayed-stat corner predicted pool D398–399@100–101 and fixed-hypot D347@103, so this directly validates conserved pooling below the one-complete-shield break threshold."
   }),
   observation({
-    id: "s40-current-section15-bridge-2000-inf-1000-marksman-vs-5000-inf",
+    id: "s40-2000-inf-1000-marksman-vs-5000-inf",
     section: "40",
     caseLabel:
       "2,000 T6 infantry + 1,000 T6 marksmen with Gatot S2 level 3 vs 5,000 T6 infantry with Gatot S2 level 1; Section 15 bridge",
@@ -1257,13 +1257,13 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       attackerCreditedKills: { infantry: 499, marksman: 1251 }
     },
     buildInput: latestSection15BridgeInput(
-      "s40-current-section15-bridge-2000-inf-1000-marksman-vs-5000-inf"
+      "s40-2000-inf-1000-marksman-vs-5000-inf"
     ),
     notes:
       "Captured 2026-07-29 from minxxx attacking WIP at 12:05:47 as the pre-registered direct bridge to the failed external Section 15 composition. The historical uncapped pool gives A2799@190; the smaller-initial-army count cap gives the exact A2802@189 report endpoint. Live credited Infantry/Marksman shares are 28.514/71.486% versus capped-pool 28.506/71.494%."
   }),
   observation({
-    id: "s41-current-three-formation-pool-checklist-300-inf-200-lancer-600-marksman-vs-500-inf",
+    id: "s41-300-inf-200-lancer-600-marksman-vs-500-inf",
     section: "41",
     caseLabel:
       "300 T6 infantry + 200 T6 lancers + 600 T6 marksmen with Gatot S2 level 1 vs 500 T6 infantry with Gatot S2 level 3; three-formation pool checklist",
@@ -1274,7 +1274,7 @@ export const GATOT_GAME_OBSERVATIONS: readonly GatotGameObservation[] = [
       attackerCreditedKills: { infantry: 1, lancer: 10, marksman: 164 }
     },
     buildInput: latestThreeFormationPoolChecklistInput(
-      "s41-current-three-formation-pool-checklist-300-inf-200-lancer-600-marksman-vs-500-inf"
+      "s41-300-inf-200-lancer-600-marksman-vs-500-inf"
     ),
     notes:
       "Captured 2026-07-29 from WIP attacking minxxx as a pre-registered combined pool discriminator. Exact displayed stats and production pool predict A939@196; the two opposing all-favorable ±0.05 stat corners give A939–940@196. On round 2, unshielded Infantry/Lancer/Marksman damage is 0.818/1.106/2.670 against one 2.644 shield: Infantry and Lancer are fully blocked and the remaining 0.721 offsets Marksman. Live credited kills are I1/L10/M164 (0.571/5.714/93.714%) versus pool 0.310/6.322/93.368%; reverse pool predicts 26.077/43.162/30.761%. Fixed initial per-side shield capacities predict A930@282, fixed-hypot A950@186, and Infantry-only no-spill A1008@132. This directly validates one conserved pool spilling across both attack-order boundaries while its source magnitude shrinks."

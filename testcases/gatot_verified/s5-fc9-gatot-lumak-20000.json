@@ -1,0 +1,55 @@
+[
+  {
+    "test_id": "s5-fc9-gatot-lumak-20000",
+    "description": "Gatot evidence section 5: 20,000 T11 FC9 infantry + Lumak S1 vs same count T10 FC9 infantry",
+    "attacker": {
+      "troops": {
+        "infantry_t11_fc9": 20000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 1513,
+          "defense": 1634.1,
+          "lethality": 831.2,
+          "health": 1103.1
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        },
+        "Lumak": {
+          "skill_1": 5
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t10_fc9": 20000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 1354,
+          "defense": 1413.7,
+          "lethality": 634.3,
+          "health": 812.6
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 19986,
+        "defender": 0
+      }
+    ]
+  }
+]

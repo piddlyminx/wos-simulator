@@ -1,0 +1,52 @@
+[
+  {
+    "test_id": "s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf",
+    "description": "Gatot evidence section 44: 2,500 T6 infantry with Gatot S2 level 1 vs 500 T6 infantry with Gatot S2 level 3; reciprocal shield-count cap",
+    "attacker": {
+      "troops": {
+        "infantry_t6": 2500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 472.7,
+          "defense": 472,
+          "lethality": 150.6,
+          "health": 164
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 530.8,
+          "defense": 527.5,
+          "lethality": 218.4,
+          "health": 219.6
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 3,
+          "skill_3": 1
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 975,
+        "defender": 498
+      }
+    ]
+  }
+]

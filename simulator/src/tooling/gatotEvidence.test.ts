@@ -96,6 +96,22 @@ test("Section 25 preserves the observed defender stat change", () => {
   });
 });
 
+test("Section 31 preserves the displayed defender infantry stats", () => {
+  const config = loadSimulatorConfig();
+  const observation = GATOT_GAME_OBSERVATIONS.find(
+    (entry) => entry.id === "s31-current-2000-inf-2000-marksman-vs-5000-inf"
+  );
+  assert.ok(observation?.buildInput);
+
+  const input = observation.buildInput(config);
+  assert.deepEqual(input.defender.stats?.infantry, {
+    attack: 472.6,
+    defense: 471.9,
+    lethality: 147.5,
+    health: 160.9
+  });
+});
+
 test("Section 9 preserves its two observed stat profiles", () => {
   const config = loadSimulatorConfig();
   const inputFor = (id: string) => {

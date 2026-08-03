@@ -1,0 +1,7 @@
+[
+  {
+    "test_id": "s1-10000-vs-2000",
+    "description": "Gatot evidence section 1: 10,000 T6 infantry vs 2,000 T6 infantry",
+    "disabled_reason": "The recorded evidence does not contain both survivor counts, so it cannot be used for parity scoring."
+  }
+]

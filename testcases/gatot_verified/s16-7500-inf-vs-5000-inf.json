@@ -1,0 +1,46 @@
+[
+  {
+    "test_id": "s16-7500-inf-vs-5000-inf",
+    "description": "Gatot evidence section 16: 7,500 T6 infantry vs 5,000 T6 infantry; defender Gatot S2 level 1",
+    "attacker": {
+      "troops": {
+        "infantry_t6": 7500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 208.4,
+          "health": 209.6
+        }
+      },
+      "heroes": {}
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 5000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 483.6,
+          "defense": 478.9,
+          "lethality": 157.5,
+          "health": 170.9
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 2513
+      }
+    ]
+  }
+]

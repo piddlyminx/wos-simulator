@@ -1,0 +1,52 @@
+[
+  {
+    "test_id": "s33-current-500-marksman-wayne3-vs-5000-gatot3-inf",
+    "description": "Gatot evidence section 33: 500 T6 marksmen with Wayne 3/3/3 vs 5,000 T6 infantry; current displayed stats; defender Gatot S2 level 3",
+    "attacker": {
+      "troops": {
+        "marksman_t6": 500
+      },
+      "stats": {
+        "marksman": {
+          "attack": 369.6,
+          "defense": 365.9,
+          "lethality": 202.3,
+          "health": 183.7
+        }
+      },
+      "heroes": {
+        "Wayne": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 5000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 533.8,
+          "defense": 527.5,
+          "lethality": 218.4,
+          "health": 219.6
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 3,
+          "skill_3": 1
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 4977
+      }
+    ]
+  }
+]

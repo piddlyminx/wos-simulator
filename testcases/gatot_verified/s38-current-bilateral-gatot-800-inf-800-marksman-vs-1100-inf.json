@@ -1,0 +1,59 @@
+[
+  {
+    "test_id": "s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf",
+    "description": "Gatot evidence section 38: 800 T6 infantry + 800 T6 marksmen with Gatot S2 level 1 vs 1,100 T6 infantry with Gatot S2 level 3; current displayed stats",
+    "attacker": {
+      "troops": {
+        "infantry_t6": 800,
+        "marksman_t6": 800
+      },
+      "stats": {
+        "infantry": {
+          "attack": 472.6,
+          "defense": 471.9,
+          "lethality": 147.5,
+          "health": 160.9
+        },
+        "marksman": {
+          "attack": 197.8,
+          "defense": 194.1,
+          "lethality": 148.8,
+          "health": 154.7
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 1100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 533.8,
+          "defense": 527.5,
+          "lethality": 218.4,
+          "health": 219.6
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 3,
+          "skill_3": 1
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 224
+      }
+    ]
+  }
+]

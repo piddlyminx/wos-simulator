@@ -1,0 +1,52 @@
+[
+  {
+    "test_id": "s2-health-1.1-5050-vs-1000",
+    "description": "Gatot evidence section 2: 5,050 T6 infantry vs 1,000 T6 infantry; defender Health x1.1",
+    "attacker": {
+      "troops": {
+        "infantry_t6": 5050
+      },
+      "stats": {
+        "infantry": {
+          "attack": 285.3,
+          "defense": 283.3,
+          "lethality": 0,
+          "health": 0
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 2,
+          "skill_3": 3
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 1000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 326.1,
+          "defense": 330.1,
+          "lethality": 18.2,
+          "health": 30.02
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 5047,
+        "defender": 406
+      }
+    ]
+  }
+]

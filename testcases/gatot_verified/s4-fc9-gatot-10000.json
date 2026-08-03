@@ -1,0 +1,52 @@
+[
+  {
+    "test_id": "s4-fc9-gatot-10000",
+    "description": "Gatot evidence section 4: 10,000 T11 FC9 infantry vs same count T10 FC9 infantry",
+    "attacker": {
+      "troops": {
+        "infantry_t11_fc9": 10000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 1513,
+          "defense": 1634.1,
+          "lethality": 831.2,
+          "health": 1103.1
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        }
+      }
+    },
+    "defender": {
+      "troops": {
+        "infantry_t10_fc9": 10000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 1354,
+          "defense": 1413.7,
+          "lethality": 634.3,
+          "health": 812.6
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 9992,
+        "defender": 0
+      }
+    ]
+  }
+]

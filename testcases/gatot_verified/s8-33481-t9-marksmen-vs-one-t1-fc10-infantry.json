@@ -1,0 +1,46 @@
+[
+  {
+    "test_id": "s8-33481-t9-marksmen-vs-one-t1-fc10-infantry",
+    "description": "Gatot evidence section 8: 33,481 T9 marksmen vs one T1 FC10 infantry",
+    "attacker": {
+      "troops": {
+        "marksman_t9": 33481
+      },
+      "stats": {
+        "marksman": {
+          "attack": 208.8,
+          "defense": 207.1,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "heroes": {}
+    },
+    "defender": {
+      "troops": {
+        "infantry_t1_fc10": 1
+      },
+      "stats": {
+        "infantry": {
+          "attack": 2159.6,
+          "defense": 2185.6,
+          "lethality": 1942.2,
+          "health": 2139.7
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 33452,
+        "defender": 0
+      }
+    ]
+  }
+]

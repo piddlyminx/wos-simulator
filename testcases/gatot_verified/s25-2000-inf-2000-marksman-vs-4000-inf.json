@@ -1,0 +1,53 @@
+[
+  {
+    "test_id": "s25-2000-inf-2000-marksman-vs-4000-inf",
+    "description": "Gatot evidence section 25: 2,000 T6 infantry + 2,000 T6 marksmen vs 4,000 T6 infantry; defender Gatot S2 level 1",
+    "attacker": {
+      "troops": {
+        "infantry_t6": 2000,
+        "marksman_t6": 2000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 208.4,
+          "health": 209.6
+        },
+        "marksman": {
+          "attack": 270,
+          "defense": 265,
+          "lethality": 214.9,
+          "health": 210
+        }
+      },
+      "heroes": {}
+    },
+    "defender": {
+      "troops": {
+        "infantry_t6": 4000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 486.6,
+          "defense": 491.9,
+          "lethality": 157.5,
+          "health": 170.9
+        }
+      },
+      "heroes": {
+        "Gatot": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      }
+    },
+    "game_report_result": [
+      {
+        "attacker": 2365,
+        "defender": 0
+      }
+    ]
+  }
+]
