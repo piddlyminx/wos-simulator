@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { BattleInputBuilder } from "./battleInputBuilder";
 import { loadSimulatorConfig } from "./config";
-import { createSeededRng, chancePasses } from "./effects";
+import { createSeededRng, chancePasses, compiledTriggerForSkill } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./fighterResolution";
 import { prepareBattle, runPrepared, simulateBattles, simulateBearBattle, signedRemainingScore } from "./simulator";
 import { BEAR_TROOP_ID, createTroopStatsRecord, generateTroopStatsCatalogue } from "./troopStats";
@@ -1619,6 +1619,48 @@ test("Crystal Shield and Body of Light resolve additive FC8 and FC10 damage redu
     assert.equal(conditionalReduction?.type, "active.troop.damageTaken.down");
     assert.equal(conditionalReduction?.value, expected.conditionalReduction);
     assert.equal(crystalReduction!.value + conditionalReduction!.value, expected.combinedReduction);
+  }
+});
+
+test("Incandescent Field upgrades its trigger chance at FC10 while retaining half damage", () => {
+  const config = loadSimulatorConfig();
+  const expectations = [
+    { troopId: "lancer_t10_fc8", level: 1, probabilityPct: 10 },
+    { troopId: "lancer_t10_fc10", level: 2, probabilityPct: 15 }
+  ] as const;
+
+  for (const expected of expectations) {
+    const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
+    const incandescentField = fighter.troopSkills.find((skill) => skill.id === "IncandescentField");
+    const halfDamage = incandescentField?.effects.find((effect) => effect.id === "IncandescentField/1");
+
+    assert.equal(incandescentField?.level, expected.level);
+    assert.equal(compiledTriggerForSkill(incandescentField!).probabilityPct, expected.probabilityPct);
+    assert.equal(halfDamage?.type, "active.troop.defense.up");
+    assert.equal(halfDamage?.value, 100);
+  }
+});
+
+test("Marksman Fire Crystal skills resolve Crystal Gunpowder and Flame Charge milestones", () => {
+  const config = loadSimulatorConfig();
+  const expectations = [
+    { troopId: "marksman_t10_fc3", gunpowderLevel: 1, probabilityPct: 20, skillDamagePct: 50, flameLevel: undefined, attackPct: undefined },
+    { troopId: "marksman_t10_fc5", gunpowderLevel: 2, probabilityPct: 30, skillDamagePct: 50, flameLevel: undefined, attackPct: undefined },
+    { troopId: "marksman_t10_fc8", gunpowderLevel: 3, probabilityPct: 30, skillDamagePct: 75, flameLevel: 1, attackPct: 4 },
+    { troopId: "marksman_t10_fc10", gunpowderLevel: 4, probabilityPct: 30, skillDamagePct: 87.5, flameLevel: 2, attackPct: 6 }
+  ] as const;
+
+  for (const expected of expectations) {
+    const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
+    const crystalGunpowder = fighter.troopSkills.find((skill) => skill.id === "CrystalGunpowder");
+    const flameCharge = fighter.troopSkills.find((skill) => skill.id === "FlameCharge");
+
+    assert.equal(crystalGunpowder?.level, expected.gunpowderLevel);
+    assert.equal(compiledTriggerForSkill(crystalGunpowder!).probabilityPct, expected.probabilityPct);
+    assert.equal(crystalGunpowder?.effects.find((effect) => effect.id === "CrystalGunpowder/1")?.value, expected.skillDamagePct);
+    assert.equal(flameCharge?.level, expected.flameLevel);
+    assert.equal(flameCharge?.effects.find((effect) => effect.id === "FlameCharge/1")?.value, expected.attackPct);
+    assert.equal(fighter.troopSkills.some((skill) => skill.id === "FlameChargeExtra"), false);
   }
 });
 
