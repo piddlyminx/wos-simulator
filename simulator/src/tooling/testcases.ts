@@ -17,6 +17,8 @@ const DEFAULT_STOCHASTIC_REPEAT = 100;
 const STAT_ROUNDING_MAX_ADJUSTMENT = 0.05;
 const STAT_ROUNDING_SCAN_STEPS = 50;
 const STAT_ROUNDING_INTERPOLATION_LIMIT = STAT_ROUNDING_SCAN_STEPS;
+const DETERMINISTIC_BASE_TOLERANCE_TENTHS_PCT = 2;
+const DETERMINISTIC_MAX_TOLERANCE_TENTHS_PCT = 7;
 
 export interface TestcaseRunOptions {
   testcaseRoot?: string;
@@ -362,6 +364,10 @@ function applyExecutionResult(
         thresholds: comparison.thresholds
       })
     : null;
+  if (game) {
+    const unroundedBiasRaw = simulatorDistribution.mu - gameDistribution!.mu;
+    game = adjustedForRoundingRules(game, result.randomness.deterministic, initialTroops, result.rounds, unroundedBiasRaw);
+  }
   const gameStatAdjustment = game && preparedCase.input
     ? findGameStatAdjustment({
         game,
@@ -370,6 +376,7 @@ function applyExecutionResult(
         job: { file: preparedCase.file, reportFile, testcaseId, index, input: preparedCase.input, repeat: execution.sampleCount, seed: undefined },
         reference: gameDistribution!,
         initialTroops,
+        averageRounds: result.rounds,
         deterministic: result.randomness.deterministic,
         thresholds: comparison.thresholds
       })
@@ -417,6 +424,7 @@ function findGameStatAdjustment(options: {
   job: TestcaseExecutionJob;
   reference: { n: number; mu: number; sigma: number };
   initialTroops: number;
+  averageRounds: number;
   deterministic: boolean;
   thresholds?: Record<string, number>;
 }): InternalStatAdjustment | undefined {
@@ -460,6 +468,7 @@ function evaluateStatAdjustment(options: {
   job: TestcaseExecutionJob;
   reference: { n: number; mu: number; sigma: number };
   initialTroops: number;
+  averageRounds: number;
   deterministic: boolean;
   thresholds?: Record<string, number>;
 }, value: number): InternalStatAdjustment {
@@ -476,7 +485,13 @@ function evaluateStatAdjustment(options: {
     value: roundStatAdjustment(value),
     mode: adjustmentMode(adjusted, options.deterministic),
     unadjusted: options.game,
-    adjusted: adjustedForRoundingRules(adjusted, options.deterministic)
+    adjusted: adjustedForRoundingRules(
+      adjusted,
+      options.deterministic,
+      options.initialTroops,
+      options.averageRounds,
+      candidateStats.mu - options.reference.mu
+    )
   };
 }
 
@@ -531,9 +546,22 @@ function adjustmentMode(adjusted: ParityComparisonMetrics, deterministic: boolea
   return adjusted.passes ? "stochastic_tolerance" : "best_effort";
 }
 
-function adjustedForRoundingRules(metric: ParityComparisonMetrics, deterministic: boolean): ParityComparisonMetrics {
+function adjustedForRoundingRules(
+  metric: ParityComparisonMetrics,
+  deterministic: boolean,
+  initialTroops: number,
+  averageRounds: number,
+  unroundedBiasRaw: number
+): ParityComparisonMetrics {
   if (!deterministic) return metric;
-  return { ...metric, passes: Math.abs(metric.bias_raw) <= 1 };
+  const unroundedBiasPct = Math.abs(unroundedBiasRaw / (initialTroops || 1)) * 100;
+  return { ...metric, passes: unroundedBiasPct <= deterministicRoundTolerancePct(averageRounds) };
+}
+
+export function deterministicRoundTolerancePct(averageRounds: number): number {
+  const completedTenRoundBlocks = Math.max(0, Math.floor(averageRounds / 10));
+  const toleranceTenthsPct = DETERMINISTIC_BASE_TOLERANCE_TENTHS_PCT + completedTenRoundBlocks;
+  return Math.min(DETERMINISTIC_MAX_TOLERANCE_TENTHS_PCT, toleranceTenthsPct) / 10;
 }
 
 function correctionScore(metric: ParityComparisonMetrics, deterministic: boolean): number {

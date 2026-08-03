@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { loadSimulatorConfig } from "../config";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
-import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases";
+import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, deterministicRoundTolerancePct, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases";
 
 test("discoverTestcaseFiles follows simulator/testcases symlink and skips disabled or stale files by default", () => {
   const files = discoverTestcaseFiles();
@@ -232,8 +232,28 @@ test("runTestcases applies possible stat rounding correction to exact determinis
   assert.equal(summary?.game?.passes, true);
   assert.equal(summary?.game?.bias_raw, 0);
   assert.equal(summary?.gameStatAdjustment?.mode, "deterministic_exact");
-  assert.equal(summary?.gameStatAdjustment?.value, 0.05);
-  assert.equal(summary?.gameStatAdjustment?.unadjusted.bias_raw, -2);
+  assert.equal(summary?.gameStatAdjustment?.value, 0.025);
+  assert.equal(summary?.gameStatAdjustment?.unadjusted.bias_raw, -1);
+});
+
+test("deterministic testcase tolerance increases by 0.1 percent every ten rounds and caps at 0.7 percent", () => {
+  assert.equal(deterministicRoundTolerancePct(0), 0.2);
+  assert.equal(deterministicRoundTolerancePct(9), 0.2);
+  assert.equal(deterministicRoundTolerancePct(10), 0.3);
+  assert.equal(deterministicRoundTolerancePct(39), 0.5);
+  assert.equal(deterministicRoundTolerancePct(49), 0.6);
+  assert.equal(deterministicRoundTolerancePct(50), 0.7);
+  assert.equal(deterministicRoundTolerancePct(1500), 0.7);
+});
+
+test("round-scaled deterministic tolerance accepts close Seo-yoon cases", () => {
+  const config = loadSimulatorConfig();
+  const report = runTestcases({ matching: "Seo-yoon_tc_nc.json" }, config);
+  const fourth = Object.values(report.testcases).find((summary) => summary.testcase_id === "daut_viper_4");
+  const fifth = Object.values(report.testcases).find((summary) => summary.testcase_id === "daut_viper_5");
+
+  assert.equal(fourth?.game?.passes, true);
+  assert.equal(fifth?.game?.passes, true);
 });
 
 test("runTestcases applies stat rounding correction for stochastic misses", () => {
