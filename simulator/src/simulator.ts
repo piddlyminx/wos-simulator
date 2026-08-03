@@ -16,7 +16,7 @@ import type {
   UnitType
 } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import { calculateDamageJob, minInitialArmy, type DamageResult } from "./damage";
+import { calculateDamageJob, ceilIgnoringFloatResidue, minInitialArmy, type DamageResult } from "./damage";
 import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
@@ -247,7 +247,7 @@ function runLoop(
     scratch: runtime.damageScratch,
     capToTakerTroops: loopOptions.capJobKills,
     usedEffects: runtime.usedEffects,
-    sqrtMinInitialArmy: Math.sqrt(initialArmyCount)
+    minInitialArmy: initialArmyCount
   };
 
   let rounds = 0;
@@ -364,7 +364,7 @@ function sourceAttackProtectionBasis(
   initialArmyCount: number
 ): number {
   const livingTroopCount = Math.min(
-    Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0)),
+    ceilIgnoringFloatResidue(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0)),
     initialArmyCount
   );
   const fighter = fighters[job.dealerSide];
@@ -643,5 +643,7 @@ function snapshotTroops(troops: Record<SideId, Record<UnitType, number>>): Damag
 }
 
 function ceilTroops(troops: Record<UnitType, number>): Record<UnitType, number> {
-  return Object.fromEntries(UNIT_TYPES.map((unit) => [unit, Math.ceil(troops[unit] ?? 0)])) as Record<UnitType, number>;
+  return Object.fromEntries(
+    UNIT_TYPES.map((unit) => [unit, ceilIgnoringFloatResidue(troops[unit] ?? 0)])
+  ) as Record<UnitType, number>;
 }

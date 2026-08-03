@@ -3,6 +3,8 @@ import { test } from "node:test";
 
 import {
   calculateDamageJob,
+  ceilIgnoringFloatResidue,
+  ceilSqrtProduct,
   createDamageScratch,
   evaluateDamageExpression
 } from "./damage";
@@ -121,13 +123,28 @@ test("damage calculator counts every positive fractional remainder as one living
     fractionalJob,
     simpleFighters(),
     [],
-    { trace: true, sqrtMinInitialArmy: 100, capToTakerTroops: false }
+    { trace: true, minInitialArmy: 10000, capToTakerTroops: false }
   );
 
   assert.equal(outcome.trace?.armyTerm, 100);
 });
 
-test("damage calculator does not ceil a whole army term due to floating-point residue", () => {
+test("float-safe ceilings ignore residue but preserve genuine fractional troops", () => {
+  assert.equal(ceilIgnoringFloatResidue(200.00000000000003), 200);
+  assert.equal(ceilIgnoringFloatResidue(200.001), 201);
+  assert.equal(ceilIgnoringFloatResidue(0.01), 1);
+});
+
+test("army term uses an exact safe-integer square-root ceiling", () => {
+  assert.equal(ceilSqrtProduct(2, 2), 2);
+  assert.equal(ceilSqrtProduct(200, 200), 200);
+  assert.equal(ceilSqrtProduct(2_000_000, 2_000_000), 2_000_000);
+  assert.equal(ceilSqrtProduct(2_000_000, 1_999_999), 2_000_000);
+  assert.throws(() => ceilSqrtProduct(1.5, 2), /safe integers/);
+  assert.throws(() => ceilSqrtProduct(100_000_000, 100_000_000), /MAX_SAFE_INTEGER/);
+});
+
+test("damage calculator does not over-count a whole-number army term", () => {
   const exactSquareJob: DamageJob = {
     ...job,
     roundStartTroops: {
@@ -140,11 +157,37 @@ test("damage calculator does not ceil a whole army term due to floating-point re
     exactSquareJob,
     simpleFighters(),
     [],
-    { trace: true, sqrtMinInitialArmy: Math.sqrt(200), capToTakerTroops: false }
+    { trace: true, minInitialArmy: 200, capToTakerTroops: false }
   );
 
   assert.equal(Math.sqrt(200) * Math.sqrt(200), 200.00000000000003);
   assert.equal(outcome.trace?.armyTerm, 200);
+});
+
+test("damage calculator rounds positive damage upward to three decimal places", () => {
+  const outcome = calculateIndexedDamageJob(
+    { ...job, kind: "skill", sourceMultiplier: 1.23456 },
+    simpleFighters(),
+    [],
+    { trace: true, minInitialArmy: 1000, capToTakerTroops: false }
+  );
+
+  assert.ok(Math.abs((outcome.trace?.damageBeforeOffsets ?? 0) - 12.3456) < 1e-12);
+  assert.equal(outcome.trace?.rawDamage, 12.346);
+  assert.equal(outcome.kills, 12.346);
+});
+
+test("damage rounding does not advance a value already on the three-decimal grid", () => {
+  const outcome = calculateIndexedDamageJob(
+    { ...job, kind: "skill", sourceMultiplier: 2.007 },
+    simpleFighters(),
+    [],
+    { trace: true, minInitialArmy: 10, capToTakerTroops: false }
+  );
+
+  assert.ok((outcome.trace?.damageBeforeOffsets ?? 0) * 1000 > 2007);
+  assert.equal(outcome.trace?.rawDamage, 2.007);
+  assert.equal(outcome.kills, 2.007);
 });
 
 test("damage calculator uses centralized bucket definitions for player stat routing", () => {
@@ -248,7 +291,10 @@ test("passive stat bonuses aggregate as up sum over down sum on top of player st
   assert.equal(outcome.trace?.atomicBuckets["passive.attack.down"].totalPct, 5);
   assert.equal(outcome.trace?.aggregationGroups["passive.dealer.attack.up"].factor, 1.3);
   assert.equal(outcome.trace?.aggregationGroups["passive.dealer.attack.down"].factor, 1.05);
-  assert.equal(Number((outcome.kills / baseline.kills).toFixed(6)), Number((1.3 / 1.05).toFixed(6)));
+  assert.equal(
+    Number(((outcome.trace?.damageBeforeOffsets ?? 0) / (baseline.trace?.damageBeforeOffsets ?? 1)).toFixed(6)),
+    Number((1.3 / 1.05).toFixed(6))
+  );
 });
 
 test("static profile factoring is identical to evaluating its buckets unfactored", () => {
@@ -311,7 +357,7 @@ test("static profile factoring is identical to evaluating its buckets unfactored
     unfactoredDynamicProduct(scratch.factors, job.kind, "numerator") * unfactoredStaticNumerator /
     (100 * unfactoredDynamicProduct(scratch.factors, job.kind, "denominator") * unfactoredStaticDenominator);
 
-  assert.ok(Math.abs(profiled.kills - unfactoredDamage) < 1e-12);
+  assert.ok(Math.abs((profiled.trace?.damageBeforeOffsets ?? 0) - unfactoredDamage) < 1e-12);
   assert.equal(profiled.trace?.atomicBuckets["player.attack"].totalPct, 50);
   assert.equal(profiled.trace?.atomicBuckets["passive.attack.up"].totalPct, 20);
   assert.equal(profiled.trace?.atomicBuckets["passive.attack.down"].totalPct, 5);
@@ -377,7 +423,12 @@ test("default aggregation multiplies hero and troop active damage buckets", () =
   assert.equal(combined.trace?.atomicBuckets["active.troop.lethality.up"].totalPct, 10);
   assert.equal(combined.trace?.aggregationGroups["active.hero.lethality.up"].factor, 1.2);
   assert.equal(combined.trace?.aggregationGroups["active.troop.lethality.up"].factor, 1.1);
-  assert.ok(Math.abs(combined.kills - baseline.kills * 1.2 * 1.1) < 1e-12);
+  assert.ok(
+    Math.abs(
+      (combined.trace?.damageBeforeOffsets ?? 0) -
+      (baseline.trace?.damageBeforeOffsets ?? 0) * 1.2 * 1.1
+    ) < 1e-12
+  );
 });
 
 test("multiplicative all-damage buckets compound instead of adding", () => {

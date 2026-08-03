@@ -119,14 +119,15 @@ test("Gatot converts source formation Attack into next-turn shield protection", 
 
   assert.ok(rightShield && "value" in rightShield);
   assert.ok(Math.abs(rightShield.value - expectedRightShield) < 1e-12);
-  assert.equal(roundTwoLeftAttack?.kills, Math.max(0, (roundTwoLeftAttack?.trace?.damageBeforeOffsets ?? 0) - expectedRightShield));
+  const unroundedDamage = Math.max(0, (roundTwoLeftAttack?.trace?.damageBeforeOffsets ?? 0) - expectedRightShield);
+  assert.equal(roundTwoLeftAttack?.kills, Math.ceil(unroundedDamage * 1000) / 1000);
 });
 
 test("Gatot caps the shield formation count at the smaller initial army", () => {
   const config = loadSimulatorConfig();
   const cases = [
     { attacker: 450, defender: 200, attackerRemaining: 173, defenderRemaining: 200 },
-    { attacker: 2500, defender: 500, attackerRemaining: 975, defenderRemaining: 498 }
+    { attacker: 2500, defender: 500, attackerRemaining: 974, defenderRemaining: 498 }
   ] as const;
 
   for (const expected of cases) {
@@ -217,7 +218,7 @@ test("Gatot source-Attack shields reproduce the observed army-size threshold", (
   const config = loadSimulatorConfig();
   const expectations = [
     { left: 4900, right: 1000, winner: "draw", rounds: 1500, leftLosses: 3, rightLosses: 4 },
-    { left: 5100, right: 1000, winner: "attacker", rounds: 1380, leftLosses: 3, rightLosses: 1000 },
+    { left: 5100, right: 1000, winner: "attacker", rounds: 1378, leftLosses: 3, rightLosses: 1000 },
     { left: 10000, right: 2000, winner: "attacker", rounds: 452, leftLosses: 14, rightLosses: 2000 },
     { left: 20000, right: 4000, winner: "attacker", rounds: 342, leftLosses: 541, rightLosses: 4000 }
   ] as const;
@@ -267,7 +268,7 @@ test("Gatot conserves one complete turn shield across enemy formations", () => {
 
   assert.deepEqual(
     { winner: result.winner, rounds: result.rounds, leftInfantry: result.remaining.attacker.infantry },
-    { winner: "attacker", rounds: 1037, leftInfantry: 4996 }
+    { winner: "attacker", rounds: 1036, leftInfantry: 4996 }
   );
   assert.deepEqual(result.remaining.defender, { infantry: 0, lancer: 0, marksman: 0 });
 });
@@ -317,7 +318,7 @@ test("Gatot turn-shield pooling reproduces the mixed-formation family", () => {
       marksman: 1000,
       winner: "attacker",
       rounds: 895,
-      attackerSurvivors: 1339,
+      attackerSurvivors: 1337,
       defenderSurvivors: 0
     }
   ] as const;

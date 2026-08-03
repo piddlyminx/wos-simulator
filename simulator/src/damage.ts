@@ -94,6 +94,7 @@ const STATIC_BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(STATIC_BUCKETS);
 const DYNAMIC_NEUTRAL_VALUES = Float64Array.from(DYNAMIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const STATIC_NEUTRAL_VALUES = Float64Array.from(STATIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
+const DAMAGE_DECIMAL_SCALE = 1000;
 
 /** Smaller side's initial army; battle-invariant. */
 export function minInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
@@ -106,11 +107,6 @@ export function minInitialArmy(fighters: Record<SideId, ResolvedFighter>): numbe
   );
 }
 
-/** sqrt of the smaller side's initial army; battle-invariant. */
-export function sqrtMinInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
-  return Math.sqrt(minInitialArmy(fighters));
-}
-
 export interface DamageJobOptions {
   recorder: BattleRecorder;
   effectIndex: EffectIndex;
@@ -118,7 +114,7 @@ export interface DamageJobOptions {
   scratch?: DamageScratch;
   capToTakerTroops?: boolean;
   usedEffects?: ActiveEffect[];
-  sqrtMinInitialArmy?: number;
+  minInitialArmy?: number;
 }
 
 export function calculateDamageJob(
@@ -133,10 +129,12 @@ export function calculateDamageJob(
   const staticProfile = options.staticDamageProfile;
   // Fractional casualties carry between rounds, but every positive remainder is
   // still one living troop and contributes fully to the next attack.
-  const dealerTroops = Math.ceil(Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0));
+  const dealerTroops = ceilIgnoringFloatResidue(
+    Math.max(0, job.roundStartTroops[job.dealerSide][job.dealerUnit] ?? 0)
+  );
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
-  const sqrtMinArmy = options.sqrtMinInitialArmy ?? sqrtMinInitialArmy(fighters);
-  const armyTerm = ceilArmyTerm(Math.sqrt(dealerTroops) * sqrtMinArmy);
+  const initialArmy = options.minInitialArmy ?? minInitialArmy(fighters);
+  const armyTerm = ceilSqrtProduct(dealerTroops, initialArmy);
   const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
   applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
@@ -162,7 +160,8 @@ export function calculateDamageJob(
     recording,
     usedEffects
   );
-  const rawDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
+  const unroundedDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
+  const rawDamage = ceilIgnoringFloatResidue(unroundedDamage * DAMAGE_DECIMAL_SCALE) / DAMAGE_DECIMAL_SCALE;
   const uncappedKills = rawDamage;
   const kills = options.capToTakerTroops === false ? uncappedKills : Math.min(takerTroops, uncappedKills);
   return recording.finish({ job, factors: buckets.factors, armyTerm, damageBeforeOffsets, offsetDamage, rawDamage, kills });
@@ -331,9 +330,22 @@ function applyTurnShield(
  * Preserve the integer ceiling while ignoring a one-ULP overshoot from operations
  * such as sqrt(200) * sqrt(200) = 200.00000000000003.
  */
-function ceilArmyTerm(value: number): number {
+export function ceilIgnoringFloatResidue(value: number): number {
   if (value === 0) return 0;
   return Math.ceil(value - Number.EPSILON * Math.max(1, value));
+}
+
+export function ceilSqrtProduct(left: number, right: number): number {
+  if (!Number.isSafeInteger(left) || left < 0 || !Number.isSafeInteger(right) || right < 0) {
+    throw new RangeError(`ceilSqrtProduct requires non-negative safe integers; received ${left} and ${right}`);
+  }
+  const product = left * right;
+  if (!Number.isSafeInteger(product)) {
+    throw new RangeError(`ceilSqrtProduct product exceeds Number.MAX_SAFE_INTEGER: ${left} * ${right}`);
+  }
+
+  const root = Math.floor(Math.sqrt(product));
+  return root * root >= product ? root : root + 1;
 }
 
 function compileDamageTerms(definitions: readonly BucketSpec[]): DamageFactorTerm[] {

@@ -464,7 +464,7 @@ test("runPrepared carries fractional casualties between rounds and ceils final s
 
   assert.equal(totalRemaining(result.remaining.attacker) - totalRemaining(result.remaining.defender), -186);
   assert.equal(result.remaining.defender.lancer, 186);
-  assert.equal(result.trace?.rounds[1]?.roundStartTroops.defender.lancer.toFixed(6), "198.013242");
+  assert.equal(result.trace?.rounds[1]?.roundStartTroops.defender.lancer.toFixed(6), "198.013000");
 });
 
 test("runPrepared defaults to a 1500 round cap when no explicit maxRounds is provided", () => {
@@ -1592,7 +1592,10 @@ test("requires_effect gates a modifier to damage jobs where the required effect 
   assert.equal(marksmanAttack?.trace?.atomicBuckets["active.troop.damageTaken.down"].totalPct, 46);
   assert.equal(marksmanAttack?.trace?.aggregationGroups["active.troop.damageTaken.down"].factor, 1.46);
   assert.equal(marksmanAttack?.trace?.offsetDamage, 0);
-  assert.equal(marksmanAttack?.kills, marksmanAttack?.trace?.damageBeforeOffsets);
+  assert.equal(
+    marksmanAttack?.kills,
+    Math.ceil((marksmanAttack?.trace?.damageBeforeOffsets ?? 0) * 1000) / 1000
+  );
 });
 
 test("Crystal Shield and Body of Light resolve additive FC8 and FC10 damage reductions", () => {
