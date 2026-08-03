@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import cv2
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,6 +27,30 @@ from report_stats_parser import (
 
 
 class ReportStatsParserTests(unittest.TestCase):
+    def test_generic_troop_type_avatars_match_all_three_types(self) -> None:
+        report_path = ROOT / "dashboard" / "test_reports" / "Screenshot 2026-03-25 224629.png"
+        image = cv2.imread(str(report_path))
+        self.assertIsNotNone(image)
+        assert image is not None
+        image_height, image_width = image.shape[:2]
+        header_y1 = 185
+        avatar_y1 = header_y1 - int(image_height * 0.135)
+        avatar_y2 = header_y1 - int(image_height * 0.052)
+
+        for slot, expected_type in zip((3, 4, 5), TROOP_TYPES):
+            with self.subTest(expected_type=expected_type):
+                cx = int(image_width * report_stats_parser.TROOP_SLOT_CENTERS[slot])
+                half_width = int(image_width * report_stats_parser.TROOP_SLOT_HALF_WIDTH)
+                avatar_crop = image[avatar_y1:avatar_y2, cx - half_width : cx + half_width]
+
+                actual_type, score, template = report_stats_parser._best_avatar_match(
+                    avatar_crop, TROOP_TYPES
+                )
+
+                self.assertEqual(actual_type, expected_type)
+                self.assertGreaterEqual(score, report_stats_parser.MIN_TROOP_AVATAR_SCORE)
+                self.assertEqual(template, "generic_troop_type.png")
+
     def test_dashboard_adapter_maps_typed_partial_troops_and_stats(self) -> None:
         side = {
             "troops": [
