@@ -8,6 +8,7 @@ import {
 } from "@/lib/db";
 import HeroTrendChart from "@/components/HeroTrendChart";
 import HeroCoverageTimelineChart from "@/components/HeroCoverageTimelineChart";
+import { ExperimentalBadge } from "@/components/ExperimentalBadge";
 import MetricCard from "@/components/MetricCard";
 import { testcaseDetailHref } from "@/lib/testcase-file";
 import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
@@ -95,6 +96,7 @@ export default async function HeroDetailPage({ params }: PageProps) {
         >
           {hero.name}
         </h2>
+        {hero.experimental && <ExperimentalBadge />}
         <span
           className="inline-block px-2 py-0.5 rounded text-xs font-bold font-mono"
           style={{

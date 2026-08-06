@@ -1,6 +1,7 @@
 {
   "name": "Xura",
   "hero_generation": "S9",
+  "experimental": true,
   "troop_type": "marksman",
   "skills": {
     "FungalFog": {
@@ -17,17 +18,16 @@
     "PiercingArrow": {
       "description": "Xura's Marksmen deal X% additional damage every 2 strikes and make their target take Y% more damage for 1 turn.",
       "trigger": {
-        "type": "attack",
-        "every": 2,
-        "source": "marksman"
+        "type": "turn",
+        "every": 2
       },
       "effects": {
         "PiercingArrow/1": {
           "type": "extra_skill_attack",
           "value": [20, 40, 60, 80, 100],
           "units": {
-            "applies_to": "trigger.source",
-            "applies_vs": "trigger.target"
+            "applies_to": ["marksman"],
+            "applies_vs": "enemy.any"
           },
           "duration": { "attacks": { "count": 1 } },
           "trigger_damage_jobs": [
@@ -37,8 +37,8 @@
         "PiercingArrow/2": {
           "type": "active.hero.damageTaken.up",
           "value": [5, 10, 15, 20, 25],
-          "units": { "applies_to": "trigger.target" },
-          "duration": { "turns": { "count": 1 } },
+          "units": { "applies_to": "enemy.any" },
+          "duration": { "turns": { "count": 1, "delay": 1 } },
           "same_effect_stacking": "max"
         }
       }

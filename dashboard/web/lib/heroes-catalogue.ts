@@ -13,6 +13,7 @@ export interface Skill4Info {
 export interface HeroEntry {
   name: string;
   generation: string | null;
+  experimental: boolean;
   troopType: TroopCategory | null;
   categories: TroopCategory[];
   skillCount: number;
@@ -45,6 +46,7 @@ interface SimulatorSkillEffect {
 interface HeroSpec {
   name: string;
   generation: string | null;
+  experimental: boolean;
   troopType: TroopCategory | null;
   categories: TroopCategory[];
   skills: readonly HeroSkillDefinition[];
@@ -117,6 +119,7 @@ const HERO_SPECS: HeroSpec[] = Object.entries(SIMULATOR_CONFIG.heroDefinitions)
     return {
       name,
       generation: displayHeroGeneration(definition.hero_generation),
+      experimental: definition.experimental === true,
       troopType: category ?? null,
       categories,
       skills,
@@ -187,6 +190,7 @@ export const HEROES: HeroEntry[] = HERO_SPECS.map((spec) => {
   return {
     name: spec.name,
     generation: spec.generation,
+    experimental: spec.experimental,
     troopType: spec.troopType,
     categories: spec.categories,
     skillCount: skillNums.length,

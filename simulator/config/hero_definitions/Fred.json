@@ -1,6 +1,7 @@
 {
   "name": "Fred",
   "hero_generation": "S9",
+  "experimental": true,
   "troop_type": "lancer",
   "skills": {
     "HydraulicSuppression": {
