@@ -1,6 +1,7 @@
 {
   "name": "Magnus",
   "hero_generation": "S9",
+  "experimental": true,
   "troop_type": "infantry",
   "skills": {
     "Rapacious": {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import CoverageTrendChart from "@/components/CoverageTrendChart";
+import { ExperimentalBadge } from "@/components/ExperimentalBadge";
 import MetricCard from "@/components/MetricCard";
 import {
   getCoverageTrend,
@@ -190,13 +191,16 @@ export default function HeroesPage() {
                     className="py-2 pr-4 sticky left-0"
                     style={{ backgroundColor: "var(--main-bg)" }}
                   >
-                    <Link
-                      href={`/heroes/${encodeURIComponent(hero.name)}`}
-                      className="hover:underline"
-                      style={{ color: "var(--sidebar-active)" }}
-                    >
-                      {hero.name}
-                    </Link>
+                    <div className="flex items-center gap-1.5">
+                      <Link
+                        href={`/heroes/${encodeURIComponent(hero.name)}`}
+                        className="hover:underline"
+                        style={{ color: "var(--sidebar-active)" }}
+                      >
+                        {hero.name}
+                      </Link>
+                      {hero.experimental && <ExperimentalBadge />}
+                    </div>
                   </td>
                   <td className="py-2 pr-4 opacity-60">
                     {hero.generation ?? "—"}

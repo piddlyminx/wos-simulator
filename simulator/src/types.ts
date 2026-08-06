@@ -146,6 +146,7 @@ export interface SkillFile {
   name: string;
   aliases?: string[];
   hero_generation?: string;
+  experimental?: boolean;
   troop_type?: UnitType | string;
   skills: Record<string, Omit<SkillDefinition, "id" | "name">>;
 }
