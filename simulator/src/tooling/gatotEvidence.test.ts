@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "../config";
+import { loadSimulatorConfig } from "../config-node";
 import {
   GATOT_GAME_OBSERVATIONS,
   renderGatotEvidenceMarkdown,

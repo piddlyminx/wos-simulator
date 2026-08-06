@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { BattleInput, BattleResult, SimulationOptions, SimulatorConfig } from "@simulator/types";
 import type { OptimizeRatioRequestPayload, SimulateRequestPayload } from "@/lib/simulate-run";

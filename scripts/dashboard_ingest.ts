@@ -6,7 +6,7 @@ import { basename, dirname, relative, resolve, sep } from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
-import { loadSimulatorConfig } from "../simulator/src/config";
+import { loadSimulatorConfig } from "../simulator/src/config-node";
 import type { SkillFile } from "../simulator/src/types";
 
 const require = createRequire(import.meta.url);

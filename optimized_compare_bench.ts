@@ -1,6 +1,6 @@
 import { performance } from "node:perf_hooks";
 
-import { loadSimulatorConfig } from "./simulator/src/config";
+import { loadSimulatorConfig } from "./simulator/src/config-node";
 import { teamToBattleInput } from "./scripts/tournament/teamInput";
 import type { Team } from "./scripts/tournament/types";
 

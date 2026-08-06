@@ -4,7 +4,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { BattleInputBuilder } from "./battleInputBuilder";
-import { loadSimulatorConfig } from "./config";
+import { loadSimulatorConfig } from "./config-node";
 import { createSeededRng, chancePasses, compiledTriggerForSkill } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./fighterResolution";
 import { prepareBattle, runPrepared, simulateBattles, simulateBearBattle, signedRemainingScore } from "./simulator";

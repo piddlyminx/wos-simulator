@@ -2,7 +2,7 @@ import { runOptimizeRatio, runOptimizeBatchDirect, type OptimizeBatchResult, typ
 import { runBearOptimizeRatio, runBearSimulation, runBearSimulationTrace } from "@/lib/simulator/bear";
 import { runSimulation, runSimulationBatchDirect, runSimulationTrace, type SimulateBatchResult, type SimulateBatchTask } from "@/lib/simulator/simulate";
 import { runProgressiveSurfaceSweep, runPair, type SurfaceBatchResult, type SurfaceBatchTask } from "@/lib/simulator/surface";
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import type { SimulatorWorkerRequest, SimulatorWorkerResponse } from "@/lib/simulator/worker-protocol";
 import { runBattleTasksDirect, runTournament, type BattleSummary, type BattleTask, type TournamentRunOptions } from "@/lib/tournament";
 import type { SimulatorConfig } from "@simulator/types";

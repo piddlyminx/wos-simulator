@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "../../simulator/src/config";
+import { loadSimulatorConfig } from "../../simulator/src/config-node";
 import { signedRemainingScore, simulateBattles } from "../../simulator/src/simulator";
 import type { BattleResult, SimulatorConfig } from "../../simulator/src/types";
 import { batchTasksByWeight } from "../../simulator/src/workerPool";

@@ -3,13 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "generate:hero-manifest": "npx --yes tsx ../../scripts/generate_hero_manifest.ts",
-    "predev": "npm run generate:hero-manifest",
-    "predev-user": "npm run generate:hero-manifest",
-    "predev:docker": "npm run generate:hero-manifest",
-    "prebuild": "npm run generate:hero-manifest",
-    "pretest": "npm run generate:hero-manifest",
-    "presmoke": "npm run generate:hero-manifest",
     "dev": "scripts/dev-startup.sh dev --webpack",
     "dev-user": "NEXT_DIST_DIR=.next-user scripts/dev-startup.sh dev --webpack",
     "dev:docker": "next dev --webpack",

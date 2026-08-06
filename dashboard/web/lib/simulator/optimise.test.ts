@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import type { BattleResult, SimulationOptions } from "@simulator/types";
 import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
 import { compositionGrid, countsForPercentages, rankOptimizeRows, runOptimizeRatio, wilsonLowerBound } from "./optimise";

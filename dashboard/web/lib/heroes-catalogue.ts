@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import type { SkillRequirement } from "@simulator/types";
 
 export type TroopCategory = "infantry" | "lancer" | "marksman";
@@ -69,9 +69,11 @@ export function displayHeroGeneration(value: string | undefined): string | null 
   return match ? `Gen ${match[1]}` : value;
 }
 
-function generationNumber(generation: string | null): number {
+function generationRank(generation: string | null): number {
   const match = /^Gen (\d+)$/.exec(generation ?? "");
-  return match ? Number(match[1]) : Number.NEGATIVE_INFINITY;
+  if (match) return Number(match[1]);
+  if (generation === "SR") return 0;
+  return -1;
 }
 
 const TROOP_TYPE_ORDER: Record<TroopCategory, number> = {
@@ -85,8 +87,12 @@ export function sortHeroesByGenerationAndTroop(
 ): HeroEntry[] {
   return [...heroes].sort((a, b) => {
     const generationDelta =
-      generationNumber(b.generation) - generationNumber(a.generation);
+      generationRank(b.generation) - generationRank(a.generation);
     if (generationDelta !== 0) return generationDelta;
+    const generationLabelDelta = (b.generation ?? "").localeCompare(
+      a.generation ?? "",
+    );
+    if (generationLabelDelta !== 0) return generationLabelDelta;
     const troopDelta =
       (a.troopType ? TROOP_TYPE_ORDER[a.troopType] : Number.MAX_SAFE_INTEGER) -
       (b.troopType ? TROOP_TYPE_ORDER[b.troopType] : Number.MAX_SAFE_INTEGER);

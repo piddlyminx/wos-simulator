@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "../../simulator/src/config";
+import { loadSimulatorConfig } from "../../simulator/src/config-node";
 import { prepareBattle, runPrepared } from "../../simulator/src/simulator";
 import { teamToBattleInput, teamToFighterInput } from "./teamInput";
 import type { HeroInputEntry } from "../../simulator/src/types";

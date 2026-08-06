@@ -52,8 +52,9 @@ test("hero catalogue includes configured metadata and skills", () => {
 });
 
 test("hero overview order is descending generation then troop type", () => {
+  const sorted = sortHeroesByGenerationAndTroop(HEROES);
   assert.deepEqual(
-    sortHeroesByGenerationAndTroop(HEROES)
+    sorted
       .slice(0, 6)
       .map((hero) => [hero.name, hero.generation, hero.troopType]),
     [
@@ -63,6 +64,21 @@ test("hero overview order is descending generation then troop type", () => {
       ["Magnus", "Gen 9", "infantry"],
       ["Fred", "Gen 9", "lancer"],
       ["Xura", "Gen 9", "marksman"],
+    ],
+  );
+  assert.deepEqual(
+    sorted
+      .filter((hero) => hero.generation === "SR")
+      .map((hero) => [hero.name, hero.troopType]),
+    [
+      ["Sergey", "infantry"],
+      ["Jessie", "lancer"],
+      ["Ling", "lancer"],
+      ["Lumak", "lancer"],
+      ["Patrick", "lancer"],
+      ["Bahiti", "marksman"],
+      ["Jasser", "marksman"],
+      ["Seo-yoon", "marksman"],
     ],
   );
 });

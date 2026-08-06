@@ -5,7 +5,7 @@ import { cpus } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ingestReport } from "./dashboard_ingest";
-import { loadSimulatorConfig } from "../simulator/src/config";
+import { loadSimulatorConfig } from "../simulator/src/config-node";
 import {
   assignDetailArtifactPaths,
   buildSummaryForOutput,

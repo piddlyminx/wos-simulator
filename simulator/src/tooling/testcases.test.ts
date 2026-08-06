@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "../config";
+import { loadSimulatorConfig } from "../config-node";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
 import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, deterministicRoundTolerancePct, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases";

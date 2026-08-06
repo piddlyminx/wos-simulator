@@ -1,5 +1,5 @@
 import { HEROES } from "./heroes-catalogue";
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 
 export type HeroStatCategory =
   | "SR"

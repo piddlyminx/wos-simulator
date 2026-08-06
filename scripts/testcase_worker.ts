@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "../simulator/src/config";
+import { loadSimulatorConfig } from "../simulator/src/config-node";
 import {
   executeTestcaseCase,
   type TestcaseExecutionJob,

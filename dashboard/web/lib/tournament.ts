@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import { prepareBattle, runPrepared, signedRemainingScore } from "@simulator/simulator";
 import { BattleInputBuilder } from "@simulator/battleInputBuilder";
 import type { BattleInput, FighterInput, SimulatorConfig, SkillFile } from "@simulator/types";

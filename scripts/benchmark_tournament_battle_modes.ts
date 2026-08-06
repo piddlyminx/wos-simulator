@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import { loadSimulatorConfig } from "../simulator/src/config";
+import { loadSimulatorConfig } from "../simulator/src/config-node";
 import { prepareBattle, runPrepared, signedRemainingScore } from "../simulator/src/simulator";
 import type { BattleResult, SimulatorConfig } from "../simulator/src/types";
 import { generateTeams, parseRatio } from "./tournament/teamGeneration";

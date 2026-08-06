@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import type { SimulateRequestPayload } from "@/lib/simulate-run";
 import { runSimulationBatchDirect, type SimulateBatchResult, type SimulateBatchTask } from "@/lib/simulator/simulate";
 import { installBrowserBatchHandler } from "./browserBatchWorker";

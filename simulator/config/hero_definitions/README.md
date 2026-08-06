@@ -61,7 +61,11 @@ The generated job does not evaluate `attack` triggers itself. If one or more gen
 
 The filename without `.json` is the definition's primary config key. The filename, `name`, and every entry in `aliases` can all resolve the hero after normalization. For example, `WuMing.json` can have `"name": "Wu Ming"`; both resolve to the same definition.
 
-The Node directory loader discovers JSON files automatically. The browser-safe/default config in `simulator/src/config.ts` uses explicit JSON imports, so adding a new file also requires importing it and adding it to `DEFAULT_HERO_DEFINITIONS`.
+This directory is the sole hero catalogue. Adding, changing, or removing a JSON
+file requires no separate registration step. Standalone Node/TSX programs read
+the directory from disk when they load the simulator config. The dashboard's
+Webpack build discovers the same files and bundles them; `next dev` also watches
+the directory, while production picks up changes on the next image build.
 
 ### `hero_generation` is opt-in build-time data
 

@@ -1,7 +1,7 @@
 import { pathToFileURL } from "node:url";
 
 import { BattleInputBuilder } from "../battleInputBuilder";
-import { loadSimulatorConfig } from "../config";
+import { loadSimulatorConfig } from "../config-node";
 import { simulateBattles } from "../simulator";
 import type {
   BattleInput,

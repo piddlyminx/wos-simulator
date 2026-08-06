@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { loadSimulatorConfig } from "../../simulator/src/config";
+import { loadSimulatorConfig } from "../../simulator/src/config-node";
 import { runSingleBattleDirect, totalRemaining } from "./battleRunner";
 import type { Team } from "./types";
 

@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import { runPair, type SurfaceBatchResult, type SurfaceBatchTask } from "@/lib/simulator/surface";
 import { installBrowserBatchHandler } from "./browserBatchWorker";
 

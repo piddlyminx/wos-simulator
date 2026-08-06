@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { AppliedEffect, AttackOutcome, BattleResult, DetailedAppliedEffect, SimulatorConfig, UnitType } from "@simulator/types";
 import type {

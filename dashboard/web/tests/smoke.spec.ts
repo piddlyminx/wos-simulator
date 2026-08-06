@@ -438,7 +438,7 @@ test.describe("Dashboard smoke tests", () => {
     expect(response?.status()).toBe(404);
   });
 
-  test("/simulate — gen 7 heroes are selectable", async ({ page }) => {
+  test("/simulate — configured heroes are selectable", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
       if (msg.type() === "error") errors.push(msg.text());
@@ -456,6 +456,7 @@ test.describe("Dashboard smoke tests", () => {
       .locator("option")
       .allTextContents();
     expect(infantryOptions).toContain("Edith");
+    expect(infantryOptions).toContain("Gregory");
 
     const lancerOptions = await page
       .locator('select[aria-label="lancer hero"]')
@@ -464,6 +465,7 @@ test.describe("Dashboard smoke tests", () => {
       .allTextContents();
     expect(lancerOptions).toContain("Gordon");
     expect(lancerOptions).toContain("Ling");
+    expect(lancerOptions).toContain("Freya");
 
     const marksmanOptions = await page
       .locator('select[aria-label="marksman hero"]')
@@ -471,6 +473,7 @@ test.describe("Dashboard smoke tests", () => {
       .locator("option")
       .allTextContents();
     expect(marksmanOptions).toContain("Bradley");
+    expect(marksmanOptions).toContain("Blanchette");
 
     expect(errors).toHaveLength(0);
   });

@@ -1,5 +1,6 @@
-export { buildSimulatorConfig, loadSimulatorConfig } from "./config";
+export { buildSimulatorConfig } from "./config";
 export type { RawSimulatorConfig } from "./config";
+export { loadSimulatorConfig, loadSimulatorConfigFromDir } from "./config-node";
 export { createTroopStatsRecord, fireCrystalMultiplier, generateTroopStats, generateTroopStatsCatalogue } from "./troopStats";
 export { prepareBattle } from "./prepare";
 export type { CompiledBattle } from "./prepare";

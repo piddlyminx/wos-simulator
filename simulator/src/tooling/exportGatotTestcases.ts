@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-import { loadSimulatorConfig } from "../config";
+import { loadSimulatorConfig } from "../config-node";
 import type { BattleInput, SimulatorConfig } from "../types";
 import { GATOT_GAME_OBSERVATIONS, type GatotGameObservation } from "./gatotEvidence";
 

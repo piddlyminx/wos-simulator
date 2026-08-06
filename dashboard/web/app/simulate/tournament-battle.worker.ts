@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import { runSingleBattleDirect, type BattleSummary, type BattleTask } from "@/lib/tournament";
 import { installBrowserBatchHandler } from "./browserBatchWorker";
 

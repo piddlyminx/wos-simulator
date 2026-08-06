@@ -1,8 +1,17 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { buildSimulatorConfig, type RawSimulatorConfig } from "./config";
 import type { SimulatorConfig, SkillFile } from "./types";
+
+export const DEFAULT_CONFIG_DIR = fileURLToPath(
+  new URL("../config", import.meta.url),
+);
+
+export function loadSimulatorConfig(): SimulatorConfig {
+  return loadSimulatorConfigFromDir(DEFAULT_CONFIG_DIR);
+}
 
 export function loadSimulatorConfigFromDir(configDir: string): SimulatorConfig {
   const root = resolve(configDir);

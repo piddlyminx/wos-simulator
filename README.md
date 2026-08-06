@@ -39,7 +39,10 @@ npx tsx scripts/fit_enemy_base_stats.ts --help
 
 Config (troop/hero stats, hero definitions) lives in `simulator/config/`. The
 dashboard imports the engine through the `@simulator/*` path alias, which resolves to
-`simulator/src/*` (alias name kept for continuity).
+`simulator/src/*` (alias name kept for continuity). Hero JSON files are the sole
+catalogue: Node tools discover them from the directory at runtime, and the
+dashboard discovers and bundles the same directory through Webpack. There is no
+generated manifest or separate registration step.
 
 ### `dashboard/`
 

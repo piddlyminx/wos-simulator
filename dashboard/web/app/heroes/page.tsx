@@ -65,8 +65,6 @@ export default function HeroesPage() {
     latestRunId != null && setsDiffer(activeKeys, savedKeys);
   const coverageTrend = getCoverageTrend(50);
 
-  let previousGeneration: string | null | undefined;
-
   return (
     <div>
       <h2
@@ -166,9 +164,10 @@ export default function HeroesPage() {
             </tr>
           </thead>
           <tbody>
-            {heroes.flatMap((hero) => {
-              const generationChanged = hero.generation !== previousGeneration;
-              previousGeneration = hero.generation;
+            {heroes.flatMap((hero, heroIndex) => {
+              const generationChanged =
+                heroIndex === 0 ||
+                hero.generation !== heroes[heroIndex - 1]?.generation;
               const rows = [];
               if (generationChanged) {
                 rows.push(

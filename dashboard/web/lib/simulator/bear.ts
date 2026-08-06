@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import { simulateBearBattle } from "@simulator/simulator";
 import type { BearBattleResult, FighterInput, PassiveEffects, SimulatorConfig, StatBlock, UnitType } from "@simulator/types";
 import type {

@@ -1,4 +1,4 @@
-import { loadSimulatorConfig } from "@simulator/config";
+import { loadSimulatorConfig } from "@simulator/config-default";
 import type { OptimizeRatioRequestPayload } from "@/lib/simulate-run";
 import { runOptimizeBatchDirect, type OptimizeBatchResult, type OptimizeBatchTask } from "@/lib/simulator/optimise";
 import { installBrowserBatchHandler } from "./browserBatchWorker";

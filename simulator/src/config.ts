@@ -1,7 +1,3 @@
-import heroGenerationStatsJson from "../config/hero_generation_stats.json" with { type: "json" };
-import troopSkillsJson from "../config/troop_skills.json" with { type: "json" };
-import { DEFAULT_HERO_DEFINITIONS } from "./generated/heroDefinitions";
-
 import { UNIT_TYPES } from "./types";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types";
 import {
@@ -28,14 +24,6 @@ export interface RawSimulatorConfig {
   troopSkills: SkillFile;
   heroDefinitions: Record<string, SkillFile>;
   fileLabel?: (kind: "hero_generation_stats" | "troop_skills" | "hero_definition", key?: string) => string;
-}
-
-export function loadSimulatorConfig(): SimulatorConfig {
-  return buildSimulatorConfig({
-    heroGenerationStats: heroGenerationStatsJson as SimulatorConfig["heroGenerationStats"],
-    troopSkills: troopSkillsJson as SkillFile,
-    heroDefinitions: DEFAULT_HERO_DEFINITIONS
-  });
 }
 
 export function buildSimulatorConfig(raw: RawSimulatorConfig): SimulatorConfig {

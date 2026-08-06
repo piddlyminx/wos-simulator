@@ -4,9 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "generate:hero-manifest": "npx --yes tsx ../scripts/generate_hero_manifest.ts",
-    "pretest": "npm run generate:hero-manifest",
-    "pretypecheck": "npm run generate:hero-manifest",
     "test": "npx --yes tsx --test \"src/**/*.test.ts\"",
     "typecheck": "npx --yes --package typescript --package @types/node tsc --noEmit"
   },
