@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { EditableNumberInput } from "@/components/EditableNumberInput";
+import { ExperimentalBadge } from "@/components/ExperimentalBadge";
 import { TroopRatioInput } from "@/components/simulate/TroopRatioInput";
 import {
   HEROES,
@@ -668,7 +669,7 @@ export function SidePanel({
                     <option value="">— None —</option>
                     {HEROES.map((h) => (
                       <option key={h.name} value={h.name}>
-                        {h.name}
+                        {h.name}{h.experimental ? " · EXP" : ""}
                       </option>
                     ))}
                   </select>
@@ -1097,7 +1098,9 @@ function TroopColumn({
         )}
       </label>
       <label className="sim-hero-field">
-        <span className="sim-field-label">Hero</span>
+        <span className="sim-field-label flex items-center gap-1">
+          Hero {hero?.experimental && <ExperimentalBadge compact />}
+        </span>
         <select
           name={`${which}.heroes.${cat}.name`}
           value={heroSlot.name ?? ""}
@@ -1176,7 +1179,7 @@ function TroopColumn({
           <option value="">— None —</option>
           {heroOptions.map((h) => (
             <option key={h.name} value={h.name}>
-              {h.name}
+              {h.name}{h.experimental ? " · EXP" : ""}
             </option>
           ))}
         </select>

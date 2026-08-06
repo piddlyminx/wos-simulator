@@ -54,6 +54,7 @@ The generated job does not evaluate `attack` triggers itself. If one or more gen
 | `name` | String | Name stored on the resolved hero and accepted when resolving battle input. It does not have to equal the filename. |
 | `aliases` | Array of strings | Additional names accepted in battle input. Matching lowercases the name and removes every non-ASCII-alphanumeric character. Aliases, filenames, and `name` values must not collide after that normalization. |
 | `hero_generation` | Key from `../hero_generation_stats.json` | Associates the hero with a generation stat block, such as `SR`, `S1`, `S1_natalia`, ..., `S8`. Different consumers apply that association differently; see below. |
+| `experimental` | Boolean | Optional UI metadata. Set to `true` to label a hero configuration as experimental in dashboard hero and simulator views. It does not change combat behaviour. |
 | `troop_type` | `infantry`, `lancer`, or `marksman` | Hero class used by the dashboard catalogue and ingestion tools. It does **not** restrict which troops the hero's effects can affect, and the simulator's combat resolver does not otherwise read it. |
 | `skills` | Object keyed by skill ID | The hero's skills, in skill-number order. The object key is the skill ID used in reports and may also be used when supplying a level. |
 
