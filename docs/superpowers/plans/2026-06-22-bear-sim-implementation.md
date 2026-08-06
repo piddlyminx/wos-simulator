@@ -15,7 +15,6 @@
 **Files:**
 - Modify: `simulator/src/types.ts`
 - Modify: `simulator/src/simulator.ts`
-- Modify: `simulator/src/index.ts`
 - Test: `simulator/src/simulator.test.ts`
 
 - [ ] **Step 1: Write failing tests for fixed 10 rounds and uncapped bear score**
@@ -130,11 +129,7 @@ function bearScore(attacks: AttackOutcome[]): number {
 }
 ```
 
-Add export in `simulator/src/index.ts`:
-
-```ts
-export { simulateBearBattle, bearFighterInput, prepareBattle, runPrepared, signedRemainingScore } from "./simulator";
-```
+Consumers import the bear helpers directly from `simulator/src/simulator.ts`; there is no simulator barrel module.
 
 - [ ] **Step 4: Change the loop to support bear score semantics**
 

@@ -8,7 +8,6 @@ The method is to patch one target effect at a time into each candidate bucket an
 
 ## Relevant files
 
-- `scripts/wos443_bucket_membership_matrix.ts`
 - `simulator/config/hero_definitions/Edith.json`
 - `simulator/config/hero_definitions/Gordon.json`
 - `simulator/config/hero_definitions/Bradley.json`
@@ -29,13 +28,7 @@ Before running or interpreting this batch, read:
 
 Before assigning Battle Runner, confirm which of the runnable probes below should be collected. For every selected probe, Battle Runner must first capture fresh hero skills for both accounts, then run an exact no-hero control with the same accounts, side roles, troop counts, tiers, fire-crystal levels, buffs, and report-capture path.
 
-Generate the current simulator matrix with:
-
-```bash
-WOS443_PLAYER_HERO_SKILLS=skill/data/player_hero_skills.json npx --yes tsx scripts/wos443_bucket_membership_matrix.ts
-```
-
-The generator enforces `max_t6_per_type: 2999` while tuning each fixture, per the review request to keep any single T6 troop type under 3000.
+The table below records the matrix produced during the investigation. The one-off generator was discarded after use. Any renewed investigation should create focused, reviewable testcases instead of restoring that scratch script. The recorded matrix limited each T6 troop type to 2999.
 
 The table below was regenerated after commit `02cd97a` updated hero-skill definitions, including Sergey.
 
@@ -78,14 +71,6 @@ Outcome is signed remaining score: positive means attacker survivors, negative m
 - Live observed signed remaining score lands clearly closest to one candidate row and at least 20 troops away from the next candidate row.
 - Any weak or unavailable probe is not assigned as if it proves bucket membership.
 - Any confirmed divergence sent to Simulator Engineer includes hero, skill, candidate bucket rows, observed vs expected survivors, testcase path/control result, and a narrow hypothesis. Remind them core physics are correct.
-
-## Validation commands
-
-From the simulator repo root:
-
-```bash
-WOS443_PLAYER_HERO_SKILLS=skill/data/player_hero_skills.json npx --yes tsx scripts/wos443_bucket_membership_matrix.ts
-```
 
 ## Risk notes
 
