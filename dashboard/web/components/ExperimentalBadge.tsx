@@ -1,4 +1,4 @@
-export function ExperimentalBadge({ compact = false }: { compact?: boolean }) {
+export function ExperimentalBadge() {
   return (
     <span
       className="inline-flex items-center rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide"
@@ -11,7 +11,7 @@ export function ExperimentalBadge({ compact = false }: { compact?: boolean }) {
       aria-label="Experimental hero configuration"
       data-testid="experimental-hero-badge"
     >
-      {compact ? "EXP" : "Experimental"}
+      Experimental
     </span>
   );
 }

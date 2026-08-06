@@ -199,7 +199,7 @@ export default function HeroesPage() {
                       >
                         {hero.name}
                       </Link>
-                      {hero.experimental && <ExperimentalBadge compact />}
+                      {hero.experimental && <ExperimentalBadge />}
                     </div>
                   </td>
                   <td className="py-2 pr-4 opacity-60">

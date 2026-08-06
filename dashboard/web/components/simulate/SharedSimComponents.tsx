@@ -669,7 +669,7 @@ export function SidePanel({
                     <option value="">— None —</option>
                     {HEROES.map((h) => (
                       <option key={h.name} value={h.name}>
-                        {h.name}{h.experimental ? " · EXP" : ""}
+                        {h.experimental ? "🔮 " : ""}{h.name}
                       </option>
                     ))}
                   </select>
@@ -1099,7 +1099,7 @@ function TroopColumn({
       </label>
       <label className="sim-hero-field">
         <span className="sim-field-label flex items-center gap-1">
-          Hero {hero?.experimental && <ExperimentalBadge compact />}
+          Hero {hero?.experimental && <ExperimentalBadge />}
         </span>
         <select
           name={`${which}.heroes.${cat}.name`}
@@ -1179,7 +1179,7 @@ function TroopColumn({
           <option value="">— None —</option>
           {heroOptions.map((h) => (
             <option key={h.name} value={h.name}>
-              {h.name}{h.experimental ? " · EXP" : ""}
+              {h.experimental ? "🔮 " : ""}{h.name}
             </option>
           ))}
         </select>
