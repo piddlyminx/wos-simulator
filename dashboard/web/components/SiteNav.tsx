@@ -15,7 +15,6 @@ const DASHBOARD_GROUPS: {
       { href: "/", label: "Health Dashboard" },
       { href: "/runs", label: "Runs" },
       { href: "/parity", label: "Run Reports" },
-      { href: "/coverage", label: "Coverage" },
     ],
   },
   {

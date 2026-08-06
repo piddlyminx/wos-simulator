@@ -15,7 +15,6 @@ test.describe("public simulate surface", () => {
     await expect(page.getByRole("link", { name: "Battle Sim" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Bear Sim" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Runs" })).toHaveCount(0);
-    await expect(page.getByRole("link", { name: "Coverage" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Heroes" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Testcases" })).toHaveCount(0);
     await expect(page.getByText("Simulator Dashboard")).toHaveCount(0);
@@ -35,7 +34,6 @@ test.describe("public simulate surface", () => {
   }) => {
     for (const path of [
       "/runs",
-      "/coverage",
       "/heroes",
       "/testcases",
       "/testcases/changelog",

@@ -6,7 +6,7 @@ is organized around three primary components plus shared data and documentation.
 ```
 .
 ├── simulator/     # PRIMARY: the TypeScript battle simulator (source of truth)
-├── dashboard/     # Next.js web dashboard + Python ingestion/calibration backend
+├── dashboard/     # Next.js web dashboard + SQLite migrations and OCR fixtures
 ├── skill/         # Self-contained agent skill ("wos") for driving the game via ADB
 ├── shared/        # Data shared across components (fighter stat profiles)
 ├── testcases/     # Ground-truth calibration corpus (game-observed battle results)
@@ -43,8 +43,8 @@ dashboard imports the engine through the `@simulator/*` path alias, which resolv
 
 ### `dashboard/`
 
-A Next.js app (`dashboard/web/`) plus Python helper scripts for legacy backfill
-and OCR import. The dashboard reads parity reports and the SQLite run history;
+A Next.js app (`dashboard/web/`) with TypeScript SQLite ingestion and Python OCR
+helpers. The dashboard reads parity reports and the SQLite run history;
 current runs are generated from the CLI with
 `npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest`. In-browser simulation runs the
 TypeScript engine in a web worker.
@@ -84,7 +84,7 @@ the root `testcases/` corpus. See [`skill/SKILL.md`](skill/SKILL.md).
 ```bash
 # Python (shared venv at repo root)
 uv sync
-uv run pytest                      # dashboard and skill Python tests
+uv run pytest                      # skill and OCR Python tests
 
 # TypeScript
 cd simulator && npm test

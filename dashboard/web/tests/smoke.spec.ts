@@ -414,30 +414,6 @@ test.describe("Dashboard smoke tests", () => {
     expect(errors).toHaveLength(0);
   });
 
-  test("/coverage — renders without crash", async ({ page }) => {
-    const errors: string[] = [];
-    page.on("console", (msg) => {
-      if (msg.type() === "error") errors.push(msg.text());
-    });
-    page.on("pageerror", (err) => errors.push(err.message));
-
-    const response = await page.goto("/coverage");
-    expect(response?.status()).toBe(200);
-
-    // Either shows data table cells OR the DB-misconfiguration warning (heroes table not yet seeded)
-    const hasCells = (await page.locator("table tbody td").count()) > 0;
-    const hasMisconfigWarning =
-      (await page.locator("text=DB misconfiguration").count()) > 0;
-    expect(hasCells || hasMisconfigWarning).toBe(true);
-    if (hasCells) {
-      for (const hero of ["Bradley", "Edith", "Gordon", "Ling"]) {
-        await expect(page.locator("body")).toContainText(hero);
-      }
-    }
-
-    expect(errors).toHaveLength(0);
-  });
-
   test("/heroes — renders without crash", async ({ page }) => {
     const errors: string[] = [];
     page.on("console", (msg) => {
@@ -448,18 +424,18 @@ test.describe("Dashboard smoke tests", () => {
     const response = await page.goto("/heroes");
     expect(response?.status()).toBe(200);
 
-    const hasRows = (await page.locator("tbody tr").count()) > 0;
-    const hasMisconfigWarning =
-      (await page.locator("text=DB misconfiguration").count()) > 0;
-    expect(hasRows || hasMisconfigWarning).toBe(true);
-    if (hasRows) {
-      await expect(page.locator("body")).toContainText("Gen 7");
-      for (const hero of ["Bradley", "Edith", "Gordon", "Ling"]) {
-        await expect(page.locator("body")).toContainText(hero);
-      }
+    expect(await page.locator("tbody tr").count()).toBeGreaterThan(0);
+    await expect(page.locator("body")).toContainText("Gen 10");
+    for (const hero of ["Gregory", "Freya", "Blanchette", "Magnus", "Fred", "Xura"]) {
+      await expect(page.locator("body")).toContainText(hero);
     }
 
     expect(errors).toHaveLength(0);
+  });
+
+  test("/coverage — removed", async ({ page }) => {
+    const response = await page.goto("/coverage");
+    expect(response?.status()).toBe(404);
   });
 
   test("/simulate — gen 7 heroes are selectable", async ({ page }) => {

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS hero_skills;
+DROP TABLE IF EXISTS heroes;

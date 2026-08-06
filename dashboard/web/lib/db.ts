@@ -15,7 +15,7 @@ import Database from "better-sqlite3";
 import fs from "fs";
 import path from "path";
 import zlib from "zlib";
-import type { CoverageTrendPoint, CoverageSnapshot, Hero, HeroCoverageDelta, HeroCoverageTimelinePoint, HeroSkill, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseFileHistoryRow, TestcaseFileIndexRow, TestcaseIndexRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
+import type { CoverageTrendPoint, HeroCoverageTimelinePoint, HeroSkillHistoryRow, Run, RunDeltaCounts, RunTestcase, RunWithDelta, TestcaseChangelogRow, TestcaseDeltaRow, TestcaseFileHistoryRow, TestcaseFileIndexRow, TestcaseIndexRow, TestcaseTrendRow, TopRegressionRow } from "@/types/dashboard";
 import { biasErrorDelta } from "./run-delta";
 
 /**
@@ -128,65 +128,6 @@ export function getRunCount(): number {
 }
 
 /**
- * Return all heroes ordered by tier then name.
- */
-export function getHeroes(): Hero[] {
-  const database = getDb();
-  if (!database) return [];
-  try {
-    return database
-      .prepare(
-        `SELECT * FROM heroes ORDER BY CASE generation
-          WHEN 'Gen 7' THEN 1 WHEN 'Gen 6' THEN 2 WHEN 'Gen 5' THEN 3
-          WHEN 'Gen 4' THEN 4 WHEN 'Gen 3' THEN 5 WHEN 'Gen 2' THEN 6
-          WHEN 'Gen 1' THEN 7 WHEN 'SR' THEN 8 ELSE 9 END, name`
-      )
-      .all() as Hero[];
-  } catch (err) {
-    console.error("[wos-dashboard] getHeroes failed:", err);
-    return [];
-  }
-}
-
-interface CoverageRow extends CoverageSnapshot {
-  hero_generation: string | null;
-}
-
-/**
- * Return coverage snapshots for a given run, joined with hero tier.
- * Pass runId = "latest" to automatically use the most recent run.
- */
-export function getCoverageSnapshots(runId: string): CoverageRow[] {
-  const database = getDb();
-  if (!database) return [];
-  try {
-    let resolvedId = runId;
-    if (runId === "latest") {
-      const latestRun = database
-        .prepare(`SELECT id FROM runs ORDER BY started_at DESC LIMIT 1`)
-        .get() as { id: string } | undefined;
-      if (!latestRun) return [];
-      resolvedId = latestRun.id;
-    }
-    return database
-      .prepare(
-        `SELECT cs.*, h.generation as hero_generation
-         FROM coverage_snapshots cs
-         LEFT JOIN heroes h ON cs.hero = h.name
-         WHERE cs.run_id = ?
-         ORDER BY CASE h.generation
-           WHEN 'Gen 7' THEN 1 WHEN 'Gen 6' THEN 2 WHEN 'Gen 5' THEN 3
-           WHEN 'Gen 4' THEN 4 WHEN 'Gen 3' THEN 5 WHEN 'Gen 2' THEN 6
-           WHEN 'Gen 1' THEN 7 WHEN 'SR' THEN 8 ELSE 9 END, cs.hero, cs.skill_id`
-      )
-      .all(resolvedId) as CoverageRow[];
-  } catch (err) {
-    console.error("[wos-dashboard] getCoverageSnapshots failed:", err);
-    return [];
-  }
-}
-
-/**
  * Return the id of the most recent run, or undefined if no runs exist.
  */
 export function getLatestRunId(): string | undefined {
@@ -200,41 +141,6 @@ export function getLatestRunId(): string | undefined {
   } catch (err) {
     console.error("[wos-dashboard] getLatestRunId failed:", err);
     return undefined;
-  }
-}
-
-/**
- * Return distinct skill_ids from coverage_snapshots for a given run.
- */
-export function getDistinctSkillIds(runId: string): string[] {
-  const database = getDb();
-  if (!database) return [];
-  try {
-    const rows = database
-      .prepare(
-        `SELECT DISTINCT skill_id FROM coverage_snapshots WHERE run_id = ? ORDER BY skill_id`
-      )
-      .all(runId) as { skill_id: string }[];
-    return rows.map((r) => r.skill_id);
-  } catch (err) {
-    console.error("[wos-dashboard] getDistinctSkillIds failed:", err);
-    return [];
-  }
-}
-
-/**
- * Return all coverage snapshot rows for a given run (used for matrix pivot).
- */
-export function getCoverageMatrix(runId: string): CoverageSnapshot[] {
-  const database = getDb();
-  if (!database) return [];
-  try {
-    return database
-      .prepare(`SELECT * FROM coverage_snapshots WHERE run_id = ?`)
-      .all(runId) as CoverageSnapshot[];
-  } catch (err) {
-    console.error("[wos-dashboard] getCoverageMatrix failed:", err);
-    return [];
   }
 }
 
@@ -469,38 +375,6 @@ export function getRunTrend(
 }
 
 /**
- * Return a single hero by name.
- */
-export function getHero(name: string): Hero | undefined {
-  const database = getDb();
-  if (!database) return undefined;
-  try {
-    return database
-      .prepare(`SELECT * FROM heroes WHERE name = ?`)
-      .get(name) as Hero | undefined;
-  } catch (err) {
-    console.error("[wos-dashboard] getHero failed:", err);
-    return undefined;
-  }
-}
-
-/**
- * Return all skills for a given hero.
- */
-export function getHeroSkills(heroName: string): HeroSkill[] {
-  const database = getDb();
-  if (!database) return [];
-  try {
-    return database
-      .prepare(`SELECT * FROM hero_skills WHERE hero = ? ORDER BY skill_id`)
-      .all(heroName) as HeroSkill[];
-  } catch (err) {
-    console.error("[wos-dashboard] getHeroSkills failed:", err);
-    return [];
-  }
-}
-
-/**
  * Return testcase rows for a given hero from a specific run.
  * Matches by hero name appearing in the file path.
  */
@@ -547,29 +421,6 @@ export function getHeroErrorHistory(
   } catch (err) {
     console.error("[wos-dashboard] getHeroErrorHistory failed:", err);
     return [];
-  }
-}
-
-/**
- * Return names of required tables that are absent from the schema.
- * Used by pages to surface misconfiguration instead of silently returning empty data.
- */
-export function getMissingTables(
-  required = ["heroes", "hero_skills"]
-): string[] {
-  const database = getDb();
-  if (!database) return required;
-  try {
-    const placeholders = required.map(() => "?").join(",");
-    const existing = database
-      .prepare(
-        `SELECT name FROM sqlite_master WHERE type='table' AND name IN (${placeholders})`
-      )
-      .all(...required) as { name: string }[];
-    const existingNames = new Set(existing.map((r) => r.name));
-    return required.filter((t) => !existingNames.has(t));
-  } catch {
-    return required;
   }
 }
 
@@ -1023,50 +874,6 @@ export function getHeroSkillHistory(heroName: string): HeroSkillHistoryRow[] {
     return rows;
   } catch (err) {
     console.error("[wos-dashboard] getHeroSkillHistory failed:", err);
-    return [];
-  }
-}
-
-/**
- * Return per-hero coverage delta between two runs.
- * Only heroes where covered_skills or testcase totals changed are returned.
- */
-export function getHeroCoverageDeltas(
-  currRunId: string,
-  prevRunId: string
-): HeroCoverageDelta[] {
-  const database = getDb();
-  if (!database) return [];
-  try {
-    return database
-      .prepare(
-        `WITH curr AS (
-           SELECT hero,
-             SUM(covered_bool) as covered_skills,
-             SUM(testcase_count) as total_tc
-           FROM coverage_snapshots WHERE run_id = ?
-           GROUP BY hero
-         ),
-         prev AS (
-           SELECT hero,
-             SUM(covered_bool) as covered_skills,
-             SUM(testcase_count) as total_tc
-           FROM coverage_snapshots WHERE run_id = ?
-           GROUP BY hero
-         )
-         SELECT
-           COALESCE(c.hero, p.hero) as hero,
-           COALESCE(c.covered_skills, 0) - COALESCE(p.covered_skills, 0) as delta_skills,
-           COALESCE(c.total_tc, 0) - COALESCE(p.total_tc, 0) as delta_testcases
-         FROM curr c
-         FULL OUTER JOIN prev p ON c.hero = p.hero
-         WHERE COALESCE(c.covered_skills, 0) != COALESCE(p.covered_skills, 0)
-            OR COALESCE(c.total_tc, 0) != COALESCE(p.total_tc, 0)
-         ORDER BY hero`
-      )
-      .all(currRunId, prevRunId) as HeroCoverageDelta[];
-  } catch (err) {
-    console.error("[wos-dashboard] getHeroCoverageDeltas failed:", err);
     return [];
   }
 }

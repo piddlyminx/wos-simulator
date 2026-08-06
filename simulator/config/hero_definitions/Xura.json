@@ -1,0 +1,76 @@
+{
+  "name": "Xura",
+  "hero_generation": "S9",
+  "troop_type": "marksman",
+  "skills": {
+    "FungalFog": {
+      "description": "Xura releases an underground fungi that quickly multiplies to block enemy vision, reducing damage dealt to friendly troops by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "FungalFog/1": {
+          "type": "active.hero.damage.down",
+          "value": [4, 8, 12, 16, 20],
+          "units": { "applies_to": "enemy.any" }
+        }
+      }
+    },
+    "PiercingArrow": {
+      "description": "Xura's Marksmen deal X% additional damage every 2 strikes and make their target take Y% more damage for 1 turn.",
+      "trigger": {
+        "type": "attack",
+        "every": 2,
+        "source": "marksman"
+      },
+      "effects": {
+        "PiercingArrow/1": {
+          "type": "extra_skill_attack",
+          "value": [20, 40, 60, 80, 100],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "duration": { "attacks": { "count": 1 } },
+          "trigger_damage_jobs": [
+            { "source": "use.source", "target": "use.target" }
+          ]
+        },
+        "PiercingArrow/2": {
+          "type": "active.hero.damageTaken.up",
+          "value": [5, 10, 15, 20, 25],
+          "units": { "applies_to": "trigger.target" },
+          "duration": { "turns": { "count": 1 } },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "Unorthodoxy": {
+      "description": "Xura increases Marksmen damage dealt by X% while reducing their damage taken by Y%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "Unorthodoxy/1": {
+          "type": "active.hero.damage.up",
+          "value": [3, 6, 9, 12, 15],
+          "units": { "applies_to": ["marksman"] }
+        },
+        "Unorthodoxy/2": {
+          "type": "active.hero.damageTaken.down",
+          "value": [2, 4, 6, 8, 10],
+          "units": { "applies_to": ["marksman"] }
+        }
+      }
+    },
+    "GaiacHymn": {
+      "description": "Widget bonus: Increase Attack by X% for all troops when defending.",
+      "trigger": { "type": "pre_battle" },
+      "requirements": [
+        { "level": 1, "type": "engagement_type", "value": "garrison" }
+      ],
+      "effects": {
+        "GaiacHymn/1": {
+          "type": "passive.attack.up",
+          "value": [5, 7.5, 10, 12.5, 15]
+        }
+      }
+    }
+  }
+}

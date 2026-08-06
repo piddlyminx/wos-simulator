@@ -12,13 +12,26 @@ export interface Skill4Info {
 
 export interface HeroEntry {
   name: string;
+  generation: string | null;
+  troopType: TroopCategory | null;
   categories: TroopCategory[];
   skillCount: number;
   skillNums: number[];
+  skills: HeroSkillEntry[];
   skill4?: Skill4Info;
 }
 
+export interface HeroSkillEntry {
+  id: string;
+  key: string;
+  name: string;
+  skillNum: number;
+}
+
 interface HeroSkillDefinition {
+  id: string;
+  key: string;
+  name: string;
   skillNum: number;
   requirements?: SkillRequirement[];
   effects?: Record<string, SimulatorSkillEffect>;
@@ -31,6 +44,8 @@ interface SimulatorSkillEffect {
 
 interface HeroSpec {
   name: string;
+  generation: string | null;
+  troopType: TroopCategory | null;
   categories: TroopCategory[];
   skills: readonly HeroSkillDefinition[];
 }
@@ -47,16 +62,59 @@ function normaliseTroopCategory(value: string | undefined): TroopCategory | unde
   return isTroopCategory(value) ? value : undefined;
 }
 
+export function displayHeroGeneration(value: string | undefined): string | null {
+  if (!value) return null;
+  if (value === "SR") return value;
+  const match = /^S(\d+)/.exec(value);
+  return match ? `Gen ${match[1]}` : value;
+}
+
+function generationNumber(generation: string | null): number {
+  const match = /^Gen (\d+)$/.exec(generation ?? "");
+  return match ? Number(match[1]) : Number.NEGATIVE_INFINITY;
+}
+
+const TROOP_TYPE_ORDER: Record<TroopCategory, number> = {
+  infantry: 0,
+  lancer: 1,
+  marksman: 2,
+};
+
+export function sortHeroesByGenerationAndTroop(
+  heroes: readonly HeroEntry[],
+): HeroEntry[] {
+  return [...heroes].sort((a, b) => {
+    const generationDelta =
+      generationNumber(b.generation) - generationNumber(a.generation);
+    if (generationDelta !== 0) return generationDelta;
+    const troopDelta =
+      (a.troopType ? TROOP_TYPE_ORDER[a.troopType] : Number.MAX_SAFE_INTEGER) -
+      (b.troopType ? TROOP_TYPE_ORDER[b.troopType] : Number.MAX_SAFE_INTEGER);
+    return troopDelta || a.name.localeCompare(b.name);
+  });
+}
+
 const HERO_SPECS: HeroSpec[] = Object.entries(SIMULATOR_CONFIG.heroDefinitions)
   .map(([name, definition]) => {
-    const skills = Object.values(definition.skills ?? {}).map((skill, index) => ({
-      skillNum: index + 1,
-      requirements: skill.requirements,
-      effects: skill.effects,
-    }));
+    const skills = Object.entries(definition.skills ?? {}).map(
+      ([key, skill], index) => ({
+        id: String(index + 1),
+        key,
+        name: key,
+        skillNum: index + 1,
+        requirements: skill.requirements,
+        effects: skill.effects,
+      }),
+    );
     const category = normaliseTroopCategory(definition.troop_type);
     const categories = category ? [category] : [];
-    return { name, categories, skills };
+    return {
+      name,
+      generation: displayHeroGeneration(definition.hero_generation),
+      troopType: category ?? null,
+      categories,
+      skills,
+    };
   })
   .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -122,9 +180,17 @@ export const HEROES: HeroEntry[] = HERO_SPECS.map((spec) => {
     .sort((a, b) => a - b);
   return {
     name: spec.name,
+    generation: spec.generation,
+    troopType: spec.troopType,
     categories: spec.categories,
     skillCount: skillNums.length,
     skillNums,
+    skills: spec.skills.map(({ id, key, name, skillNum }) => ({
+      id,
+      key,
+      name,
+      skillNum,
+    })),
     skill4: skill4FromDefinitions(spec.skills),
   };
 });

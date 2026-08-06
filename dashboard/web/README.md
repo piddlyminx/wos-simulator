@@ -31,7 +31,7 @@ npm run dev
 
 The app runs at http://localhost:3000 and redirects to `/runs` by default.
 The host dev command runs `uv sync` from the repo root before starting Next.js,
-so the shared Python `.venv` is available for OCR/import helpers.
+so the shared Python `.venv` is available for OCR helpers.
 
 The Simulate and Optimise Ratio buttons do not call server compute routes. They
 run TypeScript calculations in a browser worker, then POST completed results
@@ -180,8 +180,8 @@ After the Compose change has been deployed once, committed top-level reports
 become visible on `/parity` when the VPS checkout is updated; report-only updates
 do not require another image build.
 
-The SQLite DB remains the source for historical run/trend pages. Legacy
-historical snapshots can still be backfilled with `python dashboard/backfill.py`.
+The SQLite DB remains the source for historical run/trend pages. Current runs
+are added through the TypeScript testcase runner shown above.
 
 ## Schema
 
@@ -191,8 +191,6 @@ historical snapshots can still be backfilled with `python dashboard/backfill.py`
 | `run_testcases` | run_id, file, testcase_id, mu_sim, mu_game, bias_pct (percent of total initial troops), t, q, passes, waived_bool |
 | `run_testcase_files` | run_id, file_path, sha256 |
 | `blobs` | id, kind (patch\|untracked_manifest), content_gzip |
-| `heroes` | name, classes (JSON array), tier |
-| `hero_skills` | hero, skill_id, name, json_path |
 | `coverage_snapshots` | run_id, hero, skill_id, testcase_count, battle_outcome_count, covered_bool |
 
 ## Schema invariants
@@ -204,7 +202,7 @@ historical snapshots can still be backfilled with `python dashboard/backfill.py`
 
 ## Stack
 
-- Next.js 15 App Router + TypeScript (strict mode)
+- Next.js 16 App Router + TypeScript (strict mode)
 - Tailwind CSS v4
 - Recharts (available for chart components)
 - better-sqlite3 (server-side, read-only)

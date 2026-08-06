@@ -5,7 +5,7 @@ import { getRunSnapshotBlob } from "./db";
 /**
  * Per-run simulator-file snapshot helpers (WOS-200).
  *
- * Python's `dashboard/state_capture.py` writes a gzipped USTAR tarball
+ * The TypeScript dashboard ingestion path writes a gzipped USTAR tarball
  * containing every simulator-relevant file's content at the time of the
  * run. This module unpacks those tarballs entirely in-process so the
  * dashboard can diff two runs without `git` being present in the

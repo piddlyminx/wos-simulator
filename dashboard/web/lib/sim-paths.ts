@@ -1,5 +1,5 @@
 // Canonical allowlist of simulator-relevant repo paths.
-// Mirror of dashboard/sim_paths.py — keep the two lists in lockstep.
+// Shared by TypeScript ingestion and dashboard diff rendering.
 // Changes to dashboard code, scratch scripts, docs, or local test files cannot
 // move a testcase result, so diffs scope to this list to answer board question
 // 3 cleanly ("what changed in simulator code/config between two runs?").

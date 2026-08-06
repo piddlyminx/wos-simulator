@@ -6,6 +6,9 @@ import { basename, dirname, relative, resolve, sep } from "node:path";
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
 
+import { loadSimulatorConfig } from "../simulator/src/config";
+import type { SkillFile } from "../simulator/src/types";
+
 const require = createRequire(import.meta.url);
 
 export const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -82,7 +85,6 @@ export function openDashboardDb(dbPath = process.env.DB_PATH ?? DEFAULT_DB_PATH)
   if (dbPath !== ":memory:") db.pragma("journal_mode = DELETE");
   db.pragma("foreign_keys = ON");
   applyMigrations(db);
-  seedHeroes(db, REPO_ROOT);
   return db;
 }
 
@@ -350,35 +352,6 @@ function splitSql(sql: string): string[] {
   return sql.split(";").map((statement) => statement.trim()).filter(Boolean);
 }
 
-function seedHeroes(db: DatabaseInstance, repoRoot: string): void {
-  const dir = resolve(repoRoot, "simulator/config/hero_definitions");
-  if (!existsSync(dir)) return;
-  const tx = db.transaction(() => {
-    db.prepare("DELETE FROM hero_skills").run();
-    const insertHero = db.prepare("INSERT OR REPLACE INTO heroes (name, classes, generation) VALUES (?, ?, ?)");
-    const insertSkill = db.prepare("INSERT OR IGNORE INTO hero_skills (hero, skill_id, name, json_path) VALUES (?, ?, ?, ?)");
-    for (const fileName of readdirSync(dir).filter((name) => name.endsWith(".json")).sort()) {
-      const heroName = fileName.replace(/\.json$/, "");
-      const definition = JSON.parse(readFileSync(resolve(dir, fileName), "utf8")) as Record<string, unknown>;
-      const troopType = normaliseTroopType(definition.troop_type);
-      insertHero.run(heroName, JSON.stringify(troopType ? [troopType] : []), dashboardGeneration(definition.hero_generation));
-      const skills = objectRecord(definition.skills);
-      let index = 1;
-      for (const [skillId, rawSkill] of Object.entries(skills)) {
-        const skill = objectRecord(rawSkill);
-        insertSkill.run(
-          heroName,
-          String(index),
-          typeof skill.name === "string" && skill.name ? skill.name : skillId,
-          `simulator/config/hero_definitions/${fileName}`,
-        );
-        index += 1;
-      }
-    }
-  });
-  tx();
-}
-
 function activeTestcaseFiles(directory: string): string[] {
   if (!existsSync(directory)) return [];
   const files: string[] = [];
@@ -391,19 +364,21 @@ function activeTestcaseFiles(directory: string): string[] {
   return files;
 }
 
-export function snapshotCoverage(runId: string, db: DatabaseInstance, repoRoot: string): void {
-  const heroDir = resolve(repoRoot, "simulator/config/hero_definitions");
+export function snapshotCoverage(
+  runId: string,
+  db: DatabaseInstance,
+  repoRoot: string,
+  heroDefinitions: Readonly<Record<string, SkillFile>> =
+    loadSimulatorConfig().heroDefinitions,
+): void {
   const testcaseDir = resolve(repoRoot, "testcases");
-  if (!existsSync(heroDir) || !existsSync(testcaseDir)) return;
+  if (!existsSync(testcaseDir)) return;
 
   const skills: Array<{ hero: string; skillNum: number; skillName: string }> = [];
-  for (const fileName of readdirSync(heroDir).filter((name) => name.endsWith(".json")).sort()) {
-    const hero = fileName.replace(/\.json$/, "");
-    const definition = JSON.parse(readFileSync(resolve(heroDir, fileName), "utf8")) as Record<string, unknown>;
+  for (const [hero, definition] of Object.entries(heroDefinitions)) {
     let skillNum = 1;
-    for (const [skillId, rawSkill] of Object.entries(objectRecord(definition.skills))) {
-      const skill = objectRecord(rawSkill);
-      skills.push({ hero, skillNum, skillName: typeof skill.name === "string" && skill.name ? skill.name : skillId });
+    for (const skillName of Object.keys(definition.skills ?? {})) {
+      skills.push({ hero, skillNum, skillName });
       skillNum += 1;
     }
   }
@@ -703,18 +678,6 @@ function arrayLength(value: unknown): number {
 
 function truthy(value: unknown): boolean {
   return value === true || value === 1;
-}
-
-function dashboardGeneration(value: unknown): string | null {
-  if (typeof value !== "string") return null;
-  if (value === "SR") return "SR";
-  const match = /^S(\d+)/.exec(value);
-  return match ? `Gen ${match[1]}` : value;
-}
-
-function normaliseTroopType(value: unknown): string | null {
-  if (typeof value !== "string" || !value) return null;
-  return value === "marksmen" ? "marksman" : value;
 }
 
 function heroInEntry(entry: Record<string, unknown>, hero: string): boolean {

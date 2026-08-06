@@ -62,5 +62,17 @@
     "defense": 780.62,
     "lethality": 193,
     "health": 193
+  },
+  "S9": {
+    "attack": 940.75,
+    "defense": 940.75,
+    "lethality": 232,
+    "health": 232
+  },
+  "S10": {
+    "attack": 1110.88,
+    "defense": 1110.88,
+    "lethality": 277.5,
+    "health": 277.5
   }
 }

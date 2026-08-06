@@ -1,38 +1,6 @@
 import heroGenerationStatsJson from "../config/hero_generation_stats.json" with { type: "json" };
 import troopSkillsJson from "../config/troop_skills.json" with { type: "json" };
-import Ahmose from "../config/hero_definitions/Ahmose.json" with { type: "json" };
-import Alonso from "../config/hero_definitions/Alonso.json" with { type: "json" };
-import Bahiti from "../config/hero_definitions/Bahiti.json" with { type: "json" };
-import Bradley from "../config/hero_definitions/Bradley.json" with { type: "json" };
-import Edith from "../config/hero_definitions/Edith.json" with { type: "json" };
-import Flint from "../config/hero_definitions/Flint.json" with { type: "json" };
-import Gatot from "../config/hero_definitions/Gatot.json" with { type: "json" };
-import Gordon from "../config/hero_definitions/Gordon.json" with { type: "json" };
-import Greg from "../config/hero_definitions/Greg.json" with { type: "json" };
-import Gwen from "../config/hero_definitions/Gwen.json" with { type: "json" };
-import Hector from "../config/hero_definitions/Hector.json" with { type: "json" };
-import Hendrik from "../config/hero_definitions/Hendrik.json" with { type: "json" };
-import Jasser from "../config/hero_definitions/Jasser.json" with { type: "json" };
-import Jeronimo from "../config/hero_definitions/Jeronimo.json" with { type: "json" };
-import Jessie from "../config/hero_definitions/Jessie.json" with { type: "json" };
-import Ling from "../config/hero_definitions/Ling.json" with { type: "json" };
-import Logan from "../config/hero_definitions/Logan.json" with { type: "json" };
-import Lumak from "../config/hero_definitions/Lumak.json" with { type: "json" };
-import Lynn from "../config/hero_definitions/Lynn.json" with { type: "json" };
-import Mia from "../config/hero_definitions/Mia.json" with { type: "json" };
-import Molly from "../config/hero_definitions/Molly.json" with { type: "json" };
-import Natalia from "../config/hero_definitions/Natalia.json" with { type: "json" };
-import Norah from "../config/hero_definitions/Norah.json" with { type: "json" };
-import Patrick from "../config/hero_definitions/Patrick.json" with { type: "json" };
-import Philly from "../config/hero_definitions/Philly.json" with { type: "json" };
-import Reina from "../config/hero_definitions/Reina.json" with { type: "json" };
-import Renee from "../config/hero_definitions/Renee.json" with { type: "json" };
-import SeoYoon from "../config/hero_definitions/Seo-yoon.json" with { type: "json" };
-import Sergey from "../config/hero_definitions/Sergey.json" with { type: "json" };
-import Sonya from "../config/hero_definitions/Sonya.json" with { type: "json" };
-import Wayne from "../config/hero_definitions/Wayne.json" with { type: "json" };
-import WuMing from "../config/hero_definitions/WuMing.json" with { type: "json" };
-import Zinman from "../config/hero_definitions/Zinman.json" with { type: "json" };
+import { DEFAULT_HERO_DEFINITIONS } from "./generated/heroDefinitions";
 
 import { UNIT_TYPES } from "./types";
 import type { ConfigDiagnostics, EffectIntentDefinition, SimulatorConfig, SkillFile, TriggerDamageJobDefinition } from "./types";
@@ -54,42 +22,6 @@ const KNOWN_EFFECT_TYPES = new Set([
   "no_attack",
   "attack_order"
 ]);
-
-const DEFAULT_HERO_DEFINITIONS = {
-  Ahmose,
-  Alonso,
-  Bahiti,
-  Bradley,
-  Edith,
-  Flint,
-  Gatot,
-  Gordon,
-  Greg,
-  Gwen,
-  Hector,
-  Hendrik,
-  Jasser,
-  Jeronimo,
-  Jessie,
-  Ling,
-  Logan,
-  Lumak,
-  Lynn,
-  Mia,
-  Molly,
-  Natalia,
-  Norah,
-  Patrick,
-  Philly,
-  Reina,
-  Renee,
-  "Seo-yoon": SeoYoon,
-  Sergey,
-  Sonya,
-  Wayne,
-  WuMing,
-  Zinman
-} as unknown as Record<string, SkillFile>;
 
 export interface RawSimulatorConfig {
   heroGenerationStats: SimulatorConfig["heroGenerationStats"];

@@ -8,20 +8,18 @@ import { openDashboardDb, snapshotCoverage } from "./dashboard_ingest";
 
 test("snapshot coverage counts testcase entries per active skill recursively", () => {
   const repoRoot = mkdtempSync(path.join(tmpdir(), "dashboard-coverage-"));
-  const heroDir = path.join(repoRoot, "simulator", "config", "hero_definitions");
   const testcaseDir = path.join(repoRoot, "testcases", "nested");
-  mkdirSync(heroDir, { recursive: true });
   mkdirSync(testcaseDir, { recursive: true });
-  writeFileSync(
-    path.join(heroDir, "TestHero.json"),
-    JSON.stringify({
+  const heroDefinitions = {
+    TestHero: {
+      name: "TestHero",
       skills: {
-        one: { name: "One" },
-        two: { name: "Two" },
-        three: { name: "Three" }
-      }
-    })
-  );
+        One: { trigger: { type: "battle_start" }, effects: {} },
+        Two: { trigger: { type: "battle_start" }, effects: {} },
+        Three: { trigger: { type: "battle_start" }, effects: {} },
+      },
+    },
+  };
   writeFileSync(
     path.join(testcaseDir, "cases.json"),
     JSON.stringify([
@@ -41,6 +39,12 @@ test("snapshot coverage counts testcase entries per active skill recursively", (
 
   const db = openDashboardDb(":memory:");
   try {
+    assert.deepEqual(
+      db.prepare(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name IN ('heroes', 'hero_skills') ORDER BY name",
+      ).all(),
+      [],
+    );
     const runId = "coverage-test";
     db.prepare(`
       INSERT INTO runs (
@@ -49,7 +53,7 @@ test("snapshot coverage counts testcase entries per active skill recursively", (
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(runId, "2026-01-01T00:00:00", "abc123", 0, "{}", "{}", "{}");
 
-    snapshotCoverage(runId, db, repoRoot);
+    snapshotCoverage(runId, db, repoRoot, heroDefinitions);
     const rows = db.prepare(`
       SELECT skill_num, testcase_count, battle_outcome_count, covered_bool
       FROM coverage_snapshots

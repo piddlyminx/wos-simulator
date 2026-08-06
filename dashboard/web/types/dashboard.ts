@@ -67,28 +67,6 @@ export interface Blob {
   content_gzip: Buffer; // raw column name — better-sqlite3 returns snake_case
 }
 
-export interface Hero {
-  name: string;
-  classes: string; // JSON array string
-  generation: string | null;
-}
-
-export interface HeroSkill {
-  hero: string;
-  skill_id: string;
-  name: string;
-  json_path: string;
-}
-
-export interface CoverageSnapshot {
-  run_id: string;
-  hero: string;
-  skill_id: string;
-  testcase_count: number;
-  battle_outcome_count: number;
-  covered_bool: number; // 0 | 1
-}
-
 export interface RunDeltaCounts {
   changed: number;
   improved: number;
@@ -137,12 +115,6 @@ export interface CoverageTrendPoint {
   started_at: string;
   heroes_covered: number;
   pairs_covered: number;
-}
-
-export interface HeroCoverageDelta {
-  hero: string;
-  delta_skills: number;
-  delta_testcases: number;
 }
 
 export interface HeroCoverageTimelinePoint {

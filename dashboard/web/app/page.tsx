@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
-  getCoverageMatrix,
   getCoverageTrend,
-  getHeroes,
   getLatestRunId,
   getPreviousRun,
   getRecentCommits,
@@ -15,6 +13,11 @@ import {
 import CoverageTrendChart from "@/components/CoverageTrendChart";
 import { isPublicSimulateSurface } from "@/lib/public-surface";
 import { testcaseDetailHref } from "@/lib/testcase-file";
+import {
+  HEROES,
+  sortHeroesByGenerationAndTroop,
+} from "@/lib/heroes-catalogue";
+import { getLiveHeroCoverage } from "@/lib/live-coverage";
 
 export const dynamic = "force-dynamic";
 
@@ -196,15 +199,20 @@ export default function HomePage() {
   const recentChanges = getRecentFileChanges(7);
   const recentCommits = getRecentCommits(7);
 
-  // Newest combat generations surfaced on the dashboard landing page.
-  const heroes = getHeroes();
-  const featuredHeroes = heroes.filter(
-    (h) =>
-      h.generation === "Gen 5" ||
-      h.generation === "Gen 6" ||
-      h.generation === "Gen 7"
+  const orderedHeroes = sortHeroesByGenerationAndTroop(HEROES);
+  const featuredGenerations = new Set(
+    [...new Set(orderedHeroes.map((hero) => hero.generation))]
+      .filter((generation): generation is string => /^Gen \d+$/.test(generation ?? ""))
+      .slice(0, 3),
   );
-  const matrix = getCoverageMatrix(latestRunId);
+  const featuredHeroes = orderedHeroes.filter((hero) =>
+    hero.generation ? featuredGenerations.has(hero.generation) : false,
+  );
+  const matrix = getLiveHeroCoverage(
+    HEROES.flatMap((hero) =>
+      hero.skills.map((skill) => ({ hero: hero.name, skillId: skill.id })),
+    ),
+  );
   const perHero = new Map<string, { covered: number; total: number }>();
   let coveredSkillRows = 0;
   let totalSkillRows = 0;
@@ -212,8 +220,8 @@ export default function HomePage() {
     const entry = perHero.get(row.hero) ?? { covered: 0, total: 0 };
     entry.total += 1;
     totalSkillRows += 1;
-    if (row.covered_bool === 1) entry.covered += 1;
-    if (row.covered_bool === 1) coveredSkillRows += 1;
+    if (row.covered) entry.covered += 1;
+    if (row.covered) coveredSkillRows += 1;
     perHero.set(row.hero, entry);
   }
   const coveragePct =
@@ -383,8 +391,8 @@ export default function HomePage() {
         {/* Card 3 — Coverage Trend + newest hero generations */}
         <Card
           testid="card-coverage"
-          title="Coverage trend + Gen 5-7 heroes"
-          href="/coverage"
+          title="Hero coverage"
+          href="/heroes"
         >
           {coverageTrend.length > 0 && <CoverageTrendChart data={coverageTrend} />}
           <div className="flex flex-wrap gap-2 mt-1">

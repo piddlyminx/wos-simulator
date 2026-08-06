@@ -1,8 +1,8 @@
 # Dashboard Run Guide
 
 This repo includes a Next.js dashboard in `dashboard/web` that reads
-`test_results/dashboard.sqlite` and, for some routes, shells out to Python
-helpers in `dashboard/`.
+`test_results/dashboard.sqlite`. The OCR upload route invokes the Python parser
+under `skill/scripts/`; dashboard history ingestion itself is TypeScript.
 
 Use this guide for three common setups:
 
@@ -34,14 +34,7 @@ That means:
 
 The dashboard reads from `test_results/dashboard.sqlite`.
 
-Common ways to create or refresh it:
-
-```bash
-cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator
-.venv/bin/python dashboard/backfill.py
-```
-
-or keep it updated by running your usual testcase command, for example:
+Create or refresh it with the testcase command:
 
 ```bash
 cd /home/paul/projects_wsl/wos/battle_sim/lib/wos-simulator

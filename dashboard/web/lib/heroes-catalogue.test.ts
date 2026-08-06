@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
+  HEROES,
   TROOP_TIERS,
   TROOP_TYPES,
   isTroopTypeForCategory,
+  sortHeroesByGenerationAndTroop,
   troopTypeForSelection,
 } from "./heroes-catalogue";
 
@@ -26,4 +28,41 @@ test("troop type validation uses the simulator catalogue and row category", () =
     "infantry_t6_fc10",
   );
   assert.equal(isTroopTypeForCategory("not_a_troop", "infantry"), false);
+});
+
+test("hero catalogue includes configured metadata and skills", () => {
+  const gregory = HEROES.find((hero) => hero.name === "Gregory");
+  assert.deepEqual(
+    {
+      generation: gregory?.generation,
+      troopType: gregory?.troopType,
+      skills: gregory?.skills.map((skill) => [skill.id, skill.name]),
+    },
+    {
+      generation: "Gen 10",
+      troopType: "infantry",
+      skills: [
+        ["1", "LegionOfTheSun"],
+        ["2", "ChargedAssault"],
+        ["3", "Unbroken"],
+        ["4", "DayOfTheGuard"],
+      ],
+    },
+  );
+});
+
+test("hero overview order is descending generation then troop type", () => {
+  assert.deepEqual(
+    sortHeroesByGenerationAndTroop(HEROES)
+      .slice(0, 6)
+      .map((hero) => [hero.name, hero.generation, hero.troopType]),
+    [
+      ["Gregory", "Gen 10", "infantry"],
+      ["Freya", "Gen 10", "lancer"],
+      ["Blanchette", "Gen 10", "marksman"],
+      ["Magnus", "Gen 9", "infantry"],
+      ["Fred", "Gen 9", "lancer"],
+      ["Xura", "Gen 9", "marksman"],
+    ],
+  );
 });

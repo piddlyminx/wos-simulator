@@ -1,0 +1,66 @@
+{
+  "name": "Gregory",
+  "hero_generation": "S10",
+  "troop_type": "infantry",
+  "skills": {
+    "LegionOfTheSun": {
+      "description": "Gregory increases Attack by X% and Defense by Y% for all troops.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "LegionOfTheSun/1": {
+          "type": "active.hero.attack.up",
+          "value": [3, 6, 9, 12, 15]
+        },
+        "LegionOfTheSun/2": {
+          "type": "active.hero.defense.up",
+          "value": [2, 4, 6, 8, 10]
+        }
+      }
+    },
+    "ChargedAssault": {
+      "description": "Gregory grants all troops' normal attacks an X% chance of dealing critical damage.",
+      "trigger": {
+        "type": "attack",
+        "probability": [5, 10, 15, 20, 25]
+      },
+      "effects": {
+        "ChargedAssault/1": {
+          "type": "extra_skill_attack",
+          "value": [100, 100, 100, 100, 100],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "duration": { "attacks": { "count": 1 } },
+          "trigger_damage_jobs": [
+            { "source": "use.source", "target": "use.target" }
+          ]
+        }
+      }
+    },
+    "Unbroken": {
+      "description": "Gregory reduces Infantry Damage Taken by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "Unbroken/1": {
+          "type": "active.hero.damageTaken.down",
+          "value": [4, 8, 12, 16, 20],
+          "units": { "applies_to": ["infantry"] }
+        }
+      }
+    },
+    "DayOfTheGuard": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when defending.",
+      "trigger": { "type": "pre_battle" },
+      "requirements": [
+        { "level": 1, "type": "engagement_type", "value": "garrison" }
+      ],
+      "effects": {
+        "DayOfTheGuard/1": {
+          "type": "passive.lethality.up",
+          "value": [5, 7.5, 10, 12.5, 15]
+        }
+      }
+    }
+  }
+}

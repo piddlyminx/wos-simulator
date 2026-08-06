@@ -4,19 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
-import type { CoverageSnapshot } from "@/types/dashboard";
-import { applyLiveTestcaseCoverage } from "./live-coverage";
-
-function snapshot(hero: string, skillId: string): CoverageSnapshot {
-  return {
-    run_id: "historical-run",
-    hero,
-    skill_id: skillId,
-    testcase_count: 99,
-    battle_outcome_count: 99,
-    covered_bool: 0
-  };
-}
+import { getActiveTestcaseKeys, getLiveHeroCoverage } from "./live-coverage";
 
 test("live coverage recursively reads active testcase JSON", () => {
   const root = mkdtempSync(path.join(tmpdir(), "live-coverage-"));
@@ -46,21 +34,35 @@ test("live coverage recursively reads active testcase JSON", () => {
   );
 
   try {
-    const rows = applyLiveTestcaseCoverage(
-      [snapshot("Gatot", "1"), snapshot("Gatot", "2"), snapshot("Gatot", "3")],
+    const rows = getLiveHeroCoverage(
+      [
+        { hero: "Gatot", skillId: "1" },
+        { hero: "Gatot", skillId: "2" },
+        { hero: "Gatot", skillId: "3" },
+      ],
       root
     );
     assert.deepEqual(
-      rows.map(({ testcase_count, battle_outcome_count, covered_bool }) => ({
-        testcase_count,
-        battle_outcome_count,
-        covered_bool
+      rows.map(({ testcaseCount, battleOutcomeCount, covered }) => ({
+        testcaseCount,
+        battleOutcomeCount,
+        covered,
       })),
       [
-        { testcase_count: 2, battle_outcome_count: 3, covered_bool: 1 },
-        { testcase_count: 0, battle_outcome_count: 0, covered_bool: 0 },
-        { testcase_count: 1, battle_outcome_count: 1, covered_bool: 1 }
+        { testcaseCount: 2, battleOutcomeCount: 3, covered: true },
+        { testcaseCount: 0, battleOutcomeCount: 0, covered: false },
+        { testcaseCount: 1, battleOutcomeCount: 1, covered: true },
       ]
+    );
+    assert.deepEqual(
+      getActiveTestcaseKeys(root).map(({ testcase_id, idx }) => ({
+        testcase_id,
+        idx,
+      })),
+      [
+        { testcase_id: "0", idx: 0 },
+        { testcase_id: "1", idx: 1 },
+      ],
     );
   } finally {
     rmSync(root, { recursive: true, force: true });

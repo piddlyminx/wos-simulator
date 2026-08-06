@@ -1,11 +1,8 @@
 import Link from "next/link";
 import {
-  getHero,
-  getHeroSkills,
   getHeroTestcases,
   getHeroErrorHistory,
   getLatestRunId,
-  getMissingTables,
   getHeroCoverageTimeline,
   getHeroSkillHistory,
 } from "@/lib/db";
@@ -14,6 +11,8 @@ import HeroCoverageTimelineChart from "@/components/HeroCoverageTimelineChart";
 import MetricCard from "@/components/MetricCard";
 import { testcaseDetailHref } from "@/lib/testcase-file";
 import { formatStatAdjustment, statAdjustmentTitle } from "@/lib/stat-adjustment";
+import { getHero } from "@/lib/heroes-catalogue";
+import { getLiveHeroCoverage } from "@/lib/live-coverage";
 
 const stickyTh =
   "sticky top-0 z-10 bg-[var(--sidebar-bg)] px-1.5 py-1 text-left";
@@ -41,7 +40,6 @@ export default async function HeroDetailPage({ params }: PageProps) {
   const hero = getHero(heroName);
 
   if (!hero) {
-    const missingTables = getMissingTables();
     return (
       <div>
         <Link
@@ -51,35 +49,17 @@ export default async function HeroDetailPage({ params }: PageProps) {
         >
           &larr; Back to Heroes
         </Link>
-        {missingTables.length > 0 ? (
-          <div
-            className="rounded p-3 mt-4 text-sm font-mono"
-            style={{
-              border: "1px solid #f38ba8",
-              backgroundColor: "rgba(243,139,168,0.08)",
-              color: "#f38ba8",
-            }}
-          >
-            DB misconfiguration: missing tables:{" "}
-            <strong>{missingTables.join(", ")}</strong>. Run{" "}
-            <code>npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest</code> to apply
-            migrations and seed the hero catalogue.
-          </div>
-        ) : (
-          <div
-            className="rounded p-6 text-sm opacity-60 mt-4"
-            style={{ border: "1px solid var(--border-color)" }}
-          >
-            Hero <code className="font-mono">{heroName}</code> not found in the
-            heroes table. Check that the name matches a hero in{" "}
-            <code className="font-mono">simulator/config/hero_definitions/</code>.
-          </div>
-        )}
+        <div
+          className="rounded p-6 text-sm opacity-60 mt-4"
+          style={{ border: "1px solid var(--border-color)" }}
+        >
+          Hero <code className="font-mono">{heroName}</code> is not present in{" "}
+          <code className="font-mono">simulator/config/hero_definitions/</code>.
+        </div>
       </div>
     );
   }
 
-  const skills = getHeroSkills(heroName);
   const latestRunId = getLatestRunId();
   const testcases = latestRunId
     ? getHeroTestcases(heroName, latestRunId)
@@ -87,18 +67,16 @@ export default async function HeroDetailPage({ params }: PageProps) {
   const errorHistory = getHeroErrorHistory(heroName);
   const coverageTimeline = getHeroCoverageTimeline(heroName);
   const skillHistory = getHeroSkillHistory(heroName);
-
-  // Get latest coverage stats from the last timeline point
-  const latestCoverage = coverageTimeline.length > 0
-    ? coverageTimeline[coverageTimeline.length - 1]
-    : null;
-
-  let classes: string[] = [];
-  try {
-    classes = JSON.parse(hero.classes ?? "[]");
-  } catch {
-    // ignore
-  }
+  const currentCoverage = getLiveHeroCoverage(
+    hero.skills.map((skill) => ({ hero: hero.name, skillId: skill.id })),
+  );
+  const coverageBySkill = new Map(
+    currentCoverage.map((cell) => [cell.skillId, cell]),
+  );
+  const skillHistoryById = new Map(
+    skillHistory.map((skill) => [skill.skill_id, skill]),
+  );
+  const coveredSkillCount = currentCoverage.filter((cell) => cell.covered).length;
 
   return (
     <div>
@@ -127,8 +105,8 @@ export default async function HeroDetailPage({ params }: PageProps) {
         >
           {hero.generation ?? "—"}
         </span>
-        {classes.length > 0 && (
-          <span className="text-xs opacity-50">{classes.join(", ")}</span>
+        {hero.troopType && (
+          <span className="text-xs opacity-50 capitalize">{hero.troopType}</span>
         )}
       </div>
 
@@ -136,7 +114,7 @@ export default async function HeroDetailPage({ params }: PageProps) {
       <div className="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
           label="Skills"
-          value={String(skills.length)}
+          value={String(hero.skills.length)}
           valueClassName="text-xl sm:text-2xl"
         />
         <MetricCard
@@ -149,13 +127,11 @@ export default async function HeroDetailPage({ params }: PageProps) {
           value={String(errorHistory.length)}
           valueClassName="text-xl sm:text-2xl"
         />
-        {latestCoverage && (
-          <MetricCard
-            label="Coverage"
-            value={`${latestCoverage.skills_covered}/${latestCoverage.skills_total}`}
-            valueClassName="text-xl sm:text-2xl"
-          />
-        )}
+        <MetricCard
+          label="Current Coverage"
+          value={`${coveredSkillCount}/${hero.skills.length}`}
+          valueClassName="text-xl sm:text-2xl"
+        />
       </div>
 
       {/* Coverage Timeline chart */}
@@ -203,9 +179,9 @@ export default async function HeroDetailPage({ params }: PageProps) {
         >
           Skills
         </h3>
-        {skillHistory.length === 0 && skills.length === 0 ? (
+        {hero.skills.length === 0 ? (
           <p className="text-sm opacity-50">No skills found for {hero.name}.</p>
-        ) : skillHistory.length > 0 ? (
+        ) : (
           <div className="overflow-x-auto">
             <table
               className="w-full text-xs border-collapse font-mono"
@@ -224,67 +200,39 @@ export default async function HeroDetailPage({ params }: PageProps) {
                 </tr>
               </thead>
               <tbody>
-                {skillHistory.map((skill) => (
-                  <tr
-                    key={skill.skill_id}
-                    style={{ borderBottom: "1px solid var(--border-color)" }}
-                  >
-                    <td className="py-1.5 pr-4 opacity-70">{skill.skill_id}</td>
-                    <td className="py-1.5 pr-4">{skill.skill_name}</td>
-                    <td className="py-1.5 pr-4">
-                      <span
-                        className="inline-block px-1.5 py-0.5 rounded text-xs font-bold"
-                        style={{
-                          backgroundColor:
-                            skill.currently_covered === 1
+                {hero.skills.map((skill) => {
+                  const coverage = coverageBySkill.get(skill.id);
+                  const history = skillHistoryById.get(skill.id);
+                  return (
+                    <tr
+                      key={skill.id}
+                      style={{ borderBottom: "1px solid var(--border-color)" }}
+                    >
+                      <td className="py-1.5 pr-4 opacity-70">{skill.id}</td>
+                      <td className="py-1.5 pr-4">{skill.name}</td>
+                      <td className="py-1.5 pr-4">
+                        <span
+                          className="inline-block px-1.5 py-0.5 rounded text-xs font-bold"
+                          style={{
+                            backgroundColor: coverage?.covered
                               ? "#a6e3a1"
                               : "rgba(243,139,168,0.25)",
-                          color:
-                            skill.currently_covered === 1
-                              ? "#1e1e2e"
-                              : "#f38ba8",
-                        }}
-                      >
-                        {skill.currently_covered === 1 ? "YES" : "NO"}
-                      </span>
-                    </td>
-                    <td className="py-1.5 pr-4 opacity-70">
-                      {shortDate(skill.first_seen_at)}
-                    </td>
-                    <td className="py-1.5 opacity-70">
-                      {shortDate(skill.last_changed_at)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          /* Fall back to plain skill list if no coverage history yet */
-          <div className="overflow-x-auto">
-            <table
-              className="w-full text-xs border-collapse font-mono"
-              style={{ borderColor: "var(--border-color)" }}
-            >
-              <thead>
-                <tr
-                  className="text-left uppercase tracking-wider opacity-50"
-                  style={{ borderBottom: "1px solid var(--border-color)" }}
-                >
-                  <th className="pb-2 pr-4">Skill ID</th>
-                  <th className="pb-2 pr-4">Name</th>
-                </tr>
-              </thead>
-              <tbody>
-                {skills.map((skill) => (
-                  <tr
-                    key={skill.skill_id}
-                    style={{ borderBottom: "1px solid var(--border-color)" }}
-                  >
-                    <td className="py-1.5 pr-4 opacity-70">{skill.skill_id}</td>
-                    <td className="py-1.5 pr-4">{skill.name}</td>
-                  </tr>
-                ))}
+                            color: coverage?.covered ? "#1e1e2e" : "#f38ba8",
+                          }}
+                          title={`${coverage?.testcaseCount ?? 0} current testcases`}
+                        >
+                          {coverage?.covered ? "YES" : "NO"}
+                        </span>
+                      </td>
+                      <td className="py-1.5 pr-4 opacity-70">
+                        {shortDate(history?.first_seen_at ?? null)}
+                      </td>
+                      <td className="py-1.5 opacity-70">
+                        {shortDate(history?.last_changed_at ?? null)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

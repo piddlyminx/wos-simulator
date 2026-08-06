@@ -1,0 +1,71 @@
+{
+  "name": "Fred",
+  "hero_generation": "S9",
+  "troop_type": "lancer",
+  "skills": {
+    "HydraulicSuppression": {
+      "description": "Fred's water volleys destroy opponent momentum, reducing all enemy troops' Lethality by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "HydraulicSuppression/1": {
+          "type": "active.hero.lethality.down",
+          "value": [4, 8, 12, 16, 20],
+          "units": { "applies_to": "enemy.any" }
+        }
+      }
+    },
+    "Acidification": {
+      "description": "Fred coats enemy Infantry shields with a special acidic blend, amplifying their damage taken by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "Acidification/1": {
+          "type": "active.hero.damageTaken.up",
+          "value": [4, 8, 12, 16, 20],
+          "units": { "applies_to": "enemy.infantry" }
+        }
+      }
+    },
+    "Floodbringer": {
+      "description": "Fred's Lancers deal X% additional damage every 4 strikes and reduce enemy troop damage dealt by Y% on the next turn.",
+      "trigger": {
+        "type": "attack",
+        "every": 4,
+        "source": "lancer"
+      },
+      "effects": {
+        "Floodbringer/1": {
+          "type": "extra_skill_attack",
+          "value": [40, 80, 120, 160, 200],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "duration": { "attacks": { "count": 1 } },
+          "trigger_damage_jobs": [
+            { "source": "use.source", "target": "use.target" }
+          ]
+        },
+        "Floodbringer/2": {
+          "type": "active.hero.damage.down",
+          "value": [4, 8, 12, 16, 20],
+          "units": { "applies_to": "enemy.any" },
+          "duration": { "turns": { "delay": 1, "count": 1 } },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "CallOfTheFirefighter": {
+      "description": "Widget bonus: Increase Attack by X% for all troops when rallying.",
+      "trigger": { "type": "pre_battle" },
+      "requirements": [
+        { "level": 1, "type": "engagement_type", "value": "rally" }
+      ],
+      "effects": {
+        "CallOfTheFirefighter/1": {
+          "type": "passive.attack.up",
+          "value": [5, 7.5, 10, 12.5, 15]
+        }
+      }
+    }
+  }
+}

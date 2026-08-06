@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type { CoverageSnapshot } from "@/types/dashboard";
 import { resolveSimulatorRoot } from "./simulator-root";
 
 type TestcaseEntry = {
+  test_id?: unknown;
   attacker?: FighterEntry;
   defender?: FighterEntry;
   game_report_result?: unknown;
@@ -54,15 +54,48 @@ function outcomeCount(result: unknown): number {
   return result && typeof result === "object" ? 1 : 0;
 }
 
-export function applyLiveTestcaseCoverage(
-  snapshots: readonly CoverageSnapshot[],
+export interface LiveCoverageTarget {
+  hero: string;
+  skillId: string;
+}
+
+export interface LiveCoverageCell extends LiveCoverageTarget {
+  testcaseCount: number;
+  battleOutcomeCount: number;
+  covered: boolean;
+}
+
+export interface ActiveTestcaseKey {
+  file: string;
+  testcase_id: string;
+  idx: number;
+}
+
+export function getActiveTestcaseKeys(
+  testcaseRoot = path.join(resolveSimulatorRoot(), "testcases"),
+): ActiveTestcaseKey[] {
+  return activeTestcaseFiles(testcaseRoot).flatMap((file) =>
+    entriesFromFile(file).map((entry, idx) => ({
+      file: path.posix.join(
+        "testcases",
+        path.relative(testcaseRoot, file).split(path.sep).join("/"),
+      ),
+      testcase_id:
+        typeof entry.test_id === "string" ? entry.test_id : String(idx),
+      idx,
+    })),
+  );
+}
+
+export function getLiveHeroCoverage(
+  targets: readonly LiveCoverageTarget[],
   testcaseRoot = path.join(resolveSimulatorRoot(), "testcases")
-): CoverageSnapshot[] {
-  const heroes = [...new Set(snapshots.map((row) => row.hero))];
+): LiveCoverageCell[] {
+  const heroes = [...new Set(targets.map((row) => row.hero))];
   const skillIdsByHero = new Map<string, Set<string>>();
-  for (const row of snapshots) {
+  for (const row of targets) {
     const ids = skillIdsByHero.get(row.hero) ?? new Set<string>();
-    ids.add(row.skill_id);
+    ids.add(row.skillId);
     skillIdsByHero.set(row.hero, ids);
   }
 
@@ -89,14 +122,14 @@ export function applyLiveTestcaseCoverage(
     }
   }
 
-  return snapshots.map((row) => {
-    const key = `${row.hero}\u0000${row.skill_id}`;
+  return targets.map((row) => {
+    const key = `${row.hero}\u0000${row.skillId}`;
     const count = testcaseCount.get(key) ?? 0;
     return {
       ...row,
-      testcase_count: count,
-      battle_outcome_count: battleOutcomeCount.get(key) ?? 0,
-      covered_bool: count > 0 ? 1 : 0
+      testcaseCount: count,
+      battleOutcomeCount: battleOutcomeCount.get(key) ?? 0,
+      covered: count > 0,
     };
   });
 }

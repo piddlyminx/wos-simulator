@@ -513,7 +513,7 @@ The engine accepts some values not currently used by a hero. This inventory dist
 
 | Field | Values currently present |
 | --- | --- |
-| `hero_generation` | `SR`, `S1`, `S1_natalia`, `S1_jeronimo`, `S2` through `S8` |
+| `hero_generation` | `SR`, `S1`, `S1_natalia`, `S1_jeronimo`, `S2` through `S10` |
 | `troop_type` | `infantry`, `lancer`, `marksman` |
 | `requirements[].type/value` | `engagement_type` with `rally` or `garrison`, always beginning at level 1 |
 | `trigger.type` | `pre_battle`, `battle_start`, `turn`, `attack` |

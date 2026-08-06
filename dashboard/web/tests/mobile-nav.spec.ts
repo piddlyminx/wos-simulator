@@ -67,7 +67,6 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     for (const route of [
       "/",
       "/runs",
-      "/coverage",
       "/heroes",
       "/testcases",
       "/simulate",

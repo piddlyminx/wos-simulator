@@ -69,7 +69,6 @@ Default/local mode must keep the full dashboard unchanged. In
   - `/api/ocr-report`
 - Private QA routes return 404 or another non-success response:
   - `/runs`
-  - `/coverage`
   - `/heroes`
   - `/testcases`
   - `/compare/**`
@@ -216,7 +215,7 @@ route and verify:
 - `/simulate` renders without private dashboard navigation.
 - A basic simulation works.
 - OCR upload path is available and handles at least one known report image.
-- Private routes such as `/runs` and `/coverage` are blocked.
+- Private routes such as `/runs` and `/heroes` are blocked.
 - Browser console has no page errors.
 
 ## Risk Notes

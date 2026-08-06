@@ -1,0 +1,86 @@
+{
+  "name": "Blanchette",
+  "hero_generation": "S10",
+  "troop_type": "marksman",
+  "skills": {
+    "ArmedToTheTeeth": {
+      "description": "Blanchette increases all Troops' Lethality by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "ArmedToTheTeeth/1": {
+          "type": "active.hero.lethality.up",
+          "value": [5, 10, 15, 20, 25]
+        }
+      }
+    },
+    "BloodHunter": {
+      "description": "Blanchette's Marksmen fire a crystal blade every 3 rounds, dealing X% extra damage to their target.",
+      "trigger": {
+        "type": "turn",
+        "every": 3,
+        "source": "marksman"
+      },
+      "effects": {
+        "BloodHunter/1": {
+          "type": "extra_skill_attack",
+          "value": [15, 30, 45, 60, 75],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "duration": { "attacks": { "count": 1 } },
+          "trigger_damage_jobs": [
+            { "source": "use.source", "target": "use.target" }
+          ]
+        }
+      }
+    },
+    "CrimsonSniper": {
+      "description": "Every 2 strikes, Blanchette's Marksmen deal X% extra damage to enemy Lancers and Y% extra damage to enemy Marksmen.",
+      "trigger": {
+        "type": "attack",
+        "every": 2,
+        "source": "marksman"
+      },
+      "effects": {
+        "CrimsonSniper/1": {
+          "type": "extra_skill_attack",
+          "value": [8, 16, 24, 32, 40],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "any"
+          },
+          "duration": { "attacks": { "count": 1 } },
+          "trigger_damage_jobs": [
+            { "source": "use.source", "target": ["lancer"] }
+          ]
+        },
+        "CrimsonSniper/2": {
+          "type": "extra_skill_attack",
+          "value": [4, 8, 12, 16, 20],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "any"
+          },
+          "duration": { "attacks": { "count": 1 } },
+          "trigger_damage_jobs": [
+            { "source": "use.source", "target": ["marksman"] }
+          ]
+        }
+      }
+    },
+    "LightningStrike": {
+      "description": "Widget bonus: Increase Lethality by X% for all troops when rallying.",
+      "trigger": { "type": "pre_battle" },
+      "requirements": [
+        { "level": 1, "type": "engagement_type", "value": "rally" }
+      ],
+      "effects": {
+        "LightningStrike/1": {
+          "type": "passive.lethality.up",
+          "value": [5, 7.5, 10, 12.5, 15]
+        }
+      }
+    }
+  }
+}

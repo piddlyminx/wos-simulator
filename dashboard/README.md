@@ -177,19 +177,19 @@ ORDER BY avg_bias_pct DESC;
 
 `test_results/dashboard.sqlite` relative to the repo root.
 
-## Backfill
+## Populating run history
 
-To populate historical runs:
+Run the TypeScript testcase runner with database ingestion enabled:
 
 ```bash
-.venv/bin/python dashboard/backfill.py
+npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest
 ```
 
 ## Simulator-relevant path scope
 
 Captured patches and untracked tars are scoped to **simulator-relevant paths
-only** — the source allowlist lives in `dashboard/sim_paths.py` (mirrored for
-the web UI as `dashboard/web/lib/sim-paths.ts`). Changes to dashboard code,
+only** — the source allowlist lives in the TypeScript ingestion path and
+`dashboard/web/lib/sim-paths.ts`. Changes to dashboard code,
 root-level scripts, generated parity reports, or documentation cannot move a
 testcase outcome, so they are stripped from both the stored blob and rendered
 diffs. Amend the allowlist in both files when adding a new simulator input

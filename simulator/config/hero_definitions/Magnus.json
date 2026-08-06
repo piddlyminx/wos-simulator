@@ -1,0 +1,63 @@
+{
+  "name": "Magnus",
+  "hero_generation": "S9",
+  "troop_type": "infantry",
+  "skills": {
+    "Rapacious": {
+      "description": "Magnus rouses his troops with brutal intensity, boosting friendly Troop Attack by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "Rapacious/1": {
+          "type": "active.hero.attack.up",
+          "value": [5, 10, 15, 20, 25]
+        }
+      }
+    },
+    "IronPhalanx": {
+      "description": "Infantry under Magnus' command have a 40% chance of gaining X% Defense when attacking for 1 turn.",
+      "trigger": {
+        "type": "attack",
+        "probability": [40, 40, 40, 40, 40],
+        "source": "infantry"
+      },
+      "effects": {
+        "IronPhalanx/1": {
+          "type": "active.hero.defense.up",
+          "value": [10, 20, 30, 40, 50],
+          "units": { "applies_to": "trigger.source" },
+          "duration": { "turns": { "count": 1 } },
+          "same_effect_stacking": "max"
+        }
+      }
+    },
+    "Iceman": {
+      "description": "Magnus reduces damage taken by friendly Infantry by X% while boosting friendly Marksmen damage by X%.",
+      "trigger": { "type": "battle_start" },
+      "effects": {
+        "Iceman/1": {
+          "type": "active.hero.damageTaken.down",
+          "value": [2, 4, 6, 8, 10],
+          "units": { "applies_to": ["infantry"] }
+        },
+        "Iceman/2": {
+          "type": "active.hero.damage.up",
+          "value": [2, 4, 6, 8, 10],
+          "units": { "applies_to": ["marksman"] }
+        }
+      }
+    },
+    "ValoricInspiration": {
+      "description": "Widget bonus: Increase Health by X% for all troops when defending.",
+      "trigger": { "type": "pre_battle" },
+      "requirements": [
+        { "level": 1, "type": "engagement_type", "value": "garrison" }
+      ],
+      "effects": {
+        "ValoricInspiration/1": {
+          "type": "passive.health.up",
+          "value": [5, 7.5, 10, 12.5, 15]
+        }
+      }
+    }
+  }
+}
