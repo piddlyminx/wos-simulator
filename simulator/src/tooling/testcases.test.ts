@@ -232,8 +232,8 @@ test("runTestcases applies possible stat rounding correction to exact determinis
   assert.equal(summary?.game?.passes, true);
   assert.equal(summary?.game?.bias_raw, 0);
   assert.equal(summary?.gameStatAdjustment?.mode, "deterministic_exact");
-  assert.equal(summary?.gameStatAdjustment?.value, 0.025);
-  assert.equal(summary?.gameStatAdjustment?.unadjusted.bias_raw, -1);
+  assert.equal(summary?.gameStatAdjustment?.value, 0.05);
+  assert.equal(summary?.gameStatAdjustment?.unadjusted.bias_raw, -2);
 });
 
 test("deterministic testcase tolerance increases by 0.1 percent every ten rounds and caps at 0.7 percent", () => {

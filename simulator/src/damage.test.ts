@@ -164,7 +164,7 @@ test("damage calculator does not over-count a whole-number army term", () => {
   assert.equal(outcome.trace?.armyTerm, 200);
 });
 
-test("damage calculator rounds positive damage upward to three decimal places", () => {
+test("damage calculator preserves full positive damage precision", () => {
   const outcome = calculateIndexedDamageJob(
     { ...job, kind: "skill", sourceMultiplier: 1.23456 },
     simpleFighters(),
@@ -173,11 +173,11 @@ test("damage calculator rounds positive damage upward to three decimal places", 
   );
 
   assert.ok(Math.abs((outcome.trace?.damageBeforeOffsets ?? 0) - 12.3456) < 1e-12);
-  assert.equal(outcome.trace?.rawDamage, 12.346);
-  assert.equal(outcome.kills, 12.346);
+  assert.ok(Math.abs((outcome.trace?.rawDamage ?? 0) - 12.3456) < 1e-12);
+  assert.ok(Math.abs(outcome.kills - 12.3456) < 1e-12);
 });
 
-test("damage rounding does not advance a value already on the three-decimal grid", () => {
+test("damage calculation does not quantize values near the three-decimal grid", () => {
   const outcome = calculateIndexedDamageJob(
     { ...job, kind: "skill", sourceMultiplier: 2.007 },
     simpleFighters(),
@@ -186,8 +186,8 @@ test("damage rounding does not advance a value already on the three-decimal grid
   );
 
   assert.ok((outcome.trace?.damageBeforeOffsets ?? 0) * 1000 > 2007);
-  assert.equal(outcome.trace?.rawDamage, 2.007);
-  assert.equal(outcome.kills, 2.007);
+  assert.equal(outcome.trace?.rawDamage, outcome.trace?.damageBeforeOffsets);
+  assert.equal(outcome.kills, outcome.trace?.damageBeforeOffsets);
 });
 
 test("damage calculator uses centralized bucket definitions for player stat routing", () => {
