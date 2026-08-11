@@ -45,7 +45,8 @@
           },
           "duration": {
             "turns": {
-              "count": 1
+              "count": 1,
+              "delay": 1
             }
           }
         }

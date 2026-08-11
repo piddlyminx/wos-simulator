@@ -28,7 +28,7 @@
       },
       "effects": {
         "PowerShot/1": {
-          "type": "active.hero.damage.up",
+          "type": "type.single_target.damage.up",
           "value": [
             6,
             12,
@@ -43,7 +43,7 @@
           }
         },
         "PowerShot/2": {
-          "type": "active.hero.damage.up",
+          "type": "type.single_target.damage.up",
           "value": [
             5,
             10,
