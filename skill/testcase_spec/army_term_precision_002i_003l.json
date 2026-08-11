@@ -1,0 +1,24 @@
+{
+  "test_id": "army_term_precision_002i_003l",
+  "description": "Precommitted discriminator for the army-term integer boundary using the supplied 2dp WIP/minxxx execution stats and full-precision damage. WIP attacks with 2 T6 Infantry and no heroes; minxxx defends with 3 T6 Lancers and no heroes. Exact or float-residue-aware evaluation gives ceil(sqrt(2 * 2)) = 2, accumulates 0.8835575456 damage, and predicts exactly 3 minxxx Lancers survive. Raw floating evaluation gives Math.sqrt(2) * Math.sqrt(2) = 2.0000000000000004, Math.ceil(...) = 3 for WIP while it has 2 living Infantry, accumulates 1.1044469320 damage, and predicts exactly 2 minxxx Lancers survive. minxxx's army term is 3 under both treatments.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 2
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "lancer_t6": 3
+    }
+  }
+}
