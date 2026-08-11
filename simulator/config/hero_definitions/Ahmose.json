@@ -6,10 +6,8 @@
     "ViperFormation": {
       "description": "His infantry pauses the attack once every 4 times reducing damage taken by Lancers and Marksmen by X% and Infantry by X% for 2 turns",
       "trigger": {
-        "type": "attack",
-        "first": 4,
-        "every": 5,
-        "source": "infantry"
+      "type": "turn",
+      "every": 4
       },
       "effects": {
         "ViperFormation/1": {

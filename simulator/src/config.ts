@@ -30,8 +30,7 @@ export function buildSimulatorConfig(raw: RawSimulatorConfig): SimulatorConfig {
   const diagnostics: ConfigDiagnostics = {
     legacyFields: [],
     effectTypes: {},
-    unsupportedEffects: [],
-    ambiguousTurnTriggerSelectors: []
+    unsupportedEffects: []
   };
 
   scanLegacyFields(raw.heroGenerationStats, raw.fileLabel?.("hero_generation_stats") ?? "config/hero_generation_stats.json", "$", diagnostics);
@@ -95,7 +94,7 @@ function isLegacyConfigField(key: string): boolean {
 function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostics: ConfigDiagnostics): void {
   const effectDefinitions = new Map<string, EffectIntentDefinition[]>();
   for (const skill of Object.values(skillFile.skills ?? {})) {
-    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
+    for (const [effectId, effect] of walkEffectDefinitions(skill.effects ?? {})) {
       const definitions = effectDefinitions.get(effectId);
       const definition = { id: effectId, ...effect } as EffectIntentDefinition;
       if (definitions) definitions.push(definition);
@@ -105,10 +104,11 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
   for (const [skillId, skill] of Object.entries(skillFile.skills ?? {})) {
     validateTriggerDefinition(skill.trigger, file, skillId);
     if (skill.trigger.type === "pre_battle") validatePreBattleSkill(skill, file, skillId);
-    for (const [effectId, effect] of Object.entries(skill.effects ?? {})) {
-      const type = String((effect as { type?: unknown }).type ?? "");
-      diagnostics.effectTypes[type] = (diagnostics.effectTypes[type] ?? 0) + 1;
-      collectAmbiguousTurnTriggerSelectorDiagnostics(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId, diagnostics);
+    for (const [effectId, effect, nested] of walkEffectDefinitionsWithDepth(skill.effects ?? {})) {
+      const type = (effect as { type?: unknown }).type;
+      const typeName = typeof type === "string" ? type : "(carrier)";
+      diagnostics.effectTypes[typeName] = (diagnostics.effectTypes[typeName] ?? 0) + 1;
+      if (!nested) validateDirectTurnEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateBattleStartEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
@@ -118,16 +118,39 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       validateNativeEffectDuration(effect as EffectIntentDefinition, file, skillId, effectId);
       validateStaticBucketEffect(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "extra_skill_attack") validateExtraSkillAttackEffect(effect as EffectIntentDefinition, file, skillId, effectId);
-      if (!KNOWN_EFFECT_TYPES.has(type)) {
+      if (type === undefined) {
+        if (!effect.trigger_effects || Object.keys(effect.trigger_effects).length === 0) {
+          throw new Error(`type-less effect must define non-empty trigger_effects at ${file}:${skillId}.${effectId}`);
+        }
+      } else if (typeof type !== "string" || !KNOWN_EFFECT_TYPES.has(type)) {
         diagnostics.unsupportedEffects.push({
           file,
           skillId,
           effectId,
-          type,
+          type: String(type ?? ""),
           reason: "Effect type is not supported by the native simulator"
         });
       }
     }
+  }
+}
+
+function* walkEffectDefinitions(
+  definitions: Record<string, Omit<EffectIntentDefinition, "id">>
+): Iterable<[string, Omit<EffectIntentDefinition, "id">]> {
+  for (const [id, effect] of Object.entries(definitions)) {
+    yield [id, effect];
+    if (effect.trigger_effects) yield* walkEffectDefinitions(effect.trigger_effects);
+  }
+}
+
+function* walkEffectDefinitionsWithDepth(
+  definitions: Record<string, Omit<EffectIntentDefinition, "id">>,
+  nested = false
+): Iterable<[string, Omit<EffectIntentDefinition, "id">, boolean]> {
+  for (const [id, effect] of Object.entries(definitions)) {
+    yield [id, effect, nested];
+    if (effect.trigger_effects) yield* walkEffectDefinitionsWithDepth(effect.trigger_effects, true);
   }
 }
 
@@ -146,7 +169,7 @@ function validateRequiredEffect(
   if (effect.requires_effect === effectId) {
     throw new Error(`effect cannot require itself at ${path}`);
   }
-  if (dynamicBucketDefinition(effect.type)?.effectBucket !== true) {
+  if (effect.type === undefined || dynamicBucketDefinition(effect.type)?.effectBucket !== true) {
     throw new Error(`requires_effect is only supported for runtime damage modifiers at ${path}`);
   }
   const required = effectDefinitions.get(effect.requires_effect) ?? [];
@@ -159,29 +182,22 @@ function validateRequiredEffect(
   if (required[0].requires_effect !== undefined) {
     throw new Error(`requires_effect chains are not supported at ${path}`);
   }
-  if (dynamicBucketDefinition(required[0].type)?.effectBucket !== true) {
+  if (required[0].type === undefined || dynamicBucketDefinition(required[0].type)?.effectBucket !== true) {
     throw new Error(`requires_effect must reference a runtime damage modifier at ${path}`);
   }
 }
 
-function collectAmbiguousTurnTriggerSelectorDiagnostics(
+function validateDirectTurnEffectSelectors(
   trigger: SkillFile["skills"][string]["trigger"],
   effect: EffectIntentDefinition,
   file: string,
   skillId: string,
-  effectId: string,
-  diagnostics: ConfigDiagnostics
+  effectId: string
 ): void {
-  if (trigger.type !== "turn" || trigger.source !== undefined) return;
+  if (trigger.type !== "turn") return;
   for (const selector of [effect.units?.applies_to, effect.units?.applies_vs]) {
-    if (!isTriggerRelativeUnitSelector(selector)) continue;
-    diagnostics.ambiguousTurnTriggerSelectors.push({
-      file,
-      skillId,
-      effectId,
-      selector,
-      reason: "Turn trigger has no concrete attack intent; trigger-relative unit selectors fall back to all units"
-    });
+    if (!isUseRelativeUnitSelector(selector)) continue;
+    throw new Error(`turn effect cannot use attack/use-relative selector ${JSON.stringify(selector)} at ${file}:${skillId}.${effectId}`);
   }
 }
 
@@ -196,10 +212,17 @@ function validateTriggerDefinition(trigger: SkillFile["skills"][string]["trigger
   if (trigger.first !== undefined && trigger.every === undefined) {
     throw new Error(`trigger.first requires trigger.every at ${file}:${skillId}.trigger`);
   }
+  if (trigger.type === "turn" && (trigger.source !== undefined || trigger.target !== undefined)) {
+    throw new Error(`turn trigger cannot define source or target at ${file}:${skillId}.trigger; scope the effect instead`);
+  }
 }
 
 function isTriggerRelativeUnitSelector(selector: unknown): selector is string {
   return selector === "trigger" || selector === "trigger.source" || selector === "target" || selector === "trigger.target";
+}
+
+function isUseRelativeUnitSelector(selector: unknown): selector is string {
+  return isTriggerRelativeUnitSelector(selector) || selector === "parent.use.source" || selector === "parent.use.target";
 }
 
 function validateBattleStartEffectSelectors(
@@ -258,11 +281,11 @@ function validateStaticBucketEffect(
   skillId: string,
   effectId: string
 ): void {
-  const definition = staticBucketDefinition(effect.type);
+  const definition = effect.type === undefined ? undefined : staticBucketDefinition(effect.type);
   if (!definition) return;
 
   const path = `${file}:${skillId}.${effectId}`;
-  if (!isPassiveBucket(effect.type)) {
+  if (effect.type === undefined || !isPassiveBucket(effect.type)) {
     throw new Error(`effect type ${effect.type} targets an input-derived static bucket and cannot be defined by a skill at ${path}`);
   }
   if (trigger.type !== "pre_battle") {
@@ -280,7 +303,7 @@ function validateStaticBucketEffect(
 }
 
 function validateNativeEffectValue(effect: EffectIntentDefinition, file: string, skillId: string, effectId: string): void {
-  const definition = dynamicBucketDefinition(effect.type) ?? staticBucketDefinition(effect.type);
+  const definition = effect.type === undefined ? undefined : dynamicBucketDefinition(effect.type) ?? staticBucketDefinition(effect.type);
   if (definition?.effectBucket !== true) return;
   const values = Array.isArray(effect.value) ? effect.value : [effect.value];
   for (const value of values) {
@@ -434,7 +457,7 @@ function validateTriggerDamageJobSelector(
 }
 
 function isAllowedTriggerDamageJobSelector(selector: TriggerDamageJobDefinition["source"]): boolean {
-  const supported = new Set(["use.source", "use.target", "effect.applies_to", "effect.applies_vs", "enemy.living", "self.living"]);
+  const supported = new Set(["use.source", "use.target", "parent.use.source", "parent.use.target", "effect.applies_to", "effect.applies_vs", "enemy.living", "self.living"]);
   if (typeof selector === "string") return supported.has(selector) || (UNIT_TYPES as string[]).includes(selector);
   if (Array.isArray(selector)) return selector.length > 0 && selector.every((entry) => typeof entry === "string" && (UNIT_TYPES as string[]).includes(entry));
   return false;

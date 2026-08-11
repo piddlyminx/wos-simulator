@@ -103,7 +103,7 @@ export function selectPassiveContributions(activeEffects: ActiveEffect[]): Passi
   const contributions: PassiveContribution[] = [];
   for (const effect of activeEffects) {
     const bucket = effect.intent.type;
-    if (!isPassiveBucket(bucket)) continue;
+    if (bucket === undefined || !isPassiveBucket(bucket)) continue;
     const jobSide = staticBucketDefinition(bucket)!.jobSide;
     const side = effect.appliesTo.side;
     for (const unit of UNIT_TYPES) {

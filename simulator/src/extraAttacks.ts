@@ -14,7 +14,9 @@ import { normalizeUnitType } from "./normalize";
 import {
   capJobToRemainingTarget,
   chargeEffectUse,
-  chargeUsedEffects,
+  chargeUsedEffectsForJob,
+  effectUseIntent,
+  materializeTriggeredEffects,
   targetExhausted,
   type DamageJobResult,
   type RunLoopOptions,
@@ -48,6 +50,7 @@ export function processExtraSkillAttacks(
   for (const effect of effects) {
     const sourceEffectId = effect.source.effectId ?? effect.intent.id;
     let processedJobCount = 0;
+    let firstProcessedJob: DamageJob | undefined;
     for (const definition of effect.triggerDamageJobs ?? []) {
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
@@ -74,14 +77,16 @@ export function processExtraSkillAttacks(
           const result = calculateDamageJob(job, fighters, damageJobOptions);
           if (loopOptions.capRoundKills) capJobToRemainingTarget(result, job, roundStartTroops, roundTargetDamage, recorder);
           processedJobCount += 1;
+          firstProcessedJob ??= job;
           runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
           results.push({ job, result, intent });
           triggeredKills += result.kills;
-          chargeUsedEffects(runtime);
+          chargeUsedEffectsForJob(runtime, job, recorder);
         }
       }
     }
     if (processedJobCount > 0) {
+      materializeTriggeredEffects(effect, round, effectUseIntent(firstProcessedJob!), runtime, recorder);
       chargeEffectUse(runtime, effect);
       recorder.recordExtraAttack(normalAttack, effect, processedJobCount);
     }
@@ -110,8 +115,8 @@ function resolveTriggerJobSelector(
   normalAttack: DamageJob,
   roundStartTroops: DamageJob["roundStartTroops"]
 ): TriggerJobUnit[] {
-  if (selector === "use.source") return [{ side: normalAttack.dealerSide, unit: normalAttack.dealerUnit }];
-  if (selector === "use.target") return [{ side: normalAttack.takerSide, unit: normalAttack.takerUnit }];
+  if (selector === "use.source" || selector === "parent.use.source") return [{ side: normalAttack.dealerSide, unit: normalAttack.dealerUnit }];
+  if (selector === "use.target" || selector === "parent.use.target") return [{ side: normalAttack.takerSide, unit: normalAttack.takerUnit }];
   if (selector === "effect.applies_to") return unitsFromMask(effect.appliesTo.units).map((unit) => ({ side: effect.appliesTo.side, unit }));
   if (selector === "effect.applies_vs") return unitsFromMask(effect.appliesVs.units).map((unit) => ({ side: effect.appliesVs.side, unit }));
   if (selector === "enemy.living") return livingUnits(normalAttack.takerSide, roundStartTroops);

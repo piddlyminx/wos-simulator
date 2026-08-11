@@ -31,6 +31,7 @@ export interface Runtime {
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
   usedEffects: ActiveEffect[];
+  primaryUsedEffects: ActiveEffect[];
   staticDamageProfile: StaticDamageProfile;
   damageScratch: DamageScratch;
   rng: Rng;
@@ -73,6 +74,7 @@ export function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rn
     activateEffectsByRound: [],
     expireEffectsByRound: [],
     usedEffects: [],
+    primaryUsedEffects: [],
     staticDamageProfile,
     damageScratch: createDamageScratch(),
     rng,
@@ -162,12 +164,12 @@ export function triggerAttackSkills(
   recorder: BattleRecorder,
   intent: AttackIntent
 ): DeferredEffectPlan[] | undefined {
-  let deferred: DeferredEffectPlan[] | undefined;
+  let deferredEffects: DeferredEffectPlan[] | undefined;
   for (const prepared of preparedSkills) {
     const { skill } = prepared;
-    if (!skillMatchesTrigger(skill, "attack_declared", round, intent)) continue;
+    if (!preparedAttackFrequencyMatches(prepared, intent)) continue;
     recorder.recordSkillTriggerAttempt(skill);
-    if (!chancePasses(skill, runtime.rng)) continue;
+    if (!preparedChancePasses(prepared.probabilityPct, runtime.rng)) continue;
     recorder.recordSkillTriggered(skill);
     for (const effectIntent of prepared.immediateEffects) {
       const effect = activateEffect(skill, effectIntent, round, intent);
@@ -176,11 +178,25 @@ export function triggerAttackSkills(
       recorder.recordSkillEffectActivated(skill);
     }
     if (prepared.deferredEffects) {
-      if (deferred) deferred.push(...prepared.deferredEffects);
-      else deferred = prepared.deferredEffects.slice();
+      if (deferredEffects) deferredEffects.push(...prepared.deferredEffects);
+      else deferredEffects = prepared.deferredEffects.slice();
     }
   }
-  return deferred;
+  return deferredEffects;
+}
+
+function preparedAttackFrequencyMatches(prepared: PreparedAttackSkill, intent: AttackIntent): boolean {
+  const every = prepared.everyAttack;
+  if (every === undefined) return true;
+  const count = intent.projectedAttackCount;
+  const first = prepared.firstAttack ?? every;
+  return count >= first && (count - first) % every === 0;
+}
+
+export function preparedChancePasses(probabilityPct: number, rng: Rng): boolean {
+  if (probabilityPct <= 0) return false;
+  if (probabilityPct >= 100) return true;
+  return rng() < probabilityPct / 100;
 }
 
 export function materializeDeferredEffects(
@@ -241,16 +257,65 @@ export function capJobToRemainingTarget(
   recorder.recordFinalKills(result);
 }
 
-// Apply the round's effects to fighter state: remove killed troops and bump attack/received
-// counters. Every declared attack (each damage job and each cancelled attack) counts as one
-// attack for its attacker unit and one received for its defender unit.
-
 // Drain the per-job used-effects scratch, advancing each effect's uses counter. Runs in
 // every mode: uses drives attack-constraint expiry and step:"attack" value evolution.
 export function chargeUsedEffects(runtime: Runtime): void {
   if (runtime.usedEffects.length === 0) return;
   for (const effect of runtime.usedEffects) chargeEffectUse(runtime, effect);
   runtime.usedEffects.length = 0;
+  runtime.primaryUsedEffects.length = 0;
+}
+
+/** Activate a parent's keyed children from the concrete source/target of its actual use. */
+export function materializeTriggeredEffects(
+  parent: ActiveEffect,
+  round: number,
+  useIntent: AttackIntent,
+  runtime: Runtime,
+  recorder: BattleRecorder
+): void {
+  const skill = parent.sourceSkill;
+  if (!skill || !parent.triggerEffects?.length) return;
+  for (const childIntent of parent.triggerEffects) {
+    const child = activateEffect(skill, childIntent, round, useIntent);
+    addActiveEffect(runtime, child);
+    runtime.effectActivationCounts[skill.side] += 1;
+    recorder.recordSkillEffectActivated(skill);
+  }
+}
+
+/** Materialize selected parents' children after the job, then charge all participating effects. */
+export function chargeUsedEffectsForJob(
+  runtime: Runtime,
+  job: DamageJob,
+  recorder: BattleRecorder
+): void {
+  if (runtime.usedEffects.length === 0) return;
+  if (runtime.primaryUsedEffects.length > 0) {
+    const useIntent = effectUseIntent(job);
+    for (const effect of runtime.primaryUsedEffects) {
+      materializeTriggeredEffects(effect, job.round, useIntent, runtime, recorder);
+    }
+  }
+  for (const effect of runtime.usedEffects) chargeEffectUse(runtime, effect);
+  runtime.usedEffects.length = 0;
+  runtime.primaryUsedEffects.length = 0;
+}
+
+export function effectUseIntent(job: DamageJob): AttackIntent {
+  return {
+    round: job.round,
+    source: "normal",
+    dealerSide: job.dealerSide,
+    dealerUnit: job.dealerUnit,
+    takerSide: job.takerSide,
+    takerUnit: job.takerUnit,
+    orderIndex: 0,
+    previousAttackCount: 0,
+    projectedAttackCount: 0,
+    previousReceivedAttackCount: 0,
+    projectedReceivedAttackCount: 0
+  };
 }
 
 export function chargeEffectUse(runtime: Runtime, effect: ActiveEffect): void {
@@ -264,5 +329,5 @@ export function expireActiveEffect(runtime: Runtime, effect: ActiveEffect): void
   expireEffectIndex(runtime.effectIndex, effect);
 }
 
-// A cancelled attack still charges the attacker's attack-constrained effects (the attack
-// happened, it just didn't land) plus the control that cancelled it, whatever its duration.
+// A control can still consume applicable attack-duration effects for duration bookkeeping,
+// but this duration-only charge neither advances normal cadence nor materializes children.

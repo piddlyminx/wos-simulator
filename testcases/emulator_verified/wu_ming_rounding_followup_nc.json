@@ -1,0 +1,77 @@
+[
+  {
+    "test_id": "wu_ming_rounding_followup_nc",
+    "description": "Deterministic follow-up to the 170/170/170 Wu Ming rounding anomaly, using slightly larger but similarly proportioned T6 armies. WIP attacks with Wu Ming and 190 Infantry, 190 Lancers, and 190 Marksmen against minxxx's 417 Infantry and 417 Lancers. Using the latest captured account stats, current ceil-to-3dp, unquantized float64, float32, nearest-to-2dp, and ceil-to-2dp each predict 179 defenders surviving; global floor-to-2dp predicts 155 defenders surviving. Both groups remain at those values when all rounded attacker and defender stats are perturbed in the favorable and unfavorable directions by 0.05. A result near 179 rejects global floor-to-2dp as the explanation of the earlier exact 200; a result near 155 shows that the floor-to-2dp trajectory repeats. The captured report stats must be substituted into every unchanged interpretation before final classification.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 190,
+        "lancer_t6": 190,
+        "marksman_t6": 190
+      },
+      "stats": {
+        "inf": {
+          "attack": 414.7,
+          "defense": 414.5,
+          "lethality": 199.3,
+          "health": 260.1
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 417,
+        "lancer_t6": 417
+      },
+      "stats": {
+        "inf": {
+          "attack": 282.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 275.2,
+          "defense": 278.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 281.0,
+          "defense": 286.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 180
+      }
+    ]
+  }
+]

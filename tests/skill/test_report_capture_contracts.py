@@ -306,17 +306,24 @@ class ReportCaptureContractTests(unittest.TestCase):
         self.assertTrue(found, detail)
         self.assertIn("battle_details_button found", detail)
 
-    def test_stats_frame_accepts_complete_live_layout_with_high_header(self) -> None:
+    def test_stats_frame_rejects_layout_with_clipped_troop_row(self) -> None:
         template = cv2.imread(str(ROOT / "skill" / "templates" / "tpl_stat_bonuses.png"), cv2.IMREAD_COLOR)
         self.assertIsNotNone(template)
-        img = frame(0)
+        clipped = frame(0)
         th, tw = template.shape[:2]
-        img[228:228 + th, 270:270 + tw] = template
+        clipped[228:228 + th, 270:270 + tw] = template
 
-        state = _inspect_stats_frame(img)
+        clipped_state = _inspect_stats_frame(clipped)
 
-        self.assertEqual(state["sb_top"], 216)
-        self.assertTrue(state["parseable"])
+        self.assertEqual(clipped_state["sb_top"], 216)
+        self.assertFalse(clipped_state["parseable"])
+
+        framed = frame(0)
+        framed[312:312 + th, 270:270 + tw] = template
+        framed_state = _inspect_stats_frame(framed)
+
+        self.assertEqual(framed_state["sb_top"], 300)
+        self.assertTrue(framed_state["parseable"])
 
     def test_reference_stats_frames_are_inside_capture_band(self) -> None:
         paths = [

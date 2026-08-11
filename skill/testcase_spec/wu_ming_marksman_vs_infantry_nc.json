@@ -1,0 +1,22 @@
+{
+  "test_id": "wu_ming_marksman_vs_infantry_nc",
+  "description": "Deterministic single-line discriminator for whether Wu Ming makes T6 Marksmen deal more damage to T6 Infantry than the current simulator expects, without any target-selection or retargeting boundary. WIP attacks with Wu Ming and 500 T6 Marksmen into minxxx's 350 T6 Infantry. Using stats from the latest reports and allowing every displayed stat to vary independently by +/-0.05, the current model predicted 10-14 defender survivors; Elemental Resonance amplifying only Ranged Strike's 10% bonus predicted 14-19 attacker survivors; and Elemental Resonance multiplying the whole Marksman normal attack predicted 122-123 attacker survivors. The game returned 11 defender survivors. Recalculation with the captured exact stats predicts 11 defender survivors for the current model, 17 attacker survivors for bonus-only amplification, and 123 attacker survivors for whole-attack amplification.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wu Ming": {}
+    },
+    "troops": {
+      "marksman_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 350
+    }
+  }
+}

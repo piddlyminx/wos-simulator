@@ -1,0 +1,74 @@
+[
+  {
+    "test_id": "wu_ming_s2_isolation_nc",
+    "description": "Deterministic Wu Ming S2 isolation following the mixed solo discrepancy. WIP attacks with Wu Ming 3/3/3 and 500 T6 Lancers into minxxx's 340 T6 Marksmen. Because no Infantry or skill-damage jobs exist, Wu Ming S1 and S3 should be inert. With the exact current stats captured immediately beforehand, the configured S2 predicts +39; omitting S2 predicts -61; incorrectly allowing S3 to amplify normal attacks predicts +136; and incorrectly applying S1 to all troops predicts +137. These interpretations and decision rules are frozen before capture.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "lancer_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 414.7,
+          "defense": 414.5,
+          "lethality": 199.3,
+          "health": 260.1
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 340
+      },
+      "stats": {
+        "inf": {
+          "attack": 282.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 275.2,
+          "defense": 278.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 281.0,
+          "defense": 286.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 40,
+        "defender": 0
+      }
+    ]
+  }
+]

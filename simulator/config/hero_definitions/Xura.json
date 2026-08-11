@@ -18,16 +18,17 @@
     "PiercingArrow": {
       "description": "Xura's Marksmen deal X% additional damage every 2 strikes and make their target take Y% more damage for 1 turn.",
       "trigger": {
-        "type": "turn",
-        "every": 2
+        "type": "attack",
+        "every": 2,
+        "source": "marksman"
       },
       "effects": {
         "PiercingArrow/1": {
           "type": "extra_skill_attack",
           "value": [20, 40, 60, 80, 100],
           "units": {
-            "applies_to": ["marksman"],
-            "applies_vs": "enemy.any"
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
           },
           "duration": { "attacks": { "count": 1 } },
           "trigger_damage_jobs": [
@@ -37,7 +38,7 @@
         "PiercingArrow/2": {
           "type": "active.hero.damageTaken.up",
           "value": [5, 10, 15, 20, 25],
-          "units": { "applies_to": "enemy.any" },
+          "units": { "applies_to": "trigger.target", "applies_vs": "trigger.source" },
           "duration": { "turns": { "count": 1, "delay": 1 } },
           "same_effect_stacking": "max"
         }

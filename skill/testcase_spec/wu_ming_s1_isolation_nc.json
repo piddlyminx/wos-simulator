@@ -1,0 +1,22 @@
+{
+  "test_id": "wu_ming_s1_isolation_nc",
+  "description": "Deterministic Wu Ming S1 normal-damage isolation, interpreted after the dedicated S2 fixture. WIP attacks with Wu Ming 3/3/3 and 500 T6 Infantry into minxxx's 710 T6 Marksmen. Pre-capture predictions mistakenly used a temporary helper capped at 100 rounds: configured S1 plus S2 +178, no S1 or no S2 0/draw, S1 normal reduction 18% +189, and S3 affecting normal damage +231. The game returned +178. Post-capture audit found that real testcases use the simulator's 1500-round default; rerunning the unchanged candidate configurations gives configured +178 in 100 rounds, no S1 +105 in 110 rounds, no S2 +121 in 120 rounds, 18% normal reduction +189 in 99 rounds, and S3 affecting normal damage +231 in 82 rounds. The erroneous precommit and its correction are retained explicitly rather than presenting the corrected values as precommitted.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wu Ming": {}
+    },
+    "troops": {
+      "infantry_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "marksman_t6": 710
+    }
+  }
+}

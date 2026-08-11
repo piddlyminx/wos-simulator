@@ -414,33 +414,96 @@ def adb_screencap(
     serial: str,
     out_path: str,
     timeout_sec: float | None = None,
+    physical_display_id: str | None = None,
 ) -> None:
     """Capture screen to a local file using screencap -p."""
+    command = ["adb", "-s", serial, "exec-out", "screencap"]
+    if physical_display_id is not None:
+        command.extend(["-d", physical_display_id])
+    command.append("-p")
     result = subprocess.run(
-        ["adb", "-s", serial, "exec-out", "screencap", "-p"],
-        capture_output=True,
-        timeout=timeout_sec,
-    )
-    Path(out_path).write_bytes(result.stdout)
-
-
-def adb_screencap_bgr(
-    serial: str,
-    timeout_sec: float | None = None,
-) -> np.ndarray:
-    """Capture screen and decode it directly into a BGR image."""
-    result = subprocess.run(
-        ["adb", "-s", serial, "exec-out", "screencap", "-p"],
+        command,
         capture_output=True,
         timeout=timeout_sec,
     )
     if result.returncode != 0 or not result.stdout:
         raise WosError(f"screencap failed for {serial}")
-    buf = np.frombuffer(result.stdout, dtype=np.uint8)
+    Path(out_path).write_bytes(_png_screencap_payload(result.stdout, serial))
+
+
+def _png_screencap_payload(stdout: bytes, serial: str) -> bytes:
+    """Discard emulator warnings written before screencap's PNG payload."""
+    png_signature = b"\x89PNG\r\n\x1a\n"
+    png_start = stdout.find(png_signature)
+    if png_start < 0:
+        raise WosError(f"screencap PNG payload not found for {serial}")
+    return stdout[png_start:]
+
+
+def adb_screencap_bgr(
+    serial: str,
+    timeout_sec: float | None = None,
+    physical_display_id: str | None = None,
+) -> np.ndarray:
+    """Capture screen and decode it directly into a BGR image."""
+    command = ["adb", "-s", serial, "exec-out", "screencap"]
+    if physical_display_id is not None:
+        command.extend(["-d", physical_display_id])
+    command.append("-p")
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        timeout=timeout_sec,
+    )
+    if result.returncode != 0 or not result.stdout:
+        raise WosError(f"screencap failed for {serial}")
+    payload = _png_screencap_payload(result.stdout, serial)
+    buf = np.frombuffer(payload, dtype=np.uint8)
     img = cv2.imdecode(buf, cv2.IMREAD_COLOR)
     if img is None:
         raise WosError(f"screencap decode failed for {serial}")
     return img
+
+
+def _wos_display_ids(serial: str) -> tuple[int | None, str | None]:
+    """Return WOS's logical input display and physical screencap display."""
+    windows = adb_shell(serial, "dumpsys window displays")
+    logical_display_id: int | None = None
+    display_sections = list(re.finditer(
+        r"(?ms)^  Display: mDisplayId=(\d+).*?(?=^  Display: mDisplayId=|\Z)",
+        windows,
+    ))
+    for section in display_sections:
+        section_text = section.group(0)
+        if not re.search(
+            rf"m(?:CurrentFocus|FocusedApp)=.*{re.escape(WOS_PKG)}",
+            section_text,
+        ):
+            continue
+        logical_display_id = int(section.group(1))
+        break
+    if logical_display_id is None:
+        for section in display_sections:
+            if WOS_PKG not in section.group(0):
+                continue
+            logical_display_id = int(section.group(1))
+            break
+    if logical_display_id is None:
+        return None, None
+
+    display_state = adb_shell(serial, "dumpsys display")
+    viewport_match = re.search(
+        rf"DisplayViewport\{{[^}}]*displayId={logical_display_id},[^}}]*uniqueId='local:(\d+)'",
+        display_state,
+    )
+    physical_display_id = viewport_match.group(1) if viewport_match else None
+    logger.info(
+        "WOS display on %s: logical=%d physical=%s",
+        serial,
+        logical_display_id,
+        physical_display_id or "default",
+    )
+    return logical_display_id, physical_display_id
 
 
 # ─── App control ───────────────────────────────────────────────────────────────
@@ -621,37 +684,57 @@ class WosEmulator:
     need to pass or store a raw ``serial`` string.
     """
 
-    def __init__(self, instance_name: str, instance_idx: int, serial: str) -> None:
+    def __init__(
+        self,
+        instance_name: str,
+        instance_idx: int,
+        serial: str,
+        logical_display_id: int | None = None,
+        physical_display_id: str | None = None,
+    ) -> None:
         self.instance_name = instance_name
         self.instance_idx = instance_idx
         self.serial = serial  # "127.0.0.1:<port>" — needed for low-level ADB callers
+        self.logical_display_id = logical_display_id
+        self.physical_display_id = physical_display_id
 
     # ── ADB primitives ─────────────────────────────────────────────────────────
 
     def shell(self, cmd: str, timeout_sec: float | None = None) -> str:
         """Run an adb shell command and return stdout."""
+        if self.logical_display_id is not None and cmd.startswith("input ") and not cmd.startswith("input -d "):
+            cmd = f"input -d {self.logical_display_id} {cmd.removeprefix('input ')}"
         return adb_shell(self.serial, cmd, timeout_sec=timeout_sec)
 
     def tap(self, x: int, y: int) -> None:
-        adb_tap(self.serial, x, y)
+        self.shell(f"input tap {x} {y}")
 
     def swipe(self, x1: int, y1: int, x2: int, y2: int, dur_ms: int = 300) -> None:
-        adb_swipe(self.serial, x1, y1, x2, y2, dur_ms)
+        self.shell(f"input swipe {x1} {y1} {x2} {y2} {dur_ms}")
 
     def key(self, keyevent: str) -> None:
         """Send a keyevent by name or code, e.g. 'KEYCODE_BACK' or '4'."""
         self.shell(f"input keyevent {keyevent}")
 
     def back(self) -> None:
-        adb_back(self.serial)
+        self.key("KEYCODE_BACK")
 
     def screencap(self, out_path: str, timeout_sec: float | None = None) -> None:
         """Capture screen to a local file."""
-        adb_screencap(self.serial, out_path, timeout_sec=timeout_sec)
+        adb_screencap(
+            self.serial,
+            out_path,
+            timeout_sec=timeout_sec,
+            physical_display_id=self.physical_display_id,
+        )
 
     def screencap_bgr(self, timeout_sec: float | None = None) -> np.ndarray:
         """Capture screen and return as a BGR numpy array."""
-        return adb_screencap_bgr(self.serial, timeout_sec=timeout_sec)
+        return adb_screencap_bgr(
+            self.serial,
+            timeout_sec=timeout_sec,
+            physical_display_id=self.physical_display_id,
+        )
 
     # ── State queries ──────────────────────────────────────────────────────────
 
@@ -695,4 +778,11 @@ def resolve_instance(name: str) -> WosEmulator:
     idx, port = ensure_running(name)
     serial = f"127.0.0.1:{port}"
     ensure_foreground(serial)
-    return WosEmulator(instance_name=name, instance_idx=idx, serial=serial)
+    logical_display_id, physical_display_id = _wos_display_ids(serial)
+    return WosEmulator(
+        instance_name=name,
+        instance_idx=idx,
+        serial=serial,
+        logical_display_id=logical_display_id,
+        physical_display_id=physical_display_id,
+    )

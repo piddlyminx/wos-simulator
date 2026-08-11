@@ -1,0 +1,25 @@
+{
+  "test_id": "wu_ming_rounding_followup_nc",
+  "description": "Deterministic follow-up to the 170/170/170 Wu Ming rounding anomaly, using slightly larger but similarly proportioned T6 armies. WIP attacks with Wu Ming and 190 Infantry, 190 Lancers, and 190 Marksmen against minxxx's 417 Infantry and 417 Lancers. Using the latest captured account stats, current ceil-to-3dp, unquantized float64, float32, nearest-to-2dp, and ceil-to-2dp each predict 179 defenders surviving; global floor-to-2dp predicts 155 defenders surviving. Both groups remain at those values when all rounded attacker and defender stats are perturbed in the favorable and unfavorable directions by 0.05. A result near 179 rejects global floor-to-2dp as the explanation of the earlier exact 200; a result near 155 shows that the floor-to-2dp trajectory repeats. The captured report stats must be substituted into every unchanged interpretation before final classification.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wu Ming": {}
+    },
+    "troops": {
+      "infantry_t6": 190,
+      "lancer_t6": 190,
+      "marksman_t6": 190
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 417,
+      "lancer_t6": 417
+    }
+  }
+}

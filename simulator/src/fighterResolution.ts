@@ -270,15 +270,7 @@ function hydrateSkill(
   heroInstanceId?: string,
   heroRole?: "main" | "joiner"
 ): ResolvedSkill {
-  const effects: ResolvedEffectIntentDefinition[] = [];
-  for (const [effectId, effect] of Object.entries(rawSkill.effects ?? {})) {
-    effects.push({
-      id: effectId,
-      ...effect,
-      value: levelSelectPreservingOrder(effect.value, level),
-      sourceDefinition: effect
-    });
-  }
+  const effects = hydrateEffects(rawSkill.effects ?? {}, level);
   return {
     id: skillId,
     name: skillId,
@@ -292,6 +284,24 @@ function hydrateSkill(
     trigger: rawSkill.trigger,
     effects
   };
+}
+
+function hydrateEffects(
+  definitions: Record<string, Omit<EffectIntentDefinition, "id">>,
+  level: number
+): ResolvedEffectIntentDefinition[] {
+  const hydrated: ResolvedEffectIntentDefinition[] = [];
+  for (const [effectId, effect] of Object.entries(definitions)) {
+    const resolved: ResolvedEffectIntentDefinition = {
+      id: effectId,
+      ...effect,
+      value: levelSelectPreservingOrder(effect.value, level),
+      sourceDefinition: effect
+    };
+    if (effect.trigger_effects) resolved.triggerEffects = hydrateEffects(effect.trigger_effects, level);
+    hydrated.push(resolved);
+  }
+  return hydrated;
 }
 
 function levelSelectPreservingOrder(value: unknown, level: number): unknown {

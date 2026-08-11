@@ -1,0 +1,22 @@
+{
+  "test_id": "retarget_lancer_screen_nc",
+  "description": "Deterministic same-round retargeting discriminator using only T6 troops and no heroes. WIP attacks with 100 Lancers followed by 400 Marksmen against minxxx's 1 Lancer followed by 499 Marksmen. The WIP Lancers are expected to kill the single defender Lancer comfortably before WIP Marksmen act. Using the latest captured account stats, no-retargeting predicts 303 defender Marksmen surviving, while attack-time retargeting predicts 282 defender Marksmen surviving. A result near 303 supports skipping the Marksman attack when its snapshotted target is exhausted; a result near 282 supports retargeting it to the living Marksmen. The captured report stats must be substituted into both unchanged interpretations before the result is classified.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "lancer_t6": 100,
+      "marksman_t6": 400
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "lancer_t6": 1,
+      "marksman_t6": 499
+    }
+  }
+}

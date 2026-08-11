@@ -1,0 +1,25 @@
+{
+  "test_id": "wu_ming_solo_current_nc",
+  "description": "Deterministic current-account Wu Ming solo coverage. WIP attacks with Wu Ming 3/3/3 and 170 each T6 Infantry, Lancers, and Marksmen into minxxx's 380 each T6 Infantry and Lancers. Using current no-hero stats, Wu Ming's S6 contribution estimated from the recent WIP Renee report, and the published skill values: the configured interpretation predicts a signed remaining score near -7; omitting S1's normal-damage reduction predicts about -297; omitting S2 predicts about -306; and incorrectly allowing S3 to amplify normal attacks predicts about +344. The exact captured stats will be substituted into these frozen interpretations after capture. This fixture positively exercises S1's normal-damage branch and S2; it checks that S3 remains inert without skill-damage jobs, but cannot positively validate S1's skill-damage branch or S3's amplification.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wu Ming": {}
+    },
+    "troops": {
+      "infantry_t6": 170,
+      "lancer_t6": 170,
+      "marksman_t6": 170
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 380,
+      "lancer_t6": 380
+    }
+  }
+}

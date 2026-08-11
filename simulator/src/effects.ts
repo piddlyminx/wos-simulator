@@ -36,7 +36,14 @@ interface CompiledActivation {
 }
 
 const ACTIVATION_CACHE = new WeakMap<EffectIntentDefinition, CompiledActivation>();
-const INTENT_SCOPED_VALUES = new Set(["trigger.source", "trigger", "trigger.target", "target"]);
+const INTENT_SCOPED_VALUES = new Set([
+  "trigger.source",
+  "trigger",
+  "trigger.target",
+  "target",
+  "parent.use.source",
+  "parent.use.target"
+]);
 
 export function oppositeSide(side: SideId): SideId {
   return side === "attacker" ? "defender" : "attacker";
@@ -196,6 +203,7 @@ export function activateEffect(
     remainingAttackDelay: compiled.attackDelay,
     uses: 0,
     sameEffectStacking: compiled.sameEffectStacking,
+    triggerEffects: intent.triggerEffects,
     effectGroup: intent.effectGroupsByScopeKey?.[resolvedEffectScopeKey(appliesTo, appliesVs)],
     effectGroupPosition: undefined
   };
@@ -312,10 +320,10 @@ function resolveUnitScope(
   if (role === "applies_vs" && value === "all") {
     throw new Error('effect units.applies_vs cannot be "all"; use "any" for an unrestricted usage gate');
   }
-  if ((value === "trigger.source" || value === "trigger") && attackIntent) {
+  if ((value === "trigger.source" || value === "trigger" || value === "parent.use.source") && attackIntent) {
     return { side: attackIntent.dealerSide, units: unitMask(attackIntent.dealerUnit) };
   }
-  if ((value === "trigger.target" || value === "target") && attackIntent) {
+  if ((value === "trigger.target" || value === "target" || value === "parent.use.target") && attackIntent) {
     return { side: attackIntent.takerSide, units: unitMask(attackIntent.takerUnit) };
   }
   if (ownerSide && isRelationQualifiedSelector(value)) {
@@ -329,7 +337,7 @@ function resolveUnitScope(
 
 function normalizeUnitList(value: unknown): UnitType[] | undefined {
   if (Array.isArray(value)) return value.map((entry) => normalizeUnitType(String(entry)));
-  if (typeof value === "string" && !["any", "target", "all", "trigger", "trigger.source", "trigger.target", "friendly"].includes(value)) return [normalizeUnitType(value)];
+  if (typeof value === "string" && !["any", "target", "all", "trigger", "trigger.source", "trigger.target", "parent.use.source", "parent.use.target", "friendly"].includes(value)) return [normalizeUnitType(value)];
   return undefined;
 }
 
@@ -338,6 +346,7 @@ function isRelationQualifiedSelector(value: unknown): value is string {
 }
 
 function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
+  if (intent.type === undefined) return "carrier";
   if (intent.type === "active.hero.shield" || intent.type === "active.troop.shield") return "shield";
   if (intent.type === "extra_skill_attack") return "extra_attack";
   if (intent.type === "dodge" || intent.type === "no_attack") return "control";

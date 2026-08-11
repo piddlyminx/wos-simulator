@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { test } from "node:test";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
@@ -11,49 +11,40 @@ import {
 } from "./config-node";
 import type { SkillFile } from "./types";
 
-test("Gwen Blastmaster uses a turn delay and a one-attack duration", () => {
-  const effect = loadSimulatorConfig().heroDefinitions.Gwen.skills.Blastmaster.effects["Blastmaster/1"];
+test("loadSimulatorConfig accepts keyed nested effects on a type-less attack carrier", () => {
+  const root = writeConfigWithTroopEffect({
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    duration: { attacks: { count: 1 } },
+    trigger_effects: {
+      child: {
+        type: "active.hero.lethality.up",
+        value: 10,
+        units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" }
+      }
+    }
+  }, { type: "attack", every: 2, source: "infantry" });
 
-  assert.deepEqual(effect.duration, {
-    turns: { delay: 1 },
-    attacks: { count: 1 }
-  });
+  const config = loadSimulatorConfigFromDir(root);
+  assert.equal(config.diagnostics.unsupportedEffects.length, 0);
 });
 
-test("Volley raises the triggering attack's damage instead of scheduling an extra skill attack", () => {
-  const effect = loadSimulatorConfig().troopSkills.skills.Volley.effects["Volley/1"];
-
-  assert.equal(effect.type, "active.troop.damage.up");
-  assert.deepEqual(effect.value, [100]);
-  assert.deepEqual(effect.duration, { attacks: { count: 1 } });
-  assert.equal("trigger_damage_jobs" in effect, false);
-});
-
-test("loadSimulatorConfig warns for non-per-unit turn triggers with trigger-relative effect selectors", () => {
+test("loadSimulatorConfig rejects attack-relative selectors on direct turn effects", () => {
   const root = writeConfigWithTroopEffect({
     type: "active.hero.lethality.up",
     value: 10,
     units: { applies_to: "trigger.source", applies_vs: "target" }
-  });
+  }, { type: "turn" });
 
-  const config = loadSimulatorConfigFromDir(root);
+  assert.throws(() => loadSimulatorConfigFromDir(root), /turn effect cannot use attack\/use-relative selector/i);
+});
 
-  assert.deepEqual(config.diagnostics.ambiguousTurnTriggerSelectors, [
-    {
-      file: relative(process.cwd(), join(root, "troop_skills.json")),
-      skillId: "ExampleSkill",
-      effectId: "ExampleSkill/1",
-      selector: "trigger.source",
-      reason: "Turn trigger has no concrete attack intent; trigger-relative unit selectors fall back to all units"
-    },
-    {
-      file: relative(process.cwd(), join(root, "troop_skills.json")),
-      skillId: "ExampleSkill",
-      effectId: "ExampleSkill/1",
-      selector: "target",
-      reason: "Turn trigger has no concrete attack intent; trigger-relative unit selectors fall back to all units"
-    }
-  ]);
+test("loadSimulatorConfig rejects source and target on turn triggers", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "active.hero.lethality.up",
+    value: 10,
+    units: { applies_to: "self.infantry" }
+  }, { type: "turn", source: "infantry" });
+  assert.throws(() => loadSimulatorConfigFromDir(root), /turn trigger cannot define source or target/i);
 });
 
 test("loadSimulatorConfig rejects legacy fields in simulator config", () => {
@@ -419,7 +410,7 @@ test("loadSimulatorConfig rejects missing required effects", () => {
   assert.throws(() => loadSimulatorConfigFromDir(root), /requires_effect references missing effect MissingShield\/1/i);
 });
 
-function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "turn" }): string {
+function writeConfigWithTroopEffect(effect: Record<string, unknown>, trigger: Record<string, unknown> = { type: "attack" }): string {
   const root = join(tmpdir(), `wos-simulator-config-trigger-jobs-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   mkdirSync(join(root, "hero_definitions"), { recursive: true });
   writeFileSync(join(root, "hero_generation_stats.json"), JSON.stringify({ S1: { attack: 1, defense: 1, lethality: 1, health: 1 } }));

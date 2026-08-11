@@ -1,0 +1,19 @@
+{
+  "test_id": "damage_precision_325l_010i_325m",
+  "description": "Precommitted upper control for the 3dp-ceil-versus-float damage discriminator using the supplied 2dp battle stats. WIP attacks with 325 T6 Lancers and no heroes; minxxx defends with 10 T6 Infantry and 325 T6 Marksmen and no heroes. Both the current per-attack 3dp ceiling and an otherwise identical full-float counterfactual predict minxxx wins with exactly 253 Marksmen surviving.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": { "lancer_t6": 325 }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 10,
+      "marksman_t6": 325
+    }
+  }
+}

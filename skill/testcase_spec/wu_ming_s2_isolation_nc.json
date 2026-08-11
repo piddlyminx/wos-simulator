@@ -1,0 +1,22 @@
+{
+  "test_id": "wu_ming_s2_isolation_nc",
+  "description": "Deterministic Wu Ming S2 isolation following the mixed solo discrepancy. WIP attacks with Wu Ming 3/3/3 and 500 T6 Lancers into minxxx's 340 T6 Marksmen. Because no Infantry or skill-damage jobs exist, Wu Ming S1 and S3 should be inert. With the exact current stats captured immediately beforehand, the configured S2 predicts +39; omitting S2 predicts -61; incorrectly allowing S3 to amplify normal attacks predicts +136; and incorrectly applying S1 to all troops predicts +137. These interpretations and decision rules are frozen before capture.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wu Ming": {}
+    },
+    "troops": {
+      "lancer_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "marksman_t6": 340
+    }
+  }
+}

@@ -18,18 +18,17 @@
       "description": "Blanchette's Marksmen fire a crystal blade every 3 rounds, dealing X% extra damage to their target.",
       "trigger": {
         "type": "turn",
-        "every": 3,
-        "source": "marksman"
+        "every": 3
       },
       "effects": {
         "BloodHunter/1": {
           "type": "extra_skill_attack",
           "value": [15, 30, 45, 60, 75],
           "units": {
-            "applies_to": "trigger.source",
-            "applies_vs": "trigger.target"
+            "applies_to": "self.marksman",
+            "applies_vs": "enemy.any"
           },
-          "duration": { "attacks": { "count": 1 } },
+          "duration": { "turns": { "count": 1 }, "attacks": { "count": 1 } },
           "trigger_damage_jobs": [
             { "source": "use.source", "target": "use.target" }
           ]

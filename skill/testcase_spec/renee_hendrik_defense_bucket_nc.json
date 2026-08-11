@@ -1,0 +1,23 @@
+{
+  "test_id": "renee_hendrik_defense_bucket_nc",
+  "description": "Deterministic Renee Defense Down bucket discriminator. minxxx attacks with Renee and Hendrik, fielding 120 T6 lancers into WIP's 446 T9 infantry. Hendrik's only unlocked expedition skill is persistent 5% Defense Down. Using estimated current stats reconstructed from recent reports, homogeneous Renee Defense Down predicts WIP wins with about 34 infantry; homogeneous Health Down or Damage Taken Up predicts minxxx wins with about 5 lancers. The candidate configurations and comparison rule are frozen before capture; exact captured stats will be inserted into those unchanged candidates after the report.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {
+      "Renee": {},
+      "Hendrik": {}
+    },
+    "troops": {
+      "lancer_t6": 120
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t9": 446
+    }
+  }
+}

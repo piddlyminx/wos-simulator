@@ -1,0 +1,69 @@
+[
+  {
+    "test_id": "damage_precision_325l_008i_325m",
+    "description": "Precommitted lower control for the 3dp-ceil-versus-float damage discriminator using the supplied 2dp battle stats. WIP attacks with 325 T6 Lancers and no heroes; minxxx defends with 8 T6 Infantry and 325 T6 Marksmen and no heroes. Both the current per-attack 3dp ceiling and an otherwise identical full-float counterfactual predict minxxx wins with exactly 242 Marksmen surviving.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "lancer_t6": 325
+      },
+      "stats": {
+        "inf": {
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.2,
+          "health": 181.8
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 8,
+        "marksman_t6": 325
+      },
+      "stats": {
+        "inf": {
+          "attack": 290.7,
+          "defense": 266.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 283.2,
+          "defense": 265.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 289.0,
+          "defense": 273.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 243
+      }
+    ]
+  }
+]
