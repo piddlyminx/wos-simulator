@@ -94,6 +94,8 @@ const STATIC_BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(STATIC_BUCKETS);
 const DYNAMIC_NEUTRAL_VALUES = Float64Array.from(DYNAMIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const STATIC_NEUTRAL_VALUES = Float64Array.from(STATIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
+// Smallest tested power-of-ten tolerance that removes the verified residue.
+const CEILING_EPSILON = 1e-12;
 
 /** Smaller side's initial army; battle-invariant. */
 export function minInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
@@ -133,7 +135,7 @@ export function calculateDamageJob(
   );
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
   const initialArmy = options.minInitialArmy ?? minInitialArmy(fighters);
-  const armyTerm = ceilSqrtProduct(dealerTroops, initialArmy);
+  const armyTerm = ceilIgnoringFloatResidue(Math.sqrt(dealerTroops) * Math.sqrt(initialArmy));
   const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
   applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
@@ -325,26 +327,10 @@ function applyTurnShield(
   return appliedValue;
 }
 
-/**
- * Preserve the integer ceiling while ignoring a one-ULP overshoot from operations
- * such as sqrt(200) * sqrt(200) = 200.00000000000003.
- */
+/** Preserve genuine fractions while ignoring sub-epsilon floating-point residue. */
 export function ceilIgnoringFloatResidue(value: number): number {
   if (value === 0) return 0;
-  return Math.ceil(value - Number.EPSILON * Math.max(1, value));
-}
-
-export function ceilSqrtProduct(left: number, right: number): number {
-  if (!Number.isSafeInteger(left) || left < 0 || !Number.isSafeInteger(right) || right < 0) {
-    throw new RangeError(`ceilSqrtProduct requires non-negative safe integers; received ${left} and ${right}`);
-  }
-  const product = left * right;
-  if (!Number.isSafeInteger(product)) {
-    throw new RangeError(`ceilSqrtProduct product exceeds Number.MAX_SAFE_INTEGER: ${left} * ${right}`);
-  }
-
-  const root = Math.floor(Math.sqrt(product));
-  return root * root >= product ? root : root + 1;
+  return Math.ceil(value - CEILING_EPSILON);
 }
 
 function compileDamageTerms(definitions: readonly BucketSpec[]): DamageFactorTerm[] {

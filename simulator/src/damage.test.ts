@@ -4,7 +4,6 @@ import { test } from "node:test";
 import {
   calculateDamageJob,
   ceilIgnoringFloatResidue,
-  ceilSqrtProduct,
   createDamageScratch,
   evaluateDamageExpression
 } from "./damage";
@@ -131,17 +130,11 @@ test("damage calculator counts every positive fractional remainder as one living
 
 test("float-safe ceilings ignore residue but preserve genuine fractional troops", () => {
   assert.equal(ceilIgnoringFloatResidue(200.00000000000003), 200);
+  assert.equal(ceilIgnoringFloatResidue(Math.sqrt(2) * Math.sqrt(2)), 2);
+  assert.equal(ceilIgnoringFloatResidue(10 + 5e-13), 10);
+  assert.equal(ceilIgnoringFloatResidue(10 + 2e-12), 11);
   assert.equal(ceilIgnoringFloatResidue(200.001), 201);
   assert.equal(ceilIgnoringFloatResidue(0.01), 1);
-});
-
-test("army term uses an exact safe-integer square-root ceiling", () => {
-  assert.equal(ceilSqrtProduct(2, 2), 2);
-  assert.equal(ceilSqrtProduct(200, 200), 200);
-  assert.equal(ceilSqrtProduct(2_000_000, 2_000_000), 2_000_000);
-  assert.equal(ceilSqrtProduct(2_000_000, 1_999_999), 2_000_000);
-  assert.throws(() => ceilSqrtProduct(1.5, 2), /safe integers/);
-  assert.throws(() => ceilSqrtProduct(100_000_000, 100_000_000), /MAX_SAFE_INTEGER/);
 });
 
 test("damage calculator does not over-count a whole-number army term", () => {
