@@ -1,0 +1,19 @@
+{
+  "test_id": "damage_precision_875i_026i_875m",
+  "description": "Precommitted lower control for the 3dp-ceil-versus-float damage discriminator. WIP attacks with 875 T6 Infantry and no heroes; minxxx defends with 26 T6 Infantry and 875 T6 Marksmen and no heroes. Both the current per-attack 3dp ceiling and an otherwise identical full-float counterfactual predict minxxx wins with exactly 679 Marksmen surviving.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": { "infantry_t6": 875 }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 26,
+      "marksman_t6": 875
+    }
+  }
+}

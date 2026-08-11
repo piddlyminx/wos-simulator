@@ -108,7 +108,8 @@ export interface BattleRecorder {
   recordScheduledDamageJob(job: DamageJob): void;
   /** One extra_skill_attack firing on a normal attack; spawnedJobCount is the number of its jobs that ran (always > 0). */
   recordExtraAttack(normalJob: DamageJob, effect: ActiveEffect, spawnedJobCount: number): void;
-  recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "dodge" | "no_attack"): void;
+  recordDodged(intent: AttackIntent, normalJob: DamageJob, effect: ActiveEffect): void;
+  recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "no_attack"): void;
   recordDamageJob(job: DamageJob, result: DamageResult, intent?: AttackIntent): void;
   recordFinalKills(result: DamageResult): void;
   recordRound(round: number, roundStartTroops: DamageJob["roundStartTroops"], intents: AttackIntent[]): void;
@@ -146,6 +147,7 @@ export class NullRecorder implements BattleRecorder {
   recordSkillDamageJob() {}
   recordScheduledDamageJob() {}
   recordExtraAttack() {}
+  recordDodged() {}
   recordCancelled() {}
   recordDamageJob() {}
   recordFinalKills() {}
@@ -251,7 +253,7 @@ export class BasicInfoRecorder implements BattleRecorder {
     else this.extraAttackEvents.set(normalJob, [event]);
   }
 
-  recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "dodge" | "no_attack"): void {
+  recordCancelled(intent: AttackIntent, effect: ActiveEffect, reason: "no_attack"): void {
     const order = this.orderEvents.get(intent);
     this.orderEvents.delete(intent);
     const control = this.effectEvent(effect, intent.round, { kind: "control", reason });
@@ -270,6 +272,31 @@ export class BasicInfoRecorder implements BattleRecorder {
     });
   }
 
+  recordDodged(intent: AttackIntent, normalJob: DamageJob, effect: ActiveEffect): void {
+    const order = this.orderEvents.get(intent);
+    this.orderEvents.delete(intent);
+    const control = this.effectEvent(effect, intent.round, { kind: "control", reason: "dodge" });
+    const extras = this.extraAttackEvents.get(normalJob);
+    this.extraAttackEvents.delete(normalJob);
+    const appliedEffects = [
+      ...(order ? [order] : []),
+      control,
+      ...(extras ?? [])
+    ];
+    this.attacks.push({
+      round: intent.round,
+      kind: "normal",
+      dealerSide: intent.dealerSide,
+      dealerUnit: intent.dealerUnit,
+      takerSide: intent.takerSide,
+      takerUnit: intent.takerUnit,
+      kills: 0,
+      ...(this.detailedAttackEffects ? { counterDeltas: counterDeltas(intent, "normal_attack") } : {}),
+      appliedEffects,
+      dodged: true
+    });
+  }
+
   recordDamageJob(job: DamageJob, result: DamageResult, intent?: AttackIntent): void {
     const sourceSkillReport = this.skillDamageReports.get(job);
     this.skillDamageReports.delete(job);
@@ -281,7 +308,6 @@ export class BasicInfoRecorder implements BattleRecorder {
     const extras = this.extraAttackEvents.get(job);
     this.extraAttackEvents.delete(job);
     const appliedEffects = mergeAppliedEffects(result.appliedEffects, order, extras);
-    const cause = job.kind === "skill" ? "extra_skill_attack" : "normal_attack";
     this.attacks.push({
       round: job.round,
       kind: job.kind,
@@ -291,7 +317,7 @@ export class BasicInfoRecorder implements BattleRecorder {
       takerSide: job.takerSide,
       takerUnit: job.takerUnit,
       kills: result.kills,
-      ...(this.detailedAttackEffects ? { counterDeltas: counterDeltas(job, cause) } : {}),
+      ...(this.detailedAttackEffects && job.kind === "normal" ? { counterDeltas: counterDeltas(job, "normal_attack") } : {}),
       ...(appliedEffects.length ? { appliedEffects } : {}),
       trace: result.trace
     });
@@ -402,7 +428,7 @@ class FullDamageJobRecorder implements DamageJobRecorder {
       effectId: effectId(effect),
       source: sourceLabel(effect),
       sourceSide: effect.ownerSide,
-      bucket: effect.intent.type,
+      bucket: effect.intent.type ?? "(carrier)",
       sameEffectStacking: effect.sameEffectStacking
     };
     if (effect.kind === "shield") {
@@ -729,7 +755,7 @@ function appliedEffectSummary(effect: ActiveEffect, value: number): AppliedEffec
   const identity = {
     effectId: effectId(effect),
     sourceSide: effect.ownerSide,
-    bucket: effect.intent.type
+    bucket: effect.intent.type ?? "(carrier)"
   };
   return effect.kind === "shield" ? { ...identity, value } : { ...identity, valuePct: value };
 }

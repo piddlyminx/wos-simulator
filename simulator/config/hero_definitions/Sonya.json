@@ -65,7 +65,8 @@
           ],
           "duration": {
             "turns": {
-              "count": 1
+              "count": 1,
+              "delay": 1
             }
           },
           "same_effect_stacking": "max"
@@ -76,8 +77,7 @@
       "description": "Sonya's Lancers will seize every chance to launch a surprise raid like underwater currents. Her Lancers deal X% damage every 5 turns and stun the target for 1 turn.",
       "trigger": {
         "type": "turn",
-        "every": 5,
-        "source": "lancer"
+        "every": 5
       },
       "effects": {
         "TorrentialImpact/1": {
@@ -90,10 +90,13 @@
             250
           ],
           "units": {
-            "applies_to": "trigger.source",
-            "applies_vs": "trigger.target"
+            "applies_to": "self.lancer",
+            "applies_vs": "enemy.any"
           },
           "duration": {
+            "turns": {
+              "count": 1
+            },
             "attacks": {
               "count": 1
             }
@@ -103,17 +106,20 @@
               "source": "use.source",
               "target": "use.target"
             }
-          ]
-        },
-        "TorrentialImpact/2": {
-          "type": "no_attack",
-          "units": {
-            "applies_to": "trigger.target",
-            "applies_vs": "trigger.source"
-          },
-          "duration": {
-            "turns": {
-              "count": 1
+          ],
+          "trigger_effects": {
+            "TorrentialImpact/2": {
+              "type": "no_attack",
+              "units": {
+                "applies_to": "parent.use.target",
+                "applies_vs": "parent.use.source"
+              },
+              "duration": {
+                "turns": {
+                  "count": 1,
+                  "delay": 1
+                }
+              }
             }
           }
         }

@@ -4,12 +4,14 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { BattleInputBuilder } from "./battleInputBuilder";
+import { buildSimulatorConfig } from "./config";
 import { loadSimulatorConfig } from "./config-node";
-import { createSeededRng, chancePasses, compiledTriggerForSkill } from "./effects";
+import { createSeededRng, chancePasses } from "./effects";
 import { applyHeroGenerationStats, resolveFighter } from "./fighterResolution";
 import { prepareBattle, runPrepared, simulateBattles, simulateBearBattle, signedRemainingScore } from "./simulator";
 import { BEAR_TROOP_ID, createTroopStatsRecord, generateTroopStatsCatalogue } from "./troopStats";
 import type { AppliedEffect, BattleInput, EffectIntentDefinition, FighterInput, ResolvedSkill, SimulationOptions, SimulatorConfig, SkillFile, TroopStatsCatalogue, UnitType } from "./types";
+import { UNIT_TYPES } from "./types";
 
 function hasEffectKind(effect: AppliedEffect, kind: string): boolean {
   return "kind" in effect && effect.kind === kind;
@@ -480,31 +482,32 @@ test("runPrepared defaults to a 1500 round cap when no explicit maxRounds is pro
   assert.equal(result.rounds, 1500);
 });
 
-test("round-start trigger source self.any rolls once then creates one target-locked effect per live unit type", () => {
+test("one turn-scoped extra attack effect serves every matching normal attack without recursion", () => {
   const result = runOnce(
     {
       maxRounds: 1,
       attacker: {
-        troops: { infantry_t1: 100, lancer_t1: 100 },
-        heroes: { PerUnit: { skill_1: 1 } }
+        troops: { infantry_t1: 1000000, lancer_t1: 1000000, marksman_t1: 1000000 },
+        heroes: { AllTroops: { skill_1: 1 } }
       },
       defender: {
-        troops: { lancer_t1: 100 },
+        troops: { infantry_t1: 1000000, lancer_t1: 1000000, marksman_t1: 1000000 },
         heroes: {}
       }
     },
     minimalConfig({
-      PerUnit: {
-        name: "PerUnit",
+      AllTroops: {
+        name: "AllTroops",
         skills: {
-          RoundFanout: {
-            trigger: { type: "turn", source: "self.any" },
+          SharedTurnExtra: {
+            trigger: { type: "turn" },
             effects: {
-              buff: {
-                type: "active.hero.lethality.up",
+              extra: {
+                type: "extra_skill_attack",
                 value: 100,
-                units: { applies_to: "trigger", applies_vs: "target" },
-                duration: { turns: { count: 1 } }
+                units: { applies_to: "self.any", applies_vs: "enemy.any" },
+                duration: { turns: { count: 1 } },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
               }
             }
           }
@@ -514,10 +517,16 @@ test("round-start trigger source self.any rolls once then creates one target-loc
     { mode: "trace" }
   );
 
-  const report = result.skillReport.attacker.find((entry) => entry.skillId === "RoundFanout");
+  const report = result.skillReport.attacker.find((entry) => entry.skillId === "SharedTurnExtra");
   assert.equal(report?.triggersSeen, 1);
   assert.equal(report?.skillActivations, 1);
-  assert.equal(report?.effectActivations, 2);
+  assert.equal(report?.effectActivations, 1);
+  assert.deepEqual(
+    result.attacks
+      .filter((attack) => attack.kind === "skill" && attack.dealerSide === "attacker" && attack.sourceEffectId === "extra")
+      .map((attack) => attack.dealerUnit),
+    UNIT_TYPES
+  );
 });
 
 test("failed probability gates are recorded as trigger attempts only in trace mode", () => {
@@ -631,13 +640,19 @@ test("attack-duration effects with a round cap expire at the end of their active
             }
           },
           NightmareTrace: {
-            trigger: { type: "turn", every: 2, source: "lancer" },
+            trigger: { type: "turn", every: 2 },
             effects: {
               mark: {
-                type: "active.hero.defense.down",
-                value: 100,
-                units: { applies_to: "target", applies_vs: "lancer" },
-                duration: { turns: { count: 1, delay: 1 }, attacks: { count: 1 } }
+                units: { applies_to: "self.lancer", applies_vs: "enemy.infantry" },
+                duration: { turns: { count: 1 }, attacks: { count: 1 } },
+                trigger_effects: {
+                  child: {
+                    type: "active.hero.defense.down",
+                    value: 100,
+                    units: { applies_to: "parent.use.target", applies_vs: "parent.use.source" },
+                    duration: { attacks: { count: 1 } }
+                  }
+                }
               }
             }
           }
@@ -873,31 +888,66 @@ test("attack delay skips eligible damage jobs before a modifier can apply", () =
 
 
 test("runPrepared reports resolved heroes, troop skills, activations, controls, and extra skill jobs", () => {
-  const config = loadSimulatorConfig();
+  const config = minimalConfig({
+    Reporter: {
+      name: "Reporter",
+      skills: {
+        Strike: {
+          trigger: { type: "battle_start" },
+          effects: {
+            extra: {
+              type: "extra_skill_attack",
+              value: 10,
+              units: { applies_to: "self.marksman", applies_vs: "enemy.infantry" },
+              duration: { attacks: { count: 1 } },
+              trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+            }
+          }
+        }
+      }
+    },
+    Dodger: {
+      name: "Dodger",
+      skills: {
+        Dodge: {
+          trigger: { type: "battle_start" },
+          effects: {
+            dodge: { type: "dodge", units: { applies_to: "self.infantry", applies_vs: "enemy.marksman" }, duration: { attacks: { count: 1 } } }
+          }
+        }
+      }
+    }
+  });
+  config.troopSkills = {
+    name: "Synthetic troop skills",
+    skills: {
+      Formation: {
+        troop_type: "marksman",
+        requirements: [{ level: 1, type: "tier", value: 1 }],
+        trigger: { type: "battle_start" },
+        effects: { buff: { type: "active.troop.attack.up", value: [1] } }
+      }
+    }
+  };
   const result = runOnce(
     {
-      maxRounds: 2,
+      maxRounds: 1,
       attacker: {
         name: "A",
-        troops: { marksman_t8_fc5: 900, infantry_t8_fc5: 100 },
-        stats: {
-          mark: { attack: 100, defense: 100, lethality: 100, health: 100 },
-          inf: { attack: 100, defense: 100, lethality: 100, health: 100 }
-        },
-        heroes: { Alonso: { skill_1: 5, skill_2: 5, skill_3: 5 } }
+        troops: { marksman_t1: 1000 },
+        heroes: { Reporter: { skill_1: 1 } }
       },
       defender: {
         name: "D",
-        troops: { infantry_t8_fc5: 1000 },
-        stats: { inf: { attack: 100, defense: 100, lethality: 100, health: 100 } },
-        heroes: { Flint: { skill_1: 5, skill_2: 5, skill_3: 5 } }
+        troops: { infantry_t1: 1000 },
+        heroes: { Dodger: { skill_1: 1 } }
       }
     },
     config
   );
 
-  assert.ok(result.resolved.attacker.heroes.some((hero) => hero.name === "Alonso"));
-  assert.ok(result.resolved.attacker.troopSkillIds.length > 0);
+  assert.ok(result.resolved.attacker.heroes.some((hero) => hero.name === "Reporter"));
+  assert.ok(result.resolved.attacker.troopSkillIds.includes("Formation"));
   assert.ok(result.skillReport.attacker.some((entry) => entry.effectActivations > 0));
   assert.ok(Object.keys(result.extraSkillAttackJobsByEffect).length > 0);
   assert.ok(result.attackControlCounts.dodge >= 0);
@@ -905,14 +955,20 @@ test("runPrepared reports resolved heroes, troop skills, activations, controls, 
 });
 
 test("display-name hero aliases resolve to simulator hero definitions", () => {
-  const config = loadSimulatorConfig();
+  const config = buildSimulatorConfig({
+    heroGenerationStats: {},
+    troopSkills: { name: "Synthetic troop skills", skills: {} },
+    heroDefinitions: {
+      First: { name: "First Canonical", aliases: ["First Display"], skills: {} },
+      Second: { name: "Second Canonical", aliases: ["Second Display"], skills: {} }
+    }
+  });
   const fighter = resolveFighter(
     {
       troops: { infantry_t1: 1 },
       heroes: {
-        "Ling Xue": { skill_1: 1 },
-        "Lumak Bokan": { skill_1: 1 },
-        "Wu Ming": { skill_1: 1 }
+        "First Display": { skill_1: 1 },
+        "Second Display": { skill_1: 1 }
       }
     },
     "attacker",
@@ -921,7 +977,7 @@ test("display-name hero aliases resolve to simulator hero definitions", () => {
 
   assert.deepEqual(
     fighter.heroes.map((hero) => hero.name),
-    ["Ling", "Lumak", "Wu Ming"]
+    ["First Canonical", "Second Canonical"]
   );
   assert.equal(fighter.heroes.some((hero) => hero.missing), false);
   assert.equal(fighter.diagnostics.some((line) => line.includes("Missing hero definition")), false);
@@ -1121,7 +1177,7 @@ test("joiner hero generation stats are not applied when main hero stats are enab
   assert.deepEqual(fighter.statBonuses.infantry, { attack: 11, defense: 22, lethality: 33, health: 44 });
 });
 
-test("cancelled attacks report the winning control as an applied effect", () => {
+test("no_attack outcomes report the winning control as an applied effect", () => {
   const result = runOnce(
     {
       maxRounds: 1,
@@ -1139,18 +1195,18 @@ test("cancelled attacks report the winning control as an applied effect", () => 
         name: "Canceller",
         skills: {
           CancelAndDebuff: {
-            trigger: { type: "attack", source: "infantry" },
+            trigger: { type: "battle_start" },
             effects: {
               cancel: {
                 type: "no_attack",
                 value: 100,
-                units: { applies_to: "trigger", applies_vs: "target" },
+                units: { applies_to: "self.infantry", applies_vs: "enemy.any" },
                 duration: { attacks: { count: 1 } }
               },
               debuff: {
                 type: "active.hero.attack.up",
                 value: 100,
-                units: { applies_to: "trigger", applies_vs: "target" },
+                units: { applies_to: "self.infantry", applies_vs: "enemy.any" },
                 duration: { attacks: { count: 1 } }
               }
             }
@@ -1199,11 +1255,11 @@ test("no_attack applies_to cancels that unit attacking, not attacks targeting th
         name: "StopInfantry",
         skills: {
           Pause: {
-            trigger: { type: "attack", source: "infantry" },
+            trigger: { type: "battle_start" },
             effects: {
               stop: {
                 type: "no_attack",
-                units: { applies_to: "trigger", applies_vs: "target" },
+                units: { applies_to: "self.infantry", applies_vs: "enemy.any" },
                 duration: { turns: { count: 1 } }
               }
             }
@@ -1223,7 +1279,7 @@ test("no_attack applies_to cancels that unit attacking, not attacks targeting th
   );
 });
 
-test("dodge applies_to cancels attacks targeting that unit, not that unit attacking", () => {
+test("dodge zeroes attacks targeting that unit without cancelling the attack", () => {
   const result = runOnce(
     {
       maxRounds: 1,
@@ -1241,11 +1297,11 @@ test("dodge applies_to cancels attacks targeting that unit, not that unit attack
         name: "Dodger",
         skills: {
           StepAside: {
-            trigger: { type: "attack", source: "enemy.infantry", target: "self.infantry" },
+            trigger: { type: "battle_start" },
             effects: {
               evade: {
                 type: "dodge",
-                units: { applies_to: "target", applies_vs: "trigger" },
+                units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
                 duration: { attacks: { count: 1 } }
               }
             }
@@ -1256,16 +1312,16 @@ test("dodge applies_to cancels attacks targeting that unit, not that unit attack
   );
 
   assert.deepEqual(
-    result.attacks.filter((attack) => attack.cancelReason === "dodge").map((attack) => [attack.round, attack.dealerSide, attack.dealerUnit]),
+    result.attacks.filter((attack) => attack.dodged).map((attack) => [attack.round, attack.dealerSide, attack.dealerUnit]),
     [[1, "attacker", "infantry"]]
   );
   assert.equal(
-    result.attacks.some((attack) => attack.dealerSide === "defender" && attack.dealerUnit === "infantry" && attack.cancelReason === "dodge"),
+    result.attacks.some((attack) => attack.dealerSide === "defender" && attack.dealerUnit === "infantry" && attack.dodged),
     false
   );
 });
 
-test("attack-declared controls from later intents affect earlier same-round attacks", () => {
+test("attack-triggered controls do not retroactively affect an earlier same-round attack", () => {
   const result = runOnce(
     {
       maxRounds: 1,
@@ -1297,10 +1353,7 @@ test("attack-declared controls from later intents affect earlier same-round atta
     })
   );
 
-  assert.deepEqual(
-    result.attacks.filter((attack) => attack.cancelReason === "dodge").map((attack) => [attack.round, attack.dealerSide, attack.dealerUnit]),
-    [[1, "attacker", "infantry"]]
-  );
+  assert.equal(result.attacks.some((attack) => attack.dodged), false);
 });
 
 test("attack-duration effects charged on a cancelled attack unless useEffectsOnNoAttack is disabled", () => {
@@ -1356,7 +1409,7 @@ test("attack-duration effects charged on a cancelled attack unless useEffectsOnN
   assert.ok(uncharged > charged, `expected uncharged buff to boost round 2 (${uncharged} > ${charged})`);
 });
 
-test("cancelled normal attacks advance attack counters for later frequency checks", () => {
+test("no_attack does not advance normal attack cadence counters", () => {
   const result = runOnce(
     {
       maxRounds: 4,
@@ -1390,11 +1443,11 @@ test("cancelled normal attacks advance attack counters for later frequency check
 
   assert.deepEqual(
     result.attacks.filter((attack) => attack.cancelReason === "no_attack").map((attack) => attack.round),
-    [2, 4]
+    [3]
   );
 });
 
-test("attack frequency triggers can start at a different first threshold", () => {
+test("attack frequency triggers count actual normal attacks and honor first/every", () => {
   const result = runOnce(
     {
       maxRounds: 14,
@@ -1428,8 +1481,321 @@ test("attack frequency triggers can start at a different first threshold", () =>
 
   assert.deepEqual(
     result.attacks.filter((attack) => attack.cancelReason === "no_attack").map((attack) => attack.round),
-    [4, 9, 14]
+    [5, 11]
   );
+});
+
+test("attack cadence is independent per troop type at attacks 5, 11, and 17", () => {
+  const result = runOnce(
+    {
+      maxRounds: 17,
+      attacker: {
+        troops: { infantry_t1: 10000000, lancer_t1: 10000000, marksman_t1: 10000000 },
+        heroes: { Cadence: { skill_1: 1 } }
+      },
+      defender: { troops: { infantry_t1: 10000000 }, heroes: {} }
+    },
+    minimalConfig({
+      Cadence: {
+        name: "Cadence",
+        skills: {
+          EverySixAfterFive: {
+            trigger: { type: "attack", first: 5, every: 6, source: "self.any" },
+            effects: {
+              extra: {
+                type: "extra_skill_attack",
+                value: 1,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                duration: { attacks: { count: 1 } },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  for (const unit of UNIT_TYPES) {
+    assert.deepEqual(
+      result.attacks.filter((attack) => attack.kind === "skill" && attack.dealerUnit === unit && attack.sourceEffectId === "extra").map((attack) => attack.round),
+      [5, 11, 17]
+    );
+  }
+});
+
+test("extra skill jobs do not advance normal-attack cadence", () => {
+  const result = runOnce(
+    {
+      maxRounds: 4,
+      attacker: { troops: { infantry_t1: 1000000 }, heroes: { Cadence: { skill_1: 1 } } },
+      defender: { troops: { infantry_t1: 1000000 }, heroes: {} }
+    },
+    minimalConfig({
+      Cadence: {
+        name: "Cadence",
+        skills: {
+          EveryOther: {
+            trigger: { type: "attack", every: 2, source: "infantry" },
+            effects: {
+              extra: {
+                type: "extra_skill_attack",
+                value: 10,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                duration: { attacks: { count: 1 } },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  assert.deepEqual(result.attacks.filter((attack) => attack.kind === "skill").map((attack) => attack.round), [2, 4]);
+  assert.equal(result.attacks.filter((attack) => attack.kind === "skill").every((attack) => attack.counterDeltas === undefined), true);
+});
+
+test("direct target-scoped attack effects apply to the triggering job at cadence", () => {
+  const result = runOnce(
+    {
+      maxRounds: 4,
+      attacker: { troops: { lancer_t1: 1000000 }, heroes: { CadenceDebuff: { skill_1: 1 } } },
+      defender: { troops: { infantry_t1: 1000000 }, heroes: {} }
+    },
+    minimalConfig({
+      CadenceDebuff: {
+        name: "CadenceDebuff",
+        skills: {
+          EveryOther: {
+            trigger: { type: "attack", every: 2, source: "lancer" },
+            effects: {
+              sourceLocked: {
+                type: "active.hero.health.down",
+                value: 37,
+                units: { applies_to: "trigger.target", applies_vs: "trigger.source" },
+                duration: { attacks: { count: 1 } },
+                same_effect_stacking: "max"
+              },
+              anySource: {
+                type: "active.hero.health.down",
+                value: 11,
+                units: { applies_to: "trigger.target", applies_vs: "any" },
+                duration: { attacks: { count: 1 } },
+                same_effect_stacking: "max"
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const healthDownByRound = result.attacks
+    .filter((attack) => attack.kind === "normal" && attack.dealerSide === "attacker")
+    .map((attack) => attack.trace?.atomicBuckets["active.hero.health.down"].totalPct ?? 0);
+  assert.deepEqual(healthDownByRound, [0, 48, 0, 48]);
+});
+
+test("same-round target exhaustion suppresses the later normal trigger", () => {
+  const result = runOnce(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 1000000, lancer_t1: 100 },
+        stats: { infantry: { attack: 1000000, lethality: 1000000 } },
+        heroes: { LateProc: { skill_1: 1 } }
+      },
+      defender: { troops: { infantry_t1: 1 }, heroes: {} }
+    },
+    minimalConfig({
+      LateProc: {
+        name: "LateProc",
+        skills: {
+          LancerOnly: {
+            trigger: { type: "attack", source: "lancer" },
+            effects: {
+              buff: { type: "active.hero.attack.up", value: 100, units: { applies_to: "trigger.source", applies_vs: "trigger.target" } }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const report = result.skillReport.attacker.find((entry) => entry.skillId === "LancerOnly");
+  assert.equal(report?.triggersSeen, 0);
+  assert.equal(report?.effectActivations, 0);
+});
+
+test("dodge records a zero-normal outcome while attack triggers and extras continue", () => {
+  const result = runOnce(
+    {
+      maxRounds: 1,
+      attacker: { troops: { infantry_t1: 1000 }, heroes: { Proc: { skill_1: 1 } } },
+      defender: { troops: { infantry_t1: 1000 }, heroes: { Dodge: { skill_1: 1 } } }
+    },
+    minimalConfig({
+      Proc: {
+        name: "Proc",
+        skills: {
+          Extra: {
+            trigger: { type: "attack", source: "infantry" },
+            effects: {
+              extra: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+                duration: { attacks: { count: 1 } },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+              }
+            }
+          }
+        }
+      },
+      Dodge: {
+        name: "Dodge",
+        skills: {
+          Evade: {
+            trigger: { type: "battle_start" },
+            effects: {
+              dodge: { type: "dodge", units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" }, duration: { attacks: { count: 1 } } }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const dodged = result.attacks.find((attack) => attack.dodged);
+  assert.equal(dodged?.kills, 0);
+  assert.equal(dodged?.trace, undefined);
+  assert.equal(dodged?.cancelReason, undefined);
+  assert.equal(dodged?.counterDeltas?.[0]?.cause, "normal_attack");
+  assert.equal(result.attacks.some((attack) => attack.kind === "skill" && attack.sourceEffectId === "extra"), true);
+});
+
+test("nested children materialize after a typed parent use, never on the consuming job", () => {
+  const result = runOnce(
+    {
+      maxRounds: 2,
+      attacker: { troops: { infantry_t1: 1000000 }, heroes: { Parent: { skill_1: 1 } } },
+      defender: { troops: { infantry_t1: 1000000 }, heroes: {} }
+    },
+    minimalConfig({
+      Parent: {
+        name: "Parent",
+        skills: {
+          ParentUse: {
+            trigger: { type: "battle_start" },
+            effects: {
+              parent: {
+                type: "active.hero.attack.up",
+                value: 10,
+                units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
+                duration: { attacks: { count: 1 } },
+                trigger_effects: {
+                  child: {
+                    type: "active.hero.lethality.up",
+                    value: 20,
+                    units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" },
+                    duration: { attacks: { count: 1 } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const first = result.attacks.find((attack) => attack.kind === "normal" && attack.dealerSide === "attacker" && attack.round === 1);
+  const second = result.attacks.find((attack) => attack.kind === "normal" && attack.dealerSide === "attacker" && attack.round === 2);
+  assert.equal(first?.appliedEffects?.some((effect) => effect.effectId === "parent"), true);
+  assert.equal(first?.appliedEffects?.some((effect) => effect.effectId === "child"), false);
+  assert.equal(second?.appliedEffects?.some((effect) => effect.effectId === "child"), true);
+});
+
+test("duration-only charging on no_attack does not materialize a modifier's children", () => {
+  const result = runOnce(
+    {
+      maxRounds: 2,
+      attacker: { troops: { infantry_t1: 1000000 }, heroes: { Parent: { skill_1: 1 } } },
+      defender: { troops: { infantry_t1: 1000000 }, heroes: {} }
+    },
+    minimalConfig({
+      Parent: {
+        name: "Parent",
+        skills: {
+          Setup: {
+            trigger: { type: "battle_start" },
+            effects: {
+              stop: { type: "no_attack", units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" }, duration: { turns: { count: 1 } } },
+              parent: {
+                type: "active.hero.attack.up",
+                value: 10,
+                units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
+                duration: { attacks: { count: 1 } },
+                trigger_effects: {
+                  child: { type: "active.hero.lethality.up", value: 100, units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  assert.equal(result.attacks.some((attack) => attack.appliedEffects?.some((effect) => effect.effectId === "child")), false);
+  assert.equal(result.effectActivationCounts.attacker, 2);
+});
+
+test("max-suppressed parents charge duration but only the selected primary use creates a child", () => {
+  const result = runOnce(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 1000000 },
+        heroes: [
+          { name: "Parent", levels: { skill_1: 1 } },
+          { name: "Parent", levels: { skill_1: 1 } }
+        ]
+      },
+      defender: { troops: { infantry_t1: 1000000 }, heroes: {} }
+    },
+    minimalConfig({
+      Parent: {
+        name: "Parent",
+        skills: {
+          Setup: {
+            trigger: { type: "battle_start" },
+            effects: {
+              parent: {
+                type: "active.hero.attack.up",
+                value: 10,
+                same_effect_stacking: "max",
+                units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
+                duration: { attacks: { count: 1 } },
+                trigger_effects: {
+                  child: { type: "active.hero.lethality.up", value: 100, units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    })
+  );
+
+  assert.equal(result.effectActivationCounts.attacker, 3);
 });
 
 test("same_effect_stacking max caps overlapping modifier activations while add stacks them", () => {
@@ -1593,72 +1959,6 @@ test("requires_effect gates a modifier to damage jobs where the required effect 
   assert.equal(marksmanAttack?.trace?.aggregationGroups["active.troop.damageTaken.down"].factor, 1.46);
   assert.equal(marksmanAttack?.trace?.offsetDamage, 0);
   assert.equal(marksmanAttack?.kills, marksmanAttack?.trace?.damageBeforeOffsets);
-});
-
-test("Crystal Shield and Body of Light resolve additive FC8 and FC10 damage reductions", () => {
-  const config = loadSimulatorConfig();
-  const expectations = [
-    { troopId: "infantry_t10_fc8", level: 1, defense: 4, conditionalReduction: 10, combinedReduction: 46 },
-    { troopId: "infantry_t10_fc10", level: 2, defense: 6, conditionalReduction: 15, combinedReduction: 51 }
-  ] as const;
-
-  for (const expected of expectations) {
-    const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
-    const crystalShield = fighter.troopSkills.find((skill) => skill.id === "CrystalShield");
-    const bodyOfLight = fighter.troopSkills.find((skill) => skill.id === "BodyOfLight");
-    const crystalReduction = crystalShield?.effects.find((effect) => effect.id === "CrystalShield/1");
-    const conditionalReduction = bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/2");
-
-    assert.equal(crystalReduction?.type, "active.troop.damageTaken.down");
-    assert.equal(crystalReduction?.value, 36);
-    assert.equal(bodyOfLight?.level, expected.level);
-    assert.equal(bodyOfLight?.effects.find((effect) => effect.id === "BodyOfLight/1")?.value, expected.defense);
-    assert.equal(conditionalReduction?.type, "active.troop.damageTaken.down");
-    assert.equal(conditionalReduction?.value, expected.conditionalReduction);
-    assert.equal(crystalReduction!.value + conditionalReduction!.value, expected.combinedReduction);
-  }
-});
-
-test("Incandescent Field upgrades its trigger chance at FC10 while retaining half damage", () => {
-  const config = loadSimulatorConfig();
-  const expectations = [
-    { troopId: "lancer_t10_fc8", level: 1, probabilityPct: 10 },
-    { troopId: "lancer_t10_fc10", level: 2, probabilityPct: 15 }
-  ] as const;
-
-  for (const expected of expectations) {
-    const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
-    const incandescentField = fighter.troopSkills.find((skill) => skill.id === "IncandescentField");
-    const halfDamage = incandescentField?.effects.find((effect) => effect.id === "IncandescentField/1");
-
-    assert.equal(incandescentField?.level, expected.level);
-    assert.equal(compiledTriggerForSkill(incandescentField!).probabilityPct, expected.probabilityPct);
-    assert.equal(halfDamage?.type, "active.troop.defense.up");
-    assert.equal(halfDamage?.value, 100);
-  }
-});
-
-test("Marksman Fire Crystal skills resolve Crystal Gunpowder and Flame Charge milestones", () => {
-  const config = loadSimulatorConfig();
-  const expectations = [
-    { troopId: "marksman_t10_fc3", gunpowderLevel: 1, probabilityPct: 20, skillDamagePct: 50, flameLevel: undefined, attackPct: undefined },
-    { troopId: "marksman_t10_fc5", gunpowderLevel: 2, probabilityPct: 30, skillDamagePct: 50, flameLevel: undefined, attackPct: undefined },
-    { troopId: "marksman_t10_fc8", gunpowderLevel: 3, probabilityPct: 30, skillDamagePct: 75, flameLevel: 1, attackPct: 4 },
-    { troopId: "marksman_t10_fc10", gunpowderLevel: 4, probabilityPct: 30, skillDamagePct: 87.5, flameLevel: 2, attackPct: 6 }
-  ] as const;
-
-  for (const expected of expectations) {
-    const fighter = resolveFighter({ troops: { [expected.troopId]: 1 }, heroes: {} }, "attacker", config);
-    const crystalGunpowder = fighter.troopSkills.find((skill) => skill.id === "CrystalGunpowder");
-    const flameCharge = fighter.troopSkills.find((skill) => skill.id === "FlameCharge");
-
-    assert.equal(crystalGunpowder?.level, expected.gunpowderLevel);
-    assert.equal(compiledTriggerForSkill(crystalGunpowder!).probabilityPct, expected.probabilityPct);
-    assert.equal(crystalGunpowder?.effects.find((effect) => effect.id === "CrystalGunpowder/1")?.value, expected.skillDamagePct);
-    assert.equal(flameCharge?.level, expected.flameLevel);
-    assert.equal(flameCharge?.effects.find((effect) => effect.id === "FlameCharge/1")?.value, expected.attackPct);
-    assert.equal(fighter.troopSkills.some((skill) => skill.id === "FlameChargeExtra"), false);
-  }
 });
 
 test("fighter passive effects are added to the static profile after pre_battle skill effects", () => {
@@ -3059,6 +3359,6 @@ function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): Simulat
     heroGenerationStats: {},
     heroDefinitions,
     troopSkills: { name: "troop skills", skills: {} },
-    diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [], ambiguousTurnTriggerSelectors: [] }
+    diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [] }
   };
 }

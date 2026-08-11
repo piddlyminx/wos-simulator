@@ -1,0 +1,70 @@
+[
+  {
+    "test_id": "retarget_lancer_screen_nc",
+    "description": "Deterministic same-round retargeting discriminator using only T6 troops and no heroes. WIP attacks with 100 Lancers followed by 400 Marksmen against minxxx's 1 Lancer followed by 499 Marksmen. The WIP Lancers are expected to kill the single defender Lancer comfortably before WIP Marksmen act. Using the latest captured account stats, no-retargeting predicts 303 defender Marksmen surviving, while attack-time retargeting predicts 282 defender Marksmen surviving. A result near 303 supports skipping the Marksman attack when its snapshotted target is exhausted; a result near 282 supports retargeting it to the living Marksmen. The captured report stats must be substituted into both unchanged interpretations before the result is classified.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "lancer_t6": 100,
+        "marksman_t6": 400
+      },
+      "stats": {
+        "inf": {
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.2,
+          "health": 181.8
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "lancer_t6": 1,
+        "marksman_t6": 499
+      },
+      "stats": {
+        "inf": {
+          "attack": 282.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 275.2,
+          "defense": 278.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 281.0,
+          "defense": 286.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 303
+      }
+    ]
+  }
+]

@@ -1,0 +1,69 @@
+[
+  {
+    "test_id": "plateau_boundary_700m_006i_700l",
+    "description": "Precommitted deterministic plateau-boundary probe. WIP attacks with 700 T6 Marksmen and no heroes; minxxx defends with 6 T6 Infantry and 700 T6 Lancers and no heroes. Using the supplied 2dp stats plus minxxx's stated hidden +2pp Attack/Defense, the simulator predicts minxxx wins with exactly 478 Lancers. Counts 6 and 7 are the same lower plateau because the Infantry line is exhausted in round 1. The boundary is predicted between 7 and 8 Infantry.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 700
+      },
+      "stats": {
+        "inf": {
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.2,
+          "health": 181.8
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 6,
+        "lancer_t6": 700
+      },
+      "stats": {
+        "inf": {
+          "attack": 290.7,
+          "defense": 266.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 283.2,
+          "defense": 265.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 289.0,
+          "defense": 273.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 478
+      }
+    ]
+  }
+]

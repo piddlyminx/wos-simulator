@@ -30,7 +30,7 @@ _skill_dir = Path(__file__).resolve().parent.parent
 _tpl_dir = _skill_dir / "templates"
 
 _STAT_BONUSES_REF_HEIGHT = 1280
-_STAT_BONUSES_Y_BAND = (205, 429)
+_STAT_BONUSES_Y_BAND = (280, 429)
 _STATS_CAPTURE_MAX_ATTEMPTS = 10
 _BATTLE_DETAILS_BUTTON_TEMPLATE = _tpl_dir / "battle_details_button.png"
 _BATTLE_DETAILS_BUTTON_THRESHOLD = 0.80

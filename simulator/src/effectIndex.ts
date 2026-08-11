@@ -35,6 +35,7 @@ export interface EffectIndex {
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
   battleOrder: ActiveEffect[];
+  carriers: ActiveEffect[];
 }
 
 export const DAMAGE_JOB_SHAPE_SLOTS = 2 * 2 * 3 * 2 * 3;
@@ -49,7 +50,8 @@ export function createEffectIndex(
     liveEffectsByGroup: effectGroups.map(() => []),
     controls: [],
     extraAttacks: [],
-    battleOrder: []
+    battleOrder: [],
+    carriers: []
   };
 }
 
@@ -67,6 +69,10 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
     index.battleOrder.push(effect);
     return;
   }
+  if (effect.kind === "carrier") {
+    index.carriers.push(effect);
+    return;
+  }
 
   const group = effect.effectGroup;
   if (!group) throw new Error(`Runtime modifier ${effect.intent.id} has no prepared effect group`);
@@ -77,8 +83,8 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
 }
 
 export function isRuntimeIndexableEffect(effect: ActiveEffect): boolean {
-  if (effect.kind === "control" || effect.kind === "extra_attack" || effect.kind === "battle_order") return true;
-  return dynamicBucketDefinition(effect.intent.type)?.effectBucket === true;
+  if (effect.kind === "control" || effect.kind === "extra_attack" || effect.kind === "battle_order" || effect.kind === "carrier") return true;
+  return effect.intent.type !== undefined && dynamicBucketDefinition(effect.intent.type)?.effectBucket === true;
 }
 
 export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): void {
@@ -86,6 +92,7 @@ export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): voi
   if (effect.kind === "control") removeStable(index.controls, effect);
   else if (effect.kind === "extra_attack") removeStable(index.extraAttacks, effect);
   else if (effect.kind === "battle_order") removeStable(index.battleOrder, effect);
+  else if (effect.kind === "carrier") removeStable(index.carriers, effect);
   removeEffectGroupEntry(index, effect);
 }
 
@@ -109,7 +116,7 @@ export function damageBucketIndex(bucket: DynamicDamageBucket): number {
 }
 
 export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?: DynamicDamageBucket): Uint8Array {
-  const runtimeDefinition = bucketOverride === undefined ? dynamicBucketDefinition(effect.intent.type) : undefined;
+  const runtimeDefinition = bucketOverride === undefined && effect.intent.type !== undefined ? dynamicBucketDefinition(effect.intent.type) : undefined;
   if (!bucketOverride && runtimeDefinition?.effectBucket !== true) {
     return EMPTY_JOB_SHAPE_SLOTS;
   }

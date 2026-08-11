@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "renee_gwen_bucket_retry_nc",
+    "description": "Second deterministic Renee/Gwen grouping discriminator. WIP attacks with Renee 3/3/3 and Gwen 2/1/0, fielding 500 T6 Lancers into minxxx's 900 T6 Infantry. Using the exact stats from the preceding 620-vs-920 report, separate Renee/Gwen buckets with Gwen's stated 10% predict 330 survivors; same bucket at 10% or separate buckets at an effective 5% predict 321; same bucket at an effective 5% predicts 316; and no effective Gwen S1 predicts 312. Corresponding approximate Renee S1 activation counts are 25, 26, 27, and 28. These candidates and the decision rule are frozen before capture; the report's exact captured stats will be substituted afterward without changing the candidate models.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Gwen": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.2,
+          "health": 181.8
+        },
+        "lanc": {
+          "attack": 460.1,
+          "defense": 457.9,
+          "lethality": 243.2,
+          "health": 228.3
+        },
+        "mark": {
+          "attack": 314.2,
+          "defense": 311.0,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 900
+      },
+      "stats": {
+        "inf": {
+          "attack": 282.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 275.2,
+          "defense": 278.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 281.0,
+          "defense": 286.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 318,
+        "defender": 0
+      }
+    ]
+  }
+]

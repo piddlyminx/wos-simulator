@@ -1,0 +1,26 @@
+{
+  "test_id": "wu_ming_bradley_current_nc",
+  "description": "Deterministic current-account Wu Ming 3/3/3 plus Bradley 4/4/4 interaction coverage. WIP attacks with 170 each T6 Infantry, Lancers, and Marksmen into minxxx's 900 each T6 Infantry and Lancers, exercising both Bradley S2 target scopes. Using Wu Ming's stats captured immediately beforehand plus Bradley's current contribution estimated from his paired report/control: Wu Ming S2 adding in Bradley S3's active.hero.damage.up bucket predicts about +9; putting Wu Ming S2 in a separate multiplicative normal-damage bucket predicts about +68; omitting Wu Ming S1, Wu Ming S2, Bradley S1, Bradley S2, or Bradley S3 predicts about -628, -604, -847, -797, or -546 respectively; and incorrectly letting Wu Ming S3 boost normal attacks predicts about +198. The exact captured stats will be substituted into these frozen interpretations after capture.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Wu Ming": {},
+      "Bradley": {}
+    },
+    "troops": {
+      "infantry_t6": 170,
+      "lancer_t6": 170,
+      "marksman_t6": 170
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 900,
+      "lancer_t6": 900
+    }
+  }
+}

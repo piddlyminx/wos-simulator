@@ -1,0 +1,19 @@
+{
+  "test_id": "damage_precision_325l_009i_325m",
+  "description": "Precommitted discriminator between the current per-attack 3dp damage ceiling and full-float damage, using the supplied 2dp battle stats. WIP attacks with 325 T6 Lancers and no heroes; minxxx defends with 9 T6 Infantry and 325 T6 Marksmen and no heroes. The current 3dp ceiling accumulates 9.001 Infantry damage through round 4 and predicts exactly 242 Marksmen survive. Full-float damage accumulates 8.999108727, leaves 0.000891273 Infantry for round 5, and predicts exactly 253 Marksmen survive. Across all 4,096 corners of the possible hidden values within the displayed 2dp intervals, 3dp-ceil remains 242 while float remains 252 or 253, so the result sets do not overlap.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": { "lancer_t6": 325 }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 9,
+      "marksman_t6": 325
+    }
+  }
+}

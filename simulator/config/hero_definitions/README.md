@@ -41,11 +41,7 @@ This guide describes the native TypeScript simulator's current behaviour. It is 
 }
 ```
 
-At skill level 5, this trigger is attempted when the owning side's Lancer declares a normal attack whose `previous counter -> previous counter + 1` step crosses an even threshold. The counter is per side and unit type, and is shared by normal and skill-damage jobs. If nothing else has advanced it, the first activation is on the Lancer's second normal attack. It creates a one-use extra-attack effect, which immediately creates a skill-damage job from that Lancer to the normal attack's target at a `25 / 100 = 0.25` damage multiplier.
-
-That generated skill job also increments the Lancer's counter when the round commits. Assuming the target remains valid and one extra job runs each time, this example therefore activates on the Lancer's 2nd, 3rd, 4th, ... normal attacks—not its 2nd, 4th, 6th, ... normal attacks.
-
-The generated job does not evaluate `attack` triggers itself. If one or more generated jobs move the counter across a threshold, that threshold produces no activation and is not replayed later. A later normal attack fires only if its own `previous -> previous + 1` check crosses a threshold. Consequently, changing the number of jobs produced by an effect can change the future trigger cadence.
+At skill level 5, this trigger is attempted when the owning side's Lancer performs its second, fourth, sixth, ... successful normal attack. The cadence counter is per side and unit type. Dodged normal attacks count; `no_attack`, exhausted-target skips, and generated skill-damage jobs do not. The effect immediately creates a skill-damage job from that Lancer to the locked normal target at a `25 / 100 = 0.25` damage multiplier.
 
 ## File and hero fields
 
@@ -141,12 +137,12 @@ A trigger controls **when the skill is attempted**. If it matches, the simulator
 | --- | --- |
 | `pre_battle` | Activated once while preparing the battle, before any runtime exists. Chance-free by definition and restricted to static `passive.*` effects; these feed the static damage profile (in-game: widget passives baked into player bonus stats). |
 | `battle_start` | Is attempted once during battle setup, before round 1. `first`, `every`, `source`, and `target` do not gate this trigger type. |
-| `turn` | Is attempted at the start of matching simulator rounds. The simulator calls these rounds internally; JSON and game text commonly call them turns. Omitting `source` makes it global; defining `source` selects the separate per-unit path described below. |
-| `attack` | Is attempted when a matching **normal** attack is declared. Generated skill jobs do not evaluate it. Every intended normal attack's skill triggers are processed before any controls or damage jobs for the round. |
+| `turn` | Is attempted once at the start of matching simulator rounds. Turn triggers must not define `source` or `target`; scope their effects instead. |
+| `attack` | Is attempted procedurally for a matching **normal** attack, after locked-target exhaustion and pre-existing `no_attack` checks. Generated skill jobs do not evaluate it. |
 
 Only these three exact strings are scheduled by the runtime. An unknown string is not rejected by a closed trigger schema; it simply leaves the skill unscheduled.
 
-**Phase gotcha for `attack`.** The simulator first resolves every side/unit's intended normal attack for the round, then activates all matching `attack` skills for all of those intents, and only afterwards evaluates controls and damage in intent order. An effect triggered by a later intent can therefore affect an earlier intent's damage in the same round. Conversely, an `attack_order` activated by an attack trigger is too late to change targets already selected for that round.
+Each attack is one procedural cluster. Effects produced by an earlier attack can affect later attacks, but a later intent cannot retroactively change an earlier attack. Target order is applied while locking that attack's target, before its trigger stage.
 
 ### `trigger.probability`
 
@@ -158,9 +154,7 @@ Accepts either a percentage number or a per-level array of percentages:
 
 Omitting it means 100%. A scalar is coerced with `Number(...)`; an array selects by skill level first. The resolved value is clamped to 0–100, and a value that cannot become a finite number resolves to 0. The probability gate is attached to the whole skill trigger, not to individual effects.
 
-An `attack` trigger rolls separately for each matching normal intent. A global `turn` trigger rolls once for the round. A per-unit `turn` trigger also rolls only once; on success, the runtime then tries to activate the effects once for each living matching source unit type. It does not roll independently for infantry, lancer, and marksman.
-
-On the per-unit turn path, the recorder counts the probability success as a skill activation before source/target intent construction finishes. A skill can therefore report one successful activation but zero effect activations when no living source/acceptable target produces a valid synthetic intent.
+An `attack` trigger rolls separately for each matching normal attack. A `turn` trigger rolls once for the round, and every effect activated by that trigger shares the result of that one roll.
 
 Passive (`passive.*`) battle-start effects may not use probability: static passive factors must be deterministic.
 
@@ -169,21 +163,14 @@ Passive (`passive.*`) battle-start effects may not use probability: static passi
 `every` defines arithmetic thresholds. What is checked against those thresholds depends on the trigger type.
 
 - for a `turn` trigger, `"every": 4` fires on rounds 4, 8, 12, ...;
-- for an `attack` trigger, `"every": 4` fires when a matching normal attack's `previous counter -> previous counter + 1` step crosses thresholds 4, 8, 12, ...; these need not be the unit's 4th, 8th, and 12th **normal** attacks;
+- for an `attack` trigger, `"every": 4` fires on that side/unit type's 4th, 8th, 12th, ... actual normal attacks;
 - `"first": 4, "every": 5` uses thresholds 4, 9, 14, ... on the applicable round number or attack counter;
 - omitting `every` means every otherwise-matching turn or attack;
 - `first` is only valid when `every` is also present and must be at least 1.
 
 Use positive integer intervals. The loader validates `first` but currently does not fully validate `every`, so malformed `every` values should not be treated as supported merely because they pass loading.
 
-**Gotcha — counter updates and trigger evaluation are different events.** A normal declaration evaluates `attack` triggers using `previousAttackCount` and `projectedAttackCount = previousAttackCount + 1`. At the end of the round, the counter is advanced once for every normal damage job, cancelled normal attack, and generated skill-damage job that actually ran. Generated jobs update the counter but never evaluate `attack` triggers. Thresholds reached or crossed by those jobs are therefore skipped, not queued.
-
-An intended normal attack is not guaranteed to advance the counter. All intents and their `attack` triggers are created from round-start troop counts, but before each intent is calculated the simulator checks whether its selected target has already been exhausted by earlier same-round jobs. If so, that intent is dropped: its trigger has already been attempted, but it produces no job or cancellation record and advances neither attack nor received-attack counters. This can leave the same frequency threshold available to the unit's next normal declaration.
-
-Concrete current examples:
-
-- Sonya's `BountyTemptation` emits one skill job when its every-2 trigger succeeds. With a valid target, its Lancer counter advances by two on each successful round, so the skill fires on normal attacks 2, 3, 4, ... after the first activation.
-- Wayne's `RoundaboutHit` can emit two jobs, one against Lancers and one against Marksmen. When both targets exist, the Marksman counter advances by three on a successful round. Its every-2 trigger then fires on normal attacks 2, 4, 6, ... because the generated jobs themselves pass alternate thresholds without evaluating the trigger.
+The counter advances only for a normal attack that reaches its attack stage. Dodge advances it because the attack occurred. A pre-existing `no_attack` control and an exhausted locked target suppress both the trigger and the counter. Extra skill jobs never change attack or received-attack cadence counters.
 
 ### `trigger.source` and `trigger.target`
 
@@ -209,19 +196,13 @@ There is no closed selector validator here. Empty arrays resolve to an empty uni
 
 For an `attack` trigger, `source` and `target` are matched directly against each intended normal attack. Reina demonstrates the reverse-side form: `source: "enemy.any"` and `target: "self.any"` listens for an enemy attack against Reina's side.
 
-For a `turn` trigger:
-
-- with no `source`, the skill is global and activates once on each matching round; because no attack-shaped intent is constructed, `trigger.target` does not filter this path either;
-- with `source`, it is per-unit: after the single probability roll succeeds, the simulator considers each living matching source troop type and builds a synthetic attack-shaped intent for it;
-- source and target should resolve to opposing sides. A same-side source/target pairing cannot match the synthetic attack intent.
-
-**Per-unit target-selection gotcha.** The runtime does not search for a troop satisfying `trigger.target`. It first chooses one opposing target using the current `attack_order` or the default order `infantry`, `lancer`, `marksman`, then checks that chosen target against the trigger selector. If the chosen target fails the selector, that source produces no effects; the runtime does not try the next living target. Thus `target: "enemy.lancer"` can produce no effect while enemy Infantry is alive, even when enemy Lancers are also alive.
+`turn` triggers reject `source` and `target`. They have no attack-shaped source or target; use concrete effect scopes. A broad turn-scoped effect can participate in every matching normal attack during its active window. For example, an `extra_skill_attack` applying to `self.any` with `turns.count: 1` can emit one extra job for each eligible troop attack that turn without matching the generated skill jobs.
 
 `pre_battle` and `battle_start` never have an attack-shaped intent. Its `source` and `target` fields are compiled but never used for matching; use effect scopes, not trigger selectors, to scope a battle-start effect.
 
 ## Effects
 
-For `battle_start`, global `turn`, and `attack` triggers, every entry in `effects` is activated together when the trigger's probability gate succeeds. For a per-unit `turn` trigger, every entry is activated once for each source unit type that produces a valid synthetic source/target intent; a successful probability roll alone does not guarantee an effect activation.
+For `battle_start`, `turn`, and `attack` triggers, every top-level entry in `effects` is activated when the trigger's probability gate succeeds.
 
 The entry's object key becomes the effect ID used in traces, applied-effect summaries, and extra-skill job attribution. Keep effect IDs unique across the catalogue: aggregate fields such as `extraSkillAttackJobsByEffect` are keyed by this ID alone. The current `SkillId/number` convention does that while keeping the source readable. The ID labels the effect but does not decide stacking identity; `same_effect_stacking` groups by the originating definition object and resolved scope.
 
@@ -229,7 +210,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 
 | Field | Accepted value | Meaning |
 | --- | --- | --- |
-| `type` | One supported modifier or special-effect string | Chooses the mechanic and, for modifiers, the damage-equation bucket. |
+| `type` | One supported modifier/special-effect string, or omitted on a child-bearing carrier | Chooses the mechanic and, for modifiers, the damage-equation bucket. |
 | `value` | Usually a number or per-level numeric array | Percentage magnitude for modifiers; damage multiplier percentage for `extra_skill_attack`; fixed unit order for `attack_order`. |
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
 | `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means the effect is permanent. |
@@ -237,6 +218,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | `requires_effect` | Effect ID string | Applies a runtime damage modifier only while the named effect is applicable to the same damage job. |
 | `value_evolution` | Evolution object | Optionally changes the effect value as rounds or uses advance. |
 | `trigger_damage_jobs` | Non-empty array of job definitions | Required for `extra_skill_attack`; describes the actual skill-damage jobs it emits. |
+| `trigger_effects` | Object keyed by child effect ID | Defines children materialized only from an actual parent use. |
 
 ### `value` and level selection
 
@@ -324,14 +306,13 @@ Supported values for either field include:
 - `"enemy"`, `"enemy.any"`, `"enemy.all"`, `"enemy.<unit>"`;
 - `"trigger.source"` or its short alias `"trigger"`;
 - `"trigger.target"` or its short alias `"target"`.
+- `"parent.use.source"` or `"parent.use.target"` inside a keyed child effect.
 
 `applies_vs: "all"` is deliberately rejected; use `"any"`. `units.side` is also rejected. Side belongs in relation-qualified selectors such as `enemy.any`.
 
-`trigger.source`/`trigger` resolve to the intent's dealer side and unit. `trigger.target`/`target` resolve to its taker side and unit. They are meaningful for `attack` triggers and valid per-unit `turn` intents. They are rejected on `pre_battle` and `battle_start` effects because no such intent exists.
+`trigger.source`/`trigger` resolve to an attack trigger's dealer side and unit. `trigger.target`/`target` resolve to its locked taker side and unit. Direct turn effects and pre-battle/battle-start effects reject attack-relative selectors. A nested effect instead uses `parent.use.source` and `parent.use.target`; these resolve from the concrete job or control in which the typed parent actually participated.
 
-**Gotcha — global turn triggers have no concrete source or target.** On a `turn` trigger with no `trigger.source`, the activation has no attack intent. Trigger-relative effect selectors consequently retain their precompiled fallback: all units on that field's default side. The loader records an `ambiguousTurnTriggerSelectors` diagnostic but does not reject the definition.
-
-The current `Sonya.json` `TorrentialImpact/2` definition is affected. Its global turn trigger gives `applies_to: "trigger.target"` no target to resolve, so it becomes all troops on Sonya's own side. Because the effect is `no_attack`, it cancels Sonya's side's normal attacks on the trigger round. A trace with only this skill shows the round-5 Lancer attack cancelled and `TorrentialImpact/1`'s one-use extra-skill effect surviving until it is used on round 6. This is the runtime behaviour of the current JSON, despite the description saying the enemy target is stunned.
+An effect can define both its normal `type` and keyed `trigger_effects`. Its children activate only when the parent is actually used. A type-less effect is a normal-attack carrier: when its unit scopes match an eligible normal attack, it materializes its keyed children and consumes a use. The carrier is useful for bounded one-use consequences without inventing a combat bucket. Children are snapshotted after the parent's use, so a child cannot recursively affect the same consuming damage job.
 
 The parser also accepts `"friendly"`, but only as “all units on this field's default side.” It is not an owner-relative synonym in every context. No current hero definition uses it; use `self.any`, `enemy.any`, or `any` instead.
 
@@ -371,14 +352,14 @@ An attack-triggered effect with `{ "turns": { "count": 1 } }` is available for l
 
 - a modifier use is an applicable normal **or skill** damage job to which it contributes a non-zero value;
 - an extra-skill use is one eligible normal attack that emits at least one job, regardless of how many target jobs it emits;
-- a control use is an attack it cancels;
+- a `no_attack` control use is an attack it cancels; a dodge use zeroes only normal damage and still permits triggers, children, and extra attacks;
 - an attack-order use is an attack whose target order it chooses.
 
 `attacks.delay` skips that many otherwise-eligible mechanic uses before the effect can apply. For a modifier this means applicable damage jobs; for extra attacks, controls, and attack order it means applicable normal attacks. The last skipped use is not also the first active use. Delay decrements only when the effect's side/unit/job-kind gates otherwise match.
 
-For an effect created by an `attack` trigger, the triggering normal intent is eligible to be its first use because attack skills activate before controls and damage. Thus `attacks.delay: 1` normally skips that current matching intent and begins with the next eligible one; it does not mean “wait one complete round.” The all-intents trigger phase can make the first eligible use a different, earlier intent in the same round when the effect has broad scope.
+For an effect created by an `attack` trigger, the triggering normal attack is eligible to be its first use. Thus `attacks.delay: 1` skips that current matching attack and begins with the next eligible one; it does not mean “wait one complete round.”
 
-Cancelled attacks normally still consume applicable attack-limited modifiers and controls because the attack was declared even though it did not land. Permanent modifiers without an `attacks` duration are not use-charged through this cancellation path merely because they have `value_evolution.step: "attack"`. Simulation options can disable cancellation charging separately for dodge or no-attack, but those options are outside the hero JSON.
+`no_attack` and dodge normally still consume applicable attack-limited durations. This duration-only charging does not count as a typed parent mechanic use and therefore does not materialize children. Permanent modifiers without an `attacks` duration are not use-charged through this path merely because they have `value_evolution.step: "attack"`. Simulation options can disable duration charging separately for dodge or no-attack, but those options are outside the hero JSON.
 
 ## `same_effect_stacking`
 
@@ -435,7 +416,7 @@ Requirements:
 - every job must have `source` and `target`;
 - `same_effect_stacking` is not allowed;
 - generated jobs do not trigger `attack` skills recursively;
-- every generated job that actually runs advances its dealer's attack counter and taker's received counter when the round commits;
+- generated jobs do not advance normal attack or received-attack cadence counters;
 - each live applicable extra-attack effect runs independently; there is no max/add suppression between them.
 
 Each job has this shape:
@@ -490,9 +471,7 @@ Attack-triggered controls are activated during the all-triggers phase and can ca
 
 If both a no-attack and dodge control apply to the same normal attack, no-attack wins. If several live controls of the same type match, the last one encountered is reported as the winning control; matching attack-limited controls can still be charged together. `same_effect_stacking` does not select among controls.
 
-**One-use control gotcha.** Control applicability is determined for every normal intent in the round before any of those intents is processed and charges a use. A broad control with `attacks.count: 1` can therefore already be attached to several same-round intents and cancel all of them, even though its first cancellation expires it from the live index. The current one-use Reina dodge is narrowed to its concrete triggering dealer/target pair, but the generic duration shape does not itself guarantee only one cancellation per round.
-
-A cancelled normal attack emits no normal damage job and no extra-skill jobs, but it still advances the dealer's normal attack counter and the target's received counter once when the round commits.
+Controls are checked from the live index for each attack in procedural order. A one-use broad control expires after its first actual use and cannot be pre-attached to later attacks. `no_attack` emits no normal or extra job and advances no cadence counter. Dodge emits a zero-kill normal outcome with `dodged: true`, advances normal cadence, and allows attack triggers and extra jobs to continue.
 
 ### `attack_order`
 
@@ -510,7 +489,7 @@ Overrides target preference for matching normal attacks. Although no current her
 
 Only `units.applies_to` gates which dealer troop lines use the order. `applies_vs` is not consulted by attack-order target selection, even though the current troop-skill `Ambusher` definition supplies it.
 
-Target order is resolved before attack triggers for the round. Orders activated at battle start or round start can affect that round; an order activated by an `attack` trigger cannot affect the already-created intents until a later round. When multiple live orders match a dealer, the first ready effect in runtime insertion order wins and later orders are not consulted. A per-unit turn trigger may use an active order to select its synthetic target, but doing so does not consume an order use. Duration and attack delay/count otherwise work as described above.
+Target order is resolved for each attack immediately before its exhaustion/control/trigger stages. Orders activated at battle start, round start, or an earlier attack can affect a later attack in the same round. An order created by the attack it would order is necessarily too late for that attack. When multiple live orders match a dealer, the first ready effect in runtime insertion order wins and later orders are not consulted. Duration and attack delay/count otherwise work as described above.
 
 ## Values currently present in hero definitions
 
@@ -522,13 +501,14 @@ The engine accepts some values not currently used by a hero. This inventory dist
 | `troop_type` | `infantry`, `lancer`, `marksman` |
 | `requirements[].type/value` | `engagement_type` with `rally` or `garrison`, always beginning at level 1 |
 | `trigger.type` | `pre_battle`, `battle_start`, `turn`, `attack` |
-| `trigger.source` | omitted, `infantry`, `lancer`, `marksman`, `self.any`, `self.all`, `enemy.any` |
-| `trigger.target` | omitted or `self.any` |
+| `trigger.source` | attack triggers only: omitted, `infantry`, `lancer`, `marksman`, `self.any`, `self.all`, `enemy.any` |
+| `trigger.target` | attack triggers only: omitted or `self.any` |
 | `trigger.probability` | omitted or a five-level numeric percentage array |
 | `trigger.first` | omitted, 4, or 5 |
 | `trigger.every` | omitted, 2, 3, 4, 5, or 6 |
-| `units.applies_to` | omitted; unit strings/arrays; `all`; `enemy.any`, `enemy.infantry`, `enemy.marksman`; `target`; `trigger.source`; `trigger.target` |
-| `units.applies_vs` | omitted; `any`; unit strings/arrays; `self.any`; `trigger.source`; `trigger.target` |
+| `units.applies_to` | omitted; unit strings/arrays; `all`; relation-qualified selectors; attack-relative selectors; nested `parent.use.*` selectors |
+| `units.applies_vs` | omitted; `any`; unit strings/arrays; relation-qualified selectors; attack-relative selectors; nested `parent.use.*` selectors |
+| `trigger_effects` | omitted or an object keyed by stable child effect IDs |
 | `duration.turns` | `count` 1–3; optional `delay: 1`; or `delay: 1` with no count |
 | `duration.attacks` | `count: 1` or `count: 10`; no hero currently uses `attacks.delay` |
 | `same_effect_stacking` | omitted, `add`, or `max` |
@@ -559,7 +539,7 @@ The loader performs focused validation, but the JSON is cast into TypeScript int
 - some unknown or misspelled fields outside tightly validated objects can be silently ignored;
 - `description`, `notes`, and `status` never override runtime behaviour.
 
-The current 33 hero files load with zero unsupported-effect diagnostics and one ambiguity diagnostic: Sonya `TorrentialImpact/2`, described in the units section.
+The current hero files load with zero unsupported-effect diagnostics. Invalid turn source/target fields and direct turn attack-relative selectors are rejected.
 
 After editing definitions, at minimum load the config and inspect both diagnostics arrays, then run the simulator tests and a focused trace that exercises the relevant timing/scope interaction. A definition being valid JSON—or a description sounding plausible—is not evidence that the mechanic behaves as intended.
 
@@ -568,7 +548,7 @@ After editing definitions, at minimum load the config and inspect both diagnosti
 The behaviour described here is owned primarily by:
 
 - `simulator/src/config.ts` — loading, aliases, diagnostics, and config validation;
-- `simulator/src/resolve.ts` — hero lookup, skill ordering/levels, requirements, and generation-stat baking;
+- `simulator/src/fighterResolution.ts` — hero lookup, skill ordering/levels, requirements, nested-effect hydration, and generation-stat baking;
 - `simulator/src/effects.ts` — trigger matching, probability, selectors, durations, stacking defaults, and value evolution;
 - `simulator/src/runtimeSkills.ts` — trigger scheduling and prepared modifier groups;
 - `simulator/src/simulator.ts` — round/attack phases, controls, extra-skill jobs, counters, and use charging;

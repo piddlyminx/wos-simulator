@@ -115,6 +115,8 @@ export interface DamageJobOptions {
   scratch?: DamageScratch;
   capToTakerTroops?: boolean;
   usedEffects?: ActiveEffect[];
+  /** Effects whose primary mechanic actually won/applied; excludes duration-only siblings. */
+  primaryUsedEffects?: ActiveEffect[];
   minInitialArmy?: number;
 }
 
@@ -141,6 +143,7 @@ export function calculateDamageJob(
   applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
 
   const usedEffects = options.usedEffects ?? [];
+  const primaryUsedEffects = options.primaryUsedEffects ?? usedEffects;
   const jobSlot = damageJobSlot(job);
   applyBucketEffects(
     options.effectIndex.damageGroupsByJobShape[jobSlot],
@@ -149,7 +152,8 @@ export function calculateDamageJob(
     jobSlot,
     buckets,
     recording,
-    usedEffects
+    usedEffects,
+    primaryUsedEffects
   );
 
   const damageBeforeOffsets = evaluateDamageExpressionForJob(job, buckets, staticProfile);
@@ -159,7 +163,8 @@ export function calculateDamageJob(
     job.round,
     Math.max(0, damageBeforeOffsets - offsetDamage),
     recording,
-    usedEffects
+    usedEffects,
+    primaryUsedEffects
   );
   const unroundedDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
   const rawDamage = unroundedDamage;
@@ -175,7 +180,8 @@ function applyBucketEffects(
   jobSlot: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[]
+  usedEffects: ActiveEffect[],
+  primaryUsedEffects: ActiveEffect[]
 ): void {
   for (const group of groups) {
     const dependency = group.requiredGroupOrdinalsByJobShape;
@@ -185,14 +191,14 @@ function applyBucketEffects(
     if (group.sameEffectStacking !== "max") {
       for (const effect of effects) {
         if (!advanceEffectAttackDelay(effect)) continue;
-        applyBucketEffect(effect, round, buckets, recording, usedEffects);
+        applyBucketEffect(effect, round, buckets, recording, usedEffects, primaryUsedEffects);
       }
       continue;
     }
     if (effects.length === 1) {
       const effect = effects[0];
       if (advanceEffectAttackDelay(effect)) {
-        applyBucketEffect(effect, round, buckets, recording, usedEffects);
+        applyBucketEffect(effect, round, buckets, recording, usedEffects, primaryUsedEffects);
       }
       continue;
     }
@@ -209,7 +215,7 @@ function applyBucketEffects(
       }
     }
     if (selected) {
-      applyBucketEffectGroup(selected, eligible, selectedValue, buckets, recording, usedEffects);
+      applyBucketEffectGroup(selected, eligible, selectedValue, buckets, recording, usedEffects, primaryUsedEffects);
     }
   }
 }
@@ -251,7 +257,8 @@ function applyBucketEffect(
   round: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[]
+  usedEffects: ActiveEffect[],
+  primaryUsedEffects: ActiveEffect[]
 ): void {
   if (isTurnShield(effect)) {
     buckets.turnShield = effect;
@@ -265,6 +272,7 @@ function applyBucketEffect(
   );
   if (appliedValue !== 0) {
     usedEffects.push(effect);
+    if (primaryUsedEffects !== usedEffects && effect.triggerEffects?.length) primaryUsedEffects.push(effect);
   } else {
     recording.recordRejected(effect, "same_effect_max_superseded");
   }
@@ -276,7 +284,8 @@ function applyBucketEffectGroup(
   selectedValue: number,
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[]
+  usedEffects: ActiveEffect[],
+  primaryUsedEffects: ActiveEffect[]
 ): void {
   if (isTurnShield(selected)) {
     buckets.turnShield = selected;
@@ -285,6 +294,7 @@ function applyBucketEffectGroup(
   }
   const appliedValue = applySelectedBucket(selected, selectedValue, buckets, recording);
   if (appliedValue !== 0) {
+    if (primaryUsedEffects !== usedEffects && selected.triggerEffects?.length) primaryUsedEffects.push(selected);
     // The whole max-stacking group is charged: suppressed siblings deplete alongside the winner.
     for (const effect of effects) {
       usedEffects.push(effect);
@@ -304,7 +314,8 @@ function applyTurnShield(
   round: number,
   damage: number,
   recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[]
+  usedEffects: ActiveEffect[],
+  primaryUsedEffects: ActiveEffect[]
 ): number {
   const selected = buckets.turnShield;
   if (!selected || damage <= 0) return 0;
@@ -316,6 +327,7 @@ function applyTurnShield(
   if (!group) {
     selected.initialValue = Math.max(0, selected.initialValue - appliedValue);
     usedEffects.push(selected);
+    if (primaryUsedEffects !== usedEffects && selected.triggerEffects?.length) primaryUsedEffects.push(selected);
     return appliedValue;
   }
 
@@ -324,6 +336,7 @@ function applyTurnShield(
     usedEffects.push(effect);
     if (effect !== selected) recording.recordRejected(effect, "same_effect_max_suppressed");
   }
+  if (primaryUsedEffects !== usedEffects && selected.triggerEffects?.length) primaryUsedEffects.push(selected);
   return appliedValue;
 }
 

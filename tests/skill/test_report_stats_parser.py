@@ -357,6 +357,48 @@ class ReportStatsParserTests(unittest.TestCase):
         self.assertIn("left_infantry_count", repaired["meta"]["missing_fields"])
         self.assertNotIn("left_infantry_attack", repaired["meta"]["missing_fields"])
 
+    def test_targeted_count_repair_accepts_single_troop_only_for_detected_slot(self) -> None:
+        result = {
+            "left": {
+                "troop_counts": {"infantry": 100, "lancer": 400},
+                "levels": {
+                    "infantry": {"tier": 6, "fire_crystal_level": None},
+                    "lancer": {"tier": 6, "fire_crystal_level": None},
+                    "marksman": {"tier": None, "fire_crystal_level": None},
+                },
+            },
+            "right": {
+                "troop_counts": {"marksman": 499},
+                "levels": {
+                    "infantry": {"tier": None, "fire_crystal_level": None},
+                    "lancer": {"tier": 6, "fire_crystal_level": None},
+                    "marksman": {"tier": 6, "fire_crystal_level": None},
+                },
+            },
+            "meta": {
+                "header_box": {
+                    "text": "Stat Bonuses",
+                    "x1": 272,
+                    "y1": 333,
+                    "x2": 450,
+                    "y2": 371,
+                    "confidence": 1.0,
+                },
+                "slot_counts": {"0": 100, "1": 400, "5": 499},
+            },
+        }
+
+        with patch.object(report_stats_parser, "_ocr_count_crop", side_effect=[1, 1, 1]):
+            report_stats_parser._repair_troop_counts_from_slots(
+                result,
+                np.zeros((1280, 720, 3), dtype=np.uint8),
+            )
+
+        self.assertNotIn("marksman", result["left"]["troop_counts"])
+        self.assertNotIn("infantry", result["right"]["troop_counts"])
+        self.assertEqual(result["right"]["troop_counts"]["lancer"], 1)
+        self.assertEqual(result["meta"]["slot_counts"]["4"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

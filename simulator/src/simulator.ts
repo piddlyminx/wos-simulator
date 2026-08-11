@@ -9,7 +9,6 @@ import type {
   DamageJob,
   FighterInput,
   ResolvedFighter,
-  ResolvedSkill,
   SideId,
   SimulationOptions,
   SimulatorConfig,
@@ -21,26 +20,26 @@ import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
   advanceEffectAttackDelay,
-  chancePasses,
-  compiledTriggerForSkill,
   createSeededRng,
   hasAttackDurationConstraint,
   isEffectAttackReady,
   oppositeSide,
-  skillMatchesTrigger,
   type Rng
 } from "./effects";
 import { damageJobShapeSlot, damageJobSlot, type EffectIndex } from "./effectIndex";
-import { buildRuntimeSkills, type DeferredEffectPlan, type RuntimeSkills } from "./runtimeSkills";
+import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
 import { activatePreBattleEffects, buildResolved, prepareBattle, type CompiledBattle } from "./prepare";
 import {
   addActiveEffect,
   capJobToRemainingTarget,
   chargeEffectUse,
   chargeUsedEffects,
+  chargeUsedEffectsForJob,
   createRuntime,
   emptyRoundTargetDamage,
   materializeDeferredEffects,
+  materializeTriggeredEffects,
+  preparedChancePasses,
   processEffectSchedule,
   targetExhausted,
   triggerAttackSkills,
@@ -247,6 +246,7 @@ function runLoop(
     scratch: runtime.damageScratch,
     capToTakerTroops: loopOptions.capJobKills,
     usedEffects: runtime.usedEffects,
+    primaryUsedEffects: runtime.primaryUsedEffects,
     minInitialArmy: initialArmyCount
   };
 
@@ -257,88 +257,96 @@ function runLoop(
     rounds = round;
     const roundStartTroops = snapshotTroops(runtime.troops);
     processEffectSchedule(runtime, round);
-    triggerRoundStartSkills(round, runtime, roundStartTroops, recorder);
+    triggerRoundStartSkills(round, runtime, recorder);
 
-    const intents = resolveAttackIntents(round, runtime, roundStartTroops, recorder);
+    const intents: AttackIntent[] = [];
     const results: DamageJobResult[] = [];
     const cancelled: CancelledAttack[] = [];
-
-    // Phase 1: fire all attack_declared triggers for every intended attack before
-    // evaluating any controls or damage, per the battle-core spec.
-    const pendingNormalJobs: Array<{ intent: AttackIntent; job: DamageJob; deferredEffects?: DeferredEffectPlan[]; control?: Control }> = [];
-    const declaredNormalJobs: Array<{ intent: AttackIntent; job: DamageJob; deferredEffects?: DeferredEffectPlan[] }> = [];
     const roundTargetDamage = emptyRoundTargetDamage();
-    for (const intent of intents) {
-      const matchingTriggerSkills = runtime.skills.attackDeclaredByJobShape[
-        damageJobShapeSlot("normal", intent.dealerSide, intent.dealerUnit, intent.takerSide, intent.takerUnit)
-      ];
-      const deferredEffects = matchingTriggerSkills
-        ? triggerAttackSkills(round, matchingTriggerSkills, runtime, recorder, intent)
-        : undefined;
-      const job = normalJob(intent, roundStartTroops);
-      declaredNormalJobs.push({ intent, job, deferredEffects });
-    }
 
-    for (const { intent, job, deferredEffects } of declaredNormalJobs) {
-      const controls = applicableControls(job, runtime);
-      if (controls.no_attack || controls.dodge) {
-        const control = controls.no_attack ?? controls.dodge!;
-        pendingNormalJobs.push({ intent, job, deferredEffects, control });
-      } else {
-        pendingNormalJobs.push({ intent, job, deferredEffects });
-      }
-    }
-
-    // Phase 2: calculate each normal job; any extra_skill_attack effect it
-    // uses spawns extra DamageJobs that are calculated immediately after.
-    // chargeUsedEffects runs after each job so subsequent normal jobs see the
-    // correct uses count on any shared extra_skill_attack effects.
-    for (const { intent, job, deferredEffects, control } of pendingNormalJobs) {
-      if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
-
-      if (control) {
-        runtime.attackControlCounts[control.reason] += 1;
-        if (useEffectsOnCancel[control.reason]) {
-          chargeCancelledAttack(job, control.effect, control.attackDurationEffects, runtime);
+    // Resolve each normal attack as one procedural cluster. Later attacks observe effects
+    // produced by earlier attacks; no synthetic global attack-declaration phase exists.
+    for (const side of ["attacker", "defender"] as SideId[]) {
+      const takerSide = oppositeSide(side);
+      let orderIndex = 0;
+      for (const dealerUnit of UNIT_TYPES) {
+        if ((roundStartTroops[side][dealerUnit] ?? 0) <= 0) continue;
+        const ordered = orderFromEffects(dealerUnit, side, runtime.effectIndex, true);
+        const takerUnit = firstLivingUnit(ordered?.order ?? UNIT_TYPES, takerSide, roundStartTroops);
+        if (!takerUnit) continue;
+        const intent = makeNormalIntent(round, side, dealerUnit, takerSide, takerUnit, orderIndex, runtime);
+        intents.push(intent);
+        orderIndex += 1;
+        if (ordered) {
+          materializeTriggeredEffects(ordered.effect, round, intent, runtime, recorder);
+          chargeEffectUse(runtime, ordered.effect);
+          recorder.recordBattleOrder(intent, ordered.effect, takerUnit);
         }
-        cancelled.push({
-          intent,
-          control
-        });
-        continue;
-      }
 
-      recorder.recordScheduledDamageJob(job);
-      const normalResult = calculateDamageJob(job, fighters, damageJobOptions);
-      if (loopOptions.capRoundKills) capJobToRemainingTarget(normalResult, job, roundStartTroops, roundTargetDamage, recorder);
-      if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-        score += normalResult.kills;
-      }
-      chargeUsedEffects(runtime);
+        const job = normalJob(intent, roundStartTroops);
+        if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
 
-      results.push({ job, result: normalResult, intent });
-      const triggeredKills = processExtraSkillAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
-      if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-        score += triggeredKills;
-      }
-      if (deferredEffects) {
-        materializeDeferredEffects(
-          deferredEffects,
-          round,
-          intent,
-          normalResult.kills,
-          triggeredKills,
-          sourceAttackProtectionBasis(job, fighters, initialArmyCount),
-          runtime,
-          recorder
-        );
+        // Controls are snapshotted before this attack's triggers. no_attack suppresses the
+        // attack entirely; dodge still permits cadence triggers, children, and extra jobs.
+        const controls = applicableControls(job, runtime);
+        if (controls.no_attack) {
+          const control = controls.no_attack;
+          runtime.attackControlCounts.no_attack += 1;
+          materializeTriggeredEffects(control.effect, round, intent, runtime, recorder);
+          if (useEffectsOnCancel.no_attack) chargeCancelledAttack(job, control.effect, control.attackDurationEffects, runtime);
+          cancelled.push({ intent, control });
+          continue;
+        }
+
+        const matchingTriggerSkills = runtime.skills.attackDeclaredByJobShape[
+          damageJobShapeSlot("normal", intent.dealerSide, intent.dealerUnit, intent.takerSide, intent.takerUnit)
+        ];
+        const deferredEffects = matchingTriggerSkills
+          ? triggerAttackSkills(round, matchingTriggerSkills, runtime, recorder, intent)
+          : undefined;
+        fireApplicableCarriers(round, job, intent, runtime, recorder);
+
+        let normalKills = 0;
+        if (controls.dodge) {
+          runtime.attackControlCounts.dodge += 1;
+          materializeTriggeredEffects(controls.dodge.effect, round, intent, runtime, recorder);
+          if (useEffectsOnCancel.dodge) chargeCancelledAttack(job, controls.dodge.effect, controls.dodge.attackDurationEffects, runtime);
+        } else {
+          recorder.recordScheduledDamageJob(job);
+          const normalResult = calculateDamageJob(job, fighters, damageJobOptions);
+          if (loopOptions.capRoundKills) capJobToRemainingTarget(normalResult, job, roundStartTroops, roundTargetDamage, recorder);
+          normalKills = normalResult.kills;
+          if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
+            score += normalResult.kills;
+          }
+          chargeUsedEffectsForJob(runtime, job, recorder);
+          results.push({ job, result: normalResult, intent });
+        }
+
+        advanceNormalAttackCounters(intent, runtime);
+        const triggeredKills = processExtraSkillAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+        if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
+          score += triggeredKills;
+        }
+        if (deferredEffects) {
+          materializeDeferredEffects(
+            deferredEffects,
+            round,
+            intent,
+            normalKills,
+            triggeredKills,
+            sourceAttackProtectionBasis(job, fighters, initialArmyCount),
+            runtime,
+            recorder
+          );
+        }
+        if (controls.dodge) recorder.recordDodged(intent, job, controls.dodge.effect);
       }
     }
 
-    if (loopOptions.commitLosses) commitRound(cancelled, results, runtime);
-    else commitRoundCounters(cancelled, results, runtime);
+    if (loopOptions.commitLosses) commitRound(results, runtime);
 
-    for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.control.effect, entry.control.reason);
+    for (const entry of cancelled) recorder.recordCancelled(entry.intent, entry.control.effect, "no_attack");
     for (const entry of results) recorder.recordDamageJob(entry.job, entry.result, entry.intent);
     recorder.recordRound(round, roundStartTroops, intents);
   }
@@ -378,52 +386,37 @@ function sourceAttackProtectionBasis(
 function triggerRoundStartSkills(
   round: number,
   runtime: Runtime,
-  roundStartTroops: DamageJob["roundStartTroops"],
   recorder: BattleRecorder
 ): ActiveEffect[] {
   const activated: ActiveEffect[] = [];
-  activated.push(...triggerSkills("round_start", round, runtime.skills.roundStartGlobal, runtime, recorder));
-  for (const skill of runtime.skills.roundStartPerUnit) {
-    const side = roundTriggerSourceSide(skill);
-    const takerSide = roundTriggerTargetSide(skill, side);
-    if (!skillMatchesTrigger(skill, "round_start", round)) continue;
+  for (const prepared of runtime.skills.roundStart) {
+    if (!preparedRoundFrequencyMatches(prepared, round)) continue;
+    const { skill } = prepared;
     recorder.recordSkillTriggerAttempt(skill);
-    if (!chancePasses(skill, runtime.rng)) continue;
+    if (!preparedChancePasses(prepared.probabilityPct, runtime.rng)) continue;
     recorder.recordSkillTriggered(skill);
-    let orderIndex = 0;
-    for (const dealerUnit of roundTriggerUnits(skill, roundStartTroops)) {
-      const takerUnit = chooseTakerUnit(dealerUnit, side, takerSide, roundStartTroops, runtime.effectIndex);
-      if (!takerUnit) continue;
-      const intent = syntheticRoundIntent(round, side, dealerUnit, takerSide, takerUnit, orderIndex, runtime);
-      if (!skillMatchesTrigger(skill, "round_start", round, intent)) continue;
-      for (const effectIntent of skill.effects) {
-        const effect = activateEffect(skill, effectIntent, round, intent);
-        addActiveEffect(runtime, effect);
-        activated.push(effect);
-        runtime.effectActivationCounts[skill.side] += 1;
-        recorder.recordSkillEffectActivated(skill);
-      }
-      orderIndex += 1;
+    for (const effectIntent of skill.effects) {
+      const effect = activateEffect(skill, effectIntent, round);
+      addActiveEffect(runtime, effect);
+      activated.push(effect);
+      runtime.effectActivationCounts[skill.side] += 1;
+      recorder.recordSkillEffectActivated(skill);
     }
   }
   return activated;
 }
 
-function roundTriggerUnits(skill: ResolvedSkill, roundStartTroops: DamageJob["roundStartTroops"]): UnitType[] {
-  const source = compiledTriggerForSkill(skill).source;
-  return UNIT_TYPES.filter((unit) => (roundStartTroops[source.side][unit] ?? 0) > 0 && unitMaskHas(source.units, unit));
+function preparedRoundFrequencyMatches(
+  prepared: Runtime["skills"]["roundStart"][number],
+  round: number
+): boolean {
+  const every = prepared.everyTurn;
+  if (every === undefined) return true;
+  const first = prepared.firstTurn ?? every;
+  return round >= first && (round - first) % every === 0;
 }
 
-function roundTriggerSourceSide(skill: ResolvedSkill): SideId {
-  return compiledTriggerForSkill(skill).source.side;
-}
-
-function roundTriggerTargetSide(skill: ResolvedSkill, sourceSide: SideId): SideId {
-  const targetSide = compiledTriggerForSkill(skill).target.side;
-  return targetSide === sourceSide ? oppositeSide(sourceSide) : targetSide;
-}
-
-function syntheticRoundIntent(
+function makeNormalIntent(
   round: number,
   dealerSide: SideId,
   dealerUnit: UnitType,
@@ -432,6 +425,8 @@ function syntheticRoundIntent(
   orderIndex: number,
   runtime: Runtime
 ): AttackIntent {
+  const previousAttackCount = runtime.counters.attacks[dealerSide][dealerUnit];
+  const previousReceivedAttackCount = runtime.counters.received[takerSide][takerUnit];
   return {
     round,
     source: "normal",
@@ -440,65 +435,11 @@ function syntheticRoundIntent(
     takerSide,
     takerUnit,
     orderIndex,
-    previousAttackCount: runtime.counters.attacks[dealerSide][dealerUnit],
-    projectedAttackCount: runtime.counters.attacks[dealerSide][dealerUnit],
-    previousReceivedAttackCount: runtime.counters.received[takerSide][takerUnit],
-    projectedReceivedAttackCount: runtime.counters.received[takerSide][takerUnit]
+    previousAttackCount,
+    projectedAttackCount: previousAttackCount + 1,
+    previousReceivedAttackCount,
+    projectedReceivedAttackCount: previousReceivedAttackCount + 1
   };
-}
-
-function resolveAttackIntents(
-  round: number,
-  runtime: Runtime,
-  roundStartTroops: DamageJob["roundStartTroops"],
-  recorder: BattleRecorder
-): AttackIntent[] {
-  const intents: AttackIntent[] = [];
-  for (const side of ["attacker", "defender"] as SideId[]) {
-    const takerSide = oppositeSide(side);
-    let orderIndex = 0;
-    for (const dealerUnit of UNIT_TYPES) {
-      if ((roundStartTroops[side][dealerUnit] ?? 0) <= 0) continue;
-      const ordered = orderFromEffects(dealerUnit, side, runtime.effectIndex, true);
-      const takerUnit = firstLivingUnit(ordered?.order ?? UNIT_TYPES, takerSide, roundStartTroops);
-      if (!takerUnit) continue;
-      const previousAttackCount = runtime.counters.attacks[side][dealerUnit];
-      const previousReceivedAttackCount = runtime.counters.received[takerSide][takerUnit];
-      const intent: AttackIntent = {
-        round,
-        source: "normal",
-        dealerSide: side,
-        dealerUnit,
-        takerSide,
-        takerUnit,
-        orderIndex,
-        previousAttackCount,
-        projectedAttackCount: previousAttackCount + 1,
-        previousReceivedAttackCount,
-        projectedReceivedAttackCount: previousReceivedAttackCount + 1
-      };
-      if (ordered) {
-        chargeEffectUse(runtime, ordered.effect);
-        recorder.recordBattleOrder(intent, ordered.effect, takerUnit);
-      }
-      intents.push(intent);
-      orderIndex += 1;
-    }
-  }
-  return intents;
-}
-
-// Synthetic round-start trigger targeting reuses attack-order effects to pick a target but
-// does not charge them: no real attack intent is being ordered.
-function chooseTakerUnit(
-  dealerUnit: UnitType,
-  dealerSide: SideId,
-  takerSide: SideId,
-  roundStartTroops: DamageJob["roundStartTroops"],
-  effectIndex: EffectIndex
-): UnitType | undefined {
-  const order = orderFromEffects(dealerUnit, dealerSide, effectIndex, false)?.order ?? UNIT_TYPES;
-  return firstLivingUnit(order, takerSide, roundStartTroops);
 }
 
 function firstLivingUnit(order: readonly UnitType[], side: SideId, roundStartTroops: DamageJob["roundStartTroops"]): UnitType | undefined {
@@ -560,6 +501,39 @@ function controlEffectApplies(effect: ActiveEffect, job: DamageJob, control: "do
   return effect.appliesVs.side === appliesVsSide && unitMaskHas(effect.appliesVs.units, appliesVsUnit);
 }
 
+function fireApplicableCarriers(
+  round: number,
+  job: DamageJob,
+  intent: AttackIntent,
+  runtime: Runtime,
+  recorder: BattleRecorder
+): void {
+  const carriers = runtime.effectIndex.carriers;
+  const originalCount = carriers.length;
+  let index = 0;
+  for (let inspected = 0; inspected < originalCount; inspected += 1) {
+    const carrier = carriers[index];
+    if (!carrier) break;
+    const matches = carrier.appliesTo.side === job.dealerSide &&
+      unitMaskHas(carrier.appliesTo.units, job.dealerUnit) &&
+      carrier.appliesVs.side === job.takerSide &&
+      unitMaskHas(carrier.appliesVs.units, job.takerUnit) &&
+      advanceEffectAttackDelay(carrier);
+    if (matches) {
+      materializeTriggeredEffects(carrier, round, intent, runtime, recorder);
+      chargeEffectUse(runtime, carrier);
+    }
+    // chargeEffectUse may have removed the current carrier. Keep the same index
+    // in that case so the shifted original entry is inspected next.
+    if (carriers[index] === carrier) index += 1;
+  }
+}
+
+function advanceNormalAttackCounters(intent: AttackIntent, runtime: Runtime): void {
+  runtime.counters.attacks[intent.dealerSide][intent.dealerUnit] += 1;
+  runtime.counters.received[intent.takerSide][intent.takerUnit] += 1;
+}
+
 function normalJob(intent: AttackIntent, roundStartTroops: DamageJob["roundStartTroops"]): DamageJob {
   return {
     round: intent.round,
@@ -573,8 +547,7 @@ function normalJob(intent: AttackIntent, roundStartTroops: DamageJob["roundStart
   };
 }
 
-function commitRound(cancelled: CancelledAttack[], results: DamageJobResult[], runtime: Runtime): void {
-  commitRoundCounters(cancelled, results, runtime);
+function commitRound(results: DamageJobResult[], runtime: Runtime): void {
   const losses: Record<SideId, Record<UnitType, number>> = { attacker: emptyTroops(), defender: emptyTroops() };
   for (const { job, result } of results) {
     losses[job.takerSide][job.takerUnit] += result.kills;
@@ -583,17 +556,6 @@ function commitRound(cancelled: CancelledAttack[], results: DamageJobResult[], r
     for (const unit of UNIT_TYPES) {
       runtime.troops[side][unit] = Math.max(0, runtime.troops[side][unit] - losses[side][unit]);
     }
-  }
-}
-
-function commitRoundCounters(cancelled: CancelledAttack[], results: DamageJobResult[], runtime: Runtime): void {
-  for (const entry of cancelled) {
-    runtime.counters.attacks[entry.intent.dealerSide][entry.intent.dealerUnit] += 1;
-    runtime.counters.received[entry.intent.takerSide][entry.intent.takerUnit] += 1;
-  }
-  for (const { job, result } of results) {
-    runtime.counters.attacks[job.dealerSide][job.dealerUnit] += 1;
-    runtime.counters.received[job.takerSide][job.takerUnit] += 1;
   }
 }
 

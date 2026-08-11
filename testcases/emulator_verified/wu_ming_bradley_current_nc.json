@@ -1,0 +1,82 @@
+[
+  {
+    "test_id": "wu_ming_bradley_current_nc",
+    "description": "Deterministic current-account Wu Ming 3/3/3 plus Bradley 4/4/4 interaction coverage. WIP attacks with 170 each T6 Infantry, Lancers, and Marksmen into minxxx's 900 each T6 Infantry and Lancers, exercising both Bradley S2 target scopes. Using Wu Ming's stats captured immediately beforehand plus Bradley's current contribution estimated from his paired report/control: Wu Ming S2 adding in Bradley S3's active.hero.damage.up bucket predicts about +9; putting Wu Ming S2 in a separate multiplicative normal-damage bucket predicts about +68; omitting Wu Ming S1, Wu Ming S2, Bradley S1, Bradley S2, or Bradley S3 predicts about -628, -604, -847, -797, or -546 respectively; and incorrectly letting Wu Ming S3 boost normal attacks predicts about +198. The exact captured stats will be substituted into these frozen interpretations after capture.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Bradley": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 170,
+        "lancer_t6": 170,
+        "marksman_t6": 170
+      },
+      "stats": {
+        "inf": {
+          "attack": 414.7,
+          "defense": 414.5,
+          "lethality": 199.3,
+          "health": 260.1
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 659.0,
+          "defense": 655.8,
+          "lethality": 308.6,
+          "health": 261.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 900,
+        "lancer_t6": 900
+      },
+      "stats": {
+        "inf": {
+          "attack": 282.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 275.2,
+          "defense": 278.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 281.0,
+          "defense": 286.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 112,
+        "defender": 0
+      }
+    ]
+  }
+]

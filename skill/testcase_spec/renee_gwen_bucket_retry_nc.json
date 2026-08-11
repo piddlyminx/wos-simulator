@@ -1,0 +1,23 @@
+{
+  "test_id": "renee_gwen_bucket_retry_nc",
+  "description": "Second deterministic Renee/Gwen grouping discriminator. WIP attacks with Renee 3/3/3 and Gwen 2/1/0, fielding 500 T6 Lancers into minxxx's 900 T6 Infantry. Using the exact stats from the preceding 620-vs-920 report, separate Renee/Gwen buckets with Gwen's stated 10% predict 330 survivors; same bucket at 10% or separate buckets at an effective 5% predict 321; same bucket at an effective 5% predicts 316; and no effective Gwen S1 predicts 312. Corresponding approximate Renee S1 activation counts are 25, 26, 27, and 28. These candidates and the decision rule are frozen before capture; the report's exact captured stats will be substituted afterward without changing the candidate models.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {
+      "Renee": {},
+      "Gwen": {}
+    },
+    "troops": {
+      "lancer_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 900
+    }
+  }
+}

@@ -6,7 +6,7 @@
     "VenomInfusion": {
       "description": "Every 2 attacks, Lancers deal X% extra damage and apply poison to the target for 1 turn. Poisoned enemies deal Y% less damage.",
       "trigger": {
-        "type": "turn",
+      "type": "attack",
         "every": 2,
         "source": "lancer"
       },
@@ -21,9 +21,8 @@
             100
           ],
           "units": {
-            "applies_to": [
-              "lancer"
-            ]
+          "applies_to": "trigger.source",
+          "applies_vs": "trigger.target"
           },
           "duration": {
             "attacks": {

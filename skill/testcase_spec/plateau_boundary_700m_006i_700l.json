@@ -1,0 +1,19 @@
+{
+  "test_id": "plateau_boundary_700m_006i_700l",
+  "description": "Precommitted deterministic plateau-boundary probe. WIP attacks with 700 T6 Marksmen and no heroes; minxxx defends with 6 T6 Infantry and 700 T6 Lancers and no heroes. Using the supplied 2dp stats plus minxxx's stated hidden +2pp Attack/Defense, the simulator predicts minxxx wins with exactly 478 Lancers. Counts 6 and 7 are the same lower plateau because the Infantry line is exhausted in round 1. The boundary is predicted between 7 and 8 Infantry.",
+  "emulator": {
+    "attacker": { "instance": "WIP" },
+    "defender": { "instance": "minxxx" }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": { "marksman_t6": 700 }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 6,
+      "lancer_t6": 700
+    }
+  }
+}

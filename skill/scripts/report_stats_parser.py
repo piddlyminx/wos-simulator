@@ -591,7 +591,7 @@ def _ocr_count_crop(crop_bgr: np.ndarray) -> int | None:
     if tess:
         texts.append(tess)
     values = [_parse_integer(text) for text in texts]
-    values = [value for value in values if value is not None and value >= 10]
+    values = [value for value in values if value is not None and value >= 1]
     if not values:
         return None
     return max(values, key=lambda value: len(str(value)))
@@ -613,10 +613,13 @@ def _repair_troop_counts_from_slots(result: dict[str, Any], img_bgr: np.ndarray)
         value = _ocr_count_crop(img_bgr[count_y1:count_y2, x1:x2])
         if value is None:
             continue
-        if current is None and value < 1000:
+        level = result[side].get("levels", {}).get(troop_type, {})
+        slot_has_level = level.get("tier") is not None or level.get("fire_crystal_level") is not None
+        if current is None and value < 1000 and not slot_has_level:
             continue
         if current is None or current < 10 or current > 5_000_000:
             result[side]["troop_counts"][troop_type] = value
+            result.setdefault("meta", {}).setdefault("slot_counts", {})[str(slot_index)] = value
 
 
 def _slot_x_bounds(image_width: int, slot_index: int) -> tuple[int, int]:
@@ -1261,6 +1264,7 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
 
     result["meta"]["ocr_strategy"] = strategies
     result["meta"]["template_match_image"] = "original"
+    _repair_troop_counts_from_slots(result, img_bgr)
     _finalize_troops_and_missing(result, img_bgr)
     if _needs_ocr_repair(result):
         strategies.append("targeted-fallback")

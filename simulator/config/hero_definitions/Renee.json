@@ -7,33 +7,33 @@
       "description": "Troops place Dream Marks on targets every two turns, dealing extra Lancer damage once next turn",
       "trigger": {
         "type": "turn",
-        "every": 2,
-        "source": "lancer"
+        "every": 2
       },
       "effects": {
-        "NightmareTrace/1": {
-          "type": "active.hero.health.down",
-          "value": [
-            40,
-            80,
-            120,
-            160,
-            200
-          ],
+        "NightmareTrace/mark": {
           "units": {
-            "applies_to": "target",
-            "applies_vs": "lancer"
+            "applies_to": "self.lancer",
+            "applies_vs": "enemy.any"
           },
           "duration": {
-            "turns": {
-              "count": 1,
-              "delay": 1
-            },
-            "attacks": {
-              "count": 1
-            }
+            "turns": { "count": 1 },
+            "attacks": { "count": 1 }
           },
-          "same_effect_stacking": "max"
+          "trigger_effects": {
+            "NightmareTrace/1": {
+              "type": "active.hero.damageTaken.up",
+              "value": [40, 80, 120, 160, 200],
+              "units": {
+                "applies_to": "parent.use.target",
+                "applies_vs": "parent.use.source"
+              },
+              "duration": {
+                "turns": { "delay": 1, "count": 1 },
+                "attacks": { "count": 1 }
+              },
+              "same_effect_stacking": "max"
+            }
+          }
         }
       }
     },
@@ -41,30 +41,32 @@
       "description": "Dream Marks highlight enemy vulnerabilities, increasing damage dealt by Lancers to marked targets",
       "trigger": {
         "type": "turn",
-        "every": 2,
-        "source": "lancer"
+        "every": 2
       },
       "effects": {
-        "Dreamcatcher/1": {
-          "type": "active.hero.health.down",
-          "value": [
-            30,
-            60,
-            90,
-            120,
-            150
-          ],
+        "Dreamcatcher/mark": {
           "units": {
-            "applies_to": "target",
-            "applies_vs": "lancer"
+            "applies_to": "self.lancer",
+            "applies_vs": "enemy.any"
           },
           "duration": {
-            "turns": {
-              "count": 1,
-              "delay": 1
-            }
+            "turns": { "count": 1 },
+            "attacks": { "count": 1 }
           },
-          "same_effect_stacking": "max"
+          "trigger_effects": {
+            "Dreamcatcher/1": {
+              "type": "active.hero.damageTaken.up",
+              "value": [30, 60, 90, 120, 150],
+              "units": {
+                "applies_to": "parent.use.target",
+                "applies_vs": "parent.use.source"
+              },
+              "duration": {
+                "turns": { "delay": 1, "count": 1 }
+              },
+              "same_effect_stacking": "max"
+            }
+          }
         }
       }
     },
@@ -72,30 +74,32 @@
       "description": "Dream Marks expose enemy weaknesses, increasing damage taken by marked targets for all troops",
       "trigger": {
         "type": "turn",
-        "every": 2,
-        "source": "lancer"
+        "every": 2
       },
       "effects": {
-        "Dreamslice/1": {
-          "type": "active.hero.health.down",
-          "value": [
-            15,
-            30,
-            45,
-            60,
-            75
-          ],
+        "Dreamslice/mark": {
           "units": {
-            "applies_to": "target",
-            "applies_vs": "any"
+            "applies_to": "self.lancer",
+            "applies_vs": "enemy.any"
           },
           "duration": {
-            "turns": {
-              "count": 1,
-              "delay": 1
-            }
+            "turns": { "count": 1 },
+            "attacks": { "count": 1 }
           },
-          "same_effect_stacking": "max"
+          "trigger_effects": {
+            "Dreamslice/1": {
+              "type": "active.hero.damageTaken.up",
+              "value": [15, 30, 45, 60, 75],
+              "units": {
+                "applies_to": "parent.use.target",
+                "applies_vs": "any"
+              },
+              "duration": {
+                "turns": { "delay": 1, "count": 1 }
+              },
+              "same_effect_stacking": "max"
+            }
+          }
         }
       }
     },

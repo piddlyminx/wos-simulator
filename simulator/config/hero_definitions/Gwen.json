@@ -6,8 +6,7 @@
     "EagleVision": {
       "description": "Increasing target's damage taken by X%",
       "trigger": {
-        "type": "attack",
-        "source": "self.any"
+        "type": "battle_start"
       },
       "effects": {
         "EagleVision/1": {
@@ -20,13 +19,7 @@
             25
           ],
           "units": {
-            "applies_to": "trigger.target",
-            "applies_vs": "trigger.source"
-          },
-          "duration": {
-            "attacks": {
-              "count": 1
-            }
+            "applies_to": "enemy.any"
           }
         }
       }
@@ -34,10 +27,10 @@
     "AirDominance": {
       "description": "Grants all troops' attack X% extra damage after every 5 attacks and causes the target to receive X% extra damage for its next attack received",
       "trigger": {
-        "type": "turn",
+        "type": "attack",
         "first": 5,
         "every": 6,
-        "source": "self.all"
+        "source": "self.any"
       },
       "effects": {
         "AirDominance/1": {

@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "renee_hendrik_defense_bucket_nc",
+    "description": "Deterministic Renee Defense Down bucket discriminator. minxxx attacks with Renee and Hendrik, fielding 120 T6 lancers into WIP's 446 T9 infantry. Hendrik's only unlocked expedition skill is persistent 5% Defense Down. Using estimated current stats reconstructed from recent reports, homogeneous Renee Defense Down predicts WIP wins with about 34 infantry; homogeneous Health Down or Damage Taken Up predicts minxxx wins with about 5 lancers. The candidate configurations and comparison rule are frozen before capture; exact captured stats will be inserted into those unchanged candidates after the report.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        },
+        "Hendrik": {
+          "skill_1": 1,
+          "skill_2": 0,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 120
+      },
+      "stats": {
+        "inf": {
+          "attack": 285.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 586.7,
+          "defense": 587.0,
+          "lethality": 315.1,
+          "health": 271.1
+        },
+        "mark": {
+          "attack": 382.5,
+          "defense": 384.5,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t9": 446
+      },
+      "stats": {
+        "inf": {
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.2,
+          "health": 181.8
+        },
+        "lanc": {
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.3,
+          "health": 181.1
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 14,
+        "defender": 0
+      }
+    ]
+  }
+]

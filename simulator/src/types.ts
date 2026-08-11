@@ -2,7 +2,7 @@ export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
 export type DamageKind = "normal" | "skill";
 export type UnitMask = number;
-export type ActiveEffectKind = "modifier" | "shield" | "extra_attack" | "control" | "battle_order";
+export type ActiveEffectKind = "modifier" | "shield" | "extra_attack" | "control" | "battle_order" | "carrier";
 export type SameEffectStacking = "add" | "max";
 
 export const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
@@ -21,6 +21,8 @@ export interface ResolvedUnitScope {
 export type SupportedTriggerDamageJobSelector =
   | "use.source"
   | "use.target"
+  | "parent.use.source"
+  | "parent.use.target"
   | "effect.applies_to"
   | "effect.applies_vs"
   | "enemy.living"
@@ -84,7 +86,8 @@ export interface EffectDuration {
 
 export interface EffectIntentDefinition {
   id: string;
-  type: string;
+  /** Optional only for a child-bearing normal-attack carrier. */
+  type?: string;
   value?: unknown;
   /** Apply this modifier only while the named effect is applicable to the same damage job. */
   requires_effect?: string;
@@ -94,6 +97,8 @@ export interface EffectIntentDefinition {
   trigger_damage_jobs?: TriggerDamageJobDefinition[];
   duration?: EffectDuration;
   same_effect_stacking?: SameEffectStacking;
+  /** Effects activated when this effect is actually used. Keys are stable child effect IDs. */
+  trigger_effects?: Record<string, Omit<EffectIntentDefinition, "id">>;
   reason?: string;
 }
 
@@ -112,6 +117,7 @@ export interface ResolvedEffectIntentDefinition extends EffectIntentDefinition {
   // Canonical config object retained across per-instance/level resolution. Duplicate
   // main/joiner copies use this identity to share prepared activation groups.
   sourceDefinition: Omit<EffectIntentDefinition, "id">;
+  triggerEffects?: ResolvedEffectIntentDefinition[];
   // Runtime damage modifiers only: prepared groups for every resolved scope this definition can
   // activate with, indexed by resolvedEffectScopeKey. Populated during battle preparation.
   effectGroupsByScopeKey?: Array<ActiveEffectGroup | undefined>;
@@ -155,7 +161,6 @@ export interface ConfigDiagnostics {
   legacyFields: Array<{ file: string; path: string; field: string }>;
   effectTypes: Record<string, number>;
   unsupportedEffects: Array<{ file: string; skillId: string; effectId: string; type: string; reason: string }>;
-  ambiguousTurnTriggerSelectors: Array<{ file: string; skillId: string; effectId: string; selector: string; reason: string }>;
 }
 
 export interface SimulatorConfig {
@@ -316,6 +321,7 @@ export interface ActiveEffect {
   // unless useEffectsOnDodge/useEffectsOnNoAttack disable that.
   uses: number;
   sameEffectStacking: SameEffectStacking;
+  triggerEffects?: ResolvedEffectIntentDefinition[];
   effectGroup?: ActiveEffectGroup;
   effectGroupPosition?: number;
 }
@@ -461,7 +467,9 @@ export interface AttackOutcome {
   counterDeltas?: CounterDelta[];
   /** Standard emits four-field summaries; trace emits detailed causal events. */
   appliedEffects?: AppliedEffect[];
-  cancelReason?: "dodge" | "no_attack";
+  cancelReason?: "no_attack";
+  /** The normal attack occurred and advanced cadence, but dealt zero normal damage. */
+  dodged?: true;
   trace?: DamageEquationTrace;
 }
 
