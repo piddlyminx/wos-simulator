@@ -415,14 +415,14 @@ test("default aggregation multiplies hero and troop active damage buckets", () =
   const combined = calculateIndexedDamageJob(
     job,
     fighters,
-    [effect("active.hero.lethality.up", "attacker", 20, "hero_skill"), effect("active.troop.lethality.up", "attacker", 10, "troop_skill")],
+    [effect("active.hero.lethality.up", "attacker", 20, "hero_skill"), effect("type.single_target.damage.up", "attacker", 10, "troop_skill")],
     { trace: true }
   );
 
   assert.equal(combined.trace?.atomicBuckets["active.hero.lethality.up"].totalPct, 20);
-  assert.equal(combined.trace?.atomicBuckets["active.troop.lethality.up"].totalPct, 10);
+  assert.equal(combined.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
   assert.equal(combined.trace?.aggregationGroups["active.hero.lethality.up"].factor, 1.2);
-  assert.equal(combined.trace?.aggregationGroups["active.troop.lethality.up"].factor, 1.1);
+  assert.equal(combined.trace?.aggregationGroups["type.single_target.damage.up"].factor, 1.1);
   assert.ok(
     Math.abs(
       (combined.trace?.damageBeforeOffsets ?? 0) -

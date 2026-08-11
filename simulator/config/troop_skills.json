@@ -16,7 +16,7 @@
       },
       "effects": {
         "MasterBrawler/1": {
-          "type": "active.troop.lethality.up",
+          "type": "type.single_target.damage.up",
           "value": [
             10
           ],
@@ -167,7 +167,7 @@
       },
       "effects": {
         "Charge/1": {
-          "type": "active.troop.lethality.up",
+          "type": "type.single_target.damage.up",
           "value": [
             10
           ],
@@ -330,7 +330,7 @@
       },
       "effects": {
         "RangedStrike/1": {
-          "type": "active.troop.lethality.up",
+          "type": "type.single_target.damage.up",
           "value": [
             10
           ],
