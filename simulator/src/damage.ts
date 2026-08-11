@@ -94,7 +94,6 @@ const STATIC_BUCKET_UPDATE_BY_INDEX = compileBucketUpdates(STATIC_BUCKETS);
 const DYNAMIC_NEUTRAL_VALUES = Float64Array.from(DYNAMIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const STATIC_NEUTRAL_VALUES = Float64Array.from(STATIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
-const DAMAGE_DECIMAL_SCALE = 1000;
 
 /** Smaller side's initial army; battle-invariant. */
 export function minInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
@@ -161,7 +160,7 @@ export function calculateDamageJob(
     usedEffects
   );
   const unroundedDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
-  const rawDamage = ceilIgnoringFloatResidue(unroundedDamage * DAMAGE_DECIMAL_SCALE) / DAMAGE_DECIMAL_SCALE;
+  const rawDamage = unroundedDamage;
   const uncappedKills = rawDamage;
   const kills = options.capToTakerTroops === false ? uncappedKills : Math.min(takerTroops, uncappedKills);
   return recording.finish({ job, factors: buckets.factors, armyTerm, damageBeforeOffsets, offsetDamage, rawDamage, kills });
