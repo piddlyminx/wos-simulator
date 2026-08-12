@@ -75,6 +75,30 @@ The existence of a nearby cliff does not prove that the actual `±0.05` stat reg
 
 ## Key quantitative evidence
 
+### Per-stat hidden-precision audit
+
+Hypothesis tested: the original 200 result is reachable under the unchanged battle mechanics by substituting two-decimal stat values inside each displayed stat's independent `±0.05` interval.
+
+The raw simulator initially appeared to support the hypothesis. A seeded search found 200 after 18 samples, and an exhaustive sparse search found a two-stat construction with every other stat unchanged:
+
+- WIP Infantry Defense `414.50 → 414.53`;
+- WIP Infantry Health `260.10 → 260.13`.
+
+No single two-decimal stat substitution produced 200. The two-stat result was not a normal hidden-precision shelf, however. It left approximately `5.7e-14` WIP Infantry after round 56. That numerically empty line remained eligible for target selection in round 57, absorbed the defending attacks, and preserved WIP's Lancers. The same stat vector left the linked 190-versus-417 follow-up at 179 rather than its observed 180.
+
+This was checked over 100,000 seeded shared stat vectors. Without normalizing committed troop residue, the original results were 219 (90,116 vectors), 218 (7,827), 200 (1,504), or 199 (553). Of the 1,504 vectors producing 200, 1,503 produced 179 in the linked follow-up and one produced 155; none produced 180.
+
+A diagnostic variant then snapped a committed troop count down when it was within `1e-12` above an integer. This is not retained as a mechanic. Under that residue-safe diagnostic:
+
+- 100,000 seeded vectors in the ordinary two-decimal interval (`-0.05…+0.04`) produced only 218 or 219;
+- another 100,000 vectors in the deliberately wider inclusive `±0.05` box also produced only 218 or 219;
+- exhaustive searches of every one- and two-stat substitution in the wider box (27,840 combinations) found no 200;
+- the globally attacker-favourable corner produced 218 and the globally defender-favourable corner produced 219;
+- both dominance corners retained the decisive schedule: WIP Infantry was exhausted in round 56, minxxx Infantry survived round 57 and was exhausted in round 58, and attacks first moved to Lancers in round 59;
+- even at the attacker-favourable corner, minxxx Infantry started round 58 at `3.3461`, well clear of the earlier-target-transition boundary.
+
+Because the two dominance corners preserve the same extinction schedule, every intermediate stat vector is bounded between their 218 and 219 outcomes under the residue-safe arithmetic. The independent hidden-stat box therefore does **not** explain 200 by itself. Reaching 200 inside that box requires the separate and currently unverified behavior that a machine-scale post-subtraction residue remains a living target.
+
 ### Original Wu Ranged Strike counterfactual sweep
 
 Ranged Strike is configured as 10% damage up for Marksmen against Infantry. Changing its value is a diagnostic counterfactual, not evidence that its real value differs from 10%.
@@ -164,7 +188,7 @@ The source allocation is close and the final survivor result is exact. This supp
 - Every normal attack uses its source troop count snapshotted at round start; units killed earlier in the round still make their scheduled attack.
 - `dealerTroops = ceil(positive round-start source troops)` for the damage army term.
 - The count contribution is `ceil(sqrt(dealerTroops × minInitialArmy))`, where `minInitialArmy` is the smaller initial total army.
-- Raw damage is currently ceiled to three decimal places per damage job.
+- Raw damage is currently kept at float64 precision per damage job; near-integer output/source ceilings ignore machine-scale residue.
 - A target is selected from the round-start troop snapshot. If earlier same-round jobs exhaust that locked target, a later job is skipped rather than retargeted.
 - Remaining result troop counts are ceiled for output.
 - The loop remains side-major: attacker Infantry/Lancer/Marksman, then defender Infantry/Lancer/Marksman. A diagnostic unit-major reorder did not change the original Wu result because round-start attack snapshots still preserved the relevant attacks.
@@ -204,7 +228,7 @@ Near-zero cutoffs become rapidly worse as the threshold grows. Percentage/absolu
 
 ## What remains unresolved
 
-1. **Does the plausible hidden-stat region reach the game's 200-result shelf?** The existing one-dimensional ±0.05 adjustment only reaches 218. A per-stat uncertainty analysis has not been run.
+1. **Does the game keep machine-scale post-subtraction residue targetable?** The per-stat audit reaches 200 only when approximately `5.7e-14` WIP Infantry remains eligible to absorb the next round. Normalizing that residue constrains the independent hidden-stat box to 218–219.
 2. **What exact count/precision rule does the game use for a small positive troop remainder?** Current simulator uses fractional state plus ceiled positive source count. The observed cliff is compatible with several nearby alternatives, but none is confirmed.
 3. **Are there other mixed-target cases whose apparent residuals are input-precision boundary artifacts?** This has not been audited systematically.
 4. **Can in-game damage rounding be inferred at all from 1dp report stats?** Only if candidate rounding models remain separated after shared hidden-stat uncertainty is included.
