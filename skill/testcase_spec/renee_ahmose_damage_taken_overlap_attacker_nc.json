@@ -1,0 +1,28 @@
+{
+  "test_id": "renee_ahmose_damage_taken_overlap_attacker_nc",
+  "description": "Deterministic Renee/Ahmose damage-taken bucket overlap discriminator frozen before capture. minxxx attacks WIP with Ahmose 1/1/3 and Renee 4/4/4, fielding 4000 T6 Infantry plus 500 T6 Lancers into 13400 T6 Infantry. Infantry attacks before Lancers; Blade of Light contributes 15% active.hero.damageTaken.up to the shared target before every eligible Renee marked Lancer attack. Using current account stats, Renee sharing active.hero.damageTaken.up with Ahmose predicts minxxx wins with 3757-3759 total survivors; Renee in a separate numerator bucket predicts 3809-3811. Both candidates leave all 500 Lancers and more than 3200 Ahmose Infantry alive, so the target dies first. Capture exact report stats, then rerun these unchanged candidate mechanics before interpreting the observation.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Ahmose": {},
+      "Renee": {}
+    },
+    "troops": {
+      "infantry_t6": 4000,
+      "lancer_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 13400
+    }
+  }
+}

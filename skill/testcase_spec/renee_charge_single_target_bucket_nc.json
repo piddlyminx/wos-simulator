@@ -1,0 +1,26 @@
+{
+  "test_id": "renee_charge_single_target_bucket_nc",
+  "description": "Deterministic Renee/Charge bucket discriminator frozen before capture. WIP attacks minxxx with Renee 3/3/3, fielding 500 T6 Lancers into 1490 T6 Marksmen. Charge contributes 10% in type.single_target.damage.up on every Lancer-to-Marksman job. Using stats from the preceding Renee/Gwen capture, Renee in active.hero.damageTaken.up predicts WIP wins with about 52 Lancers because Charge and Renee multiply across buckets; Renee in type.single_target.damage.up predicts minxxx wins with about 49 Marksmen because Charge and Renee add within one bucket. Capture exact report stats, then rerun these unchanged candidate mechanics before interpreting the observation.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Renee": {}
+    },
+    "troops": {
+      "lancer_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "marksman_t6": 1490
+    }
+  }
+}
