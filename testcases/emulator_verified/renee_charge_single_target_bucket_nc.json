@@ -1,0 +1,74 @@
+[
+  {
+    "test_id": "renee_charge_single_target_bucket_nc",
+    "description": "Deterministic Renee/Charge bucket discriminator frozen before capture. WIP attacks minxxx with Renee 3/3/3, fielding 500 T6 Lancers into 1490 T6 Marksmen. Charge contributes 10% in type.single_target.damage.up on every Lancer-to-Marksman job. Using stats from the preceding Renee/Gwen capture, Renee in active.hero.damageTaken.up predicts WIP wins with about 52 Lancers because Charge and Renee multiply across buckets; Renee in type.single_target.damage.up predicts minxxx wins with about 49 Marksmen because Charge and Renee add within one bucket. Capture exact report stats, then rerun these unchanged candidate mechanics before interpreting the observation.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "lancer_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.2,
+          "health": 181.8
+        },
+        "lanc": {
+          "attack": 460.1,
+          "defense": 457.9,
+          "lethality": 243.2,
+          "health": 228.3
+        },
+        "mark": {
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.7,
+          "health": 176.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 1490
+      },
+      "stats": {
+        "inf": {
+          "attack": 290.7,
+          "defense": 274.5,
+          "lethality": 226.3,
+          "health": 221.0
+        },
+        "lanc": {
+          "attack": 283.2,
+          "defense": 273.5,
+          "lethality": 216.2,
+          "health": 217.5
+        },
+        "mark": {
+          "attack": 289.0,
+          "defense": 281.0,
+          "lethality": 226.3,
+          "health": 221.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 50,
+        "defender": 0
+      }
+    ]
+  }
+]
