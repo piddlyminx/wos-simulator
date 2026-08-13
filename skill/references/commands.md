@@ -64,19 +64,25 @@ Report capture:
 Testcase collection:
 
 ```bash
+# Deterministic battle: one run
 ./scripts/wosctl run-battle testcase_spec/example.json
-./scripts/wosctl run-battle testcase_spec/example.json --repeat 10
+# Stochastic battle: five runs by default
+./scripts/wosctl run-battle testcase_spec/example.json --repeat 5
 ./scripts/wosctl create-testcase testcase_spec/example.json --tab war --index 1
 ./scripts/wosctl create-testcase testcase_spec/example.json --report captures/my-report.json
 ./scripts/wosctl create-testcase testcase_spec/example.json --images captures/saved-report
+# End-to-end deterministic testcase: one capture
 ./scripts/wosctl run-testcase testcase_spec/example.json
-./scripts/wosctl run-testcase testcase_spec/example.json --repeat 10
+# End-to-end stochastic testcase: five captures by default
+./scripts/wosctl run-testcase testcase_spec/example.json --repeat 5
 ./scripts/wosctl run-testcase testcase_spec/example.json --dry-run
 ```
 
 `run-battle` stops after a new report is detected. `create-testcase` can capture any selected existing inbox report, consume previously parsed report JSON, or parse saved screenshots. `run-testcase` is the convenience composition of run, capture, and create.
 
 Only `create-testcase` and `run-testcase` append observations under `game_report_result`. None of these commands runs the TypeScript simulator or writes `sim_result`.
+
+Capture counts and match criteria are defined in [Testcase Evidence Policy](../knowledge/testcase-evidence-policy.md). The examples above show its normal command forms.
 
 Simulator comparison is separate and runs from the repo root:
 

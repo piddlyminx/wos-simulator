@@ -1,6 +1,6 @@
 {
   "test_id": "wos444_gordon_s22_all_enemy_damage_dealt_control_nc",
-  "description": "WOS-444 exact no-hero control for Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends 2560 T6 lancer. Same accounts, roles, troop counts, and report path as the paired hero fixture.",
+  "description": "WOS-444 no-hero baseline for the Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends 2560 T6 lancer.",
   "emulator": {
     "attacker": { "instance": "WIP" },
     "defender": { "instance": "minxxx" }

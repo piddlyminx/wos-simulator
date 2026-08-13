@@ -1,7 +1,7 @@
 [
   {
     "test_id": "wos451_bradley_s21_lancer_damage_up_control",
-    "description": "WOS-451 paired no-hero control for Bradley S2/1 damage-to-lancer-up bucket discriminator. WIP attacks minxxx with 2800 T6 marksmen into 1040 T6 lancers, matching the hero fixture accounts, roles, troop counts, and report path.",
+    "description": "WOS-451 no-hero baseline for the Bradley S2/1 damage-to-lancer-up bucket discriminator. WIP attacks minxxx with 2800 T6 marksmen into 1040 T6 lancers.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},

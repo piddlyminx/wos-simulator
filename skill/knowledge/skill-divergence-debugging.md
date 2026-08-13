@@ -4,9 +4,11 @@
 
 Read this before changing simulator code, hero config, troop-skill config, report parsing, or dashboard thresholds because a testcase differs from the game.
 
+Use [Testcase Evidence Policy](testcase-evidence-policy.md) for capture counts and match criteria. This document covers diagnosis after the comparison has been classified.
+
 Core rule:
 
-> If no-hero controls pass, assume the remaining divergence is skill semantics, target selection, timing, chance, stale data, or report parsing until evidence proves otherwise.
+> Establish whether the divergence comes from skill behavior, input data, base combat, or report capture before changing simulator semantics.
 
 ## Required Workflow
 
@@ -35,18 +37,11 @@ Record:
 - signed error and absolute error
 - detail artifact or run snapshot path
 
-Do not draw strong conclusions from one stochastic observation.
+### 2. Rule Out Non-Skill Causes
 
-### 2. Check Paired Controls
+Use the existing testcase corpus, captured report fields, traces, and focused simulator probes to check the inputs and shared combat path. Do not make fresh emulator controls a prerequisite for each hero fixture.
 
-Before touching skill data, find or create controls with the same accounts, stats, troop ids, and army scale:
-
-- no-hero single-type control
-- no-hero mixed control if the failing case is mixed
-- role-swapped control if attacker/defender role may matter
-- target-composition control if the case depends on `trigger.target`, `units.applies_vs`, or extra skill target jobs
-
-If controls fail, debug stats, report parsing, troop data, target order, rounding, capping, or bucket aggregation before hero skills.
+If the available evidence points to a base-combat or capture problem, debug stats, report parsing, troop data, target order, rounding, capping, or bucket aggregation before hero skills.
 
 ### 3. Classify The Failure
 

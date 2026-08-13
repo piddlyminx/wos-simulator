@@ -1,7 +1,7 @@
 [
   {
     "test_id": "wos444_bradley_s3_all_troops_damage_control_nc",
-    "description": "WOS-444 exact no-hero control for Bradley S3 all-troops damage-up bucket probe. WIP attacks 2520 each T6 mixed; minxxx defends 900 each T6 mixed. Same accounts, roles, troop counts, and report path as the paired hero fixture.",
+    "description": "WOS-444 no-hero baseline for the Bradley S3 all-troops damage-up bucket probe. WIP attacks 2520 each T6 mixed; minxxx defends 900 each T6 mixed.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
@@ -71,7 +71,7 @@
   },
   {
     "test_id": "wos444_bradley_s3_all_troops_damage_control_nc",
-    "description": "WOS-444 exact no-hero control for revised Bradley S3 all-troops damage-up bucket probe. WIP attacks 2880 each T6 mixed; minxxx defends 900 each T6 mixed. Same accounts, roles, troop counts, and report path as the paired hero fixture.",
+    "description": "WOS-444 no-hero baseline for the Bradley S3 all-troops damage-up bucket probe. WIP attacks 2880 each T6 mixed; minxxx defends 900 each T6 mixed.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},

@@ -26,7 +26,7 @@ npx tsx scripts/run_testcases.ts --matching <pattern> --repeat 100
 npx tsx scripts/run_testcases.ts --matching <pattern> --workers 4 --human
 ```
 
-The runner writes a run snapshot by default and emits a `simulator-parity-summary`.
+The runner emits parity output to stdout by default. Add `--save-snapshot` when the run should persist a summary and case-detail artifacts.
 
 ## Current Runner Shapes
 
@@ -76,22 +76,19 @@ The dashboard is for calibration and regression review. It should answer:
 
 It is not an issue tracker. Do not list active issues in `KNOWLEDGE_INDEX.md`.
 
-## Stochastic Cases
+## Evidence Policy In The Runner And Dashboard
 
-A testcase is stochastic when hydrated simulator skills contain chance triggers. Do not add `_nc` to testcase filenames; the test runner determines stochasticity, not the filename.
+[Testcase Evidence Policy](testcase-evidence-policy.md) owns capture counts and match criteria. The runner and dashboard should expose enough information to apply that policy; they do not define a separate tolerance policy.
 
-For stochastic cases:
+For stochastic cases, preserve simulator sample outcomes and show game observation count, simulator sample count, mean, and variance.
 
-- preserve individual `game_report_result` observations
-- preserve simulator sample outcomes when `--repeat` is used
-- show mean and variance
-- warn if observation count is too low
-- avoid treating a single observation as decisive
-- collect more game observations with `wosctl run-testcase --repeat N` before making semantic changes
+For deterministic cases, show the raw endpoint difference. A generic percentage-based `passes` flag is not sufficient to establish deterministic parity. When a larger but still very small error is accepted through sensitivity evidence, the detail view or linked investigation artifact should identify the varied input and the attainable endpoint.
 
-## Deterministic Controls
+The current runner's automated flags do not encode the complete evidence policy: the main parity metric still has percentage-based deterministic passing, while the stat-adjustment classification recognizes only exact or within-one results. Review deterministic cases against the raw values until those implementations are aligned.
 
-Run and review controls first:
+## Regression Baselines
+
+Existing deterministic baselines remain useful regression coverage:
 
 - no-hero single-type
 - no-hero mixed
@@ -151,8 +148,8 @@ Avoid ambiguous names unless the UI explains the reference next to the value.
 Before accepting a simulator change:
 
 1. Compare current run to the previous snapshot.
-2. Check no-hero controls first.
-3. Check deterministic hero cases next.
+2. Check deterministic cases and their exact or sensitivity-supported parity.
+3. Check relevant regression baselines.
 4. Check stochastic means and variance separately.
 5. Inspect grouped residuals for broad regressions.
 6. Confirm whether default simulation outputs changed.
