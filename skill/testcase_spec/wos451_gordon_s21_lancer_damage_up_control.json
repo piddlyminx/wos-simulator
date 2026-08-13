@@ -1,6 +1,6 @@
 {
   "test_id": "wos451_gordon_s21_lancer_damage_up_control",
-  "description": "WOS-451 paired no-hero control for Gordon S2/1 lancer damage-dealt-up bucket discriminator. minxxx attacks WIP with 360 T6 lancers into 2100 T6 infantry, matching the hero fixture accounts, roles, troop counts, and report path.",
+  "description": "WOS-451 no-hero baseline for the Gordon S2/1 lancer damage-dealt-up bucket discriminator. minxxx attacks WIP with 360 T6 lancers into 2100 T6 infantry.",
   "emulator": {
     "attacker": { "instance": "minxxx" },
     "defender": { "instance": "WIP" }

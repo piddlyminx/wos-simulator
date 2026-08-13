@@ -28,22 +28,11 @@ Use current simulator shapes:
 
 Do not write or expect `sim_result` in captured fixture JSON. Game observations belong under `game_report_result`; simulator output comes from the TypeScript testcase runner.
 
+Use [Testcase Evidence Policy](testcase-evidence-policy.md) to determine emulator capture counts and whether the resulting simulator comparison matches.
+
 ## Practical Isolation Methods
 
-### 1. Paired No-Hero Controls
-
-Every hero fixture should have a same-session no-hero control with the same:
-
-- accounts
-- attacker/defender roles
-- troop ids and counts
-- troop tiers and fire-crystal levels
-- buffs and stat snapshot
-- report-capture path
-
-Use the control to separate skill mismatch from stale stats, troop data, or parser issues.
-
-### 2. Full-Kit Single-Hero Fixtures
+### 1. Full-Kit Single-Hero Fixtures
 
 When possible, test one hero as a full kit against no heroes. Label it accurately:
 
@@ -56,7 +45,7 @@ When possible, test one hero as a full kit against no heroes. Label it accuratel
 
 Do not describe it as an isolated skill test.
 
-### 3. Attacker Composition Gating
+### 2. Attacker Composition Gating
 
 Some effects only trigger for or apply to a source unit. Change the attacking army to make effects eligible or ineligible.
 
@@ -66,7 +55,7 @@ Some effects only trigger for or apply to a source unit. Change the attacking ar
 | Gate lancer effects | lancers present vs no lancers |
 | Test mixed-body interactions | single-type, two-type, and three-type armies |
 
-### 4. Defender Target Gating
+### 3. Defender Target Gating
 
 Some effects depend on target type or generated skill-damage jobs. Change the defender composition.
 
@@ -77,7 +66,7 @@ Some effects depend on target type or generated skill-damage jobs. Change the de
 | Test primary-target inclusion | tiny frontline plus larger backline |
 | Test current-target behavior | setup where frontline changes during the fight |
 
-### 5. Battle-Length Gating
+### 4. Battle-Length Gating
 
 Frequency, delay, and duration bugs often need boundary fights.
 
@@ -92,13 +81,7 @@ expires after N rounds
 expires after N uses
 ```
 
-### 6. Repeated Stochastic Observations
-
-A testcase is stochastic if hydrated skills have `trigger.probability`, regardless of filename.
-
-Store individual game observations, not just the mean. Use enough repeats to estimate mean, variance, min/max, and distribution shape.
-
-### 7. Simulator-Side Ablation
+### 5. Simulator-Side Ablation
 
 Use ablation only to rank likely causes:
 
@@ -121,8 +104,7 @@ Use explicit metadata so future agents do not overinterpret the testcase:
   "skill_isolation": false,
   "expected_stochastic": true,
   "stochastic_reason": ["hydrated trigger.probability"],
-  "stats_snapshot": "fresh for this capture batch",
-  "control_fixture": "matching_nohero_case_id"
+  "stats_snapshot": "fresh for this capture batch"
 }
 ```
 

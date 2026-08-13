@@ -1,7 +1,7 @@
 [
   {
     "test_id": "greg_mia_nohero_control_current",
-    "description": "Greg/Mia Batch 1 exact paired no-hero control. WIP attacks clean; minxxx defends clean. Same troop counts and report path as Greg/Mia full-kit fixtures.",
+    "description": "Greg/Mia Batch 1 no-hero baseline. WIP attacks clean; minxxx defends clean.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
@@ -79,7 +79,7 @@
   },
   {
     "test_id": "greg_mia_nohero_control_current",
-    "description": "Greg/Mia Batch 1 exact paired no-hero control. WIP attacks clean; minxxx defends clean. Same troop counts and report path as Greg/Mia full-kit fixtures.",
+    "description": "Greg/Mia Batch 1 no-hero baseline. WIP attacks clean; minxxx defends clean.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},

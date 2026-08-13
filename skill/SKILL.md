@@ -67,7 +67,7 @@ Read [commands.md](references/commands.md) when you need exact command forms, re
 - `create-testcase <spec.json> --images <directory>` is also offline: it parses saved screenshots and then applies the same testcase validation. Generic image filenames are classified by content; standard capture filenames are accepted directly. Put explicit non-empty skill levels under each spec hero when the screenshots came from an account without saved `player_hero_skills.json` data.
 - Omitting both `--report` and `--images` makes `create-testcase` capture the selected existing report from the attacker instance named in the spec. It does not run a battle first.
 - Use `run-testcase <spec.json>` as the convenience composition for end-to-end in-game data collection.
-- Use `--repeat N` to collect a sensible observation count for the same spec, especially for battles with chance effects or other RNG.
+- Before collecting or interpreting a testcase, follow [Testcase Evidence Policy](knowledge/testcase-evidence-policy.md).
 - `create-testcase` and `run-testcase` append captured game observations under `game_report_result`.
 - Testcase JSON files must not include `sim_result`; simulator output belongs in later analysis, not in captured fixture data.
 - After collecting enough observations, run the TypeScript simulator testcase runner from the monorepo root with `npx tsx scripts/run_testcases.ts --matching <pattern>` to compare against the captured data.

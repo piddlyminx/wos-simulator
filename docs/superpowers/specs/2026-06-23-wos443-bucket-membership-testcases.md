@@ -4,7 +4,7 @@
 
 WOS-443 needs deterministic simulator-designed experiments for the named Edith, Gordon, and Bradley skills. The previous generic WOS-443 fixtures did not satisfy this issue and have been removed.
 
-The method is to patch one target effect at a time into each candidate bucket and simulate a paired fight that includes deterministic reference buckets. The live emulator result should then land near one candidate row. Core physics are presumed correct; if no-hero controls fail, stop and debug stats/report parsing before interpreting bucket membership.
+The method is to patch one target effect at a time into each candidate bucket and simulate a fight that includes deterministic reference buckets. The live emulator result should then land near one candidate row.
 
 ## Relevant files
 
@@ -18,6 +18,7 @@ The method is to patch one target effect at a time into each candidate bucket an
 Before running or interpreting this batch, read:
 
 - `skill/KNOWLEDGE_INDEX.md`
+- `skill/knowledge/testcase-evidence-policy.md`
 - `skill/knowledge/skill-isolation-with-fixed-hero-kits.md`
 - `skill/knowledge/skill-divergence-debugging.md`
 - `skill/knowledge/effect-sensitivity-tracing.md`
@@ -26,7 +27,7 @@ Before running or interpreting this batch, read:
 
 ## Task
 
-Before assigning Battle Runner, confirm which of the runnable probes below should be collected. For every selected probe, Battle Runner must first capture fresh hero skills for both accounts, then run an exact no-hero control with the same accounts, side roles, troop counts, tiers, fire-crystal levels, buffs, and report-capture path.
+Before assigning Battle Runner, confirm which of the runnable probes below should be collected. For every selected probe, Battle Runner must first capture fresh hero skills for both accounts.
 
 The table below records the matrix produced during the investigation. The one-off generator was discarded after use. Any renewed investigation should create focused, reviewable testcases instead of restoring that scratch script. The recorded matrix limited each T6 troop type to 2999.
 
@@ -43,13 +44,13 @@ Outcome is signed remaining score: positive means attacker survivors, negative m
 
 | Target skill | Runnable now? | Troop shape | Candidate outcomes | Minimum gap | Use |
 |---|---:|---|---|---:|---|
-| Edith S1/1 marksman damage taken down (`StrategicBalance/1`) | yes | WIP attacks 2880 marksman; minxxx defends Edith+Sergey+Patrick with 400 marksman | `damageTaken.down` = +498; `defense.up` = +434; `health.up` = +539 | 41 | Battle Runner-ready after exact no-hero control |
+| Edith S1/1 marksman damage taken down (`StrategicBalance/1`) | yes | WIP attacks 2880 marksman; minxxx defends Edith+Sergey+Patrick with 400 marksman | `damageTaken.down` = +498; `defense.up` = +434; `health.up` = +539 | 41 | Battle Runner-ready |
 | Edith S1/2 lancer damage dealt up (`StrategicBalance/2`) | yes | WIP attacks 2520 infantry; minxxx defends Edith+Patrick+Jasser with 390 lancer | `damage.up` = +916; `attack.up` = +937; `lethality.up` = +954 | 17 | Below 20-troop discriminator threshold; do not assign without a stronger design |
 | Edith S2 infantry damage taken down (`Ironclad/1`) | yes | WIP attacks 2880 infantry; minxxx defends Edith+Sergey+Patrick with 900 infantry | `damageTaken.down` = -445; `defense.up` = -450; `health.up` = -440 | 5 | Not acceptable as a bucket discriminator under the troop cap |
 | Gordon S1/1 lancer damage dealt up (`VenomInfusion/1`) | yes | minxxx attacks Gordon+Patrick+Jasser with 200 lancer; WIP defends 1440 infantry | `damage.up` = -512; `attack.up` = -496; `lethality.up` = -513 | 1 | Not acceptable as a bucket discriminator under the troop cap |
 | Gordon S1/2 target damage dealt down (`VenomInfusion/2`) | yes | WIP attacks 2100 lancer; minxxx defends Gordon+Sergey+Lynn with 240 lancer | `damage.down` = +855; `attack.down` = +856; `lethality.down` = +849 | 1 | Not acceptable as a bucket discriminator under the troop cap |
 | Gordon S2/1 lancer damage dealt up (`ChemicalTerror/1`) | yes | minxxx attacks Gordon+Patrick+Jasser with 200 lancer; WIP defends 1440 infantry | `damage.up` = -512; `attack.up` = -496; `lethality.up` = -513 | 1 | Not acceptable as a bucket discriminator under the troop cap |
-| Gordon S2/2 all enemy damage dealt down (`ChemicalTerror/2`) | yes | WIP attacks 2700 each mixed; minxxx defends Gordon+Sergey+Lynn with 2560 lancer | `damage.down` = +558; `attack.down` = +593; `lethality.down` = -143 | 35 | Battle Runner-ready after exact no-hero control |
+| Gordon S2/2 all enemy damage dealt down (`ChemicalTerror/2`) | yes | WIP attacks 2700 each mixed; minxxx defends Gordon+Sergey+Lynn with 2560 lancer | `damage.down` = +558; `attack.down` = +593; `lethality.down` = -143 | 35 | Battle Runner-ready |
 | Gordon S3/1 enemy infantry damage taken up (`ToxicRelease/1`) | no, captured S3=0 | simulator-only: minxxx attacks Gordon+Renee with 240 lancer; WIP defends 360 infantry | `damageTaken.up` = +227; `defense.down` = +227; `health.down` = +227 | 0 | Blocked: current accounts cannot check; also no live reference separates candidates |
 | Gordon S3/2 enemy marksman damage dealt down (`ToxicRelease/2`) | no, captured S3=0 | simulator-only: WIP attacks 1080 marksman; minxxx defends Gordon+Sergey+Lynn with 140 lancer | `damage.down` = +75; `attack.down` = +73; `lethality.down` = +66 | 2 | Blocked by locked S3 and weak separation |
 | Bradley S2/1 damage to lancer up (`PowerShot/1`) | yes | minxxx attacks Bradley+Jasser with 180 marksman; WIP defends 360 lancer | `damage.up` = +153; `attack.up` = +153; `lethality.up` = +153 | 0 | Not acceptable as a bucket discriminator under the troop cap; current config maps this effect to `active.hero.lethality.up` |
@@ -67,10 +68,9 @@ Outcome is signed remaining score: positive means attacker survivors, negative m
 
 - CEO/board confirms whether to run the three capped Battle Runner-ready probes: Edith S1/1, Gordon S2/2, and Bradley S3.
 - Fresh hero skill capture exists for both instances before the batch.
-- Each selected hero fixture has a same-session exact no-hero control.
 - Live observed signed remaining score lands clearly closest to one candidate row and at least 20 troops away from the next candidate row.
 - Any weak or unavailable probe is not assigned as if it proves bucket membership.
-- Any confirmed divergence sent to Simulator Engineer includes hero, skill, candidate bucket rows, observed vs expected survivors, testcase path/control result, and a narrow hypothesis. Remind them core physics are correct.
+- Any confirmed divergence sent to Simulator Engineer includes hero, skill, candidate bucket rows, observed vs expected survivors, testcase path, and a narrow hypothesis. Remind them core physics are correct.
 
 ## Risk notes
 
@@ -85,5 +85,5 @@ Before assigning Battle Runner, request confirmation on this design. After confi
 
 - Commands run and repeat counts.
 - Fresh hero skill capture confirmation.
-- Control survivors, hero fixture survivors, and closest candidate row.
+- Hero fixture survivors and closest candidate row.
 - Any blocker, including troop shortages or missing hero availability.

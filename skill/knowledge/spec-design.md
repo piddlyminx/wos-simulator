@@ -78,7 +78,7 @@ Any spec that changes battle mechanics must say:
 - which controls must not regress
 - whether default simulation outputs are expected to change
 - whether the change affects `DamageJob.kind`, bucket aggregation, selectors, or extra skill jobs
-- how stochastic cases will be evaluated
+- how testcase evidence will be evaluated under [Testcase Evidence Policy](testcase-evidence-policy.md)
 - whether the change is behind an experimental path
 
 Do not ask for broad formula rewrites unless controls support it.
