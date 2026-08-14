@@ -1,0 +1,23 @@
+{
+  "test_id": "gordon_wayne_s1_extra_overlap_nc",
+  "description": "Unresolved Gordon S1 normal-hit versus Wayne extra-hit scope discriminator. minxxx attacks WIP with Gordon 2/2/1 and Wayne 1/0/0, fielding 2000 T6 lancers into 6000 T6 lancers. Captured result: 39 rounds from Gordon 19/13/9, Wayne 9 activations, and attacker 883 survivors. The current normal-only simulator produces 892 survivors in 38 rounds. All 256 +/-0.049 corners of the eight relevant displayed Lancer stats remain at 38 rounds and produce 891-894 survivors, so no corner attains the observation. Corner checks alone do not prove the complete non-monotonic interior envelope; a valid interior or dominance audit is still required. Do not infer Gordon S1's scope from this testcase until the deterministic endpoint residual is explained.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": {
+      "Gordon": {},
+      "Wayne": {}
+    },
+    "troops": {
+      "lancer_t6": 260
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "lancer_t6": 1000
+    }
+  }
+}
