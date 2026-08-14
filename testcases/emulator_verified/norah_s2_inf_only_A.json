@@ -1,33 +1,33 @@
 [
   {
     "test_id": "norah_s2_inf_only_A",
-    "description": "WOS-27: Norah S2 isolation test \u2014 Scenario A (Norah active). WIP infantry-only 1500 t6 attacks minxxx 50/50/50 t6 with Norah S2 level 1. Purpose: determine if Norah S2 extra_vs_all hits the primary target (lancer vs infantry = primary hit). Compare survivors to Scenario B (no heroes). Config chosen for ~61% winner casualties and ~23-troop A-B delta.",
+    "description": "WOS-27: Norah S2 primary-target test. WIP attacks with 1,000 T6 infantry and no heroes; minxxx defends with 50/50/50 T6 and Norah 2/2/2. Four captured endpoints are 643, 643, 646, and 645 WIP infantry survivors. Battle Details recorded 20, 21, 16, and 16 S2 procs across the four runs (the two 643 runs had 20 and 21), with 3 displayed kills at the game's 35% reporting scale in every run.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {},
       "troops": {
-        "infantry_t6": 1500,
+        "infantry_t6": 1000,
         "lancer_t6": 0,
         "marksman_t6": 0
       },
       "stats": {
         "inf": {
-          "attack": 73.8,
-          "defense": 76.4,
-          "lethality": 31.1,
-          "health": 38.1
+          "attack": 230.5,
+          "defense": 230.3,
+          "lethality": 171.3,
+          "health": 181.9
         },
         "lanc": {
-          "attack": 78.8,
-          "defense": 71.2,
-          "lethality": 38.1,
-          "health": 28.8
+          "attack": 203.8,
+          "defense": 201.6,
+          "lethality": 181.4,
+          "health": 181.3
         },
         "mark": {
-          "attack": 83.3,
-          "defense": 69.9,
-          "lethality": 37.6,
-          "health": 29.4
+          "attack": 208.0,
+          "defense": 204.8,
+          "lethality": 175.8,
+          "health": 176.6
         }
       },
       "joiner_heroes": {}
@@ -36,9 +36,9 @@
       "name": "[ARK]Piddilyminxxx",
       "heroes": {
         "Norah": {
-          "skill_1": 1,
-          "skill_2": 1,
-          "skill_3": 0
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2
         }
       },
       "troops": {
@@ -48,41 +48,41 @@
       },
       "stats": {
         "inf": {
-          "attack": 209.9,
-          "defense": 202.2,
-          "lethality": 118.1,
-          "health": 131.2
+          "attack": 282.7,
+          "defense": 279.5,
+          "lethality": 226.3,
+          "health": 221.0
         },
         "lanc": {
-          "attack": 275.5,
-          "defense": 278.8,
-          "lethality": 120.3,
-          "health": 121.1
+          "attack": 447.1,
+          "defense": 450.4,
+          "lethality": 216.2,
+          "health": 217.5
         },
         "mark": {
-          "attack": 200.9,
-          "defense": 203.2,
-          "lethality": 123.0,
-          "health": 124.0
+          "attack": 281.0,
+          "defense": 286.0,
+          "lethality": 226.3,
+          "health": 221.4
         }
       },
       "joiner_heroes": {}
     },
     "game_report_result": [
       {
-        "attacker": 111,
+        "attacker": 643,
         "defender": 0
       },
       {
-        "attacker": 94,
+        "attacker": 643,
         "defender": 0
       },
       {
-        "attacker": 95,
+        "attacker": 646,
         "defender": 0
       },
       {
-        "attacker": 94,
+        "attacker": 645,
         "defender": 0
       }
     ]
