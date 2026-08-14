@@ -64,11 +64,6 @@
             "applies_to": "trigger.source",
             "applies_vs": "any"
           },
-          "duration": {
-            "turns": {
-              "count": 1
-            }
-          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",

@@ -375,6 +375,36 @@ test("runPrepared calculates all same-round damage from the round-start troop sn
   assert.equal(normalAttacks[1]?.trace?.roundStartTroops.defender.infantry, 1);
 });
 
+test("normal attacks execute troop-major, alternating attacker and defender within each troop type", () => {
+  const result = runOnce(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 1_000, lancer_t1: 1_000, marksman_t1: 1_000 },
+        heroes: {}
+      },
+      defender: {
+        troops: { infantry_t1: 1_000, lancer_t1: 1_000, marksman_t1: 1_000 },
+        heroes: {}
+      }
+    },
+    minimalConfig(),
+    { mode: "trace" }
+  );
+
+  assert.deepEqual(
+    result.trace?.rounds[0]?.intents.map((intent) => [intent.dealerSide, intent.dealerUnit]),
+    [
+      ["attacker", "infantry"],
+      ["defender", "infantry"],
+      ["attacker", "lancer"],
+      ["defender", "lancer"],
+      ["attacker", "marksman"],
+      ["defender", "marksman"]
+    ]
+  );
+});
+
 test("runPrepared skips later attacks against same-round exhausted targets only", () => {
   const result = runOnce(
     {
@@ -1321,7 +1351,7 @@ test("dodge zeroes attacks targeting that unit without cancelling the attack", (
   );
 });
 
-test("attack-triggered controls do not retroactively affect an earlier same-round attack", () => {
+test("attack-triggered dodge applies to the normal attack that triggered it", () => {
   const result = runOnce(
     {
       maxRounds: 1,
@@ -1339,12 +1369,12 @@ test("attack-triggered controls do not retroactively affect an earlier same-roun
         name: "ReactiveDodge",
         skills: {
           StepAside: {
-            trigger: { type: "attack", source: "infantry" },
+            trigger: { type: "attack", source: "enemy.any", target: "self.infantry" },
             effects: {
               evade: {
                 type: "dodge",
-                units: { applies_to: "self.infantry", applies_vs: "any" },
-                duration: { turns: { count: 1 } }
+                units: { applies_to: "trigger.target", applies_vs: "trigger.source" },
+                duration: { attacks: { count: 1 } }
               }
             }
           }
@@ -1353,7 +1383,12 @@ test("attack-triggered controls do not retroactively affect an earlier same-roun
     })
   );
 
-  assert.equal(result.attacks.some((attack) => attack.dodged), false);
+  assert.deepEqual(
+    result.attacks.filter((attack) => attack.dodged).map((attack) => [attack.dealerSide, attack.dealerUnit, attack.takerSide, attack.takerUnit]),
+    [["attacker", "infantry", "defender", "infantry"]]
+  );
+  assert.equal(result.attackControlCounts.dodge, 1);
+  assert.equal(result.skillReport.defender.find((entry) => entry.skillId === "StepAside")?.skillActivations, 1);
 });
 
 test("attack-duration effects charged on a cancelled attack unless useEffectsOnNoAttack is disabled", () => {
@@ -2375,13 +2410,16 @@ test("attack-triggered extra skill attacks activate then resolve trigger damage 
   const jobs = result.trace?.rounds[0]?.jobs ?? [];
   const normalJobs = jobs.filter((job) => job.kind === "normal");
   const skillJobs = jobs.filter((job) => job.kind === "skill");
+  const triggeringNormal = normalJobs.find(
+    (job) => job.dealerSide === "attacker" && job.dealerUnit === "marksman"
+  );
 
   assert.equal(normalJobs.length, 2);
   assert.equal(skillJobs.length, 1);
-  assert.equal(skillJobs[0]?.dealerSide, normalJobs[0]?.dealerSide);
-  assert.equal(skillJobs[0]?.dealerUnit, normalJobs[0]?.dealerUnit);
-  assert.equal(skillJobs[0]?.takerSide, normalJobs[0]?.takerSide);
-  assert.equal(skillJobs[0]?.takerUnit, normalJobs[0]?.takerUnit);
+  assert.equal(skillJobs[0]?.dealerSide, triggeringNormal?.dealerSide);
+  assert.equal(skillJobs[0]?.dealerUnit, triggeringNormal?.dealerUnit);
+  assert.equal(skillJobs[0]?.takerSide, triggeringNormal?.takerSide);
+  assert.equal(skillJobs[0]?.takerUnit, triggeringNormal?.takerUnit);
 });
 
 test("deferred shields use finalized normal plus linked skill kills as one next-turn pool", () => {
@@ -2794,7 +2832,7 @@ test("extra skill attack applies_vs must match the current normal attack target"
   const jobs = result.trace?.rounds[0]?.jobs ?? [];
   assert.deepEqual(
     jobs.map((job) => `${job.kind}:${job.dealerUnit}->${job.takerUnit}`),
-    ["normal:marksman->infantry", "normal:infantry->marksman", "normal:lancer->marksman"]
+    ["normal:infantry->marksman", "normal:lancer->marksman", "normal:marksman->infantry"]
   );
   assert.deepEqual(result.extraSkillAttackJobsByEffect, {});
 });

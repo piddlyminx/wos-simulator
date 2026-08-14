@@ -258,11 +258,6 @@
             ],
             "applies_vs": "trigger.target"
           },
-          "duration": {
-            "attacks": {
-              "count": 1
-            }
-          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",
@@ -429,11 +424,6 @@
               "marksman"
             ],
             "applies_vs": "trigger.target"
-          },
-          "duration": {
-            "attacks": {
-              "count": 1
-            }
           },
           "trigger_damage_jobs": [
             {

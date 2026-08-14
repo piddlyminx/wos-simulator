@@ -75,12 +75,6 @@ interface CancelledAttack {
   control: Control;
 }
 
-interface ApplicableControls {
-  dodge?: Control;
-  no_attack?: Control;
-  attackDurationEffects: ActiveEffect[];
-}
-
 interface Control {
   effect: ActiveEffect;
   reason: "dodge" | "no_attack";
@@ -266,17 +260,25 @@ function runLoop(
 
     // Resolve each normal attack as one procedural cluster. Later attacks observe effects
     // produced by earlier attacks; no synthetic global attack-declaration phase exists.
-    for (const side of ["attacker", "defender"] as SideId[]) {
-      const takerSide = oppositeSide(side);
-      let orderIndex = 0;
-      for (const dealerUnit of UNIT_TYPES) {
+    const orderIndexBySide: Record<SideId, number> = { attacker: 0, defender: 0 };
+    for (const dealerUnit of UNIT_TYPES) {
+      for (const side of ["attacker", "defender"] as SideId[]) {
+        const takerSide = oppositeSide(side);
         if ((roundStartTroops[side][dealerUnit] ?? 0) <= 0) continue;
         const ordered = orderFromEffects(dealerUnit, side, runtime.effectIndex, true);
         const takerUnit = firstLivingUnit(ordered?.order ?? UNIT_TYPES, takerSide, roundStartTroops);
         if (!takerUnit) continue;
-        const intent = makeNormalIntent(round, side, dealerUnit, takerSide, takerUnit, orderIndex, runtime);
+        const intent = makeNormalIntent(
+          round,
+          side,
+          dealerUnit,
+          takerSide,
+          takerUnit,
+          orderIndexBySide[side],
+          runtime
+        );
         intents.push(intent);
-        orderIndex += 1;
+        orderIndexBySide[side] += 1;
         if (ordered) {
           materializeTriggeredEffects(ordered.effect, round, intent, runtime, recorder);
           chargeEffectUse(runtime, ordered.effect);
@@ -286,11 +288,11 @@ function runLoop(
         const job = normalJob(intent, roundStartTroops);
         if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
 
-        // Controls are snapshotted before this attack's triggers. no_attack suppresses the
-        // attack entirely; dodge still permits cadence triggers, children, and extra jobs.
-        const controls = applicableControls(job, runtime);
-        if (controls.no_attack) {
-          const control = controls.no_attack;
+        // A pre-existing no_attack prevents the attack from being declared at all.
+        // Reactive dodge skills instead roll on this declaration and can dodge this job.
+        const noAttack = applicableControl(job, runtime, "no_attack");
+        if (noAttack) {
+          const control = noAttack;
           runtime.attackControlCounts.no_attack += 1;
           materializeTriggeredEffects(control.effect, round, intent, runtime, recorder);
           if (useEffectsOnCancel.no_attack) chargeCancelledAttack(job, control.effect, control.attackDurationEffects, runtime);
@@ -304,13 +306,14 @@ function runLoop(
         const deferredEffects = matchingTriggerSkills
           ? triggerAttackSkills(round, matchingTriggerSkills, runtime, recorder, intent)
           : undefined;
+        const dodge = applicableControl(job, runtime, "dodge");
         fireApplicableCarriers(round, job, intent, runtime, recorder);
 
         let normalKills = 0;
-        if (controls.dodge) {
+        if (dodge) {
           runtime.attackControlCounts.dodge += 1;
-          materializeTriggeredEffects(controls.dodge.effect, round, intent, runtime, recorder);
-          if (useEffectsOnCancel.dodge) chargeCancelledAttack(job, controls.dodge.effect, controls.dodge.attackDurationEffects, runtime);
+          materializeTriggeredEffects(dodge.effect, round, intent, runtime, recorder);
+          if (useEffectsOnCancel.dodge) chargeCancelledAttack(job, dodge.effect, dodge.attackDurationEffects, runtime);
         } else {
           recorder.recordScheduledDamageJob(job);
           const normalResult = calculateDamageJob(job, fighters, damageJobOptions);
@@ -340,7 +343,7 @@ function runLoop(
             recorder
           );
         }
-        if (controls.dodge) recorder.recordDodged(intent, job, controls.dodge.effect);
+        if (dodge) recorder.recordDodged(intent, job, dodge.effect);
       }
     }
 
@@ -462,27 +465,25 @@ function orderFromEffects(
   return undefined;
 }
 
-// Shared empty result for the common no-control-effects case; callers only read it.
-const NO_APPLICABLE_CONTROLS: ApplicableControls = { attackDurationEffects: [] };
-
-function applicableControls(
+function applicableControl(
   job: DamageJob,
-  runtime: Runtime
-): ApplicableControls {
-  if (runtime.effectIndex.controls.length === 0) return NO_APPLICABLE_CONTROLS;
-  const controls: ApplicableControls = { attackDurationEffects: [] };
+  runtime: Runtime,
+  reason: Control["reason"]
+): Control | undefined {
+  const attackDurationEffects: ActiveEffect[] = [];
+  let selected: Control | undefined;
   for (const effect of runtime.effectIndex.controls) {
-    const reason = controlType(effect);
+    if (controlType(effect) !== reason) continue;
     if (!controlEffectApplies(effect, job, reason)) continue;
     if (!advanceEffectAttackDelay(effect)) continue;
-    if (hasAttackDurationConstraint(effect)) controls.attackDurationEffects.push(effect);
-    controls[reason] = {
+    if (hasAttackDurationConstraint(effect)) attackDurationEffects.push(effect);
+    selected = {
       effect,
       reason,
-      attackDurationEffects: controls.attackDurationEffects
+      attackDurationEffects
     };
   }
-  return controls;
+  return selected;
 }
 
 function controlType(effect: ActiveEffect): "dodge" | "no_attack" {

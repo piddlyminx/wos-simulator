@@ -46,11 +46,6 @@
             "applies_to": "trigger.source",
             "applies_vs": "trigger.target"
           },
-          "duration": {
-            "attacks": {
-              "count": 1
-            }
-          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",
@@ -87,6 +82,7 @@
       "description": "Gwen equips her Marksmen with grenades, dealing X% extra damage to all enemies on the next attack of every 4 attacks",
       "trigger": {
         "type": "attack",
+        "first": 5,
         "every": 4,
         "source": "marksman"
       },
@@ -104,14 +100,6 @@
             "applies_to": [
               "marksman"
             ]
-          },
-          "duration": {
-            "turns": {
-              "delay": 1
-            },
-            "attacks": {
-              "count": 1
-            }
           },
           "trigger_damage_jobs": [
             {

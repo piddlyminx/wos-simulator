@@ -26,7 +26,7 @@
           "type": "active.hero.defense.up",
           "value": [10, 20, 30, 40, 50],
           "units": { "applies_to": "trigger.source" },
-          "duration": { "turns": { "count": 1 } },
+          "duration": { "turns": { "delay": 1, "count": 1 } },
           "same_effect_stacking": "max"
         }
       }

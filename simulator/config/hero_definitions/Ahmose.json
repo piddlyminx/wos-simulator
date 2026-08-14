@@ -134,6 +134,7 @@
           },
           "duration": {
             "turns": {
+              "delay": 1,
               "count": 1
             }
           },
