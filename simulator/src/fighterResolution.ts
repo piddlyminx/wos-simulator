@@ -105,6 +105,15 @@ function resolveInputStatBonuses(stats: FighterInput["stats"]): Record<UnitType,
 // Build-time scaffolding: fold each MAIN hero's generation-stat block into the stat block for
 // that hero's troop type, so the simulator can treat FighterInput.stats as authoritative.
 export function applyHeroGenerationStats(input: FighterInput, config: SimulatorConfig): FighterInput {
+  return adjustHeroGenerationStats(input, config, 1);
+}
+
+/** Remove already-included main-hero generation stats to recover a hero-neutral input. */
+export function removeHeroGenerationStats(input: FighterInput, config: SimulatorConfig): FighterInput {
+  return adjustHeroGenerationStats(input, config, -1);
+}
+
+function adjustHeroGenerationStats(input: FighterInput, config: SimulatorConfig, direction: 1 | -1): FighterInput {
   const stats = resolveInputStatBonuses(input.stats);
   for (const instance of heroInputInstances(input)) {
     if (instance.role !== "main") continue;
@@ -119,7 +128,13 @@ export function applyHeroGenerationStats(input: FighterInput, config: SimulatorC
       throw new Error(`Hero ${definition.name ?? instance.name} has hero_generation ${generation} but no troop_type`);
     }
     const unit = normalizeUnitType(String(definition.troop_type));
-    stats[unit] = addStats(stats[unit], normalizeStatBlock(generationStats as Record<string, unknown>));
+    const adjustment = normalizeStatBlock(generationStats as Record<string, unknown>);
+    stats[unit] = addStats(stats[unit], {
+      attack: direction * adjustment.attack,
+      defense: direction * adjustment.defense,
+      lethality: direction * adjustment.lethality,
+      health: direction * adjustment.health
+    });
   }
   return { ...input, stats };
 }
