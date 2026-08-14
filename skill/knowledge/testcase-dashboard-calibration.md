@@ -82,7 +82,7 @@ It is not an issue tracker. Do not list active issues in `KNOWLEDGE_INDEX.md`.
 
 For stochastic cases, preserve simulator sample outcomes and show game observation count, simulator sample count, mean, and variance.
 
-For deterministic cases, show the raw endpoint difference. A generic percentage-based `passes` flag is not sufficient to establish deterministic parity. When a larger but still very small error is accepted through sensitivity evidence, the detail view or linked investigation artifact should identify the varied input and the attainable endpoint.
+For deterministic cases, show the raw survivor endpoint and round count. Treat source-attributed kills and other Battle Details fields as diagnostics for that same trajectory, not as independent parity results. A generic percentage-based `passes` flag is not sufficient to establish deterministic parity. When a larger but still very small error is accepted through sensitivity evidence, the detail view or linked investigation artifact should identify the plausible input interval, the battle-state discontinuity inside it, and the in-range input that attains the exact game endpoint.
 
 The current runner's automated flags do not encode the complete evidence policy: the main parity metric still has percentage-based deterministic passing, while the stat-adjustment classification recognizes only exact or within-one results. Review deterministic cases against the raw values until those implementations are aligned.
 

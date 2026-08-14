@@ -43,6 +43,10 @@ Use the existing testcase corpus, captured report fields, traces, and focused si
 
 If the available evidence points to a base-combat or capture problem, debug stats, report parsing, troop data, target order, rounding, capping, or bucket aggregation before hero skills.
 
+For a deterministic skill discriminator, the survivor endpoint remains the primary result. Activation counts and source-attributed kills explain the trajectory; they do not form independent confirmation of the skill when the endpoint is wrong. Before drawing the skill conclusion, apply the larger-error rule in [Testcase Evidence Policy](testcase-evidence-policy.md): show that plausible captured-input uncertainty crosses the relevant state discontinuity and attains the observed endpoint. Otherwise retain the testcase as an unresolved deterministic mismatch.
+
+Do not confuse ordinary terminal elimination with target exhaustion. Target exhaustion is specifically the mixed-unit scheduling case where a later attack remains locked to a troop line exhausted by an earlier same-round attack. A single-line battle ending because its last enemy line dies has reached the normal win condition; only a change in which final round it dies on is a potential final-round discontinuity.
+
 ### 3. Classify The Failure
 
 | Pattern | First suspicion |

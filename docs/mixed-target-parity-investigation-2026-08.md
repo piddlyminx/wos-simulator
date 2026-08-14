@@ -54,6 +54,8 @@ These rules create sharp state transitions. A tiny damage change can:
 
 This is not Wu-specific. The same shelf-and-jump behavior was reproduced without Wu once enough Marksmen were present to cross the defender Infantry extinction boundary.
 
+Here, **troop-line exhaustion** means that defending Infantry reaches zero while defending Lancers still remain. **Target exhaustion** is the narrower same-round scheduling event: an attack selected Infantry from the round-start snapshot, an earlier attack exhausts Infantry, and the later locked attack now has no live target. It does not mean ordinary terminal elimination of the last enemy line. Most conclusive battles end through terminal elimination because that is the win condition.
+
 ### 4. The testcase inputs are not precise enough to infer small arithmetic details directly
 
 Battle reports display each Attack, Defense, Lethality, and Health bonus to one decimal place. The underlying value is therefore approximately within `displayed ± 0.05`. Across two sides, three troop types, and four stats, a mixed testcase can contain up to 24 hidden rounding residuals.
@@ -162,6 +164,8 @@ A single-target control against only Infantry, sweeping Marksman count from 100�
 
 The game report's troop-line `Kills` values approximately show the 35% seriously-injured share of casualties; the losing side's other 65% is restored as lightly injured. Treat these as rounded report values, not exact raw casualties.
 
+These values decompose the same casualty trajectory represented by the final survivor endpoint. They are useful for locating which source or target transition accounts for a residual, but they are not an independent parity result and cannot override an unexplained deterministic survivor mismatch.
+
 Original Wu solo:
 
 | Attacker source | Game report kills | Simulator raw kills × 0.35 |
@@ -255,7 +259,7 @@ The full independent box may include combinations not achievable from shared bon
 
 ### 2. Reassess rounding only on stable evidence
 
-Use short, deterministic, T6, preferably single-line paired battles with the same accounts and unchanged stats. Avoid target extinction, winner-round, and integer-source-count boundaries. Candidate rounding models should use the same hidden stat values across a linked set of battles and be validated on held-out battles; do not fit hidden stats separately per testcase.
+Use short, deterministic, T6, preferably single-line paired battles with the same accounts and unchanged stats. When rounding is the question, avoid unrelated discontinuities: mixed-line target exhaustion, a final-round transition inside the plausible input interval, or an integer source-count transition. This is not an instruction to avoid terminal elimination; terminal elimination is the normal win condition. It means that a rounding experiment should not rely on an unrelated schedule change unless that boundary is explicitly modelled and is itself the subject of the test. Candidate rounding models should use the same hidden stat values across a linked set of battles and be validated on held-out battles; do not fit hidden stats separately per testcase.
 
 ### 3. Do not change Wu or retargeting from current evidence
 
