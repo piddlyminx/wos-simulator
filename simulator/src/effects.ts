@@ -126,8 +126,8 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
   const ownerSide = skill.side;
   const staticAppliesTo = resolveUnitScope(units.applies_to, ownerSide, "applies_to", undefined, ownerSide);
   const staticAppliesVs = resolveUnitScope(units.applies_vs, oppositeSide(staticAppliesTo.side), "applies_vs", undefined, ownerSide);
-  const duration = normalizeDuration(intent.duration);
   const effectKind = kindForIntent(intent);
+  const duration = normalizeDuration(intent.duration, effectKind);
   if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
     throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
   }
@@ -354,8 +354,12 @@ function kindForIntent(intent: EffectIntentDefinition): ActiveEffectKind {
   return "modifier";
 }
 
-function normalizeDuration(duration: EffectIntentDefinition["duration"]): EffectDuration {
-  if (!duration) return {};
+function normalizeDuration(duration: EffectIntentDefinition["duration"], effectKind: ActiveEffectKind): EffectDuration {
+  if (duration === undefined) {
+    return effectKind === "extra_attack"
+      ? { turns: { count: 1 }, attacks: { count: 1 } }
+      : {};
+  }
   return {
     ...(duration.turns ? { turns: normalizeDurationAxis(duration.turns) } : {}),
     ...(duration.attacks ? { attacks: normalizeDurationAxis(duration.attacks) } : {})

@@ -42,11 +42,6 @@
             "applies_to": "trigger.source",
             "applies_vs": "trigger.target"
           },
-          "duration": {
-            "attacks": {
-              "count": 1
-            }
-          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",
@@ -93,14 +88,6 @@
             "applies_to": "self.lancer",
             "applies_vs": "enemy.any"
           },
-          "duration": {
-            "turns": {
-              "count": 1
-            },
-            "attacks": {
-              "count": 1
-            }
-          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",
@@ -112,7 +99,7 @@
               "type": "no_attack",
               "units": {
                 "applies_to": "parent.use.target",
-                "applies_vs": "parent.use.source"
+                "applies_vs": "any"
               },
               "duration": {
                 "turns": {

@@ -28,7 +28,6 @@
             "applies_to": "self.marksman",
             "applies_vs": "enemy.any"
           },
-          "duration": { "turns": { "count": 1 }, "attacks": { "count": 1 } },
           "trigger_damage_jobs": [
             { "source": "use.source", "target": "use.target" }
           ]
@@ -50,7 +49,6 @@
             "applies_to": "trigger.source",
             "applies_vs": "any"
           },
-          "duration": { "attacks": { "count": 1 } },
           "trigger_damage_jobs": [
             { "source": "use.source", "target": ["lancer"] }
           ]
@@ -62,7 +60,6 @@
             "applies_to": "trigger.source",
             "applies_vs": "any"
           },
-          "duration": { "attacks": { "count": 1 } },
           "trigger_damage_jobs": [
             { "source": "use.source", "target": ["marksman"] }
           ]

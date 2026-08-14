@@ -69,11 +69,6 @@
             "applies_to": "marksman",
             "applies_vs": "any"
           },
-          "duration": {
-            "attacks": {
-              "count": 1
-            }
-          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",

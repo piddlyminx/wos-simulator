@@ -28,9 +28,6 @@ This guide describes the native TypeScript simulator's current behaviour. It is 
             "applies_to": "trigger.source",
             "applies_vs": "trigger.target"
           },
-          "duration": {
-            "attacks": { "count": 1 }
-          },
           "trigger_damage_jobs": [
             { "source": "use.source", "target": "use.target" }
           ]
@@ -213,7 +210,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | `type` | One supported modifier/special-effect string, or omitted on a child-bearing carrier | Chooses the mechanic and, for modifiers, the damage-equation bucket. |
 | `value` | Usually a number or per-level numeric array | Percentage magnitude for modifiers; damage multiplier percentage for `extra_skill_attack`; fixed unit order for `attack_order`. |
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
-| `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means the effect is permanent. |
+| `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means permanent, except that `extra_skill_attack` defaults to one turn and one attack. |
 | `same_effect_stacking` | `add` or `max` | Controls overlap between live activations of the same modifier definition and scope. Omitted means `add`. |
 | `requires_effect` | Effect ID string | Applies a runtime damage modifier only while the named effect is applicable to the same damage job. |
 | `value_evolution` | Evolution object | Optionally changes the effect value as rounds or uses advance. |
@@ -329,6 +326,8 @@ The parser also accepts `"friendly"`, but only as “all units on this field's d
 }
 ```
 
+An omitted duration normally means that an effect is permanent. An omitted duration on `extra_skill_attack` instead defaults to `turns.count: 1` and `attacks.count: 1`. Any explicit duration replaces that default completely, so a partial duration constrains only its declared axis and `duration: {}` explicitly requests a permanent extra-attack effect.
+
 `count` must be an integer at least 1. `delay` must be an integer at least 0. If both axes are present, they are independent constraints on the same instance. Turn expiry or exhaustion of the attack-use budget removes the effect, whichever happens first.
 
 ### `turns`
@@ -407,6 +406,8 @@ For `step: "round"`/`"turn"`, the step count is `current round - first active ro
 ### `extra_skill_attack`
 
 This creates an active effect that can be used by eligible normal attacks. `units.applies_to`/`applies_vs` gate the parent normal attack; they do not by themselves define the generated jobs. After the parent normal job is calculated, each `trigger_damage_jobs` entry expands into zero or more immediate `kind: "skill"` jobs.
+
+When `duration` is omitted, the active effect defaults to one turn and one applicable attack. Declare `duration` only when the extra attack needs a different lifetime or delay.
 
 `value` becomes the generated job's source multiplier: `100` means `1.0`, `25` means `0.25`, and `200` means `2.0`. The result is a **new full damage calculation**, not that percentage of the parent normal job's final kills or raw damage. It uses the generated source/target pair, round-start troop counts, the ordinary static factors, general active modifiers, and skill-only type modifiers. Normal-only type modifiers do not apply.
 

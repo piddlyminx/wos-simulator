@@ -1175,6 +1175,8 @@ Extra skill attack is damage produced by an ActiveEffect created from an
 
 Rules:
 
+- an omitted duration defaults to one turn and one applicable attack; an
+  explicit duration replaces that default completely.
 - `extra_skill_attack` creates an ActiveEffect with resolved applicability
   scopes.
 - When a normal attack uses that ActiveEffect, its `trigger_damage_jobs`
