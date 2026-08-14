@@ -1,0 +1,81 @@
+{
+  "max_rounds": 600,
+  "input_stats_include_hero_generation": {
+    "attacker": false,
+    "defender": false
+  },
+  "attacker": [
+    {
+      "name": "Attack army 1",
+      "fighter": {
+        "troops": { "infantry_t6": 5000, "lancer_t6": 2000, "marksman_t6": 3000 },
+        "heroes": {}
+      }
+    },
+    {
+      "name": "Attack army 2",
+      "fighter": {
+        "troops": { "infantry_t6": 4000, "lancer_t6": 3000, "marksman_t6": 3000 },
+        "heroes": {}
+      }
+    },
+    {
+      "name": "Attack army 3",
+      "fighter": {
+        "troops": { "infantry_t6": 3000, "lancer_t6": 3000, "marksman_t6": 4000 },
+        "heroes": {}
+      }
+    }
+  ],
+  "defender": [
+    {
+      "name": "Defense army 1",
+      "fighter": {
+        "troops": { "infantry_t6": 5000, "lancer_t6": 2500, "marksman_t6": 2500 },
+        "heroes": {
+          "Gatot": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 },
+          "Sonya": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 },
+          "Bradley": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 }
+        }
+      }
+    },
+    {
+      "name": "Defense army 2",
+      "fighter": {
+        "troops": { "infantry_t6": 4000, "lancer_t6": 3000, "marksman_t6": 3000 },
+        "heroes": {
+          "Edith": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 },
+          "Philly": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 },
+          "Hendrik": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 }
+        }
+      }
+    },
+    {
+      "name": "Defense army 3",
+      "fighter": {
+        "troops": { "infantry_t6": 3000, "lancer_t6": 3000, "marksman_t6": 4000 },
+        "heroes": {
+          "Wu Ming": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 },
+          "Mia": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 },
+          "Wayne": { "skill_1": 5, "skill_2": 5, "skill_3": 5, "skill_4": 5 }
+        }
+      }
+    }
+  ],
+  "optimization": {
+    "side": "attacker",
+    "hero_skill_levels": [5, 5, 5, 0],
+    "unique_heroes": true,
+    "hero_pools": {
+      "infantry": ["Gatot", "Edith", "Wu Ming"],
+      "lancer": ["Sonya", "Philly", "Mia"],
+      "marksman": ["Bradley", "Hendrik", "Wayne"]
+    }
+  },
+  "troop_optimization": {
+    "coarse_step_percent": 10,
+    "fine_step_percent": 2,
+    "fine_radius_percent": 4,
+    "passes": 2
+  }
+}
