@@ -578,11 +578,12 @@ function chargeCancelledAttack(
   chargeUsedEffects(runtime);
 }
 
-function winnerFor(troops: Record<SideId, Record<UnitType, number>>): SideId | undefined {
+function winnerFor(troops: Record<SideId, Record<UnitType, number>>): SideId | "draw" | undefined {
   const attackerAlive = total(troops.attacker) > 0;
   const defenderAlive = total(troops.defender) > 0;
   if (attackerAlive && !defenderAlive) return "attacker";
   if (defenderAlive && !attackerAlive) return "defender";
+  if (!attackerAlive && !defenderAlive) return "draw";
   return undefined;
 }
 

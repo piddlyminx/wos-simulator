@@ -73,6 +73,11 @@
             ],
             "applies_vs": "any"
           },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          },
           "trigger_damage_jobs": [
             {
               "source": "use.source",
@@ -105,8 +110,7 @@
           },
           "duration": {
             "turns": {
-              "count": 2,
-              "delay": 1
+              "count": 2
             }
           }
         },
@@ -121,8 +125,7 @@
           ],
           "duration": {
             "turns": {
-              "count": 2,
-              "delay": 1
+              "count": 2
             }
           }
         }

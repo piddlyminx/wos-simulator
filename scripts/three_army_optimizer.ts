@@ -40,6 +40,7 @@ export interface OptimizationDefinition {
 }
 
 export interface TroopOptimizationDefinition {
+  side: TeamSide;
   coarse_step_percent: number;
   fine_step_percent: number;
   fine_radius_percent: number;
@@ -72,6 +73,7 @@ export interface EvaluationResult {
   averageAttackerRemaining: number;
   averageDefenderRemaining: number;
   averageAttackerMargin: number;
+  attackerMarginStd: number;
   averageBattles: number;
 }
 
@@ -102,11 +104,13 @@ export interface TroopOptimizationResult {
   scoreRate: number;
   averageMargin: number;
   evaluatedCandidates: number;
+  preliminaryRepsPerOrdering: number;
+  finalistRepsPerOrdering: number;
   search: TroopOptimizationDefinition;
 }
 
 export interface TroopOptimizationProgress {
-  stage: "coarse" | "fine";
+  stage: "coarse" | "fine" | "finalist";
   pass: number;
   armyIndex: number;
   completed: number;
@@ -132,6 +136,12 @@ export interface OptimizationWorkerTask {
   seed: number;
 }
 
+interface EvaluatedTroopCandidate {
+  definition: ThreeArmyDefinition;
+  troops: TroopCounts;
+  result: OptimizationResult;
+}
+
 interface MutableArmy {
   name: string;
   slot: number;
@@ -143,12 +153,17 @@ type BattleResolver = (attacker: FighterInput, defender: FighterInput, seed: str
 
 const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
 const ORDERS = permutations([0, 1, 2]) as unknown as Order[];
+const ADAPTIVE_COARSE_SEEDS_PER_METRIC = 10;
+const ADAPTIVE_FINALISTS_PER_METRIC = 30;
+const ADAPTIVE_MAX_FINALISTS = 40;
+const ADAPTIVE_PRELIMINARY_REPS_DIVISOR = 10;
+const CONFIDENCE_Z = 1.96;
 
 export function parseDefinition(raw: unknown, simulatorConfig: SimulatorConfig): ThreeArmyDefinition {
   if (!isRecord(raw)) throw new Error("Configuration must be a JSON object");
   const attacker = parseArmies(raw.attacker, "attacker", simulatorConfig);
   const defender = parseArmies(raw.defender, "defender", simulatorConfig);
-  const maxRounds = raw.max_rounds === undefined ? 600 : positiveInteger(raw.max_rounds, "max_rounds");
+  const maxRounds = raw.max_rounds === undefined ? 1500 : positiveInteger(raw.max_rounds, "max_rounds");
   if (raw.engagement_type !== undefined) {
     throw new Error("This three-army mode is not a rally or garrison; remove engagement_type");
   }
@@ -159,9 +174,9 @@ export function parseDefinition(raw: unknown, simulatorConfig: SimulatorConfig):
   const optimization = raw.optimization === undefined ? undefined : parseOptimization(raw.optimization, simulatorConfig);
   const troopOptimization = raw.troop_optimization === undefined
     ? undefined
-    : parseTroopOptimization(raw.troop_optimization);
-  if (troopOptimization && !optimization) {
-    throw new Error("troop_optimization requires optimization so there is a winning hero setup to refine");
+    : parseTroopOptimization(raw.troop_optimization, optimization?.side);
+  if (optimization && troopOptimization && troopOptimization.side !== optimization.side) {
+    throw new Error("troop_optimization.side must match optimization.side");
   }
   for (const side of ["attacker", "defender"] as const) {
     if (!inputStatsIncludeHeroGeneration[side]) continue;
@@ -255,6 +270,8 @@ export function evaluateDefinition(
   let defenderRemaining = 0;
   let battles = 0;
   let scenario = 0;
+  let attackerMarginMean = 0;
+  let attackerMarginM2 = 0;
   for (const attackerOrder of ORDERS) {
     for (const defenderOrder of ORDERS) {
       for (let rep = 0; rep < reps; rep += 1) {
@@ -273,6 +290,10 @@ export function evaluateDefinition(
         attackerRemaining += result.attackerRemaining;
         defenderRemaining += result.defenderRemaining;
         battles += result.battles;
+        const attackerMargin = result.attackerRemaining - result.defenderRemaining;
+        const marginDelta = attackerMargin - attackerMarginMean;
+        attackerMarginMean += marginDelta / scenario;
+        attackerMarginM2 += marginDelta * (attackerMargin - attackerMarginMean);
       }
     }
   }
@@ -286,6 +307,7 @@ export function evaluateDefinition(
     averageAttackerRemaining: attackerRemaining / scenario,
     averageDefenderRemaining: defenderRemaining / scenario,
     averageAttackerMargin: (attackerRemaining - defenderRemaining) / scenario,
+    attackerMarginStd: scenario > 1 ? Math.sqrt(attackerMarginM2 / (scenario - 1)) : 0,
     averageBattles: battles / scenario
   };
 }
@@ -415,6 +437,27 @@ export function generateTroopCompositions(total: number, stepPercent: number): T
   return [...output.values()];
 }
 
+export function generateBoundaryTroopCompositions(center: TroopCounts): TroopCounts[] {
+  const output = new Map<string, TroopCounts>();
+  for (const unitType of UNIT_TYPES) {
+    for (const boundaryCount of [0, 1]) {
+      if (boundaryCount > center.total) continue;
+      for (const composition of compositionsWithUnitCount(center, unitType, boundaryCount)) {
+        output.set(troopCountsKey(composition), composition);
+      }
+    }
+  }
+  return [...output.values()];
+}
+
+export function generateAdaptiveTroopCompositions(total: number, stepPercent: number): TroopCounts[] {
+  const output = new Map<string, TroopCounts>();
+  for (const composition of generateTroopCompositions(total, stepPercent)) {
+    addCompositionWithDiscreteBoundaryNeighbour(output, composition);
+  }
+  return [...output.values()];
+}
+
 export function applyTroopComposition(
   definition: ThreeArmyDefinition,
   side: TeamSide,
@@ -465,12 +508,21 @@ export async function optimizeWinningTroopsParallel(
   const optimization = definition.optimization;
   const heroWinner = heroResults[0];
   if (!search) throw new Error("The configuration has no troop_optimization section");
-  if (!optimization || !heroWinner) throw new Error("Troop optimization requires a winning hero result");
+  if (optimization && !heroWinner) throw new Error("Troop optimization requires a winning hero result");
 
-  const side = optimization.side;
-  let currentDefinition = definitionWithHeroLineups(definition, heroWinner.heroes, simulatorConfig);
-  let currentResult = heroWinner;
+  const side = search.side;
+  const currentHeroes = heroWinner?.heroes ?? definition[side].map((army) => mainHeroNames(army.fighter));
+  let currentDefinition = heroWinner
+    ? definitionWithHeroLineups(definition, heroWinner.heroes, simulatorConfig)
+    : normalizeDefinitionHeroStats(definition, simulatorConfig);
+  let currentResult = heroWinner ?? optimizationResult(
+    currentHeroes,
+    evaluateDefinition(currentDefinition, simulatorConfig, reps, seed),
+    side
+  );
+  const initialEvaluation = currentResult.evaluation;
   const initialTroops = troopCountsForTeam(currentDefinition[side], simulatorConfig, side);
+  const preliminaryReps = Math.max(1, Math.ceil(reps / ADAPTIVE_PRELIMINARY_REPS_DIVISOR));
   let evaluatedCandidates = 0;
   const pool = jobs > 1
     ? new BatchWorkerPool<OptimizationWorkerTask, OptimizationResult>(
@@ -481,15 +533,16 @@ export async function optimizeWinningTroopsParallel(
 
   const evaluateCandidates = async (
     candidates: Array<{ definition: ThreeArmyDefinition; troops: TroopCounts }>,
+    phaseReps: number,
     progress: Omit<TroopOptimizationProgress, "completed" | "total">
-  ): Promise<Array<{ definition: ThreeArmyDefinition; troops: TroopCounts; result: OptimizationResult }>> => {
+  ): Promise<EvaluatedTroopCandidate[]> => {
     let completed = 0;
     const evaluate = async (candidate: { definition: ThreeArmyDefinition; troops: TroopCounts }) => {
       const task: OptimizationWorkerTask = {
         definition: candidate.definition,
-        heroes: heroWinner.heroes,
+        heroes: currentHeroes,
         side,
-        reps,
+        reps: phaseReps,
         seed
       };
       const result = pool
@@ -504,34 +557,55 @@ export async function optimizeWinningTroopsParallel(
   };
 
   try {
-    for (const stage of ["coarse", "fine"] as const) {
-      for (let pass = 1; pass <= search.passes; pass += 1) {
-        let changed = false;
-        for (let armyIndex = 0; armyIndex < 3; armyIndex += 1) {
-          const currentTroops = troopCountsForArmy(currentDefinition[side][armyIndex], simulatorConfig, `${side}[${armyIndex}]`);
-          const variants = stage === "coarse"
-            ? generateTroopCompositions(currentTroops.total, search.coarse_step_percent)
-            : generateLocalTroopCompositions(
-              currentTroops,
-              search.fine_step_percent,
-              search.fine_radius_percent
-            );
-          const unique = new Map<string, TroopCounts>();
-          unique.set(troopCountsKey(currentTroops), currentTroops);
-          for (const variant of variants) unique.set(troopCountsKey(variant), variant);
-          const candidates = [...unique.values()].map((troops) => ({
-            definition: applyTroopComposition(currentDefinition, side, armyIndex, troops, simulatorConfig),
+    for (let pass = 1; pass <= search.passes; pass += 1) {
+      let changed = false;
+      for (let armyIndex = 0; armyIndex < 3; armyIndex += 1) {
+        const currentTroops = troopCountsForArmy(currentDefinition[side][armyIndex], simulatorConfig, `${side}[${armyIndex}]`);
+        const candidatesFor = (compositions: readonly TroopCounts[]) => compositions.map((troops) => ({
+          definition: applyTroopComposition(currentDefinition, side, armyIndex, troops, simulatorConfig),
+          troops
+        }));
+
+        const coarseCompositions = dedupeTroopCompositions([
+          currentTroops,
+          ...generateAdaptiveTroopCompositions(currentTroops.total, search.coarse_step_percent)
+        ]);
+        const coarse = await evaluateCandidates(
+          candidatesFor(coarseCompositions),
+          preliminaryReps,
+          { stage: "coarse", pass, armyIndex }
+        );
+        const seeds = selectAdaptiveSeeds(coarse);
+
+        const fineCompositions = dedupeTroopCompositions([
+          currentTroops,
+          ...generateLocalTroopCompositions(
+            [currentTroops, ...seeds.map((candidate) => candidate.troops)],
+            search.fine_step_percent,
+            search.fine_radius_percent
+          )
+        ]);
+        const fine = await evaluateCandidates(
+          candidatesFor(fineCompositions),
+          preliminaryReps,
+          { stage: "fine", pass, armyIndex }
+        );
+        const finalists = selectAdaptiveFinalists(fine, currentTroops);
+        const finalistResults = await evaluateCandidates(
+          finalists.map(({ definition: candidateDefinition, troops }) => ({
+            definition: candidateDefinition,
             troops
-          }));
-          const ranked = await evaluateCandidates(candidates, { stage, pass, armyIndex });
-          ranked.sort((left, right) => compareOptimizationResults(left.result, right.result));
-          const best = ranked[0];
-          if (troopCountsKey(best.troops) !== troopCountsKey(currentTroops)) changed = true;
-          currentDefinition = best.definition;
-          currentResult = best.result;
-        }
-        if (!changed) break;
+          })),
+          reps,
+          { stage: "finalist", pass, armyIndex }
+        );
+        finalistResults.sort((left, right) => compareOptimizationResults(left.result, right.result));
+        const best = finalistResults[0];
+        if (troopCountsKey(best.troops) !== troopCountsKey(currentTroops)) changed = true;
+        currentDefinition = best.definition;
+        currentResult = best.result;
       }
+      if (!changed) break;
     }
   } finally {
     await pool?.close();
@@ -539,17 +613,85 @@ export async function optimizeWinningTroopsParallel(
 
   return {
     side,
-    heroes: heroWinner.heroes,
+    heroes: currentHeroes,
     initialTroops,
     troops: troopCountsForTeam(currentDefinition[side], simulatorConfig, side),
-    initialEvaluation: heroWinner.evaluation,
+    initialEvaluation,
     evaluation: currentResult.evaluation,
     winRate: currentResult.winRate,
     scoreRate: currentResult.scoreRate,
     averageMargin: currentResult.averageMargin,
     evaluatedCandidates,
+    preliminaryRepsPerOrdering: preliminaryReps,
+    finalistRepsPerOrdering: reps,
     search
   };
+}
+
+function dedupeTroopCompositions(compositions: readonly TroopCounts[]): TroopCounts[] {
+  const output = new Map<string, TroopCounts>();
+  for (const composition of compositions) output.set(troopCountsKey(composition), composition);
+  return [...output.values()];
+}
+
+function selectAdaptiveSeeds(candidates: readonly EvaluatedTroopCandidate[]): EvaluatedTroopCandidate[] {
+  const byScore = [...candidates]
+    .sort((left, right) => compareOptimizationResults(left.result, right.result))
+    .slice(0, ADAPTIVE_COARSE_SEEDS_PER_METRIC);
+  const byMargin = [...candidates]
+    .sort((left, right) =>
+      right.result.averageMargin - left.result.averageMargin ||
+      compareOptimizationResults(left.result, right.result)
+    )
+    .slice(0, ADAPTIVE_COARSE_SEEDS_PER_METRIC);
+  return dedupeEvaluatedTroopCandidates([...byScore, ...byMargin]);
+}
+
+function selectAdaptiveFinalists(
+  candidates: readonly EvaluatedTroopCandidate[],
+  currentTroops: TroopCounts
+): EvaluatedTroopCandidate[] {
+  const byConservativeScore = [...candidates]
+    .sort((left, right) =>
+      conservativeScoreRate(right.result) - conservativeScoreRate(left.result) ||
+      conservativeMargin(right.result) - conservativeMargin(left.result) ||
+      compareOptimizationResults(left.result, right.result)
+    )
+    .slice(0, ADAPTIVE_FINALISTS_PER_METRIC);
+  const byConservativeMargin = [...candidates]
+    .sort((left, right) =>
+      conservativeMargin(right.result) - conservativeMargin(left.result) ||
+      conservativeScoreRate(right.result) - conservativeScoreRate(left.result) ||
+      compareOptimizationResults(left.result, right.result)
+    )
+    .slice(0, ADAPTIVE_FINALISTS_PER_METRIC);
+  const currentKey = troopCountsKey(currentTroops);
+  const current = candidates.find((candidate) => troopCountsKey(candidate.troops) === currentKey);
+  if (!current) throw new Error("Adaptive troop search lost the current composition before finalist selection");
+  const output = new Map<string, EvaluatedTroopCandidate>([[currentKey, current]]);
+  for (const candidate of [...byConservativeScore, ...byConservativeMargin]) {
+    if (output.size >= ADAPTIVE_MAX_FINALISTS) break;
+    output.set(troopCountsKey(candidate.troops), candidate);
+  }
+  return [...output.values()];
+}
+
+function dedupeEvaluatedTroopCandidates(candidates: readonly EvaluatedTroopCandidate[]): EvaluatedTroopCandidate[] {
+  const output = new Map<string, EvaluatedTroopCandidate>();
+  for (const candidate of candidates) output.set(troopCountsKey(candidate.troops), candidate);
+  return [...output.values()];
+}
+
+function conservativeScoreRate(result: OptimizationResult): number {
+  const scenarios = result.evaluation.scenarios;
+  if (scenarios <= 1) return result.scoreRate;
+  const sumSquares = result.winRate * scenarios + result.evaluation.draws * 0.25;
+  const variance = Math.max(0, (sumSquares - scenarios * result.scoreRate ** 2) / (scenarios - 1));
+  return result.scoreRate - CONFIDENCE_Z * Math.sqrt(variance / scenarios);
+}
+
+function conservativeMargin(result: OptimizationResult): number {
+  return result.averageMargin - CONFIDENCE_Z * result.evaluation.attackerMarginStd / Math.sqrt(result.evaluation.scenarios);
 }
 
 export function evaluateOptimizationWorkerTask(task: OptimizationWorkerTask, simulatorConfig: SimulatorConfig): OptimizationResult {
@@ -604,15 +746,20 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     return;
   }
 
+  if (!definition.optimization && !definition.troop_optimization) {
+    throw new Error("The configuration has no optimization or troop_optimization section");
+  }
   let lastPct = -1;
-  const results = await optimizeDefinitionParallel(definition, simulatorConfig, args.reps, args.seed, args.jobs, args.maxCandidates, (completed, total) => {
-    const pct = Math.floor((completed * 100) / total);
-    if (!args.json && pct !== lastPct) {
-      process.stderr.write(`\rEvaluating hero setups: ${completed}/${total} (${pct}%)`);
-      lastPct = pct;
-      if (completed === total) process.stderr.write("\n");
-    }
-  });
+  const results = definition.optimization
+    ? await optimizeDefinitionParallel(definition, simulatorConfig, args.reps, args.seed, args.jobs, args.maxCandidates, (completed, total) => {
+      const pct = Math.floor((completed * 100) / total);
+      if (!args.json && pct !== lastPct) {
+        process.stderr.write(`\rEvaluating hero setups: ${completed}/${total} (${pct}%)`);
+        lastPct = pct;
+        if (completed === total) process.stderr.write("\n");
+      }
+    })
+    : [];
   const top = results.slice(0, args.top);
   let troopResult: TroopOptimizationResult | undefined;
   if (definition.troop_optimization) {
@@ -641,10 +788,15 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
     );
   }
   if (args.json) {
-    console.log(JSON.stringify(troopResult ? { heroOptimization: top, troopOptimization: troopResult } : top, null, 2));
+    const output = troopResult
+      ? definition.optimization
+        ? { heroOptimization: top, troopOptimization: troopResult }
+        : { troopOptimization: troopResult }
+      : top;
+    console.log(JSON.stringify(output, null, 2));
   } else {
-    printOptimization(top, definition, definition.optimization!.side);
-    if (troopResult) printTroopOptimization(troopResult, definition);
+    if (definition.optimization) printOptimization(top, definition, definition.optimization.side);
+    if (troopResult) printTroopOptimization(troopResult, definition, Boolean(definition.optimization));
   }
 }
 
@@ -654,7 +806,7 @@ function createBattleResolver(definition: ThreeArmyDefinition, simulatorConfig: 
       .fighter("attacker", attacker)
       .fighter("defender", defender)
       .seed(seed)
-      .maxRounds(definition.max_rounds ?? 600)
+      .maxRounds(definition.max_rounds ?? 1500)
       .addHeroGenerationStats();
     return simulateBattles(builder.build(), simulatorConfig, { mode: "fast", count: 1 })[0];
   };
@@ -740,11 +892,10 @@ function heroAtLevels(
     throw new Error(`Hero ${JSON.stringify(name)} is ${definition.troop_type ?? "untyped"}, not ${role}`);
   }
   const levels: Record<string, number> = {};
-  Object.keys(definition.skills ?? {}).forEach((skillId, index) => {
+  Object.keys(definition.skills ?? {}).forEach((_, index) => {
     const level = skillLevels[index] ?? 0;
     if (level <= 0) return;
     levels[`skill_${index + 1}`] = level;
-    levels[skillId] = level;
   });
   return { name: definition.name || key, levels };
 }
@@ -820,19 +971,25 @@ function parseOptimization(value: unknown, simulatorConfig: SimulatorConfig): Op
   };
 }
 
-function parseTroopOptimization(value: unknown): TroopOptimizationDefinition {
+function parseTroopOptimization(value: unknown, optimizationSide?: TeamSide): TroopOptimizationDefinition {
   if (!isRecord(value)) throw new Error("troop_optimization must be an object");
+  if (value.side !== undefined && value.side !== "attacker" && value.side !== "defender") {
+    throw new Error("troop_optimization.side must be attacker or defender");
+  }
+  const side = value.side ?? optimizationSide;
+  if (!side) throw new Error("troop_optimization.side is required when optimization is omitted");
   const coarseStep = value.coarse_step_percent === undefined
-    ? 10
+    ? 5
     : percentageInteger(value.coarse_step_percent, "troop_optimization.coarse_step_percent");
   const fineStep = value.fine_step_percent === undefined
-    ? 2
+    ? 1
     : percentageInteger(value.fine_step_percent, "troop_optimization.fine_step_percent");
   const fineRadius = value.fine_radius_percent === undefined
-    ? 4
+    ? 3
     : percentageInteger(value.fine_radius_percent, "troop_optimization.fine_radius_percent");
   const passes = value.passes === undefined ? 2 : positiveInteger(value.passes, "troop_optimization.passes");
   return {
+    side,
     coarse_step_percent: coarseStep,
     fine_step_percent: fineStep,
     fine_radius_percent: fineRadius,
@@ -909,9 +1066,14 @@ function printOptimization(results: OptimizationResult[], definition: ThreeArmyD
   }
 }
 
-function printTroopOptimization(result: TroopOptimizationResult, definition: ThreeArmyDefinition): void {
+function printTroopOptimization(
+  result: TroopOptimizationResult,
+  definition: ThreeArmyDefinition,
+  usedHeroOptimization: boolean
+): void {
   const armyNames = definition[result.side].map((army) => army.name);
-  console.log(`\nTroop optimization for the rank 1 hero setup (${result.side}; opposing team unchanged):`);
+  const baseline = usedHeroOptimization ? "rank 1 hero setup" : "input hero setup";
+  console.log(`\nTroop optimization for the ${baseline} (${result.side}; opposing team unchanged):`);
   console.log(
     `Baseline: win=${percent(winRateForSide(result.initialEvaluation, result.side))} ` +
     `margin=${signed(marginForSide(result.initialEvaluation, result.side))}`
@@ -925,9 +1087,10 @@ function printTroopOptimization(result: TroopOptimizationResult, definition: Thr
     );
   });
   console.log(
-    `Evaluated ${result.evaluatedCandidates} coordinate candidates ` +
+    `Evaluated ${result.evaluatedCandidates} adaptive candidates ` +
     `(coarse ${result.search.coarse_step_percent}%, fine ${result.search.fine_step_percent}% ` +
-    `within ±${result.search.fine_radius_percent}%, up to ${result.search.passes} passes).`
+    `within ±${result.search.fine_radius_percent}%, up to ${result.search.passes} passes; ` +
+    `${result.preliminaryRepsPerOrdering} preliminary and ${result.finalistRepsPerOrdering} finalist reps per ordering).`
   );
 }
 
@@ -975,25 +1138,73 @@ function troopIdsByType(
   return ids;
 }
 
-function generateLocalTroopCompositions(
-  center: TroopCounts,
+export function generateLocalTroopCompositions(
+  centers: readonly TroopCounts[],
   stepPercent: number,
   radiusPercent: number
 ): TroopCounts[] {
   const output = new Map<string, TroopCounts>();
-  const centerInfantry = (center.infantry * 100) / center.total;
-  const centerLancer = (center.lancer * 100) / center.total;
-  for (let infantryDelta = -radiusPercent; infantryDelta <= radiusPercent; infantryDelta += stepPercent) {
-    const infantryPercent = centerInfantry + infantryDelta;
-    if (infantryPercent < 0 || infantryPercent > 100) continue;
-    for (let lancerDelta = -radiusPercent; lancerDelta <= radiusPercent; lancerDelta += stepPercent) {
-      const lancerPercent = centerLancer + lancerDelta;
-      if (lancerPercent < 0 || infantryPercent + lancerPercent > 100) continue;
-      const composition = countsForPercentages(center.total, infantryPercent, lancerPercent);
-      output.set(troopCountsKey(composition), composition);
+  for (const center of centers) {
+    addCompositionWithDiscreteBoundaryNeighbour(output, center);
+    const centerInfantry = Math.round((center.infantry * 100) / center.total);
+    const centerLancer = Math.round((center.lancer * 100) / center.total);
+    for (let infantryDelta = -radiusPercent; infantryDelta <= radiusPercent; infantryDelta += stepPercent) {
+      const infantryPercent = centerInfantry + infantryDelta;
+      if (infantryPercent < 0 || infantryPercent > 100) continue;
+      for (let lancerDelta = -radiusPercent; lancerDelta <= radiusPercent; lancerDelta += stepPercent) {
+        const lancerPercent = centerLancer + lancerDelta;
+        if (lancerPercent < 0 || infantryPercent + lancerPercent > 100) continue;
+        const composition = countsForPercentages(center.total, infantryPercent, lancerPercent);
+        addCompositionWithDiscreteBoundaryNeighbour(output, composition);
+      }
     }
   }
   return [...output.values()];
+}
+
+function addCompositionWithDiscreteBoundaryNeighbour(
+  output: Map<string, TroopCounts>,
+  composition: TroopCounts
+): void {
+  output.set(troopCountsKey(composition), composition);
+  for (const unitType of UNIT_TYPES) {
+    if (composition[unitType] !== 0 && composition[unitType] !== 1) continue;
+    const neighbourCount = composition[unitType] === 0 ? 1 : 0;
+    for (const neighbour of compositionsWithUnitCount(composition, unitType, neighbourCount)) {
+      output.set(troopCountsKey(neighbour), neighbour);
+    }
+  }
+}
+
+function compositionsWithUnitCount(center: TroopCounts, unitType: UnitType, targetCount: number): TroopCounts[] {
+  const otherTypes = UNIT_TYPES.filter((candidate) => candidate !== unitType);
+  const remaining = center.total - targetCount;
+  const sourceTotal = center[otherTypes[0]] + center[otherTypes[1]];
+  if (sourceTotal === 0) {
+    return otherTypes.map((recipient) => {
+      const counts = { infantry: 0, lancer: 0, marksman: 0 } as Record<UnitType, number>;
+      counts[unitType] = targetCount;
+      counts[recipient] = remaining;
+      return { ...counts, total: center.total };
+    });
+  }
+
+  const raw = otherTypes.map((candidate) => (remaining * center[candidate]) / sourceTotal);
+  const allocated = raw.map(Math.floor);
+  let remainder = remaining - allocated[0] - allocated[1];
+  const order = raw
+    .map((value, index) => ({ index, fraction: value - allocated[index] }))
+    .sort((left, right) => right.fraction - left.fraction || left.index - right.index);
+  for (const entry of order) {
+    if (remainder <= 0) break;
+    allocated[entry.index] += 1;
+    remainder -= 1;
+  }
+  const counts = { infantry: 0, lancer: 0, marksman: 0 } as Record<UnitType, number>;
+  counts[unitType] = targetCount;
+  counts[otherTypes[0]] = allocated[0];
+  counts[otherTypes[1]] = allocated[1];
+  return [{ ...counts, total: center.total }];
 }
 
 function countsForPercentages(total: number, infantryPercent: number, lancerPercent: number): TroopCounts {
@@ -1130,8 +1341,8 @@ function helpText(): string {
     "  npx tsx scripts/three_army_optimizer.ts simulate <config.json> [--reps N] [--seed N] [--json]",
     "  npx tsx scripts/three_army_optimizer.ts optimize <config.json> [--reps N] [--seed N] [--jobs N] [--top N] [--max-candidates N] [--json]",
     "",
-    "Each evaluation covers all 6 × 6 random army orderings. --reps (default 10) is the number of combat-RNG samples per ordering.",
-    "If troop_optimization is configured, optimize first finds the best hero setup, then redistributes each winning army's fixed troop total while leaving the opposing team unchanged.",
+    "Each evaluation covers all 6 × 6 random army orderings. --reps (default 10) is the finalist combat-RNG sample count per ordering; adaptive troop screening uses one tenth of it, rounded up.",
+    "troop_optimization redistributes each selected army's fixed troop total while leaving the opposing team unchanged. Set troop_optimization.side when optimization is omitted; the input hero setup is then used as the baseline.",
     "See scripts/three_army_optimizer.example.json for the configuration format. Set input_stats_include_hero_generation per side; selected heroes are always reflected in effective stats."
   ].join("\n");
 }

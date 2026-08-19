@@ -1,0 +1,138 @@
+{
+  "max_rounds": 1500,
+  "input_stats_include_hero_generation": {
+    "attacker": true,
+    "defender": true
+  },
+  "attacker": [
+    {
+      "name": "Attacker 1 (fcaae43a-1369-4bdb-b445-1c9cbd94f3be)",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 97564,
+          "lancer_t11_fc10": 1,
+          "marksman_t11_fc10": 119245
+        },
+        "stats": {
+          "infantry": { "attack": 1965.7, "defense": 1862.5, "lethality": 1674.2, "health": 2078.8 },
+          "lancer": { "attack": 1523.2, "defense": 1432.5, "lethality": 1514.9, "health": 1281.6 },
+          "marksman": { "attack": 2086.71, "defense": 1895.11, "lethality": 2220.2, "health": 1971 }
+        },
+        "heroes": {
+          "WuMing": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Philly": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Wayne": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Attacker 2 (916a5f79-7cab-4fce-af15-03d19fd30f85)",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 97564,
+          "lancer_t11_fc10": 1,
+          "marksman_t11_fc10": 119245
+        },
+        "stats": {
+          "infantry": { "attack": 2138.5, "defense": 2017, "lethality": 1981.6, "health": 2265.3 },
+          "lancer": { "attack": 1654.2, "defense": 1526.7, "lethality": 1860.3, "health": 1566.4 },
+          "marksman": { "attack": 2391.6, "defense": 2197.1, "lethality": 2282.8, "health": 2069.2 }
+        },
+        "heroes": {
+          "Logan": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Mia": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Hendrik": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Attacker 3 (c254b37e-a493-4201-8162-63f25f16504a)",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 147430,
+          "lancer_t11_fc10": 69379,
+          "marksman_t11_fc10": 1
+        },
+        "stats": {
+          "infantry": { "attack": 2391, "defense": 2197, "lethality": 2076, "health": 2300.9 },
+          "lancer": { "attack": 2391, "defense": 2197, "lethality": 2255, "health": 2049.5 },
+          "marksman": { "attack": 2029, "defense": 1867, "lethality": 1704, "health": 1417 }
+        },
+        "heroes": {
+          "Gatot": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Sonya": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Bradley": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    }
+  ],
+  "defender": [
+    {
+      "name": "Defender 1 (fcaae43a-1369-4bdb-b445-1c9cbd94f3be)",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 109155,
+          "lancer_t11_fc10": 43662,
+          "marksman_t11_fc10": 65493
+        },
+        "stats": {
+          "infantry": { "attack": 2062.7, "defense": 1942.6, "lethality": 1948.4, "health": 2079.3 },
+          "lancer": { "attack": 1721.5, "defense": 1622.3, "lethality": 1943.5, "health": 1802.2 },
+          "marksman": { "attack": 2051.7, "defense": 1872.6, "lethality": 1860.4, "health": 1826 }
+        },
+        "heroes": {
+          "WuMing": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Philly": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Wayne": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Defender 2 (916a5f79-7cab-4fce-af15-03d19fd30f85)",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 98239,
+          "lancer_t11_fc10": 21831,
+          "marksman_t11_fc10": 98240
+        },
+        "stats": {
+          "infantry": { "attack": 2370.8, "defense": 2182.7, "lethality": 2424.2, "health": 2318.4 },
+          "lancer": { "attack": 1924.1, "defense": 1776.5, "lethality": 1837.1, "health": 1830 },
+          "marksman": { "attack": 2514, "defense": 2312, "lethality": 2273, "health": 2267 }
+        },
+        "heroes": {
+          "Edith": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Norah": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Hendrik": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Defender 3 (c254b37e-a493-4201-8162-63f25f16504a)",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 130986,
+          "lancer_t11_fc10": 87325,
+          "marksman_t11": 0
+        },
+        "stats": {
+          "infantry": { "attack": 2514, "defense": 2313, "lethality": 2358, "health": 2352 },
+          "lancer": { "attack": 2514, "defense": 2313, "lethality": 2302, "health": 2296 },
+          "marksman": { "attack": 2371, "defense": 2183, "lethality": 2239, "health": 2234 }
+        },
+        "heroes": {
+          "Gatot": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Sonya": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Bradley": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    }
+  ],
+  "troop_optimization": {
+    "side": "attacker",
+    "coarse_step_percent": 5,
+    "fine_step_percent": 1,
+    "fine_radius_percent": 3,
+    "passes": 2
+  }
+}

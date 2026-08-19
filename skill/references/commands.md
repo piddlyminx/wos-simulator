@@ -59,6 +59,8 @@ Report capture:
 ./scripts/wosctl report-images captures/saved-report --output captures/saved-report.json
 ./scripts/wosctl --instance <instance-name> reports --tab reports --count 5
 ./scripts/wosctl --instance <instance-name> reports --tab starred --count 3 --full-json
+./scripts/wosctl --instance <instance-name> reports --tab war --count 15 --long-screenshots
+./scripts/wosctl --instance <instance-name> reports --tab war --skip 17 --count 10 --long-screenshots
 ```
 
 Testcase collection:

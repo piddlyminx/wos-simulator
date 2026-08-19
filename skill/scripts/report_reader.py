@@ -383,7 +383,11 @@ def _parse_captured_report(
     return merged
 
 
-def _capture_and_parse_open_report(emulator, debug_dir: Path | None = None) -> dict:
+def _capture_and_parse_open_report(
+    emulator,
+    debug_dir: Path | None = None,
+    long_screenshot_path: Path | None = None,
+) -> dict:
     from parse_battle_details import parse_battle_details
 
     def _capture_and_parse(outdir: Path, *, debug: bool) -> dict:
@@ -403,6 +407,7 @@ def _capture_and_parse_open_report(emulator, debug_dir: Path | None = None) -> d
                 outdir,
                 debug=debug,
                 battle_details_ready=_start_details_parse,
+                long_screenshot_path=long_screenshot_path,
             )
             if details_future is None:
                 raise RuntimeError("Battle-details parser did not start after capture")
@@ -788,20 +793,31 @@ def read_battle_report(emulator, tab: str, index: int = 1, debug: bool = False) 
     )
 
 
-def capture_multiple_reports(emulator, tab: str, count: int, debug: bool = False) -> list[str]:
+def capture_multiple_reports(
+    emulator,
+    tab: str,
+    count: int,
+    skip: int = 0,
+    debug: bool = False,
+    long_screenshots: bool = False,
+) -> list[str]:
     """Capture, parse, and save multiple consecutive battle reports.
 
-    Starts from the first visible report entry in the requested inbox tab, saves
-    each merged report JSON under ``wos/captures/reports/<run>/``, and returns
-    the saved JSON paths.
+    Starts from the first visible report entry in the requested inbox tab,
+    advances past ``skip`` battle reports, saves each merged report JSON under
+    ``wos/captures/reports/<run>/``, and returns the saved JSON paths.
     """
     normalized_tab = normalize_mail_tab(tab)
     if count < 1:
         raise ValueError("Report count must be at least 1")
+    if skip < 0:
+        raise ValueError("Report skip must not be negative")
 
     _open_mail_inbox(emulator)
     _select_mail_tab(emulator, normalized_tab)
     _open_report_entry(emulator, 1)
+    for _ in range(skip):
+        _advance_to_next_battle_report(emulator)
 
     out_root = _next_capture_run_dir(normalized_tab)
     debug_root = None
@@ -814,7 +830,16 @@ def capture_multiple_reports(emulator, tab: str, count: int, debug: bool = False
         if debug_root is not None:
             report_debug_dir = debug_root / f"report_{report_num:02d}"
 
-        merged = _capture_and_parse_open_report(emulator, debug_dir=report_debug_dir)
+        long_screenshot_path = (
+            out_root / f"report_{report_num:02d}_long.png"
+            if long_screenshots
+            else None
+        )
+        merged = _capture_and_parse_open_report(
+            emulator,
+            debug_dir=report_debug_dir,
+            long_screenshot_path=long_screenshot_path,
+        )
         saved = _save_report_json(merged, out_root / f"report_{report_num:02d}.json")
         saved_paths.append(str(saved.resolve()))
 

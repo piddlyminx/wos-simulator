@@ -62,6 +62,29 @@ test("simulateBattles returns the requested replicates and rejects invalid count
   assert.throws(() => simulateBattles(input, config, { count: 1.5 }), /positive integer/i);
 });
 
+test("runPrepared terminates immediately when either or both armies start empty", () => {
+  const config = loadSimulatorConfig();
+  const empty: FighterInput = { troops: {}, heroes: {} };
+  const occupied: FighterInput = { troops: { infantry_t6: 20 }, heroes: {} };
+
+  const emptyAttacker = runOnce({ attacker: empty, defender: occupied }, config);
+  assert.equal(emptyAttacker.winner, "defender");
+  assert.equal(emptyAttacker.rounds, 0);
+  assert.equal(emptyAttacker.attacks.length, 0);
+  assert.equal(emptyAttacker.remaining.defender.infantry, 20);
+
+  const emptyDefender = runOnce({ attacker: occupied, defender: empty }, config);
+  assert.equal(emptyDefender.winner, "attacker");
+  assert.equal(emptyDefender.rounds, 0);
+  assert.equal(emptyDefender.attacks.length, 0);
+  assert.equal(emptyDefender.remaining.attacker.infantry, 20);
+
+  const bothEmpty = runOnce({ attacker: empty, defender: empty }, config);
+  assert.equal(bothEmpty.winner, "draw");
+  assert.equal(bothEmpty.rounds, 0);
+  assert.equal(bothEmpty.attacks.length, 0);
+});
+
 test("runPrepared returns structured result for a no-hero battle", () => {
   const config = loadSimulatorConfig();
   const result = runOnce(
@@ -500,10 +523,15 @@ test("runPrepared carries fractional casualties between rounds and ceils final s
 });
 
 test("runPrepared defaults to a 1500 round cap when no explicit maxRounds is provided", () => {
+  const stalemate: FighterInput = {
+    troops: { infantry_t1: 1 },
+    stats: { inf: { attack: 0, defense: 1_000_000, lethality: 0, health: 1_000_000 } },
+    heroes: {}
+  };
   const result = runOnce(
     {
-      attacker: { troops: {}, heroes: {} },
-      defender: { troops: {}, heroes: {} }
+      attacker: stalemate,
+      defender: stalemate
     },
     minimalConfig()
   );
