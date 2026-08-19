@@ -48,7 +48,7 @@ This skill lives inside the simulator repository at `skill/`. Agents should stil
 - `screencap <path>`
 - `report --tab <war|reports|starred> --index <1-5> [--output <path>]` — read and parse an existing battle report, optionally saving reusable parsed JSON
 - `report-images <directory> [--output <path>]` — parse saved overview, troop/stat, and complete Battle Details screenshots without emulator access
-- `reports --tab <war|reports|starred> --count <N> [--full-json]` — capture and parse `N` consecutive battle reports starting from visible entry 1
+- `reports --tab <war|reports|starred> --count <N> [--skip N] [--full-json] [--long-screenshots]` — optionally skip battle reports from visible entry 1, then capture and parse `N` consecutive battle reports; optionally save one stitched full-length PNG per report
 - `run-battle <spec.json> [--repeat N]` — deploy and fight, then stop after detecting the new inbox report; it does not parse the report or write testcase JSON
 - `create-testcase <spec.json> [--report <parsed.json> | --images <directory> | --tab <tab> --index <1-5>]` — validate saved JSON, parse saved screenshots, or capture a selected inbox report, then append one `game_report_result` observation
 - `run-testcase <spec.json> [--repeat N]` — end-to-end battle capture: deploy → fight → capture report → append testcase JSON with hero skill levels and one `game_report_result` observation per successful run. It does not run the simulator and must not write `sim_result`.
@@ -80,6 +80,7 @@ Read [commands.md](references/commands.md) when you need exact command forms, re
 - `wosctl reports` is the supported batch reader for consecutive battle reports.
 - It returns the final merged JSON payload, including hero data from Battle Details.
 - By default, `wosctl reports` returns a compact payload with `output_dir` and `files`. Use `--full-json` only when the caller explicitly wants all parsed report objects inline.
+- Use `--long-screenshots` to save `report_NN_long.png` beside each parsed JSON and return those paths under `long_screenshots`.
 - If the requested inbox item opens a non-standard report layout, treat that as a missing `wosctl` capability rather than improvising a multi-command workaround.
 
 Read [reports.md](references/reports.md) when you need the output schema, parsing assumptions, or report-specific facts.

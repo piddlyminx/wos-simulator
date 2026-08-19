@@ -7,8 +7,12 @@ import type { BattleResult, FighterInput, UnitType } from "../simulator/src/type
 import {
   evaluateDefinition,
   applyTroopComposition,
+  generateAdaptiveTroopCompositions,
+  generateBoundaryTroopCompositions,
+  generateLocalTroopCompositions,
   generateTroopCompositions,
   generateOptimizationCandidates,
+  optimizeWinningTroopsParallel,
   parseCliArgs,
   parseDefinition,
   simulateThreeArmyMatch,
@@ -16,6 +20,13 @@ import {
 } from "./three_army_optimizer";
 
 const simulatorConfig = loadSimulatorConfig();
+
+test("three-army definitions default to the standard 1500-round cap", () => {
+  const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  delete raw.max_rounds;
+
+  assert.equal(parseDefinition(raw, simulatorConfig).max_rounds, 1500);
+});
 
 test("three-army match runs opening slots then the lowest-numbered survivors", () => {
   const definition = definitionWithInfantry([10, 25, 30], [15, 15, 25]);
@@ -53,6 +64,7 @@ test("evaluation covers every pair of random orderings for every rep", () => {
   assert.equal(result.attackerWins, 72);
   assert.equal(result.attackerWinRate, 1);
   assert.equal(result.averageBattles, 3);
+  assert.equal(result.attackerMarginStd, 0);
 });
 
 test("optimization candidates assign each role once per army without reusing heroes", () => {
@@ -80,6 +92,7 @@ test("optimization candidates assign each role once per army without reusing her
     candidates[0].heroes[0]
   );
   const firstHero = (candidates[0].definition.attacker[0].fighter.heroes as Array<{ levels: Record<string, number> }>)[0];
+  assert.deepEqual(Object.keys(firstHero.levels), ["skill_1", "skill_2", "skill_3"]);
   assert.equal(firstHero.levels.skill_1, 5);
   assert.equal(firstHero.levels.skill_3, 5);
   assert.equal(firstHero.levels.skill_4, undefined);
@@ -173,6 +186,37 @@ test("troop composition grid preserves the army total", () => {
   assert.ok(compositions.every((composition) => composition.total === 10));
 });
 
+test("adaptive troop grids explicitly cover zero and singleton troop boundaries", () => {
+  const center = { infantry: 97_564, lancer: 1, marksman: 119_245, total: 216_810 };
+  const boundaries = generateBoundaryTroopCompositions(center);
+  const lancerZero = boundaries.find((composition) => composition.lancer === 0);
+
+  assert.ok(lancerZero);
+  assert.equal(lancerZero.total, center.total);
+  assert.equal(lancerZero.infantry + lancerZero.lancer + lancerZero.marksman, center.total);
+  assert.ok(boundaries.some((composition) => composition.lancer === 1));
+
+  const coarse = generateAdaptiveTroopCompositions(1_000, 10);
+  assert.ok(coarse.some((composition) =>
+    composition.lancer === 1 && Math.abs(composition.infantry - composition.marksman) <= 1
+  ));
+  assert.ok(coarse.some((composition) =>
+    composition.lancer === 0 && composition.infantry === 500 && composition.marksman === 500
+  ));
+});
+
+test("adaptive local search expands multiple seeds and retains boundary neighbours", () => {
+  const compositions = generateLocalTroopCompositions([
+    { infantry: 50, lancer: 0, marksman: 50, total: 100 },
+    { infantry: 30, lancer: 40, marksman: 30, total: 100 }
+  ], 1, 1);
+
+  assert.ok(compositions.some((composition) => composition.infantry === 50 && composition.lancer === 1));
+  assert.ok(compositions.some((composition) =>
+    composition.infantry === 31 && composition.lancer === 40 && composition.marksman === 29
+  ));
+});
+
 test("applying a troop composition changes one army and leaves the opposing team static", () => {
   const definition = definitionWithInfantry([10, 20, 30], [40, 50, 60]);
   const originalDefender = structuredClone(definition.defender);
@@ -203,7 +247,7 @@ test("applying a troop composition changes one army and leaves the opposing team
   );
 });
 
-test("troop optimization parses configurable coarse-to-fine coordinate search", () => {
+test("troop optimization parses configurable adaptive search", () => {
   const raw = {
     ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
     optimization: {
@@ -227,11 +271,77 @@ test("troop optimization parses configurable coarse-to-fine coordinate search", 
   const definition = parseDefinition(raw, simulatorConfig);
 
   assert.deepEqual(definition.troop_optimization, {
+    side: "attacker",
     coarse_step_percent: 20,
     fine_step_percent: 2,
     fine_radius_percent: 6,
     passes: 3
   });
+});
+
+test("troop optimization defaults match the dashboard adaptive search resolution", () => {
+  const definition = parseDefinition({
+    ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
+    troop_optimization: { side: "attacker" }
+  }, simulatorConfig);
+
+  assert.deepEqual(definition.troop_optimization, {
+    side: "attacker",
+    coarse_step_percent: 5,
+    fine_step_percent: 1,
+    fine_radius_percent: 3,
+    passes: 2
+  });
+});
+
+test("troop optimization without hero optimization uses the input lineup", async () => {
+  const raw = {
+    ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
+    troop_optimization: {
+      side: "attacker",
+      coarse_step_percent: 100,
+      fine_step_percent: 100,
+      fine_radius_percent: 100,
+      passes: 1
+    }
+  };
+  const definition = parseDefinition(raw, simulatorConfig);
+  const expectedBaseline = evaluateDefinition(definition, simulatorConfig, 1, 42);
+  const stages = new Set<string>();
+
+  const result = await optimizeWinningTroopsParallel(
+    definition,
+    [],
+    simulatorConfig,
+    1,
+    42,
+    1,
+    ({ stage }) => stages.add(stage)
+  );
+
+  assert.equal(result.side, "attacker");
+  assert.deepEqual(result.heroes, [[], [], []]);
+  assert.deepEqual(result.initialEvaluation, expectedBaseline);
+  assert.deepEqual(result.initialTroops, [
+    { infantry: 10, lancer: 0, marksman: 0, total: 10 },
+    { infantry: 10, lancer: 0, marksman: 0, total: 10 },
+    { infantry: 10, lancer: 0, marksman: 0, total: 10 }
+  ]);
+  assert.deepEqual([...stages], ["coarse", "fine", "finalist"]);
+  assert.equal(result.preliminaryRepsPerOrdering, 1);
+  assert.equal(result.finalistRepsPerOrdering, 1);
+});
+
+test("troop optimization requires its own side when hero optimization is omitted", () => {
+  const raw = {
+    ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
+    troop_optimization: {}
+  };
+
+  assert.throws(
+    () => parseDefinition(raw, simulatorConfig),
+    /troop_optimization\.side is required when optimization is omitted/
+  );
 });
 
 test("CLI parser supplies stable defaults and parses optimization controls", () => {

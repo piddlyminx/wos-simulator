@@ -20,10 +20,12 @@ from capture_report_top_bottom import (
     _inspect_stats_frame,
     contains_report_end,
     scroll_to_bottom,
+    stitch_report_frames,
 )
 from report_reader import (
     _extract_report_timestamp,
     _parse_captured_report,
+    capture_multiple_reports,
     resolve_saved_report_images,
 )
 import report_reader
@@ -53,6 +55,30 @@ def frame(value: int) -> np.ndarray:
 
 
 class ReportCaptureContractTests(unittest.TestCase):
+    def test_batch_capture_skips_battle_reports_before_first_capture(self) -> None:
+        emulator = object()
+        with tempfile.TemporaryDirectory() as tmpdir, \
+                patch.object(report_reader, "_open_mail_inbox"), \
+                patch.object(report_reader, "_select_mail_tab"), \
+                patch.object(report_reader, "_open_report_entry") as open_entry, \
+                patch.object(report_reader, "_advance_to_next_battle_report") as advance, \
+                patch.object(report_reader, "_next_capture_run_dir", return_value=Path(tmpdir)), \
+                patch.object(
+                    report_reader,
+                    "_capture_and_parse_open_report",
+                    side_effect=[{"capture_id": "first"}, {"capture_id": "second"}],
+                ), \
+                patch.object(
+                    report_reader,
+                    "_save_report_json",
+                    side_effect=lambda _report, path: path,
+                ):
+            files = capture_multiple_reports(emulator, "war", count=2, skip=3)
+
+        open_entry.assert_called_once_with(emulator, 1)
+        self.assertEqual(advance.call_count, 4)
+        self.assertEqual([Path(path).name for path in files], ["report_01.json", "report_02.json"])
+
     def test_saved_report_bundle_accepts_standard_webp_names(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             directory = Path(tmpdir)
@@ -148,6 +174,70 @@ class ReportCaptureContractTests(unittest.TestCase):
         self.assertTrue(scroll_to_bottom(emulator, detect, diagnostic_events=events))
         self.assertEqual(calls, 3)
         self.assertEqual(len(emulator.swipes), 2)
+
+    def test_scroll_to_bottom_can_collect_frames_for_long_screenshot(self) -> None:
+        emulator = FakeEmulator([frame(10), frame(20), frame(30)])
+        captured: list[np.ndarray] = []
+
+        self.assertTrue(
+            scroll_to_bottom(
+                emulator,
+                lambda image: (int(image[0, 0, 0]) == 30, "marker"),
+                frames_out=captured,
+            )
+        )
+
+        self.assertEqual([int(image[0, 0, 0]) for image in captured], [10, 20, 30])
+        self.assertEqual(emulator.swipes, [(360, 920, 360, 470, 450)] * 2)
+
+    def test_stitch_report_frames_reconstructs_scrolled_document(self) -> None:
+        rng = np.random.default_rng(451)
+        header = np.full((20, 80, 3), 17, dtype=np.uint8)
+        footer = np.full((20, 80, 3), 233, dtype=np.uint8)
+        document = rng.integers(0, 256, size=(380, 80, 3), dtype=np.uint8)
+
+        frames = [
+            np.concatenate([header, document[offset : offset + 160], footer], axis=0)
+            for offset in (0, 100, 220)
+        ]
+        stitched = stitch_report_frames(frames, content_bounds=(20, 180))
+        expected = np.concatenate([header, document, footer], axis=0)
+
+        np.testing.assert_array_equal(stitched, expected)
+
+    def test_stitch_report_frames_preserves_exact_rows_at_device_resolution(self) -> None:
+        rng = np.random.default_rng(452)
+        header = np.full((86, 720, 3), 17, dtype=np.uint8)
+        footer = np.full((90, 720, 3), 233, dtype=np.uint8)
+        document = rng.integers(0, 256, size=(2011, 720, 3), dtype=np.uint8)
+
+        frames = [
+            np.concatenate([header, document[offset : offset + 1104], footer], axis=0)
+            for offset in (0, 451, 907)
+        ]
+        stitched = stitch_report_frames(frames, content_bounds=(86, 1190))
+        expected = np.concatenate([header, document, footer], axis=0)
+
+        np.testing.assert_array_equal(stitched, expected)
+
+    def test_stitch_report_frames_excludes_fixed_footer_overlay_from_joins(self) -> None:
+        rng = np.random.default_rng(453)
+        header = np.full((86, 720, 3), 17, dtype=np.uint8)
+        document = rng.integers(0, 256, size=(1993, 720, 3), dtype=np.uint8)
+        snowy_overlay = np.full((18, 720, 3), 245, dtype=np.uint8)
+        footer = np.full((90, 720, 3), 33, dtype=np.uint8)
+
+        frames = [
+            np.concatenate(
+                [header, document[offset : offset + 1086], snowy_overlay, footer],
+                axis=0,
+            )
+            for offset in (0, 451, 907)
+        ]
+        stitched = stitch_report_frames(frames)
+        expected = np.concatenate([header, document, snowy_overlay, footer], axis=0)
+
+        np.testing.assert_array_equal(stitched, expected)
 
     def test_scroll_to_bottom_keeps_swiping_down_until_marker_or_limit(self) -> None:
         emulator = FakeEmulator([frame(10), frame(10), frame(10), frame(10), frame(10)])

@@ -1,5 +1,5 @@
 {
-  "max_rounds": 600,
+  "max_rounds": 1500,
   "input_stats_include_hero_generation": {
     "attacker": false,
     "defender": false
@@ -73,9 +73,10 @@
     }
   },
   "troop_optimization": {
-    "coarse_step_percent": 10,
-    "fine_step_percent": 2,
-    "fine_radius_percent": 4,
+    "side": "attacker",
+    "coarse_step_percent": 5,
+    "fine_step_percent": 1,
+    "fine_radius_percent": 3,
     "passes": 2
   }
 }

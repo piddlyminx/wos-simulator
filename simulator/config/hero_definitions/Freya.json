@@ -1,7 +1,6 @@
 {
   "name": "Freya",
   "hero_generation": "S10",
-  "experimental": true,
   "troop_type": "lancer",
   "skills": {
     "FogOfWar": {

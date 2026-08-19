@@ -431,6 +431,16 @@ def _positive_int(value: str) -> int:
     return parsed
 
 
+def _non_negative_int(value: str) -> int:
+    try:
+        parsed = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError("must be an integer")
+    if parsed < 0:
+        raise argparse.ArgumentTypeError("must be >= 0")
+    return parsed
+
+
 def _resolve_emulator(instance_name: str) -> WosEmulator:
     """Resolve instance name → running WosEmulator (mumu lookup + ADB + foreground)."""
     return resolve_instance(instance_name)
@@ -825,8 +835,10 @@ def cmd_reports(
     instance_name: str,
     tab: str,
     count: int,
+    skip: int = 0,
     debug: bool = False,
     full_json: bool = False,
+    long_screenshots: bool = False,
 ) -> int:
     try:
         from report_reader import normalize_mail_tab, capture_multiple_reports
@@ -840,6 +852,7 @@ def cmd_reports(
             command="reports",
             tab=tab,
             count=count,
+            skip=skip,
         )
 
     if count < 1:
@@ -850,6 +863,7 @@ def cmd_reports(
             command="reports",
             tab=tab,
             count=count,
+            skip=skip,
         )
 
     try:
@@ -861,11 +875,19 @@ def cmd_reports(
             instance_name=instance_name,
             tab=tab,
             count=count,
+            skip=skip,
             cause=exc,
         )
 
     try:
-        files = capture_multiple_reports(emulator, tab=normalized_tab, count=count, debug=debug)
+        files = capture_multiple_reports(
+            emulator,
+            tab=normalized_tab,
+            count=count,
+            skip=skip,
+            debug=debug,
+            long_screenshots=long_screenshots,
+        )
         output_dir = str(Path(files[0]).parent) if files else ""
         payload: dict[str, object] = {
             "ok": True,
@@ -873,6 +895,7 @@ def cmd_reports(
             "instance_name": instance_name,
             "tab": normalized_tab,
             "count": len(files),
+            "skip": skip,
             "output_dir": output_dir,
             "files": files,
         }
@@ -883,6 +906,11 @@ def cmd_reports(
             ]
         if full_json:
             payload["reports"] = [json.loads(Path(path).read_text()) for path in files]
+        if long_screenshots:
+            payload["long_screenshots"] = [
+                str(Path(path).with_name(f"{Path(path).stem}_long.png"))
+                for path in files
+            ]
         _emit(payload)
         return 0
     except ValueError as exc:
@@ -894,6 +922,7 @@ def cmd_reports(
             instance_name=instance_name,
             tab=tab,
             count=count,
+            skip=skip,
         )
     except Exception as exc:
         return _fail(
@@ -902,6 +931,7 @@ def cmd_reports(
             instance_name=instance_name,
             tab=tab,
             count=count,
+            skip=skip,
             cause=exc,
         )
 
@@ -1298,8 +1328,19 @@ def build_parser() -> argparse.ArgumentParser:
     reports_p = sub.add_parser("reports", help="Capture and parse multiple consecutive battle reports")
     reports_p.add_argument("--tab", required=True, help="Inbox tab to read from: war, reports, or starred")
     reports_p.add_argument("--count", type=int, required=True, help="Number of consecutive reports to capture starting at visible entry 1")
+    reports_p.add_argument(
+        "--skip",
+        type=_non_negative_int,
+        default=0,
+        help="Number of battle reports to advance past before capturing",
+    )
     reports_p.add_argument("--full-json", action="store_true",
                            help="Inline the parsed report JSON objects in the CLI response as 'reports'")
+    reports_p.add_argument(
+        "--long-screenshots",
+        action="store_true",
+        help="Save one stitched full-length PNG beside each parsed report JSON",
+    )
     reports_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
     memories_p = sub.add_parser("memories", help="Clear visible memories labels using a CSV or JSON map")
@@ -1417,8 +1458,10 @@ def main() -> int:
                     instance_name,
                     args.tab,
                     args.count,
+                    skip=getattr(args, "skip", 0),
                     debug=args.debug,
                     full_json=getattr(args, "full_json", False),
+                    long_screenshots=getattr(args, "long_screenshots", False),
                 )
 
             if args.command == "memories":

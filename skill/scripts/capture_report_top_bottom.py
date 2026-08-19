@@ -39,6 +39,10 @@ _STAT_BONUSES_TEMPLATE = _tpl_dir / "tpl_stat_bonuses.png"
 _STAT_BONUSES_TEMPLATE_THRESHOLD = 0.72
 _SCREEN_CHANGE_MEAN_THRESHOLD = 5.0
 _SCREEN_STABLE_MEAN_THRESHOLD = 1.5
+_REPORT_CONTENT_TOP_REF = 86
+# Stop before the fixed snowy strip above the mail action bar. Including even
+# its upper edge repeats a pale horizontal stripe at every stitched join.
+_REPORT_CONTENT_BOTTOM_REF = 1172
 
 # ── Battle Details button location (fallback only) ─────────────────────────────
 BD_BUTTON_X, BD_BUTTON_Y = 185, 970
@@ -293,10 +297,13 @@ def scroll_to_bottom(
     diagnostic_events: list[dict[str, object]] | None = None,
     fallback_detect_fn: Callable[[np.ndarray], tuple[bool, str]] | None = None,
     fallback_every: int = 4,
+    frames_out: list[np.ndarray] | None = None,
 ) -> bool:
     """Swipe down until the fast detector or periodic fallback confirms the end."""
     for step in range(max_steps + 1):
         img = emulator.screencap_bgr()
+        if frames_out is not None:
+            frames_out.append(img.copy())
         hit, snippet = detect_fn(img)
         used_fallback = False
         if (
@@ -321,10 +328,116 @@ def scroll_to_bottom(
         if step == max_steps:
             break
 
-        emulator.swipe(360, 1120, 360, 120, 450)
+        if frames_out is None:
+            emulator.swipe(360, 1120, 360, 120, 450)
+        else:
+            # Long screenshots need substantial overlap between viewports.
+            # The normal 1000px gesture can coast beyond one viewport and
+            # leave an unrecoverable gap even when the bottom capture succeeds.
+            emulator.swipe(360, 920, 360, 470, 450)
         time.sleep(0.2)
 
     return False
+
+
+def _estimate_vertical_scroll(previous: np.ndarray, current: np.ndarray) -> tuple[int, float]:
+    """Return the document-pixel advance between consecutive report viewports."""
+    if previous.shape != current.shape:
+        raise ValueError(
+            f"Cannot stitch report frames with different shapes: {previous.shape} != {current.shape}"
+        )
+
+    height, width = previous.shape[:2]
+    min_overlap = max(24, int(round(height * 0.08)))
+    min_shift = max(1, int(round(height * 0.03)))
+    max_shift = height - min_overlap
+    if min_shift > max_shift:
+        raise ValueError(f"Report content viewport is too short to stitch: {height}px")
+
+    # Ignore the side borders and down-arrow overlay. Downsample horizontally
+    # only: vertical downsampling aliases several real row offsets to one
+    # coarse offset, which leaves thin duplicated/clipped seams in the result.
+    x1 = int(round(width * 0.08))
+    x2 = int(round(width * 0.86))
+    previous_gray = cv2.cvtColor(previous[:, x1:x2], cv2.COLOR_BGR2GRAY)
+    current_gray = cv2.cvtColor(current[:, x1:x2], cv2.COLOR_BGR2GRAY)
+    target_width = min(180, previous_gray.shape[1])
+    if target_width < previous_gray.shape[1]:
+        previous_gray = cv2.resize(
+            previous_gray,
+            (target_width, height),
+            interpolation=cv2.INTER_AREA,
+        )
+        current_gray = cv2.resize(
+            current_gray,
+            (target_width, height),
+            interpolation=cv2.INTER_AREA,
+        )
+
+    best_shift = min_shift
+    best_score = float("inf")
+    for shift in range(min_shift, max_shift + 1):
+        overlap_previous = previous_gray[shift:]
+        overlap_current = current_gray[: height - shift]
+        score = float(np.mean(cv2.absdiff(overlap_previous, overlap_current)))
+        if score < best_score:
+            best_shift = shift
+            best_score = score
+
+    return best_shift, best_score
+
+
+def stitch_report_frames(
+    frames: list[np.ndarray],
+    *,
+    content_bounds: tuple[int, int] | None = None,
+) -> np.ndarray:
+    """Stitch scrolled report frames into one long, readable screenshot."""
+    if not frames:
+        raise ValueError("Cannot stitch an empty report frame list")
+    if any(frame.shape != frames[0].shape for frame in frames):
+        raise ValueError("Cannot stitch report frames with different dimensions")
+
+    height = frames[0].shape[0]
+    if content_bounds is None:
+        content_top = int(round(_REPORT_CONTENT_TOP_REF * height / _STAT_BONUSES_REF_HEIGHT))
+        content_bottom = int(round(_REPORT_CONTENT_BOTTOM_REF * height / _STAT_BONUSES_REF_HEIGHT))
+    else:
+        content_top, content_bottom = content_bounds
+    if not 0 <= content_top < content_bottom <= height:
+        raise ValueError(
+            f"Invalid report content bounds ({content_top}, {content_bottom}) for {height}px frame"
+        )
+
+    content_frames = [frame[content_top:content_bottom] for frame in frames]
+    chunks = [frames[0][:content_top], content_frames[0]]
+    previous = content_frames[0]
+    last_frame = frames[0]
+    for frame, current in zip(frames[1:], content_frames[1:]):
+        if _mean_frame_delta(previous, current) <= _SCREEN_STABLE_MEAN_THRESHOLD:
+            continue
+        shift, score = _estimate_vertical_scroll(previous, current)
+        if score > 24.0:
+            raise RuntimeError(
+                "Could not align consecutive report screenshots reliably "
+                f"(best mean pixel error={score:.2f})"
+            )
+        chunks.append(current[current.shape[0] - shift :])
+        previous = current
+        last_frame = frame
+
+    chunks.append(last_frame[content_bottom:])
+    return np.concatenate(chunks, axis=0)
+
+
+def save_long_report_screenshot(frames: list[np.ndarray], output_path: str | Path) -> str:
+    """Stitch report frames and write the resulting PNG atomically enough for CLI use."""
+    path = Path(output_path).expanduser().resolve()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    stitched = stitch_report_frames(frames)
+    if not cv2.imwrite(str(path), stitched):
+        raise RuntimeError(f"Failed to write long report screenshot: {path}")
+    return str(path)
 
 
 def _save_bottom_failure_diagnostics(
@@ -359,6 +472,7 @@ def capture_report(
     outdir: Path,
     prefix: str = "report",
     debug: bool = False,
+    long_screenshot_path: str | Path | None = None,
 ) -> dict[str, str | bool]:
     """Capture report_top and confirm report bottom.
 
@@ -379,6 +493,7 @@ def capture_report(
 
     bottom_events: list[dict[str, object]] = []
     last_bottom_frame: list[np.ndarray] = []
+    scroll_frames: list[np.ndarray] | None = [] if long_screenshot_path is not None else None
 
     def _detect_bottom(img: np.ndarray) -> tuple[bool, str]:
         last_bottom_frame[:] = [img]
@@ -394,6 +509,7 @@ def capture_report(
         debug_dir=outdir if debug else None,
         diagnostic_events=bottom_events,
         fallback_detect_fn=contains_report_end,
+        frames_out=scroll_frames,
     )
     bottom_path = outdir / f'{prefix}_bottom.png'
     if last_bottom_frame:
@@ -411,11 +527,17 @@ def capture_report(
     if debug:
         _write_json(outdir / f"{prefix}_bottom_detection_events.json", bottom_events)
 
-    return {
+    result: dict[str, str | bool] = {
         "report_top": str(top_path),
         "report_bottom": str(bottom_path),
         "report_bottom_reached": ok,
     }
+    if long_screenshot_path is not None:
+        result["report_long"] = save_long_report_screenshot(
+            scroll_frames or [top_img],
+            long_screenshot_path,
+        )
+    return result
 
 
 def _find_battle_details_button(img_bgr: np.ndarray) -> tuple[int, int, float] | None:
@@ -589,13 +711,19 @@ def capture_full_report(
     outdir: Path,
     debug: bool = False,
     battle_details_ready: Callable[[dict[str, str]], None] | None = None,
+    long_screenshot_path: str | Path | None = None,
 ) -> dict[str, str | bool]:
     """Capture all 4 screenshots for a single report."""
     started = time.monotonic()
     outdir.mkdir(parents=True, exist_ok=True)
 
     logger.info("Capturing battle report top and bottom to %s", outdir)
-    report_data = capture_report(emulator, outdir, debug=debug)
+    report_data = capture_report(
+        emulator,
+        outdir,
+        debug=debug,
+        long_screenshot_path=long_screenshot_path,
+    )
 
     logger.info("Capturing battle details to %s", outdir)
     report_bottom_frame = cv2.imread(report_data["report_bottom"])

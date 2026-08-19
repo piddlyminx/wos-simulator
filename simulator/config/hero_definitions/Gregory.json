@@ -1,7 +1,6 @@
 {
   "name": "Gregory",
   "hero_generation": "S10",
-  "experimental": true,
   "troop_type": "infantry",
   "skills": {
     "LegionOfTheSun": {

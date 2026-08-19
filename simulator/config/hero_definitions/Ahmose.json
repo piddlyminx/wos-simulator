@@ -40,11 +40,9 @@
           },
           "duration": {
             "turns": {
-              "count": 2,
-              "delay": 1
+              "count": 2
             }
-          },
-          "same_effect_stacking": "max"
+          }
         },
         "ViperFormation/3": {
           "type": "active.hero.damageTaken.down",
@@ -62,11 +60,9 @@
           },
           "duration": {
             "turns": {
-              "count": 2,
-              "delay": 1
+              "count": 2
             }
-          },
-          "same_effect_stacking": "max"
+          }
         }
       }
     },
