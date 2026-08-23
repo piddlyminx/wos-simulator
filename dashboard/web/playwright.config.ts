@@ -28,8 +28,10 @@ export default defineConfig({
     ? {}
     : {
         webServer: {
-          command: `npm run dev -- -p ${PORT}`,
-           wait: {
+          // Keep Playwright's generated files independent from both the normal
+          // developer server and production builds.
+          command: `npm run dev:playwright -- -p ${PORT}`,
+          wait: {
             stdout: /Local:\s+http:\/\/localhost:\d+/,
           },
           // Never reuse: a stale process on this port is more likely to be a
