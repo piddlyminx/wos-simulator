@@ -15,6 +15,10 @@ test("dev startup syncs the repo-root uv environment before Next starts", () => 
     "utf8",
   );
   const nextConfig = readFileSync(join(webRoot, "next.config.ts"), "utf8");
+  const playwrightConfig = readFileSync(
+    join(webRoot, "playwright.config.ts"),
+    "utf8",
+  );
   const devCompose = readFileSync(join(webRoot, "..", "..", "docker-compose.yml"), "utf8");
   const prodCompose = readFileSync(
     join(webRoot, "..", "..", "docker-compose.prod.yml"),
@@ -22,10 +26,22 @@ test("dev startup syncs the repo-root uv environment before Next starts", () => 
   );
   const devDockerfile = readFileSync(join(webRoot, "Dockerfile"), "utf8");
 
+  assert.match(packageJson.scripts?.dev ?? "", /NEXT_DIST_DIR=\.next-dev/);
   assert.match(packageJson.scripts?.dev ?? "", /dev-startup\.sh/);
+  assert.match(
+    packageJson.scripts?.["dev-user"] ?? "",
+    /NEXT_DIST_DIR=\.next-user/,
+  );
+  assert.match(
+    packageJson.scripts?.["dev:playwright"] ?? "",
+    /NEXT_DIST_DIR=\.next-playwright/,
+  );
   assert.match(packageJson.scripts?.["dev:docker"] ?? "", /next dev --webpack/);
   assert.match(packageJson.scripts?.build ?? "", /next build --webpack/);
-  assert.match(packageJson.scripts?.smoke ?? "", /next build --webpack && playwright test/);
+  assert.equal(packageJson.scripts?.playwright, "playwright test");
+  assert.equal(packageJson.scripts?.smoke, "npm run build && npm run playwright");
+  assert.match(playwrightConfig, /npm run dev:playwright/);
+  assert.doesNotMatch(playwrightConfig, /command: `npm run dev --/);
   assert.match(startupScript, /uv sync/);
   assert.match(startupScript, /exec next "\$@"/);
   assert.match(devCompose, /- \.\/dashboard:\/repo\/dashboard:ro/);

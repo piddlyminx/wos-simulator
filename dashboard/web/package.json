@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "scripts/dev-startup.sh dev --webpack",
+    "dev": "NEXT_DIST_DIR=.next-dev scripts/dev-startup.sh dev --webpack",
     "dev-user": "NEXT_DIST_DIR=.next-user scripts/dev-startup.sh dev --webpack",
+    "dev:playwright": "NEXT_DIST_DIR=.next-playwright scripts/dev-startup.sh dev --webpack",
     "dev:docker": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
     "test": "npx --yes tsx --test \"lib/**/*.test.ts\"",
     "lint": "eslint .",
-    "smoke": "next build --webpack && playwright test"
+    "playwright": "playwright test",
+    "smoke": "npm run build && npm run playwright"
   },
   "dependencies": {
     "@types/diff": "^7.0.2",

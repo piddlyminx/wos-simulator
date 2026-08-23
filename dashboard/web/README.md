@@ -6,7 +6,8 @@ A read-only local dev dashboard for the Whiteout Survival battle simulator.
 
 Always run `npm run smoke` against the committed `test_results/dashboard.sqlite` before marking dashboard work done.
 
-This builds the app, starts the production server, and runs Playwright smoke tests across all routes.
+This builds the app, then runs Playwright smoke tests across all routes using
+Playwright's isolated managed development server.
 
 For agent visual QA, do not start ad-hoc dashboard dev servers by default.
 First use an already-running local dashboard at `http://localhost:3000` when it
@@ -32,6 +33,13 @@ npm run dev
 The app runs at http://localhost:3000 and redirects to `/runs` by default.
 The host dev command runs `uv sync` from the repo root before starting Next.js,
 so the shared Python `.venv` is available for OCR helpers.
+
+Next output is separated by role so concurrent tools do not contend for the
+same development lock: `npm run dev` uses `.next-dev`, `npm run dev-user` uses
+`.next-user`, Playwright's managed server uses `.next-playwright`, and
+production build/start use `.next`. Running either `npm run playwright` or
+`npx playwright test` uses the managed Playwright server automatically unless
+`PLAYWRIGHT_BASE_URL` explicitly points the tests at an existing server.
 
 The Simulate and Optimise Ratio buttons do not call server compute routes. They
 run TypeScript calculations in a browser worker, then POST completed results
