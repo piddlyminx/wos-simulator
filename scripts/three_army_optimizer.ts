@@ -5,8 +5,9 @@ import { pathToFileURL } from "node:url";
 
 import { BattleInputBuilder } from "../simulator/src/battleInputBuilder";
 import { loadSimulatorConfig } from "../simulator/src/config-node";
-import { removeHeroGenerationStats } from "../simulator/src/fighterResolution";
-import { simulateBattles } from "../simulator/src/simulator";
+import { createSeededRng } from "../simulator/src/effects";
+import { applyHeroGenerationStats, removeHeroGenerationStats } from "../simulator/src/fighterResolution";
+import { prepareBattle, runPrepared, type CompiledBattle } from "../simulator/src/simulator";
 import { BatchWorkerPool } from "../simulator/src/workerPool";
 import type {
   BattleResult,
@@ -14,11 +15,13 @@ import type {
   HeroInputEntry,
   SimulatorConfig,
   SkillFile,
+  StatBlock,
   UnitType
 } from "../simulator/src/types";
 import { WorkerThreadBatchWorker } from "./workerThreadBatchWorker";
 
 export type TeamSide = "attacker" | "defender";
+export type ArmyOrdering = "sequential" | "random";
 
 export interface ArmyDefinition {
   name: string;
@@ -50,6 +53,7 @@ export interface TroopOptimizationDefinition {
 export interface ThreeArmyDefinition {
   attacker: [ArmyDefinition, ArmyDefinition, ArmyDefinition];
   defender: [ArmyDefinition, ArmyDefinition, ArmyDefinition];
+  ordering: ArmyOrdering;
   max_rounds?: number;
   input_stats_include_hero_generation: Record<TeamSide, boolean>;
   optimization?: OptimizationDefinition;
@@ -86,6 +90,13 @@ export interface OptimizationResult {
   averageMargin: number;
 }
 
+export type OptimizedArmyStats = Record<UnitType, StatBlock>;
+export type OptimizedTeamStats = [OptimizedArmyStats, OptimizedArmyStats, OptimizedArmyStats];
+
+export interface OptimizationOutputResult extends OptimizationResult {
+  stats: OptimizedTeamStats;
+}
+
 export interface TroopCounts {
   infantry: number;
   lancer: number;
@@ -109,12 +120,17 @@ export interface TroopOptimizationResult {
   search: TroopOptimizationDefinition;
 }
 
+export interface TroopOptimizationOutputResult extends TroopOptimizationResult {
+  stats: OptimizedTeamStats;
+}
+
 export interface TroopOptimizationProgress {
   stage: "coarse" | "fine" | "finalist";
   pass: number;
   armyIndex: number;
   completed: number;
   total: number;
+  battlesCompleted: number;
 }
 
 interface CliOptions {
@@ -128,12 +144,70 @@ interface CliOptions {
   json: boolean;
 }
 
-export interface OptimizationWorkerTask {
+export interface DefinitionEvaluationWorkerTask {
   definition: ThreeArmyDefinition;
   heroes: string[][];
   side: TeamSide;
   reps: number;
   seed: number;
+}
+
+export interface HeroOptimizationWorkerTask {
+  candidate: OptimizationCandidateKey;
+  seed: number;
+  seedNamespace: string;
+  scenarios: HeroOptimizationScenario[];
+}
+
+export interface HeroOptimizationScenario {
+  attackerOrderIndex: number;
+  defenderOrderIndex: number;
+  rep: number;
+}
+
+export interface HeroScreeningPolicy {
+  retainFractions: [number, number, number, number];
+  minimumRetained: number;
+  minimumCandidates: number;
+}
+
+export interface HeroStatChoice {
+  hero: HeroInputEntry;
+  normalizedName: string;
+  statRow: StatBlock;
+}
+
+export interface ArmyHeroChoices {
+  infantry: HeroStatChoice[];
+  lancer: HeroStatChoice[];
+  marksman: HeroStatChoice[];
+}
+
+export interface ArmyHeroSelectionKey {
+  infantry: number;
+  lancer: number;
+  marksman: number;
+}
+
+export interface OptimizationCandidateKey {
+  armies: [ArmyHeroSelectionKey, ArmyHeroSelectionKey, ArmyHeroSelectionKey];
+}
+
+export interface HeroOptimizationWorkerContext {
+  definition: ThreeArmyDefinition;
+  side: TeamSide;
+  choices: [ArmyHeroChoices, ArmyHeroChoices, ArmyHeroChoices];
+}
+
+interface HeroRaceCandidate {
+  candidate: OptimizationCandidateKey;
+  result: OptimizationResult;
+}
+
+interface HeroScreeningStage {
+  name: string;
+  scenarios: HeroOptimizationScenario[];
+  retainFraction: number;
 }
 
 interface EvaluatedTroopCandidate {
@@ -144,12 +218,20 @@ interface EvaluatedTroopCandidate {
 
 interface MutableArmy {
   name: string;
+  armyIndex: number;
   slot: number;
-  fighter: FighterInput;
+  template: FighterInput;
+  troops: Record<string, number>;
+  pristine: boolean;
 }
 
 type Order = readonly [number, number, number];
-type BattleResolver = (attacker: FighterInput, defender: FighterInput, seed: string) => BattleResult;
+type BattleResolver = (
+  attacker: FighterInput,
+  defender: FighterInput,
+  seed: string,
+  preparationKey?: string
+) => BattleResult;
 
 const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
 const ORDERS = permutations([0, 1, 2]) as unknown as Order[];
@@ -158,11 +240,26 @@ const ADAPTIVE_FINALISTS_PER_METRIC = 30;
 const ADAPTIVE_MAX_FINALISTS = 40;
 const ADAPTIVE_PRELIMINARY_REPS_DIVISOR = 10;
 const CONFIDENCE_Z = 1.96;
+export const DEFAULT_HERO_SCREENING_POLICY: HeroScreeningPolicy = {
+  retainFractions: [0.65, 0.45, 0.25, 0.1],
+  minimumRetained: 100,
+  minimumCandidates: 100
+};
+const HERO_OPTIMIZATION_BATCH_SIZE = 1;
+const HERO_OPTIMIZATION_BATCHES_PER_WORKER = 2;
+const OPTIMIZATION_WORKER_RESOURCE_LIMITS = {
+  maxOldGenerationSizeMb: 192,
+  maxYoungGenerationSizeMb: 32
+};
 
 export function parseDefinition(raw: unknown, simulatorConfig: SimulatorConfig): ThreeArmyDefinition {
   if (!isRecord(raw)) throw new Error("Configuration must be a JSON object");
   const attacker = parseArmies(raw.attacker, "attacker", simulatorConfig);
   const defender = parseArmies(raw.defender, "defender", simulatorConfig);
+  const ordering = raw.ordering === undefined ? "sequential" : raw.ordering;
+  if (ordering !== "sequential" && ordering !== "random") {
+    throw new Error("ordering must be sequential or random");
+  }
   const maxRounds = raw.max_rounds === undefined ? 1500 : positiveInteger(raw.max_rounds, "max_rounds");
   if (raw.engagement_type !== undefined) {
     throw new Error("This three-army mode is not a rally or garrison; remove engagement_type");
@@ -192,6 +289,7 @@ export function parseDefinition(raw: unknown, simulatorConfig: SimulatorConfig):
   return {
     attacker,
     defender,
+    ordering,
     max_rounds: maxRounds,
     input_stats_include_hero_generation: inputStatsIncludeHeroGeneration,
     ...(optimization ? { optimization } : {}),
@@ -208,42 +306,81 @@ export function simulateThreeArmyMatch(
   resolveBattle?: BattleResolver
 ): MatchResult {
   const normalizedDefinition = normalizeDefinitionHeroStats(definition, simulatorConfig);
-  const attacker = orderedArmies(normalizedDefinition.attacker, attackerOrder);
-  const defender = orderedArmies(normalizedDefinition.defender, defenderOrder);
-  const battleResolver = resolveBattle ?? createBattleResolver(normalizedDefinition, simulatorConfig);
+  const effectiveDefinition = resolveBattle
+    ? normalizedDefinition
+    : applyDefinitionHeroGenerationStats(normalizedDefinition, simulatorConfig);
+  return simulateEffectiveThreeArmyMatch(
+    effectiveDefinition,
+    simulatorConfig,
+    attackerOrder,
+    defenderOrder,
+    seed,
+    resolveBattle ?? createBattleResolver(effectiveDefinition, simulatorConfig)
+  );
+}
+
+function simulateEffectiveThreeArmyMatch(
+  definition: ThreeArmyDefinition,
+  simulatorConfig: SimulatorConfig,
+  attackerOrder: Order,
+  defenderOrder: Order,
+  seed: string,
+  battleResolver: BattleResolver
+): MatchResult {
+  const attacker = orderedArmies(definition.attacker, attackerOrder);
+  const defender = orderedArmies(definition.defender, defenderOrder);
+  const orderingRng = createSeededRng(`${seed}:ordering`);
   let battles = 0;
 
   const fight = (left: MutableArmy, right: MutableArmy): "ok" | "draw" => {
-    const result = battleResolver(left.fighter, right.fighter, `${seed}:battle:${battles}`);
+    const preparationKey = left.pristine && right.pristine
+      ? `${left.armyIndex}:${right.armyIndex}`
+      : undefined;
+    const result = battleResolver(
+      fighterAtCurrentTroops(left),
+      fighterAtCurrentTroops(right),
+      `${seed}:battle:${battles}`,
+      preparationKey
+    );
     battles += 1;
+    left.pristine = false;
+    right.pristine = false;
     if (result.winner === "draw") {
-      left.fighter = withRemainingTroops(left.fighter, result.remaining.attacker, simulatorConfig);
-      right.fighter = withRemainingTroops(right.fighter, result.remaining.defender, simulatorConfig);
+      left.troops = withRemainingTroops(left.troops, result.remaining.attacker, simulatorConfig);
+      right.troops = withRemainingTroops(right.troops, result.remaining.defender, simulatorConfig);
       return "draw";
     }
     if (result.winner === "attacker") {
-      left.fighter = withRemainingTroops(left.fighter, result.remaining.attacker, simulatorConfig);
+      left.troops = withRemainingTroops(left.troops, result.remaining.attacker, simulatorConfig);
       removeArmy(defender, right);
     } else {
-      right.fighter = withRemainingTroops(right.fighter, result.remaining.defender, simulatorConfig);
+      right.troops = withRemainingTroops(right.troops, result.remaining.defender, simulatorConfig);
       removeArmy(attacker, left);
     }
     return "ok";
   };
 
-  // Opening fights are paired by the random slot assigned to each army.
-  for (let slot = 1; slot <= 3; slot += 1) {
-    const left = attacker.find((army) => army.slot === slot);
-    const right = defender.find((army) => army.slot === slot);
-    if (!left || !right) throw new Error(`Internal error: missing opening army in slot ${slot}`);
-    if (fight(left, right) === "draw") return drawResult(attacker, defender, battles);
-  }
+  if (definition.ordering === "random") {
+    while (attacker.length > 0 && defender.length > 0) {
+      const left = attacker[Math.floor(orderingRng() * attacker.length)];
+      const right = defender[Math.floor(orderingRng() * defender.length)];
+      if (fight(left, right) === "draw") return drawResult(attacker, defender, battles);
+    }
+  } else {
+    // Opening fights are paired by the random slot assigned to each army.
+    for (let slot = 1; slot <= 3; slot += 1) {
+      const left = attacker.find((army) => army.slot === slot);
+      const right = defender.find((army) => army.slot === slot);
+      if (!left || !right) throw new Error(`Internal error: missing opening army in slot ${slot}`);
+      if (fight(left, right) === "draw") return drawResult(attacker, defender, battles);
+    }
 
-  // Thereafter, the lowest-numbered live armies meet until one team is eliminated.
-  while (attacker.length > 0 && defender.length > 0) {
-    attacker.sort(bySlot);
-    defender.sort(bySlot);
-    if (fight(attacker[0], defender[0]) === "draw") return drawResult(attacker, defender, battles);
+    // Thereafter, the lowest-numbered live armies meet until one team is eliminated.
+    while (attacker.length > 0 && defender.length > 0) {
+      attacker.sort(bySlot);
+      defender.sort(bySlot);
+      if (fight(attacker[0], defender[0]) === "draw") return drawResult(attacker, defender, battles);
+    }
   }
 
   return {
@@ -263,6 +400,25 @@ export function evaluateDefinition(
 ): EvaluationResult {
   if (!Number.isInteger(reps) || reps < 1) throw new Error("reps must be at least 1");
   const normalizedDefinition = normalizeDefinitionHeroStats(definition, simulatorConfig);
+  const effectiveDefinition = resolveBattle
+    ? normalizedDefinition
+    : applyDefinitionHeroGenerationStats(normalizedDefinition, simulatorConfig);
+  return evaluateEffectiveDefinition(
+    effectiveDefinition,
+    simulatorConfig,
+    reps,
+    seed,
+    resolveBattle ?? createBattleResolver(effectiveDefinition, simulatorConfig)
+  );
+}
+
+function evaluateEffectiveDefinition(
+  definition: ThreeArmyDefinition,
+  simulatorConfig: SimulatorConfig,
+  reps: number,
+  seed: number,
+  resolveBattle: BattleResolver
+): EvaluationResult {
   let attackerWins = 0;
   let defenderWins = 0;
   let draws = 0;
@@ -275,8 +431,8 @@ export function evaluateDefinition(
   for (const attackerOrder of ORDERS) {
     for (const defenderOrder of ORDERS) {
       for (let rep = 0; rep < reps; rep += 1) {
-        const result = simulateThreeArmyMatch(
-          normalizedDefinition,
+        const result = simulateEffectiveThreeArmyMatch(
+          definition,
           simulatorConfig,
           attackerOrder,
           defenderOrder,
@@ -312,57 +468,191 @@ export function evaluateDefinition(
   };
 }
 
-export function generateOptimizationCandidates(
+function evaluateEffectiveScenarioSet(
   definition: ThreeArmyDefinition,
   simulatorConfig: SimulatorConfig,
-  maxCandidates = 100_000
-): Array<{ definition: ThreeArmyDefinition; heroes: string[][] }> {
+  scenarios: readonly HeroOptimizationScenario[],
+  seed: number,
+  seedNamespace: string,
+  resolveBattle: BattleResolver
+): EvaluationResult {
+  if (scenarios.length === 0) throw new Error("Hero optimization scenario set must not be empty");
+  const matches = scenarios.map((scenario) => simulateEffectiveThreeArmyMatch(
+    definition,
+    simulatorConfig,
+    ORDERS[scenario.attackerOrderIndex],
+    ORDERS[scenario.defenderOrderIndex],
+    `${seed}:${seedNamespace}:attacker:${scenario.attackerOrderIndex}:defender:${scenario.defenderOrderIndex}:rep:${scenario.rep}`,
+    resolveBattle
+  ));
+  return evaluationFromMatchResults(matches);
+}
+
+function evaluationFromMatchResults(matches: readonly MatchResult[]): EvaluationResult {
+  let attackerWins = 0;
+  let defenderWins = 0;
+  let draws = 0;
+  let attackerRemaining = 0;
+  let defenderRemaining = 0;
+  let battles = 0;
+  let attackerMarginMean = 0;
+  let attackerMarginM2 = 0;
+  for (const [index, result] of matches.entries()) {
+    if (result.winner === "attacker") attackerWins += 1;
+    else if (result.winner === "defender") defenderWins += 1;
+    else draws += 1;
+    attackerRemaining += result.attackerRemaining;
+    defenderRemaining += result.defenderRemaining;
+    battles += result.battles;
+    const scenario = index + 1;
+    const attackerMargin = result.attackerRemaining - result.defenderRemaining;
+    const marginDelta = attackerMargin - attackerMarginMean;
+    attackerMarginMean += marginDelta / scenario;
+    attackerMarginM2 += marginDelta * (attackerMargin - attackerMarginMean);
+  }
+  const scenarios = matches.length;
+  return {
+    scenarios,
+    attackerWins,
+    defenderWins,
+    draws,
+    attackerWinRate: attackerWins / scenarios,
+    defenderWinRate: defenderWins / scenarios,
+    averageAttackerRemaining: attackerRemaining / scenarios,
+    averageDefenderRemaining: defenderRemaining / scenarios,
+    averageAttackerMargin: (attackerRemaining - defenderRemaining) / scenarios,
+    attackerMarginStd: scenarios > 1 ? Math.sqrt(attackerMarginM2 / (scenarios - 1)) : 0,
+    averageBattles: battles / scenarios
+  };
+}
+
+export function createHeroOptimizationWorkerContext(
+  definition: ThreeArmyDefinition,
+  simulatorConfig: SimulatorConfig
+): HeroOptimizationWorkerContext {
   const optimization = definition.optimization;
   if (!optimization) throw new Error("The configuration has no optimization section");
   const normalizedDefinition = normalizeDefinitionHeroStats(definition, simulatorConfig);
   const sourceArmies = normalizedDefinition[optimization.side];
-  const choices = sourceArmies.map((_, armyIndex) =>
-    heroLineups(
+  const choices = sourceArmies.map((army, armyIndex) =>
+    heroChoicesForArmy(
+      army,
       optimization.per_army_hero_pools?.[armyIndex] ?? optimization.hero_pools!,
       optimization.hero_skill_levels,
       simulatorConfig
     )
-  );
-  const output: Array<{ definition: ThreeArmyDefinition; heroes: string[][] }> = [];
-  const selected: HeroInputEntry[][] = [];
+  ) as [ArmyHeroChoices, ArmyHeroChoices, ArmyHeroChoices];
+  const fixedSide: TeamSide = optimization.side === "attacker" ? "defender" : "attacker";
+  const fixedArmies = normalizedDefinition[fixedSide].map((army) => ({
+    ...army,
+    fighter: applyHeroGenerationStats(army.fighter, simulatorConfig)
+  })) as [ArmyDefinition, ArmyDefinition, ArmyDefinition];
+  return {
+    definition: {
+      ...normalizedDefinition,
+      [fixedSide]: fixedArmies,
+      input_stats_include_hero_generation: { attacker: false, defender: false }
+    },
+    side: optimization.side,
+    choices
+  };
+}
+
+export function* generateOptimizationCandidateKeys(
+  context: HeroOptimizationWorkerContext
+): Generator<OptimizationCandidateKey> {
+  const optimization = context.definition.optimization;
+  if (!optimization) throw new Error("The configuration has no optimization section");
+  const selected: ArmyHeroSelectionKey[] = [];
   const selectedNames = new Set<string>();
   const uniqueHeroes = optimization.unique_heroes ?? true;
 
-  const visit = (armyIndex: number): void => {
-    if (armyIndex === sourceArmies.length) {
-      const armies = sourceArmies.map((army, index) => ({
-        ...army,
-        fighter: { ...army.fighter, heroes: selected[index].map(cloneHero) }
-      })) as [ArmyDefinition, ArmyDefinition, ArmyDefinition];
-      output.push({
-        definition: { ...normalizedDefinition, [optimization.side]: armies },
-        heroes: selected.map((lineup) => lineup.map((hero) => hero.name))
-      });
-      if (output.length > maxCandidates) {
-        throw new Error(`Optimization exceeds --max-candidates=${maxCandidates}; narrow the hero pools or raise the limit`);
-      }
+  function* visit(armyIndex: number): Generator<OptimizationCandidateKey> {
+    if (armyIndex === context.choices.length) {
+      yield {
+        armies: [
+          { ...selected[0] },
+          { ...selected[1] },
+          { ...selected[2] }
+        ]
+      };
       return;
     }
-    for (const lineup of choices[armyIndex]) {
-      const normalized = lineup.map((hero) => normalizeHeroName(hero.name));
-      if (uniqueHeroes && normalized.some((name) => selectedNames.has(name))) continue;
+    for (const lineup of armyHeroSelectionKeys(context.choices[armyIndex])) {
+      const names = normalizedNamesForSelection(context.choices[armyIndex], lineup);
+      if (uniqueHeroes && names.some((name) => selectedNames.has(name))) continue;
       selected.push(lineup);
-      if (uniqueHeroes) normalized.forEach((name) => selectedNames.add(name));
-      visit(armyIndex + 1);
-      if (uniqueHeroes) normalized.forEach((name) => selectedNames.delete(name));
+      if (uniqueHeroes) names.forEach((name) => selectedNames.add(name));
+      yield* visit(armyIndex + 1);
+      if (uniqueHeroes) names.forEach((name) => selectedNames.delete(name));
       selected.pop();
     }
-  };
-  visit(0);
-  if (output.length === 0) {
+  }
+
+  yield* visit(0);
+}
+
+export function countOptimizationCandidates(
+  context: HeroOptimizationWorkerContext,
+  maxCandidates = 100_000
+): number {
+  let count = 0;
+  for (const _candidate of generateOptimizationCandidateKeys(context)) {
+    count += 1;
+    if (count > maxCandidates) {
+      throw new Error(`Optimization exceeds --max-candidates=${maxCandidates}; narrow the hero pools or raise the limit`);
+    }
+  }
+  if (count === 0) {
     throw new Error("Hero pools produce no valid candidates (unique_heroes may leave too few heroes for three armies)");
   }
-  return output;
+  return count;
+}
+
+export function effectiveDefinitionForOptimizationCandidate(
+  context: HeroOptimizationWorkerContext,
+  candidate: OptimizationCandidateKey
+): ThreeArmyDefinition {
+  const createArmy = (armyIndex: 0 | 1 | 2): ArmyDefinition => {
+    const army = context.definition[context.side][armyIndex];
+    const selection = candidate.armies[armyIndex];
+    const choices = context.choices[armyIndex];
+    const infantry = choices.infantry[selection.infantry];
+    const lancer = choices.lancer[selection.lancer];
+    const marksman = choices.marksman[selection.marksman];
+    return {
+      ...army,
+      fighter: {
+        ...army.fighter,
+        stats: {
+          infantry: infantry.statRow,
+          lancer: lancer.statRow,
+          marksman: marksman.statRow
+        },
+        heroes: [infantry.hero, lancer.hero, marksman.hero]
+      }
+    };
+  };
+  const armies: [ArmyDefinition, ArmyDefinition, ArmyDefinition] = [
+    createArmy(0),
+    createArmy(1),
+    createArmy(2)
+  ];
+  return { ...context.definition, [context.side]: armies };
+}
+
+export function heroNamesForOptimizationCandidate(
+  context: HeroOptimizationWorkerContext,
+  candidate: OptimizationCandidateKey
+): string[][] {
+  return candidate.armies.map((selection, armyIndex) => {
+    const choices = context.choices[armyIndex];
+    return [
+      choices.infantry[selection.infantry].hero.name,
+      choices.lancer[selection.lancer].hero.name,
+      choices.marksman[selection.marksman].hero.name
+    ];
+  });
 }
 
 export function optimizeDefinition(
@@ -371,17 +661,33 @@ export function optimizeDefinition(
   reps: number,
   seed: number,
   maxCandidates = 100_000,
-  onProgress?: (completed: number, total: number) => void
+  onProgress?: (completed: number, total: number, battlesCompleted: number, stage?: string) => void,
+  resultLimit = maxCandidates
 ): OptimizationResult[] {
-  const optimization = definition.optimization;
-  if (!optimization) throw new Error("The configuration has no optimization section");
-  const candidates = generateOptimizationCandidates(definition, simulatorConfig, maxCandidates);
-  const results = candidates.map((candidate, index) => {
-    const evaluation = evaluateDefinition(candidate.definition, simulatorConfig, reps, seed);
-    onProgress?.(index + 1, candidates.length);
-    return optimizationResult(candidate.heroes, evaluation, optimization.side);
-  });
-  return rankOptimizationResults(results);
+  const context = createHeroOptimizationWorkerContext(definition, simulatorConfig);
+  const total = countOptimizationCandidates(context, maxCandidates);
+  const scenarios = allOrderingScenarios(reps);
+  onProgress?.(0, total, 0, "final");
+  const retained: OptimizationResult[] = [];
+  let completed = 0;
+  let battlesCompleted = 0;
+  for (const candidate of generateOptimizationCandidateKeys(context)) {
+    const result = evaluateHeroOptimizationWorkerTask(context, {
+      candidate,
+      seed,
+      seedNamespace: "final",
+      scenarios
+    }, simulatorConfig);
+    retainOptimizationResults(
+      retained,
+      [result],
+      resultLimit
+    );
+    completed += 1;
+    battlesCompleted += evaluationBattleCount(result.evaluation);
+    onProgress?.(completed, total, battlesCompleted, "final");
+  }
+  return finalizeRetainedOptimizationResults(retained, resultLimit);
 }
 
 export async function optimizeDefinitionParallel(
@@ -391,34 +697,238 @@ export async function optimizeDefinitionParallel(
   seed: number,
   jobs: number,
   maxCandidates = 100_000,
-  onProgress?: (completed: number, total: number) => void
+  onProgress?: (completed: number, total: number, battlesCompleted: number, stage?: string) => void,
+  resultLimit = maxCandidates,
+  screeningPolicy: HeroScreeningPolicy | false = DEFAULT_HERO_SCREENING_POLICY
 ): Promise<OptimizationResult[]> {
-  if (jobs <= 1) return optimizeDefinition(definition, simulatorConfig, reps, seed, maxCandidates, onProgress);
-  const optimization = definition.optimization;
-  if (!optimization) throw new Error("The configuration has no optimization section");
-  const candidates = generateOptimizationCandidates(definition, simulatorConfig, maxCandidates);
-  const pool = new BatchWorkerPool<OptimizationWorkerTask, OptimizationResult>(
-    Math.min(Math.floor(jobs), candidates.length),
-    () => new WorkerThreadBatchWorker(new URL("./three_army_optimizer.worker.ts", import.meta.url))
+  const context = createHeroOptimizationWorkerContext(definition, simulatorConfig);
+  const total = countOptimizationCandidates(context, maxCandidates);
+  const workerCount = Math.min(Math.max(1, Math.floor(jobs)), total);
+  const pool = new BatchWorkerPool<HeroOptimizationWorkerTask, OptimizationResult>(
+    workerCount,
+    () => new WorkerThreadBatchWorker(
+      new URL("./three_army_hero_optimizer.worker.ts", import.meta.url),
+      { workerData: context, resourceLimits: OPTIMIZATION_WORKER_RESOURCE_LIMITS }
+    )
   );
-  let completed = 0;
-  try {
-    const results = await Promise.all(candidates.map(async (candidate) => {
-      const result = await pool.runTask({
-        definition: candidate.definition,
-        heroes: candidate.heroes,
-        side: optimization.side,
-        reps,
-        seed
+  let battlesCompleted = 0;
+  const maxInFlight = workerCount * HERO_OPTIMIZATION_BATCHES_PER_WORKER;
+
+  const evaluateStage = async (
+    inputs: Iterable<{ candidate: OptimizationCandidateKey; previous?: OptimizationResult }>,
+    inputCount: number,
+    scenarios: HeroOptimizationScenario[],
+    stage: string,
+    mergePrevious: boolean
+  ): Promise<HeroRaceCandidate[]> => {
+    let completed = 0;
+    const output: HeroRaceCandidate[] = [];
+    const inFlight = new Set<Promise<void>>();
+    onProgress?.(0, inputCount, battlesCompleted, stage);
+
+    const submit = async (
+      batch: Array<{ candidate: OptimizationCandidateKey; previous?: OptimizationResult }>
+    ): Promise<void> => {
+      const tasks = batch.map(({ candidate }) => ({
+        candidate,
+        seed,
+        seedNamespace: stage,
+        scenarios
+      }));
+      const pending = pool.runBatch(tasks).then((results) => {
+        for (let index = 0; index < results.length; index += 1) {
+          const previous = batch[index].previous;
+          const result = mergePrevious && previous
+            ? optimizationResult(
+              results[index].heroes,
+              mergeEvaluationResults(previous.evaluation, results[index].evaluation),
+              context.side
+            )
+            : results[index];
+          output.push({ candidate: batch[index].candidate, result });
+          battlesCompleted += evaluationBattleCount(results[index].evaluation);
+        }
+        completed += results.length;
+        onProgress?.(completed, inputCount, battlesCompleted, stage);
       });
-      completed += 1;
-      onProgress?.(completed, candidates.length);
-      return result;
-    }));
-    return rankOptimizationResults(results);
+      inFlight.add(pending);
+      void pending.then(
+        () => inFlight.delete(pending),
+        () => inFlight.delete(pending)
+      );
+      if (inFlight.size >= maxInFlight) await Promise.race(inFlight);
+    };
+
+    try {
+      let batch: Array<{ candidate: OptimizationCandidateKey; previous?: OptimizationResult }> = [];
+      for (const input of inputs) {
+        batch.push(input);
+        if (batch.length < HERO_OPTIMIZATION_BATCH_SIZE) continue;
+        await submit(batch);
+        batch = [];
+      }
+      if (batch.length > 0) await submit(batch);
+      await Promise.all(inFlight);
+      return output;
+    } catch (error) {
+      await Promise.allSettled(inFlight);
+      throw error;
+    }
+  };
+
+  try {
+    let active: HeroRaceCandidate[] | undefined;
+    const screeningStages = screeningPolicy === false ? [] : heroScreeningStages(total, screeningPolicy);
+    for (const stage of screeningStages) {
+      const inputs = active
+        ? active.map(({ candidate, result }) => ({ candidate, previous: result }))
+        : initialHeroRaceInputs(context);
+      const inputCount = active?.length ?? total;
+      const evaluated = await evaluateStage(inputs, inputCount, stage.scenarios, stage.name, Boolean(active));
+      const target = Math.min(
+        evaluated.length,
+        Math.max(
+          screeningPolicy === false ? 0 : screeningPolicy.minimumRetained,
+          Math.ceil(total * stage.retainFraction)
+        )
+      );
+      active = selectHeroScreeningSurvivors(evaluated, target);
+    }
+    const finalists = active
+      ? active.map(({ candidate }) => ({ candidate }))
+      : initialHeroRaceInputs(context);
+    const finalistCount = active?.length ?? total;
+    const finalEvaluated = await evaluateStage(
+      finalists,
+      finalistCount,
+      allOrderingScenarios(reps),
+      "final",
+      false
+    );
+    return finalizeRetainedOptimizationResults(
+      finalEvaluated.map(({ result }) => result),
+      resultLimit
+    );
   } finally {
     await pool.close();
   }
+}
+
+function* initialHeroRaceInputs(
+  context: HeroOptimizationWorkerContext
+): Generator<{ candidate: OptimizationCandidateKey }> {
+  for (const candidate of generateOptimizationCandidateKeys(context)) yield { candidate };
+}
+
+function heroScreeningStages(
+  totalCandidates: number,
+  policy: HeroScreeningPolicy
+): HeroScreeningStage[] {
+  validateHeroScreeningPolicy(policy);
+  if (totalCandidates <= policy.minimumCandidates) return [];
+  const balanced = balancedOpeningOrderScenarios();
+  const balancedKeys = new Set(balanced.map(scenarioKey));
+  const remainingFirstRep = allOrderingScenarios(1).filter((scenario) => !balancedKeys.has(scenarioKey(scenario)));
+  const [after12, after36, after72, after144] = policy.retainFractions;
+  return [
+    { name: "screen-12", scenarios: balanced, retainFraction: after12 },
+    { name: "screen-36", scenarios: remainingFirstRep, retainFraction: after36 },
+    { name: "screen-72", scenarios: orderingScenariosForReps([1]), retainFraction: after72 },
+    { name: "screen-144", scenarios: orderingScenariosForReps([2, 3]), retainFraction: after144 }
+  ];
+}
+
+function validateHeroScreeningPolicy(policy: HeroScreeningPolicy): void {
+  if (!Number.isInteger(policy.minimumRetained) || policy.minimumRetained < 1) {
+    throw new Error("Hero screening minimumRetained must be a positive integer");
+  }
+  if (!Number.isInteger(policy.minimumCandidates) || policy.minimumCandidates < 1) {
+    throw new Error("Hero screening minimumCandidates must be a positive integer");
+  }
+  for (const [index, fraction] of policy.retainFractions.entries()) {
+    if (!Number.isFinite(fraction) || fraction <= 0 || fraction > 1) {
+      throw new Error(`Hero screening retainFractions[${index}] must be greater than 0 and at most 1`);
+    }
+    if (index > 0 && fraction > policy.retainFractions[index - 1]) {
+      throw new Error("Hero screening retain fractions must not increase between stages");
+    }
+  }
+}
+
+function balancedOpeningOrderScenarios(): HeroOptimizationScenario[] {
+  const scenarios: HeroOptimizationScenario[] = [];
+  for (let attackerOrderIndex = 0; attackerOrderIndex < ORDERS.length; attackerOrderIndex += 1) {
+    for (const offset of [0, 3]) {
+      scenarios.push({
+        attackerOrderIndex,
+        defenderOrderIndex: (attackerOrderIndex + offset) % ORDERS.length,
+        rep: 0
+      });
+    }
+  }
+  return scenarios;
+}
+
+function allOrderingScenarios(reps: number): HeroOptimizationScenario[] {
+  if (!Number.isInteger(reps) || reps < 1) throw new Error("reps must be at least 1");
+  return orderingScenariosForReps(Array.from({ length: reps }, (_, rep) => rep));
+}
+
+function orderingScenariosForReps(reps: readonly number[]): HeroOptimizationScenario[] {
+  const scenarios: HeroOptimizationScenario[] = [];
+  for (const rep of reps) {
+    for (let attackerOrderIndex = 0; attackerOrderIndex < ORDERS.length; attackerOrderIndex += 1) {
+      for (let defenderOrderIndex = 0; defenderOrderIndex < ORDERS.length; defenderOrderIndex += 1) {
+        scenarios.push({ attackerOrderIndex, defenderOrderIndex, rep });
+      }
+    }
+  }
+  return scenarios;
+}
+
+function scenarioKey(scenario: HeroOptimizationScenario): string {
+  return `${scenario.attackerOrderIndex}:${scenario.defenderOrderIndex}:${scenario.rep}`;
+}
+
+function selectHeroScreeningSurvivors(
+  candidates: HeroRaceCandidate[],
+  target: number
+): HeroRaceCandidate[] {
+  candidates.sort((left, right) => compareOptimizationResults(left.result, right.result));
+  candidates.length = Math.min(candidates.length, target);
+  return candidates;
+}
+
+function mergeEvaluationResults(left: EvaluationResult, right: EvaluationResult): EvaluationResult {
+  const scenarios = left.scenarios + right.scenarios;
+  const leftMarginMean = left.averageAttackerMargin;
+  const rightMarginMean = right.averageAttackerMargin;
+  const marginDelta = rightMarginMean - leftMarginMean;
+  const leftMarginM2 = left.attackerMarginStd ** 2 * Math.max(0, left.scenarios - 1);
+  const rightMarginM2 = right.attackerMarginStd ** 2 * Math.max(0, right.scenarios - 1);
+  const marginM2 = leftMarginM2 + rightMarginM2 +
+    marginDelta ** 2 * left.scenarios * right.scenarios / scenarios;
+  const attackerWins = left.attackerWins + right.attackerWins;
+  const defenderWins = left.defenderWins + right.defenderWins;
+  const draws = left.draws + right.draws;
+  const attackerRemaining = left.averageAttackerRemaining * left.scenarios +
+    right.averageAttackerRemaining * right.scenarios;
+  const defenderRemaining = left.averageDefenderRemaining * left.scenarios +
+    right.averageDefenderRemaining * right.scenarios;
+  const battles = evaluationBattleCount(left) + evaluationBattleCount(right);
+  return {
+    scenarios,
+    attackerWins,
+    defenderWins,
+    draws,
+    attackerWinRate: attackerWins / scenarios,
+    defenderWinRate: defenderWins / scenarios,
+    averageAttackerRemaining: attackerRemaining / scenarios,
+    averageDefenderRemaining: defenderRemaining / scenarios,
+    averageAttackerMargin: (attackerRemaining - defenderRemaining) / scenarios,
+    attackerMarginStd: scenarios > 1 ? Math.sqrt(Math.max(0, marginM2) / (scenarios - 1)) : 0,
+    averageBattles: battles / scenarios
+  };
 }
 
 export function generateTroopCompositions(total: number, stepPercent: number): TroopCounts[] {
@@ -524,21 +1034,25 @@ export async function optimizeWinningTroopsParallel(
   const initialTroops = troopCountsForTeam(currentDefinition[side], simulatorConfig, side);
   const preliminaryReps = Math.max(1, Math.ceil(reps / ADAPTIVE_PRELIMINARY_REPS_DIVISOR));
   let evaluatedCandidates = 0;
+  let battlesCompleted = heroWinner ? 0 : evaluationBattleCount(currentResult.evaluation);
   const pool = jobs > 1
-    ? new BatchWorkerPool<OptimizationWorkerTask, OptimizationResult>(
+    ? new BatchWorkerPool<DefinitionEvaluationWorkerTask, OptimizationResult>(
       Math.max(1, Math.floor(jobs)),
-      () => new WorkerThreadBatchWorker(new URL("./three_army_optimizer.worker.ts", import.meta.url))
+      () => new WorkerThreadBatchWorker(
+        new URL("./three_army_optimizer.worker.ts", import.meta.url),
+        { resourceLimits: OPTIMIZATION_WORKER_RESOURCE_LIMITS }
+      )
     )
     : undefined;
 
   const evaluateCandidates = async (
     candidates: Array<{ definition: ThreeArmyDefinition; troops: TroopCounts }>,
     phaseReps: number,
-    progress: Omit<TroopOptimizationProgress, "completed" | "total">
+    progress: Omit<TroopOptimizationProgress, "completed" | "total" | "battlesCompleted">
   ): Promise<EvaluatedTroopCandidate[]> => {
     let completed = 0;
     const evaluate = async (candidate: { definition: ThreeArmyDefinition; troops: TroopCounts }) => {
-      const task: OptimizationWorkerTask = {
+      const task: DefinitionEvaluationWorkerTask = {
         definition: candidate.definition,
         heroes: currentHeroes,
         side,
@@ -550,7 +1064,8 @@ export async function optimizeWinningTroopsParallel(
         : evaluateOptimizationWorkerTask(task, simulatorConfig);
       completed += 1;
       evaluatedCandidates += 1;
-      onProgress?.({ ...progress, completed, total: candidates.length });
+      battlesCompleted += evaluationBattleCount(result.evaluation);
+      onProgress?.({ ...progress, completed, total: candidates.length, battlesCompleted });
       return { ...candidate, result };
     };
     return Promise.all(candidates.map(evaluate));
@@ -694,9 +1209,30 @@ function conservativeMargin(result: OptimizationResult): number {
   return result.averageMargin - CONFIDENCE_Z * result.evaluation.attackerMarginStd / Math.sqrt(result.evaluation.scenarios);
 }
 
-export function evaluateOptimizationWorkerTask(task: OptimizationWorkerTask, simulatorConfig: SimulatorConfig): OptimizationResult {
+export function evaluateOptimizationWorkerTask(task: DefinitionEvaluationWorkerTask, simulatorConfig: SimulatorConfig): OptimizationResult {
   const evaluation = evaluateDefinition(task.definition, simulatorConfig, task.reps, task.seed);
   return optimizationResult(task.heroes, evaluation, task.side);
+}
+
+export function evaluateHeroOptimizationWorkerTask(
+  context: HeroOptimizationWorkerContext,
+  task: HeroOptimizationWorkerTask,
+  simulatorConfig: SimulatorConfig
+): OptimizationResult {
+  const definition = effectiveDefinitionForOptimizationCandidate(context, task.candidate);
+  const evaluation = evaluateEffectiveScenarioSet(
+    definition,
+    simulatorConfig,
+    task.scenarios,
+    task.seed,
+    task.seedNamespace,
+    createBattleResolver(definition, simulatorConfig)
+  );
+  return optimizationResult(
+    heroNamesForOptimizationCandidate(context, task.candidate),
+    evaluation,
+    context.side
+  );
 }
 
 export function parseCliArgs(argv: string[]): CliOptions {
@@ -742,28 +1278,35 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   if (args.command === "simulate") {
     const result = evaluateDefinition(definition, simulatorConfig, args.reps, args.seed);
     if (args.json) console.log(JSON.stringify(result, null, 2));
-    else printEvaluation(result);
+    else printEvaluation(result, definition.ordering);
     return;
   }
 
   if (!definition.optimization && !definition.troop_optimization) {
     throw new Error("The configuration has no optimization or troop_optimization section");
   }
-  let lastPct = -1;
+  const metrics = new TerminalRunMetricsReporter();
   const results = definition.optimization
-    ? await optimizeDefinitionParallel(definition, simulatorConfig, args.reps, args.seed, args.jobs, args.maxCandidates, (completed, total) => {
-      const pct = Math.floor((completed * 100) / total);
-      if (!args.json && pct !== lastPct) {
-        process.stderr.write(`\rEvaluating hero setups: ${completed}/${total} (${pct}%)`);
-        lastPct = pct;
-        if (completed === total) process.stderr.write("\n");
-      }
-    })
+    ? await optimizeDefinitionParallel(
+      definition,
+      simulatorConfig,
+      args.reps,
+      args.seed,
+      args.jobs,
+      args.maxCandidates,
+      (completed, total, battlesCompleted, stage = "final") => metrics.update(
+        "heroes",
+        `Evaluating hero setups (${stage})`,
+        completed,
+        total,
+        battlesCompleted
+      ),
+      args.top
+    )
     : [];
   const top = results.slice(0, args.top);
   let troopResult: TroopOptimizationResult | undefined;
   if (definition.troop_optimization) {
-    let progressKey = "";
     troopResult = await optimizeWinningTroopsParallel(
       definition,
       results,
@@ -772,62 +1315,77 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
       args.seed,
       args.jobs,
       (progress) => {
-        if (args.json) return;
-        const key = `${progress.stage}:${progress.pass}:${progress.armyIndex}`;
-        const pct = Math.floor((progress.completed * 100) / progress.total);
-        if (key !== progressKey || pct !== lastPct) {
-          process.stderr.write(
-            `\rOptimizing troops (${progress.stage}, pass ${progress.pass}, army ${progress.armyIndex + 1}): ` +
-            `${progress.completed}/${progress.total} (${pct}%)`
-          );
-          progressKey = key;
-          lastPct = pct;
-          if (progress.completed === progress.total) process.stderr.write("\n");
-        }
+        metrics.update(
+          "troops",
+          `Optimizing troops (${progress.stage}, pass ${progress.pass}, army ${progress.armyIndex + 1})`,
+          progress.completed,
+          progress.total,
+          progress.battlesCompleted
+        );
       }
     );
   }
+  metrics.endProgressLine();
+  const topWithStats = definition.optimization
+    ? addOptimizationOutputStats(top, definition, simulatorConfig)
+    : [];
+  const troopResultWithStats = troopResult
+    ? addTroopOptimizationOutputStats(troopResult, definition, simulatorConfig)
+    : undefined;
   if (args.json) {
-    const output = troopResult
+    const output = troopResultWithStats
       ? definition.optimization
-        ? { heroOptimization: top, troopOptimization: troopResult }
-        : { troopOptimization: troopResult }
-      : top;
+        ? { heroOptimization: topWithStats, troopOptimization: troopResultWithStats }
+        : { troopOptimization: troopResultWithStats }
+      : topWithStats;
     console.log(JSON.stringify(output, null, 2));
   } else {
-    if (definition.optimization) printOptimization(top, definition, definition.optimization.side);
-    if (troopResult) printTroopOptimization(troopResult, definition, Boolean(definition.optimization));
+    if (definition.optimization) printOptimization(topWithStats, definition, definition.optimization.side);
+    if (troopResultWithStats) printTroopOptimization(troopResultWithStats, definition, Boolean(definition.optimization));
   }
+  metrics.finish();
 }
 
 function createBattleResolver(definition: ThreeArmyDefinition, simulatorConfig: SimulatorConfig): BattleResolver {
-  return (attacker, defender, seed) => {
+  const preparedOpenings = new Map<string, CompiledBattle>();
+  return (attacker, defender, seed, preparationKey) => {
+    const existing = preparationKey === undefined ? undefined : preparedOpenings.get(preparationKey);
+    if (existing) return runPrepared(existing, seed, { mode: "fast" });
+
     const builder = new BattleInputBuilder(simulatorConfig)
       .fighter("attacker", attacker)
       .fighter("defender", defender)
       .seed(seed)
-      .maxRounds(definition.max_rounds ?? 1500)
-      .addHeroGenerationStats();
-    return simulateBattles(builder.build(), simulatorConfig, { mode: "fast", count: 1 })[0];
+      .maxRounds(definition.max_rounds ?? 1500);
+    const compiled = prepareBattle(builder.build(), simulatorConfig);
+    if (preparationKey !== undefined) preparedOpenings.set(preparationKey, compiled);
+    return runPrepared(compiled, seed, { mode: "fast" });
   };
 }
 
 function orderedArmies(armies: readonly ArmyDefinition[], order: Order): MutableArmy[] {
   return order.map((armyIndex, slotIndex) => ({
     name: armies[armyIndex].name,
+    armyIndex,
     slot: slotIndex + 1,
-    fighter: cloneFighter(armies[armyIndex].fighter)
+    template: armies[armyIndex].fighter,
+    troops: { ...armies[armyIndex].fighter.troops },
+    pristine: true
   }));
 }
 
+function fighterAtCurrentTroops(army: MutableArmy): FighterInput {
+  return { ...army.template, troops: army.troops };
+}
+
 function withRemainingTroops(
-  fighter: FighterInput,
+  currentTroops: Record<string, number>,
   remaining: Record<UnitType, number>,
   simulatorConfig: SimulatorConfig
-): FighterInput {
+): Record<string, number> {
   const troops: Record<string, number> = {};
   for (const unitType of UNIT_TYPES) {
-    const entries = Object.entries(fighter.troops)
+    const entries = Object.entries(currentTroops)
       .filter(([id, count]) => count > 0 && simulatorConfig.troopStats[id]?.type === unitType);
     const target = Math.max(0, Math.round(remaining[unitType] ?? 0));
     const total = entries.reduce((sum, [, count]) => sum + count, 0);
@@ -843,18 +1401,63 @@ function withRemainingTroops(
     }
     for (const allocation of allocations) if (allocation.count > 0) troops[allocation.id] = allocation.count;
   }
-  return { ...fighter, troops };
+  return troops;
 }
 
-function heroLineups(pools: HeroPools, skillLevels: readonly number[], simulatorConfig: SimulatorConfig): HeroInputEntry[][] {
-  const byRole = UNIT_TYPES.map((role) => pools[role].map((name) => heroAtLevels(name, role, skillLevels, simulatorConfig)));
-  const lineups: HeroInputEntry[][] = [];
-  for (const infantry of byRole[0]) {
-    for (const lancer of byRole[1]) {
-      for (const marksman of byRole[2]) lineups.push([infantry, lancer, marksman]);
+function heroChoicesForArmy(
+  army: ArmyDefinition,
+  pools: HeroPools,
+  skillLevels: readonly number[],
+  simulatorConfig: SimulatorConfig
+): ArmyHeroChoices {
+  const choices = {} as ArmyHeroChoices;
+  for (const role of UNIT_TYPES) {
+    choices[role] = pools[role].map((name) => {
+      const hero = heroAtLevels(name, role, skillLevels, simulatorConfig);
+      const effective = applyHeroGenerationStats(
+        { ...army.fighter, heroes: [hero] },
+        simulatorConfig
+      );
+      const stats = effective.stats?.[role];
+      if (
+        stats?.attack === undefined ||
+        stats.defense === undefined ||
+        stats.lethality === undefined ||
+        stats.health === undefined
+      ) {
+        throw new Error(`Missing complete ${role} stats for ${army.name}`);
+      }
+      const statRow: StatBlock = {
+        attack: stats.attack,
+        defense: stats.defense,
+        lethality: stats.lethality,
+        health: stats.health
+      };
+      return { hero, normalizedName: normalizeHeroName(hero.name), statRow };
+    });
+  }
+  return choices;
+}
+
+function* armyHeroSelectionKeys(choices: ArmyHeroChoices): Generator<ArmyHeroSelectionKey> {
+  for (let infantry = 0; infantry < choices.infantry.length; infantry += 1) {
+    for (let lancer = 0; lancer < choices.lancer.length; lancer += 1) {
+      for (let marksman = 0; marksman < choices.marksman.length; marksman += 1) {
+        yield { infantry, lancer, marksman };
+      }
     }
   }
-  return lineups;
+}
+
+function normalizedNamesForSelection(
+  choices: ArmyHeroChoices,
+  selection: ArmyHeroSelectionKey
+): [string, string, string] {
+  return [
+    choices.infantry[selection.infantry].normalizedName,
+    choices.lancer[selection.lancer].normalizedName,
+    choices.marksman[selection.marksman].normalizedName
+  ];
 }
 
 function definitionWithHeroLineups(
@@ -1040,6 +1643,23 @@ function normalizeDefinitionHeroStats(
   };
 }
 
+function applyDefinitionHeroGenerationStats(
+  definition: ThreeArmyDefinition,
+  simulatorConfig: SimulatorConfig
+): ThreeArmyDefinition {
+  const applySide = (side: TeamSide): [ArmyDefinition, ArmyDefinition, ArmyDefinition] =>
+    definition[side].map((army) => ({
+      ...army,
+      fighter: applyHeroGenerationStats(army.fighter, simulatorConfig)
+    })) as [ArmyDefinition, ArmyDefinition, ArmyDefinition];
+  return {
+    ...definition,
+    attacker: applySide("attacker"),
+    defender: applySide("defender"),
+    input_stats_include_hero_generation: { attacker: false, defender: false }
+  };
+}
+
 function mainHeroNames(fighter: FighterInput): string[] {
   if (!fighter.heroes) return [];
   return Array.isArray(fighter.heroes)
@@ -1047,8 +1667,148 @@ function mainHeroNames(fighter: FighterInput): string[] {
     : Object.keys(fighter.heroes);
 }
 
-function printEvaluation(result: EvaluationResult): void {
-  console.log(`Scenarios: ${result.scenarios} (36 orderings × ${result.scenarios / 36} reps)`);
+export function substitutedHeroStats(
+  definition: ThreeArmyDefinition,
+  lineups: readonly string[][],
+  simulatorConfig: SimulatorConfig
+): OptimizedTeamStats {
+  const optimization = definition.optimization;
+  if (!optimization) throw new Error("The configuration has no optimization section");
+  const effective = applyDefinitionHeroGenerationStats(
+    definitionWithHeroLineups(definition, lineups, simulatorConfig),
+    simulatorConfig
+  );
+  return statsForSide(effective, optimization.side);
+}
+
+function addOptimizationOutputStats(
+  results: readonly OptimizationResult[],
+  definition: ThreeArmyDefinition,
+  simulatorConfig: SimulatorConfig
+): OptimizationOutputResult[] {
+  return results.map((result) => ({
+    ...result,
+    stats: substitutedHeroStats(definition, result.heroes, simulatorConfig)
+  }));
+}
+
+function addTroopOptimizationOutputStats(
+  result: TroopOptimizationResult,
+  definition: ThreeArmyDefinition,
+  simulatorConfig: SimulatorConfig
+): TroopOptimizationOutputResult {
+  const effective = definition.optimization
+    ? applyDefinitionHeroGenerationStats(
+      definitionWithHeroLineups(definition, result.heroes, simulatorConfig),
+      simulatorConfig
+    )
+    : applyDefinitionHeroGenerationStats(
+      normalizeDefinitionHeroStats(definition, simulatorConfig),
+      simulatorConfig
+    );
+  return { ...result, stats: statsForSide(effective, result.side) };
+}
+
+function statsForSide(definition: ThreeArmyDefinition, side: TeamSide): OptimizedTeamStats {
+  return definition[side].map((army, armyIndex) => {
+    const stats = army.fighter.stats;
+    const rows = {} as OptimizedArmyStats;
+    for (const unitType of UNIT_TYPES) {
+      const row = stats?.[unitType];
+      if (
+        row?.attack === undefined ||
+        row.defense === undefined ||
+        row.lethality === undefined ||
+        row.health === undefined
+      ) {
+        throw new Error(`Missing complete ${unitType} stats for ${side}[${armyIndex}]`);
+      }
+      rows[unitType] = {
+        attack: outputStatValue(row.attack),
+        defense: outputStatValue(row.defense),
+        lethality: outputStatValue(row.lethality),
+        health: outputStatValue(row.health)
+      };
+    }
+    return rows;
+  }) as OptimizedTeamStats;
+}
+
+function outputStatValue(value: number): number {
+  return Number(value.toFixed(12));
+}
+
+class TerminalRunMetricsReporter {
+  private readonly startedAt = process.hrtime.bigint();
+  private lastPrintedAt = this.startedAt;
+  private lastPrintedBattles = 0;
+  private totalBattles = 0;
+  private peakRss = process.memoryUsage().rss;
+  private readonly phaseBattles = new Map<string, number>();
+
+  update(
+    phase: string,
+    label: string,
+    completed: number,
+    total: number,
+    battlesCompleted: number
+  ): void {
+    const previous = this.phaseBattles.get(phase) ?? 0;
+    if (battlesCompleted < previous) {
+      throw new Error(`Internal error: ${phase} battle progress moved backwards`);
+    }
+    this.phaseBattles.set(phase, battlesCompleted);
+    this.totalBattles += battlesCompleted - previous;
+
+    const now = process.hrtime.bigint();
+    const rss = process.memoryUsage().rss;
+    this.peakRss = Math.max(this.peakRss, rss);
+    const secondsSincePrint = elapsedSeconds(this.lastPrintedAt, now);
+    if (secondsSincePrint < 1 && completed > 0 && completed < total) return;
+
+    const recentBattles = this.totalBattles - this.lastPrintedBattles;
+    const battlesPerSecond = secondsSincePrint > 0 ? recentBattles / secondsSincePrint : 0;
+    const pct = Math.floor((completed * 100) / total);
+    this.writeLine(
+      `${label}: ${completed.toLocaleString()}/${total.toLocaleString()} (${pct}%)` +
+      ` | ${formatRate(battlesPerSecond)} battles/s` +
+      ` | RSS ${formatBytes(rss)}` +
+      ` | ${formatDuration(elapsedSeconds(this.startedAt, now))}`
+    );
+    this.lastPrintedAt = now;
+    this.lastPrintedBattles = this.totalBattles;
+  }
+
+  finish(): void {
+    const now = process.hrtime.bigint();
+    const rss = process.memoryUsage().rss;
+    this.peakRss = Math.max(this.peakRss, rss);
+    const elapsed = elapsedSeconds(this.startedAt, now);
+    this.writeLine(
+      `Run summary: ${this.totalBattles.toLocaleString()} battles` +
+      ` | ${formatRate(elapsed > 0 ? this.totalBattles / elapsed : 0)} battles/s average` +
+      ` | RSS ${formatBytes(rss)} (peak ${formatBytes(this.peakRss)})` +
+      ` | ${formatDuration(elapsed)}`,
+      true
+    );
+  }
+
+  endProgressLine(): void {
+    if (process.stderr.isTTY) process.stderr.write("\n");
+  }
+
+  private writeLine(line: string, final = false): void {
+    if (process.stderr.isTTY) {
+      process.stderr.write(`\r${line}\x1b[K${final ? "\n" : ""}`);
+    } else {
+      process.stderr.write(`${line}\n`);
+    }
+  }
+}
+
+function printEvaluation(result: EvaluationResult, ordering: ArmyOrdering): void {
+  const scenarioLabel = ordering === "random" ? "random trajectories" : "orderings";
+  console.log(`Scenarios: ${result.scenarios} (36 ${scenarioLabel} × ${result.scenarios / 36} reps)`);
   console.log(`Attacker: ${percent(result.attackerWinRate)} wins (${result.attackerWins})`);
   console.log(`Defender: ${percent(result.defenderWinRate)} wins (${result.defenderWins})`);
   console.log(`Draws: ${percent(result.draws / result.scenarios)} (${result.draws})`);
@@ -1057,17 +1817,18 @@ function printEvaluation(result: EvaluationResult): void {
   console.log(`Average battles per scenario: ${result.averageBattles.toFixed(2)}`);
 }
 
-function printOptimization(results: OptimizationResult[], definition: ThreeArmyDefinition, side: TeamSide): void {
+function printOptimization(results: OptimizationOutputResult[], definition: ThreeArmyDefinition, side: TeamSide): void {
   const armyNames = definition[side].map((army) => army.name);
   console.log(`Top ${results.length} hero setups for ${side}:`);
   for (const result of results) {
     const lineups = result.heroes.map((heroes, index) => `${armyNames[index]}=[${heroes.join(", ")}]`).join("  ");
     console.log(`${String(result.rank).padStart(3)}  win=${percent(result.winRate)} score=${percent(result.scoreRate)} margin=${signed(result.averageMargin)}  ${lineups}`);
+    printOptimizedStats(result.stats, armyNames);
   }
 }
 
 function printTroopOptimization(
-  result: TroopOptimizationResult,
+  result: TroopOptimizationOutputResult,
   definition: ThreeArmyDefinition,
   usedHeroOptimization: boolean
 ): void {
@@ -1086,12 +1847,23 @@ function printTroopOptimization(
       `(total=${troops.total}; was ${initial.infantry}/${initial.lancer}/${initial.marksman})`
     );
   });
+  printOptimizedStats(result.stats, armyNames);
   console.log(
     `Evaluated ${result.evaluatedCandidates} adaptive candidates ` +
     `(coarse ${result.search.coarse_step_percent}%, fine ${result.search.fine_step_percent}% ` +
     `within ±${result.search.fine_radius_percent}%, up to ${result.search.passes} passes; ` +
     `${result.preliminaryRepsPerOrdering} preliminary and ${result.finalistRepsPerOrdering} finalist reps per ordering).`
   );
+}
+
+function printOptimizedStats(stats: OptimizedTeamStats, armyNames: readonly string[]): void {
+  stats.forEach((armyStats, index) => {
+    const rows = UNIT_TYPES.map((unitType) => {
+      const row = armyStats[unitType];
+      return `${unitType} ${row.attack}/${row.defense}/${row.lethality}/${row.health}`;
+    }).join("  ");
+    console.log(`      ${armyNames[index]} stats (A/D/L/H): ${rows}`);
+  });
 }
 
 function troopCountsForTeam(
@@ -1231,7 +2003,7 @@ function troopCountsKey(troops: TroopCounts): string {
 }
 
 function remainingForTeam(armies: readonly MutableArmy[]): number {
-  return armies.reduce((sum, army) => sum + Object.values(army.fighter.troops).reduce((armySum, count) => armySum + count, 0), 0);
+  return armies.reduce((sum, army) => sum + Object.values(army.troops).reduce((armySum, count) => armySum + count, 0), 0);
 }
 
 function drawResult(attacker: MutableArmy[], defender: MutableArmy[], battles: number): MatchResult {
@@ -1241,14 +2013,6 @@ function drawResult(attacker: MutableArmy[], defender: MutableArmy[], battles: n
 function removeArmy(armies: MutableArmy[], target: MutableArmy): void {
   const index = armies.indexOf(target);
   if (index >= 0) armies.splice(index, 1);
-}
-
-function cloneFighter(fighter: FighterInput): FighterInput {
-  return structuredClone(fighter);
-}
-
-function cloneHero(hero: HeroInputEntry): HeroInputEntry {
-  return { name: hero.name, ...(hero.levels ? { levels: { ...hero.levels } } : {}) };
 }
 
 function permutations<T>(items: readonly T[]): T[][] {
@@ -1272,6 +2036,29 @@ function optimizationResult(heroes: string[][], evaluation: EvaluationResult, si
   };
 }
 
+function retainOptimizationResults(
+  retained: OptimizationResult[],
+  additions: readonly OptimizationResult[],
+  resultLimit: number
+): void {
+  const safeLimit = positiveInteger(resultLimit, "result limit");
+  retained.push(...additions);
+  if (retained.length <= safeLimit * 2) return;
+  retained.sort(compareOptimizationResults);
+  retained.length = safeLimit;
+}
+
+function finalizeRetainedOptimizationResults(
+  retained: OptimizationResult[],
+  resultLimit: number
+): OptimizationResult[] {
+  const safeLimit = positiveInteger(resultLimit, "result limit");
+  retained.sort(compareOptimizationResults);
+  retained.length = Math.min(retained.length, safeLimit);
+  retained.forEach((result, index) => { result.rank = index + 1; });
+  return retained;
+}
+
 function rankOptimizationResults(results: OptimizationResult[]): OptimizationResult[] {
   results.sort(compareOptimizationResults);
   results.forEach((result, index) => { result.rank = index + 1; });
@@ -1288,6 +2075,37 @@ function winRateForSide(evaluation: EvaluationResult, side: TeamSide): number {
 
 function marginForSide(evaluation: EvaluationResult, side: TeamSide): number {
   return side === "attacker" ? evaluation.averageAttackerMargin : -evaluation.averageAttackerMargin;
+}
+
+function evaluationBattleCount(evaluation: EvaluationResult): number {
+  return Math.round(evaluation.averageBattles * evaluation.scenarios);
+}
+
+function elapsedSeconds(start: bigint, end: bigint): number {
+  return Number(end - start) / 1_000_000_000;
+}
+
+function formatRate(value: number): string {
+  return Math.round(value).toLocaleString();
+}
+
+function formatBytes(bytes: number): string {
+  const units = ["B", "KiB", "MiB", "GiB"];
+  let value = bytes;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  return `${value.toFixed(unit === 0 ? 0 : 1)} ${units[unit]}`;
+}
+
+function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${seconds.toFixed(1)}s`;
+  const wholeSeconds = Math.floor(seconds);
+  const minutes = Math.floor(wholeSeconds / 60);
+  const remainder = wholeSeconds % 60;
+  return `${minutes}m ${String(remainder).padStart(2, "0")}s`;
 }
 
 function normalizeHeroName(name: string): string {
@@ -1341,7 +2159,7 @@ function helpText(): string {
     "  npx tsx scripts/three_army_optimizer.ts simulate <config.json> [--reps N] [--seed N] [--json]",
     "  npx tsx scripts/three_army_optimizer.ts optimize <config.json> [--reps N] [--seed N] [--jobs N] [--top N] [--max-candidates N] [--json]",
     "",
-    "Each evaluation covers all 6 × 6 random army orderings. --reps (default 10) is the finalist combat-RNG sample count per ordering; adaptive troop screening uses one tenth of it, rounded up.",
+    "Set top-level ordering to sequential (default) or random. Each evaluation uses 36 scheduling scenarios; --reps (default 10) is the finalist sample count per scenario, and adaptive troop screening uses one tenth of it, rounded up.",
     "troop_optimization redistributes each selected army's fixed troop total while leaving the opposing team unchanged. Set troop_optimization.side when optimization is omitted; the input hero setup is then used as the baseline.",
     "See scripts/three_army_optimizer.example.json for the configuration format. Set input_stats_include_hero_generation per side; selected heroes are always reflected in effective stats."
   ].join("\n");
