@@ -6,7 +6,8 @@
     "EagleVision": {
       "description": "Increasing target's damage taken by X%",
       "trigger": {
-        "type": "battle_start"
+        "type": "attack",
+        "source": "self.any"
       },
       "effects": {
         "EagleVision/1": {
@@ -20,6 +21,12 @@
           ],
           "units": {
             "applies_to": "enemy.any"
+          },
+          "duration": {
+            "attacks": {
+              "count": 1,
+              "delay": 1
+            }
           }
         }
       }
