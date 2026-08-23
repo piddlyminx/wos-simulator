@@ -69,6 +69,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
       "/runs",
       "/heroes",
       "/testcases",
+      "/deploy",
       "/simulate",
     ]) {
       const response = await page.goto(route);
@@ -908,11 +909,44 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     const matrix = statsSection.getByTestId("stat-bonus-summary-matrix");
     await expect(matrix).toBeVisible();
     await expect(matrix).toContainText("160");
-    await expect(matrix).toContainText("(+60");
+    await expect(matrix).toContainText("(+30.0%)");
     await expect(matrix.locator(".sim-value-up").first()).toBeVisible();
     await expect(page.getByTestId("side-section-attacker-buffs")).toContainText(
       /City [1-9]/,
     );
+  });
+
+  test("simulate stat summary labels two 15% widgets as 30%, not relative value growth", async ({
+    page,
+  }) => {
+    await page.setViewportSize(DESKTOP);
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.getByLabel("Rally mode").first().check();
+    await page
+      .locator('select[aria-label="lancer hero"]')
+      .first()
+      .selectOption("Mia");
+    await page
+      .locator('select[aria-label="marksman hero"]')
+      .first()
+      .selectOption("Hendrik");
+
+    const statsSection = page.getByTestId("side-section-attacker-stats");
+    const statsButton = statsSection.getByRole("button", {
+      name: /Stat bonuses/i,
+    });
+    await statsButton.click();
+    await statsSection.getByLabel("Infantry Attack").fill("2175.1");
+    await statsButton.click();
+
+    const attackSummary = statsSection.getByTestId(
+      "stat-summary-attacker-infantry-attack",
+    );
+    await expect(attackSummary).toContainText("2857.6");
+    await expect(attackSummary).toContainText("(+30.0%)");
+    await expect(attackSummary).not.toContainText("31.4%");
   });
 
   test("simulate mobile stat summary uses compact row labels without value overlap", async ({

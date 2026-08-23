@@ -20,6 +20,7 @@ const DASHBOARD_GROUPS: {
   {
     title: "Simulation Running",
     links: [
+      { href: "/deploy", label: "Deploy Sim" },
       { href: "/simulate", label: "Battle Sim" },
       { href: "/bear", label: "Bear Sim" },
       { href: "/tournament", label: "Tournament" },
@@ -36,6 +37,7 @@ const DASHBOARD_GROUPS: {
 ];
 
 const SIMULATE_LINKS: { href: string; label: string }[] = [
+  { href: "/deploy", label: "Deploy Sim" },
   { href: "/simulate", label: "Battle Sim" },
   { href: "/bear", label: "Bear Sim" },
 ];

@@ -1680,3 +1680,748 @@ body {
     justify-self: stretch;
   }
 }
+
+/* Alternative deployment interface. The selectors are deliberately scoped so
+   /simulate and /bear retain their established dashboard presentation. */
+.deploy-simulator-skin {
+  --deploy-deep: #0b3761;
+  --deploy-navy: #104b7d;
+  --deploy-blue: #2e8fd0;
+  --deploy-sky: #71bce9;
+  --deploy-ice: #e9f7ff;
+  --deploy-ink: #173f60;
+  position: relative;
+  margin: -0.5rem auto 0;
+  width: min(100%, 1500px);
+  color: var(--deploy-ink);
+  font-family: ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+}
+
+.deploy-simulator-skin::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  background:
+    radial-gradient(circle at 85% 5%, rgba(102, 192, 239, 0.2), transparent 29rem),
+    linear-gradient(180deg, #102e50 0, #0b2643 42rem, #081d34 100%);
+}
+
+.deploy-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1rem 2rem;
+  align-items: end;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  border: 2px solid #56afe3;
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, #1a639d, #104674);
+  color: white;
+  padding: 1.25rem clamp(1rem, 3vw, 2rem);
+  box-shadow: 0 7px 0 #072d50, 0 18px 38px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 2px 0 rgba(6, 40, 68, 0.68);
+}
+
+.deploy-back-button {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 3.25rem;
+  height: 3.1rem;
+  place-items: center;
+  border: 2px solid #d8f3ff;
+  border-radius: 16px 11px 11px 16px;
+  background: linear-gradient(#c9f0ff, #75c5ed);
+  color: #176492;
+  font-size: 1.75rem;
+  font-weight: 950;
+  box-shadow: inset 0 2px 0 white, 0 4px 0 #0b466f;
+  text-shadow: 0 1px 0 white;
+}
+
+.deploy-hero::after {
+  position: absolute;
+  right: -4rem;
+  bottom: -7rem;
+  width: 22rem;
+  height: 13rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  content: "";
+  box-shadow:
+    -5rem -2rem 0 rgba(255, 255, 255, 0.035),
+    -10rem 2rem 0 rgba(255, 255, 255, 0.025);
+  pointer-events: none;
+}
+
+.deploy-hero-snow {
+  position: absolute;
+  top: -2px;
+  left: clamp(1.5rem, 7vw, 7rem);
+  width: clamp(9rem, 18vw, 16rem);
+  height: 10px;
+  border-radius: 20% 55% 35% 65%;
+  background: #f4fbff;
+  box-shadow: 0 4px 0 #c9eaff;
+}
+
+.deploy-hero-copy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.deploy-hero h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2.15rem);
+  font-weight: 950;
+  line-height: 1.05;
+}
+
+.deploy-mode-tabs {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(7rem, 1fr));
+  gap: 0.55rem;
+  min-width: min(24rem, 42vw);
+  padding: 0.5rem;
+  border: 1px solid rgba(185, 230, 255, 0.42);
+  border-radius: 14px;
+  background: rgba(3, 43, 75, 0.6);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.22);
+}
+
+.deploy-mode-tabs button {
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: 0.45rem;
+  align-items: center;
+  min-height: 48px;
+  border: 1px solid #4d9bd1;
+  border-radius: 10px;
+  background: #286ea5;
+  color: #dff4ff;
+  padding: 0.35rem 0.6rem;
+  text-align: left;
+  box-shadow: 0 3px 0 #072f52;
+}
+
+.deploy-mode-tabs button[data-active="true"] {
+  border-color: #cceeff;
+  background: linear-gradient(#5db9f0, #358fd0);
+  color: white;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.18),
+    0 3px 0 #082f52;
+}
+
+.deploy-mode-tabs button > span:first-child {
+  display: grid;
+  width: 2.1rem;
+  height: 2.1rem;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(5, 55, 91, 0.45);
+  font-size: 1.15rem;
+}
+
+.deploy-mode-tabs strong,
+.deploy-mode-tabs small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deploy-mode-tabs strong {
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.deploy-mode-tabs small {
+  margin-top: 0.1rem;
+  color: #c4e8fb;
+  font-size: 0.62rem;
+}
+
+.deploy-workspace .simulate-workspace {
+  --sim-page: #0d345b;
+  --sim-panel: #dff1fc;
+  --sim-panel-2: #c5e4f7;
+  --sim-field: #f6fbff;
+  --sim-line: #83b9d9;
+  --sim-line-soft: rgba(23, 78, 116, 0.14);
+  --sim-line-strong: #2f8bc7;
+  --sim-text: #173f60;
+  --sim-muted: #567791;
+  --sim-blue: #176fa9;
+  --sim-green: #25c866;
+  --sim-yellow: #be7e08;
+  font-family: ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+}
+
+.deploy-workspace .sim-start-card,
+.deploy-workspace .sim-role-panel,
+.deploy-workspace .sim-tool-panel,
+.deploy-workspace .sim-runbar,
+.deploy-workspace .sim-mode-command,
+.deploy-workspace .sim-modal {
+  border-color: #65add9;
+  border-radius: 15px;
+  box-shadow: 0 4px 0 #082f52, 0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+.deploy-workspace .sim-start-card {
+  border-width: 2px;
+  background: linear-gradient(180deg, #2a89c5, #176ca8);
+  padding: 0.65rem;
+}
+
+.deploy-client-workspace .sim-start-card {
+  box-shadow: 0 3px 0 #082f52;
+}
+
+.deploy-client-workspace .sim-start-file-actions,
+.deploy-client-workspace .sim-start-toggles {
+  align-items: stretch;
+}
+
+.deploy-client-workspace {
+  --sim-action-dock-height: 6rem;
+}
+
+.deploy-client-workspace .sim-mode-inline-status {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.deploy-workspace .sim-upload-primary,
+.deploy-workspace .sim-start-card .sim-edit-chip,
+.deploy-workspace .sim-start-card .sim-toggle,
+.deploy-workspace .sim-tour-help {
+  border-color: rgba(208, 239, 255, 0.55);
+  background: rgba(9, 66, 105, 0.58);
+  color: white;
+}
+
+.deploy-workspace .sim-start-card .sim-toggle[data-active="true"] {
+  border-color: #ccefff;
+  background: rgba(111, 195, 240, 0.34);
+  color: white;
+}
+
+.deploy-workspace .sim-switch {
+  border-color: #6aaed4;
+  background: #d9edf9;
+}
+
+.deploy-workspace .sim-role-panel {
+  overflow: hidden;
+  border-width: 2px;
+  background: linear-gradient(180deg, #eaf7ff, #cce8f8);
+  padding: 0.65rem;
+}
+
+.deploy-workspace .sim-role-header {
+  border-color: #2a84bd;
+  background: linear-gradient(180deg, #286fa8, #155b91);
+  color: white;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.deploy-workspace .sim-role-header h3 {
+  color: white !important;
+  font-size: 0.92rem;
+  font-weight: 950;
+  text-shadow: 0 2px 0 #16466c;
+}
+
+.deploy-workspace .sim-role-header p {
+  color: #d4efff;
+  opacity: 1;
+}
+
+.deploy-workspace .sim-profile-button {
+  border-color: #b8e5fd;
+  background: #4a9bd0;
+  color: white;
+  box-shadow: 0 2px 0 #0d426d;
+}
+
+.deploy-workspace .sim-section-card {
+  overflow: hidden;
+  border-color: #a3cce4;
+  border-radius: 12px;
+  background: rgba(248, 253, 255, 0.78);
+  box-shadow: 0 2px 0 rgba(30, 91, 132, 0.18);
+}
+
+.deploy-workspace .sim-section-card[data-open="true"] {
+  border-color: #3c96cc;
+  background: #f1f9fe;
+}
+
+.deploy-workspace .sim-section-card > button > span:first-child {
+  background: #39ae72 !important;
+  color: white !important;
+  box-shadow: 0 2px 0 #16764a;
+}
+
+.deploy-workspace .sim-section-card .sim-edit-chip {
+  border-color: #86b9d8;
+  background: #d3ebf9;
+}
+
+.deploy-workspace .sim-unit-row {
+  border-color: #9fc9e1;
+  background: #dceefa;
+  border-radius: 11px;
+  box-shadow: inset 0 1px 0 white;
+}
+
+.deploy-workspace .sim-unit-name {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  color: #176fa9;
+  font-weight: 950;
+}
+
+.deploy-workspace .sim-unit-name::before {
+  display: grid;
+  width: 1.7rem;
+  height: 1.9rem;
+  flex: 0 0 auto;
+  place-items: center;
+  margin-right: 0.4rem;
+  clip-path: polygon(50% 0, 92% 18%, 84% 76%, 50% 100%, 16% 76%, 8% 18%);
+  background: #3196ce;
+  color: white;
+  content: "◆";
+  font-size: 0.66rem;
+  text-shadow: 0 1px 0 #175a83;
+}
+
+.deploy-workspace .sim-unit-row:nth-child(3) .sim-unit-name::before {
+  background: #32ae92;
+  content: "➤";
+}
+
+.deploy-workspace .sim-unit-row:nth-child(4) .sim-unit-name::before {
+  background: #8a78cf;
+  content: "⌁";
+}
+
+.deploy-workspace .sim-input,
+.deploy-workspace .sim-modal input,
+.deploy-workspace .sim-modal select {
+  border-color: #8dbbd5;
+  background: #f8fcff;
+  color: #173f60;
+  box-shadow: inset 0 1px 2px rgba(20, 71, 105, 0.1);
+}
+
+.deploy-workspace .sim-troop-ratio-track {
+  border-color: #70a9ca;
+  background: #61829b;
+  box-shadow: inset 0 2px 4px rgba(9, 46, 72, 0.32);
+}
+
+.deploy-workspace .sim-troop-ratio-fill-infantry {
+  background: #43b7ee;
+}
+
+.deploy-workspace .sim-troop-ratio-fill-lancer {
+  background: #42cba8;
+}
+
+.deploy-workspace .sim-troop-ratio-fill-marksman {
+  background: #a68de1;
+}
+
+.deploy-workspace .sim-troop-ratio-labels {
+  color: white;
+  text-shadow: 0 1px 2px #163d59;
+}
+
+.deploy-workspace .sim-stat-card,
+.deploy-workspace .sim-modifier-card,
+.deploy-workspace .sim-preview-pill {
+  border-color: #a7cde3;
+  background: #e2f1fa;
+}
+
+.deploy-workspace .sim-segmented,
+.deploy-workspace .sim-compact-toggle,
+.deploy-workspace .sim-mode-tab,
+.deploy-workspace .sim-options-toggle,
+.deploy-workspace .sim-optimize-side-toggle {
+  border-color: #77abd0;
+  background: #d9edf9;
+  color: #174d73;
+}
+
+.deploy-workspace .sim-segmented button {
+  background: #e9f6fd;
+  color: #174d73;
+}
+
+.deploy-workspace .sim-segmented button[data-active="true"],
+.deploy-workspace .sim-compact-toggle[data-active="true"],
+.deploy-workspace .sim-mode-tab[data-active="true"] {
+  background: linear-gradient(#5eb9ef, #328ed0);
+  color: white;
+  text-shadow: 0 1px 0 #15537d;
+}
+
+.deploy-workspace .sim-top-actions {
+  border: 2px solid #57a7d7;
+  border-radius: 17px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 40%),
+    #175f96;
+  padding: 0.55rem;
+  box-shadow: 0 -5px 0 #082f52, 0 -16px 34px rgba(4, 28, 48, 0.48);
+}
+
+.deploy-workspace .sim-mode-command {
+  border: 0;
+  background: #dceffa;
+  box-shadow: none;
+}
+
+.deploy-workspace .sim-run-button,
+.deploy-workspace .sim-optimize-run-button {
+  border: 2px solid #87ddff;
+  border-radius: 11px;
+  background: linear-gradient(#5fbaf2, #3692d6);
+  color: white;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.46),
+    0 3px 0 #0a4776;
+  font-weight: 950;
+  text-shadow: 0 2px 0 #1d5a86;
+}
+
+.deploy-workspace .sim-tool-panel {
+  background: #e7f4fc;
+}
+
+.deploy-workspace .sim-panel-results-shell {
+  border-width: 2px;
+}
+
+.deploy-client-workspace .sim-panel-results-shell {
+  border-color: #bca28d;
+  background: #f3e4d6;
+  color: #6d5849;
+  box-shadow: 0 5px 0 #8c705c, 0 14px 28px rgb(0 0 0 / 22%);
+}
+
+/* The game keeps Deploy reachable at the end of army setup. Keeping the web
+   command dock in normal flow avoids covering troop and setup controls while
+   still letting it hold at the viewport edge once the user reaches it. */
+.deploy-client-workspace {
+  padding-bottom: 2rem;
+}
+
+.deploy-client-workspace .sim-top-actions {
+  position: sticky;
+  right: auto;
+  bottom: 0;
+  left: auto;
+  order: 45;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.deploy-client-workspace .sim-panel-results-shell > h3,
+.deploy-client-workspace .sim-panel-results-shell > div:first-child h3 {
+  border: 2px solid #bca28d;
+  border-radius: 10px;
+  background: linear-gradient(#d9c3b0, #c7ad98);
+  color: white;
+  padding: 8px 12px;
+  opacity: 1;
+  text-align: center;
+  text-shadow: 0 2px 0 #856c59;
+}
+
+.deploy-client-workspace .sim-panel-results-shell .sim-tool-panel {
+  border-color: #d0bbaa;
+  background: #fff5ed;
+  color: #6d5849;
+  box-shadow: none;
+}
+
+.deploy-client-workspace .sim-panel-results-shell table {
+  color: #654f42;
+}
+
+.deploy-workspace .sim-tab {
+  border-color: #5d9fc9;
+  background: #154f7e;
+  color: #c9e9fa;
+}
+
+.deploy-workspace .sim-tab[data-active="true"] {
+  border-color: #d5f2ff;
+  background: #4aa7df;
+  color: white;
+}
+
+.deploy-workspace .sim-modal {
+  border-width: 2px;
+  background: #e5f4fc;
+}
+
+.deploy-workspace .sim-modal-header,
+.deploy-workspace .sim-modal-footer {
+  background: #cce7f7;
+}
+
+@media (max-width: 767px) {
+  .deploy-simulator-skin {
+    margin-top: -0.25rem;
+  }
+
+  .deploy-hero {
+    grid-template-columns: 2.65rem minmax(4.2rem, 1fr) minmax(8.8rem, auto);
+    gap: 0.4rem;
+    min-height: 60px;
+    border-radius: 14px;
+    padding: 0.4rem 0.45rem;
+  }
+
+  .deploy-hero h1 {
+    font-size: 1.05rem;
+  }
+
+  .deploy-back-button {
+    width: 2.55rem;
+    height: 2.5rem;
+    border-radius: 12px 9px 9px 12px;
+    font-size: 1.3rem;
+  }
+
+  .deploy-mode-tabs {
+    grid-column: 3;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+    gap: 0.28rem;
+    padding: 0.28rem;
+    border-radius: 10px;
+  }
+
+  .deploy-mode-tabs button {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    min-height: 38px;
+    padding: 0.2rem;
+    text-align: center;
+  }
+
+  .deploy-mode-tabs button > span:first-child {
+    display: none;
+  }
+
+  .deploy-mode-tabs strong {
+    font-size: 0.64rem;
+  }
+
+  .deploy-mode-tabs small {
+    display: none;
+  }
+
+  .deploy-workspace .sim-start-card {
+    border-radius: 13px;
+  }
+
+  .deploy-client-workspace .sim-mode-inline-status {
+    display: none;
+  }
+
+  .deploy-client-workspace .sim-mode-command,
+  .deploy-client-workspace .sim-top-actions {
+    gap: 4px;
+    padding: 5px;
+  }
+
+  .deploy-client-workspace .sim-mode-command-main {
+    gap: 4px;
+  }
+
+  .deploy-client-workspace .sim-mode-tab {
+    min-height: 36px;
+    padding-inline: 4px;
+    font-size: 9px;
+  }
+
+  .deploy-workspace .sim-role-panel {
+    border-radius: 14px;
+    padding: 0.5rem;
+  }
+
+  .deploy-workspace .sim-input,
+  .deploy-workspace button,
+  .deploy-workspace select {
+    min-height: 44px;
+  }
+
+  .deploy-workspace .sim-unit-name::before {
+    display: none;
+  }
+
+  .deploy-workspace .sim-top-actions {
+    right: auto;
+    bottom: 0;
+    left: auto;
+    border-radius: 14px;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock {
+    gap: 5px;
+    padding: 5px;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-action-card {
+    padding: 5px 7px;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-runbar {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-optimize-flow {
+    grid-template-columns: minmax(0, 0.85fr) 34px minmax(0, 1.15fr);
+    gap: 6px;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-options-toggle,
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-optimize-run-button {
+    order: initial;
+    min-height: 44px;
+    padding-inline: 7px;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-options-toggle {
+    grid-column: 1;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-action-help-row {
+    grid-column: 2;
+    order: initial;
+    margin: 0;
+  }
+
+  .deploy-workspace[data-mode="bear"] .bear-action-dock .sim-optimize-run-button {
+    grid-column: 3;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .deploy-hero {
+    align-items: center;
+    gap: 0.75rem;
+    padding-inline: 1rem;
+  }
+
+  .deploy-mode-tabs {
+    min-width: 15rem;
+  }
+
+  .deploy-mode-tabs button {
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    padding-inline: 0.4rem;
+  }
+
+  .deploy-mode-tabs button > span:first-child {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .deploy-hero h1 {
+    font-size: 1.45rem;
+  }
+
+  .deploy-workspace .sim-role-panel {
+    max-width: 58rem;
+    margin-inline: auto;
+  }
+}
+
+@media (min-width: 768px) {
+  .deploy-client-workspace .sim-mode-command {
+    width: min(100%, 1080px);
+    padding: 7px 9px;
+  }
+
+  .deploy-client-workspace .sim-mode-command-main {
+    grid-template-columns: minmax(300px, 1fr) minmax(300px, 0.8fr);
+    align-items: center;
+    gap: 5px 10px;
+  }
+
+  .deploy-client-workspace .sim-mode-tabs {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .deploy-client-workspace .sim-mode-command-row {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .deploy-client-workspace .sim-mode-inline-status {
+    grid-column: 1 / -1;
+    min-height: 0;
+    font-size: 9px;
+  }
+
+  .deploy-client-workspace .sim-mode-command-main > [role="progressbar"] {
+    grid-column: 1 / -1;
+  }
+
+  .deploy-client-workspace .sim-mode-tab,
+  .deploy-client-workspace .sim-mode-primary-button,
+  .deploy-client-workspace .sim-replicates-inline {
+    min-height: 42px;
+  }
+
+  .deploy-client-workspace .sim-replicates-inline {
+    min-width: 9.4rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .deploy-workspace .sim-role-grid {
+    gap: 14px;
+  }
+
+  .deploy-workspace .sim-role-swap-slot .sim-edit-chip {
+    border: 2px solid #6eb3dc !important;
+    border-radius: 999px;
+    background: #d9edf9 !important;
+    color: #176fa9 !important;
+    box-shadow: 0 3px 0 #0b426c;
+  }
+}
+
+@media (min-width: 1600px) {
+  .deploy-hero {
+    padding-inline: 2.4rem;
+  }
+
+  .deploy-workspace .sim-role-grid {
+    gap: 22px;
+  }
+}

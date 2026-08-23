@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type KeyboardEventHandler,
@@ -57,6 +59,7 @@ import {
   type StatModifierName,
   type StatModifierState,
 } from "@/lib/simulate/form-state";
+import deployStyles from "./DeployArmyPanel.module.css";
 
 export { RecentRunsModal } from "./RecentRunsModal";
 export { ProgressBar, ResultCard } from "./ProgressPrimitives";
@@ -81,6 +84,20 @@ type StatSyncHandler = (info: {
   prevStats: Record<string, number>;
   deltas: HeroBaseStats;
 }) => void;
+
+interface SidePanelProps {
+  title: string;
+  which: Side;
+  state: SideState;
+  opponent: SideState;
+  setState: (updater: (prev: SideState) => SideState) => void;
+  rallyMode: boolean;
+  syncStatsOnHeroChange: boolean;
+  onStatSync: StatSyncHandler;
+  loadedPresetName: string | null;
+  onOpenPreset: () => void;
+  variant?: "dashboard" | "deploy";
+}
 
 function StatBonusInput({
   value,
@@ -234,11 +251,6 @@ function TroopSetupPreview({ state }: { state: SideState }) {
   );
 }
 
-function statModifierPercent(baseValue: number, effectiveValue: number): number {
-  if (baseValue === 0) return effectiveValue === 0 ? 0 : 100;
-  return ((effectiveValue - baseValue) / baseValue) * 100;
-}
-
 function formattedEffectiveStat(
   baseValue: number,
   bonusGroups: { up: number; down: number },
@@ -249,17 +261,23 @@ function formattedEffectiveStat(
     bonusGroups.down,
   );
   const hasModifier = bonusGroups.up !== 0 || bonusGroups.down !== 0;
-  const modifierPercent = statModifierPercent(baseValue, effectiveNumber);
+  const modifierSummary = [
+    bonusGroups.up !== 0 ? signedPercent(bonusGroups.up) : null,
+    bonusGroups.down !== 0 ? `-${bonusGroups.down.toFixed(1)}%` : null,
+  ]
+    .filter(Boolean)
+    .join(" / ");
   const value = effectiveStatPreview(baseValue, bonusGroups.up, bonusGroups.down);
+  const effectiveDelta = effectiveNumber - baseValue;
   const tone =
-    !hasModifier || Math.abs(modifierPercent) < 0.05
+    !hasModifier || Math.abs(effectiveDelta) < 0.05
       ? "neutral"
-      : modifierPercent > 0
+      : effectiveDelta > 0
         ? "up"
         : "down";
   return {
     value,
-    modifierText: hasModifier ? ` (${signedPercent(modifierPercent)})` : "",
+    modifierText: hasModifier ? ` (${modifierSummary})` : "",
     tone,
   };
 }
@@ -306,6 +324,7 @@ function StatSetupPreview({
             return (
               <span
                 key={stat}
+                data-testid={`stat-summary-${which}-${cat}-${stat}`}
                 className={`sim-summary-stat-value ${
                   statValue.tone === "up"
                     ? "sim-value-up"
@@ -352,7 +371,7 @@ function ModifierSetupPreview({ state }: { state: SideState }) {
   );
 }
 
-export function SidePanel({
+function DashboardSidePanel({
   title,
   which,
   state,
@@ -363,18 +382,7 @@ export function SidePanel({
   onStatSync,
   loadedPresetName,
   onOpenPreset,
-}: {
-  title: string;
-  which: Side;
-  state: SideState;
-  opponent: SideState;
-  setState: (updater: (prev: SideState) => SideState) => void;
-  rallyMode: boolean;
-  syncStatsOnHeroChange: boolean;
-  onStatSync: StatSyncHandler;
-  loadedPresetName: string | null;
-  onOpenPreset: () => void;
-}) {
+}: SidePanelProps) {
   const [activeSection, setActiveSection] =
     useState<SimRoleSectionId | null>("troops");
   const troopCountRefs = useRef<Record<TroopCategory, HTMLInputElement | null>>(
@@ -739,6 +747,729 @@ export function SidePanel({
         </RoleSection>
       </div>
     </div>
+  );
+}
+
+const DEPLOY_CATEGORY_GLYPHS: Record<TroopCategory, string> = {
+  infantry: "◆",
+  lancer: "➤",
+  marksman: "⌁",
+};
+
+const DEPLOY_HERO_AVATARS = new Set([
+  "Ahmose",
+  "Alonso",
+  "Bahiti",
+  "Bradley",
+  "Edith",
+  "Flint",
+  "Gatot",
+  "Gordon",
+  "Greg",
+  "Gwen",
+  "Hector",
+  "Hendrik",
+  "Jasser",
+  "Jeronimo",
+  "Jessie",
+  "Ling",
+  "Logan",
+  "Lumak",
+  "Lynn",
+  "Mia",
+  "Molly",
+  "Natalia",
+  "Norah",
+  "Patrick",
+  "Philly",
+  "Reina",
+  "Renee",
+  "Seo-yoon",
+  "Sergey",
+  "Sonya",
+  "Wayne",
+  "WuMing",
+  "Zinman",
+]);
+
+type DeploySetupSheet = "stats" | "skills" | "joiners" | "bonuses";
+
+function distributeTroopCount(
+  troops: SideState["troops"],
+  category: TroopCategory,
+  nextValue: number,
+): SideState["troops"] {
+  const total = CATEGORIES.reduce((sum, current) => sum + troops[current], 0);
+  const clamped = Math.max(0, Math.min(total, Math.round(nextValue)));
+  const otherCategories = CATEGORIES.filter((current) => current !== category);
+  const remaining = total - clamped;
+  const otherTotal = otherCategories.reduce(
+    (sum, current) => sum + troops[current],
+    0,
+  );
+  const first = otherCategories[0];
+  const second = otherCategories[1];
+  const firstValue =
+    otherTotal > 0
+      ? Math.round((troops[first] / otherTotal) * remaining)
+      : Math.round(remaining / 2);
+  return {
+    ...troops,
+    [category]: clamped,
+    [first]: firstValue,
+    [second]: remaining - firstValue,
+  };
+}
+
+function troopsForPercentages(
+  total: number,
+  infantryPercent: number,
+  lancerPercent: number,
+): SideState["troops"] {
+  const infantry = Math.round((total * infantryPercent) / 100);
+  const lancer = Math.round((total * lancerPercent) / 100);
+  return {
+    infantry,
+    lancer,
+    marksman: Math.max(0, total - infantry - lancer),
+  };
+}
+
+function DeployTypeCrest({ category }: { category: TroopCategory }) {
+  return (
+    <span
+      className={deployStyles.typeCrest}
+      data-category={category}
+      aria-hidden="true"
+    >
+      {DEPLOY_CATEGORY_GLYPHS[category]}
+    </span>
+  );
+}
+
+function heroInitials(name: string): string {
+  const words = name.replace(/([a-z])([A-Z])/g, "$1 $2").split(/[\s-]+/);
+  return words
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+}
+
+function deployHeroAvatarPath(name: string): string | null {
+  if (!DEPLOY_HERO_AVATARS.has(name)) return null;
+  const slug = name === "WuMing"
+    ? "wu_ming"
+    : name.toLowerCase().replace(/[\s-]+/g, "_");
+  return `/hero-avatars/${slug}.webp`;
+}
+
+function DeployHeroPortrait({
+  name,
+  category,
+}: {
+  name: string;
+  category: TroopCategory;
+}) {
+  const avatarPath = deployHeroAvatarPath(name);
+  return (
+    <span
+      className={deployStyles.heroPortrait}
+      data-category={category}
+      data-has-avatar={Boolean(avatarPath)}
+    >
+      {avatarPath ? (
+      <Image
+        src={avatarPath}
+        alt=""
+        fill
+        loading="eager"
+        sizes="(max-width: 639px) 120px, 220px"
+        className={deployStyles.heroPortraitImage}
+      />
+      ) : (
+        <span>{heroInitials(name)}</span>
+      )}
+    </span>
+  );
+}
+
+function applyDeployHeroSelection({
+  category,
+  newName,
+  which,
+  state,
+  setState,
+  rallyMode,
+  syncStatsOnHeroChange,
+  onStatSync,
+}: {
+  category: TroopCategory;
+  newName: string | null;
+  which: Side;
+  state: SideState;
+  setState: SidePanelProps["setState"];
+  rallyMode: boolean;
+  syncStatsOnHeroChange: boolean;
+  onStatSync: StatSyncHandler;
+}) {
+  const previousName = state.heroes[category].name;
+  let statSnapshot: Record<string, number> | null = null;
+  let deltas: HeroBaseStats | null = null;
+  if (syncStatsOnHeroChange && previousName !== newName) {
+    const oldBase = heroBaseStats(previousName);
+    const newBase = heroBaseStats(newName);
+    const computed: HeroBaseStats = {
+      attack: newBase.attack - oldBase.attack,
+      defense: newBase.defense - oldBase.defense,
+      lethality: newBase.lethality - oldBase.lethality,
+      health: newBase.health - oldBase.health,
+    };
+    if (STAT_NAMES_ORDERED.some((stat) => Math.abs(computed[stat]) > 1e-9)) {
+      statSnapshot = { ...state.stats[category] };
+      deltas = computed;
+    }
+  }
+
+  setState((previous) => {
+    const skills = deriveSkillsForHero(
+      previous.heroes[category].name,
+      previous.heroes[category].skills,
+      newName,
+      rallyMode,
+    );
+    let stats = previous.stats;
+    if (deltas) {
+      const nextCategoryStats = { ...previous.stats[category] };
+      for (const stat of STAT_NAMES_ORDERED) {
+        nextCategoryStats[stat] =
+          Math.round(((nextCategoryStats[stat] ?? 0) + deltas[stat]) * 100) /
+          100;
+      }
+      stats = { ...previous.stats, [category]: nextCategoryStats };
+    }
+    return {
+      ...previous,
+      heroes: {
+        ...previous.heroes,
+        [category]: { name: newName, skills },
+      },
+      stats,
+    };
+  });
+
+  if (statSnapshot && deltas) {
+    onStatSync({
+      which,
+      cat: category,
+      oldHeroName: previousName,
+      newHeroName: newName,
+      prevStats: statSnapshot,
+      deltas,
+    });
+  }
+}
+
+function DeployHeroPicker({
+  category,
+  selected,
+  onSelect,
+  onClose,
+}: {
+  category: TroopCategory;
+  selected: string | null;
+  onSelect: (name: string | null) => void;
+  onClose: () => void;
+}) {
+  const [sort, setSort] = useState<"generation" | "name">("generation");
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState<string | null>(selected);
+  const heroes = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    const options = heroesForCategory(category).filter((hero) =>
+      normalizedQuery.length === 0
+        ? true
+        : hero.name.toLowerCase().includes(normalizedQuery),
+    );
+    if (sort === "name") return options.sort((a, b) => a.name.localeCompare(b.name));
+    return options.sort((a, b) => {
+      const generation = (value: string | null) => {
+        const match = /\d+/.exec(value ?? "");
+        return match ? Number(match[0]) : 0;
+      };
+      return generation(b.generation) - generation(a.generation) ||
+        a.name.localeCompare(b.name);
+    });
+  }, [category, query, sort]);
+
+  return (
+    <div className={deployStyles.backdrop} role="presentation" onMouseDown={onClose}>
+      <section
+        className={deployStyles.picker}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Select ${troopCategoryLabel(category)} hero`}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header className={deployStyles.modalHeader}>
+          <span className={deployStyles.snowCap} aria-hidden="true" />
+          <h3>Select hero</h3>
+          <button type="button" onClick={onClose} aria-label="Close hero picker">×</button>
+        </header>
+        <div className={deployStyles.pickerToolbar}>
+          <span><DeployTypeCrest category={category} /> {troopCategoryLabel(category)}</span>
+          <label className={deployStyles.heroSearch}>
+            <span className="sr-only">Search heroes</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => {
+                const nextQuery = event.target.value;
+                setQuery(nextQuery);
+                if (focused && !focused.toLowerCase().includes(nextQuery.trim().toLowerCase())) {
+                  setFocused(null);
+                }
+              }}
+              placeholder="Search heroes"
+              aria-label="Search heroes"
+            />
+          </label>
+          <label>
+            <span>Sort</span>
+            <select value={sort} onChange={(event) => setSort(event.target.value as "generation" | "name")}>
+              <option value="generation">Generation</option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+        </div>
+        <div className={deployStyles.heroGrid}>
+          {heroes.map((hero) => (
+            <button
+              key={hero.name}
+              type="button"
+              className={deployStyles.heroGridCard}
+              data-active={focused === hero.name}
+              data-assigned={selected === hero.name}
+              aria-pressed={focused === hero.name}
+              onClick={() => setFocused(hero.name)}
+            >
+              <DeployHeroPortrait name={hero.name} category={category} />
+              <DeployTypeCrest category={category} />
+              <strong>{hero.name}</strong>
+              <small>{hero.generation ?? "Hero"}</small>
+              {selected === hero.name ? (
+                <span className={deployStyles.assignedBadge}>Assigned</span>
+              ) : null}
+              {hero.experimental ? <ExperimentalBadge /> : null}
+            </button>
+          ))}
+          {heroes.length === 0 ? (
+            <p className={deployStyles.noHeroes}>No heroes match “{query}”.</p>
+          ) : null}
+        </div>
+        <footer className={deployStyles.modalFooter}>
+          <button type="button" className={deployStyles.secondaryButton} onClick={() => onSelect(null)}>
+            Clear slot
+          </button>
+          <button
+            type="button"
+            className={deployStyles.gameButton}
+            disabled={!focused}
+            onClick={() => onSelect(focused)}
+          >
+            Assign
+          </button>
+        </footer>
+      </section>
+    </div>
+  );
+}
+
+function DeployHeroSlots({
+  which,
+  state,
+  onChoose,
+}: {
+  which: Side;
+  state: SideState;
+  onChoose: (category: TroopCategory) => void;
+}) {
+  return (
+    <div className={deployStyles.heroSlots} aria-label={`${which} heroes`}>
+      {CATEGORIES.map((category) => {
+        const hero = getHero(state.heroes[category].name);
+        return (
+          <button
+            key={category}
+            type="button"
+            className={deployStyles.heroSlot}
+            data-empty={!hero}
+            onClick={() => onChoose(category)}
+            aria-label={`Choose ${category} hero, currently ${hero?.name ?? "none"}`}
+            data-testid={`deploy-hero-${which}-${category}`}
+          >
+            {hero ? (
+              <>
+                <DeployHeroPortrait name={hero.name} category={category} />
+                <DeployTypeCrest category={category} />
+                <span className={deployStyles.heroGeneration}>{hero.generation ?? "Hero"}</span>
+                <strong>{hero.name}</strong>
+                <small>Tap to change</small>
+              </>
+            ) : (
+              <>
+                <DeployTypeCrest category={category} />
+                <span className={deployStyles.addHero}>+</span>
+                <strong>Add hero</strong>
+              </>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function DeployTroopRow({
+  category,
+  which,
+  state,
+  setState,
+}: {
+  category: TroopCategory;
+  which: Side;
+  state: SideState;
+  setState: SidePanelProps["setState"];
+}) {
+  const selectedTier = state.tiers[category];
+  const isCustom = !TROOP_TIERS.includes(selectedTier);
+  const [editingCustom, setEditingCustom] = useState(isCustom);
+  const total = CATEGORIES.reduce((sum, current) => sum + state.troops[current], 0);
+  const count = state.troops[category];
+  const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+  const step = Math.max(1, Math.round(Math.max(total, 100) / 100));
+
+  const setCount = (nextCount: number) => {
+    setState((previous) => ({
+      ...previous,
+      troops: { ...previous.troops, [category]: Math.max(0, Math.round(nextCount)) },
+    }));
+  };
+
+  return (
+    <div className={deployStyles.troopRow} data-category={category} data-testid={`sim-unit-row-${which}-${category}`}>
+      <div className={deployStyles.troopIdentity}>
+        <DeployTypeCrest category={category} />
+        <span>
+          <strong>{troopCategoryLabel(category)}</strong>
+          {editingCustom ? (
+            <input
+              autoFocus
+              name={`${which}.troops.${category}.tier`}
+              value={selectedTier}
+              aria-label={`${category} custom troop type`}
+              onChange={(event) => setState((previous) => ({
+                ...previous,
+                tiers: { ...previous.tiers, [category]: event.target.value },
+              }))}
+              onBlur={() => {
+                if (!troopTypeForSelection(category, selectedTier)) {
+                  setState((previous) => ({ ...previous, tiers: { ...previous.tiers, [category]: TROOP_TIERS[0] } }));
+                  setEditingCustom(false);
+                }
+              }}
+              placeholder="t6_fc10"
+            />
+          ) : (
+            <select
+              name={`${which}.troops.${category}.tier`}
+              value={selectedTier}
+              aria-label={`${category} troop tier`}
+              onChange={(event) => {
+                if (event.target.value === "__other__") {
+                  setState((previous) => ({ ...previous, tiers: { ...previous.tiers, [category]: "" } }));
+                  setEditingCustom(true);
+                } else {
+                  setState((previous) => ({ ...previous, tiers: { ...previous.tiers, [category]: event.target.value } }));
+                }
+              }}
+            >
+              {TROOP_TIERS.map((tier) => <option key={tier} value={tier}>{tier.toUpperCase()}</option>)}
+              <option value="__other__">Custom</option>
+            </select>
+          )}
+        </span>
+      </div>
+      <div className={deployStyles.troopAmount}>
+        <button type="button" aria-label={`Remove ${category} troops`} onClick={() => setCount(count - step)}>−</button>
+        <label>
+          <span className="sr-only">{category} troop count</span>
+          <EditableNumberInput
+            name={`${which}.troops.${category}.count`}
+            min={0}
+            inputMode="numeric"
+            parse="int"
+            value={count}
+            onValueChange={setCount}
+            aria-label={`${category} troop count`}
+          />
+          <small>{percent}%</small>
+        </label>
+        <button type="button" aria-label={`Add ${category} troops`} onClick={() => setCount(count + step)}>+</button>
+      </div>
+      <input
+        className={deployStyles.troopSlider}
+        type="range"
+        min={0}
+        max={Math.max(total, 1)}
+        value={Math.min(count, Math.max(total, 1))}
+        disabled={total === 0}
+        aria-label={`${category} troop ratio`}
+        style={{ "--fill": `${percent}%` } as React.CSSProperties}
+        onChange={(event) => {
+          const next = Number(event.target.value);
+          setState((previous) => ({
+            ...previous,
+            troops: distributeTroopCount(previous.troops, category, next),
+          }));
+        }}
+      />
+    </div>
+  );
+}
+
+function DeployStatsSheet({
+  which,
+  state,
+  opponent,
+  rallyMode,
+  setState,
+}: Pick<SidePanelProps, "which" | "state" | "opponent" | "rallyMode" | "setState">) {
+  return (
+    <div className={deployStyles.reportTable} data-testid="stat-bonus-edit-matrix">
+      <div className={deployStyles.reportHead}>
+        <span>Troop</span>
+        {STAT_NAMES.map((stat) => <span key={stat}>{STAT_SHORT_LABELS[stat]}</span>)}
+      </div>
+      {CATEGORIES.map((category) => (
+        <div className={deployStyles.reportRow} key={category}>
+          <strong><DeployTypeCrest category={category} /> {troopCategoryLabel(category)}</strong>
+          {STAT_NAMES.map((stat) => {
+            const base = state.stats[category][stat];
+            const bonuses = effectiveStatBonusGroups(state, opponent, which, stat, rallyMode);
+            const effective = effectiveStatPreview(base, bonuses.up, bonuses.down);
+            return (
+              <label key={stat}>
+                <StatBonusInput
+                  value={base}
+                  onValueChange={(value) => setState((previous) => ({
+                    ...previous,
+                    stats: { ...previous.stats, [category]: { ...previous.stats[category], [stat]: Number.isNaN(value) ? 0 : value } },
+                  }))}
+                  ariaLabel={statLabel(category, stat)}
+                  name={`${which}.stats.${category}.${stat}`}
+                />
+                {(bonuses.up !== 0 || bonuses.down !== 0) ? (
+                  <small data-testid={`stat-preview-${which}-${category}-${stat}`}>Effective {effective}</small>
+                ) : null}
+              </label>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DeploySkillsSheet({
+  which,
+  state,
+  rallyMode,
+  setState,
+}: Pick<SidePanelProps, "which" | "state" | "rallyMode" | "setState">) {
+  return (
+    <div className={deployStyles.skillRows}>
+      {CATEGORIES.map((category) => {
+        const hero = getHero(state.heroes[category].name);
+        if (!hero) return (
+          <p key={category} className={deployStyles.emptySheetRow}>
+            <DeployTypeCrest category={category} /> Choose a {troopCategoryLabel(category)} hero to configure skills.
+          </p>
+        );
+        return (
+          <section key={category} className={deployStyles.skillHeroRow}>
+            <div><DeployHeroPortrait name={hero.name} category={category} /><span><strong>{hero.name}</strong><small>{hero.generation ?? troopCategoryLabel(category)}</small></span></div>
+            <div>
+              {[1, 2, 3, 4].map((slot) => {
+                const enabled = skillSlotEnabled(hero, slot as 1 | 2 | 3 | 4, rallyMode);
+                const skill = hero.skills.find((entry) => entry.skillNum === slot);
+                return (
+                  <label key={slot} title={skill?.name ?? `Skill ${slot}`}>
+                    <span>S{slot}</span>
+                    <select
+                      name={`${which}.heroes.${category}.skill${slot}`}
+                      value={state.heroes[category].skills[slot - 1]}
+                      disabled={!enabled}
+                      aria-label={`${category} skill ${slot}`}
+                      onChange={(event) => setState((previous) => {
+                        const skills = [...previous.heroes[category].skills] as [number, number, number, number];
+                        skills[slot - 1] = Number(event.target.value);
+                        return { ...previous, heroes: { ...previous.heroes, [category]: { ...previous.heroes[category], skills } } };
+                      })}
+                    >
+                      {[0, 1, 2, 3, 4, 5].map((level) => <option key={level} value={level}>{level}</option>)}
+                    </select>
+                  </label>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+function DeploySetupModal({
+  sheet,
+  title,
+  onClose,
+  children,
+}: {
+  sheet: DeploySetupSheet;
+  title: string;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div className={deployStyles.backdrop} role="presentation" onMouseDown={onClose}>
+      <section className={deployStyles.setupModal} role="dialog" aria-modal="true" aria-label={`${title} ${sheet}`} onMouseDown={(event) => event.stopPropagation()}>
+        <header className={deployStyles.modalHeader}>
+          <span className={deployStyles.snowCap} aria-hidden="true" />
+          <h3>{sheet === "bonuses" ? "Battle bonuses" : sheet === "stats" ? "Stat bonuses" : sheet === "skills" ? "Hero skills" : "Rally joiners"}</h3>
+          <button type="button" onClick={onClose} aria-label={`Close ${sheet}`}>×</button>
+        </header>
+        <div className={deployStyles.setupModalBody}>{children}</div>
+        <footer className={deployStyles.modalFooter}>
+          <button type="button" className={deployStyles.gameButton} onClick={onClose}>Done</button>
+        </footer>
+      </section>
+    </div>
+  );
+}
+
+function DeployArmyPanel({
+  title,
+  which,
+  state,
+  opponent,
+  setState,
+  rallyMode,
+  syncStatsOnHeroChange,
+  onStatSync,
+  loadedPresetName,
+  onOpenPreset,
+}: SidePanelProps) {
+  const [heroPicker, setHeroPicker] = useState<TroopCategory | null>(null);
+  const [setupSheet, setSetupSheet] = useState<DeploySetupSheet | null>(null);
+  const total = CATEGORIES.reduce((sum, category) => sum + state.troops[category], 0);
+  const percentages = CATEGORIES.map((category) => total > 0 ? Math.round((state.troops[category] / total) * 100) : 0);
+  const activeBonuses = STAT_MODIFIER_NAMES.filter((name) => state.statModifiers[name] !== 0).length + PET_MODIFIER_NAMES.filter((name) => state.petModifiers[name] !== 0).length;
+  const activeJoiners = state.joiners.filter((slot) => slot.name).length;
+
+  return (
+    <section className={deployStyles.armyPanel} data-tour={`side-panel-${which}`} data-side={which}>
+      <header className={deployStyles.armyHeader}>
+        <span className={deployStyles.snowCap} aria-hidden="true" />
+        <div><small>{title === "Player army" ? "Rally march" : which === "attacker" ? "Offensive march" : "Defensive march"}</small><h2>{title}</h2></div>
+        <button
+          type="button"
+          className={deployStyles.profileButton}
+          onClick={onOpenPreset}
+          aria-label={`${which} player profile`}
+          data-tour={which === "attacker" ? "stat-presets" : undefined}
+        >
+          <span aria-hidden="true">♙</span><span><strong>Profile</strong><small>{loadedPresetName ?? "Not loaded"}</small></span>
+        </button>
+      </header>
+
+      <div className={deployStyles.capacityBar}>
+        <span><b aria-hidden="true">♟</b> {total.toLocaleString()} troops</span>
+        <button type="button" onClick={() => setSetupSheet("bonuses")}><span>Battle Bonus</span><strong>{activeBonuses > 0 ? `${activeBonuses} active` : "Add bonuses"}</strong><b aria-hidden="true">+</b></button>
+      </div>
+
+      <DeployHeroSlots which={which} state={state} onChoose={setHeroPicker} />
+
+      <div
+        className={deployStyles.troopList}
+        data-testid={`side-section-${which}-troops`}
+      >
+        {CATEGORIES.map((category) => <DeployTroopRow key={category} category={category} which={which} state={state} setState={setState} />)}
+      </div>
+
+      <div className={deployStyles.ratioStrip}>
+        <span>Troop ratio</span>
+        {CATEGORIES.map((category, index) => <span key={category}><DeployTypeCrest category={category} /> {percentages[index]}%</span>)}
+      </div>
+
+      <div className={deployStyles.quickActions}>
+        <button type="button" onClick={() => setState((previous) => ({ ...previous, troops: { infantry: 0, lancer: 0, marksman: 0 } }))}><span aria-hidden="true">↶</span><strong>Withdraw</strong></button>
+        <button type="button" disabled={total === 0} onClick={() => setState((previous) => ({ ...previous, troops: troopsForPercentages(total, 33.34, 33.33) }))}><span aria-hidden="true">⚖</span><strong>Equalize</strong></button>
+        <button type="button" disabled={total === 0} onClick={() => setState((previous) => ({ ...previous, troops: troopsForPercentages(total, 10, 45) }))}><span aria-hidden="true">☷</span><strong>10 / 45 / 45</strong></button>
+      </div>
+
+      <div className={deployStyles.setupDock}>
+        <button type="button" onClick={() => setSetupSheet("stats")} data-testid={`side-section-${which}-stats`}><span>↑</span><strong>Stats</strong><small>Base + effective</small></button>
+        <button type="button" onClick={() => setSetupSheet("skills")}><span>✦</span><strong>Skills</strong><small>Skill levels</small></button>
+        {rallyMode ? <button type="button" onClick={() => setSetupSheet("joiners")} data-testid={`side-section-${which}-joiners`}><span>♟</span><strong>Joiners</strong><small>{activeJoiners}/4 assigned</small></button> : null}
+        <button type="button" onClick={() => setSetupSheet("bonuses")} data-testid={`side-section-${which}-buffs`}><span>+</span><strong>Bonuses</strong><small>{activeBonuses} active</small></button>
+      </div>
+
+      {heroPicker ? (
+        <DeployHeroPicker
+          category={heroPicker}
+          selected={state.heroes[heroPicker].name}
+          onClose={() => setHeroPicker(null)}
+          onSelect={(name) => {
+            applyDeployHeroSelection({ category: heroPicker, newName: name, which, state, setState, rallyMode, syncStatsOnHeroChange, onStatSync });
+            setHeroPicker(null);
+          }}
+        />
+      ) : null}
+
+      {setupSheet ? (
+        <DeploySetupModal sheet={setupSheet} title={title} onClose={() => setSetupSheet(null)}>
+          {setupSheet === "stats" ? <DeployStatsSheet which={which} state={state} opponent={opponent} rallyMode={rallyMode} setState={setState} /> : null}
+          {setupSheet === "skills" ? <DeploySkillsSheet which={which} state={state} rallyMode={rallyMode} setState={setState} /> : null}
+          {setupSheet === "joiners" ? (
+            <div className={deployStyles.joinerRows}>
+              {state.joiners.map((slot, index) => (
+                <label key={index}><span><b>#{index + 1}</b> Joiner hero</span><select name={`${which}.joiners.${index}.hero`} value={slot.name ?? ""} aria-label={`${which} joiner ${index + 1}`} onChange={(event) => setState((previous) => ({ ...previous, joiners: previous.joiners.map((joiner, current) => current === index ? { name: event.target.value || null } : joiner) }))}><option value="">None</option>{HEROES.map((hero) => <option key={hero.name} value={hero.name}>{hero.experimental ? "Experimental - " : ""}{hero.name}</option>)}</select></label>
+              ))}
+            </div>
+          ) : null}
+          {setupSheet === "bonuses" ? (
+            <StatModifierControls
+              which={which}
+              modifiers={state.statModifiers}
+              petModifiers={state.petModifiers}
+              onChange={(name, value) => setState((previous) => ({ ...previous, statModifiers: { ...previous.statModifiers, [name]: value } }))}
+              onPetChange={(name, value) => setState((previous) => ({ ...previous, petModifiers: { ...previous.petModifiers, [name]: value } }))}
+              onCityPreset={(value) => setState((previous) => ({ ...previous, statModifiers: STAT_MODIFIER_NAMES.reduce((next, name) => ({ ...next, [name]: value }), {} as StatModifierState) }))}
+              onPetPreset={(enabled) => setState((previous) => ({ ...previous, petModifiers: enabled ? { attack: PET_BUFF_MAX, defense: PET_BUFF_MAX, lethality: PET_BUFF_MAX, health: PET_BUFF_MAX, enemy_defense: PET_DEFENSE_DEBUFF_MAX, enemy_lethality: PET_DEFAULT_DEBUFF_MAX, enemy_health: PET_DEFAULT_DEBUFF_MAX } : defaultPetModifiers() }))}
+            />
+          ) : null}
+        </DeploySetupModal>
+      ) : null}
+    </section>
+  );
+}
+
+export function SidePanel(props: SidePanelProps) {
+  return props.variant === "deploy" ? (
+    <DeployArmyPanel {...props} />
+  ) : (
+    <DashboardSidePanel {...props} />
   );
 }
 
