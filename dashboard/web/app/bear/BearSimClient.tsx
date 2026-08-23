@@ -72,6 +72,7 @@ import {
   toApiPayload,
   type SideState,
 } from "@/lib/simulate/form-state";
+import { deployRunHref } from "@/lib/simulate/deploy-route";
 
 const RALLY_MODE = true;
 const RECENT_RUNS_PAGE_SIZE = 20;
@@ -89,6 +90,8 @@ interface BearSimClientProps {
   initialRunId?: string | null;
   initialSavedRun?: SavedSimulationRunResponse | null;
   initialSavedRunError?: string | null;
+  alternateRunLinks?: boolean;
+  presentation?: "dashboard" | "deploy";
 }
 
 type BearWorkspaceTab = "setup" | "results";
@@ -312,6 +315,8 @@ export default function BearSimClient({
   initialRunId = null,
   initialSavedRun = null,
   initialSavedRunError = null,
+  alternateRunLinks = false,
+  presentation = "dashboard",
 }: BearSimClientProps) {
   const router = useRouter();
   const initialState = useMemo(
@@ -612,15 +617,16 @@ export default function BearSimClient({
     const kind = meta.saved_kind;
     const createdAt = meta.saved_at;
     const shareUrl = meta.share_url;
+    const activeUrl = alternateRunLinks ? deployRunHref(id, kind) : shareUrl;
     const title = buildSimulationRunTitle(request, kind);
     storeSavedRunMeta({ id, kind, createdAt, shareUrl, title });
     if (
       typeof window !== "undefined" &&
-      `${window.location.pathname}${window.location.search}` !== shareUrl
+      `${window.location.pathname}${window.location.search}` !== activeUrl
     ) {
-      window.history.pushState(null, "", shareUrl);
+      window.history.pushState(null, "", activeUrl);
     }
-    router.push(shareUrl, { scroll: false });
+    router.push(activeUrl, { scroll: false });
     setRecentRuns((prev) => [
       {
         id,
@@ -765,7 +771,8 @@ export default function BearSimClient({
 
   return (
     <div
-      className="simulate-workspace"
+      className={`simulate-workspace ${presentation === "deploy" ? "deploy-client-workspace" : ""}`}
+      data-presentation={presentation}
       onFocusCapture={selectFocusedInputText}
       onMouseUpCapture={keepFocusSelectionOnMouseUp}
     >
@@ -879,6 +886,7 @@ export default function BearSimClient({
           onStatSync={() => undefined}
           loadedPresetName={loadedPresetName}
           onOpenPreset={openPresetModal}
+          variant={presentation}
         />
       </div>
       </div>
@@ -1080,7 +1088,12 @@ export default function BearSimClient({
           onLoadMore={() => void loadMoreRecentRuns()}
           onChoose={(run) => {
             setRecentRunsOpen(false);
-            router.push(run.share_url, { scroll: false });
+            router.push(
+              alternateRunLinks
+                ? deployRunHref(run.id, run.kind)
+                : run.share_url,
+              { scroll: false },
+            );
           }}
         />
       )}

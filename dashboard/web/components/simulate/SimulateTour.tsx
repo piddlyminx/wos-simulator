@@ -36,6 +36,7 @@ interface TourGeometry {
 }
 
 interface UseSimulateTourOptions {
+  autoStart?: boolean;
   wideLayout: boolean;
   initialRunId?: string | null;
   loadingSavedRun: boolean;
@@ -370,6 +371,7 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
 }
 
 export function useSimulateTour({
+  autoStart = true,
   wideLayout,
   initialRunId,
   loadingSavedRun,
@@ -513,6 +515,7 @@ export function useSimulateTour({
   }, [closeTour, stepIndex]);
 
   useEffect(() => {
+    if (!autoStart) return;
     if (initialRunId || loadingSavedRun || stepIndex !== null) return;
     const markInteracted = () => {
       hasUserInteractedRef.current = true;
@@ -532,7 +535,7 @@ export function useSimulateTour({
       window.removeEventListener("wheel", markInteracted);
       window.removeEventListener("touchstart", markInteracted);
     };
-  }, [initialRunId, loadingSavedRun, startSimulateTour, stepIndex]);
+  }, [autoStart, initialRunId, loadingSavedRun, startSimulateTour, stepIndex]);
 
   async function runTourAction(step: SimulateTourStep, nextIndex: number) {
     if (!step.runAction || actionLoading) return;

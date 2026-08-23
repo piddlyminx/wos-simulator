@@ -115,6 +115,7 @@ import {
   type Side,
   type SideState,
 } from "@/lib/simulate/form-state";
+import { deployRunHref } from "@/lib/simulate/deploy-route";
 import {
   formatBattleOutcome,
   formatMeanSurvivorCount,
@@ -466,12 +467,16 @@ interface SimulateClientProps {
   initialRunId?: string | null;
   initialSavedRun?: SavedSimulationRunResponse | null;
   initialSavedRunError?: string | null;
+  alternateRunLinks?: boolean;
+  presentation?: "dashboard" | "deploy";
 }
 
 export default function SimulateClient({
   initialRunId = null,
   initialSavedRun = null,
   initialSavedRunError = null,
+  alternateRunLinks = false,
+  presentation = "dashboard",
 }: SimulateClientProps) {
   const router = useRouter();
   const initialState = useMemo(
@@ -852,7 +857,10 @@ export default function SimulateClient({
       shareUrl,
       title,
     });
-    router.push(shareUrl, { scroll: false });
+    router.push(
+      alternateRunLinks ? deployRunHref(id, kind) : shareUrl,
+      { scroll: false },
+    );
     prependRecentRun({
       id,
       kind,
@@ -1592,6 +1600,7 @@ export default function SimulateClient({
   }
 
   const { startSimulateTour, simulateTour } = useSimulateTour({
+    autoStart: presentation !== "deploy",
     wideLayout: wideSimLayout,
     initialRunId,
     loadingSavedRun,
@@ -1610,7 +1619,8 @@ export default function SimulateClient({
   return (
     <div
       ref={workspaceRef}
-      className="simulate-workspace"
+      className={`simulate-workspace ${presentation === "deploy" ? "deploy-client-workspace" : ""}`}
+      data-presentation={presentation}
       onFocusCapture={selectFocusedInputText}
       onMouseUpCapture={keepFocusSelectionOnMouseUp}
     >
@@ -1811,6 +1821,7 @@ export default function SimulateClient({
             onStatSync={handleStatSync}
             loadedPresetName={loadedPresetNames.attacker}
             onOpenPreset={() => openStatPresetModal("attacker")}
+            variant={presentation}
           />
         </div>
         <div
@@ -1854,6 +1865,7 @@ export default function SimulateClient({
             onStatSync={handleStatSync}
             loadedPresetName={loadedPresetNames.defender}
             onOpenPreset={() => openStatPresetModal("defender")}
+            variant={presentation}
           />
         </div>
       </div>
@@ -1871,7 +1883,12 @@ export default function SimulateClient({
           onLoadMore={() => void loadMoreRecentRuns()}
           onChoose={(run) => {
             setRecentRunsOpen(false);
-            router.push(run.share_url, { scroll: false });
+            router.push(
+              alternateRunLinks
+                ? deployRunHref(run.id, run.kind)
+                : run.share_url,
+              { scroll: false },
+            );
           }}
         />
       )}
@@ -1954,7 +1971,12 @@ export default function SimulateClient({
 
       <div
         ref={resultsAnchorRef}
-        className={`${wideSimLayout || mobileTab === "results" ? "block" : "hidden"} sim-panel-results-shell`}
+        className={`${presentation === "deploy" && !result && !optimizeResult && !surfaceResult
+          ? "hidden"
+          : wideSimLayout || mobileTab === "results"
+            ? "block"
+            : "hidden"
+        } sim-panel-results-shell`}
         data-testid="sim-panel-results"
         data-tour="results-panel"
       >
