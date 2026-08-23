@@ -10,9 +10,9 @@
       "name": "Attacker 1: Gatot, Sonya, Bradley",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 142584,
-          "lancer_t11_fc10": 74582,
-          "marksman_t11_fc10": 2194
+          "infantry_t11_fc10": 142583,
+          "lancer_t11_fc10": 76776,
+          "marksman_t11_fc10": 1
         },
         "stats": {
           "infantry": { "attack": 2418.0, "defense": 2441.1, "lethality": 2210.3, "health": 2420.4 },
@@ -30,9 +30,9 @@
       "name": "Attacker 2: Logan, Mia, Hendrik",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 109680,
-          "lancer_t11_fc10": 2193,
-          "marksman_t11_fc10": 107487
+          "infantry_t11_fc10": 125035,
+          "lancer_t11_fc10": 4387,
+          "marksman_t11_fc10": 89938
         },
         "stats": {
           "infantry": { "attack": 1768.6, "defense": 1846.6, "lethality": 1984.2, "health": 2283.5 },
@@ -51,8 +51,8 @@
       "fighter": {
         "troops": {
           "infantry_t11_fc10": 109680,
-          "lancer_t11_fc10": 2193,
-          "marksman_t11_fc10": 107487
+          "lancer_t11_fc10": 6581,
+          "marksman_t11_fc10": 103099
         },
         "stats": {
           "infantry": { "attack": 1988.8, "defense": 2033.8, "lethality": 1760.9, "health": 2187.2 },
