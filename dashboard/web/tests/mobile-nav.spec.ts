@@ -141,6 +141,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(drawer.getByText("Quality Metrics")).toBeVisible();
     await expect(drawer.getByText("Simulation Running")).toBeVisible();
     await expect(drawer.getByText("Library")).toBeVisible();
+    await expect(page.locator("nav a[href='/deploy']")).toHaveCount(0);
     const simulateLink = drawer.locator("a[href='/simulate']");
     await expect(simulateLink).toBeVisible();
     await expect(simulateLink).toHaveText("Battle Sim");
