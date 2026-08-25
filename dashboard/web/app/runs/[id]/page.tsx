@@ -1,22 +1,12 @@
 import Link from "next/link";
 import {
-  computeCrossShaDiff,
-  computeSnapshotDiff,
-  filterPatchText,
-  formatCrossShaBanner,
-  resolveRepoRoot,
-} from "@/lib/diff";
-import {
   getRun,
   getRunTestcases,
   getPreviousRun,
   getRunTestcaseKeys,
-  getRunPatch,
 } from "@/lib/db";
-import { getRunSnapshot } from "@/lib/snapshots";
 import TestcaseTable from "@/components/TestcaseTable";
 import ParityReportTable from "@/components/ParityReportTable";
-import DiffViewer from "@/components/DiffViewer";
 import MetricCard from "@/components/MetricCard";
 import { testcaseDetailHref } from "@/lib/testcase-file";
 import { formatDashboardDateTime } from "@/lib/date-format";
@@ -57,13 +47,6 @@ export default async function RunDetailPage({ params }: PageProps) {
   const totalTestcases = testcases.length;
   const passingTestcases = testcases.filter((t) => t.passes === 1).length;
 
-  // Diff blob decompression for current run. Old blobs may include dashboard
-  // code / scratch noise; scope to simulator-relevant paths at display time so
-  // the fix (WOS-188) is retroactive without a storage backfill.
-  const rawPatchText: string | null = run.dirty === 1 ? getRunPatch(id) : null;
-  const filteredPatchText = rawPatchText ? filterPatchText(rawPatchText) : null;
-  const patchText: string | null =
-    filteredPatchText && filteredPatchText.length > 0 ? filteredPatchText : null;
 
   // Testcase set diff vs previous run
   const previousRun = getPreviousRun(id);
@@ -84,51 +67,6 @@ export default async function RunDetailPage({ params }: PageProps) {
     removedKeys = previousKeys.filter((k) => !currentSet.has(toStr(k)));
   }
 
-  // Incremental diff computation.
-  //
-  // Preferred path (WOS-200): both runs have simulator_snapshot blobs —
-  // diff those directly in-process, no git required. That works for any
-  // pair of runs regardless of SHA reachability.
-  //
-  // Legacy fallback: if either snapshot is missing (run was ingested
-  // before the snapshot refactor), fall back to computeCrossShaDiff which
-  // reconstructs baselines via git. That still requires git on the host.
-  let diffLabel = "Dirty State Patch (vs clean baseline)";
-  let diffWarning: string | null = null;
-  let displayPatch: string | null = patchText;
-  let rawCurrPatch: string | null = null;
-
-  if (previousRun) {
-    const currSnapshot = getRunSnapshot(id);
-    const prevSnapshot = getRunSnapshot(previousRun.id);
-    if (currSnapshot && prevSnapshot) {
-      diffLabel = "Code Changes Since Previous Run";
-      displayPatch = computeSnapshotDiff(prevSnapshot, currSnapshot);
-      rawCurrPatch = patchText;
-    } else if (patchText) {
-      const prevPatch = getRunPatch(previousRun.id);
-      if (prevPatch !== null && previousRun.dirty === 1) {
-        const repoRoot = resolveRepoRoot();
-        const result = computeCrossShaDiff(
-          prevPatch,
-          previousRun.git_sha ?? "",
-          patchText,
-          run.git_sha ?? "",
-          repoRoot
-        );
-        diffLabel = "Code Changes Since Previous Run";
-        displayPatch = result.patch || "";
-        diffWarning = formatCrossShaBanner(
-          result,
-          previousRun.git_sha ?? "",
-          run.git_sha ?? ""
-        );
-        rawCurrPatch = patchText;
-      } else if (prevPatch === null && previousRun.dirty === 1) {
-        diffWarning = "Previous run has no stored patch — showing full cumulative patch.";
-      }
-    }
-  }
 
   return (
     <div>
@@ -257,52 +195,6 @@ export default async function RunDetailPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Diff viewer */}
-      {displayPatch !== null && (
-        <div
-          className="rounded p-4 mb-8 overflow-x-auto"
-          style={{
-            border: "1px solid var(--border-color)",
-            backgroundColor: "var(--sidebar-bg)",
-          }}
-        >
-          <h3 className="font-bold mb-3 text-xs uppercase tracking-wider opacity-60">
-            {diffLabel}
-          </h3>
-          {diffWarning && (
-            <div
-              className="rounded px-3 py-2 mb-3 text-xs"
-              style={{
-                backgroundColor: "#3d3000",
-                border: "1px solid #7a6000",
-                color: "#ffd966",
-              }}
-            >
-              {diffWarning}
-            </div>
-          )}
-          {displayPatch ? (
-            <DiffViewer patch={displayPatch} />
-          ) : (
-            <p className="text-xs opacity-60">
-              No code changes between this run and the previous run.
-            </p>
-          )}
-          {rawCurrPatch && (
-            <details className="mt-4">
-              <summary
-                className="text-xs uppercase tracking-wider opacity-60 cursor-pointer"
-                style={{ color: "var(--sidebar-active)" }}
-              >
-                Show Raw Dirty State Patch (vs Clean Baseline)
-              </summary>
-              <div className="mt-3">
-                <DiffViewer patch={rawCurrPatch} />
-              </div>
-            </details>
-          )}
-        </div>
-      )}
 
       {/* Testcase table */}
       <div>

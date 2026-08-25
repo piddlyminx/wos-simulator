@@ -77,7 +77,33 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-20T02-48-43.394Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-20T02-48-43.394Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-20T02-48-43.394Z"

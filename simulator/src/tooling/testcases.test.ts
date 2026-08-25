@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { loadSimulatorConfig } from "../config-node";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration";
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
-import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, deterministicRoundTolerancePct, discoverTestcaseFiles, runTestcases, type TestcaseSummaryEntry } from "./testcases";
+import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, deterministicRoundTolerancePct, discoverTestcaseFiles, runTestcases, testcaseArmiesFromEntry, type TestcaseSummaryEntry } from "./testcases";
 
 test("discoverTestcaseFiles follows simulator/testcases symlink and skips disabled or stale files by default", () => {
   const files = discoverTestcaseFiles();
@@ -46,6 +46,41 @@ test("runTestcases returns compact summary entries and full detail entries separ
   assert.ok(detail?.result);
   assert.equal(detail?.simulatorStats?.n, 5);
   assert.ok(detail?.visibility.attacker.troops.lancer);
+  assert.deepEqual(summary?.armies?.attacker.troops, { lancer_t8: 200 });
+  assert.deepEqual(summary?.armies?.defender.troops, { lancer_t9: 200 });
+  assert.deepEqual(detail?.armies, summary?.armies);
+});
+
+test("testcase artifacts retain exact troop tiers and hero skill levels", () => {
+  const armies = testcaseArmiesFromEntry({
+    attacker: {
+      heroes: { Mia: { skill_1: 2, skill_2: 3, skill_3: 4 } },
+      joiner_heroes: { Jessie: { skill_1: 5, skill_2: 5 } },
+      troops: { infantry_t10_fc5: 12_345, lancer_t9: 678 },
+    },
+    defender: {
+      heroes: {},
+      joiner_heroes: {},
+      troops: { marksman_t11_fc9: 9_876 },
+    },
+  });
+
+  assert.deepEqual(armies.attacker.heroes.Mia, {
+    skill_1: 2,
+    skill_2: 3,
+    skill_3: 4,
+  });
+  assert.deepEqual(armies.attacker.joinerHeroes.Jessie, {
+    skill_1: 5,
+    skill_2: 5,
+  });
+  assert.deepEqual(armies.attacker.troops, {
+    infantry_t10_fc5: 12_345,
+    lancer_t9: 678,
+  });
+  assert.deepEqual(armies.defender.troops, {
+    marksman_t11_fc9: 9_876,
+  });
 });
 
 test("runTestcases defaults stochastic cases to 100 samples", () => {

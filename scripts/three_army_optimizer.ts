@@ -234,7 +234,13 @@ type BattleResolver = (
 ) => BattleResult;
 
 const UNIT_TYPES: UnitType[] = ["infantry", "lancer", "marksman"];
+const UNIT_LABELS: Record<UnitType, string> = {
+  infantry: "I",
+  lancer: "L",
+  marksman: "M"
+};
 const ORDERS = permutations([0, 1, 2]) as unknown as Order[];
+const CANONICAL_ORDERS: readonly Order[] = [ORDERS[0]];
 const ADAPTIVE_COARSE_SEEDS_PER_METRIC = 10;
 const ADAPTIVE_FINALISTS_PER_METRIC = 30;
 const ADAPTIVE_MAX_FINALISTS = 40;
@@ -279,9 +285,9 @@ export function parseDefinition(raw: unknown, simulatorConfig: SimulatorConfig):
     if (!inputStatsIncludeHeroGeneration[side]) continue;
     const armies = side === "attacker" ? attacker : defender;
     for (const [index, army] of armies.entries()) {
-      if (!army.fighter.stats || mainHeroNames(army.fighter).length !== 3) {
+      if (!army.fighter.stats) {
         throw new Error(
-          `${side}[${index}] must specify its input stats and three original main heroes because its input stats include hero generation`
+          `${side}[${index}] must specify its input stats because they include hero generation`
         );
       }
     }
@@ -428,8 +434,9 @@ function evaluateEffectiveDefinition(
   let scenario = 0;
   let attackerMarginMean = 0;
   let attackerMarginM2 = 0;
-  for (const attackerOrder of ORDERS) {
-    for (const defenderOrder of ORDERS) {
+  const orders = definition.ordering === "random" ? CANONICAL_ORDERS : ORDERS;
+  for (const attackerOrder of orders) {
+    for (const defenderOrder of orders) {
       for (let rep = 0; rep < reps; rep += 1) {
         const result = simulateEffectiveThreeArmyMatch(
           definition,
@@ -666,7 +673,7 @@ export function optimizeDefinition(
 ): OptimizationResult[] {
   const context = createHeroOptimizationWorkerContext(definition, simulatorConfig);
   const total = countOptimizationCandidates(context, maxCandidates);
-  const scenarios = allOrderingScenarios(reps);
+  const scenarios = allOrderingScenarios(reps, definition.ordering);
   onProgress?.(0, total, 0, "final");
   const retained: OptimizationResult[] = [];
   let completed = 0;
@@ -778,7 +785,9 @@ export async function optimizeDefinitionParallel(
 
   try {
     let active: HeroRaceCandidate[] | undefined;
-    const screeningStages = screeningPolicy === false ? [] : heroScreeningStages(total, screeningPolicy);
+    const screeningStages = screeningPolicy === false
+      ? []
+      : heroScreeningStages(total, screeningPolicy, definition.ordering);
     for (const stage of screeningStages) {
       const inputs = active
         ? active.map(({ candidate, result }) => ({ candidate, previous: result }))
@@ -801,7 +810,7 @@ export async function optimizeDefinitionParallel(
     const finalEvaluated = await evaluateStage(
       finalists,
       finalistCount,
-      allOrderingScenarios(reps),
+      allOrderingScenarios(reps, definition.ordering),
       "final",
       false
     );
@@ -822,19 +831,29 @@ function* initialHeroRaceInputs(
 
 function heroScreeningStages(
   totalCandidates: number,
-  policy: HeroScreeningPolicy
+  policy: HeroScreeningPolicy,
+  ordering: ArmyOrdering
 ): HeroScreeningStage[] {
   validateHeroScreeningPolicy(policy);
   if (totalCandidates <= policy.minimumCandidates) return [];
+  const [after12, after36, after72, after144] = policy.retainFractions;
+  if (ordering === "random") {
+    return [
+      { name: "screen-12", scenarios: randomOrderingScenariosForReps(integerRange(0, 12)), retainFraction: after12 },
+      { name: "screen-36", scenarios: randomOrderingScenariosForReps(integerRange(12, 36)), retainFraction: after36 },
+      { name: "screen-72", scenarios: randomOrderingScenariosForReps(integerRange(36, 72)), retainFraction: after72 },
+      { name: "screen-144", scenarios: randomOrderingScenariosForReps(integerRange(72, 144)), retainFraction: after144 }
+    ];
+  }
   const balanced = balancedOpeningOrderScenarios();
   const balancedKeys = new Set(balanced.map(scenarioKey));
-  const remainingFirstRep = allOrderingScenarios(1).filter((scenario) => !balancedKeys.has(scenarioKey(scenario)));
-  const [after12, after36, after72, after144] = policy.retainFractions;
+  const remainingFirstRep = allOrderingScenarios(1, "sequential")
+    .filter((scenario) => !balancedKeys.has(scenarioKey(scenario)));
   return [
     { name: "screen-12", scenarios: balanced, retainFraction: after12 },
     { name: "screen-36", scenarios: remainingFirstRep, retainFraction: after36 },
-    { name: "screen-72", scenarios: orderingScenariosForReps([1]), retainFraction: after72 },
-    { name: "screen-144", scenarios: orderingScenariosForReps([2, 3]), retainFraction: after144 }
+    { name: "screen-72", scenarios: sequentialOrderingScenariosForReps([1]), retainFraction: after72 },
+    { name: "screen-144", scenarios: sequentialOrderingScenariosForReps([2, 3]), retainFraction: after144 }
   ];
 }
 
@@ -869,12 +888,23 @@ function balancedOpeningOrderScenarios(): HeroOptimizationScenario[] {
   return scenarios;
 }
 
-function allOrderingScenarios(reps: number): HeroOptimizationScenario[] {
-  if (!Number.isInteger(reps) || reps < 1) throw new Error("reps must be at least 1");
-  return orderingScenariosForReps(Array.from({ length: reps }, (_, rep) => rep));
+function integerRange(start: number, end: number): number[] {
+  return Array.from({ length: end - start }, (_, offset) => start + offset);
 }
 
-function orderingScenariosForReps(reps: readonly number[]): HeroOptimizationScenario[] {
+function allOrderingScenarios(reps: number, ordering: ArmyOrdering): HeroOptimizationScenario[] {
+  if (!Number.isInteger(reps) || reps < 1) throw new Error("reps must be at least 1");
+  const repIndexes = integerRange(0, reps);
+  return ordering === "random"
+    ? randomOrderingScenariosForReps(repIndexes)
+    : sequentialOrderingScenariosForReps(repIndexes);
+}
+
+function randomOrderingScenariosForReps(reps: readonly number[]): HeroOptimizationScenario[] {
+  return reps.map((rep) => ({ attackerOrderIndex: 0, defenderOrderIndex: 0, rep }));
+}
+
+function sequentialOrderingScenariosForReps(reps: readonly number[]): HeroOptimizationScenario[] {
   const scenarios: HeroOptimizationScenario[] = [];
   for (const rep of reps) {
     for (let attackerOrderIndex = 0; attackerOrderIndex < ORDERS.length; attackerOrderIndex += 1) {
@@ -1340,7 +1370,9 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
       : topWithStats;
     console.log(JSON.stringify(output, null, 2));
   } else {
-    if (definition.optimization) printOptimization(topWithStats, definition, definition.optimization.side);
+    if (definition.optimization) {
+      printOptimization(topWithStats, definition, definition.optimization.side, simulatorConfig);
+    }
     if (troopResultWithStats) printTroopOptimization(troopResultWithStats, definition, Boolean(definition.optimization));
   }
   metrics.finish();
@@ -1807,8 +1839,10 @@ class TerminalRunMetricsReporter {
 }
 
 function printEvaluation(result: EvaluationResult, ordering: ArmyOrdering): void {
-  const scenarioLabel = ordering === "random" ? "random trajectories" : "orderings";
-  console.log(`Scenarios: ${result.scenarios} (36 ${scenarioLabel} × ${result.scenarios / 36} reps)`);
+  const scenarioSummary = ordering === "random"
+    ? `${result.scenarios} random trajectories`
+    : `36 army-order combinations × ${result.scenarios / 36} reps`;
+  console.log(`Scenarios: ${result.scenarios} (${scenarioSummary})`);
   console.log(`Attacker: ${percent(result.attackerWinRate)} wins (${result.attackerWins})`);
   console.log(`Defender: ${percent(result.defenderWinRate)} wins (${result.defenderWins})`);
   console.log(`Draws: ${percent(result.draws / result.scenarios)} (${result.draws})`);
@@ -1817,13 +1851,29 @@ function printEvaluation(result: EvaluationResult, ordering: ArmyOrdering): void
   console.log(`Average battles per scenario: ${result.averageBattles.toFixed(2)}`);
 }
 
-function printOptimization(results: OptimizationOutputResult[], definition: ThreeArmyDefinition, side: TeamSide): void {
-  const armyNames = definition[side].map((army) => army.name);
-  console.log(`Top ${results.length} hero setups for ${side}:`);
+function printOptimization(
+  results: OptimizationOutputResult[],
+  definition: ThreeArmyDefinition,
+  side: TeamSide,
+  simulatorConfig: SimulatorConfig
+): void {
+  const troops = troopCountsForTeam(definition[side], simulatorConfig, side);
+  console.log(`Top ${results.length} hero setups for ${side} (army unit hero troops A/D/L/H):`);
   for (const result of results) {
-    const lineups = result.heroes.map((heroes, index) => `${armyNames[index]}=[${heroes.join(", ")}]`).join("  ");
-    console.log(`${String(result.rank).padStart(3)}  win=${percent(result.winRate)} score=${percent(result.scoreRate)} margin=${signed(result.averageMargin)}  ${lineups}`);
-    printOptimizedStats(result.stats, armyNames);
+    console.log(
+      `${String(result.rank).padStart(3)}  win=${percent(result.winRate)} ` +
+      `score=${percent(result.scoreRate)} margin=${signed(result.averageMargin)}`
+    );
+    result.heroes.forEach((heroes, armyIndex) => {
+      UNIT_TYPES.forEach((unitType, unitIndex) => {
+        const row = result.stats[armyIndex][unitType];
+        console.log(
+          `      ${armyIndex + 1} ${UNIT_LABELS[unitType]} ${heroes[unitIndex]} ` +
+          `${troops[armyIndex][unitType].toLocaleString()} ` +
+          `${row.attack}/${row.defense}/${row.lethality}/${row.health}`
+        );
+      });
+    });
   }
 }
 
@@ -2159,7 +2209,7 @@ function helpText(): string {
     "  npx tsx scripts/three_army_optimizer.ts simulate <config.json> [--reps N] [--seed N] [--json]",
     "  npx tsx scripts/three_army_optimizer.ts optimize <config.json> [--reps N] [--seed N] [--jobs N] [--top N] [--max-candidates N] [--json]",
     "",
-    "Set top-level ordering to sequential (default) or random. Each evaluation uses 36 scheduling scenarios; --reps (default 10) is the finalist sample count per scenario, and adaptive troop screening uses one tenth of it, rounded up.",
+    "Set top-level ordering to sequential (default) or random. Sequential ordering evaluates all 36 attacker/defender army-order combinations per rep; random ordering runs exactly one random trajectory per rep. --reps defaults to 10, and adaptive troop screening uses one tenth of it, rounded up.",
     "troop_optimization redistributes each selected army's fixed troop total while leaving the opposing team unchanged. Set troop_optimization.side when optimization is omitted; the input hero setup is then used as the baseline.",
     "See scripts/three_army_optimizer.example.json for the configuration format. Set input_stats_include_hero_generation per side; selected heroes are always reflected in effective stats."
   ].join("\n");

@@ -135,7 +135,28 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2520,
+            "lancer_t6": 2520,
+            "marksman_t6": 2520
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 900,
+            "lancer_t6": 900,
+            "marksman_t6": 900
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#1": {
       "file": "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json",
@@ -160,7 +181,28 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2520,
+            "lancer_t6": 2520,
+            "marksman_t6": 2520
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 900,
+            "lancer_t6": 900,
+            "marksman_t6": 900
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json",
@@ -185,7 +227,24 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000003.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000003.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 2880
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 400
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json",
@@ -210,7 +269,24 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000004.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000004.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2520
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 390
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_hero_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_hero_nc.json",
@@ -235,7 +311,38 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000005.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000005.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2520
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Edith": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Patrick": {
+              "skill_1": 3,
+              "skill_2": 2
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 390
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json",
@@ -260,7 +367,26 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000006.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000006.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 2560
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#1": {
       "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json",
@@ -305,7 +431,26 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000007.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000007.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 2560
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#2": {
       "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json",
@@ -330,7 +475,26 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000008.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000008.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 2560
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json",
@@ -355,7 +519,41 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000009.json"
+      "detailArtifact": "simulator_parity_2026-06-23T16-35-50.044Z/cases/000009.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Sergey": {
+              "skill_1": 4,
+              "skill_2": 4
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 2560
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-23T16-35-50.044Z"

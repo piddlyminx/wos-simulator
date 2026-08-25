@@ -57,7 +57,39 @@
         "q": 0.000286,
         "passes": false
       },
-      "detailArtifact": "simulator_parity_2026-06-26T02-38-59.967Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-26T02-38-59.967Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Norah": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            },
+            "Gwen": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/gwen_solo_nc.json#0": {
       "file": "testcases/emulator_verified/gwen_solo_nc.json",
@@ -117,7 +149,34 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-26T02-38-59.967Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-26T02-38-59.967Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Gwen": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/logan_gwen_combo_nc.json#0": {
       "file": "testcases/emulator_verified/logan_gwen_combo_nc.json",
@@ -177,7 +236,39 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-26T02-38-59.967Z/cases/000003.json"
+      "detailArtifact": "simulator_parity_2026-06-26T02-38-59.967Z/cases/000003.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Gwen": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-26T02-38-59.967Z"

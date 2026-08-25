@@ -57,7 +57,39 @@
         "q": 0.714664,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-08T15-49-37.768Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-08T15-49-37.768Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/greg_mia_combo.json#1": {
       "file": "testcases/emulator_verified/greg_mia_combo.json",
@@ -77,8 +109,8 @@
         "sem": 9.88,
         "stat_type": "t",
         "stat": 4.4808,
-        "p": 0.000007,
-        "q": 0.000014,
+        "p": 7e-06,
+        "q": 1.4e-05,
         "passes": false
       },
       "baseline": {
@@ -97,7 +129,39 @@
         "q": 0.10771,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-08T15-49-37.768Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-08T15-49-37.768Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-08T15-49-37.768Z"

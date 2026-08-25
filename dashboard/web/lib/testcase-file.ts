@@ -1,7 +1,7 @@
 import "server-only";
 import fs from "fs";
 import path from "path";
-import { resolveRepoRoot } from "./diff";
+import { resolveSimulatorRoot } from "./simulator-root";
 
 export { testcaseDetailHref, testcaseFileFromPath } from "./testcase-href";
 
@@ -35,9 +35,10 @@ export interface RawTestcase {
   description?: string;
   attacker?: TestcaseArmy;
   defender?: TestcaseArmy;
-  game_report_result?: TestcaseBattleResult[];
+  game_report_result?: TestcaseBattleResult[] | TestcaseBattleResult;
   [k: string]: unknown;
 }
+
 
 /**
  * Resolve the absolute path for a testcase file referenced in the DB.
@@ -45,9 +46,13 @@ export interface RawTestcase {
  * e.g. `testcases/emulator_verified/molly_solo.json`.
  */
 export function resolveTestcaseAbsPath(filePath: string): string | null {
-  const root = resolveRepoRoot();
-  if (!root) return null;
-  return path.resolve(root, filePath);
+  const root = resolveSimulatorRoot();
+  const candidate = path.resolve(root, filePath);
+  const relative = path.relative(root, candidate);
+  if (!relative || relative.startsWith("..") || path.isAbsolute(relative)) {
+    return null;
+  }
+  return candidate;
 }
 
 /**
@@ -69,3 +74,4 @@ export function readTestcaseFile(filePath: string): RawTestcase[] | null {
     return null;
   }
 }
+

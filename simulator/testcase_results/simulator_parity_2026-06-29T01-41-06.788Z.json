@@ -96,7 +96,39 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Flint": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 500
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2990
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json#0": {
       "file": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json",
@@ -141,7 +173,24 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 500
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2990
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": {
       "file": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json",
@@ -186,7 +235,39 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000003.json"
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000003.json",
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Flint": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 360
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2100
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json#0": {
       "file": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json",
@@ -211,7 +292,24 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000004.json"
+      "detailArtifact": "simulator_parity_2026-06-29T01-41-06.788Z/cases/000004.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 360
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2100
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-29T01-41-06.788Z"

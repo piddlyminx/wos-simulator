@@ -37,8 +37,8 @@
         "sem": 2.46,
         "stat_type": "single_obs",
         "stat": 4.4602,
-        "p": 0.000008,
-        "q": 0.000008,
+        "p": 8e-06,
+        "q": 8e-06,
         "passes": false
       },
       "baseline": {
@@ -57,7 +57,44 @@
         "q": 0,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-19T21-42-22.376Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-19T21-42-22.376Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Hector": {
+              "skill_1": 2,
+              "skill_2": 3,
+              "skill_3": 2
+            },
+            "Renee": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1700,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/renee_solo_nc.json#0": {
       "file": "testcases/emulator_verified/renee_solo_nc.json",
@@ -117,7 +154,34 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-19T21-42-22.376Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-19T21-42-22.376Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-19T21-42-22.376Z"

@@ -51,7 +51,59 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-11T01-04-48.744Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-11T01-04-48.744Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Edith": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Renee": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Lynn": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t11_fc8": 94385,
+            "lancer_t10_fc8": 37754,
+            "marksman_t10_fc8": 56632
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Edith": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Renee": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Wayne": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t11_fc8": 34778,
+            "lancer_t11_fc8": 81191
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-11T01-04-48.744Z"
