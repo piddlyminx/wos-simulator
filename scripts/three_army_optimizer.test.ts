@@ -110,6 +110,21 @@ test("sequential evaluation covers every pair of army orderings for every rep", 
   assert.equal(result.attackerMarginStd, 0);
 });
 
+test("random evaluation runs exactly the requested number of trajectories", () => {
+  const definition = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  definition.ordering = "random";
+  const result = evaluateDefinition(
+    definition,
+    simulatorConfig,
+    7,
+    42,
+    (attacker) => battleResult("attacker", attacker.troops.infantry_t6, 0)
+  );
+
+  assert.equal(result.scenarios, 7);
+  assert.equal(result.attackerWins, 7);
+});
+
 test("optimization candidates assign each role once per army without reusing heroes", () => {
   const raw = {
     ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
@@ -241,6 +256,7 @@ test("hero stat rows retain their march and troop-type baselines", () => {
 test("parallel hero optimization matches serial ranking while retaining only requested results", async () => {
   const raw = definitionWithInfantry([2, 2, 2], [1, 1, 1]);
   raw.max_rounds = 1;
+  raw.ordering = "random";
   const definition = parseDefinition({
     ...raw,
     optimization: {
@@ -271,7 +287,12 @@ test("parallel hero optimization matches serial ranking while retaining only req
       battlesCompleted = battles;
       progressSamples.push([value, _total, battles]);
     },
-    1
+    1,
+    {
+      retainFractions: [1, 1, 1, 1],
+      minimumRetained: 1,
+      minimumCandidates: 1
+    }
   );
 
   assert.equal(completed, 2);
@@ -279,6 +300,7 @@ test("parallel hero optimization matches serial ranking while retaining only req
   assert.deepEqual(progressSamples[0], [0, 2, 0]);
   assert.equal(serial.length, 1);
   assert.deepEqual(parallel, serial);
+  assert.equal(parallel[0].evaluation.scenarios, 1);
 });
 
 test("large hero searches use balanced screening stages before a fresh final evaluation", async () => {
@@ -366,12 +388,27 @@ test("configuration rejects rally engagement and joiner heroes", () => {
   assert.throws(() => parseDefinition(withJoiner, simulatorConfig), /joiner_heroes is not supported/);
 });
 
-test("included hero-generation stats require the original heroes needed for rebasing", () => {
+test("included hero-generation stats treat missing heroes as zero generation", () => {
   const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  const expectedStats = reportResolvedStatsForGatotSonyaBradley();
   raw.input_stats_include_hero_generation.attacker = true;
-  raw.attacker[0].fighter.stats = reportResolvedStatsForGatotSonyaBradley();
+  for (const army of raw.attacker) army.fighter.stats = structuredClone(expectedStats);
+  const definition = parseDefinition(raw, simulatorConfig);
+  let normalizedStats: FighterInput["stats"];
 
-  assert.throws(() => parseDefinition(raw, simulatorConfig), /three original main heroes/);
+  simulateThreeArmyMatch(
+    definition,
+    simulatorConfig,
+    [0, 1, 2],
+    [0, 1, 2],
+    "missing-heroes",
+    (attacker) => {
+      normalizedStats ??= attacker.stats;
+      return battleResult("attacker", attacker.troops.infantry_t6, 0);
+    }
+  );
+
+  assert.deepEqual(normalizedStats, expectedStats);
 });
 
 test("troop composition grid preserves the army total", () => {

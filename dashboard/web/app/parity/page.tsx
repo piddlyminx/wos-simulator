@@ -1,6 +1,6 @@
 import MetricCard from "@/components/MetricCard";
 import ParityReportSummary from "@/components/ParityReportSummary";
-import ParityReportTable from "@/components/ParityReportTable";
+import TestcaseOutcomeTable from "@/components/TestcaseOutcomeTable";
 import {
   defaultParityReportDir,
   findParityReports,
@@ -96,7 +96,7 @@ export default async function ParityPage({
             <MetricCard label="Rows" value={String(report.rows.length)} />
           </div>
           <ParityReportSummary summary={report.summary} />
-          <ParityReportTable reportId={report.id} rows={report.rows} />
+          <TestcaseOutcomeTable reportId={report.id} rows={report.rows} />
         </>
       )}
     </div>

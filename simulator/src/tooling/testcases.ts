@@ -30,12 +30,25 @@ export interface TestcaseRunOptions {
   workers?: number;
 }
 
+export interface TestcaseArmyDefinition {
+  heroes: Record<string, Record<string, number>>;
+  joinerHeroes: Record<string, Record<string, number>>;
+  troops: Record<string, number>;
+}
+
+export interface TestcaseArmies {
+  attacker: TestcaseArmyDefinition;
+  defender: TestcaseArmyDefinition;
+}
+
 export interface TestcaseCaseReport {
   file: string;
   testcaseId: string;
   index: number;
   detailArtifact?: string;
   diagnostics: string[];
+  armies?: TestcaseArmies;
+  armiesSource?: "testcase" | "retained-result";
   gameResult?: unknown;
   calibration?: CalibrationCaseComparison;
   result?: BattleResult;
@@ -68,6 +81,8 @@ export interface TestcaseSummaryEntry {
   testcase_id: string;
   idx: number;
   detailArtifact?: string;
+  armies?: TestcaseArmies;
+  armiesSource?: "testcase" | "retained-result";
   deterministic: boolean;
   sampleCount: number;
   game: ParityComparisonMetrics | null;
@@ -205,7 +220,7 @@ export function prepareTestcaseCases(options: TestcaseRunOptions): { filesFound:
     entries.forEach((entry, index) => {
       const testcaseId = testcaseIdFor(entry, index);
       const diagnostics: string[] = [];
-      const detail = emptyCaseReport(reportFile, testcaseId, index, diagnostics);
+      const detail = emptyCaseReport(reportFile, testcaseId, index, diagnostics, entry);
       const preparedCase: PreparedTestcaseCase = { file, reportFile, entry, testcaseId, index, detail };
       try {
         preparedCase.input = adaptTestcaseEntry(entry, { seed: options.seed }, diagnostics);
@@ -402,6 +417,8 @@ function applyExecutionResult(
     file: reportFile,
     testcase_id: testcaseId,
     idx: index,
+    armies: detail.armies,
+    armiesSource: detail.armiesSource,
     deterministic: execution.deterministic,
     sampleCount: execution.sampleCount,
     game,
@@ -736,17 +753,66 @@ function walk(path: string, files: string[]): void {
   }
 }
 
-function emptyCaseReport(file: string, testcaseId: string, index: number, diagnostics: string[]): TestcaseCaseReport {
+function emptyCaseReport(
+  file: string,
+  testcaseId: string,
+  index: number,
+  diagnostics: string[],
+  entry: unknown,
+): TestcaseCaseReport {
   return {
     file,
     testcaseId,
     index,
     diagnostics,
+    armies: testcaseArmiesFromEntry(entry),
+    armiesSource: "testcase",
     visibility: {
       attacker: { heroes: [], troopSkillIds: [], troops: {}, skillEffectActivations: 0 },
       defender: { heroes: [], troopSkillIds: [], troops: {}, skillEffectActivations: 0 }
     }
   };
+}
+
+export function testcaseArmiesFromEntry(entry: unknown): TestcaseArmies {
+  const testcase = asObject(entry);
+  return {
+    attacker: armyDefinition(testcase.attacker),
+    defender: armyDefinition(testcase.defender),
+  };
+}
+
+function armyDefinition(value: unknown): TestcaseArmyDefinition {
+  const army = asObject(value);
+  const heroes: Record<string, Record<string, number>> = {};
+  const joinerHeroes: Record<string, Record<string, number>> = {};
+  for (const [name, skills] of Object.entries(asObject(army.heroes))) {
+    heroes[name] = numericRecord(skills);
+  }
+  for (const [name, skills] of Object.entries(asObject(army.joiner_heroes))) {
+    joinerHeroes[name] = numericRecord(skills);
+  }
+  return {
+    heroes,
+    joinerHeroes,
+    troops: numericRecord(army.troops),
+  };
+}
+
+function numericRecord(value: unknown): Record<string, number> {
+  const numbers: Record<string, number> = {};
+  for (const [key, candidate] of Object.entries(asObject(value))) {
+    if (typeof candidate === "number" && Number.isFinite(candidate)) {
+      numbers[key] = candidate;
+    }
+  }
+  return numbers;
+}
+
+function asObject(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
 }
 
 function testcaseIdFor(entry: unknown, index: number): string {

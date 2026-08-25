@@ -50,9 +50,20 @@ test("cli --save-snapshot writes compact summary and per-case detail artifacts",
   assert.equal(report.reportKind, "simulator-parity-summary");
   assert.equal(report.counts.executed, 1);
   assert.equal("details" in report, false);
-  const testcase = Object.values(report.testcases as Record<string, { testcase_id: string; detailArtifact?: string }>)[0];
+  const testcase = Object.values(report.testcases as Record<string, {
+    testcase_id: string;
+    detailArtifact?: string;
+    armies?: {
+      attacker: { troops: Record<string, number> };
+      defender: { troops: Record<string, number> };
+    };
+    armiesSource?: string;
+  }>)[0];
   assert.equal(testcase?.testcase_id, "simple_001");
   assert.equal(testcase?.detailArtifact, `${stderrReport.artifactRoot}/cases/000001.json`);
+  assert.deepEqual(testcase?.armies?.attacker.troops, { lancer_t8: 200 });
+  assert.deepEqual(testcase?.armies?.defender.troops, { lancer_t9: 200 });
+  assert.equal(testcase?.armiesSource, "testcase");
 
   const detailPath = resolve(outputDir, testcase!.detailArtifact!);
   assert.equal(statSync(detailPath).isFile(), true);
@@ -61,6 +72,8 @@ test("cli --save-snapshot writes compact summary and per-case detail artifacts",
   assert.equal(detail.schemaVersion, 1);
   assert.equal(detail.testcaseId, "simple_001");
   assert.ok(detail.result);
+  assert.deepEqual(detail.armies, testcase?.armies);
+  assert.equal(detail.armiesSource, "testcase");
 });
 
 test("cli writes compact stdout only and creates no artifacts by default", () => {

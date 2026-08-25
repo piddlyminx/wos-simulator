@@ -121,21 +121,21 @@ export default function RunsAccordionTable({ runs, defaultOpen = false }: Props)
                   >
                     <td className="py-2 px-4 font-mono text-xs">
                       <Link
-                        href={`/runs/${run.id}/compare/prev`}
+                        href={`/runs/${run.id}`}
                         style={{ color: "var(--sidebar-active)" }}
                         className="hover:underline"
                       >
                         {formatDashboardDateTime(run.started_at)}
                       </Link>
-                      {" "}
-                      <Link
-                        href={`/runs/${run.id}`}
-                        style={{ color: "var(--sidebar-active)", opacity: 0.6 }}
-                        className="hover:underline text-xs"
-                        title="View run detail"
-                      >
-                        ↗
-                      </Link>
+                      {run.prev_run_id && (
+                        <Link
+                          href={`/runs/${run.id}/compare/prev`}
+                          style={{ color: "var(--sidebar-active)" }}
+                          className="ml-2 whitespace-nowrap text-[10px] opacity-60 hover:opacity-100 hover:underline"
+                        >
+                          Compare
+                        </Link>
+                      )}
                     </td>
                     <td className="py-2 pr-4 font-mono text-xs opacity-70">
                       {run.git_sha?.slice(0, 8) ?? "—"}

@@ -58,7 +58,24 @@
         "q": null,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-30T06-05-49.001Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-30T06-05-49.001Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t8": 200
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t9": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-30T06-05-49.001Z"

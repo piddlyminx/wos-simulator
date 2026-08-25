@@ -58,7 +58,39 @@
         "q": 0.08648,
         "passes": false
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/greg_mia_combo.json#1": {
       "file": "testcases/emulator_verified/greg_mia_combo.json",
@@ -94,7 +126,7 @@
         "sem": 2.75,
         "stat_type": "t",
         "stat": 4.2638,
-        "p": 0.00002,
+        "p": 2e-05,
         "q": 0.0002,
         "passes": true
       },
@@ -118,7 +150,39 @@
           "passes": false
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/greg_mia_defender_current.json#0": {
       "file": "testcases/emulator_verified/greg_mia_defender_current.json",
@@ -158,7 +222,39 @@
         "q": 0.08648,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000003.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000003.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/greg_mia_nohero_control_current.json#0": {
       "file": "testcases/emulator_verified/greg_mia_nohero_control_current.json",
@@ -198,7 +294,28 @@
         "q": null,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000004.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000004.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/greg_mia_nohero_control_current.json#1": {
       "file": "testcases/emulator_verified/greg_mia_nohero_control_current.json",
@@ -258,7 +375,28 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000005.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000005.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_only_defender_current.json#0": {
       "file": "testcases/emulator_verified/mia_only_defender_current.json",
@@ -298,7 +436,34 @@
         "q": 0.347976,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000006.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000006.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_only_defender_current.json#1": {
       "file": "testcases/emulator_verified/mia_only_defender_current.json",
@@ -338,7 +503,34 @@
         "q": 0.614571,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000007.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000007.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_solo.json#0": {
       "file": "testcases/emulator_verified/mia_solo.json",
@@ -378,7 +570,34 @@
         "q": 0.42904,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000008.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000008.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 800,
+            "marksman_t6": 1000
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_solo.json#1": {
       "file": "testcases/emulator_verified/mia_solo.json",
@@ -418,7 +637,34 @@
         "q": 0.685845,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000009.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000009.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 700,
+            "lancer_t6": 560,
+            "marksman_t6": 700
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_solo.json#2": {
       "file": "testcases/emulator_verified/mia_solo.json",
@@ -458,7 +704,34 @@
         "q": 0.444749,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000010.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000010.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_solo.json#3": {
       "file": "testcases/emulator_verified/mia_solo.json",
@@ -498,7 +771,34 @@
         "q": 0.444749,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000011.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000011.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 60,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/mia_solo.json#4": {
       "file": "testcases/emulator_verified/mia_solo.json",
@@ -538,7 +838,34 @@
         "q": 0.030615,
         "passes": true
       },
-      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000012.json"
+      "detailArtifact": "simulator_parity_2026-06-18T01-41-53.468Z/cases/000012.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 50,
+            "lancer_t6": 50,
+            "marksman_t6": 50
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-18T01-41-53.468Z"

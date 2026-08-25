@@ -87,7 +87,28 @@
           "passes": true
         }
       },
-      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000001.json"
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000001.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2520,
+            "lancer_t6": 2520,
+            "marksman_t6": 2520
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 900,
+            "lancer_t6": 900,
+            "marksman_t6": 900
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json",
@@ -112,7 +133,24 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000002.json"
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000002.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 2880
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 400
+          }
+        }
+      },
+      "armiesSource": "testcase"
     },
     "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#0": {
       "file": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json",
@@ -137,7 +175,26 @@
         "passes": true
       },
       "baseline": null,
-      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000003.json"
+      "detailArtifact": "simulator_parity_2026-06-23T13-47-32.731Z/cases/000003.json",
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 2560
+          }
+        }
+      },
+      "armiesSource": "testcase"
     }
   },
   "artifactRoot": "simulator_parity_2026-06-23T13-47-32.731Z"

@@ -46,12 +46,25 @@ export interface ParitySummary {
   unmatchedRows: number;
 }
 
+export interface ParityArmyDefinition {
+  heroes: Record<string, Record<string, number>>;
+  joinerHeroes: Record<string, Record<string, number>>;
+  troops: Record<string, number>;
+}
+
+export interface ParityArmies {
+  attacker: ParityArmyDefinition;
+  defender: ParityArmyDefinition;
+}
+
 export interface ParityComparisonRow {
   key: string;
   file: string;
   testcaseId: string;
   idx: number;
   detailArtifact?: string;
+  armies?: ParityArmies;
+  armiesSource?: "testcase" | "retained-result";
   deterministic?: boolean;
   sampleCount?: number;
   game: ParityMetric | null;
@@ -95,6 +108,8 @@ export interface ParityCaseReport {
   testcaseId: string;
   index: number;
   diagnostics?: string[];
+  armies?: ParityArmies;
+  armiesSource?: "testcase" | "retained-result";
   error?: string;
   deterministic?: boolean;
   sampleCount?: number;
@@ -115,6 +130,8 @@ interface ParityReportTestcase {
   testcaseId?: string;
   idx?: number;
   detailArtifact?: string;
+  armies?: ParityArmies;
+  armiesSource?: "testcase" | "retained-result";
   deterministic?: boolean;
   sampleCount?: number;
   game?: ParityMetric | null;
@@ -358,6 +375,8 @@ function rowFromTestcase(
     testcaseId,
     idx,
     detailArtifact: testcase.detailArtifact,
+    armies: testcase.armies,
+    armiesSource: testcase.armiesSource,
     deterministic: testcase.deterministic,
     sampleCount: testcase.sampleCount,
     game,

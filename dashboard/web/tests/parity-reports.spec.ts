@@ -108,6 +108,18 @@ function summary(name: string, overrides: Record<string, unknown> = {}) {
         detailArtifact: "run/cases/000001.json",
         deterministic: true,
         sampleCount: 1,
+        armies: {
+          attacker: {
+            heroes: { Jessie: { skill_1: 2 } },
+            joinerHeroes: {},
+            troops: { infantry_t6: 1000 },
+          },
+          defender: {
+            heroes: { Alonso: { skill_1: 3 } },
+            joinerHeroes: {},
+            troops: { marksman_t9: 500 },
+          },
+        },
         game: metric({ bias_raw: 1, bias_pct: 11.1, stat: 4, passes: false }),
         baseline: metric({ bias_raw: 2, bias_pct: 25, stat: 1, passes: true }),
       },
@@ -166,6 +178,12 @@ test.describe("simulator parity report helpers", () => {
         deterministic: true,
         sampleCount: 1,
         game: expect.objectContaining({ passes: false, bias_pct: 11.1 }),
+        armies: expect.objectContaining({
+          attacker: expect.objectContaining({
+            heroes: { Jessie: { skill_1: 2 } },
+            troops: { infantry_t6: 1000 },
+          }),
+        }),
         baseline: expect.objectContaining({ passes: true, bias_pct: 25 }),
         matched: true,
         simulatorMu: 10,
