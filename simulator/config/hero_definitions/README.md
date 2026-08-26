@@ -69,8 +69,8 @@ For callers constructing a raw `BattleInput`, generation stats are added only wh
 
 When enabled:
 
-- the stat block from `hero_generation_stats.json` is added to every troop type's player stats;
-- generation stats from all **main** heroes are summed;
+- each main hero's generation stat block is added only to the player-stat block for that hero's troop type;
+- generation stats from multiple main heroes of the same troop type are summed in that troop type's block;
 - joiner heroes do not contribute generation stats;
 - skill level does not change the generation stat block.
 

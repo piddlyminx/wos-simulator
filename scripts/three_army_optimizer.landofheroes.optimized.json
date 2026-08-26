@@ -11,8 +11,8 @@
       "fighter": {
         "troops": {
           "infantry_t11_fc10": 121861,
-          "lancer_t11_fc10": 68548,
-          "marksman_t11_fc10": 1
+          "lancer_t11_fc10": 68000,
+          "marksman_t11_fc10": 549
         },
         "stats": {
           "infantry": {
@@ -303,50 +303,35 @@
     "per_army_hero_pools": [
       { 
         "infantry": [
-          "Gatot"
+          "Gatot", "Edith", "Wu Ming", "Hector", "Logan"
         ],
         "lancer": [
           "Sonya"
         ],
         "marksman": [
-          "Bradley",
           "Greg"
         ]
       },
       {
         "infantry": [
-          "Edith",
-          "Hector",
-          "Wu Ming",
-          "Logan"
+          "Gatot", "Edith", "Wu Ming", "Hector", "Logan"
         ],
         "lancer": [
-          "Mia",
-          "Philly",
-          "Gordon"
+          "Gordon", "Renee", "Norah", "Reina", "Mia", "Philly" 
         ],
         "marksman": [
-          "Bradley",
-          "Hendrik",
-          "Wayne"
+          "Bradley", "Hendrik"
         ]
       },
       {
         "infantry": [
-          "Edith",
-          "Hector",
-          "Wu Ming",
-          "Logan"
+          "Gatot", "Edith", "Wu Ming", "Hector", "Logan"
         ],
         "lancer": [
-          "Mia",
-          "Philly",
-          "Gordon"
+          "Gordon", "Renee", "Norah", "Reina", "Mia", "Philly" 
         ],
         "marksman": [
-          "Bradley",
-          "Hendrik",
-          "Wayne"
+          "Bradley", "Hendrik"
         ]
       }
     ]

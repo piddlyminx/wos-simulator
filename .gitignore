@@ -6,6 +6,7 @@ __pycache__
 .venv/
 .history
 .vscode/
+.omp/
 battle_specs_manual
 tmp
 test_results/runs/
