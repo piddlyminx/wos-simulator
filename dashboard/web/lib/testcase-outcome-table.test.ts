@@ -65,8 +65,8 @@ test("unified report table shows testcase inputs and both outcomes", () => {
   );
 
   assert.match(html, />Testcase</);
-  assert.match(html, />Heroes</);
-  assert.match(html, />Troops</);
+  assert.match(html, />Attacker</);
+  assert.match(html, />Defender</);
   assert.match(html, />Game result</);
   assert.match(html, />Sim result</);
   assert.match(html, /hero_matchup/);
@@ -79,10 +79,12 @@ test("unified report table shows testcase inputs and both outcomes", () => {
   assert.match(html, /8,000/);
   assert.match(html, /2,000/);
   assert.match(html, /A 5,302/);
+  assert.ok(html.indexOf("Jessie 2/3") < html.indexOf("Alonso 1/2/3"));
+  assert.ok(html.indexOf("8,000") < html.indexOf("2,000"));
   assert.match(html, /D 1,618/);
   assert.match(html, />FAIL</);
   assert.match(html, />PASS</);
   assert.match(html, /color:#f38ba8/);
   assert.match(html, /color:#a6e3a1/);
-  assert.ok(html.indexOf("-130.50%") < html.indexOf("absolute -6920.0"));
+  assert.ok(html.indexOf("-130.50%") < html.indexOf("-6920.0"));
 });
