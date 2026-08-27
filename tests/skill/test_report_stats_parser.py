@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -135,6 +136,14 @@ class ReportStatsParserTests(unittest.TestCase):
             shaped["defender"]["troops"],
             {"infantry": 0, "lancer": 0, "marksman": 800},
         )
+        self.assertEqual(
+            shaped["attacker"]["troop_types"],
+            {"infantry": "infantry_t11", "lancer": None, "marksman": None},
+        )
+        self.assertEqual(
+            shaped["defender"]["troop_types"],
+            {"infantry": None, "lancer": None, "marksman": "marksman_t10"},
+        )
 
     def test_dashboard_adapter_missing_fields_become_warning(self) -> None:
         warnings = dashboard_warnings_from_result(
@@ -145,6 +154,26 @@ class ReportStatsParserTests(unittest.TestCase):
             warnings,
             ["missing fields: left_lancer_count, right_marksman_tier"],
         )
+
+    def test_dashboard_adapter_warns_without_rejecting_uncertain_troop_type(self) -> None:
+        warnings = dashboard_warnings_from_result(
+            {
+                "meta": {
+                    "missing_fields": [],
+                    "troop_template_matches": [
+                        {
+                            "side": "right",
+                            "slot": 3,
+                            "type": "infantry",
+                            "score": 0.41,
+                            "low_confidence": True,
+                        }
+                    ],
+                }
+            }
+        )
+
+        self.assertEqual(warnings, ["low-confidence troop types: right slot 3=infantry (0.41)"])
 
     def test_extracts_stats_counts_and_tier_from_ocr_items(self) -> None:
         items = [
@@ -225,6 +254,22 @@ class ReportStatsParserTests(unittest.TestCase):
                             )
                 self.assertEqual(result["meta"]["missing_fields"], [])
 
+                shaped = shape_dashboard_report_result(result)
+                for parsed_side, dashboard_side in (("left", "attacker"), ("right", "defender")):
+                    for troop_type, expected_troop in expected[parsed_side]["troops"].items():
+                        expected_count = expected_troop["count"]
+                        self.assertEqual(shaped[dashboard_side]["troops"][troop_type], expected_count or 0)
+                        if expected_count is None:
+                            self.assertIsNone(shaped[dashboard_side]["troop_types"][troop_type])
+                        else:
+                            expected_type = f"{troop_type}_t{expected_troop['tier']}"
+                            if expected_troop["fire_crystal_level"]:
+                                expected_type += f"_fc{expected_troop['fire_crystal_level']}"
+                            self.assertEqual(
+                                shaped[dashboard_side]["troop_types"][troop_type],
+                                expected_type,
+                            )
+
     def test_dashboard_report_fixture_rejects_negative_stat_ocr(self) -> None:
         path = ROOT / "dashboard" / "test_reports" / "WOS-278-negative-marksman-defense.png"
 
@@ -233,6 +278,30 @@ class ReportStatsParserTests(unittest.TestCase):
         self.assertEqual(result["left"]["stat_bonuses"]["marksman_defense"], 219.0)
         self.assertTrue(all(value >= 0 for value in result["left"]["stat_bonuses"].values()))
         self.assertEqual(result["meta"]["missing_fields"], [])
+
+    def test_dashboard_report_parser_handles_large_uniform_border(self) -> None:
+        report_path = ROOT / "dashboard" / "test_reports" / "Screenshot 2026-03-25 224629.png"
+        expected = json.loads((ROOT / "tests" / "fixtures" / "dashboard_report_expected.json").read_text())[
+            report_path.name
+        ]
+        image = cv2.imread(str(report_path))
+        self.assertIsNotNone(image)
+        assert image is not None
+        padded = cv2.copyMakeBorder(image, 120, 90, 160, 140, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+
+        with tempfile.NamedTemporaryFile(suffix=".png") as handle:
+            cv2.imwrite(handle.name, padded)
+            result = extract_report_stats_and_troops(handle.name)
+
+        self.assertIn("content_box", result["meta"])
+        for side in ("left", "right"):
+            self.assertEqual(result[side]["stat_bonuses"], expected[side]["stat_bonuses"])
+            actual_troops = {troop["type"]: troop for troop in result[side]["troops"]}
+            for troop_type, expected_troop in expected[side]["troops"].items():
+                actual_troop = actual_troops[troop_type]
+                self.assertEqual(actual_troop["count"], expected_troop["count"])
+                self.assertEqual(actual_troop["tier"], expected_troop["tier"])
+                self.assertEqual(actual_troop["fire_crystal_level"], expected_troop["fire_crystal_level"])
 
     def test_troop_count_extraction_splits_adjacent_ocr_numbers(self) -> None:
         items = [

@@ -1,0 +1,429 @@
+[
+  {
+    "test_id": "ambusher_logan_renee_vs_logan_patrick_nc",
+    "description": "Ambusher capture over 10 battles. MiniClaw2 attacks with Logan 1/0/0 and Renee 1/0/0 using 6000 T9 Infantry and 1500 T9 Lancers. [LAB]MiniClaw defends with Logan 1/1/0 and Patrick 1/1 using 5000 T6 Infantry and 5000 T6 Marksmen. Stats are the displayed battle-report bonuses; per-trial skill counts and troop outcomes are retained in metadata.",
+    "attacker": {
+      "name": "MiniClaw2",
+      "heroes": {
+        "Logan": {
+          "skill_1": 1,
+          "skill_2": 0,
+          "skill_3": 0
+        },
+        "Renee": {
+          "skill_1": 1,
+          "skill_2": 0,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t9": 6000,
+        "lancer_t9": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 78.9,
+          "defense": 80.1,
+          "lethality": 36.0,
+          "health": 36.0
+        },
+        "lanc": {
+          "attack": 110.5,
+          "defense": 111.7,
+          "lethality": 54.0,
+          "health": 54.0
+        },
+        "mark": {
+          "attack": 42.3,
+          "defense": 43.5,
+          "lethality": 36.0,
+          "health": 36.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[LAB]MiniClaw",
+      "heroes": {
+        "Logan": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        },
+        "Patrick": {
+          "skill_1": 1,
+          "skill_2": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 5000,
+        "marksman_t6": 5000
+      },
+      "stats": {
+        "inf": {
+          "attack": 141.3,
+          "defense": 145.3,
+          "lethality": 72.2,
+          "health": 72.2
+        },
+        "lanc": {
+          "attack": 148.0,
+          "defense": 152.0,
+          "lethality": 72.2,
+          "health": 72.2
+        },
+        "mark": {
+          "attack": 81.5,
+          "defense": 85.5,
+          "lethality": 72.2,
+          "health": 72.2
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 2057,
+        "defender": 0
+      },
+      {
+        "attacker": 581,
+        "defender": 9
+      },
+      {
+        "attacker": 0,
+        "defender": 2668
+      },
+      {
+        "attacker": 1547,
+        "defender": 0
+      },
+      {
+        "attacker": 2428,
+        "defender": 0
+      },
+      {
+        "attacker": 2199,
+        "defender": 0
+      },
+      {
+        "attacker": 0,
+        "defender": 1731
+      },
+      {
+        "attacker": 1178,
+        "defender": 0
+      },
+      {
+        "attacker": 0,
+        "defender": 1580
+      },
+      {
+        "attacker": 0,
+        "defender": 2209
+      }
+    ],
+    "metadata": {
+      "reported_initial_totals": {
+        "attacker": 7500,
+        "defender": 10000
+      },
+      "observed_battle_outcomes": [
+        {
+          "trial": 1,
+          "skill_counts": {
+            "renee_s1": 53,
+            "ambusher": 23
+          },
+          "attacker": {
+            "survivors": 2057,
+            "infantry": {
+              "kills": 491,
+              "survivors": 557
+            },
+            "lancer": {
+              "kills": 3009,
+              "survivors": 1500
+            }
+          },
+          "defender": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 523,
+              "survivors": 0
+            },
+            "marksman": {
+              "kills": 1383,
+              "survivors": 0
+            }
+          }
+        },
+        {
+          "trial": 2,
+          "skill_counts": {
+            "renee_s1": 58,
+            "ambusher": 21
+          },
+          "attacker": {
+            "survivors": 581,
+            "infantry": {
+              "kills": 421,
+              "survivors": 9
+            },
+            "lancer": {
+              "kills": 3079,
+              "survivors": 581
+            }
+          },
+          "defender": {
+            "survivors": 9,
+            "infantry": {
+              "kills": 600,
+              "survivors": 0
+            },
+            "marksman": {
+              "kills": 1822,
+              "survivors": 0
+            }
+          }
+        },
+        {
+          "trial": 3,
+          "skill_counts": {
+            "renee_s1": 45,
+            "ambusher": 13
+          },
+          "attacker": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 381,
+              "survivors": 0
+            },
+            "lancer": {
+              "kills": 2187,
+              "survivors": 0
+            }
+          },
+          "defender": {
+            "survivors": 2668,
+            "infantry": {
+              "kills": 531,
+              "survivors": 714
+            },
+            "marksman": {
+              "kills": 2094,
+              "survivors": 1954
+            }
+          }
+        },
+        {
+          "trial": 4,
+          "skill_counts": {
+            "renee_s1": 53,
+            "ambusher": 22
+          },
+          "attacker": {
+            "survivors": 1547,
+            "infantry": {
+              "kills": 453,
+              "survivors": 47
+            },
+            "lancer": {
+              "kills": 3047,
+              "survivors": 1500
+            }
+          },
+          "defender": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 524,
+              "survivors": 0
+            },
+            "marksman": {
+              "kills": 1560,
+              "survivors": 0
+            }
+          }
+        },
+        {
+          "trial": 5,
+          "skill_counts": {
+            "renee_s1": 52,
+            "ambusher": 23
+          },
+          "attacker": {
+            "survivors": 2428,
+            "infantry": {
+              "kills": 498,
+              "survivors": 928
+            },
+            "lancer": {
+              "kills": 3092,
+              "survivors": 1500
+            }
+          },
+          "defender": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 525,
+              "survivors": 0
+            },
+            "marksman": {
+              "kills": 1251,
+              "survivors": 0
+            }
+          }
+        },
+        {
+          "trial": 6,
+          "skill_counts": {
+            "renee_s1": 53,
+            "ambusher": 23
+          },
+          "attacker": {
+            "survivors": 2199,
+            "infantry": {
+              "kills": 497,
+              "survivors": 699
+            },
+            "lancer": {
+              "kills": 3003,
+              "survivors": 1500
+            }
+          },
+          "defender": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 528,
+              "survivors": 0
+            },
+            "marksman": {
+              "kills": 1328,
+              "survivors": 0
+            }
+          }
+        },
+        {
+          "trial": 7,
+          "skill_counts": {
+            "renee_s1": 47,
+            "ambusher": 16
+          },
+          "attacker": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 384,
+              "survivors": 0
+            },
+            "lancer": {
+              "kills": 2511,
+              "survivors": 0
+            }
+          },
+          "defender": {
+            "survivors": 1731,
+            "infantry": {
+              "kills": 566,
+              "survivors": 805
+            },
+            "marksman": {
+              "kills": 2059,
+              "survivors": 926
+            }
+          }
+        },
+        {
+          "trial": 8,
+          "skill_counts": {
+            "renee_s1": 55,
+            "ambusher": 23
+          },
+          "attacker": {
+            "survivors": 1178,
+            "infantry": {
+              "kills": 424,
+              "survivors": 0
+            },
+            "lancer": {
+              "kills": 3076,
+              "survivors": 1178
+            }
+          },
+          "defender": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 567,
+              "survivors": 0
+            },
+            "marksman": {
+              "kills": 1646,
+              "survivors": 0
+            }
+          }
+        },
+        {
+          "trial": 9,
+          "skill_counts": {
+            "renee_s1": 51,
+            "ambusher": 17
+          },
+          "attacker": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 415,
+              "survivors": 0
+            },
+            "lancer": {
+              "kills": 2533,
+              "survivors": 0
+            }
+          },
+          "defender": {
+            "survivors": 1580,
+            "infantry": {
+              "kills": 557,
+              "survivors": 329
+            },
+            "marksman": {
+              "kills": 2068,
+              "survivors": 1251
+            }
+          }
+        },
+        {
+          "trial": 10,
+          "skill_counts": {
+            "renee_s1": 47,
+            "ambusher": 14
+          },
+          "attacker": {
+            "survivors": 0,
+            "infantry": {
+              "kills": 382,
+              "survivors": 0
+            },
+            "lancer": {
+              "kills": 2346,
+              "survivors": 0
+            }
+          },
+          "defender": {
+            "survivors": 2209,
+            "infantry": {
+              "kills": 555,
+              "survivors": 690
+            },
+            "marksman": {
+              "kills": 2070,
+              "survivors": 1519
+            }
+          }
+        }
+      ],
+      "data_quality_notes": [
+        "Trial 2's supplied attacker troop survivors sum to 590 (9 Infantry + 581 Lancers), while its supplied attacker total is 581.",
+        "Trial 2's supplied defender troop survivors sum to 0, while its supplied defender total is 9. Values are preserved exactly as supplied."
+      ]
+    }
+  }
+]
