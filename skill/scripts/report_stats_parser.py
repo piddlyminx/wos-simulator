@@ -8,8 +8,10 @@ fire-crystal level as separate fields while preserving the legacy
 from __future__ import annotations
 
 import base64
+import csv
 import dataclasses
 import difflib
+import io
 import json
 import logging
 import re
@@ -56,6 +58,7 @@ MIN_TROOP_AVATAR_SCORE = 0.55
 MIN_FC_BADGE_TEMPLATE_SCORE = 0.80
 FC_BADGE_TEMPLATE_SCALES = (0.95, 1.05, 1.15, 1.25)
 FAST_OCR_TOP_CROP = 56
+MAX_OCR_WIDTH = 760
 
 _rapid_ocr: Any = None
 _fast_rapid_ocr: Any = None
@@ -221,6 +224,44 @@ def _crop_report_panel_for_ocr(img_bgr: np.ndarray) -> np.ndarray:
     return img_bgr
 
 
+def _trim_uniform_border(img_bgr: np.ndarray) -> tuple[np.ndarray, tuple[int, int, int, int] | None]:
+    """Remove a substantial flat-colour frame without guessing at report content."""
+    image_height, image_width = img_bgr.shape[:2]
+    patch_size = max(2, min(16, image_height // 8, image_width // 8))
+    corner_patches = (
+        img_bgr[:patch_size, :patch_size],
+        img_bgr[:patch_size, -patch_size:],
+        img_bgr[-patch_size:, :patch_size],
+        img_bgr[-patch_size:, -patch_size:],
+    )
+    if any(float(patch.std()) > 4.0 for patch in corner_patches):
+        return img_bgr, None
+    corner_colours = np.array([np.median(patch.reshape(-1, 3), axis=0) for patch in corner_patches])
+    if float(np.max(np.ptp(corner_colours, axis=0))) > 8.0:
+        return img_bgr, None
+
+    border_colour = np.median(corner_colours, axis=0)
+    foreground = np.max(np.abs(img_bgr.astype(np.int16) - border_colour.astype(np.int16)), axis=2) > 12
+    ys, xs = np.where(foreground)
+    if not len(xs):
+        return img_bgr, None
+    padding = max(2, int(round(min(image_width, image_height) * 0.004)))
+    x1 = max(0, int(xs.min()) - padding)
+    y1 = max(0, int(ys.min()) - padding)
+    x2 = min(image_width, int(xs.max()) + padding + 1)
+    y2 = min(image_height, int(ys.max()) + padding + 1)
+    minimum_horizontal_trim = max(8, int(round(image_width * 0.02)))
+    minimum_vertical_trim = max(8, int(round(image_height * 0.02)))
+    if (
+        x1 < minimum_horizontal_trim
+        and image_width - x2 < minimum_horizontal_trim
+        and y1 < minimum_vertical_trim
+        and image_height - y2 < minimum_vertical_trim
+    ):
+        return img_bgr, None
+    return img_bgr[y1:y2, x1:x2], (x1, y1, x2, y2)
+
+
 def _ocr_pass(
     img_bgr: np.ndarray,
     *,
@@ -229,6 +270,7 @@ def _ocr_pass(
     clahe: bool = False,
     fast: bool = False,
     y_offset: int = 0,
+    coordinate_scale: float = 1.0,
 ) -> list[OCRItem]:
     processed = _preprocess_image(img_bgr, scale=scale, sharpen=sharpen, clahe=clahe)
     result = (_get_fast_rapid() if fast else _get_rapid())(processed)
@@ -241,11 +283,66 @@ def _ocr_pass(
         items.append(
             OCRItem(
                 text=str(text).strip(),
-                x1=int(min(xs) / scale),
-                y1=int(min(ys) / scale) + y_offset,
-                x2=int(max(xs) / scale),
-                y2=int(max(ys) / scale) + y_offset,
+                x1=int(min(xs) / scale * coordinate_scale),
+                y1=int(min(ys) / scale * coordinate_scale) + y_offset,
+                x2=int(max(xs) / scale * coordinate_scale),
+                y2=int(max(ys) / scale * coordinate_scale) + y_offset,
                 confidence=float(confidence),
+            )
+        )
+    return items
+
+
+def _limit_ocr_width(img_bgr: np.ndarray) -> tuple[np.ndarray, float]:
+    width = img_bgr.shape[1]
+    if width <= MAX_OCR_WIDTH:
+        return img_bgr, 1.0
+    coordinate_scale = width / MAX_OCR_WIDTH
+    resized_height = max(1, int(round(img_bgr.shape[0] / coordinate_scale)))
+    return (
+        cv2.resize(img_bgr, (MAX_OCR_WIDTH, resized_height), interpolation=cv2.INTER_AREA),
+        coordinate_scale,
+    )
+
+
+def _tesseract_ocr_pass(
+    img_bgr: np.ndarray,
+    *,
+    y_offset: int = 0,
+    coordinate_scale: float = 1.0,
+) -> list[OCRItem]:
+    if img_bgr.size == 0 or not shutil.which("tesseract"):
+        return []
+    gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=True) as handle:
+        cv2.imwrite(handle.name, gray)
+        completed = subprocess.run(
+            ["tesseract", handle.name, "stdout", "--psm", "11", "tsv"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    items: list[OCRItem] = []
+    for row in csv.DictReader(io.StringIO(completed.stdout), delimiter="\t"):
+        text = (row.get("text") or "").strip()
+        if not text:
+            continue
+        try:
+            x = int(row["left"])
+            y = int(row["top"])
+            width = int(row["width"])
+            height = int(row["height"])
+            confidence = max(0.0, float(row["conf"]) / 100.0)
+        except (KeyError, TypeError, ValueError):
+            continue
+        items.append(
+            OCRItem(
+                text=text,
+                x1=int(x * coordinate_scale),
+                y1=int(y * coordinate_scale) + y_offset,
+                x2=int((x + width) * coordinate_scale),
+                y2=int((y + height) * coordinate_scale) + y_offset,
+                confidence=confidence,
             )
         )
     return items
@@ -498,9 +595,17 @@ def _extract_troop_count_slot_items(
             distance = abs(cx - image_width * TROOP_SLOT_CENTERS[slot])
             if distance > image_width * TROOP_SLOT_HALF_WIDTH * 1.8:
                 continue
-            score = distance - item.confidence
+            score = distance - item.confidence * image_width * 0.02
             current = assigned.get(slot)
-            if current is None or score < current[0]:
+            prefer_candidate = current is None or score < current[0]
+            if current is not None:
+                candidate_digits = str(value)
+                current_digits = str(current[2])
+                longer, shorter = sorted((candidate_digits, current_digits), key=len, reverse=True)
+                if longer.endswith(shorter) and len(longer) != len(shorter):
+                    preferred_digits = shorter if len(longer) - len(shorter) == 1 else longer
+                    prefer_candidate = candidate_digits == preferred_digits
+            if prefer_candidate:
                 assigned[slot] = (score, item, value)
     return {slot: (int(value), item) for slot, (_score, item, value) in assigned.items()}
 
@@ -583,13 +688,8 @@ def _ocr_crop_texts(crop_bgr: np.ndarray) -> list[str]:
 
 
 def _ocr_count_crop(crop_bgr: np.ndarray) -> int | None:
-    texts: list[str] = []
-    for item in _ocr_pass(crop_bgr, scale=2.0, sharpen=True, clahe=True):
-        if item.text:
-            texts.append(item.text)
     tess = _tesseract_text(crop_bgr, ["--psm", "7", "-c", "tessedit_char_whitelist=0123456789,"])
-    if tess:
-        texts.append(tess)
+    texts = [tess] if tess else []
     values = [_parse_integer(text) for text in texts]
     values = [value for value in values if value is not None and value >= 1]
     if not values:
@@ -609,12 +709,14 @@ def _repair_troop_counts_from_slots(result: dict[str, Any], img_bgr: np.ndarray)
         current = result[side]["troop_counts"].get(troop_type)
         if current is not None and 10 <= current <= 5_000_000:
             continue
+        level = result[side].get("levels", {}).get(troop_type, {})
+        slot_has_level = level.get("tier") is not None or level.get("fire_crystal_level") is not None
+        if current is None and not slot_has_level:
+            continue
         x1, x2 = _slot_x_bounds(image_width, slot_index)
         value = _ocr_count_crop(img_bgr[count_y1:count_y2, x1:x2])
         if value is None:
             continue
-        level = result[side].get("levels", {}).get(troop_type, {})
-        slot_has_level = level.get("tier") is not None or level.get("fire_crystal_level") is not None
         if current is None and value < 1000 and not slot_has_level:
             continue
         if current is None or current < 10 or current > 5_000_000:
@@ -774,6 +876,44 @@ def _missing_stat_bonus_count(result: dict[str, Any] | None) -> int:
     return missing
 
 
+def _has_suspicious_stat_values(result: dict[str, Any] | None) -> bool:
+    if result is None:
+        return True
+    for side in ("left", "right"):
+        stats = result[side]["stat_bonuses"]
+        for stat_name in STAT_NAMES:
+            peers = [
+                stats[f"{troop_type}_{stat_name}"]
+                for troop_type in TROOP_TYPES
+                if f"{troop_type}_{stat_name}" in stats
+            ]
+            if len(peers) >= 2 and min(peers) > 0 and max(peers) / min(peers) > 5.0:
+                return True
+    return False
+
+
+def _is_complete_friendly_tesseract_result(result: dict[str, Any] | None) -> bool:
+    if result is None or _missing_stat_bonus_count(result) or _has_suspicious_stat_values(result):
+        return False
+    count_boxes = result.get("meta", {}).get("slot_count_boxes", {})
+    if len(count_boxes) != 6:
+        return False
+    for box in count_boxes.values():
+        if box.get("confidence", 0.0) < 0.75:
+            return False
+        if re.fullmatch(r"[0-9]{1,3}(?:,[0-9]{3})+", box.get("text", "")) is None:
+            return False
+    for side in ("left", "right"):
+        observed_tiers = [
+            level["tier"]
+            for level in result[side]["levels"].values()
+            if level.get("tier") is not None
+        ]
+        if len(observed_tiers) < 2 or len(set(observed_tiers)) != 1:
+            return False
+    return True
+
+
 def _compute_final_missing_fields(result: dict[str, Any]) -> list[str]:
     missing: set[str] = set()
     if result.get("meta", {}).get("troop_slots_present") is False:
@@ -907,11 +1047,6 @@ def _best_avatar_match(avatar_crop: np.ndarray, candidates: tuple[str, ...]) -> 
             _, score, _, _ = cv2.minMaxLoc(res)
             if score > best[1]:
                 best = (troop, float(score), p.name)
-    if best[1] < MIN_TROOP_AVATAR_SCORE:
-        raise RuntimeError(
-            "Troop avatar template match below threshold: "
-            f"best_type={best[0]} score={best[1]:.3f} threshold={MIN_TROOP_AVATAR_SCORE:.3f} candidates={candidates}"
-        )
     return best
 
 
@@ -1145,7 +1280,7 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
             count_box = stats_result.get("meta", {}).get("slot_count_boxes", {}).get(str(slot))
             if count_box is not None:
                 count_item = OCRItem(**count_box)
-                count_height = max(1, count_item.height)
+                count_height = max(1, count_item.height, int(round(image_width / 720.0 * 27)))
                 badge_y1 = max(0, count_item.y1 - int(round(5.0 * count_height)))
                 badge_y2 = max(badge_y1 + 1, count_item.y1 - int(round(2.0 * count_height)))
                 slot_crop = img_bgr[badge_y1:badge_y2, x1:badge_x2]
@@ -1218,6 +1353,7 @@ def _append_troop_detail(
             "type": troop_type,
             "score": match[1],
             "template": match[2],
+            "low_confidence": match[1] < MIN_TROOP_AVATAR_SCORE,
             "count": count,
         }
     )
@@ -1227,37 +1363,78 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
     img_bgr = cv2.imread(str(image_path))
     if img_bgr is None:
         raise FileNotFoundError(f"Could not read image: {image_path}")
+    source_height, source_width = img_bgr.shape[:2]
+    img_bgr, content_box = _trim_uniform_border(img_bgr)
     image_height, image_width = img_bgr.shape[:2]
 
-    # Template matching must use the original image so avatar and badge colours
-    # stay comparable to templates. The common OCR path uses a faster detector
-    # on the original report; enhanced/server OCR is retained as a fallback for
-    # noisy or unfamiliar crops.
+    # Template matching uses the original pixels so avatar and badge colours
+    # stay comparable to templates. Tesseract handles the regular stat table;
+    # the mobile detector only sees the narrow troop row unless stat values are
+    # missing or internally inconsistent.
     ocr_input = _crop_report_panel_for_ocr(img_bgr)
-    fast_ocr_top = FAST_OCR_TOP_CROP if ocr_input.shape[0] > FAST_OCR_TOP_CROP + 200 else 0
-    fast_original = _ocr_pass(ocr_input[fast_ocr_top:], fast=True, y_offset=fast_ocr_top)
-    strategies = ["rapidocr:fast-panel-crop" if ocr_input.shape[:2] != img_bgr.shape[:2] else "rapidocr:fast-original"]
+    scaled_top_crop = int(round(FAST_OCR_TOP_CROP * image_width / 720.0))
+    fast_ocr_top = scaled_top_crop if ocr_input.shape[0] > scaled_top_crop + 200 else 0
+    fast_input, fast_coordinate_scale = _limit_ocr_width(ocr_input[fast_ocr_top:])
+    tesseract_items = _tesseract_ocr_pass(
+        fast_input,
+        y_offset=fast_ocr_top,
+        coordinate_scale=fast_coordinate_scale,
+    )
+    strategies = ["tesseract:panel"]
     try:
-        result = extract_values_from_ocr_items(fast_original, image_width=image_width, image_height=image_height)
+        result = extract_values_from_ocr_items(tesseract_items, image_width=image_width, image_height=image_height)
     except ValueError:
         result = None
 
-    if _missing_stat_bonus_count(result) > 0:
-        strategies.append("rapidocr:enhanced")
-        enhanced = _ocr_pass(img_bgr, scale=2.0, sharpen=True, clahe=True)
+    troop_items: list[OCRItem] = []
+    if _is_complete_friendly_tesseract_result(result):
+        strategies.append("tesseract:complete")
+    elif result is not None:
+        header = OCRItem(**result["meta"]["header_box"])
+        layout_scale = image_width / 720.0
+        troop_y1 = max(0, header.y1 - int(round(155 * layout_scale)))
+        troop_y2 = min(image_height, header.y2 + int(round(8 * layout_scale)))
+        troop_input, troop_coordinate_scale = _limit_ocr_width(img_bgr[troop_y1:troop_y2])
+        troop_items = _ocr_pass(
+            troop_input,
+            fast=True,
+            y_offset=troop_y1,
+            coordinate_scale=troop_coordinate_scale,
+        )
+        strategies.append("rapidocr:troop-row")
         try:
-            enhanced_result = extract_values_from_ocr_items(enhanced, image_width=image_width, image_height=image_height)
-            if _missing_stat_bonus_count(enhanced_result) < _missing_stat_bonus_count(result):
-                result = enhanced_result
+            result = extract_values_from_ocr_items(
+                _merge_ocr_items(tesseract_items, troop_items),
+                image_width=image_width,
+                image_height=image_height,
+            )
         except ValueError:
             pass
 
-    if _missing_stat_bonus_count(result) > 0:
-        strategies.append("rapidocr:original")
-        original = _ocr_pass(img_bgr)
-        original_result = extract_values_from_ocr_items(original, image_width=image_width, image_height=image_height)
-        if _missing_stat_bonus_count(original_result) < _missing_stat_bonus_count(result):
-            result = original_result
+    if _missing_stat_bonus_count(result) > 0 or _has_suspicious_stat_values(result):
+        strategies.append("rapidocr:full-fallback")
+        rapid_items = _ocr_pass(
+            fast_input,
+            fast=True,
+            y_offset=fast_ocr_top,
+            coordinate_scale=fast_coordinate_scale,
+        )
+        try:
+            fallback_result = extract_values_from_ocr_items(
+                _merge_ocr_items(tesseract_items, troop_items, rapid_items),
+                image_width=image_width,
+                image_height=image_height,
+            )
+            if (
+                _missing_stat_bonus_count(fallback_result) < _missing_stat_bonus_count(result)
+                or (
+                    _has_suspicious_stat_values(result)
+                    and not _has_suspicious_stat_values(fallback_result)
+                )
+            ):
+                result = fallback_result
+        except ValueError:
+            pass
 
     if result is None:
         raise ValueError("Could not find a 'Stat Bonuses' header in the OCR output")
@@ -1266,15 +1443,16 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
     result["meta"]["template_match_image"] = "original"
     _repair_troop_counts_from_slots(result, img_bgr)
     _finalize_troops_and_missing(result, img_bgr)
-    if _needs_ocr_repair(result):
-        strategies.append("targeted-fallback")
-        result = _repair_missing_values(result, img_bgr)
-        result["meta"]["ocr_strategy"] = strategies
-        result["meta"]["template_match_image"] = "original"
-        _finalize_troops_and_missing(result, img_bgr)
 
     result["image_path"] = str(Path(image_path).resolve())
-    result["image_size"] = {"width": image_width, "height": image_height}
+    result["image_size"] = {"width": source_width, "height": source_height}
+    if content_box is not None:
+        result["meta"]["content_box"] = {
+            "x1": content_box[0],
+            "y1": content_box[1],
+            "x2": content_box[2],
+            "y2": content_box[3],
+        }
 
     if debug_outdir:
         outdir = Path(debug_outdir)
@@ -1311,6 +1489,7 @@ def shape_dashboard_side(
     stats: dict[str, dict[str, float | None]] = {
         troop_type: {stat: None for stat in STAT_NAMES} for troop_type in TROOP_TYPES
     }
+    typed_troop_types: set[str] = set()
 
     for troop in side_data.get("troops", []):
         if not isinstance(troop, dict):
@@ -1318,6 +1497,7 @@ def shape_dashboard_side(
         troop_type = troop.get("type")
         if troop_type not in TROOP_TYPES:
             continue
+        typed_troop_types.add(troop_type)
         count = troop.get("count")
         if isinstance(count, int):
             troops[troop_type] = count
@@ -1335,6 +1515,8 @@ def shape_dashboard_side(
 
     for troop_type, level in side_data.get("levels", {}).items():
         if troop_type not in TROOP_TYPES or troop_types[troop_type] is not None:
+            continue
+        if troop_slots_present and typed_troop_types and troop_type not in typed_troop_types:
             continue
         troop_types[troop_type] = _troop_type_key(
             troop_type,
@@ -1356,10 +1538,24 @@ def shape_dashboard_side(
 
 
 def dashboard_warnings_from_result(result: dict[str, Any]) -> list[str]:
+    warnings: list[str] = []
     missing = result.get("meta", {}).get("missing_fields", [])
-    if not missing:
-        return []
-    return ["missing fields: " + ", ".join(str(field) for field in missing)]
+    if missing:
+        warnings.append("missing fields: " + ", ".join(str(field) for field in missing))
+    uncertain_types = [
+        match
+        for match in result.get("meta", {}).get("troop_template_matches", [])
+        if match.get("low_confidence")
+    ]
+    if uncertain_types:
+        warnings.append(
+            "low-confidence troop types: "
+            + ", ".join(
+                f"{match['side']} slot {match['slot']}={match['type']} ({match['score']:.2f})"
+                for match in uncertain_types
+            )
+        )
+    return warnings
 
 
 def shape_dashboard_report_result(result: dict[str, Any]) -> dict[str, Any]:
