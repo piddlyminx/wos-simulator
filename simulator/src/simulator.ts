@@ -48,7 +48,7 @@ import {
   type RunLoopOptions,
   type Runtime
 } from "./runtime";
-import { processExtraSkillAttacks } from "./extraAttacks";
+import { deliverScheduledDamage, processExtraSkillAttacks } from "./extraAttacks";
 
 // Re-exported so the public battle API stays importable from one module.
 export { prepareBattle, type CompiledBattle } from "./prepare";
@@ -257,6 +257,22 @@ function runLoop(
     const results: DamageJobResult[] = [];
     const cancelled: CancelledAttack[] = [];
     const roundTargetDamage = emptyRoundTargetDamage();
+    const delayedResults = deliverScheduledDamage(
+      round,
+      runtime,
+      roundStartTroops,
+      roundTargetDamage,
+      loopOptions,
+      recorder
+    );
+    results.push(...delayedResults);
+    if (loopOptions.scoreSide) {
+      for (const { job, result } of delayedResults) {
+        if (job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
+          score += result.kills;
+        }
+      }
+    }
 
     // Resolve each normal attack as one procedural cluster. Later attacks observe effects
     // produced by earlier attacks; no synthetic global attack-declaration phase exists.

@@ -32,6 +32,10 @@ export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitT
 export interface TriggerDamageJobDefinition {
   source: TriggerDamageJobSelector;
   target: TriggerDamageJobSelector;
+  /** Damage is calculated now, then delivered this many turns later without recalculation. */
+  delivery_delay_turns?: number;
+  /** Damage equation used when the job is calculated. Defaults to skill damage. */
+  damage_kind?: DamageKind;
 }
 
 export function unitMask(units: UnitType | UnitType[]): UnitMask {
@@ -350,6 +354,8 @@ export interface AttackIntent {
 
 export interface DamageJob {
   round: number;
+  /** Present when a delayed job was calculated in an earlier round. */
+  calculationRound?: number;
   kind: DamageKind;
   roundStartTroops: Record<SideId, Record<UnitType, number>>;
   dealerSide: SideId;
@@ -456,6 +462,8 @@ export type AppliedEffect = AppliedPercentageEffectSummary | AppliedShieldEffect
 
 export interface AttackOutcome {
   round: number;
+  /** Present when this damage was snapshotted in an earlier round. */
+  calculationRound?: number;
   kind: DamageKind;
   sourceEffectId?: string;
   dealerSide: SideId;

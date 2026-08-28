@@ -28,6 +28,7 @@ export interface Runtime {
   troops: Record<SideId, Record<UnitType, number>>;
   activateEffectsByRound: Array<ActiveEffect[] | undefined>;
   expireEffectsByRound: Array<ActiveEffect[] | undefined>;
+  delayedDamageByRound: Array<ScheduledDamageJob[] | undefined>;
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
   usedEffects: ActiveEffect[];
@@ -43,6 +44,12 @@ export interface Runtime {
     attacks: Record<SideId, Record<UnitType, number>>;
     received: Record<SideId, Record<UnitType, number>>;
   };
+}
+
+export interface ScheduledDamageJob {
+  job: DamageJob;
+  result: DamageResult;
+  sourceEffect: ActiveEffect;
 }
 
 export interface RunLoopOptions {
@@ -73,6 +80,7 @@ export function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rn
     ),
     activateEffectsByRound: [],
     expireEffectsByRound: [],
+    delayedDamageByRound: [],
     usedEffects: [],
     primaryUsedEffects: [],
     staticDamageProfile,

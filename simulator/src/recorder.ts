@@ -310,6 +310,7 @@ export class BasicInfoRecorder implements BattleRecorder {
     const appliedEffects = mergeAppliedEffects(result.appliedEffects, order, extras);
     this.attacks.push({
       round: job.round,
+      ...(job.calculationRound === undefined ? {} : { calculationRound: job.calculationRound }),
       kind: job.kind,
       sourceEffectId: job.sourceEffectId,
       dealerSide: job.dealerSide,

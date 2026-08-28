@@ -294,6 +294,34 @@ test("loadSimulatorConfig rejects per-job extra skill damage multipliers", () =>
   assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key multiplier/i);
 });
 
+test("loadSimulatorConfig validates delayed damage job timing and kind", () => {
+  const invalidDelay = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", delivery_delay_turns: 1.5 }]
+  });
+  const invalidKind = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" as never }]
+  });
+  assert.throws(() => loadSimulatorConfigFromDir(invalidDelay), /delivery_delay_turns.*integer >= 0/i);
+  assert.throws(() => loadSimulatorConfigFromDir(invalidKind), /damage_kind.*normal.*skill/i);
+});
+
+test("loadSimulatorConfig rejects per-job skill reporting overrides", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", reports_skill_kills: false } as never]
+  });
+
+  assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key reports_skill_kills/i);
+});
+
 test("loadSimulatorConfig requires trigger_damage_jobs source and target", () => {
   const missingSourceRoot = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
