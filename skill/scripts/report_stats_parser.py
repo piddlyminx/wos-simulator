@@ -57,11 +57,17 @@ TROOP_SLOT_HALF_WIDTH = 0.07
 MIN_TROOP_AVATAR_SCORE = 0.55
 MIN_FC_BADGE_TEMPLATE_SCORE = 0.80
 FC_BADGE_TEMPLATE_SCALES = (0.95, 1.05, 1.15, 1.25)
+PARTIAL_BADGE_FRACTIONS = (0.08, 0.16, 0.24, 0.32)
+FC_BADGE_CLASSIFIER_CROP_SIZE = (96, 48)
+FC_BADGE_CLASSIFIER_MODEL = SKILL_DIR / "models" / "fire_crystal_badge.onnx"
+FC_BADGE_CLASSIFIER_NONE_MARGIN = 2.5
+FC_BADGE_CLASSIFIER_LEVEL_MARGIN = 4.0
 FAST_OCR_TOP_CROP = 56
 MAX_OCR_WIDTH = 760
 
 _rapid_ocr: Any = None
 _fast_rapid_ocr: Any = None
+_fc_badge_classifier_session: Any = None
 _fc_badge_templates: list[tuple[int, str, np.ndarray, np.ndarray]] | None = None
 
 
@@ -1116,22 +1122,6 @@ def _score_badge_digit(probe_bgr: np.ndarray, template_bgr: np.ndarray) -> float
     return best
 
 
-def _is_star_badge_template(img_bgr: np.ndarray) -> bool:
-    hsv = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2HSV)
-    magenta = cv2.inRange(hsv, (125, 45, 70), (169, 255, 255))
-    return cv2.countNonZero(magenta) >= max(20, int(img_bgr.shape[0] * img_bgr.shape[1] * 0.08))
-
-
-def _top_clipped_badge_template(template: np.ndarray, template_bgr: np.ndarray) -> np.ndarray | None:
-    if not _is_star_badge_template(template_bgr):
-        return None
-    height = template.shape[0]
-    y1 = int(height * 0.25)
-    if height - y1 < 8:
-        return None
-    return template[y1:, :, :]
-
-
 def _crop_to_largest_badge_contour(img_bgr: np.ndarray, mask: np.ndarray, *, pad_ratio: float = 0.22) -> np.ndarray | None:
     kernel = np.ones((3, 3), np.uint8)
     mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=1)
@@ -1174,32 +1164,47 @@ def _isolate_badge_blob(img_bgr: np.ndarray) -> np.ndarray:
     return img_bgr
 
 
-def _match_fire_crystal_badge_template(badge_bgr: np.ndarray) -> tuple[int | None, float, str]:
+def _match_fire_crystal_badge_template(
+    badge_bgr: np.ndarray,
+    *,
+    allow_partial: bool = False,
+    clip_sides: frozenset[str] = frozenset(),
+    preferred_level: int | None = None,
+) -> tuple[int | None, float, str]:
     templates = _load_fc_badge_templates()
     if not templates or badge_bgr.size == 0:
         return None, -1.0, "none"
     probe_bgr = _isolate_badge_blob(badge_bgr)
 
-    def score_templates(*, clipped: bool) -> list[tuple[int, str, float, float]]:
+    def score_templates(
+        *,
+        partial: bool = False,
+        only_level: int | None = None,
+        probe: np.ndarray = probe_bgr,
+    ) -> list[tuple[int, str, float, float]]:
         scores: list[tuple[int, str, float, float]] = []
         for fc_level, name, _tpl, tpl_bgr in templates:
-            if clipped:
-                tpl_to_match = _top_clipped_badge_template(tpl_bgr, tpl_bgr)
-                if tpl_to_match is None:
-                    continue
-            else:
-                tpl_to_match = tpl_bgr
+            if only_level is not None and fc_level != only_level:
+                continue
             shell_score = -1.0
             for scale in FC_BADGE_TEMPLATE_SCALES:
-                th, tw = tpl_to_match.shape[:2]
-                resized = cv2.resize(tpl_to_match, (max(3, int(tw * scale)), max(3, int(th * scale))), interpolation=cv2.INTER_AREA)
-                rh, rw = resized.shape[:2]
-                ph, pw = probe_bgr.shape[:2]
-                if rh > ph or rw > pw:
-                    continue
-                score = float(cv2.minMaxLoc(cv2.matchTemplate(probe_bgr, resized, cv2.TM_CCOEFF_NORMED))[1])
-                shell_score = max(shell_score, score)
-            digit_score = _score_badge_digit(probe_bgr, tpl_bgr) if fc_level in (6, 8) else shell_score
+                th, tw = tpl_bgr.shape[:2]
+                resized = cv2.resize(
+                    tpl_bgr,
+                    (max(3, int(tw * scale)), max(3, int(th * scale))),
+                    interpolation=cv2.INTER_AREA,
+                )
+                candidates = _partial_badge_template_fragments(resized, clip_sides) if partial else [resized]
+                for candidate in candidates:
+                    rh, rw = candidate.shape[:2]
+                    ph, pw = probe.shape[:2]
+                    if rh > ph or rw > pw:
+                        continue
+                    score = float(
+                        cv2.minMaxLoc(cv2.matchTemplate(probe, candidate, cv2.TM_CCOEFF_NORMED))[1]
+                    )
+                    shell_score = max(shell_score, score)
+            digit_score = _score_badge_digit(probe, tpl_bgr) if fc_level in (6, 8) else shell_score
             scores.append((fc_level, name, shell_score, digit_score))
         return scores
 
@@ -1213,10 +1218,58 @@ def _match_fire_crystal_badge_template(badge_bgr: np.ndarray) -> tuple[int | Non
             chosen = max((chosen, runner_up), key=lambda item: item[3])
         return chosen[0], chosen[2], chosen[1]
 
-    full_match = choose(score_templates(clipped=False))
+    if preferred_level is not None and preferred_level not in (6, 8):
+        preferred_match = choose(score_templates(only_level=preferred_level))
+        if preferred_match[0] is not None and preferred_match[1] >= MIN_FC_BADGE_TEMPLATE_SCORE:
+            return preferred_match
+    full_match = choose(score_templates())
     if full_match[0] is not None and full_match[1] >= MIN_FC_BADGE_TEMPLATE_SCORE:
         return full_match
+    if allow_partial:
+        if preferred_level is not None and preferred_level not in (6, 8):
+            preferred_match = choose(
+                score_templates(partial=True, only_level=preferred_level, probe=badge_bgr)
+            )
+            if preferred_match[0] is not None and preferred_match[1] >= MIN_FC_BADGE_TEMPLATE_SCORE:
+                return preferred_match
+        return choose(score_templates(partial=True, probe=badge_bgr))
     return full_match
+
+
+def _partial_badge_template_fragments(
+    template: np.ndarray,
+    clip_sides: frozenset[str],
+) -> list[np.ndarray]:
+    """Return substantial visible fragments for edge or diagonal clipping.
+
+    Known image edges keep this small. With no reliable edge hint, adjacent
+    two-edge fragments also cover a badge cut across a corner or diagonal.
+    """
+    height, width = template.shape[:2]
+    sides = clip_sides or frozenset({"top", "right", "bottom", "left"})
+    fragments: list[np.ndarray] = []
+    for fraction in PARTIAL_BADGE_FRACTIONS:
+        dx = max(1, int(round(width * fraction)))
+        dy = max(1, int(round(height * fraction)))
+        one_edge = {
+            "top": template[dy:, :],
+            "right": template[:, : width - dx],
+            "bottom": template[: height - dy, :],
+            "left": template[:, dx:],
+        }
+        fragments.extend(one_edge[side] for side in sides)
+        pairs = (
+            ("top", "right", template[dy:, : width - dx]),
+            ("right", "bottom", template[: height - dy, : width - dx]),
+            ("bottom", "left", template[: height - dy, dx:]),
+            ("left", "top", template[dy:, dx:]),
+        )
+        fragments.extend(
+            fragment
+            for first, second, fragment in pairs
+            if not clip_sides or {first, second}.issubset(clip_sides)
+        )
+    return [fragment for fragment in fragments if min(fragment.shape[:2]) >= 8]
 
 
 def _detect_fire_crystal_badge(slot_crop: np.ndarray, *, crop_from_slot: bool = True) -> int | None:
@@ -1224,7 +1277,144 @@ def _detect_fire_crystal_badge(slot_crop: np.ndarray, *, crop_from_slot: bool = 
     return fc_level
 
 
-def _detect_fire_crystal_badge_match(slot_crop: np.ndarray, *, crop_from_slot: bool = True) -> tuple[int | None, float]:
+def _fire_crystal_badge_classifier_crop(
+    img_bgr: np.ndarray,
+    slot: int,
+    count_item: OCRItem,
+) -> tuple[np.ndarray, np.ndarray]:
+    image_height, image_width = img_bgr.shape[:2]
+    scale = image_width / 720.0
+    slot_center = int(image_width * TROOP_SLOT_CENTERS[slot])
+    slot_half_width = int(image_width * TROOP_SLOT_HALF_WIDTH)
+    count_height = max(1, count_item.height, int(round(scale * 27)))
+    x1 = slot_center - slot_half_width
+    x2 = slot_center + slot_half_width + int(round(image_width * 0.055))
+    y1 = count_item.y1 - int(round(5.0 * count_height))
+    y2 = count_item.y1 - int(round(2.0 * count_height))
+    source_width = max(20, x2 - x1)
+    source_height = max(20, y2 - y1)
+
+    crop = np.full((source_height, source_width, 3), 235, dtype=np.uint8)
+    valid = np.zeros((source_height, source_width), dtype=np.uint8)
+    source_x1 = max(0, x1)
+    source_y1 = max(0, y1)
+    source_x2 = min(image_width, x2)
+    source_y2 = min(image_height, y2)
+    if source_x2 > source_x1 and source_y2 > source_y1:
+        target_x1 = source_x1 - x1
+        target_y1 = source_y1 - y1
+        target_x2 = target_x1 + source_x2 - source_x1
+        target_y2 = target_y1 + source_y2 - source_y1
+        crop[target_y1:target_y2, target_x1:target_x2] = img_bgr[
+            source_y1:source_y2,
+            source_x1:source_x2,
+        ]
+        valid[target_y1:target_y2, target_x1:target_x2] = 255
+
+    return (
+        cv2.resize(crop, FC_BADGE_CLASSIFIER_CROP_SIZE, interpolation=cv2.INTER_AREA),
+        cv2.resize(valid, FC_BADGE_CLASSIFIER_CROP_SIZE, interpolation=cv2.INTER_NEAREST),
+    )
+
+
+def _get_fire_crystal_badge_classifier() -> Any | None:
+    global _fc_badge_classifier_session
+    if not FC_BADGE_CLASSIFIER_MODEL.exists():
+        return None
+    if _fc_badge_classifier_session is None:
+        import onnxruntime as ort
+
+        ort.set_default_logger_severity(3)
+        options = ort.SessionOptions()
+        options.log_severity_level = 3
+        _fc_badge_classifier_session = ort.InferenceSession(
+            str(FC_BADGE_CLASSIFIER_MODEL),
+            sess_options=options,
+            providers=["CPUExecutionProvider"],
+        )
+    return _fc_badge_classifier_session
+
+
+def _fire_crystal_badge_classifier_features(crop: np.ndarray, valid: np.ndarray) -> np.ndarray:
+    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+    saturation_value = hsv[:, :, 1:3].astype(np.float32)
+    mask = valid.astype(np.float32)[:, :, None]
+    return np.transpose(np.concatenate((saturation_value, mask), axis=2), (2, 0, 1)) / 255.0
+
+
+def _classify_fire_crystal_badges(
+    stats_result: dict[str, Any],
+    img_bgr: np.ndarray,
+) -> tuple[dict[int, int], dict[int, bool], dict[str, Any]]:
+    session = _get_fire_crystal_badge_classifier()
+    if session is None:
+        return {}, {}, {"status": "unavailable"}
+
+    slots: list[int] = []
+    features: list[np.ndarray] = []
+    slot_counts = stats_result.get("meta", {}).get("slot_counts", {})
+    count_boxes = stats_result.get("meta", {}).get("slot_count_boxes", {})
+    for slot in range(6):
+        if int(slot_counts.get(str(slot)) or 0) <= 0 or str(slot) not in count_boxes:
+            continue
+        crop, valid = _fire_crystal_badge_classifier_crop(
+            img_bgr,
+            slot,
+            OCRItem(**count_boxes[str(slot)]),
+        )
+        slots.append(slot)
+        features.append(_fire_crystal_badge_classifier_features(crop, valid))
+    if not features:
+        return {}, {}, {"status": "no-slots"}
+
+    input_name = session.get_inputs()[0].name
+    logits, classes = session.run(None, {input_name: np.stack(features).astype(np.float32)})
+    available_classes = {int(level) for level in classes}
+    missing_classes = sorted(set(range(11)) - available_classes)
+
+    accepted: dict[int, int] = {}
+    presence: dict[int, bool] = {}
+    predictions: list[dict[str, Any]] = []
+    for slot, row in zip(slots, logits):
+        order = np.argsort(row)
+        class_index = int(order[-1])
+        level = int(classes[class_index])
+        margin = float(row[order[-1]] - row[order[-2]])
+        threshold = (
+            FC_BADGE_CLASSIFIER_NONE_MARGIN
+            if level == 0
+            else FC_BADGE_CLASSIFIER_LEVEL_MARGIN
+        )
+        is_accepted = margin >= threshold
+        if is_accepted:
+            presence[slot] = level != 0
+            if not missing_classes:
+                accepted[slot] = level
+        predictions.append(
+            {
+                "slot": slot,
+                "level": level,
+                "margin": round(margin, 4),
+                "accepted": is_accepted,
+            }
+        )
+    meta: dict[str, Any] = {
+        "status": "ok" if not missing_classes else "presence-only",
+        "predictions": predictions,
+    }
+    if missing_classes:
+        meta["missing_classes"] = missing_classes
+    return accepted, presence, meta
+
+
+def _detect_fire_crystal_badge_match(
+    slot_crop: np.ndarray,
+    *,
+    crop_from_slot: bool = True,
+    allow_partial: bool = False,
+    clip_sides: frozenset[str] = frozenset(),
+    preferred_level: int | None = None,
+) -> tuple[int | None, float]:
     """Read the fire-crystal badge number in the top-right of a troop slot.
 
     Returns ``None`` when no badge is visible or the match is not confident.
@@ -1244,7 +1434,12 @@ def _detect_fire_crystal_badge_match(slot_crop: np.ndarray, *, crop_from_slot: b
     if red_count < max(20, badge.shape[0] * badge.shape[1] * 0.04):
         return None, -1.0
 
-    fc_level, score, template_name = _match_fire_crystal_badge_template(badge)
+    fc_level, score, template_name = _match_fire_crystal_badge_template(
+        badge,
+        allow_partial=allow_partial,
+        clip_sides=clip_sides,
+        preferred_level=preferred_level,
+    )
     if fc_level is not None and score >= MIN_FC_BADGE_TEMPLATE_SCORE:
         return fc_level, score
 
@@ -1258,6 +1453,12 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
     avatar_y2 = max(avatar_y1 + 10, header.y1 - int(image_height * 0.052))
     details = {"left": [], "right": []}
     debug: list[dict[str, Any]] = []
+    classified_badges, badge_presence, classifier_meta = _classify_fire_crystal_badges(stats_result, img_bgr)
+    stats_result["meta"]["fire_crystal_classifier"] = classifier_meta
+    badge_predictions = {
+        int(prediction["slot"]): int(prediction["level"])
+        for prediction in classifier_meta.get("predictions", [])
+    }
 
     for side, slots in (("left", (0, 1, 2)), ("right", (3, 4, 5))):
         slot_counts: dict[int, int] = {}
@@ -1276,23 +1477,45 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
             x2 = min(image_width, cx + half_width)
             slot_counts[slot] = int(count)
             slot_avatars[slot] = img_bgr[avatar_y1:avatar_y2, x1:x2]
-            badge_x2 = min(image_width, x2 + int(round(image_width * 0.055)))
+            planned_badge_x2 = x2 + int(round(image_width * 0.055))
+            badge_x2 = min(image_width, planned_badge_x2)
+            clip_sides = frozenset({"right"}) if planned_badge_x2 > image_width else frozenset()
             count_box = stats_result.get("meta", {}).get("slot_count_boxes", {}).get(str(slot))
-            if count_box is not None:
+            if slot in classified_badges:
+                fc_badge = classified_badges[slot] or None
+            elif badge_presence.get(slot) is False:
+                fc_badge = None
+            elif count_box is not None:
                 count_item = OCRItem(**count_box)
                 count_height = max(1, count_item.height, int(round(image_width / 720.0 * 27)))
-                badge_y1 = max(0, count_item.y1 - int(round(5.0 * count_height)))
+                planned_badge_y1 = count_item.y1 - int(round(5.0 * count_height))
+                if planned_badge_y1 < 0:
+                    clip_sides = clip_sides | {"top"}
+                badge_y1 = max(0, planned_badge_y1)
                 badge_y2 = max(badge_y1 + 1, count_item.y1 - int(round(2.0 * count_height)))
                 slot_crop = img_bgr[badge_y1:badge_y2, x1:badge_x2]
-                count_fc, count_score = _detect_fire_crystal_badge_match(slot_crop, crop_from_slot=False)
+                allow_partial = bool(clip_sides)
+                count_fc, count_score = _detect_fire_crystal_badge_match(
+                    slot_crop,
+                    crop_from_slot=False,
+                    allow_partial=allow_partial,
+                    clip_sides=clip_sides,
+                    preferred_level=badge_predictions.get(slot),
+                )
+                if count_fc is not None and count_fc not in (6, 8) and count_score >= MIN_FC_BADGE_TEMPLATE_SCORE:
+                    fc_badge = count_fc
+                else:
+                    fallback_crop = img_bgr[max(0, avatar_y1 - 12):avatar_y2, x1:badge_x2]
+                    fallback_fc, fallback_score = _detect_fire_crystal_badge_match(
+                        fallback_crop,
+                        allow_partial=allow_partial,
+                        clip_sides=clip_sides,
+                        preferred_level=badge_predictions.get(slot),
+                    )
+                    fc_badge = count_fc if count_score >= fallback_score else fallback_fc
             else:
                 count_fc, count_score = None, -1.0
-            if count_fc is not None and count_fc not in (6, 8) and count_score >= MIN_FC_BADGE_TEMPLATE_SCORE:
-                fc_badge = count_fc
-            else:
-                fallback_crop = img_bgr[max(0, avatar_y1 - 12):avatar_y2, x1:badge_x2]
-                fallback_fc, fallback_score = _detect_fire_crystal_badge_match(fallback_crop)
-                fc_badge = count_fc if count_score >= fallback_score else fallback_fc
+                fc_badge = None
             if fc_badge is not None:
                 stats_result.setdefault("meta", {}).setdefault("fire_crystal_badges", {})[str(slot)] = fc_badge
 

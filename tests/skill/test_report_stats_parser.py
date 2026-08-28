@@ -28,6 +28,29 @@ from report_stats_parser import (
 
 
 class ReportStatsParserTests(unittest.TestCase):
+    def test_fire_crystal_matcher_handles_edge_and_corner_clipping(self) -> None:
+        badge = cv2.imread(
+            str(ROOT / "skill" / "templates" / "fire_crystal_badges" / "fc7.png")
+        )
+        self.assertIsNotNone(badge)
+        assert badge is not None
+
+        cases = (
+            (badge[5:, :], frozenset({"top"})),
+            (badge[:, :-5], frozenset({"right"})),
+            (badge[5:, :-5], frozenset({"top", "right"})),
+        )
+        for crop, clip_sides in cases:
+            with self.subTest(clip_sides=clip_sides):
+                level, score, _template = report_stats_parser._match_fire_crystal_badge_template(
+                    crop,
+                    allow_partial=True,
+                    clip_sides=clip_sides,
+                    preferred_level=7,
+                )
+                self.assertEqual(level, 7)
+                self.assertGreaterEqual(score, report_stats_parser.MIN_FC_BADGE_TEMPLATE_SCORE)
+
     def test_generic_troop_type_avatars_match_all_three_types(self) -> None:
         report_path = ROOT / "dashboard" / "test_reports" / "Screenshot 2026-03-25 224629.png"
         image = cv2.imread(str(report_path))
