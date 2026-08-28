@@ -38,7 +38,8 @@ export interface EffectIndex {
   carriers: ActiveEffect[];
 }
 
-export const DAMAGE_JOB_SHAPE_SLOTS = 2 * 2 * 3 * 2 * 3;
+const DAMAGE_KINDS: DamageKind[] = ["normal", "skill", "extra"];
+export const DAMAGE_JOB_SHAPE_SLOTS = DAMAGE_KINDS.length * 2 * 3 * 2 * 3;
 
 export function createEffectIndex(
   effectGroups: ActiveEffectGroup[] = [],
@@ -137,7 +138,7 @@ const EMPTY_JOB_SHAPE_SLOTS = new Uint8Array();
 function buildShapeSlots(effect: ActiveEffect, bucket: DynamicDamageBucket): Uint8Array {
   const definition = dynamicBucketDefinition(bucket)!;
   const slots: number[] = [];
-  const jobKinds: DamageKind[] = definition.damageKind ? [definition.damageKind] : ["normal", "skill"];
+  const jobKinds = definition.damageKind ? [definition.damageKind] : DAMAGE_KINDS;
   for (const jobKind of jobKinds) {
     for (const appliesToUnit of unitsFromMask(effect.appliesTo.units)) {
       for (const appliesVsUnit of unitsFromMask(effect.appliesVs.units)) {
@@ -152,7 +153,7 @@ function buildShapeSlots(effect: ActiveEffect, bucket: DynamicDamageBucket): Uin
   return Uint8Array.from(slots);
 }
 
-function kindIndex(kind: DamageKind): number { return kind === "normal" ? 0 : 1; }
+function kindIndex(kind: DamageKind): number { return DAMAGE_KINDS.indexOf(kind); }
 function sideIndex(side: SideId): number { return side === "attacker" ? 0 : 1; }
 function unitIndex(unit: UnitType): number {
   if (unit === "infantry") return 0;

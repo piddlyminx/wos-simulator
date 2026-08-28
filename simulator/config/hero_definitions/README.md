@@ -210,11 +210,11 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | `type` | One supported modifier/special-effect string, or omitted on a child-bearing carrier | Chooses the mechanic and, for modifiers, the damage-equation bucket. |
 | `value` | Usually a number or per-level numeric array | Percentage magnitude for modifiers; damage multiplier percentage for `extra_skill_attack`; fixed unit order for `attack_order`. |
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
-| `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means permanent, except that `extra_skill_attack` defaults to one turn and one attack. |
+| `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means permanent, except that extra-attack effects default to one turn and one attack. |
 | `same_effect_stacking` | `add` or `max` | Controls overlap between live activations of the same modifier definition and scope. Omitted means `add`. |
 | `requires_effect` | Effect ID string | Applies a runtime damage modifier only while the named effect is applicable to the same damage job. |
 | `value_evolution` | Evolution object | Optionally changes the effect value as rounds or uses advance. |
-| `trigger_damage_jobs` | Non-empty array of job definitions | Required for `extra_skill_attack`; describes the actual skill-damage jobs it emits. |
+| `trigger_damage_jobs` | Non-empty array of job definitions | Required for `extra_skill_attack`; describes the damage jobs it emits. |
 | `trigger_effects` | Object keyed by child effect ID | Defines children materialized only from an actual parent use. |
 
 ### `value` and level selection
@@ -227,7 +227,7 @@ For percentage-bucket modifiers, every configured scalar/array entry must be a f
 
 At level 3 this resolves to 15. A scalar number gives the same value at every level. Numeric arrays are selected by level before effects reach the runtime.
 
-`dodge` and `no_attack` ignore `value`; their probability belongs on the skill trigger. `extra_skill_attack` is not covered by the percentage-bucket value validator: its resolved `value` is converted to a number, and a missing, non-finite, zero, or negative value produces no damage jobs.
+`dodge` and `no_attack` ignore `value`; their probability belongs on the skill trigger. Extra-attack effects are not covered by the percentage-bucket value validator: their resolved `value` is converted to a number, and a missing, non-finite, zero, or negative value produces no damage jobs.
 
 ## Modifier effect types
 
@@ -405,11 +405,11 @@ For `step: "round"`/`"turn"`, the step count is `current round - first active ro
 
 ### `extra_skill_attack`
 
-This creates an active effect that can be used by eligible normal attacks. `units.applies_to`/`applies_vs` gate the parent normal attack; they do not by themselves define the generated jobs. After the parent normal job is calculated, each `trigger_damage_jobs` entry expands into zero or more immediate `kind: "skill"` jobs.
+This creates an active effect that can be used by eligible normal attacks. `units.applies_to`/`applies_vs` gate the parent normal attack; they do not by themselves define the generated jobs. After the parent normal job is calculated, each `trigger_damage_jobs` entry expands into zero or more generated jobs.
 
 When `duration` is omitted, the active effect defaults to one turn and one applicable attack. Declare `duration` only when the extra attack needs a different lifetime or delay.
 
-`value` becomes the generated job's source multiplier: `100` means `1.0`, `25` means `0.25`, and `200` means `2.0`. The result is a **new full damage calculation**, not that percentage of the parent normal job's final kills or raw damage. It uses the generated source/target pair, round-start troop counts, the ordinary static factors, general active modifiers, and skill-only type modifiers. Normal-only type modifiers do not apply.
+`value` becomes the generated job's source multiplier: `100` means `1.0`, `25` means `0.25`, and `200` means `2.0`. The result is a **new full damage calculation**, not that percentage of the parent normal job's final kills or raw damage. The multiplier is independent of `damage_kind`; that field alone decides whether normal-only, skill-only, or neither family of type modifiers applies.
 
 Requirements:
 
@@ -429,6 +429,8 @@ Each job has this shape:
 }
 ```
 
+An optional `damage_kind` may be `normal`, `skill`, or `extra`, and defaults to `skill`. This is the only field that classifies the generated damage. `extra` receives common damage buckets but neither normal-only nor skill-only buckets, and it is not attributed to `skillKills`.
+
 Supported `source` and `target` selectors are:
 
 | Selector | Meaning |
@@ -447,6 +449,10 @@ If selectors produce multiple sources and targets, the simulator considers their
 The job selector determines the actual side as well as the unit. The runtime does not enforce that a generated source and target are opponents, so scopes misconfigured onto the same side can generate friendly-fire or same-side jobs.
 
 The extra-attack effect is charged once for the parent normal attack if at least one of its jobs runs. If its `value` is non-positive, every job lacks living source/target troops, or every job is skipped because its target is already exhausted, the effect is not charged and can remain available.
+
+When an `extra_skill_attack` is materialized as a carrier's `trigger_effects` child, its completed damage result is captured in the carrier-use round and stored on that child ActiveEffect. The child can deliver that fixed result only when a later normal attack matches its resolved source and target scope. Delivery does not run the damage equation again; if the matching attack never occurs during the child's duration, the pending damage expires with the effect.
+
+Renee's Nightmare Trace uses this form with a one-turn delay: the even-round Lancer attack locks the target and calculates the damage, then the following odd-round Lancer attack delivers it. The precise capture ordering and treatment of defensive state are provisional reverse-engineering assumptions, not confirmed game mechanics.
 
 All jobs emitted by one use read the parent extra-attack effect's same current `value`; its use/evolution is charged only after those jobs finish. Other attack-limited **modifier** effects are different: each generated skill job is a separate modifier use, and modifiers are charged after each job, so a one-job modifier can expire before the second target in the same extra attack is calculated.
 

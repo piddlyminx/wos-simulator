@@ -10,24 +10,35 @@
         "every": 2
       },
       "effects": {
-        "NightmareTrace/1": {
-          "type": "extra_skill_attack",
-          "value": [40, 80, 120, 160, 200],
+        "NightmareTrace/mark": {
           "units": {
             "applies_to": "self.lancer",
             "applies_vs": "enemy.any"
           },
-          "trigger_damage_jobs": [
-            {
-              "source": "use.source",
-              "target": "use.target",
-              "delivery_delay_turns": 1,
-              "damage_kind": "skill"
-            }
-          ],
           "duration": {
             "turns": { "count": 1 },
             "attacks": { "count": 1 }
+          },
+          "trigger_effects": {
+            "NightmareTrace/1": {
+              "type": "extra_skill_attack",
+              "value": [40, 80, 120, 160, 200],
+              "units": {
+                "applies_to": "parent.use.source",
+                "applies_vs": "parent.use.target"
+              },
+              "trigger_damage_jobs": [
+                {
+                  "source": "use.source",
+                  "target": "use.target",
+                  "damage_kind": "normal"
+                }
+              ],
+              "duration": {
+                "turns": { "delay": 1, "count": 1 },
+                "attacks": { "count": 1 }
+              }
+            }
           }
         }
       }

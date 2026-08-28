@@ -1,6 +1,6 @@
 export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
-export type DamageKind = "normal" | "skill";
+export type DamageKind = "normal" | "skill" | "extra";
 export type UnitMask = number;
 export type ActiveEffectKind = "modifier" | "shield" | "extra_attack" | "control" | "battle_order" | "carrier";
 export type SameEffectStacking = "add" | "max";
@@ -32,9 +32,7 @@ export type TriggerDamageJobSelector = SupportedTriggerDamageJobSelector | UnitT
 export interface TriggerDamageJobDefinition {
   source: TriggerDamageJobSelector;
   target: TriggerDamageJobSelector;
-  /** Damage is calculated now, then delivered this many turns later without recalculation. */
-  delivery_delay_turns?: number;
-  /** Damage equation used when the job is calculated. Defaults to skill damage. */
+  /** Damage classification used when the job is calculated. Defaults to skill. */
   damage_kind?: DamageKind;
 }
 
@@ -326,6 +324,8 @@ export interface ActiveEffect {
   uses: number;
   sameEffectStacking: SameEffectStacking;
   triggerEffects?: ResolvedEffectIntentDefinition[];
+  /** Completed damage captured when this runtime effect was materialized and emitted on its later matching attack. */
+  pendingDamageJobs?: PendingDamageJob[];
   effectGroup?: ActiveEffectGroup;
   effectGroupPosition?: number;
 }
@@ -364,6 +364,17 @@ export interface DamageJob {
   takerUnit: UnitType;
   sourceEffectId?: string;
   sourceMultiplier?: number;
+}
+
+export interface DamageResult {
+  kills: number;
+  appliedEffects?: AppliedEffect[];
+  trace?: DamageEquationTrace;
+}
+
+export interface PendingDamageJob {
+  job: DamageJob;
+  result: DamageResult;
 }
 
 export interface CounterDelta {

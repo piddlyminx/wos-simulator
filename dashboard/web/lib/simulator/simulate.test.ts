@@ -370,7 +370,7 @@ test("skill kill summaries show only chance troop skills grouped under matching 
       takerSide: "defender",
       takerUnit: "infantry",
       kills: 4,
-      appliedEffects: [{ kind: "modifier", effectId: "S1:e1", bucket: "source.extraSkill", valuePct: 100, source: "Greg/S1/S1:e1", sourceSide: "attacker", sameEffectStacking: "add" }],
+      appliedEffects: [{ kind: "modifier", effectId: "S1:e1", bucket: "source.multiplier", valuePct: 100, source: "Greg/S1/S1:e1", sourceSide: "attacker", sameEffectStacking: "add" }],
     },
   ];
   sample.trace = {

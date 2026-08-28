@@ -966,10 +966,10 @@ type.skill.damage.down
 type.skill.defense.up
 type.skill.defense.down
 
-source.extraSkill
+source.multiplier
 ```
 
-`troops.count` and `source.extraSkill` are runtime raw factors. Static
+`troops.count` and `source.multiplier` are runtime raw factors. Static
 `troops.base*` buckets are raw factors in the static damage profile. All
 active, passive, type, and player buckets are percentage buckets.
 
@@ -978,7 +978,7 @@ active, passive, type, and player buckets are percentage buckets.
 Populate runtime raw buckets for each damage job:
 
 - current attacker troop count -> `troops.count`
-- extra skill damage multiplier -> `source.extraSkill` for skill jobs
+- generated-job damage multiplier -> `source.multiplier`, independent of damage kind
 
 Populate the static damage profile before damage jobs are evaluated:
 
@@ -1078,7 +1078,7 @@ The default runtime aggregation shape is:
 ```text
 damage =
   troops.count-derived army factor
-  * source.extraSkill
+  * source.multiplier
   * static attacker offense factor
   * static defender defense factor
   * configured numerator aggregation group factors

@@ -28,7 +28,6 @@ export interface Runtime {
   troops: Record<SideId, Record<UnitType, number>>;
   activateEffectsByRound: Array<ActiveEffect[] | undefined>;
   expireEffectsByRound: Array<ActiveEffect[] | undefined>;
-  delayedDamageByRound: Array<ScheduledDamageJob[] | undefined>;
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
   usedEffects: ActiveEffect[];
@@ -44,12 +43,6 @@ export interface Runtime {
     attacks: Record<SideId, Record<UnitType, number>>;
     received: Record<SideId, Record<UnitType, number>>;
   };
-}
-
-export interface ScheduledDamageJob {
-  job: DamageJob;
-  result: DamageResult;
-  sourceEffect: ActiveEffect;
 }
 
 export interface RunLoopOptions {
@@ -80,7 +73,6 @@ export function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rn
     ),
     activateEffectsByRound: [],
     expireEffectsByRound: [],
-    delayedDamageByRound: [],
     usedEffects: [],
     primaryUsedEffects: [],
     staticDamageProfile,
@@ -281,15 +273,18 @@ export function materializeTriggeredEffects(
   useIntent: AttackIntent,
   runtime: Runtime,
   recorder: BattleRecorder
-): void {
+): ActiveEffect[] {
   const skill = parent.sourceSkill;
-  if (!skill || !parent.triggerEffects?.length) return;
+  if (!skill || !parent.triggerEffects?.length) return [];
+  const children: ActiveEffect[] = [];
   for (const childIntent of parent.triggerEffects) {
     const child = activateEffect(skill, childIntent, round, useIntent);
     addActiveEffect(runtime, child);
+    children.push(child);
     runtime.effectActivationCounts[skill.side] += 1;
     recorder.recordSkillEffectActivated(skill);
   }
+  return children;
 }
 
 /** Materialize selected parents' children after the job, then charge all participating effects. */

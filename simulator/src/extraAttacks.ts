@@ -20,19 +20,17 @@ import {
   targetExhausted,
   type DamageJobResult,
   type RunLoopOptions,
-  type Runtime,
-  type ScheduledDamageJob
+  type Runtime
 } from "./runtime";
-import type { BattleRecorder } from "./recorder";
 
-// Spawn, calculate, and charge the extra_skill_attack attacks riding on one normal attack.
+// Spawn, calculate, and charge extra attacks riding on one normal attack.
 // Returns the finalized kills from every generated job in this normal attack's
-// cluster. A job with delivery_delay_turns is still calculated in this cluster, but its
-// fixed result is committed in the later round without another damage calculation.
+// cluster. A triggered child can instead carry damage captured in an earlier round;
+// that fixed result is emitted only when the child's locked normal attack matches.
 // The effect is charged one use only when at least one of its own jobs actually ran.
 // Spawning reads only round-start state and the effect's own gates, so running earlier
 // effects' jobs first cannot change what later effects spawn.
-export function processExtraSkillAttacks(
+export function processExtraAttacks(
   normalAttack: DamageJob,
   intent: AttackIntent,
   runtime: Runtime,
@@ -41,11 +39,12 @@ export function processExtraSkillAttacks(
   roundTargetDamage: Record<SideId, Record<UnitType, number>>,
   loopOptions: RunLoopOptions,
   results: DamageJobResult[]
-): number {
-  if (runtime.effectIndex.extraAttacks.length === 0) return 0;
+): { totalKills: number; skillKills: number } {
+  if (runtime.effectIndex.extraAttacks.length === 0) return { totalKills: 0, skillKills: 0 };
   const { round, roundStartTroops } = normalAttack;
   const recorder = damageJobOptions.recorder;
-  let triggeredKills = 0;
+  let totalKills = 0;
+  let skillKills = 0;
   // Snapshot the applicable effects: charging an effect below may expire it out of the live index.
   const effects = runtime.effectIndex.extraAttacks.filter(
     (effect) => extraAttackEffectAppliesToNormalAttack(effect, normalAttack) && advanceEffectAttackDelay(effect)
@@ -54,58 +53,67 @@ export function processExtraSkillAttacks(
     const sourceEffectId = effect.source.effectId ?? effect.intent.id;
     let processedJobCount = 0;
     let firstProcessedJob: DamageJob | undefined;
-    for (const definition of effect.triggerDamageJobs ?? []) {
-      const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
-      const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
-      const multiplier = effect.getCurrentValue(round) / 100;
-      const deliveryDelay = definition.delivery_delay_turns ?? 0;
-      if (multiplier <= 0) continue;
-      for (const source of sources) {
-        if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
-        for (const target of targets) {
-          if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
-          const calculationJob: DamageJob = {
-            round,
-            kind: definition.damage_kind ?? "skill",
-            roundStartTroops,
-            dealerSide: source.side,
-            dealerUnit: source.unit,
-            takerSide: target.side,
-            takerUnit: target.unit,
-            sourceEffectId,
-            sourceMultiplier: multiplier
-          };
-          if (deliveryDelay === 0 && loopOptions.capRoundKills && targetExhausted(calculationJob, roundStartTroops, roundTargetDamage)) continue;
-          if (deliveryDelay === 0) recorder.recordScheduledDamageJob(calculationJob);
-          const result = calculateDamageJob(
-            calculationJob,
-            fighters,
-            deliveryDelay === 0 ? damageJobOptions : { ...damageJobOptions, capToTakerTroops: false }
+    if (effect.pendingDamageJobs) {
+      for (const pending of effect.pendingDamageJobs) {
+        const deliveryJob: DamageJob = {
+          ...pending.job,
+          round,
+          calculationRound: pending.job.round
+        };
+        if (loopOptions.capRoundKills && targetExhausted(deliveryJob, roundStartTroops, roundTargetDamage)) continue;
+        recorder.recordScheduledDamageJob(deliveryJob);
+        if (loopOptions.capRoundKills) {
+          capJobToRemainingTarget(pending.result, deliveryJob, roundStartTroops, roundTargetDamage, recorder);
+        } else if (loopOptions.capJobKills) {
+          pending.result.kills = Math.min(
+            pending.result.kills,
+            Math.max(0, roundStartTroops[deliveryJob.takerSide][deliveryJob.takerUnit] ?? 0)
           );
-          if (deliveryDelay === 0) {
-            recorder.recordSkillDamageJob(calculationJob, effect);
-            if (loopOptions.capRoundKills) {
-              capJobToRemainingTarget(result, calculationJob, roundStartTroops, roundTargetDamage, recorder);
-            }
-            results.push({ job: calculationJob, result, intent });
-            triggeredKills += result.kills;
-          } else {
-            const deliveryRound = round + deliveryDelay;
-            const deliveryJob: DamageJob = {
-              ...calculationJob,
-              round: deliveryRound,
-              calculationRound: round
+          recorder.recordFinalKills(pending.result);
+        }
+        results.push({ job: deliveryJob, result: pending.result, intent });
+        totalKills += pending.result.kills;
+        processedJobCount += 1;
+        firstProcessedJob ??= deliveryJob;
+      }
+    } else {
+      for (const definition of effect.triggerDamageJobs ?? []) {
+        const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
+        const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
+        const multiplier = effect.getCurrentValue(round) / 100;
+        if (multiplier <= 0) continue;
+        for (const source of sources) {
+          if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
+          for (const target of targets) {
+            if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
+            const job: DamageJob = {
+              round,
+              kind: definition.damage_kind ?? "skill",
+              roundStartTroops,
+              dealerSide: source.side,
+              dealerUnit: source.unit,
+              takerSide: target.side,
+              takerUnit: target.unit,
+              sourceEffectId,
+              sourceMultiplier: multiplier
             };
-            scheduleDelayedDamage(runtime, deliveryRound, {
-              job: deliveryJob,
-              result,
-              sourceEffect: effect
-            });
+            if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
+            recorder.recordScheduledDamageJob(job);
+            const result = calculateDamageJob(job, fighters, damageJobOptions);
+            if (job.kind === "skill") recorder.recordSkillDamageJob(job, effect);
+            if (loopOptions.capRoundKills) {
+              capJobToRemainingTarget(result, job, roundStartTroops, roundTargetDamage, recorder);
+            }
+            results.push({ job, result, intent });
+            totalKills += result.kills;
+            if (job.kind === "skill") {
+              skillKills += result.kills;
+              runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
+            }
+            processedJobCount += 1;
+            firstProcessedJob ??= job;
+            chargeUsedEffectsForJob(runtime, job, recorder);
           }
-          processedJobCount += 1;
-          firstProcessedJob ??= calculationJob;
-          runtime.extraSkillAttackJobsByEffect[sourceEffectId] = (runtime.extraSkillAttackJobsByEffect[sourceEffectId] ?? 0) + 1;
-          chargeUsedEffectsForJob(runtime, calculationJob, recorder);
         }
       }
     }
@@ -115,41 +123,48 @@ export function processExtraSkillAttacks(
       recorder.recordExtraAttack(normalAttack, effect, processedJobCount);
     }
   }
-  return triggeredKills;
+  return { totalKills, skillKills };
 }
 
-function scheduleDelayedDamage(runtime: Runtime, round: number, entry: ScheduledDamageJob): void {
-  const scheduled = runtime.delayedDamageByRound[round];
-  if (scheduled) scheduled.push(entry);
-  else runtime.delayedDamageByRound[round] = [entry];
-}
-
-export function deliverScheduledDamage(
-  round: number,
-  runtime: Runtime,
-  roundStartTroops: DamageJob["roundStartTroops"],
-  roundTargetDamage: Record<SideId, Record<UnitType, number>>,
-  loopOptions: RunLoopOptions,
-  recorder: BattleRecorder
-): DamageJobResult[] {
-  const scheduled = runtime.delayedDamageByRound[round];
-  if (!scheduled) return [];
-  runtime.delayedDamageByRound[round] = undefined;
-  const delivered: DamageJobResult[] = [];
-  for (const entry of scheduled) {
-    const { job, result } = entry;
-    recorder.recordScheduledDamageJob(job);
-    if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
-    recorder.recordSkillDamageJob(job, entry.sourceEffect);
-    if (loopOptions.capRoundKills) {
-      capJobToRemainingTarget(result, job, roundStartTroops, roundTargetDamage, recorder);
-    } else if (loopOptions.capJobKills) {
-      result.kills = Math.min(result.kills, Math.max(0, roundStartTroops[job.takerSide][job.takerUnit] ?? 0));
-      recorder.recordFinalKills(result);
+export function captureTriggeredExtraDamage(
+  effects: ActiveEffect[],
+  normalAttack: DamageJob,
+  fighters: Record<SideId, ResolvedFighter>,
+  damageJobOptions: DamageJobOptions,
+  runtime: Runtime
+): void {
+  const { round, roundStartTroops } = normalAttack;
+  for (const effect of effects) {
+    if (effect.expired || effect.intent.type !== "extra_skill_attack" || effect.pendingDamageJobs) continue;
+    const multiplier = effect.getCurrentValue(round) / 100;
+    if (multiplier <= 0) continue;
+    const pending = [];
+    for (const definition of effect.triggerDamageJobs ?? []) {
+      const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
+      const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
+      for (const source of sources) {
+        if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
+        for (const target of targets) {
+          if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
+          const job: DamageJob = {
+            round,
+            kind: definition.damage_kind ?? "skill",
+            roundStartTroops,
+            dealerSide: source.side,
+            dealerUnit: source.unit,
+            takerSide: target.side,
+            takerUnit: target.unit,
+            sourceEffectId: effect.source.effectId ?? effect.intent.id,
+            sourceMultiplier: multiplier
+          };
+          const result = calculateDamageJob(job, fighters, { ...damageJobOptions, capToTakerTroops: false });
+          pending.push({ job, result });
+          chargeUsedEffectsForJob(runtime, job, damageJobOptions.recorder);
+        }
+      }
     }
-    delivered.push({ job, result });
+    if (pending.length > 0) effect.pendingDamageJobs = pending;
   }
-  return delivered;
 }
 
 function extraAttackEffectAppliesToNormalAttack(effect: ActiveEffect, normalAttack: DamageJob): boolean {

@@ -1,5 +1,13 @@
 import assert from "node:assert/strict";
-import { appendFile, mkdtemp, readdir, writeFile } from "node:fs/promises";
+import {
+  appendFile,
+  mkdtemp,
+  readFile,
+  readdir,
+  stat,
+  utimes,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
@@ -326,4 +334,67 @@ test("cleanup enforces age and size limits but preserves kept runs", async () =>
   });
   assert.equal(finalCleanup.deleted_runs, 1);
   assert.equal(await store.readSimulationRun(kept.id), null);
+});
+
+test("cleanup reconciles valid run files missing from the index", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
+  process.env.SIM_RUNS_DIR = dir;
+  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
+
+  const indexed = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const omitted = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
+  await store.listSimulationRunsPage({ limit: 20 });
+
+  const indexPath = path.join(dir, ".runs-index.json");
+  const index = JSON.parse(await readFile(indexPath, "utf8")) as {
+    version: number;
+    runs: Array<{ id: string }>;
+  };
+  index.runs = index.runs.filter((record) => record.id !== omitted.id);
+  await writeFile(indexPath, `${JSON.stringify(index)}\n`, "utf8");
+
+  const cleanup = await store.cleanupSimulationRuns({
+    retentionDays: 30,
+    maxStorageBytes: 0,
+    now: Date.now() + 31 * 24 * 60 * 60 * 1000,
+  });
+
+  assert.equal(cleanup.deleted_runs, 2);
+  assert.equal(await store.readSimulationRun(indexed.id), null);
+  assert.equal(await store.readSimulationRun(omitted.id), null);
+});
+
+test("locked index updates bypass a stale process-local cache", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
+  process.env.SIM_RUNS_DIR = dir;
+  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
+
+  const first = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const indexPath = path.join(dir, ".runs-index.json");
+  const stableTime = new Date("2020-01-01T00:00:00.000Z");
+  await utimes(indexPath, stableTime, stableTime);
+  await store.listSimulationRunsPage({ limit: 20 });
+
+  const before = await stat(indexPath);
+  const externalIndex = JSON.parse(await readFile(indexPath, "utf8")) as {
+    version: number;
+    runs: Array<{ id: string; title: string }>;
+  };
+  const externalRecord = externalIndex.runs.find((record) => record.id === first.id)!;
+  externalRecord.title = `X${externalRecord.title.slice(1)}`;
+  const externalSerialized = `${JSON.stringify(externalIndex)}\n`;
+  assert.equal(Buffer.byteLength(externalSerialized), before.size);
+  await writeFile(indexPath, externalSerialized, "utf8");
+  await utimes(indexPath, stableTime, stableTime);
+
+  await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
+
+  const after = JSON.parse(await readFile(indexPath, "utf8")) as {
+    runs: Array<{ id: string; title: string }>;
+  };
+  assert.equal(
+    after.runs.find((record) => record.id === first.id)?.title,
+    externalRecord.title,
+  );
+  assert.equal(after.runs.length, 2);
 });
