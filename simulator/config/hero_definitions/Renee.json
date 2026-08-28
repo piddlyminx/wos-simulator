@@ -10,29 +10,24 @@
         "every": 2
       },
       "effects": {
-        "NightmareTrace/mark": {
+        "NightmareTrace/1": {
+          "type": "extra_skill_attack",
+          "value": [40, 80, 120, 160, 200],
           "units": {
             "applies_to": "self.lancer",
             "applies_vs": "enemy.any"
           },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target",
+              "delivery_delay_turns": 1,
+              "damage_kind": "skill"
+            }
+          ],
           "duration": {
             "turns": { "count": 1 },
             "attacks": { "count": 1 }
-          },
-          "trigger_effects": {
-            "NightmareTrace/1": {
-              "type": "active.hero.damageTaken.up",
-              "value": [40, 80, 120, 160, 200],
-              "units": {
-                "applies_to": "parent.use.target",
-                "applies_vs": "parent.use.source"
-              },
-              "duration": {
-                "turns": { "delay": 1, "count": 1 },
-                "attacks": { "count": 1 }
-              },
-              "same_effect_stacking": "max"
-            }
           }
         }
       }
@@ -55,11 +50,11 @@
           },
           "trigger_effects": {
             "Dreamcatcher/1": {
-              "type": "active.hero.damageTaken.up",
+              "type": "type.marked_target.damage.up",
               "value": [30, 60, 90, 120, 150],
               "units": {
-                "applies_to": "parent.use.target",
-                "applies_vs": "parent.use.source"
+                "applies_to": "parent.use.source",
+                "applies_vs": "parent.use.target"
               },
               "duration": {
                 "turns": { "delay": 1, "count": 1 }
@@ -88,11 +83,11 @@
           },
           "trigger_effects": {
             "Dreamslice/1": {
-              "type": "active.hero.damageTaken.up",
+              "type": "type.marked_target.damage.up",
               "value": [15, 30, 45, 60, 75],
               "units": {
-                "applies_to": "parent.use.target",
-                "applies_vs": "any"
+                "applies_to": "all",
+                "applies_vs": "parent.use.target"
               },
               "duration": {
                 "turns": { "delay": 1, "count": 1 }
