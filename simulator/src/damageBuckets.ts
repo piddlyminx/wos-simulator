@@ -68,6 +68,7 @@ export const DYNAMIC_BUCKETS = [
   { name: "type.all.damage.up", jobSide: "dealer", update: "multiply_pct_factor", placement: "numerator", effectBucket: true },
   { name: "type.single_target.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "type.single_target.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "type.marked_target.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
   { name: "type.normal.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", damageKind: "normal", effectBucket: true },
   { name: "type.normal.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", damageKind: "normal", effectBucket: true },
   { name: "type.normal.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", damageKind: "normal", effectBucket: true },

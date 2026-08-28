@@ -728,6 +728,78 @@ test("attack-duration effects with a round cap expire at the end of their active
   assert.equal((round4LancerAttack?.appliedEffects ?? []).some((effect) => effect.effectId === "mark"), false);
 });
 
+test("Renee snapshots Nightmare Trace on the even turn and only delivers the fixed damage next turn", () => {
+  const result = runOnce(
+    {
+      maxRounds: 3,
+      attacker: {
+        troops: { lancer_t1: 1000000 },
+        heroes: { Renee: { skill_1: 1, skill_2: 1, skill_3: 1 } }
+      },
+      defender: {
+        troops: { marksman_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    loadSimulatorConfig(),
+    { mode: "trace" }
+  );
+
+  const attackerJobs = result.attacks.filter((attack) => attack.dealerSide === "attacker");
+  const roundTwoNormal = attackerJobs.find((attack) => attack.round === 2 && attack.kind === "normal");
+  const delayed = attackerJobs.find((attack) => attack.sourceEffectId === "NightmareTrace/1");
+  const roundThreeNormal = attackerJobs.find((attack) => attack.round === 3 && attack.kind === "normal");
+
+  assert.equal(attackerJobs.some((attack) => attack.round === 2 && attack.kind === "skill"), false);
+  assert.equal(delayed?.round, 3);
+  assert.equal(delayed?.calculationRound, 2);
+  assert.ok(Math.abs(delayed!.kills - roundTwoNormal!.kills * 0.4) < 1e-9);
+  assert.equal(delayed?.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
+  assert.equal(delayed?.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 0);
+  assert.equal(roundThreeNormal?.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
+  assert.equal(roundThreeNormal?.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 45);
+
+  const nightmareTrace = result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace");
+  assert.ok(Math.abs(nightmareTrace!.skillKills - delayed!.kills) < 1e-9);
+});
+
+test("Renee's marked-target bucket multiplies separately from the single-target counterfactual", () => {
+  const base = loadSimulatorConfig();
+  const heroDefinitions = structuredClone(base.heroDefinitions);
+  const reneeSkills = heroDefinitions.Renee.skills;
+  for (const [skillId, effectId] of [["Dreamcatcher", "Dreamcatcher/1"], ["Dreamslice", "Dreamslice/1"]] as const) {
+    reneeSkills[skillId].effects[`${skillId}/mark`].trigger_effects![effectId].type = "type.single_target.damage.up";
+  }
+  const singleTargetConfig = buildSimulatorConfig({
+    heroGenerationStats: base.heroGenerationStats,
+    troopSkills: base.troopSkills,
+    heroDefinitions
+  });
+  const input: BattleInput = {
+    maxRounds: 3,
+    attacker: {
+      troops: { lancer_t1: 1000000 },
+      heroes: { Renee: { skill_1: 1, skill_2: 1, skill_3: 1 } }
+    },
+    defender: {
+      troops: { marksman_t1: 1000000 },
+      heroes: {}
+    }
+  };
+
+  const shared = runOnce(input, singleTargetConfig, { mode: "trace" });
+  const separate = runOnce(input, base, { mode: "trace" });
+  const sharedNormal = shared.attacks.find((attack) => attack.round === 3 && attack.kind === "normal" && attack.dealerSide === "attacker")!;
+  const separateNormal = separate.attacks.find((attack) => attack.round === 3 && attack.kind === "normal" && attack.dealerSide === "attacker")!;
+  const separateDelayed = separate.attacks.find((attack) => attack.sourceEffectId === "NightmareTrace/1")!;
+
+  assert.equal(sharedNormal.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 55);
+  assert.equal(separateNormal.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
+  assert.equal(separateNormal.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 45);
+  assert.ok(Math.abs(separateNormal.kills / sharedNormal.kills - (1.1 * 1.45) / 1.55) < 1e-12);
+  assert.equal(separateDelayed.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 0);
+});
+
 test("attack-duration effects with a round cap expire after one applicable attack", () => {
   const result = runOnce(
     {
