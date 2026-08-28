@@ -294,21 +294,41 @@ test("loadSimulatorConfig rejects per-job extra skill damage multipliers", () =>
   assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key multiplier/i);
 });
 
-test("loadSimulatorConfig validates delayed damage job timing and kind", () => {
-  const invalidDelay = writeConfigWithTroopEffect({
+test("loadSimulatorConfig accepts extra damage jobs and rejects removed delay metadata or unknown kinds", () => {
+  const validExtra = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
     value: 100,
     units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
-    trigger_damage_jobs: [{ source: "use.source", target: "use.target", delivery_delay_turns: 1.5 }]
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }]
+  });
+  const removedDelay = writeConfigWithTroopEffect({
+    type: "extra_skill_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", delivery_delay_turns: 1 }]
   });
   const invalidKind = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
     value: 100,
     units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
-    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" as never }]
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "mystery" }]
   });
-  assert.throws(() => loadSimulatorConfigFromDir(invalidDelay), /delivery_delay_turns.*integer >= 0/i);
-  assert.throws(() => loadSimulatorConfigFromDir(invalidKind), /damage_kind.*normal.*skill/i);
+
+  assert.doesNotThrow(() => loadSimulatorConfigFromDir(validExtra));
+  assert.throws(() => loadSimulatorConfigFromDir(removedDelay), /unknown trigger_damage_jobs key delivery_delay_turns/i);
+  assert.throws(() => loadSimulatorConfigFromDir(invalidKind), /damage_kind.*normal.*skill.*extra/i);
+});
+
+test("loadSimulatorConfig reports the removed extra_attack effect type as unsupported", () => {
+  const root = writeConfigWithTroopEffect({
+    type: "extra_attack",
+    value: 100,
+    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }]
+  });
+
+  const config = loadSimulatorConfigFromDir(root);
+  assert.equal(config.diagnostics.unsupportedEffects.some((effect) => effect.type === "extra_attack"), true);
 });
 
 test("loadSimulatorConfig rejects per-job skill reporting overrides", () => {

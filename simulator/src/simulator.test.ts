@@ -363,6 +363,25 @@ test("simulateBearBattle scores uncapped per-attack damage", () => {
   assert.ok(damage.score > defensive.score);
 });
 
+test("simulateBearBattle includes carried extra damage in score without treating it as skill kills", () => {
+  const result = simulateBearBattle(
+    {
+      troops: { lancer_t1: 1000 },
+      stats: {},
+      heroes: { Renee: { skill_1: 1 } }
+    },
+    loadSimulatorConfig(),
+    "bear-renee-extra"
+  );
+
+  const attackerDamage = result.attacks
+    .filter((attack) => attack.dealerSide === "attacker")
+    .reduce((total, attack) => total + attack.kills, 0);
+  assert.equal(result.score, attackerDamage);
+  assert.equal(result.attacks.some((attack) => attack.kind === "extra"), true);
+  assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace")?.skillKills, 0);
+});
+
 test("runPrepared calculates all same-round damage from the round-start troop snapshot", () => {
   const config = loadSimulatorConfig();
   const result = runOnce(
@@ -728,7 +747,66 @@ test("attack-duration effects with a round cap expire at the end of their active
   assert.equal((round4LancerAttack?.appliedEffects ?? []).some((effect) => effect.effectId === "mark"), false);
 });
 
-test("Renee snapshots Nightmare Trace on the even turn and only delivers the fixed damage next turn", () => {
+test("carried extra damage expires when the next normal attack does not match its locked target", () => {
+  const result = runOnce(
+    {
+      maxRounds: 3,
+      attacker: {
+        troops: { lancer_t1: 1000000 },
+        heroes: { DreamLancer: { skill_1: 1, skill_2: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000, marksman_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      DreamLancer: {
+        name: "DreamLancer",
+        troop_type: "lancer",
+        skills: {
+          EvenTurnAmbusher: {
+            trigger: { type: "turn", every: 2 },
+            effects: {
+              order: {
+                type: "attack_order",
+                value: ["marksman", "infantry", "lancer"],
+                units: { applies_to: "lancer", applies_vs: "marksman" },
+                duration: { turns: { count: 1 } }
+              }
+            }
+          },
+          NightmareTrace: {
+            trigger: { type: "turn", every: 2 },
+            effects: {
+              mark: {
+                units: { applies_to: "self.lancer", applies_vs: "enemy.any" },
+                duration: { turns: { count: 1 }, attacks: { count: 1 } },
+                trigger_effects: {
+                  delayed: {
+                    type: "extra_skill_attack",
+                    value: 40,
+                    units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" },
+                    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }],
+                    duration: { turns: { delay: 1, count: 1 }, attacks: { count: 1 } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  const lancerAttacks = result.attacks.filter((attack) => attack.dealerSide === "attacker" && attack.dealerUnit === "lancer");
+  assert.equal(lancerAttacks.find((attack) => attack.round === 2 && attack.kind === "normal")?.takerUnit, "marksman");
+  assert.equal(lancerAttacks.find((attack) => attack.round === 3 && attack.kind === "normal")?.takerUnit, "infantry");
+  assert.equal(lancerAttacks.some((attack) => attack.sourceEffectId === "delayed"), false);
+});
+
+test("Renee snapshots Nightmare Trace as extra damage on the even turn and only delivers it next turn", () => {
   const result = runOnce(
     {
       maxRounds: 3,
@@ -751,6 +829,7 @@ test("Renee snapshots Nightmare Trace on the even turn and only delivers the fix
   const roundThreeNormal = attackerJobs.find((attack) => attack.round === 3 && attack.kind === "normal");
 
   assert.equal(attackerJobs.some((attack) => attack.round === 2 && attack.kind === "skill"), false);
+  assert.equal(delayed?.kind, "extra");
   assert.equal(delayed?.round, 3);
   assert.equal(delayed?.calculationRound, 2);
   assert.ok(Math.abs(delayed!.kills - roundTwoNormal!.kills * 0.4) < 1e-9);
@@ -760,7 +839,34 @@ test("Renee snapshots Nightmare Trace on the even turn and only delivers the fix
   assert.equal(roundThreeNormal?.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 45);
 
   const nightmareTrace = result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace");
-  assert.ok(Math.abs(nightmareTrace!.skillKills - delayed!.kills) < 1e-9);
+  assert.equal(nightmareTrace?.skillKills, 0);
+});
+
+test("Wu Ming skill-damage amplification does not affect Renee's carried extra damage", () => {
+  const result = runOnce(
+    {
+      maxRounds: 3,
+      attacker: {
+        troops: { lancer_t1: 1000000 },
+        heroes: {
+          WuMing: { skill_2: 1, skill_3: 1 },
+          Renee: { skill_1: 1 }
+        }
+      },
+      defender: {
+        troops: { marksman_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    loadSimulatorConfig(),
+    { mode: "trace" }
+  );
+
+  const delayed = result.attacks.find((attack) => attack.sourceEffectId === "NightmareTrace/1");
+  assert.equal(delayed?.kind, "extra");
+  assert.equal(delayed?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 4);
+  assert.equal(delayed?.trace?.aggregationGroups["type.skill.damage.up"], undefined);
+  assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace")?.skillKills, 0);
 });
 
 test("Renee's marked-target bucket multiplies separately from the single-target counterfactual", () => {

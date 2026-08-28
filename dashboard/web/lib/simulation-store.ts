@@ -296,7 +296,9 @@ async function readSimulationRunListItem(
   };
 }
 
-async function collectRunCandidates(): Promise<{
+async function collectRunCandidates(
+  excludedIds: ReadonlySet<string> = new Set(),
+): Promise<{
   candidates: RunCandidate[];
   keptIds: Set<string>;
 }> {
@@ -331,6 +333,7 @@ async function collectRunCandidates(): Promise<{
     const id = name.slice(0, -".meta.json".length);
     if (!ID_RE.test(id) || !fileNames.has(`${id}.json.gz`)) continue;
     compressedIds.add(id);
+    if (excludedIds.has(id)) continue;
     descriptors.push({
       id,
       headerPath: path.join(SIM_RUNS_DIR, name),
@@ -341,7 +344,7 @@ async function collectRunCandidates(): Promise<{
   for (const name of fileNames) {
     if (!name.endsWith(".json") || name.endsWith(".meta.json")) continue;
     const id = name.slice(0, -".json".length);
-    if (!ID_RE.test(id) || compressedIds.has(id)) continue;
+    if (!ID_RE.test(id) || compressedIds.has(id) || excludedIds.has(id)) continue;
     const filePath = path.join(SIM_RUNS_DIR, name);
     descriptors.push({
       id,
@@ -372,10 +375,13 @@ async function writeAtomic(filePath: string, data: string | Buffer): Promise<voi
   await fs.rename(tempPath, filePath);
 }
 
-async function readSimulationRunIndex(): Promise<SimulationRunIndex | null> {
+async function readSimulationRunIndex(
+  options: { bypassCache?: boolean } = {},
+): Promise<SimulationRunIndex | null> {
   try {
     const stats = await fs.stat(runIndexPath());
     if (
+      !options.bypassCache &&
       runIndexCache?.ino === stats.ino &&
       runIndexCache.modifiedAt === stats.mtimeMs &&
       runIndexCache.size === stats.size
@@ -431,8 +437,10 @@ async function candidateSize(candidate: RunCandidate): Promise<number> {
   return sizes.reduce((sum, size) => sum + size, 0);
 }
 
-async function buildSimulationRunIndexUnlocked(): Promise<SimulationRunIndex> {
-  const { candidates, keptIds } = await collectRunCandidates();
+async function buildSimulationRunRecords(
+  candidates: RunCandidate[],
+  keptIds: ReadonlySet<string>,
+): Promise<SimulationRunIndexRecord[]> {
   const records: SimulationRunIndexRecord[] = [];
   for (
     let start = 0;
@@ -466,7 +474,26 @@ async function buildSimulationRunIndexUnlocked(): Promise<SimulationRunIndex> {
       if (record) records.push(record);
     }
   }
+  return records;
+}
+
+async function buildSimulationRunIndexUnlocked(): Promise<SimulationRunIndex> {
+  const { candidates, keptIds } = await collectRunCandidates();
+  const records = await buildSimulationRunRecords(candidates, keptIds);
   return { version: RUN_INDEX_VERSION, runs: sortIndexRecords(records) };
+}
+
+async function reconcileSimulationRunIndexUnlocked(
+  index: SimulationRunIndex,
+): Promise<SimulationRunIndex> {
+  const indexedIds = new Set(index.runs.map((record) => record.id));
+  const { candidates, keptIds } = await collectRunCandidates(indexedIds);
+  if (candidates.length === 0) return index;
+  const recovered = await buildSimulationRunRecords(candidates, keptIds);
+  return {
+    version: RUN_INDEX_VERSION,
+    runs: sortIndexRecords([...index.runs, ...recovered]),
+  };
 }
 
 async function loadOrBuildSimulationRunIndex(): Promise<SimulationRunIndex> {
@@ -474,7 +501,7 @@ async function loadOrBuildSimulationRunIndex(): Promise<SimulationRunIndex> {
   if (existing) return existing;
   mkdirSync(SIM_RUNS_DIR, { recursive: true });
   return withDirectoryLock(SIM_RUNS_DIR, async () => {
-    const current = await readSimulationRunIndex();
+    const current = await readSimulationRunIndex({ bypassCache: true });
     if (current) return current;
     const built = await buildSimulationRunIndexUnlocked();
     await writeSimulationRunIndex(built);
@@ -494,8 +521,9 @@ export async function rebuildSimulationRunIndex(): Promise<number> {
 async function updateExistingSimulationRunIndex(
   update: (records: SimulationRunIndexRecord[]) => SimulationRunIndexRecord[],
 ): Promise<void> {
-  const index = await readSimulationRunIndex();
-  if (!index) return;
+  const index =
+    (await readSimulationRunIndex({ bypassCache: true })) ??
+    (await buildSimulationRunIndexUnlocked());
   await writeSimulationRunIndex({
     version: RUN_INDEX_VERSION,
     runs: update([...index.runs]),
@@ -599,7 +627,7 @@ export async function setSimulationRunKept(
   assertRunId(id);
   mkdirSync(SIM_RUNS_DIR, { recursive: true });
   return withDirectoryLock(SIM_RUNS_DIR, async () => {
-    const index = await readSimulationRunIndex();
+    const index = await readSimulationRunIndex({ bypassCache: true });
     const indexed = index?.runs.find((record) => record.id === id);
     const exists = indexed
       ? true
@@ -709,9 +737,10 @@ export async function cleanupSimulationRuns(
     const cutoff = retentionDays > 0
       ? now - retentionDays * 24 * 60 * 60 * 1000
       : Number.NEGATIVE_INFINITY;
-    const index =
-      (await readSimulationRunIndex()) ??
-      (await buildSimulationRunIndexUnlocked());
+    const existingIndex = await readSimulationRunIndex({ bypassCache: true });
+    const index = existingIndex
+      ? await reconcileSimulationRunIndexUnlocked(existingIndex)
+      : await buildSimulationRunIndexUnlocked();
     const oldestFirst = [...index.runs].sort((a, b) => {
       const aCreated = Date.parse(a.created_at);
       const bCreated = Date.parse(b.created_at);

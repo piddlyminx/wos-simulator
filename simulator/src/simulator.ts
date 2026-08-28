@@ -48,7 +48,7 @@ import {
   type RunLoopOptions,
   type Runtime
 } from "./runtime";
-import { deliverScheduledDamage, processExtraSkillAttacks } from "./extraAttacks";
+import { captureTriggeredExtraDamage, processExtraAttacks } from "./extraAttacks";
 
 // Re-exported so the public battle API stays importable from one module.
 export { prepareBattle, type CompiledBattle } from "./prepare";
@@ -257,23 +257,6 @@ function runLoop(
     const results: DamageJobResult[] = [];
     const cancelled: CancelledAttack[] = [];
     const roundTargetDamage = emptyRoundTargetDamage();
-    const delayedResults = deliverScheduledDamage(
-      round,
-      runtime,
-      roundStartTroops,
-      roundTargetDamage,
-      loopOptions,
-      recorder
-    );
-    results.push(...delayedResults);
-    if (loopOptions.scoreSide) {
-      for (const { job, result } of delayedResults) {
-        if (job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-          score += result.kills;
-        }
-      }
-    }
-
     // Resolve each normal attack as one procedural cluster. Later attacks observe effects
     // produced by earlier attacks; no synthetic global attack-declaration phase exists.
     const orderIndexBySide: Record<SideId, number> = { attacker: 0, defender: 0 };
@@ -323,7 +306,7 @@ function runLoop(
           ? triggerAttackSkills(round, matchingTriggerSkills, runtime, recorder, intent)
           : undefined;
         const dodge = applicableControl(job, runtime, "dodge");
-        fireApplicableCarriers(round, job, intent, runtime, recorder);
+        const triggeredChildren = fireApplicableCarriers(round, job, intent, runtime, recorder);
 
         let normalKills = 0;
         if (dodge) {
@@ -342,10 +325,11 @@ function runLoop(
           results.push({ job, result: normalResult, intent });
         }
 
+        captureTriggeredExtraDamage(triggeredChildren, job, fighters, damageJobOptions, runtime);
         advanceNormalAttackCounters(intent, runtime);
-        const triggeredKills = processExtraSkillAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+        const extraAttacks = processExtraAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
         if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-          score += triggeredKills;
+          score += extraAttacks.totalKills;
         }
         if (deferredEffects) {
           materializeDeferredEffects(
@@ -353,7 +337,7 @@ function runLoop(
             round,
             intent,
             normalKills,
-            triggeredKills,
+            extraAttacks.skillKills,
             sourceAttackProtectionBasis(job, fighters, initialArmyCount),
             runtime,
             recorder
@@ -524,9 +508,10 @@ function fireApplicableCarriers(
   intent: AttackIntent,
   runtime: Runtime,
   recorder: BattleRecorder
-): void {
+): ActiveEffect[] {
   const carriers = runtime.effectIndex.carriers;
   const originalCount = carriers.length;
+  const children: ActiveEffect[] = [];
   let index = 0;
   for (let inspected = 0; inspected < originalCount; inspected += 1) {
     const carrier = carriers[index];
@@ -537,13 +522,14 @@ function fireApplicableCarriers(
       unitMaskHas(carrier.appliesVs.units, job.takerUnit) &&
       advanceEffectAttackDelay(carrier);
     if (matches) {
-      materializeTriggeredEffects(carrier, round, intent, runtime, recorder);
+      children.push(...materializeTriggeredEffects(carrier, round, intent, runtime, recorder));
       chargeEffectUse(runtime, carrier);
     }
     // chargeEffectUse may have removed the current carrier. Keep the same index
     // in that case so the shifted original entry is inspected next.
     if (carriers[index] === carrier) index += 1;
   }
+  return children;
 }
 
 function advanceNormalAttackCounters(intent: AttackIntent, runtime: Runtime): void {

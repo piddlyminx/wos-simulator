@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { createEffectIndex, damageJobSlot, damageShapeSlotsForEffect, expireEffectIndex, indexEffect } from "./effectIndex";
+import { createEffectIndex, damageJobSlot, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, expireEffectIndex, indexEffect } from "./effectIndex";
 import { resolvedEffectScopeKey } from "./effects";
 import { unitMask } from "./types";
 import type { ActiveEffect, DamageJob } from "./types";
@@ -91,7 +91,7 @@ function effect(type: string): ActiveEffect {
 
 function preparedIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectIndex> {
   const groups: NonNullable<ActiveEffect["effectGroup"]>[] = [];
-  const byShape: NonNullable<ActiveEffect["effectGroup"]>[][] = Array.from({ length: 72 }, () => []);
+  const byShape: NonNullable<ActiveEffect["effectGroup"]>[][] = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS }, () => []);
   const byResolvedGroup = new Map<string, NonNullable<ActiveEffect["effectGroup"]>>();
   for (const effect of effects) {
     const slots = damageShapeSlotsForEffect(effect);

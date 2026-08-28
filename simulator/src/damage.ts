@@ -4,6 +4,7 @@ import type {
   AppliedEffect,
   DamageEquationTrace,
   DamageJob,
+  DamageResult,
   ResolvedFighter,
   SideId,
   UnitType
@@ -68,17 +69,14 @@ export type StaticDamageProfile = Record<SideId, Record<UnitType, StaticDamagePr
 // Lean result of a single damage job: kills plus whatever the selected recorder requested.
 // Usage charging happens via options.usedEffects (every mode); the heavy per-attack
 // AttackOutcome is assembled by the recorder, not here.
-export interface DamageResult {
-  kills: number;
-  appliedEffects?: AppliedEffect[];
-  trace?: DamageEquationTrace;
-}
+export type { DamageResult } from "./types";
 
 const DYNAMIC_FACTOR_TERMS = compileDamageTerms(DYNAMIC_BUCKETS);
 const STATIC_FACTOR_TERMS = compileDamageTerms(STATIC_BUCKETS);
 const DYNAMIC_EXPRESSIONS = {
   normal: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "normal" }),
-  skill: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "skill" })
+  skill: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "skill" }),
+  extra: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "extra" })
 };
 const STATIC_EXPRESSIONS = {
   dealer: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "dealer" }),
@@ -140,7 +138,7 @@ export function calculateDamageJob(
   const armyTerm = ceilIgnoringFloatResidue(Math.sqrt(dealerTroops) * Math.sqrt(initialArmy));
   const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
-  applyDynamicDamageBucketValue(buckets, "source.extraSkill", job.kind === "skill" ? job.sourceMultiplier ?? 1 : 1);
+  applyDynamicDamageBucketValue(buckets, "source.multiplier", job.sourceMultiplier ?? 1);
 
   const usedEffects = options.usedEffects ?? [];
   const primaryUsedEffects = options.primaryUsedEffects ?? usedEffects;

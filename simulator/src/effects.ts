@@ -129,7 +129,7 @@ function compiledActivation(skill: ResolvedSkill, intent: ResolvedEffectIntentDe
   const effectKind = kindForIntent(intent);
   const duration = normalizeDuration(intent.duration, effectKind);
   if (effectKind === "extra_attack" && (!intent.trigger_damage_jobs || intent.trigger_damage_jobs.length === 0)) {
-    throw new Error(`extra_skill_attack effect ${intent.id} requires at least one trigger_damage_jobs entry`);
+    throw new Error(`${intent.type} effect ${intent.id} requires at least one trigger_damage_jobs entry`);
   }
   const evolution = intent.value_evolution;
   const compiled: CompiledActivation = {

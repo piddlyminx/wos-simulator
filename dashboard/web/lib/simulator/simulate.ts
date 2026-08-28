@@ -386,7 +386,7 @@ function traceEffect(effect: DetailedAppliedEffect, attack: AttackOutcome, uses:
     effect_name: effect.effectId,
     effect_type: kindKey,
     benefit_on: kindKey,
-    extra_attack: attack.kind === "skill",
+    extra_attack: attack.kind !== "normal",
     used: true,
     uses_count: uses,
     trigger_count: uses,

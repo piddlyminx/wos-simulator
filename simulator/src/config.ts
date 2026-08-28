@@ -431,7 +431,7 @@ function validateTriggerDamageJobShape(job: unknown, path: string, jobIndex: num
   if (!job || typeof job !== "object" || Array.isArray(job)) {
     throw new Error(`trigger_damage_jobs entry must be an object at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
-  const allowedKeys = new Set(["source", "target", "delivery_delay_turns", "damage_kind"]);
+  const allowedKeys = new Set(["source", "target", "damage_kind"]);
   for (const key of Object.keys(job)) {
     if (!allowedKeys.has(key)) {
       throw new Error(`unknown trigger_damage_jobs key ${key} at ${path}.trigger_damage_jobs[${jobIndex}]`);
@@ -444,12 +444,8 @@ function validateTriggerDamageJobShape(job: unknown, path: string, jobIndex: num
   if (record.target === undefined) {
     throw new Error(`trigger_damage_jobs entry requires target at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
-  if (record.delivery_delay_turns !== undefined &&
-      (typeof record.delivery_delay_turns !== "number" || !Number.isInteger(record.delivery_delay_turns) || record.delivery_delay_turns < 0)) {
-    throw new Error(`trigger_damage_jobs delivery_delay_turns must be an integer >= 0 at ${path}.trigger_damage_jobs[${jobIndex}]`);
-  }
-  if (record.damage_kind !== undefined && record.damage_kind !== "normal" && record.damage_kind !== "skill") {
-    throw new Error(`trigger_damage_jobs damage_kind must be "normal" or "skill" at ${path}.trigger_damage_jobs[${jobIndex}]`);
+  if (record.damage_kind !== undefined && record.damage_kind !== "normal" && record.damage_kind !== "skill" && record.damage_kind !== "extra") {
+    throw new Error(`trigger_damage_jobs damage_kind must be "normal", "skill", or "extra" at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
 }
 

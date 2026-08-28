@@ -170,6 +170,19 @@ test("damage calculator preserves full positive damage precision", () => {
   assert.ok(Math.abs(outcome.kills - 12.3456) < 1e-12);
 });
 
+test("generated-job source multiplier is independent of damage kind", () => {
+  for (const kind of ["normal", "skill", "extra"] as const) {
+    const outcome = calculateIndexedDamageJob(
+      { ...job, kind, sourceMultiplier: 1.6 },
+      simpleFighters(),
+      [],
+      { trace: true, minInitialArmy: 1000, capToTakerTroops: false }
+    );
+
+    assert.ok(Math.abs(outcome.kills - 16) < 1e-12, kind);
+  }
+});
+
 test("damage calculation does not quantize values near the three-decimal grid", () => {
   const outcome = calculateIndexedDamageJob(
     { ...job, kind: "skill", sourceMultiplier: 2.007 },
@@ -452,7 +465,7 @@ test("damage-taken buckets use the expected damage direction", () => {
   assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
 });
 
-test("a durationless shield subtracts its full raw value from every normal and skill damage job", () => {
+test("a durationless shield subtracts its full raw value from normal, skill, and extra damage jobs", () => {
   const fighters = simpleFighters();
   const shield = {
     ...effect("active.hero.shield", "defender", 25),
@@ -466,10 +479,14 @@ test("a durationless shield subtracts its full raw value from every normal and s
   const skillJob = { ...job, kind: "skill" as const, sourceMultiplier: 1 };
   const skillBaseline = calculateIndexedDamageJob(skillJob, fighters, [], { trace: true });
   const skill = calculateIndexedDamageJob(skillJob, fighters, [shield], { trace: true });
+  const extraJob = { ...job, kind: "extra" as const, sourceMultiplier: 1 };
+  const extraBaseline = calculateIndexedDamageJob(extraJob, fighters, [], { trace: true });
+  const extra = calculateIndexedDamageJob(extraJob, fighters, [shield], { trace: true });
 
   assert.equal(firstNormal.kills, Math.max(0, normalBaseline.kills - 25));
   assert.equal(secondNormal.kills, firstNormal.kills);
   assert.equal(skill.kills, Math.max(0, skillBaseline.kills - 25));
+  assert.equal(extra.kills, Math.max(0, extraBaseline.kills - 25));
   assert.equal(firstNormal.trace?.damageBeforeOffsets, normalBaseline.kills);
   assert.equal(firstNormal.trace?.offsetDamage, 25);
   assert.equal(firstNormal.trace?.aggregationGroups["active.hero.shield"].placement, "post_subtract");
@@ -592,7 +609,7 @@ test("negative passive stat bonuses route to down buckets with positive factors"
   assert.equal(Number((outcome.kills / baseline.kills).toFixed(6)), 2.05);
 });
 
-test("pass-specific buckets only apply to matching damage job kind", () => {
+test("normal- and skill-specific buckets exclude extra damage", () => {
   const normalEffect = effect("type.normal.damage.up", "attacker", 100);
   const skillEffect = effect("type.skill.damage.up", "attacker", 100);
   const fighters = simpleFighters();
@@ -600,11 +617,16 @@ test("pass-specific buckets only apply to matching damage job kind", () => {
   const skillOutcome = calculateIndexedDamageJob({ ...job, kind: "skill", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
     trace: true
   });
+  const extraOutcome = calculateIndexedDamageJob({ ...job, kind: "extra", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
+    trace: true
+  });
 
   assert.equal(normalOutcome.trace?.atomicBuckets["type.normal.damage.up"].totalPct, 100);
   assert.equal(normalOutcome.trace?.aggregationGroups["type.skill.damage.up"], undefined);
   assert.equal(skillOutcome.trace?.aggregationGroups["type.normal.damage.up"], undefined);
   assert.equal(skillOutcome.trace?.atomicBuckets["type.skill.damage.up"].totalPct, 100);
+  assert.equal(extraOutcome.trace?.aggregationGroups["type.normal.damage.up"], undefined);
+  assert.equal(extraOutcome.trace?.aggregationGroups["type.skill.damage.up"], undefined);
 });
 
 test("attack-duration bucket effects are charged by the applicable attack job", () => {
