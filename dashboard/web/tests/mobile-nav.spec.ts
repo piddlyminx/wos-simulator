@@ -591,6 +591,62 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     await expect(page.getByRole("button", { name: "Grid" })).toBeVisible();
   });
 
+  test("simulate desktop results remain clickable beside open run options", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1600, height: 950 });
+    await page.addInitScript(() => {
+      window.localStorage.setItem("wos-simulator.simulate-tour.v1.seen", "1");
+    });
+    const response = await page.goto("/simulate");
+    expect(response?.status()).toBe(200);
+
+    await page.getByRole("spinbutton", { name: "REPLICATES" }).fill("1");
+    await page
+      .getByTestId("simulate-runbar")
+      .getByRole("button", { name: /^Simulate$/i })
+      .click();
+    const showExample = page.getByRole("button", {
+      name: /^Show example battle/,
+    });
+    await expect(showExample).toBeVisible();
+
+    await page.getByRole("tab", { name: "Optimise ratio" }).click();
+    await page.getByTestId("optimize-options-toggle").click();
+    const dock = page.getByTestId("sim-action-dock");
+    const command = page.getByTestId("run-mode-command");
+    await expect(dock).toHaveCSS("pointer-events", "none");
+    await expect(command).toHaveCSS("pointer-events", "auto");
+
+    await showExample.evaluate((button) => {
+      const dockElement = document.querySelector<HTMLElement>(
+        '[data-testid="sim-action-dock"]',
+      );
+      if (!dockElement) return;
+      const buttonBox = button.getBoundingClientRect();
+      const dockBox = dockElement.getBoundingClientRect();
+      window.scrollBy(0, buttonBox.y - (dockBox.y + 40));
+    });
+
+    const showExampleBox = await showExample.boundingBox();
+    const dockBox = await dock.boundingBox();
+    const commandBox = await command.boundingBox();
+    expect(showExampleBox).not.toBeNull();
+    expect(dockBox).not.toBeNull();
+    expect(commandBox).not.toBeNull();
+    expect((showExampleBox?.x ?? 0) + (showExampleBox?.width ?? 0) / 2).toBeGreaterThan(
+      (commandBox?.x ?? 0) + (commandBox?.width ?? 0),
+    );
+    expect((showExampleBox?.y ?? 0) + (showExampleBox?.height ?? 0) / 2).toBeGreaterThan(
+      dockBox?.y ?? Number.POSITIVE_INFINITY,
+    );
+
+    await showExample.click();
+    await expect(
+      page.getByRole("heading", { name: "Example battle trace" }),
+    ).toBeVisible();
+  });
+
   test("simulate action dock keeps run controls compact and exposes options help", async ({
     page,
   }) => {

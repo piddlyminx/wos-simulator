@@ -301,6 +301,11 @@ body {
   grid-template-columns: minmax(0, 1fr);
   padding: 0;
   box-shadow: none;
+  pointer-events: none;
+}
+
+.sim-mode-actions > .sim-mode-command {
+  pointer-events: auto;
 }
 
 .sim-mode-command {
