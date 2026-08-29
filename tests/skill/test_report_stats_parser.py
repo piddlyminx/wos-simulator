@@ -326,6 +326,43 @@ class ReportStatsParserTests(unittest.TestCase):
                 self.assertEqual(actual_troop["tier"], expected_troop["tier"])
                 self.assertEqual(actual_troop["fire_crystal_level"], expected_troop["fire_crystal_level"])
 
+    def test_dashboard_report_parser_handles_textured_desktop_background(self) -> None:
+        report_path = ROOT / "dashboard" / "test_reports" / "Screenshot 2026-03-25 224629.png"
+        expected = json.loads((ROOT / "tests" / "fixtures" / "dashboard_report_expected.json").read_text())[
+            report_path.name
+        ]
+        report = cv2.imread(str(report_path))
+        self.assertIsNotNone(report)
+        assert report is not None
+        rng = np.random.default_rng(8)
+        texture = rng.integers(20, 130, (90, 101, 3), dtype=np.uint8)
+        desktop = cv2.resize(texture, (1612, 1432), interpolation=cv2.INTER_CUBIC)
+        desktop = np.clip(
+            desktop.astype(np.int16) + rng.integers(-10, 11, desktop.shape),
+            0,
+            255,
+        ).astype(np.uint8)
+        x, y = 350, 90
+        desktop[y : y + report.shape[0], x : x + report.shape[1]] = report
+
+        with tempfile.NamedTemporaryFile(suffix=".png") as handle:
+            cv2.imwrite(handle.name, desktop)
+            result = extract_report_stats_and_troops(handle.name)
+
+        self.assertEqual(result["meta"]["ocr_strategy"][:2], ["tesseract:embedded-report", "tesseract:panel"])
+        self.assertAlmostEqual(result["meta"]["content_box"]["x1"], x, delta=20)
+        self.assertAlmostEqual(result["meta"]["content_box"]["x2"], x + report.shape[1], delta=20)
+        for side in ("left", "right"):
+            self.assertEqual(result[side]["stat_bonuses"], expected[side]["stat_bonuses"])
+            actual_troops = {troop["type"]: troop for troop in result[side]["troops"]}
+            for troop_type, expected_troop in expected[side]["troops"].items():
+                self.assertEqual(actual_troops[troop_type]["count"], expected_troop["count"])
+                self.assertEqual(actual_troops[troop_type]["tier"], expected_troop["tier"])
+                self.assertEqual(
+                    actual_troops[troop_type]["fire_crystal_level"],
+                    expected_troop["fire_crystal_level"],
+                )
+
     def test_troop_count_extraction_splits_adjacent_ocr_numbers(self) -> None:
         items = [
             {"text": "Lv. 10.4", "x1": 406, "y1": 99, "x2": 475, "y2": 122, "confidence": 0.95},

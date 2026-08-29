@@ -64,6 +64,8 @@ FC_BADGE_CLASSIFIER_NONE_MARGIN = 2.5
 FC_BADGE_CLASSIFIER_LEVEL_MARGIN = 4.0
 FAST_OCR_TOP_CROP = 56
 MAX_OCR_WIDTH = 760
+STAT_VALUE_COLUMN_SEPARATION = 0.556
+STAT_HEADER_WIDTH_RATIO = 0.28
 
 _rapid_ocr: Any = None
 _fast_rapid_ocr: Any = None
@@ -266,6 +268,48 @@ def _trim_uniform_border(img_bgr: np.ndarray) -> tuple[np.ndarray, tuple[int, in
     ):
         return img_bgr, None
     return img_bgr[y1:y2, x1:x2], (x1, y1, x2, y2)
+
+
+def _embedded_report_horizontal_bounds(
+    items: Iterable[OCRItem],
+    image_width: int,
+) -> tuple[int, int] | None:
+    """Locate a report panel embedded in a wider desktop screenshot.
+
+    The two percentage columns are stable landmarks even when the surrounding
+    desktop, emulator chrome, borders, or viewport size are not. Their median
+    separation recovers the report panel width without relying on background
+    colour or a particular window style.
+    """
+    ocr_items = list(items)
+    header = _match_header(ocr_items)
+    if header is None:
+        return None
+    percentages = [
+        item
+        for item in _candidate_percentage_items(ocr_items)
+        if item.cy > header.cy
+        and "%" in item.text
+        and _parse_percentage(item.text) is not None
+        and abs(item.cx - header.cx) < image_width * 0.35
+    ]
+    left = [item.cx for item in percentages if item.cx < header.cx]
+    right = [item.cx for item in percentages if item.cx > header.cx]
+    if len(left) >= 4 and len(right) >= 4:
+        left_center = float(np.median(left))
+        right_center = float(np.median(right))
+        panel_width = (right_center - left_center) / STAT_VALUE_COLUMN_SEPARATION
+        panel_center = (left_center + right_center) / 2.0
+    else:
+        panel_width = header.width / STAT_HEADER_WIDTH_RATIO
+        panel_center = header.cx
+    if panel_width < 240 or panel_width >= image_width * 0.88:
+        return None
+    x1 = max(0, int(round(panel_center - panel_width / 2.0)))
+    x2 = min(image_width, int(round(panel_center + panel_width / 2.0)))
+    if x2 - x1 < 240:
+        return None
+    return x1, x2
 
 
 def _ocr_pass(
@@ -1604,6 +1648,46 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
         coordinate_scale=fast_coordinate_scale,
     )
     strategies = ["tesseract:panel"]
+    embedded_bounds = _embedded_report_horizontal_bounds(tesseract_items, image_width)
+    if (
+        embedded_bounds is None
+        and image_width >= 1000
+        and image_width / max(1, image_height) >= 0.9
+    ):
+        landmark_items = _ocr_pass(
+            fast_input,
+            fast=True,
+            y_offset=fast_ocr_top,
+            coordinate_scale=fast_coordinate_scale,
+        )
+        embedded_bounds = _embedded_report_horizontal_bounds(
+            _merge_ocr_items(tesseract_items, landmark_items),
+            image_width,
+        )
+    if embedded_bounds is not None:
+        embedded_x1, embedded_x2 = embedded_bounds
+        img_bgr = img_bgr[:, embedded_x1:embedded_x2]
+        if content_box is None:
+            content_box = (embedded_x1, 0, embedded_x2, source_height)
+        else:
+            border_x1, border_y1, _border_x2, border_y2 = content_box
+            content_box = (
+                border_x1 + embedded_x1,
+                border_y1,
+                border_x1 + embedded_x2,
+                border_y2,
+            )
+        image_height, image_width = img_bgr.shape[:2]
+        ocr_input = _crop_report_panel_for_ocr(img_bgr)
+        scaled_top_crop = int(round(FAST_OCR_TOP_CROP * image_width / 720.0))
+        fast_ocr_top = scaled_top_crop if ocr_input.shape[0] > scaled_top_crop + 200 else 0
+        fast_input, fast_coordinate_scale = _limit_ocr_width(ocr_input[fast_ocr_top:])
+        tesseract_items = _tesseract_ocr_pass(
+            fast_input,
+            y_offset=fast_ocr_top,
+            coordinate_scale=fast_coordinate_scale,
+        )
+        strategies = ["tesseract:embedded-report", "tesseract:panel"]
     try:
         result = extract_values_from_ocr_items(tesseract_items, image_width=image_width, image_height=image_height)
     except ValueError:
