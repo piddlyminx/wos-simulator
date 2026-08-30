@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Suspense,
   useCallback,
   useEffect,
   useMemo,
@@ -12,7 +13,7 @@ import {
   type MouseEventHandler,
   type SetStateAction,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import PlayerStatProfileModal from "@/components/PlayerStatProfileModal";
 import {
   RecentRunsModal,
@@ -58,6 +59,7 @@ import {
 } from "@/lib/optimize-ratio";
 import {
   buildSimulationRunTitle,
+  isPvpSavedSimulationKind,
   PVP_SAVED_RUN_KINDS,
   type SavedSimulationRunListItem,
   OptimizeRatioApiResponse,
@@ -145,6 +147,21 @@ const AUTO_SELECT_INPUT_TYPES = new Set([
   "url",
   "email",
 ]);
+
+function RunUrlObserver({
+  onRunIdChange,
+}: {
+  onRunIdChange: (runId: string | null) => void;
+}) {
+  const searchParams = useSearchParams();
+  const runId = searchParams.get("run");
+
+  useEffect(() => {
+    onRunIdChange(runId);
+  }, [onRunIdChange, runId]);
+
+  return null;
+}
 
 interface SaveMetaPayload {
   saved_run_id?: string;
@@ -493,7 +510,6 @@ export default function SimulateClient({
   alternateRunLinks = false,
   presentation = "dashboard",
 }: SimulateClientProps) {
-  const router = useRouter();
   const initialState = useMemo(
     () => buildInitialSavedRunState(initialSavedRun, initialSavedRunError),
     [initialSavedRun, initialSavedRunError],
@@ -665,7 +681,8 @@ export default function SimulateClient({
     setScope: setRecentRunsScope,
   } = recentRuns;
   const loadedRunIdRef = useRef<string | null>(initialSavedRun?.id ?? null);
-  const previousInitialRunIdRef = useRef<string | null>(initialRunId);
+  const [activeRunId, setActiveRunId] = useState<string | null>(initialRunId);
+  const previousRunIdRef = useRef<string | null>(initialRunId);
   // When true, the defender panel is rendered on the left. Shared with the
   // upload modal so both views always display sides in the same order.
   const [sidesSwapped, setSidesSwapped] = useState(false);
@@ -683,9 +700,9 @@ export default function SimulateClient({
   }, []);
 
   useEffect(() => {
-    if (initialRunId || initialSavedRun) return;
+    if (activeRunId || initialSavedRun) return;
     setSurfaceJobs(defaultSurfaceJobsForBrowser());
-  }, [initialRunId, initialSavedRun]);
+  }, [activeRunId, initialSavedRun]);
 
   useEffect(() => {
     const workspace = workspaceRef.current;
@@ -737,6 +754,11 @@ export default function SimulateClient({
     loadedRunIdRef.current = meta.id;
     storeSavedRunMetaState(meta);
   }, [storeSavedRunMetaState]);
+
+  const activateRunUrl = useCallback((runId: string, href: string) => {
+    window.history.pushState(null, "", href);
+    setActiveRunId(runId);
+  }, []);
 
   const scrollResultsIntoViewOnDesktop = useCallback(() => {
     if (!wideSimLayout) return;
@@ -875,9 +897,9 @@ export default function SimulateClient({
       shareUrl,
       title,
     });
-    router.push(
+    activateRunUrl(
+      id,
       alternateRunLinks ? deployRunHref(id, kind) : shareUrl,
-      { scroll: false },
     );
     prependRecentRun({
       id,
@@ -903,10 +925,10 @@ export default function SimulateClient({
   }
 
   useEffect(() => {
-    const previousInitialRunId = previousInitialRunIdRef.current;
-    previousInitialRunIdRef.current = initialRunId;
-    if (!initialRunId) {
-      if (!previousInitialRunId) {
+    const previousRunId = previousRunIdRef.current;
+    previousRunIdRef.current = activeRunId;
+    if (!activeRunId) {
+      if (!previousRunId) {
         setLoadingSavedRun(false);
         return;
       }
@@ -942,7 +964,7 @@ export default function SimulateClient({
       loadedRunIdRef.current = null;
       return;
     }
-    if (loadedRunIdRef.current === initialRunId) {
+    if (loadedRunIdRef.current === activeRunId) {
       setLoadingSavedRun(false);
       return;
     }
@@ -954,7 +976,7 @@ export default function SimulateClient({
     void (async () => {
       try {
         const res = await fetch(
-          `/api/simulate/runs/${encodeURIComponent(initialRunId)}`,
+          `/api/simulate/runs/${encodeURIComponent(activeRunId)}`,
           {
             cache: "no-store",
           },
@@ -964,6 +986,9 @@ export default function SimulateClient({
           "Saved run request",
         );
         if (cancelled) return;
+        if (!isPvpSavedSimulationKind(data.kind)) {
+          throw new Error(`Saved run ${activeRunId} belongs to Bear Sim.`);
+        }
         applySavedRun(data);
       } catch (err) {
         if (cancelled) return;
@@ -982,7 +1007,7 @@ export default function SimulateClient({
     };
   }, [
     applySavedRun,
-    initialRunId,
+    activeRunId,
     resetLoadedPresets,
     resetRunOutputs,
     setLoadingSavedRun,
@@ -1620,7 +1645,7 @@ export default function SimulateClient({
   const { startSimulateTour, simulateTour } = useSimulateTour({
     autoStart: presentation !== "deploy",
     wideLayout: wideSimLayout,
-    initialRunId,
+    initialRunId: activeRunId,
     loadingSavedRun,
     hasSimulationResult: Boolean(result),
     hasOptimizeResult: Boolean(optimizeResult),
@@ -1642,6 +1667,9 @@ export default function SimulateClient({
       onFocusCapture={selectFocusedInputText}
       onMouseUpCapture={keepFocusSelectionOnMouseUp}
     >
+      <Suspense fallback={null}>
+        <RunUrlObserver onRunIdChange={setActiveRunId} />
+      </Suspense>
       <div className="mb-4 space-y-3 sm:mb-5">
         <div hidden>
           <h2 className="sim-page-title text-xl font-bold">
@@ -1904,11 +1932,11 @@ export default function SimulateClient({
           onScopeChange={setRecentRunsScope}
           onChoose={(run) => {
             setRecentRunsOpen(false);
-            router.push(
+            activateRunUrl(
+              run.id,
               alternateRunLinks
                 ? deployRunHref(run.id, run.kind)
                 : run.share_url,
-              { scroll: false },
             );
           }}
         />

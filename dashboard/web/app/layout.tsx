@@ -3,8 +3,6 @@ import SiteNav from "@/components/SiteNav";
 import { getPublicSurface } from "@/lib/public-surface";
 import "./globals.css";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "WOS Simulator Dashboard",
   description: "Battle simulator accuracy dashboard for Whiteout Survival",
