@@ -83,16 +83,16 @@ test("testcase artifacts retain exact troop tiers and hero skill levels", () => 
   });
 });
 
-test("runTestcases defaults stochastic cases to 100 samples", () => {
+test("runTestcases defaults stochastic cases to 500 samples", () => {
   const config = loadSimulatorConfig();
   const report = runTestcases({ matching: "simple_001" }, config);
   const summary = Object.values(report.testcases)[0];
   const detail = report.details[0];
 
-  assert.equal(report.options.repeat, 100);
+  assert.equal(report.options.repeat, 500);
   assert.equal(summary?.deterministic, false);
-  assert.equal(summary?.sampleCount, 100);
-  assert.equal(detail?.simulatorStats?.n, 100);
+  assert.equal(summary?.sampleCount, 500);
+  assert.equal(detail?.simulatorStats?.n, 500);
 });
 
 test("assignDetailArtifactPaths assigns deterministic compact detail paths", () => {
@@ -345,11 +345,11 @@ test("adaptTestcaseEntry reads engagement_type nested under a legacy mechanics o
 
 test("compareOutcomeDistribution matches deterministic zero-bias shape", () => {
   const metrics = compareOutcomeDistribution({
-    candidate: { n: 1, mu: -186, sigma: 0 },
-    reference: { n: 1, mu: -186, sigma: 0 },
+    candidate: { samples: [-186] },
+    reference: { samples: [-186] },
     initialTroops: 1200,
     deterministic: true,
-    thresholds: { max_diff_ratio_deterministic: 0.01, z_threshold: 2, min_bias_pct: 0.5 }
+    thresholds: { max_diff_ratio_deterministic: 0.01 }
   });
 
   assert.deepEqual(metrics, {
@@ -370,38 +370,68 @@ test("compareOutcomeDistribution matches deterministic zero-bias shape", () => {
   } satisfies ParityComparisonMetrics);
 });
 
-test("compareOutcomeDistribution uses candidate spread for single-observation stochastic references", () => {
+test("compareOutcomeDistribution calibrates one observation against same-size simulator draws", () => {
   const metrics = compareOutcomeDistribution({
-    candidate: { n: 5, mu: 10, sigma: 2 },
-    reference: { n: 1, mu: 8, sigma: 0 },
+    candidate: { samples: [0, 1, 2, 3] },
+    reference: { samples: [0] },
     initialTroops: 100,
-    deterministic: false,
-    thresholds: { max_diff_ratio_deterministic: 0.01, z_threshold: 2, min_bias_pct: 0.5 }
+    deterministic: false
   });
 
-  assert.equal(metrics.stat_type, "single_obs");
+  assert.equal(metrics.stat_type, "surprisal");
   assert.equal(metrics.passes, true);
-  assert.equal(metrics.bias_raw, 2);
-  assert.equal(metrics.bias_pct, 2);
-  assert.equal(metrics.sem, 2);
-  assert.equal(metrics.stat, 1);
+  assert.equal(metrics.bias_raw, 1.5);
+  assert.equal(metrics.stat, 1.8562);
+  assert.equal(metrics.p, 0.499285);
 });
 
-test("compareOutcomeDistribution fails single-observation references outside candidate spread", () => {
+test("compareOutcomeDistribution detects an unlikely valley even when means match", () => {
   const metrics = compareOutcomeDistribution({
-    candidate: { n: 100, mu: 862.15, sigma: 3.79 },
-    reference: { n: 1, mu: 879, sigma: 0 },
-    initialTroops: 1440,
-    deterministic: false,
-    thresholds: { max_diff_ratio_deterministic: 0.01, z_threshold: 2, min_bias_pct: 0.5 }
+    candidate: { samples: [-2, -2, 2, 2] },
+    reference: { samples: [0, 0, 0, 0] },
+    initialTroops: 100,
+    deterministic: false
   });
 
-  assert.equal(metrics.stat_type, "single_obs");
+  assert.equal(metrics.bias_raw, 0);
+  assert.ok(metrics.stat! > 0);
+  assert.equal(metrics.p, 0.00001);
   assert.equal(metrics.passes, false);
-  assert.equal(metrics.bias_raw, -16.85);
-  assert.equal(metrics.bias_pct, -1.17);
-  assert.equal(metrics.sem, 3.79);
-  assert.equal(metrics.stat, -4.4459);
+});
+
+test("compareOutcomeDistribution compounds several moderately rare observations", () => {
+  const candidate = triangularSamples(100, 10);
+  const oneRare = compareOutcomeDistribution({
+    candidate: { samples: candidate },
+    reference: { samples: [99, 100, 100, 101, 90] },
+    initialTroops: 100,
+    deterministic: false
+  });
+  const manyRare = compareOutcomeDistribution({
+    candidate: { samples: candidate },
+    reference: { samples: [90, 91, 92, 108, 109] },
+    initialTroops: 100,
+    deterministic: false
+  });
+
+  assert.equal(oneRare.stat_type, "surprisal");
+  assert.equal(oneRare.passes, true);
+  assert.ok(manyRare.stat! > oneRare.stat!);
+  assert.ok(manyRare.p! < oneRare.p!);
+  assert.equal(manyRare.passes, false);
+});
+
+test("compareOutcomeDistribution does not dilute one extreme outlier among common observations", () => {
+  const metrics = compareOutcomeDistribution({
+    candidate: { samples: triangularSamples(100, 10) },
+    reference: { samples: [...Array(19).fill(100), 400] },
+    initialTroops: 100,
+    deterministic: false
+  });
+
+  assert.ok(metrics.stat! > 700);
+  assert.equal(metrics.p, 0.00001);
+  assert.equal(metrics.passes, false);
 });
 
 test("applyBenjaminiHochberg fills q values on p-valued comparisons", () => {
@@ -445,12 +475,22 @@ function comparisonMetric(p: number): ParityComparisonMetrics {
     bias_raw: 2,
     bias_pct: 1,
     sem: 1,
-    stat_type: "t",
-    stat: 2,
+    stat_type: "surprisal",
+    stat: 0.2,
     p,
     q: null,
     passes: true
   };
+}
+
+function triangularSamples(center: number, radius: number): number[] {
+  const samples: number[] = [];
+  for (let offset = -radius; offset <= radius; offset += 1) {
+    for (let count = 0; count < radius + 1 - Math.abs(offset); count += 1) {
+      samples.push(center + offset);
+    }
+  }
+  return samples;
 }
 
 function summaryEntry(testcaseId: string, idx: number, game: ParityComparisonMetrics | null, baseline: ParityComparisonMetrics | null): TestcaseSummaryEntry {

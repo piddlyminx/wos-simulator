@@ -23,6 +23,7 @@ import {
 import {
   formatSavedRunTimestamp,
   savedRunKindLabel,
+  type SavedRunListScope,
 } from "@/components/simulate/RecentRunsModal";
 import {
   OptimizeResultsPanel,
@@ -284,13 +285,17 @@ function useSavedRunSync({
 
 function useRecentRuns() {
   const [open, setOpen] = useState(false);
+  const [scope, setScope] = useState<SavedRunListScope>("mine");
+  const [contentScope, setContentScope] = useState<SavedRunListScope>("mine");
   const [runs, setRuns] = useState<SavedSimulationRunListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestSequenceRef = useRef(0);
 
   const fetchRuns = useCallback(async (offset: number) => {
+    const requestSequence = ++requestSequenceRef.current;
     if (offset === 0) setLoading(true);
     else setLoadingMore(true);
     setError(null);
@@ -299,6 +304,7 @@ function useRecentRuns() {
         limit: String(RECENT_RUNS_PAGE_SIZE),
         offset: String(offset),
         kinds: PVP_SAVED_RUN_KINDS.join(","),
+        scope,
       });
       const res = await fetch(`/api/simulate/runs?${params}`, {
         cache: "no-store",
@@ -307,17 +313,23 @@ function useRecentRuns() {
         runs?: SavedSimulationRunListItem[];
         has_more?: boolean;
       }>(res, "Recent runs request");
+      if (requestSequence !== requestSequenceRef.current) return;
       setRuns((prev) =>
         offset === 0 ? data.runs ?? [] : [...prev, ...(data.runs ?? [])],
       );
+      if (offset === 0) setContentScope(scope);
       setHasMore(Boolean(data.has_more));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load recent runs");
+      if (requestSequence === requestSequenceRef.current) {
+        setError(err instanceof Error ? err.message : "Failed to load recent runs");
+      }
     } finally {
-      if (offset === 0) setLoading(false);
-      else setLoadingMore(false);
+      if (requestSequence === requestSequenceRef.current) {
+        if (offset === 0) setLoading(false);
+        else setLoadingMore(false);
+      }
     }
-  }, []);
+  }, [scope]);
 
   const refresh = useCallback(async () => {
     await fetchRuns(0);
@@ -336,6 +348,7 @@ function useRecentRuns() {
   }, [open, refresh]);
 
   return {
+    contentScope,
     error,
     hasMore,
     loading,
@@ -345,7 +358,9 @@ function useRecentRuns() {
     prepend,
     refresh,
     runs,
+    scope,
     setOpen,
+    setScope,
   };
 }
 
@@ -635,6 +650,7 @@ export default function SimulateClient({
     setPresets: setPlayerStatPresets,
   } = statPresets;
   const {
+    contentScope: recentRunsContentScope,
     error: recentRunsError,
     hasMore: recentRunsHasMore,
     loading: recentRunsLoading,
@@ -644,7 +660,9 @@ export default function SimulateClient({
     prepend: prependRecentRun,
     refresh: refreshRecentRuns,
     runs: recentRunItems,
+    scope: recentRunsScope,
     setOpen: setRecentRunsOpen,
+    setScope: setRecentRunsScope,
   } = recentRuns;
   const loadedRunIdRef = useRef<string | null>(initialSavedRun?.id ?? null);
   const previousInitialRunIdRef = useRef<string | null>(initialRunId);
@@ -1878,9 +1896,12 @@ export default function SimulateClient({
           loadingMore={recentRunsLoadingMore}
           hasMore={recentRunsHasMore}
           error={recentRunsError}
+          scope={recentRunsScope}
+          contentScope={recentRunsContentScope}
           onClose={() => setRecentRunsOpen(false)}
           onRefresh={() => void refreshRecentRuns()}
           onLoadMore={() => void loadMoreRecentRuns()}
+          onScopeChange={setRecentRunsScope}
           onChoose={(run) => {
             setRecentRunsOpen(false);
             router.push(

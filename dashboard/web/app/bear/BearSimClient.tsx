@@ -62,6 +62,7 @@ import {
   SidePanel,
   SkillUseTable,
 } from "@/components/simulate/SharedSimComponents";
+import type { SavedRunListScope } from "@/components/simulate/RecentRunsModal";
 import {
   compactNumber,
   defaultSide,
@@ -358,11 +359,14 @@ export default function BearSimClient({
   const [savedRunError, setSavedRunError] = useState<string | null>(() => initialState.savedRunError);
   const [loadingSavedRun, setLoadingSavedRun] = useState(false);
   const [recentRunsOpen, setRecentRunsOpen] = useState(false);
+  const [recentRunsScope, setRecentRunsScope] = useState<SavedRunListScope>("mine");
+  const [recentRunsContentScope, setRecentRunsContentScope] = useState<SavedRunListScope>("mine");
   const [recentRuns, setRecentRuns] = useState<SavedSimulationRunListItem[]>([]);
   const [recentRunsLoading, setRecentRunsLoading] = useState(false);
   const [recentRunsLoadingMore, setRecentRunsLoadingMore] = useState(false);
   const [recentRunsHasMore, setRecentRunsHasMore] = useState(false);
   const [recentRunsError, setRecentRunsError] = useState<string | null>(null);
+  const recentRunsRequestSequenceRef = useRef(0);
   const loadedRunIdRef = useRef<string | null>(initialSavedRun?.id ?? null);
   const previousInitialRunIdRef = useRef<string | null>(initialRunId);
 
@@ -391,6 +395,7 @@ export default function BearSimClient({
   }, [recentRunsOpen]);
 
   const fetchRecentRuns = useCallback(async (offset: number) => {
+    const requestSequence = ++recentRunsRequestSequenceRef.current;
     if (offset === 0) setRecentRunsLoading(true);
     else setRecentRunsLoadingMore(true);
     setRecentRunsError(null);
@@ -399,6 +404,7 @@ export default function BearSimClient({
         limit: String(RECENT_RUNS_PAGE_SIZE),
         offset: String(offset),
         kinds: BEAR_SAVED_RUN_KINDS.join(","),
+        scope: recentRunsScope,
       });
       const res = await fetch(`/api/simulate/runs?${params}`, {
         cache: "no-store",
@@ -412,15 +418,21 @@ export default function BearSimClient({
       if (!res.ok) {
         throw new Error(data.error || `Recent runs request failed with ${res.status}`);
       }
+      if (requestSequence !== recentRunsRequestSequenceRef.current) return;
       setRecentRuns((prev) => offset === 0 ? data.runs ?? [] : [...prev, ...(data.runs ?? [])]);
+      if (offset === 0) setRecentRunsContentScope(recentRunsScope);
       setRecentRunsHasMore(Boolean(data.has_more));
     } catch (err) {
-      setRecentRunsError(err instanceof Error ? err.message : "Failed to load recent runs");
+      if (requestSequence === recentRunsRequestSequenceRef.current) {
+        setRecentRunsError(err instanceof Error ? err.message : "Failed to load recent runs");
+      }
     } finally {
-      if (offset === 0) setRecentRunsLoading(false);
-      else setRecentRunsLoadingMore(false);
+      if (requestSequence === recentRunsRequestSequenceRef.current) {
+        if (offset === 0) setRecentRunsLoading(false);
+        else setRecentRunsLoadingMore(false);
+      }
     }
-  }, []);
+  }, [recentRunsScope]);
 
   const refreshRecentRuns = useCallback(async () => {
     await fetchRecentRuns(0);
@@ -1083,9 +1095,12 @@ export default function BearSimClient({
           loadingMore={recentRunsLoadingMore}
           hasMore={recentRunsHasMore}
           error={recentRunsError}
+          scope={recentRunsScope}
+          contentScope={recentRunsContentScope}
           onClose={() => setRecentRunsOpen(false)}
           onRefresh={() => void refreshRecentRuns()}
           onLoadMore={() => void loadMoreRecentRuns()}
+          onScopeChange={setRecentRunsScope}
           onChoose={(run) => {
             setRecentRunsOpen(false);
             router.push(

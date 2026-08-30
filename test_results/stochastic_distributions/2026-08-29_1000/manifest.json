@@ -1,0 +1,25 @@
+{
+  "created_at": "2026-08-29T06:11:15.900Z",
+  "seed": "simulator-default",
+  "samples_per_stochastic_case": 1000,
+  "checkpoints": [
+    10,
+    25,
+    50,
+    100,
+    250,
+    500,
+    1000
+  ],
+  "bins": 40,
+  "simulator_distribution": "raw testcase input without parity stat adjustment",
+  "files_found": 211,
+  "testcase_cases_found": 288,
+  "stochastic_cases": 119,
+  "deterministic_cases_excluded": 169,
+  "notes": [
+    "Checkpoint distributions are prefixes of the same seeded sample sequence.",
+    "Scores are signed remaining-army deltas: attacker remaining minus defender remaining.",
+    "Histograms use exact integer bins for spans up to 200 and integer-aligned grouped bins for broader spans."
+  ]
+}

@@ -1882,7 +1882,7 @@ function printTroopOptimization(
   definition: ThreeArmyDefinition,
   usedHeroOptimization: boolean
 ): void {
-  const armyNames = definition[result.side].map((army) => army.name);
+  const armyNames = troopOptimizationArmyLabels(result, definition);
   const baseline = usedHeroOptimization ? "rank 1 hero setup" : "input hero setup";
   console.log(`\nTroop optimization for the ${baseline} (${result.side}; opposing team unchanged):`);
   console.log(
@@ -1904,6 +1904,23 @@ function printTroopOptimization(
     `within ±${result.search.fine_radius_percent}%, up to ${result.search.passes} passes; ` +
     `${result.preliminaryRepsPerOrdering} preliminary and ${result.finalistRepsPerOrdering} finalist reps per ordering).`
   );
+}
+
+export function troopOptimizationArmyLabels(
+  result: Pick<TroopOptimizationResult, "side" | "heroes">,
+  definition: ThreeArmyDefinition
+): string[] {
+  return definition[result.side].map((army, index) => {
+    const inputHeroes = mainHeroNames(army.fighter);
+    const inputHeroSuffix = inputHeroes.length > 0 ? `: ${inputHeroes.join(", ")}` : "";
+    const stableName = inputHeroSuffix && army.name.endsWith(inputHeroSuffix)
+      ? army.name.slice(0, -inputHeroSuffix.length)
+      : army.name;
+    const optimizedHeroes = result.heroes[index] ?? [];
+    return optimizedHeroes.length > 0
+      ? `${stableName}: ${optimizedHeroes.join(", ")}`
+      : stableName;
+  });
 }
 
 function printOptimizedStats(stats: OptimizedTeamStats, armyNames: readonly string[]): void {

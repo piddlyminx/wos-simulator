@@ -21,6 +21,7 @@ import {
   parseDefinition,
   simulateThreeArmyMatch,
   substitutedHeroStats,
+  troopOptimizationArmyLabels,
   type ThreeArmyDefinition
 } from "./three_army_optimizer";
 
@@ -599,6 +600,42 @@ test("CLI parser supplies stable defaults and parses optimization controls", () 
     jobs: 2,
     json: true
   });
+});
+
+test("troop optimization labels use the selected heroes instead of stale input names", () => {
+  const definition = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  definition.attacker[0].name = "Attacker 1: Gatot, Sonya, Bradley";
+  definition.attacker[0].fighter.heroes = {
+    Gatot: { skill_1: 5 },
+    Sonya: { skill_1: 5 },
+    Bradley: { skill_1: 5 }
+  };
+  definition.attacker[1].name = "Second wave";
+  definition.attacker[2].name = "Attacker 3: Wu Ming, Philly, Wayne";
+  definition.attacker[2].fighter.heroes = {
+    "Wu Ming": { skill_1: 5 },
+    Philly: { skill_1: 5 },
+    Wayne: { skill_1: 5 }
+  };
+
+  assert.deepEqual(
+    troopOptimizationArmyLabels(
+      {
+        side: "attacker",
+        heroes: [
+          ["Gatot", "Sonya", "Greg"],
+          ["Wu Ming", "Philly", "Hendrik"],
+          ["Edith", "Mia", "Bradley"]
+        ]
+      },
+      definition
+    ),
+    [
+      "Attacker 1: Gatot, Sonya, Greg",
+      "Second wave: Wu Ming, Philly, Hendrik",
+      "Attacker 3: Edith, Mia, Bradley"
+    ]
+  );
 });
 
 function definitionWithInfantry(attackerCounts: number[], defenderCounts: number[]): ThreeArmyDefinition {

@@ -6,7 +6,7 @@ export const MAIN_POOL: Record<string, MainHeroRole> = {
   Jeronimo: "inf",
   // Logan: "inf",
   Magnus: "inf",
-  Gregory: "inf",
+  // Gregory: "inf",
   // Hector: "inf",
   "Wu Ming": "inf",
   Gordon: "lanc",
@@ -14,13 +14,13 @@ export const MAIN_POOL: Record<string, MainHeroRole> = {
   Philly: "lanc",
   Sonya: "lanc",
   Fred: "lanc",
-  Freya: "lanc",
+  // Freya: "lanc",
   // Alonso: "mark",
   Bradley: "mark",
   // Greg: "mark",
   Hendrik: "mark",
   Xura: "mark",
-  Blanchette: "mark",
+  // Blanchette: "mark",
   // Wayne: "mark"
 };
 

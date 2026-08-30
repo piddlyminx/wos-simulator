@@ -1,6 +1,6 @@
 [
   {
-    "test_id": "daut_viper_1",
+    "test_id": "mia_tc_1",
     "time": "2025-07-18 - 23:40",
     "attacker": {
       "name": "daut",
@@ -85,7 +85,7 @@
     }
   },
   {
-    "test_id": "daut_viper_2",
+    "test_id": "mia_tc_2",
     "time": "2025-07-18 - 23:41",
     "attacker": {
       "name": "daut",
@@ -196,7 +196,7 @@
     ]
   },
   {
-    "test_id": "daut_viper_3",
+    "test_id": "mia_tc_3",
     "time": "2025-07-19 - 01:02",
     "attacker": {
       "name": "daut",
@@ -301,7 +301,7 @@
     ]
   },
   {
-    "test_id": "daut_viper_4",
+    "test_id": "mia_tc_4",
     "time": "2025-07-20 - 02:42",
     "attacker": {
       "name": "daut",
@@ -384,7 +384,7 @@
     }
   },
   {
-    "test_id": "daut_viper_5",
+    "test_id": "mia_tc_5",
     "time": "2025-07-20 - 02:48",
     "attacker": {
       "name": "daut",

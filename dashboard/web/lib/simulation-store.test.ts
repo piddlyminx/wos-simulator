@@ -251,6 +251,84 @@ test("simulation store filters and pages each run history separately", async () 
   assert.deepEqual((await store.readSimulationRun(pvp.id))?.result, pvpResult);
 });
 
+test("simulation store lists new runs by anonymous browser owner", async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
+  process.env.SIM_RUNS_DIR = dir;
+  const store = await import(`./simulation-store.ts?case=${Date.now()}-owners`);
+  const ownerA = "a".repeat(64);
+  const ownerB = "b".repeat(64);
+
+  const ownedA = await store.saveSimulationRun(
+    "simulate",
+    pvpRequest,
+    pvpResult,
+    ownerA,
+  );
+  const legacy = await store.saveSimulationRun(
+    "simulate",
+    pvpRequest,
+    pvpResult,
+  );
+  const ownedB = await store.saveSimulationRun(
+    "simulate",
+    pvpRequest,
+    pvpResult,
+    ownerB,
+  );
+
+  const mine = await store.listSimulationRunsPage({
+    limit: 1,
+    ownerHash: ownerA,
+  });
+  assert.deepEqual(mine.runs.map((run: SavedSimulationRunListItem) => run.id), [
+    ownedA.id,
+  ]);
+  assert.equal(mine.has_more, false);
+
+  const all = await store.listSimulationRunsPage({ limit: 10 });
+  assert.deepEqual(
+    new Set(all.runs.map((run: SavedSimulationRunListItem) => run.id)),
+    new Set([ownedA.id, legacy.id, ownedB.id]),
+  );
+
+  assert.equal(
+    await store.setSimulationRunKept(ownedA.id, true, ownerB),
+    undefined,
+  );
+  assert.equal(
+    await store.setSimulationRunKept(ownedA.id, true, ownerA),
+    true,
+  );
+  const starred = await store.listSimulationRunsPage({
+    limit: 10,
+    ownerHash: ownerA,
+    kept: true,
+  });
+  assert.deepEqual(
+    starred.runs.map((run: SavedSimulationRunListItem) => run.id),
+    [ownedA.id],
+  );
+
+  const metadata = JSON.parse(
+    await readFile(path.join(dir, `${ownedA.id}.meta.json`), "utf8"),
+  ) as { owner_hash?: string };
+  assert.equal(metadata.owner_hash, ownerA);
+  assert.equal(
+    "owner_hash" in (await store.readSimulationRun(ownedA.id))!,
+    false,
+  );
+
+  await store.rebuildSimulationRunIndex();
+  const rebuiltMine = await store.listSimulationRunsPage({
+    limit: 10,
+    ownerHash: ownerA,
+  });
+  assert.deepEqual(
+    rebuiltMine.runs.map((run: SavedSimulationRunListItem) => run.id),
+    [ownedA.id],
+  );
+});
+
 test("simulation run index persists without rereading legacy result files", async () => {
   const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
   process.env.SIM_RUNS_DIR = dir;

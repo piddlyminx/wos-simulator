@@ -1,6 +1,6 @@
 [
   {
-    "test_id": "daut_viper_1",
+    "test_id": "zinman_tc_1",
     "time": "2025-07-18 - 23:01",
     "attacker": {
       "name": "daut",
@@ -77,7 +77,7 @@
     }
   },
   {
-    "test_id": "daut_viper_2",
+    "test_id": "zinman_tc_2",
     "time": "2025-07-18 - 23:16",
     "attacker": {
       "name": "daut",
@@ -163,7 +163,7 @@
     }
   },
   {
-    "test_id": "daut_viper_3",
+    "test_id": "zinman_tc_3",
     "time": "2025-07-18 - 23:31",
     "attacker": {
       "name": "daut",
