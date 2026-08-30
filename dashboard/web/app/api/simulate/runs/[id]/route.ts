@@ -4,6 +4,10 @@ import {
   readSimulationRun,
   setSimulationRunKept,
 } from "@/lib/simulation-store";
+import {
+  hashSavedRunOwnerToken,
+  readSavedRunOwnerToken,
+} from "@/lib/saved-run-owner";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +41,10 @@ export async function PATCH(
 ) {
   try {
     const { id } = await context.params;
+    const ownerToken = readSavedRunOwnerToken(req);
+    if (!ownerToken) {
+      return NextResponse.json({ error: "This run is not owned by this browser" }, { status: 403 });
+    }
     const body = (await req.json()) as { kept?: unknown };
     if (typeof body.kept !== "boolean") {
       return NextResponse.json(
@@ -44,11 +52,21 @@ export async function PATCH(
         { status: 400 },
       );
     }
-    const kept = await setSimulationRunKept(id, body.kept);
+    const kept = await setSimulationRunKept(
+      id,
+      body.kept,
+      hashSavedRunOwnerToken(ownerToken),
+    );
     if (kept === null) {
       return NextResponse.json(
         { error: `No saved simulation found for ${id}` },
         { status: 404 },
+      );
+    }
+    if (kept === undefined) {
+      return NextResponse.json(
+        { error: "This run is not owned by this browser" },
+        { status: 403 },
       );
     }
     return NextResponse.json({ id, kept });

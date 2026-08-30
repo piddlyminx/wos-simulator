@@ -130,6 +130,193 @@ test("/deploy keeps recent-run navigation in the alternative interface", async (
   );
 });
 
+test("/deploy separates this browser's runs from the global archive", async ({ page }) => {
+  let releaseAllRuns: (() => void) | undefined;
+  const allRunsCanRespond = new Promise<void>((resolve) => {
+    releaseAllRuns = resolve;
+  });
+  await page.route("**/api/simulate/runs?*", async (route) => {
+    const scope = new URL(route.request().url()).searchParams.get("scope");
+    if (scope === "all") await allRunsCanRespond;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        runs: [
+          {
+            id: `${scope}-deployment`,
+            kind: "simulate",
+            created_at: "2026-08-19T12:00:00.000Z",
+            kept: scope === "starred",
+            share_url: `/simulate?run=${scope}-deployment`,
+            title:
+              scope === "mine"
+                ? "My deployment"
+                : scope === "starred"
+                  ? "Starred deployment"
+                  : "Global deployment",
+          },
+        ],
+        has_more: false,
+      }),
+    });
+  });
+
+  await page.goto("/deploy?mode=battle");
+  await page.getByTestId("recent-runs-toggle").click();
+  const modal = page.getByTestId("recent-runs-modal");
+  await expect(modal.getByRole("button", { name: "My runs" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(modal.getByText("My deployment")).toBeVisible();
+  await expect(modal.getByRole("button", { name: "Clean up" })).toHaveCount(0);
+  await expect(
+    modal.getByRole("button", { name: "Star saved run mine-deployment" }),
+  ).toHaveAttribute("aria-pressed", "false");
+
+  await modal.getByRole("button", { name: "Starred" }).click();
+  await expect(modal.getByText("Starred deployment")).toBeVisible();
+  await expect(
+    modal.getByRole("button", { name: "Unstar saved run starred-deployment" }),
+  ).toHaveAttribute("aria-pressed", "true");
+
+  await modal.getByRole("button", { name: "All runs" }).click();
+  await expect(modal.getByRole("button", { name: "All runs" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const allRunsResponse = page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return url.pathname === "/api/simulate/runs" && url.searchParams.get("scope") === "all";
+  });
+  await modal.getByRole("button", { name: "My runs" }).click();
+  await expect(modal.getByText("My deployment")).toBeVisible();
+  releaseAllRuns?.();
+  await allRunsResponse;
+  await expect(modal.getByText("Global deployment")).toHaveCount(0);
+  await expect(modal.getByText("My deployment")).toBeVisible();
+});
+
+test("/deploy keeps a populated recent-runs modal stable while refreshing", async ({ page }) => {
+  let requestCount = 0;
+  let markRefreshStarted: (() => void) | undefined;
+  let releaseRefresh: (() => void) | undefined;
+  const refreshStarted = new Promise<void>((resolve) => {
+    markRefreshStarted = resolve;
+  });
+  const refreshCanRespond = new Promise<void>((resolve) => {
+    releaseRefresh = resolve;
+  });
+  const runs = Array.from({ length: 10 }, (_, index) => ({
+    id: `stable-modal-run-${index}`,
+    kind: "simulate",
+    created_at: "2026-08-19T12:00:00.000Z",
+    kept: false,
+    share_url: `/simulate?run=stable-modal-run-${index}`,
+    title: `Stable modal run ${index + 1}`,
+  }));
+
+  await page.route("**/api/simulate/runs?*", async (route) => {
+    requestCount += 1;
+    if (requestCount === 2) {
+      markRefreshStarted?.();
+      await refreshCanRespond;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ runs, has_more: false }),
+    });
+  });
+
+  await page.goto("/deploy?mode=battle");
+  await page.getByTestId("recent-runs-toggle").click();
+  const modal = page.getByTestId("recent-runs-modal");
+  const panel = modal.locator(".sim-modal");
+  await expect(modal.getByText("Stable modal run 1", { exact: true })).toBeVisible();
+  const loadedHeight = (await panel.boundingBox())?.height;
+
+  await modal.getByRole("button", { name: "Close recent runs" }).click();
+  await page.getByTestId("recent-runs-toggle").click();
+  await refreshStarted;
+  await expect(modal.getByRole("button", { name: "Refreshing…" })).toBeVisible();
+  await expect(modal.getByText("Stable modal run 1", { exact: true })).toBeVisible();
+  const refreshingHeight = (await panel.boundingBox())?.height;
+  const refreshResponse = page.waitForResponse((response) =>
+    response.url().includes("/api/simulate/runs?"),
+  );
+  releaseRefresh?.();
+  await refreshResponse;
+
+  expect(loadedHeight).toBeDefined();
+  expect(refreshingHeight).toBeDefined();
+  expect(Math.abs((refreshingHeight ?? 0) - (loadedHeight ?? 0))).toBeLessThanOrEqual(1);
+});
+
+test("/deploy changes recent-run scopes in one visual transition", async ({ page }) => {
+  let markAllRunsStarted: (() => void) | undefined;
+  let releaseAllRuns: (() => void) | undefined;
+  const allRunsStarted = new Promise<void>((resolve) => {
+    markAllRunsStarted = resolve;
+  });
+  const allRunsCanRespond = new Promise<void>((resolve) => {
+    releaseAllRuns = resolve;
+  });
+  const mineRuns = Array.from({ length: 10 }, (_, index) => ({
+    id: `scope-transition-mine-${index}`,
+    kind: "simulate",
+    created_at: "2026-08-19T12:00:00.000Z",
+    kept: false,
+    share_url: `/simulate?run=scope-transition-mine-${index}`,
+    title: `Scope transition mine ${index + 1}`,
+  }));
+  const allRuns = [{
+    id: "scope-transition-all",
+    kind: "simulate",
+    created_at: "2026-08-19T12:00:00.000Z",
+    kept: false,
+    share_url: "/simulate?run=scope-transition-all",
+    title: "Scope transition all",
+  }];
+
+  await page.route("**/api/simulate/runs?*", async (route) => {
+    const scope = new URL(route.request().url()).searchParams.get("scope");
+    if (scope === "all") {
+      markAllRunsStarted?.();
+      await allRunsCanRespond;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        runs: scope === "all" ? allRuns : mineRuns,
+        has_more: false,
+      }),
+    });
+  });
+
+  await page.goto("/deploy?mode=battle");
+  await page.getByTestId("recent-runs-toggle").click();
+  const modal = page.getByTestId("recent-runs-modal");
+  const panel = modal.locator(".sim-modal");
+  await expect(modal.getByText("Scope transition mine 1", { exact: true })).toBeVisible();
+  const mineHeight = (await panel.boundingBox())?.height;
+
+  await modal.getByRole("button", { name: "All runs" }).click();
+  await allRunsStarted;
+  await expect(modal.getByText("Loading all runs…", { exact: true })).toBeVisible();
+  await expect(modal.getByText("Scope transition mine 1", { exact: true })).toBeHidden();
+  const loadingHeight = (await panel.boundingBox())?.height;
+
+  expect(mineHeight).toBeDefined();
+  expect(loadingHeight).toBeDefined();
+  expect(Math.abs((loadingHeight ?? 0) - (mineHeight ?? 0))).toBeLessThanOrEqual(1);
+
+  releaseAllRuns?.();
+  await expect(modal.getByText("Scope transition all", { exact: true })).toBeVisible();
+});
+
 for (const viewport of VIEWPORTS) {
   test(`/deploy fits the ${viewport.name} viewport`, async ({ page }) => {
     await page.setViewportSize(viewport);

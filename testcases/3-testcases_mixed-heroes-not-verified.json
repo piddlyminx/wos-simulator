@@ -1,6 +1,6 @@
 [
   {
-    "test_id": "daut_viper_1",
+    "test_id": "no_heroes_t6_mixed_2x_1",
     "time": "2025-07-12 - 23:09",
     "attacker": {
       "name": "daut2x",
@@ -85,7 +85,7 @@
     }
   },
   {
-    "test_id": "daut_viper_2",
+    "test_id": "no_heroes_t6_mixed_2x_2",
     "time": "2025-07-12 - 23:17",
     "attacker": {
       "name": "daut2x",
@@ -167,7 +167,7 @@
     }
   },
   {
-    "test_id": "daut_viper_3",
+    "test_id": "no_heroes_t6_mixed_2x_3",
     "time": "2025-07-13 - 13:45",
     "attacker": {
       "name": "daut2x",
@@ -281,7 +281,7 @@
     }
   },
   {
-    "test_id": "daut_viper_4",
+    "test_id": "no_heroes_t6_mixed_2x_4",
     "time": "2025-07-13 - 16:51",
     "attacker": {
       "name": "daut2x",
@@ -393,7 +393,7 @@
     }
   },
   {
-    "test_id": "daut_viper_5",
+    "test_id": "no_heroes_t6_mixed_2x_5",
     "time": "2025-07-13 - 16:57",
     "attacker": {
       "name": "daut2x",
@@ -505,7 +505,7 @@
     }
   },
   {
-    "test_id": "daut_viper_7",
+    "test_id": "no_heroes_t6_mixed_2x_6",
     "time": "2025-07-13 - 17:03",
     "attacker": {
       "name": "daut2x",

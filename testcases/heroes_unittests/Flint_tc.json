@@ -1,6 +1,6 @@
 [
   {
-    "test_id": "daut_viper_1",
+    "test_id": "flint_tc_1",
     "time": "2025-07-20 - 03:49",
     "attacker": {
       "name": "daut",
@@ -105,7 +105,7 @@
     ]
   },
   {
-    "test_id": "daut_viper_2",
+    "test_id": "flint_tc_2",
     "time": "2025-07-20 - 04:07",
     "attacker": {
       "name": "daut",

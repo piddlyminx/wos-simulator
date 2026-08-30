@@ -11,9 +11,9 @@ import {
 import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
 import { prepareBattle, runPrepared } from "../simulator";
 import { DamageAggregationError } from "../staticDamageProfile";
-import type { BattleInput, BattleResult, FighterInput, SimulatorConfig, StatBlock, UnitType } from "../types";
+import type { BattleInput, BattleResult, FighterInput, SimulationMode, SimulatorConfig, StatBlock, UnitType } from "../types";
 
-const DEFAULT_STOCHASTIC_REPEAT = 100;
+const DEFAULT_STOCHASTIC_REPEAT = 500;
 const STAT_ROUNDING_MAX_ADJUSTMENT = 0.05;
 const STAT_ROUNDING_SCAN_STEPS = 50;
 const STAT_ROUNDING_INTERPOLATION_LIMIT = STAT_ROUNDING_SCAN_STEPS;
@@ -146,6 +146,8 @@ export interface TestcaseExecutionJob {
   input: BattleInput;
   repeat: number;
   seed?: string | number;
+  includeSamples?: boolean;
+  simulationMode?: SimulationMode;
 }
 
 export interface TestcaseExecutionResult {
@@ -155,6 +157,7 @@ export interface TestcaseExecutionResult {
   deterministic?: boolean;
   sampleCount?: number;
   simulatorStats?: SampleStats;
+  simulatorSamples?: number[];
   simulatorScoreDelta?: number;
   simulatorSampleOutcomes?: TestcaseSampleOutcome[];
   simulatorSampleDeltas?: number[];
@@ -357,7 +360,7 @@ function applyExecutionResult(
     return;
   }
   const result = execution.result;
-  if (!result || !execution.simulatorStats || execution.deterministic === undefined || execution.sampleCount === undefined) {
+  if (!result || !execution.simulatorStats || !execution.simulatorSamples || execution.deterministic === undefined || execution.sampleCount === undefined) {
     const reason = "Worker returned incomplete testcase execution result";
     detail.error = reason;
     detail.errorDetails = { type: "IncompleteExecutionResult" };
@@ -368,19 +371,19 @@ function applyExecutionResult(
   const stats = execution.simulatorStats;
   const gameResult = (entry as { game_report_result?: unknown }).game_report_result;
   const initialTroops = totalInputTroops(preparedCase.input!.attacker) + totalInputTroops(preparedCase.input!.defender);
-  const simulatorDistribution = { n: stats.n, mu: stats.mu, sigma: stats.sigma };
-  const gameDistribution = distributionFromGameResult(gameResult);
-  let game = gameDistribution
+  const simulatorSamples = execution.simulatorSamples;
+  const gameSamples = extractOutcomeScores(gameResult);
+  let game = gameSamples.length > 0
     ? compareOutcomeDistribution({
-        candidate: simulatorDistribution,
-        reference: gameDistribution,
+        candidate: { samples: simulatorSamples },
+        reference: { samples: gameSamples },
         initialTroops,
         deterministic: result.randomness.deterministic,
         thresholds: comparison.thresholds
       })
     : null;
   if (game) {
-    const unroundedBiasRaw = simulatorDistribution.mu - gameDistribution!.mu;
+    const unroundedBiasRaw = stats.mu - mean(gameSamples);
     game = adjustedForRoundingRules(game, result.randomness.deterministic, initialTroops, result.rounds, unroundedBiasRaw);
   }
   const gameStatAdjustment = game && preparedCase.input
@@ -389,7 +392,7 @@ function applyExecutionResult(
         input: preparedCase.input,
         config,
         job: { file: preparedCase.file, reportFile, testcaseId, index, input: preparedCase.input, repeat: execution.sampleCount, seed: undefined },
-        reference: gameDistribution!,
+        reference: gameSamples,
         initialTroops,
         averageRounds: result.rounds,
         deterministic: result.randomness.deterministic,
@@ -439,7 +442,7 @@ function findGameStatAdjustment(options: {
   input: BattleInput;
   config: SimulatorConfig;
   job: TestcaseExecutionJob;
-  reference: { n: number; mu: number; sigma: number };
+  reference: number[];
   initialTroops: number;
   averageRounds: number;
   deterministic: boolean;
@@ -483,17 +486,17 @@ function evaluateStatAdjustment(options: {
   input: BattleInput;
   config: SimulatorConfig;
   job: TestcaseExecutionJob;
-  reference: { n: number; mu: number; sigma: number };
+  reference: number[];
   initialTroops: number;
   averageRounds: number;
   deterministic: boolean;
   thresholds?: Record<string, number>;
 }, value: number): InternalStatAdjustment {
   const adjustedInput = inputWithStatAdjustment(options.input, value);
-  const candidateStats = simulateAdjustedDistribution(adjustedInput, options.job, options.config);
+  const candidateSamples = simulateAdjustedOutcomes(adjustedInput, options.job, options.config);
   const adjusted = compareOutcomeDistribution({
-    candidate: { n: candidateStats.n, mu: candidateStats.mu, sigma: candidateStats.sigma },
-    reference: options.reference,
+    candidate: { samples: candidateSamples },
+    reference: { samples: options.reference },
     initialTroops: options.initialTroops,
     deterministic: options.deterministic,
     thresholds: options.thresholds
@@ -507,7 +510,7 @@ function evaluateStatAdjustment(options: {
       options.deterministic,
       options.initialTroops,
       options.averageRounds,
-      candidateStats.mu - options.reference.mu
+      mean(candidateSamples) - mean(options.reference)
     )
   };
 }
@@ -526,7 +529,7 @@ function interpolatedZeroAdjustment(low: { value: number; bias: number }, high: 
   return roundStatAdjustment(value);
 }
 
-function simulateAdjustedDistribution(input: BattleInput, job: TestcaseExecutionJob, config: SimulatorConfig): SampleStats {
+function simulateAdjustedOutcomes(input: BattleInput, job: TestcaseExecutionJob, config: SimulatorConfig): number[] {
   const samples: number[] = [];
   const compiled = prepareBattle(input, config);
   for (let iteration = 0; iteration < job.repeat; iteration += 1) {
@@ -535,7 +538,7 @@ function simulateAdjustedDistribution(input: BattleInput, job: TestcaseExecution
     const score = battleScoreDelta(result);
     if (score !== undefined) samples.push(score);
   }
-  return sampleStats(samples);
+  return samples;
 }
 
 function inputWithStatAdjustment(input: BattleInput, value: number): BattleInput {
@@ -619,7 +622,11 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
     // Resolve the battle once and reuse it across every seeded sample of this case.
     const compiled = prepareBattle(job.input, config);
     const baseSeed = job.seed ?? job.input.seed;
-    const sample = (iteration: number) => runPrepared(compiled, sampleSeed(baseSeed, job.file, job.testcaseId, job.index, iteration));
+    const sample = (iteration: number) => runPrepared(
+      compiled,
+      sampleSeed(baseSeed, job.file, job.testcaseId, job.index, iteration),
+      job.simulationMode ? { mode: job.simulationMode } : {}
+    );
     let result = sample(0);
     const firstScore = battleScoreDelta(result);
     if (firstScore !== undefined) {
@@ -645,7 +652,8 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
       result,
       deterministic: result.randomness.deterministic,
       sampleCount,
-      simulatorStats: sampleStats(samples),
+      simulatorStats: sampleStats(samples, { includeSamples: job.includeSamples }),
+      simulatorSamples: samples,
       simulatorScoreDelta: battleScoreDelta(result),
       simulatorSampleOutcomes: sampleOutcomes,
       simulatorSampleDeltas: sampleDeltas,
@@ -906,18 +914,15 @@ function normalizeReportPath(filePath: string): string {
   return testcaseIndex >= 0 ? normalized.slice(testcaseIndex) : normalized;
 }
 
-function distributionFromGameResult(value: unknown): { n: number; mu: number; sigma: number } | undefined {
-  const outcomes = extractOutcomeScores(value);
-  if (outcomes.length === 0) return undefined;
-  const stats = sampleStats(outcomes);
-  return { n: stats.n, mu: stats.mu, sigma: stats.sigma };
-}
-
 function extractOutcomeScores(value: unknown): number[] {
   const rows = Array.isArray(value) ? value : value ? [value] : [];
   return rows
     .map((row) => battleScoreDelta(row))
     .filter((score): score is number => score !== undefined);
+}
+
+function mean(values: readonly number[]): number {
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
 function totalInputTroops(fighter: FighterInput): number {

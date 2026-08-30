@@ -19,6 +19,7 @@ import {
 } from "@/lib/simulate-run";
 
 const ID_RE = /^[A-Za-z0-9_-]{8,128}$/;
+const OWNER_HASH_RE = /^[a-f0-9]{64}$/;
 const LIST_READ_BATCH_SIZE = 32;
 const LIST_HEADER_CHUNK_SIZE = 64 * 1024;
 const LIST_HEADER_LIMIT = 256 * 1024;
@@ -47,6 +48,8 @@ export interface SimulationRunListOptions {
   limit?: number;
   offset?: number;
   kinds?: readonly SavedSimulationKind[];
+  ownerHash?: string;
+  kept?: boolean;
 }
 
 export interface SimulationRunListPage {
@@ -86,7 +89,17 @@ interface SimulationRunIndexRecord {
   storage: "gzip" | "json";
   modified_at_ms: number;
   size_bytes: number;
+  owner_hash?: string;
 }
+
+interface StoredSimulationRunListItem extends SavedSimulationRunListItem {
+  owner_hash?: string;
+}
+
+type StoredSimulationRunListDocument = Omit<
+  SavedSimulationRunDocument,
+  "result"
+> & { owner_hash?: string };
 
 interface SimulationRunIndex {
   version: typeof RUN_INDEX_VERSION;
@@ -156,22 +169,23 @@ function assertSavedSimulationDoc(
 
 function assertSavedSimulationListDoc(
   value: unknown,
-): Omit<SavedSimulationRunDocument, "result"> {
+): StoredSimulationRunListDocument {
   if (!value || typeof value !== "object") {
     throw new Error("Saved simulation document is missing");
   }
-  const doc = value as Partial<SavedSimulationRunDocument>;
+  const doc = value as Partial<StoredSimulationRunListDocument>;
   if (
     doc.version !== 1 ||
     typeof doc.id !== "string" ||
     !ID_RE.test(doc.id) ||
     !isSavedSimulationKind(doc.kind) ||
     typeof doc.created_at !== "string" ||
-    doc.request === undefined
+    doc.request === undefined ||
+    (doc.owner_hash !== undefined && !OWNER_HASH_RE.test(doc.owner_hash))
   ) {
     throw new Error("Saved simulation document is malformed");
   }
-  return doc as Omit<SavedSimulationRunDocument, "result">;
+  return doc as StoredSimulationRunListDocument;
 }
 
 function assertSimulationRunIndex(value: unknown): SimulationRunIndex {
@@ -197,7 +211,9 @@ function assertSimulationRunIndex(value: unknown): SimulationRunIndex {
       !Number.isFinite(record.modified_at_ms) ||
       typeof record.size_bytes !== "number" ||
       !Number.isFinite(record.size_bytes) ||
-      record.size_bytes < 0
+      record.size_bytes < 0 ||
+      (record.owner_hash !== undefined &&
+        !OWNER_HASH_RE.test(record.owner_hash))
     ) {
       throw new Error("Saved-run index is malformed");
     }
@@ -243,7 +259,7 @@ function candidateForRecord(record: SimulationRunIndexRecord): RunCandidate {
 async function readSimulationRunListItem(
   candidate: RunCandidate,
   kept: boolean,
-): Promise<SavedSimulationRunListItem> {
+): Promise<StoredSimulationRunListItem> {
   if (candidate.compressed) {
     const value = JSON.parse(await fs.readFile(candidate.headerPath, "utf8"));
     const doc = assertSavedSimulationListDoc(value);
@@ -254,6 +270,7 @@ async function readSimulationRunListItem(
       kept,
       share_url: buildSimulationShareUrl(doc.id, doc.kind),
       title: buildSimulationRunTitle(doc.request, doc.kind),
+      owner_hash: doc.owner_hash,
     };
   }
 
@@ -464,6 +481,7 @@ async function buildSimulationRunRecords(
             storage: candidate.compressed ? "gzip" as const : "json" as const,
             modified_at_ms: candidate.modifiedAt,
             size_bytes: await candidateSize(candidate),
+            owner_hash: item.owner_hash,
           };
         } catch {
           return null;
@@ -534,7 +552,11 @@ export async function saveSimulationRun(
   kind: SavedSimulationKind,
   request: SavedSimulationRequest,
   result: SavedSimulationResult,
+  ownerHash?: string,
 ): Promise<SavedSimulationRunResponse> {
+  if (ownerHash !== undefined && !OWNER_HASH_RE.test(ownerHash)) {
+    throw new Error("Invalid saved simulation owner hash");
+  }
   const id = randomUUID();
   const doc: SavedSimulationRunDocument = {
     version: 1,
@@ -554,6 +576,7 @@ export async function saveSimulationRun(
     kind: doc.kind,
     created_at: doc.created_at,
     request: doc.request,
+    owner_hash: ownerHash,
   })}\n`;
   await withDirectoryLock(SIM_RUNS_DIR, async () => {
     await writeAtomic(compressedRunPath(id), compressed);
@@ -570,6 +593,7 @@ export async function saveSimulationRun(
           storage: "gzip",
           modified_at_ms: stats.mtimeMs,
           size_bytes: compressed.length + Buffer.byteLength(metadata),
+          owner_hash: ownerHash,
         },
         ...records.filter((record) => record.id !== id),
       ]);
@@ -623,7 +647,11 @@ async function fileExists(filePath: string): Promise<boolean> {
 export async function setSimulationRunKept(
   id: string,
   kept: boolean,
-): Promise<boolean | null> {
+  ownerHash?: string,
+): Promise<boolean | null | undefined> {
+  if (ownerHash !== undefined && !OWNER_HASH_RE.test(ownerHash)) {
+    throw new Error("Invalid saved simulation owner hash");
+  }
   assertRunId(id);
   mkdirSync(SIM_RUNS_DIR, { recursive: true });
   return withDirectoryLock(SIM_RUNS_DIR, async () => {
@@ -634,6 +662,9 @@ export async function setSimulationRunKept(
       : (await fileExists(compressedRunPath(id))) ||
         (await fileExists(legacyRunPath(id)));
     if (!exists) return null;
+    if (ownerHash !== undefined && indexed?.owner_hash !== ownerHash) {
+      return undefined;
+    }
     let previousMarkerSize = 0;
     try {
       previousMarkerSize = (await fs.stat(keepPath(id))).size;
@@ -686,9 +717,13 @@ export async function listSimulationRunsPage(
       ? new Set(options.kinds)
       : null;
   const index = await loadOrBuildSimulationRunIndex();
-  const matching = kindSet
-    ? index.runs.filter((record) => kindSet.has(record.kind))
-    : index.runs;
+  const matching = index.runs.filter(
+    (record) =>
+      (!kindSet || kindSet.has(record.kind)) &&
+      (options.kept === undefined || record.kept === options.kept) &&
+      (options.ownerHash === undefined ||
+        record.owner_hash === options.ownerHash),
+  );
   const pageRecords = matching.slice(offset, offset + limit);
   scheduleSimulationRunCleanup();
   return {

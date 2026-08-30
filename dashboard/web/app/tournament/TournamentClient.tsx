@@ -6,6 +6,7 @@ import { EditableNumberInput } from "@/components/EditableNumberInput";
 import {
   formatSavedRunTimestamp,
   RecentRunsModal,
+  type SavedRunListScope,
 } from "@/components/simulate/RecentRunsModal";
 import {
   buildSimulationRunTitle,
@@ -144,11 +145,14 @@ export default function TournamentClient({
   const [savedRun, setSavedRun] = useState<SavedSimulationRunResponse | null>(initialSavedRun);
   const [loadingSavedRun, setLoadingSavedRun] = useState(false);
   const [recentTournamentsOpen, setRecentTournamentsOpen] = useState(false);
+  const [recentTournamentsScope, setRecentTournamentsScope] = useState<SavedRunListScope>("mine");
+  const [recentTournamentsContentScope, setRecentTournamentsContentScope] = useState<SavedRunListScope>("mine");
   const [recentTournaments, setRecentTournaments] = useState<SavedSimulationRunListItem[]>([]);
   const [recentTournamentsLoading, setRecentTournamentsLoading] = useState(false);
   const [recentTournamentsLoadingMore, setRecentTournamentsLoadingMore] = useState(false);
   const [recentTournamentsHasMore, setRecentTournamentsHasMore] = useState(false);
   const [recentTournamentsError, setRecentTournamentsError] = useState<string | null>(null);
+  const recentTournamentsRequestSequenceRef = useRef(0);
   const [running, setRunning] = useState(false);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [activeTab, setActiveTab] = useState<ResultTab>(initialResult?.finals ? "finalsOffense" : "swissOffense");
@@ -258,7 +262,11 @@ export default function TournamentClient({
     return () => window.removeEventListener("keydown", onKey);
   }, [recentTournamentsOpen]);
 
-  const fetchRecentTournaments = useCallback(async (offset: number) => {
+  const fetchRecentTournaments = useCallback(async (
+    offset: number,
+    scope = recentTournamentsScope,
+  ) => {
+    const requestSequence = ++recentTournamentsRequestSequenceRef.current;
     if (offset === 0) setRecentTournamentsLoading(true);
     else setRecentTournamentsLoadingMore(true);
     setRecentTournamentsError(null);
@@ -267,6 +275,7 @@ export default function TournamentClient({
         limit: String(RECENT_TOURNAMENTS_PAGE_SIZE),
         offset: String(offset),
         kinds: TOURNAMENT_SAVED_RUN_KINDS.join(","),
+        scope,
       });
       const response = await fetch(`/api/simulate/runs?${params}`, { cache: "no-store" });
       const data = await response.json() as {
@@ -277,15 +286,21 @@ export default function TournamentClient({
       if (!response.ok) {
         throw new Error(data.error || `Recent tournaments request failed with ${response.status}`);
       }
+      if (requestSequence !== recentTournamentsRequestSequenceRef.current) return;
       setRecentTournaments((current) => offset === 0 ? data.runs ?? [] : [...current, ...(data.runs ?? [])]);
+      if (offset === 0) setRecentTournamentsContentScope(scope);
       setRecentTournamentsHasMore(Boolean(data.has_more));
     } catch (err) {
-      setRecentTournamentsError(err instanceof Error ? err.message : "Failed to load recent tournaments");
+      if (requestSequence === recentTournamentsRequestSequenceRef.current) {
+        setRecentTournamentsError(err instanceof Error ? err.message : "Failed to load recent tournaments");
+      }
     } finally {
-      if (offset === 0) setRecentTournamentsLoading(false);
-      else setRecentTournamentsLoadingMore(false);
+      if (requestSequence === recentTournamentsRequestSequenceRef.current) {
+        if (offset === 0) setRecentTournamentsLoading(false);
+        else setRecentTournamentsLoadingMore(false);
+      }
     }
-  }, []);
+  }, [recentTournamentsScope]);
 
   const refreshRecentTournaments = useCallback(async () => {
     await fetchRecentTournaments(0);
@@ -298,6 +313,11 @@ export default function TournamentClient({
   function openRecentTournaments() {
     setRecentTournamentsOpen(true);
     void refreshRecentTournaments();
+  }
+
+  function changeRecentTournamentsScope(scope: SavedRunListScope) {
+    setRecentTournamentsScope(scope);
+    void fetchRecentTournaments(0, scope);
   }
 
   async function loadTournament(id: string) {
@@ -557,9 +577,12 @@ export default function TournamentClient({
           loadingMore={recentTournamentsLoadingMore}
           hasMore={recentTournamentsHasMore}
           error={recentTournamentsError}
+          scope={recentTournamentsScope}
+          contentScope={recentTournamentsContentScope}
           onClose={() => setRecentTournamentsOpen(false)}
           onRefresh={refreshRecentTournaments}
           onLoadMore={loadMoreRecentTournaments}
+          onScopeChange={changeRecentTournamentsScope}
           onChoose={(run) => void loadTournament(run.id)}
         />
       ) : null}

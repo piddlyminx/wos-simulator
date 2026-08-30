@@ -28,7 +28,7 @@ function summaryRow(): ParityComparisonRow {
       bias_raw: 0,
       bias_pct: 0,
       sem: 0.3,
-      stat_type: "t",
+      stat_type: "surprisal",
       stat: null,
       p: null,
       q: null,

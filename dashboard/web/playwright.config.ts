@@ -1,9 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'node:path';
 
 // Use a non-standard port so the smoke harness never collides with other
 // local Next.js / Node apps (e.g. Hermes Workspace on :3000).
 const PORT = process.env.PORT ?? '3947';
 const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${PORT}`;
+const SIM_RUNS_DIR = path.join(process.cwd(), 'tmp', 'playwright', 'simulate-runs');
 
 export default defineConfig({
   testDir: './tests',
@@ -38,6 +40,9 @@ export default defineConfig({
           // different app than a clean dashboard build.
           reuseExistingServer: false,
           timeout: 60_000,
+          env: {
+            SIM_RUNS_DIR,
+          },
         },
       }),
 });

@@ -1,6 +1,17 @@
 import { expect, test } from "@playwright/test";
 
 test("POST /api/simulate/runs saves a computed simulation result", async ({ request }) => {
+  const emptyMineResponse = await request.get(
+    "/api/simulate/runs?scope=mine&kinds=simulate&limit=100",
+  );
+  expect(emptyMineResponse.ok()).toBeTruthy();
+  expect((await emptyMineResponse.json()).runs).toEqual([]);
+  const emptyStarredResponse = await request.get(
+    "/api/simulate/runs?scope=starred&kinds=simulate&limit=100",
+  );
+  expect(emptyStarredResponse.ok()).toBeTruthy();
+  expect((await emptyStarredResponse.json()).runs).toEqual([]);
+
   const response = await request.post("/api/simulate/runs", {
     data: {
       kind: "simulate",
@@ -44,7 +55,39 @@ test("POST /api/simulate/runs saves a computed simulation result", async ({ requ
     },
   });
   expect(response.ok()).toBeTruthy();
+  expect(response.headers()["set-cookie"]).toContain("wos_saved_run_owner=");
   const body = await response.json();
   expect(body.saved_kind).toBe("simulate");
   expect(body.share_url).toMatch(/^\/simulate\?run=/);
+
+  const mineResponse = await request.get(
+    "/api/simulate/runs?scope=mine&kinds=simulate&limit=100",
+  );
+  expect(mineResponse.ok()).toBeTruthy();
+  const mine = await mineResponse.json();
+  expect(mine.runs.map((run: { id: string }) => run.id)).toContain(
+    body.saved_run_id,
+  );
+
+  const starResponse = await request.patch(
+    `/api/simulate/runs/${body.saved_run_id}`,
+    { data: { kept: true } },
+  );
+  expect(starResponse.ok()).toBeTruthy();
+  expect(await starResponse.json()).toEqual({
+    id: body.saved_run_id,
+    kept: true,
+  });
+
+  const starredResponse = await request.get(
+    "/api/simulate/runs?scope=starred&kinds=simulate&limit=100",
+  );
+  expect(starredResponse.ok()).toBeTruthy();
+  const starred = await starredResponse.json();
+  expect(starred.runs.map((run: { id: string }) => run.id)).toContain(
+    body.saved_run_id,
+  );
+
+  const deleteResponse = await request.delete("/api/simulate/runs");
+  expect(deleteResponse.status()).toBe(405);
 });

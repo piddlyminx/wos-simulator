@@ -1,6 +1,6 @@
 [
   {
-    "test_id": "daut_viper_1",
+    "test_id": "molly_tc_1",
     "time": "2025-07-18 - 02:17",
     "attacker": {
       "name": "daut",
@@ -78,7 +78,7 @@
     }
   },
   {
-    "test_id": "daut_viper_2",
+    "test_id": "molly_tc_2",
     "time": "2025-07-18 - 03:33",
     "attacker": {
       "name": "daut",
@@ -156,7 +156,7 @@
     }
   },
   {
-    "test_id": "daut_viper_3",
+    "test_id": "molly_tc_3",
     "time": "2025-07-18 - 02:34",
     "attacker": {
       "name": "daut",
@@ -224,7 +224,7 @@
     }
   },
   {
-    "test_id": "daut_viper_4",
+    "test_id": "molly_tc_4",
     "time": "2025-07-18 - 04:43",
     "attacker": {
       "name": "daut",
@@ -309,7 +309,7 @@
     }
   },
   {
-    "test_id": "daut_viper_5",
+    "test_id": "molly_tc_5",
     "time": "2025-07-18 - 05:37",
     "attacker": {
       "name": "daut",

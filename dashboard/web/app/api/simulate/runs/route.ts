@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 
 import {
-  cleanupSimulationRuns,
+  createSavedRunOwnerToken,
+  hashSavedRunOwnerToken,
+  readSavedRunOwnerToken,
+  SAVED_RUN_OWNER_COOKIE,
+  SAVED_RUN_OWNER_COOKIE_MAX_AGE,
+} from "@/lib/saved-run-owner";
+import {
   listSimulationRunsPage,
   saveSimulationRun,
 } from "@/lib/simulation-store";
@@ -20,10 +26,26 @@ export async function GET(req: Request) {
     const limit = Number.parseInt(url.searchParams.get("limit") ?? "20", 10);
     const offset = Number.parseInt(url.searchParams.get("offset") ?? "0", 10);
     const kinds = parseKindFilter(url.searchParams);
+    const scope = url.searchParams.get("scope") ?? "all";
+    if (scope !== "mine" && scope !== "starred" && scope !== "all") {
+      return NextResponse.json(
+        { error: "scope must be mine, starred, or all" },
+        { status: 400 },
+      );
+    }
+    const ownerToken = readSavedRunOwnerToken(req);
+    if (scope !== "all" && !ownerToken) {
+      return NextResponse.json({ runs: [], has_more: false, next_offset: 0 });
+    }
     const page = await listSimulationRunsPage({
       limit: Number.isFinite(limit) ? limit : 20,
       offset: Number.isFinite(offset) ? offset : 0,
       kinds,
+      ownerHash:
+        scope !== "all" && ownerToken
+          ? hashSavedRunOwnerToken(ownerToken)
+          : undefined,
+      kept: scope === "starred" ? true : undefined,
     });
     return NextResponse.json(page);
   } catch (err) {
@@ -55,26 +77,30 @@ export async function POST(req: Request) {
     if (!body.result || typeof body.result !== "object") {
       return NextResponse.json({ error: "result is required" }, { status: 400 });
     }
-    const saved = await saveSimulationRun(body.kind, body.request, body.result);
-    return NextResponse.json({
+    const currentOwnerToken = readSavedRunOwnerToken(req);
+    const ownerToken = currentOwnerToken ?? createSavedRunOwnerToken();
+    const saved = await saveSimulationRun(
+      body.kind,
+      body.request,
+      body.result,
+      hashSavedRunOwnerToken(ownerToken),
+    );
+    const response = NextResponse.json({
       saved_run_id: saved.id,
       saved_at: saved.created_at,
       saved_kind: saved.kind,
       share_url: saved.share_url,
     });
-  } catch (err) {
-    return NextResponse.json(
-      {
-        error: err instanceof Error ? err.message : String(err),
-      },
-      { status: 500 },
-    );
-  }
-}
-
-export async function DELETE() {
-  try {
-    return NextResponse.json(await cleanupSimulationRuns());
+    response.cookies.set({
+      name: SAVED_RUN_OWNER_COOKIE,
+      value: ownerToken,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: SAVED_RUN_OWNER_COOKIE_MAX_AGE,
+    });
+    return response;
   } catch (err) {
     return NextResponse.json(
       {

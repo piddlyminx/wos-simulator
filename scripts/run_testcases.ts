@@ -245,7 +245,7 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
     lines.push("No testcase results.");
   } else {
     lines.push(formatTable([
-      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Stat", "p", "q(BH)"],
+      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Test", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Stat", "p", "q(BH)"],
       ...rows.map((row) => [
         row.status,
         row.index,
@@ -253,6 +253,7 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
         row.samples,
         row.gameN,
         row.mode,
+        row.statType,
         row.statAdjustment,
         row.simMu,
         row.gameMu,
@@ -363,6 +364,7 @@ function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | unde
     samples: String(entry.sampleCount),
     gameN: formatNumber(entry.game?.n_reference),
     mode: entry.deterministic ? "det" : entry.sampleCount > 1 ? "stoch" : "single",
+    statType: entry.game?.stat_type ?? "-",
     statAdjustment: formatSignedNumber(entry.gameStatAdjustment?.value),
     simMu: formatNumber(entry.game?.mu_candidate),
     gameMu: formatNumber(entry.game?.mu_reference),

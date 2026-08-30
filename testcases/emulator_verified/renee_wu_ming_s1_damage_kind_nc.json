@@ -1,0 +1,110 @@
+[
+  {
+    "test_id": "renee_wu_ming_s1_damage_kind_nc",
+    "description": "Deterministic Renee S1 damage-kind discriminator. minxxx attacks with Renee 4/4/4 and 1500 T6 Lancers into WIP's Wu Ming 3/3/3 and 4000 T6 Infantry. Wu Ming S1 reduces normal damage to Infantry by 15% and skill damage by 18%. Before capture, the central predictions were: unaffected extra damage +430 with 47 Nightmare Trace activations, normal damage +360 with 51 activations, and skill damage +347 with 52 activations. The game returned +359 with 51 activations. A 2000-sample +/-0.05 displayed-stat probe produced +429-431/47 for unaffected extra, +359-361/51 for normal, and +346-349/51-52 for skill; the exact observation occurred 487 times under normal and never under either alternative.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 1500
+      },
+      "stats": {
+        "inf": {
+          "attack": 293.4,
+          "defense": 277.2,
+          "lethality": 238.0,
+          "health": 232.4
+        },
+        "lanc": {
+          "attack": 611.8,
+          "defense": 602.1,
+          "lethality": 323.2,
+          "health": 285.5
+        },
+        "mark": {
+          "attack": 291.7,
+          "defense": 283.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 4000
+      },
+      "stats": {
+        "inf": {
+          "attack": 418.1,
+          "defense": 420.1,
+          "lethality": 210.2,
+          "health": 269.2
+        },
+        "lanc": {
+          "attack": 207.2,
+          "defense": 207.2,
+          "lethality": 186.7,
+          "health": 181.6
+        },
+        "mark": {
+          "attack": 216.2,
+          "defense": 210.4,
+          "lethality": 181.1,
+          "health": 176.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 359,
+        "defender": 0
+      }
+    ],
+    "metadata": {
+      "observed_battle_outcomes": [
+        {
+          "trial": 1,
+          "skill_counts": {
+            "renee_s1_nightmare_trace": 51
+          },
+          "attacker": {
+            "survivors": 359
+          },
+          "defender": {
+            "survivors": 0
+          }
+        }
+      ],
+      "candidate_predictions": {
+        "unaffected_extra": {
+          "attacker_survivors": 430,
+          "nightmare_trace_activations": 47
+        },
+        "normal": {
+          "attacker_survivors": 360,
+          "nightmare_trace_activations": 51
+        },
+        "skill": {
+          "attacker_survivors": 347,
+          "nightmare_trace_activations": 52
+        }
+      }
+    }
+  }
+]
