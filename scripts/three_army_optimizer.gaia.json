@@ -10,8 +10,8 @@
       "name": "Attacker 1: Gatot, Sonya, Bradley",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 138637,
-          "lancer_t11_fc10": 81422,
+          "infantry_t11_fc10": 127635,
+          "lancer_t11_fc10": 92524,
           "marksman_t11_fc10": 1
         },
         "stats": {
@@ -57,9 +57,9 @@
       "name": "Attacker 2: Logan, Mia, Hendrik",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 123233,
-          "lancer_t11_fc10": 4401,
-          "marksman_t11_fc10": 92426
+          "infantry_t11_fc10": 123289,
+          "lancer_t11_fc10": 4403,
+          "marksman_t11_fc10": 92468
         },
         "stats": {
           "infantry": {
@@ -104,9 +104,9 @@
       "name": "Attacker 3: Wu Ming, Philly, Wayne",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 114431,
-          "lancer_t11_fc10": 2200,
-          "marksman_t11_fc10": 103429
+          "infantry_t11_fc10": 118886,
+          "lancer_t11_fc10": 4493,
+          "marksman_t11_fc10": 96871
         },
         "stats": {
           "infantry": {
@@ -159,22 +159,22 @@
         },
         "stats": {
           "infantry": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           },
           "lancer": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           },
           "marksman": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           }
         },
         "heroes": {
@@ -206,22 +206,22 @@
         },
         "stats": {
           "infantry": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           },
           "lancer": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           },
           "marksman": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           }
         },
         "heroes": {
@@ -253,22 +253,22 @@
         },
         "stats": {
           "infantry": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           },
           "lancer": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           },
           "marksman": {
-            "attack": 4238,
-            "defense": 3843.6,
-            "lethality": 3016,
-            "health": 3045.7
+            "attack": 4185,
+            "defense": 4185.6,
+            "lethality": 3141,
+            "health": 3141.7
           }
         },
         "heroes": {
@@ -302,19 +302,19 @@
     "unique_heroes": true,
     "per_army_hero_pools": [
       {
-        "infantry": ["Edith", "Gatot", "Wu Ming", "Logan", "Jeronimo", "Hector"],
-        "lancer": ["Sonya", "Mia", "Philly", "Gordon"],
-        "marksman": ["Bradley", "Hendrik", "Wayne", "Greg"]
+        "infantry": ["Gatot"],
+        "lancer": ["Sonya"],
+        "marksman": ["Greg"]
       },
       {
-        "infantry": ["Edith", "Gatot", "Wu Ming", "Logan", "Jeronimo", "Hector"],
-        "lancer": ["Sonya", "Mia", "Philly", "Gordon"],
-        "marksman": ["Bradley", "Hendrik", "Wayne", "Greg"]
+        "infantry": ["Edith", "Wu Ming", "Logan", "Jeronimo", "Hector"],
+        "lancer": ["Mia", "Philly", "Gordon"],
+        "marksman": ["Bradley", "Hendrik", "Wayne"]
       },
       {
-        "infantry": ["Edith", "Gatot", "Wu Ming", "Logan", "Jeronimo", "Hector"],
-        "lancer": ["Sonya", "Mia", "Philly", "Gordon"],
-        "marksman": ["Bradley", "Hendrik", "Wayne", "Greg"]
+        "infantry": ["Edith", "Wu Ming", "Logan", "Jeronimo", "Hector"],
+        "lancer": ["Mia", "Philly", "Gordon"],
+        "marksman": ["Bradley", "Hendrik", "Wayne"]
       }
     ]
   },
