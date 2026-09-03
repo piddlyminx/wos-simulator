@@ -229,10 +229,7 @@
     "attacker": {
       "name": "daut",
       "heroes": {
-        "Molly": {
-          "skill_1": 2,
-          "skill_2": 2
-        }
+
       },
       "troops": {
         "infantry_t6": 1000,
@@ -241,29 +238,35 @@
       },
       "stats": {
         "inf": {
-          "attack": 9.94,
-          "defense": 9.44,
-          "lethality": 1.75,
-          "health": 1.75
+          "attack": 246.9,
+          "defense": 248.8,
+          "lethality": 186.1,
+          "health": 191.7
         },
         "lanc": {
-          "attack": 57.75,
-          "defense": 57.25,
-          "lethality": 1.75,
-          "health": 1.75
+          "attack": 207.2,
+          "defense": 207.2,
+          "lethality": 186.7,
+          "health": 181.6
         },
         "mark": {
-          "attack": 10.43,
-          "defense": 9.44,
-          "lethality": 1.75,
-          "health": 1.75
+          "attack": 216.2,
+          "defense": 210.4,
+          "lethality": 181.1,
+          "health": 176.9
         }
       },
       "joiner_heroes": {}
     },
     "defender": {
       "name": "viper",
-      "heroes": {},
+      "heroes": {
+        "Molly": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 1
+        }
+      },
       "troops": {
         "infantry_t6": 100,
         "lancer_t6": 30,
@@ -271,22 +274,22 @@
       },
       "stats": {
         "inf": {
-          "attack": 184.5,
-          "defense": 188.0,
-          "lethality": 107.24,
-          "health": 114.18
+          "attack": 305.3,
+          "defense": 297.6,
+          "lethality": 244,
+          "health": 238.4
         },
         "lanc": {
-          "attack": 167.0,
-          "defense": 163.0,
-          "lethality": 110.31,
-          "health": 100.21
+          "attack": 363.1,
+          "defense": 361.9,
+          "lethality": 229.3,
+          "health": 235.0
         },
         "mark": {
-          "attack": 174.75,
-          "defense": 168.25,
-          "lethality": 117.75,
-          "health": 104.74
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
         }
       },
       "joiner_heroes": {}
@@ -304,8 +307,8 @@
       }
     },
     "game_report_result": {
-      "attacker": 0,
-      "defender": 68
+      "attacker": 1070,
+      "defender": 0
     }
   },
   {
