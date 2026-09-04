@@ -324,9 +324,32 @@ test("cli --human writes a readable testcase summary table", () => {
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Testcase summary/);
   assert.match(result.stdout, /Stochastic failures: raw p < 0\.004 \(less than 1 in 250; no multiple-testing adjustment\)/);
-  assert.match(result.stdout, /Status\s+#\s+Testcase\s+Samples\s+Game N\s+Mode\s+Test\s+Stat adj\s+Sim mu\s+Game mu\s+Game SD\s+Sim SD/);
-  assert.match(result.stdout, /PASS\s+0\s+simple_001\s+1\s+1\s+single\s+cdf_support\s+-\s+-186\s+-186\s+0\s+0/);
+  assert.match(result.stdout, /Failures \(0\)\nNone\./);
+  assert.match(result.stdout, /Passes \(1\)\n#\s+Testcase\s+N\s+Mode\s+Test\s+Stat\+\/-\s+mu G\s+mu S\s+SD G\s+SD S\s+bias%\s+bias\s+Reason\s+CDF p\s+Sup val\s+Sup p\s+p/);
+  assert.match(result.stdout, /0\s+simple_001\s+1\s+single\s+cdf_sup\s+-\s+-186\s+-186\s+0\s+0\s+\+0%\s+\+0\s+cdf\+sup/);
+  assert.doesNotMatch(result.stdout, /Samples|Game N|CDF RMS|Support mass|Support p/);
   assert.throws(() => JSON.parse(result.stdout), "human output should not be JSON");
+});
+
+test("human summary groups failures before passes and truncates testcase names", () => {
+  const report = summaryReport([
+    ["abcdefghijklmnopqrstuvwxyz_failing", false, 2],
+    ["passing_case", true, 0],
+  ]);
+  Object.values(report.testcases)[0]!.gameStatAdjustment = {
+    mode: "deterministic_exact",
+    value: 0.25,
+    unadjusted: Object.values(report.testcases)[0]!.game!,
+  };
+  const text = formatHumanSummary(report);
+
+  assert.ok(text.indexOf("Failures (1)") < text.indexOf("Passes (1)"));
+  assert.match(text, /abcdefghijklmnopqrstuv\.\.\./);
+  assert.match(text, /\+0\.25%/);
+  assert.match(text, /\+2%/);
+  assert.doesNotMatch(text, /abcdefghijklmnopqrstuvwxyz_failing/);
+  assert.match(text, /Failures \(1\)\n#\s+Testcase/);
+  assert.match(text, /Passes \(1\)\n#\s+Testcase/);
 });
 
 test("cli --human compares with the latest prior summary", () => {
@@ -658,7 +681,7 @@ test("human summary status ignores failing legacy baseline comparison when game 
     details: [],
   });
 
-  assert.match(text, /PASS\s+0\s+game_pass_baseline_fail/);
+  assert.match(text, /Passes \(1\)[\s\S]*0\s+game_pass_baseline_fail/);
   assert.doesNotMatch(text, /Base bias%/);
 });
 
