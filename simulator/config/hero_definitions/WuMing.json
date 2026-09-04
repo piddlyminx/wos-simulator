@@ -11,6 +11,7 @@
       "effects": {
         "ShadowsEvasion/1": {
           "type": "type.normal.damageTaken.down",
+          "applies_to_damage_kinds": ["normal"],
           "value": [
             5,
             10,
@@ -26,6 +27,7 @@
         },
         "ShadowsEvasion/2": {
           "type": "type.skill.damageTaken.down",
+          "applies_to_damage_kinds": ["skill"],
           "value": [
             6,
             12,
@@ -67,6 +69,7 @@
       "effects": {
         "ElementalResonance/1": {
           "type": "type.skill.damage.up",
+          "applies_to_damage_kinds": ["skill"],
           "value": [
             5,
             10,

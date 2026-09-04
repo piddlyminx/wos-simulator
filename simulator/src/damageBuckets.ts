@@ -1,5 +1,3 @@
-import type { DamageKind } from "./types";
-
 export type BucketJobSide = "dealer" | "taker";
 export type BucketUpdate = "assign_factor" | "add_pct_factor" | "multiply_pct_factor" | "add_raw";
 export type BucketPlacement = "numerator" | "denominator" | "post_subtract";
@@ -9,7 +7,6 @@ export interface BucketSpec {
   jobSide: BucketJobSide;
   update: BucketUpdate;
   placement: BucketPlacement;
-  damageKind?: DamageKind;
   /** This bucket may be named by an EffectIntentDefinition. */
   effectBucket?: true;
 }
@@ -68,15 +65,14 @@ export const DYNAMIC_BUCKETS = [
   { name: "type.all.damage.up", jobSide: "dealer", update: "multiply_pct_factor", placement: "numerator", effectBucket: true },
   { name: "type.single_target.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
   { name: "type.single_target.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
-  { name: "type.marked_target.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
-  { name: "type.normal.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", damageKind: "normal", effectBucket: true },
-  { name: "type.normal.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", damageKind: "normal", effectBucket: true },
-  { name: "type.normal.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", damageKind: "normal", effectBucket: true },
-  { name: "type.normal.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", damageKind: "normal", effectBucket: true },
-  { name: "type.skill.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", damageKind: "skill", effectBucket: true },
-  { name: "type.skill.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", damageKind: "skill", effectBucket: true },
-  { name: "type.skill.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", damageKind: "skill", effectBucket: true },
-  { name: "type.skill.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", damageKind: "skill", effectBucket: true }
+  { name: "type.normal.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "type.normal.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "type.normal.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "type.normal.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "type.skill.damage.down", jobSide: "dealer", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "type.skill.damage.up", jobSide: "dealer", update: "add_pct_factor", placement: "numerator", effectBucket: true },
+  { name: "type.skill.damageTaken.down", jobSide: "taker", update: "add_pct_factor", placement: "denominator", effectBucket: true },
+  { name: "type.skill.damageTaken.up", jobSide: "taker", update: "add_pct_factor", placement: "numerator", effectBucket: true }
 ] as const satisfies readonly BucketSpec[];
 
 export type StaticBucketSpec = (typeof STATIC_BUCKETS)[number] & BucketSpec;

@@ -112,6 +112,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       validateBattleStartEffectSelectors(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectUnits(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
+      validateAppliesToDamageKinds(effect as EffectIntentDefinition, file, skillId, effectId);
       validateRequiredEffect(effect as EffectIntentDefinition, effectDefinitions, file, skillId, effectId);
       validateEffectValueFormula(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "attack_order") validateAttackOrderEffect(effect as EffectIntentDefinition, file, skillId, effectId);
@@ -132,6 +133,42 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
         });
       }
     }
+  }
+}
+
+function validateAppliesToDamageKinds(
+  effect: EffectIntentDefinition,
+  file: string,
+  skillId: string,
+  effectId: string
+): void {
+  const legacy = effect as EffectIntentDefinition & { damage_kind?: unknown; applies_to_damage_kind?: unknown };
+  if (legacy.damage_kind !== undefined) {
+    throw new Error(
+      `effect damage_kind is ambiguous; use applies_to_damage_kinds for modifier eligibility or trigger_damage_jobs[].damage_kind for generated damage at ${file}:${skillId}.${effectId}`
+    );
+  }
+  if (legacy.applies_to_damage_kind !== undefined) {
+    throw new Error(
+      `applies_to_damage_kind was replaced by applies_to_damage_kinds at ${file}:${skillId}.${effectId}`
+    );
+  }
+  if (effect.applies_to_damage_kinds === undefined) return;
+  const path = `${file}:${skillId}.${effectId}.applies_to_damage_kinds`;
+  if (!Array.isArray(effect.applies_to_damage_kinds) || effect.applies_to_damage_kinds.length === 0) {
+    throw new Error(`applies_to_damage_kinds must be a non-empty array of "normal" and/or "skill" at ${path}`);
+  }
+  for (const kind of effect.applies_to_damage_kinds) {
+    if (kind !== "normal" && kind !== "skill") {
+      throw new Error(`applies_to_damage_kinds must contain only "normal" and/or "skill" at ${path}`);
+    }
+  }
+  if (new Set(effect.applies_to_damage_kinds).size !== effect.applies_to_damage_kinds.length) {
+    throw new Error(`applies_to_damage_kinds must not contain duplicates at ${path}`);
+  }
+  const definition = effect.type === undefined ? undefined : dynamicBucketDefinition(effect.type);
+  if (definition?.effectBucket !== true) {
+    throw new Error(`applies_to_damage_kinds is only supported for runtime damage modifiers at ${path}`);
   }
 }
 
@@ -444,8 +481,8 @@ function validateTriggerDamageJobShape(job: unknown, path: string, jobIndex: num
   if (record.target === undefined) {
     throw new Error(`trigger_damage_jobs entry requires target at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
-  if (record.damage_kind !== undefined && record.damage_kind !== "normal" && record.damage_kind !== "skill" && record.damage_kind !== "extra") {
-    throw new Error(`trigger_damage_jobs damage_kind must be "normal", "skill", or "extra" at ${path}.trigger_damage_jobs[${jobIndex}]`);
+  if (record.damage_kind !== undefined && record.damage_kind !== "normal" && record.damage_kind !== "skill") {
+    throw new Error(`trigger_damage_jobs damage_kind must be "normal" or "skill" at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
 }
 

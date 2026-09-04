@@ -42,7 +42,6 @@ interface DamageFactorTerm {
   bucket: NumericBucketId;
   bucketName: DynamicDamageBucket;
   placement: GroupPlacement;
-  damageKind?: DamageJob["kind"];
 }
 
 export interface DamageRecordingResult {
@@ -461,7 +460,7 @@ class FullDamageJobRecorder implements DamageJobRecorder {
         },
         armyTerm: result.armyTerm,
         atomicBuckets: toTraceBuckets(result.factors, this.contributors, staticEntries),
-        aggregationGroups: buildAggregationGroups(job, result.factors, this.contributors, staticEntries),
+        aggregationGroups: buildAggregationGroups(result.factors, this.contributors, staticEntries),
         appliedEffects,
         rejectedEffects: this.rejectedEffects,
         damageBeforeOffsets: result.damageBeforeOffsets,
@@ -495,8 +494,7 @@ function factorTerm(bucket: DynamicDamageBucket): DamageFactorTerm {
     id: bucket,
     bucket: DYNAMIC_BUCKET_INDEX[bucket],
     bucketName: bucket,
-    placement: definition.placement,
-    damageKind: "damageKind" in definition ? definition.damageKind : undefined
+    placement: definition.placement
   };
 }
 
@@ -615,7 +613,6 @@ function passiveAppliedEffects(entry: StaticProfileEntry, detailed: boolean): Ap
 }
 
 function buildAggregationGroups(
-  job: DamageJob,
   factors: Float64Array,
   contributors: DamageBucketTrace["contributors"][],
   staticEntries: StaticProfileEntry[]
@@ -623,7 +620,6 @@ function buildAggregationGroups(
   const groups: Record<string, DamageAggregationGroupTrace> = {};
   addStaticAggregationGroups(groups, staticEntries);
   for (const term of [...DEFAULT_NUMERATOR_TERMS, ...DEFAULT_DENOMINATOR_TERMS, ...DEFAULT_OFFSET_TERMS]) {
-    if (term.damageKind && term.damageKind !== job.kind) continue;
     const definition = dynamicBucketDefinition(term.bucketName)!;
     const factor = factors[term.bucket];
     groups[term.id] = definition.update === "add_raw"

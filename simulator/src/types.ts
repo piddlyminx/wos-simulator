@@ -1,6 +1,6 @@
 export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
-export type DamageKind = "normal" | "skill" | "extra";
+export type DamageKind = "normal" | "skill";
 export type UnitMask = number;
 export type ActiveEffectKind = "modifier" | "shield" | "extra_attack" | "control" | "battle_order" | "carrier";
 export type SameEffectStacking = "add" | "max";
@@ -91,6 +91,8 @@ export interface EffectIntentDefinition {
   /** Optional only for a child-bearing normal-attack carrier. */
   type?: string;
   value?: unknown;
+  /** Restrict this modifier to these damage job kinds without changing its arithmetic bucket. */
+  applies_to_damage_kinds?: DamageKind[];
   /** Apply this modifier only while the named effect is applicable to the same damage job. */
   requires_effect?: string;
   value_formula?: PercentOfValueFormula;

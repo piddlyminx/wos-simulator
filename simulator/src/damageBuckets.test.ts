@@ -16,7 +16,6 @@ test("active hero and troop damage aliases are supported all-damage buckets", ()
     "active.troop.damageTaken.down"
   ] as const) {
     assert.equal(DYNAMIC_BUCKETS.some((definition) => definition.name === bucket), true, bucket);
-    assert.equal(dynamicBucketDefinition(bucket)?.damageKind, undefined, bucket);
   }
   assert.equal(dynamicBucketDefinition("active.hero.damage.up")?.placement, "numerator");
   assert.equal(dynamicBucketDefinition("active.hero.damage.down")?.placement, "denominator");
@@ -27,10 +26,8 @@ test("active hero and troop damage aliases are supported all-damage buckets", ()
 test("type all damage buckets multiply percentage factors", () => {
   assert.equal(dynamicBucketDefinition("type.all.damage.up")?.update, "multiply_pct_factor");
   assert.equal(dynamicBucketDefinition("type.all.damage.up")?.placement, "numerator");
-  assert.equal(dynamicBucketDefinition("type.all.damage.up")?.damageKind, undefined);
   assert.equal(dynamicBucketDefinition("type.all.damage.down")?.update, "multiply_pct_factor");
   assert.equal(dynamicBucketDefinition("type.all.damage.down")?.placement, "denominator");
-  assert.equal(dynamicBucketDefinition("type.all.damage.down")?.damageKind, undefined);
 });
 
 test("damage scratch stores one numeric value per dynamic bucket with metadata-defined neutral values", () => {
@@ -56,6 +53,11 @@ test("hero and troop shields are raw post-subtract offsets applying to normal an
     assert.equal(shield?.jobSide, "taker", bucket);
     assert.equal(shield?.update, "add_raw", bucket);
     assert.equal(shield?.placement, "post_subtract", bucket);
-    assert.equal(shield?.damageKind, undefined, bucket);
+  }
+});
+
+test("bucket definitions contain arithmetic metadata only", () => {
+  for (const definition of DYNAMIC_BUCKETS) {
+    assert.equal("damageKind" in definition, false, definition.name);
   }
 });
