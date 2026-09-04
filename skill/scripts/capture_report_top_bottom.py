@@ -23,6 +23,7 @@ import cv2
 import numpy as np
 
 from emulator import WosEmulator
+from scroll_capture import save_stitched_screenshot, stitch_scrolling_frames
 
 logger = logging.getLogger(__name__)
 _rapid_ocr = None
@@ -340,53 +341,6 @@ def scroll_to_bottom(
     return False
 
 
-def _estimate_vertical_scroll(previous: np.ndarray, current: np.ndarray) -> tuple[int, float]:
-    """Return the document-pixel advance between consecutive report viewports."""
-    if previous.shape != current.shape:
-        raise ValueError(
-            f"Cannot stitch report frames with different shapes: {previous.shape} != {current.shape}"
-        )
-
-    height, width = previous.shape[:2]
-    min_overlap = max(24, int(round(height * 0.08)))
-    min_shift = max(1, int(round(height * 0.03)))
-    max_shift = height - min_overlap
-    if min_shift > max_shift:
-        raise ValueError(f"Report content viewport is too short to stitch: {height}px")
-
-    # Ignore the side borders and down-arrow overlay. Downsample horizontally
-    # only: vertical downsampling aliases several real row offsets to one
-    # coarse offset, which leaves thin duplicated/clipped seams in the result.
-    x1 = int(round(width * 0.08))
-    x2 = int(round(width * 0.86))
-    previous_gray = cv2.cvtColor(previous[:, x1:x2], cv2.COLOR_BGR2GRAY)
-    current_gray = cv2.cvtColor(current[:, x1:x2], cv2.COLOR_BGR2GRAY)
-    target_width = min(180, previous_gray.shape[1])
-    if target_width < previous_gray.shape[1]:
-        previous_gray = cv2.resize(
-            previous_gray,
-            (target_width, height),
-            interpolation=cv2.INTER_AREA,
-        )
-        current_gray = cv2.resize(
-            current_gray,
-            (target_width, height),
-            interpolation=cv2.INTER_AREA,
-        )
-
-    best_shift = min_shift
-    best_score = float("inf")
-    for shift in range(min_shift, max_shift + 1):
-        overlap_previous = previous_gray[shift:]
-        overlap_current = current_gray[: height - shift]
-        score = float(np.mean(cv2.absdiff(overlap_previous, overlap_current)))
-        if score < best_score:
-            best_shift = shift
-            best_score = score
-
-    return best_shift, best_score
-
-
 def stitch_report_frames(
     frames: list[np.ndarray],
     *,
@@ -395,49 +349,22 @@ def stitch_report_frames(
     """Stitch scrolled report frames into one long, readable screenshot."""
     if not frames:
         raise ValueError("Cannot stitch an empty report frame list")
-    if any(frame.shape != frames[0].shape for frame in frames):
-        raise ValueError("Cannot stitch report frames with different dimensions")
-
     height = frames[0].shape[0]
     if content_bounds is None:
         content_top = int(round(_REPORT_CONTENT_TOP_REF * height / _STAT_BONUSES_REF_HEIGHT))
         content_bottom = int(round(_REPORT_CONTENT_BOTTOM_REF * height / _STAT_BONUSES_REF_HEIGHT))
     else:
         content_top, content_bottom = content_bounds
-    if not 0 <= content_top < content_bottom <= height:
-        raise ValueError(
-            f"Invalid report content bounds ({content_top}, {content_bottom}) for {height}px frame"
-        )
-
-    content_frames = [frame[content_top:content_bottom] for frame in frames]
-    chunks = [frames[0][:content_top], content_frames[0]]
-    previous = content_frames[0]
-    last_frame = frames[0]
-    for frame, current in zip(frames[1:], content_frames[1:]):
-        if _mean_frame_delta(previous, current) <= _SCREEN_STABLE_MEAN_THRESHOLD:
-            continue
-        shift, score = _estimate_vertical_scroll(previous, current)
-        if score > 24.0:
-            raise RuntimeError(
-                "Could not align consecutive report screenshots reliably "
-                f"(best mean pixel error={score:.2f})"
-            )
-        chunks.append(current[current.shape[0] - shift :])
-        previous = current
-        last_frame = frame
-
-    chunks.append(last_frame[content_bottom:])
-    return np.concatenate(chunks, axis=0)
+    return stitch_scrolling_frames(
+        frames,
+        content_bounds=(content_top, content_bottom),
+    )
 
 
 def save_long_report_screenshot(frames: list[np.ndarray], output_path: str | Path) -> str:
     """Stitch report frames and write the resulting PNG atomically enough for CLI use."""
-    path = Path(output_path).expanduser().resolve()
-    path.parent.mkdir(parents=True, exist_ok=True)
     stitched = stitch_report_frames(frames)
-    if not cv2.imwrite(str(path), stitched):
-        raise RuntimeError(f"Failed to write long report screenshot: {path}")
-    return str(path)
+    return save_stitched_screenshot(stitched, output_path)
 
 
 def _save_bottom_failure_diagnostics(

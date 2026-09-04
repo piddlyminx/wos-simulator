@@ -32,6 +32,7 @@ Commands:
   report              Read and parse a battle report from an inbox tab
   report-images <dir> Parse a battle report from an existing screenshot bundle
   reports             Capture and parse multiple consecutive battle reports
+  screencap           Save one screenshot, or a full scrolling screenshot
   capture-hero-skills  Capture and save all hero skill levels
   ensure-alliance <tag> Ensure the player is in the specified alliance
   recall-camp          Recall all encamped troops from the world map
@@ -725,19 +726,78 @@ def cmd_goto(instance_name: str, destination: str, pet_name: str = "", coord_y: 
         )
 
 
-def cmd_screencap(instance_name: str, out_path: str) -> int:
+def cmd_screencap(
+    instance_name: str,
+    out_path: str,
+    *,
+    full: bool = False,
+    max_scrolls: int = 200,
+    content_top: int | None = None,
+    content_bottom: int | None = None,
+) -> int:
+    if (content_top is None) != (content_bottom is None):
+        return _fail(
+            "--content-top and --content-bottom must be used together",
+            exit_code=2,
+            error_type="usage_error",
+            command="screencap",
+            instance_name=instance_name,
+            path=out_path,
+        )
+    if content_top is not None and not full:
+        return _fail(
+            "--content-top and --content-bottom require --full",
+            exit_code=2,
+            error_type="usage_error",
+            command="screencap",
+            instance_name=instance_name,
+            path=out_path,
+        )
+    if content_top is not None and content_bottom is not None and content_top >= content_bottom:
+        return _fail(
+            "--content-top must be less than --content-bottom",
+            exit_code=2,
+            error_type="usage_error",
+            command="screencap",
+            instance_name=instance_name,
+            path=out_path,
+        )
+
     try:
         emulator = _resolve_emulator(instance_name)
     except WosError as exc:
         return _fail(str(exc), command="screencap", instance_name=instance_name, path=out_path, cause=exc)
 
     try:
+        if full:
+            from scroll_capture import capture_scrolling_screenshot
+
+            bounds = (
+                (content_top, content_bottom)
+                if content_top is not None and content_bottom is not None
+                else None
+            )
+            capture = capture_scrolling_screenshot(
+                emulator,
+                out_path,
+                max_scrolls=max_scrolls,
+                content_bounds=bounds,
+            )
+            return _success(
+                command="screencap",
+                instance_name=instance_name,
+                serial=emulator.serial,
+                full=True,
+                **capture,
+            )
+
         emulator.screencap(out_path)
         return _success(
             command="screencap",
             instance_name=instance_name,
             serial=emulator.serial,
             path=out_path,
+            full=False,
         )
     except Exception as exc:
         return _fail(
@@ -1352,8 +1412,37 @@ def build_parser() -> argparse.ArgumentParser:
     )
     memories_p.add_argument("map", help="CSV or JSON file mapping label text to screen coordinates")
 
-    cap_p = sub.add_parser("screencap", help="Save screenshot to a file")
+    cap_p = sub.add_parser(
+        "screencap",
+        help="Save the current viewport or a full scrolling screenshot",
+    )
     cap_p.add_argument("path", help="Output file path")
+    cap_p.add_argument(
+        "--full",
+        action="store_true",
+        help="Scroll from top to bottom and save one stitched full-length image",
+    )
+    cap_p.add_argument(
+        "--max-scrolls",
+        type=_positive_int,
+        default=200,
+        metavar="N",
+        help="Safety limit for finding either scroll boundary (default: 200)",
+    )
+    cap_p.add_argument(
+        "--content-top",
+        type=_non_negative_int,
+        default=None,
+        metavar="PX",
+        help="Top of scrolling viewport in pixels; requires --content-bottom",
+    )
+    cap_p.add_argument(
+        "--content-bottom",
+        type=_positive_int,
+        default=None,
+        metavar="PX",
+        help="Bottom of scrolling viewport in pixels; requires --content-top",
+    )
 
     tc_p = sub.add_parser("run-testcase", help="Run a battle spec end-to-end")
     tc_p.add_argument("spec", help="Path to battle spec JSON")
@@ -1468,7 +1557,14 @@ def main() -> int:
                 return cmd_memories(instance_name, args.map, args.tap_mode)
 
             if args.command == "screencap":
-                return cmd_screencap(instance_name, args.path)
+                return cmd_screencap(
+                    instance_name,
+                    args.path,
+                    full=args.full,
+                    max_scrolls=args.max_scrolls,
+                    content_top=args.content_top,
+                    content_bottom=args.content_bottom,
+                )
 
             if args.command == "capture-hero-skills":
                 return cmd_capture_hero_skills(instance_name, debug=args.debug)
