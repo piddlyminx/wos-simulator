@@ -45,7 +45,7 @@ This skill lives inside the simulator repository at `skill/`. Agents should stil
 - `goto pet "<pet name>"`
 - `goto pet_refine "<pet name>"`
 - `memories <map>` — clear visible memories labels using a CSV or JSON map
-- `screencap <path>`
+- `screencap <path> [--full] [--max-scrolls N] [--content-top PX --content-bottom PX]` — save the current viewport, or find both vertical scroll boundaries and save a seamless full-length image
 - `report --tab <war|reports|starred> --index <1-5> [--output <path>]` — read and parse an existing battle report, optionally saving reusable parsed JSON
 - `report-images <directory> [--output <path>]` — parse saved overview, troop/stat, and complete Battle Details screenshots without emulator access
 - `reports --tab <war|reports|starred> --count <N> [--skip N] [--full-json] [--long-screenshots]` — optionally skip battle reports from visible entry 1, then capture and parse `N` consecutive battle reports; optionally save one stitched full-length PNG per report

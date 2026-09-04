@@ -338,6 +338,80 @@ class WosctlErrorHandlingTests(unittest.TestCase):
         self.assertEqual(payload["command"], "run-battle")
         self.assertEqual(payload["completed"], 3)
 
+    def test_screencap_full_uses_generic_scrolling_capture(self) -> None:
+        class FakeEmulator:
+            serial = "127.0.0.1:16384"
+
+        received: list[tuple[object, str, int, tuple[int, int] | None]] = []
+        fake_scroll_capture = types.ModuleType("scroll_capture")
+
+        def capture(
+            emulator: object,
+            path: str,
+            *,
+            max_scrolls: int,
+            content_bounds: tuple[int, int] | None,
+        ) -> dict[str, object]:
+            received.append((emulator, path, max_scrolls, content_bounds))
+            return {
+                "path": "/tmp/full.png",
+                "frame_count": 4,
+                "width": 720,
+                "height": 3200,
+                "content_bounds": [86, 1172],
+                "top_reached": True,
+                "bottom_reached": True,
+            }
+
+        fake_scroll_capture.capture_scrolling_screenshot = capture
+        old_module = sys.modules.get("scroll_capture")
+        sys.modules["scroll_capture"] = fake_scroll_capture
+        emulator = FakeEmulator()
+        stdout = io.StringIO()
+        try:
+            with patch.object(self.wosctl, "_resolve_emulator", return_value=emulator), \
+                    contextlib.redirect_stdout(stdout):
+                exit_code = self.wosctl.cmd_screencap(
+                    "WIP",
+                    "full.png",
+                    full=True,
+                    max_scrolls=12,
+                    content_top=86,
+                    content_bottom=1172,
+                )
+        finally:
+            if old_module is None:
+                sys.modules.pop("scroll_capture", None)
+            else:
+                sys.modules["scroll_capture"] = old_module
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(received, [(emulator, "full.png", 12, (86, 1172))])
+        payload = json.loads(stdout.getvalue())
+        self.assertTrue(payload["ok"])
+        self.assertTrue(payload["full"])
+        self.assertTrue(payload["bottom_reached"])
+
+    def test_screencap_full_requires_content_bounds_as_a_pair(self) -> None:
+        class FakeEmulator:
+            serial = "127.0.0.1:16384"
+
+        stdout = io.StringIO()
+        with patch.object(self.wosctl, "_resolve_emulator", return_value=FakeEmulator()), \
+                contextlib.redirect_stdout(stdout):
+            exit_code = self.wosctl.cmd_screencap(
+                "WIP",
+                "full.png",
+                full=True,
+                content_top=86,
+            )
+
+        self.assertEqual(exit_code, 2)
+        payload = json.loads(stdout.getvalue())
+        self.assertFalse(payload["ok"])
+        self.assertEqual(payload["error_type"], "usage_error")
+        self.assertIn("must be used together", payload["error"])
+
     def test_create_testcase_consumes_saved_report_json(self) -> None:
         @contextlib.contextmanager
         def unlocked() -> object:

@@ -51,6 +51,15 @@ From `skill/`:
 ./scripts/wosctl --instance <instance-name> goto coord 123 456
 ```
 
+Screenshot capture:
+
+```bash
+./scripts/wosctl --instance <instance-name> screencap captures/current.png
+./scripts/wosctl --instance <instance-name> screencap captures/full.png --full
+```
+
+Full capture rapidly rewinds the current screen to its top, captures overlapping viewports until two no-progress swipes confirm the bottom, and writes one stitched image. The scrolling viewport is detected automatically. For screens with unusual fixed chrome, pass both `--content-top PX` and `--content-bottom PX`; `--max-scrolls N` changes the safety limit for either boundary search (default: 200).
+
 Report capture:
 
 ```bash
