@@ -110,16 +110,16 @@
         },
         "stats": {
           "infantry": {
-            "attack": 58,
+            "attack": 78,
             "defense": 78,
-            "lethality": 265.95,
+            "lethality": 303.8,
             "health": 462.5
           },
           "lancer": {
-            "attack": 8,
-            "defense": 8,
-            "lethality": 20.99,
-            "health": 20.99
+            "attack": -43.8,
+            "defense": -43.8,
+            "lethality": 21,
+            "health": 21
           },
           "marksman": {
             "attack": 158,
@@ -153,28 +153,28 @@
       "name": "Defender 1: Natalia, Mia, Lynn",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 65000,
-          "lancer_t11_fc10": 65000,
-          "marksman_t11_fc10": 65000
+          "infantry_t11_fc10": 104000,
+          "lancer_t11_fc10": 52000,
+          "marksman_t11_fc10": 39000
         },
         "stats": {
           "infantry": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           },
           "lancer": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           },
           "marksman": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           }
         },
         "heroes": {
@@ -188,7 +188,7 @@
             "skill_2": 5,
             "skill_3": 5
           },
-          "Lynn": {
+          "Alonso": {
             "skill_1": 5,
             "skill_2": 5,
             "skill_3": 5
@@ -200,28 +200,28 @@
       "name": "Defender 2: Flint, Molly, Greg",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 65000,
-          "lancer_t11_fc10": 65000,
-          "marksman_t11_fc10": 65000
+          "infantry_t11_fc10": 104000,
+          "lancer_t11_fc10": 52000,
+          "marksman_t11_fc10": 39000
         },
         "stats": {
           "infantry": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           },
           "lancer": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           },
           "marksman": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           }
         },
         "heroes": {
@@ -230,12 +230,12 @@
             "skill_2": 5,
             "skill_3": 5
           },
-          "Molly": {
+          "Philly": {
             "skill_1": 5,
             "skill_2": 5,
             "skill_3": 5
           },
-          "Greg": {
+          "Lynn": {
             "skill_1": 5,
             "skill_2": 5,
             "skill_3": 5
@@ -247,28 +247,28 @@
       "name": "Defender 3: Jeronimo, Philly, Alonso",
       "fighter": {
         "troops": {
-          "infantry_t11_fc10": 65000,
-          "lancer_t11_fc10": 65000,
-          "marksman_t11_fc10": 65000
+          "infantry_t11_fc10": 104000,
+          "lancer_t11_fc10": 52000,
+          "marksman_t11_fc10": 39000
         },
         "stats": {
           "infantry": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           },
           "lancer": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           },
           "marksman": {
-            "attack": 1098,
-            "defense": 1098,
-            "lethality": 637,
-            "health": 637
+            "attack": 1111,
+            "defense": 1111,
+            "lethality": 643,
+            "health": 643
           }
         },
         "heroes": {
@@ -277,12 +277,12 @@
             "skill_2": 5,
             "skill_3": 5
           },
-          "Philly": {
+          "Molly": {
             "skill_1": 5,
             "skill_2": 5,
             "skill_3": 5
           },
-          "Alonso": {
+          "Greg": {
             "skill_1": 5,
             "skill_2": 5,
             "skill_3": 5
@@ -301,38 +301,20 @@
     ],
     "unique_heroes": true,
     "per_army_hero_pools": [
-      { 
-        "infantry": [
-          "Gatot", "Edith", "Wu Ming", "Hector", "Logan"
-        ],
-        "lancer": [
-          "Sonya"
-        ],
-        "marksman": [
-          "Greg"
-        ]
+      {
+        "infantry": ["Gatot"],
+        "lancer": ["Sonya"],
+        "marksman": ["Greg"]
       },
       {
-        "infantry": [
-          "Gatot", "Edith", "Wu Ming", "Hector", "Logan"
-        ],
-        "lancer": [
-          "Gordon", "Renee", "Norah", "Reina", "Mia", "Philly" 
-        ],
-        "marksman": [
-          "Bradley", "Hendrik"
-        ]
+        "infantry": ["Edith", "Wu Ming", "Logan", "Jeronimo", "Hector"],
+        "lancer": ["Mia", "Philly", "Gordon"],
+        "marksman": ["Bradley", "Hendrik", "Wayne"]
       },
       {
-        "infantry": [
-          "Gatot", "Edith", "Wu Ming", "Hector", "Logan"
-        ],
-        "lancer": [
-          "Gordon", "Renee", "Norah", "Reina", "Mia", "Philly" 
-        ],
-        "marksman": [
-          "Bradley", "Hendrik"
-        ]
+        "infantry": ["Edith", "Wu Ming", "Logan", "Jeronimo", "Hector"],
+        "lancer": ["Mia", "Philly", "Gordon"],
+        "marksman": ["Bradley", "Hendrik", "Wayne"]
       }
     ]
   },
