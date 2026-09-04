@@ -302,50 +302,27 @@
     "unique_heroes": true,
     "per_army_hero_pools": [
       {
-        "infantry": [
-          "Edith",
-          "Hector",
-          "Wu Ming"
-        ],
-        "lancer": [
-          "Mia",
-          "Philly",
-          "Gordon"
-        ],
-        "marksman": [
-          "Bradley",
-          "Hendrik",
-          "Wayne"
-        ]
+        "infantry": ["Gatot"],
+        "lancer": ["Sonya"],
+        "marksman": ["Greg"]
       },
       {
-        "infantry": [
-          "Edith",
-          "Hector",
-          "Wu Ming"
-        ],
-        "lancer": [
-          "Mia",
-          "Philly",
-          "Gordon"
-        ],
-        "marksman": [
-          "Bradley",
-          "Hendrik",
-          "Wayne"
-        ]
+        "infantry": ["Edith", "Wu Ming", "Logan", "Jeronimo", "Hector"],
+        "lancer": ["Mia", "Philly", "Gordon"],
+        "marksman": ["Bradley", "Hendrik", "Wayne"]
       },
       {
-        "infantry": [
-          "Gatot"
-        ],
-        "lancer": [
-          "Sonya"
-        ],
-        "marksman": [
-          "Greg"
-        ]
+        "infantry": ["Edith", "Wu Ming", "Logan", "Jeronimo", "Hector"],
+        "lancer": ["Mia", "Philly", "Gordon"],
+        "marksman": ["Bradley", "Hendrik", "Wayne"]
       }
     ]
+  },
+  "troop_optimization": {
+    "side": "attacker",
+    "coarse_step_percent": 5,
+    "fine_step_percent": 1,
+    "fine_radius_percent": 3,
+    "passes": 2
   }
 }
