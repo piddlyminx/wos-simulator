@@ -1,7 +1,7 @@
 [
   {
     "test_id": "wu_ming_solo_current_nc",
-    "description": "Deterministic current-account Wu Ming solo coverage. WIP attacks with Wu Ming 3/3/3 and 170 each T6 Infantry, Lancers, and Marksmen into minxxx's 380 each T6 Infantry and Lancers. Using current no-hero stats, Wu Ming's S6 contribution estimated from the recent WIP Renee report, and the published skill values: the configured interpretation predicts a signed remaining score near -7; omitting S1's normal-damage reduction predicts about -297; omitting S2 predicts about -306; and incorrectly allowing S3 to amplify normal attacks predicts about +344. The exact captured stats will be substituted into these frozen interpretations after capture. This fixture positively exercises S1's normal-damage branch and S2; it checks that S3 remains inert without skill-damage jobs, but cannot positively validate S1's skill-damage branch or S3's amplification.",
+    "description": "Deterministic current-account Wu Ming solo coverage. WIP attacks with Wu Ming 3/3/3 and 170 each T6 Infantry, Lancers, and Marksmen into minxxx's 380 each T6 Infantry and Lancers. The displayed report stats are passed through unchanged and the recorded signed result is -223. This fixture positively exercises S1's normal-damage branch and S2; it checks that S3 remains inert without skill-damage jobs, but cannot positively validate S1's skill-damage branch or S3's amplification.",
     "attacker": {
       "name": "[BBQ]XxWIPxX",
       "heroes": {
@@ -18,22 +18,22 @@
       },
       "stats": {
         "inf": {
-          "attack": 414.7,
-          "defense": 414.5,
-          "lethality": 199.3,
-          "health": 260.1
+          "attack": 444.7,
+          "defense": 445.6,
+          "lethality": 214.4,
+          "health": 273.3
         },
         "lanc": {
-          "attack": 203.8,
-          "defense": 201.6,
-          "lethality": 181.3,
-          "health": 181.1
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
         },
         "mark": {
-          "attack": 208.0,
-          "defense": 204.8,
-          "lethality": 175.7,
-          "health": 176.4
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
         }
       },
       "joiner_heroes": {}
@@ -47,22 +47,22 @@
       },
       "stats": {
         "inf": {
-          "attack": 282.7,
-          "defense": 279.5,
-          "lethality": 226.3,
-          "health": 221.0
+          "attack": 305.3,
+          "defense": 284.6,
+          "lethality": 244.0,
+          "health": 238.4
         },
         "lanc": {
-          "attack": 275.2,
-          "defense": 278.5,
-          "lethality": 216.2,
-          "health": 217.5
+          "attack": 294.9,
+          "defense": 280.7,
+          "lethality": 224.3,
+          "health": 230.0
         },
         "mark": {
-          "attack": 281.0,
-          "defense": 286.0,
-          "lethality": 226.3,
-          "health": 221.4
+          "attack": 292.2,
+          "defense": 279.7,
+          "lethality": 235.8,
+          "health": 230.3
         }
       },
       "joiner_heroes": {}
@@ -70,7 +70,7 @@
     "game_report_result": [
       {
         "attacker": 0,
-        "defender": 200
+        "defender": 223
       }
     ]
   }
