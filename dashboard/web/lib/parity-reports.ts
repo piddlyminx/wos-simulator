@@ -113,7 +113,15 @@ export interface ParityCaseReport {
   error?: string;
   deterministic?: boolean;
   sampleCount?: number;
-  simulatorStats?: { n: number; mu: number; sigma: number; sem: number };
+  simulatorStats?: {
+    n: number;
+    mu: number;
+    sigma: number;
+    sem: number;
+    samples?: number[];
+  };
+  comparisonSamples?: number[];
+  gameResult?: unknown;
   simulatorScoreDelta?: number;
   visibility?: Record<string, unknown>;
   result?: {
@@ -154,6 +162,7 @@ export interface ParityReportJson {
   schemaVersion?: number;
   createdAt?: string;
   artifactRoot?: string;
+  chartsArtifact?: string;
   options?: Record<string, unknown>;
   counts?: ParityReportCounts;
   warnings?: unknown[];
@@ -171,6 +180,18 @@ export interface LoadedParityReport extends ParityReportDescriptor {
   rows: ParityComparisonRow[];
   cases: ParityCaseReport[];
   summary: ParitySummary;
+}
+
+export interface ParityDistributionCase {
+  file: string;
+  testcaseId: string;
+  idx: number;
+  passes: boolean | null;
+  sampleCount: number;
+  simulatorSamples: number[];
+  gameSamples: number[];
+  game: ParityMetric | null;
+  gameStatAdjustment?: ParityStatAdjustment;
 }
 
 export interface RunReportLookup {
@@ -234,6 +255,40 @@ export function getParityReport(
     cases: [],
     summary: summarizeParityReport(data),
   };
+}
+
+export function getParityReportDistributionCases(
+  reportId: string,
+  dir = defaultParityReportDir(),
+): ParityDistributionCase[] {
+  const report = getParityReport(reportId, dir);
+  if (!report) return [];
+  const reportDir = path.dirname(report.path);
+  const artifactPath = resolveArtifactPath(reportDir, report.data.chartsArtifact);
+  const artifactCases = artifactPath
+    ? loadDistributionArtifact(artifactPath)
+    : undefined;
+  if (artifactCases) return artifactCases;
+
+  return report.rows.flatMap((row) => {
+    if (row.deterministic !== false) return [];
+    const detail = loadDetailArtifact(reportDir, row.detailArtifact);
+    const simulatorSamples = finiteNumbers(
+      detail?.comparisonSamples ?? detail?.simulatorStats?.samples,
+    );
+    if (simulatorSamples.length === 0) return [];
+    return [{
+      file: row.file,
+      testcaseId: row.testcaseId,
+      idx: row.idx,
+      passes: row.game?.passes ?? null,
+      sampleCount: row.sampleCount ?? simulatorSamples.length,
+      simulatorSamples,
+      gameSamples: gameOutcomeScores(detail?.gameResult),
+      game: row.game,
+      gameStatAdjustment: row.gameStatAdjustment,
+    }];
+  });
 }
 
 export function findRunReportForRun(
@@ -423,6 +478,94 @@ function loadDetailArtifact(
   } catch {
     return undefined;
   }
+}
+
+function resolveArtifactPath(
+  reportDir: string,
+  artifact: string | undefined,
+): string | undefined {
+  if (!artifact) return undefined;
+  const reportRoot = path.resolve(reportDir);
+  const artifactPath = path.resolve(reportRoot, artifact);
+  return isSubpath(reportRoot, artifactPath) ? artifactPath : undefined;
+}
+
+function loadDistributionArtifact(
+  artifactPath: string,
+): ParityDistributionCase[] | undefined {
+  if (path.extname(artifactPath) !== ".json") return undefined;
+  try {
+    const data = JSON.parse(fs.readFileSync(artifactPath, "utf8")) as {
+      reportKind?: unknown;
+      schemaVersion?: unknown;
+      cases?: unknown;
+    };
+    if (
+      data.reportKind !== "simulator-parity-charts" ||
+      data.schemaVersion !== 1 ||
+      !Array.isArray(data.cases)
+    ) {
+      return undefined;
+    }
+    return data.cases.flatMap(parseDistributionCase);
+  } catch {
+    return undefined;
+  }
+}
+
+function parseDistributionCase(value: unknown): ParityDistributionCase[] {
+  if (!value || typeof value !== "object") return [];
+  const item = value as Record<string, unknown>;
+  if (
+    typeof item.file !== "string" ||
+    typeof item.testcaseId !== "string" ||
+    typeof item.idx !== "number"
+  ) {
+    return [];
+  }
+  const simulatorSamples = finiteNumbers(item.simulatorSamples);
+  if (simulatorSamples.length === 0) return [];
+  return [{
+    file: item.file,
+    testcaseId: item.testcaseId,
+    idx: item.idx,
+    passes: typeof item.passes === "boolean" ? item.passes : null,
+    sampleCount: typeof item.sampleCount === "number"
+      ? item.sampleCount
+      : simulatorSamples.length,
+    simulatorSamples,
+    gameSamples: finiteNumbers(item.gameSamples),
+    game: isParityMetric(item.game) ? item.game : null,
+    gameStatAdjustment: item.gameStatAdjustment as ParityStatAdjustment | undefined,
+  }];
+}
+
+function finiteNumbers(value: unknown): number[] {
+  return Array.isArray(value)
+    ? value.map(Number).filter(Number.isFinite)
+    : [];
+}
+
+function gameOutcomeScores(value: unknown): number[] {
+  const outcomes = Array.isArray(value) ? value : value ? [value] : [];
+  return outcomes.flatMap((outcome) => {
+    if (!outcome || typeof outcome !== "object") return [];
+    const attacker = Number((outcome as { attacker?: unknown }).attacker);
+    const defender = Number((outcome as { defender?: unknown }).defender);
+    return Number.isFinite(attacker) && Number.isFinite(defender)
+      ? [attacker - defender]
+      : [];
+  });
+}
+
+function isParityMetric(value: unknown): value is ParityMetric {
+  if (!value || typeof value !== "object") return false;
+  const metric = value as Partial<ParityMetric>;
+  return (
+    typeof metric.n_candidate === "number" &&
+    typeof metric.mu_candidate === "number" &&
+    typeof metric.passes === "boolean"
+  );
 }
 
 function isParityReportJson(value: unknown): value is ParityReportJson & {

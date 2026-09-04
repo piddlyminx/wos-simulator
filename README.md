@@ -27,6 +27,7 @@ cd simulator
 npm test                    # unit + testcase parity suite
 npm run typecheck
 npx tsx ../scripts/run_testcases.ts --save-snapshot --db-ingest # save run and add to dashboard history
+npx tsx ../scripts/run_testcases.ts --human --generate-charts   # summary plus stochastic distribution charts
 ```
 
 Simulator-backed operational scripts live at the repo root:
@@ -49,8 +50,10 @@ generated manifest or separate registration step.
 A Next.js app (`dashboard/web/`) with TypeScript SQLite ingestion and Python OCR
 helpers. The dashboard reads parity reports and the SQLite run history;
 current runs are generated from the CLI with
-`npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest`. In-browser simulation runs the
-TypeScript engine in a web worker.
+`npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest`. Saved testcase
+run artifacts include stochastic distribution charts, available from the
+Run Reports page's Charts tab. In-browser simulation runs the TypeScript engine
+in a web worker.
 
 ```bash
 cd dashboard/web

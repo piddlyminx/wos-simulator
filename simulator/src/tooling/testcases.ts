@@ -8,7 +8,7 @@ import {
   type SampleStats,
   sampleStats
 } from "./calibration";
-import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
+import { compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
 import { prepareBattle, runPrepared } from "../simulator";
 import { DamageAggregationError } from "../staticDamageProfile";
 import type { BattleInput, BattleResult, FighterInput, SimulationMode, SimulatorConfig, StatBlock, UnitType } from "../types";
@@ -28,6 +28,7 @@ export interface TestcaseRunOptions {
   repeat?: number;
   seed?: string | number;
   workers?: number;
+  includeSamples?: boolean;
 }
 
 export interface TestcaseArmyDefinition {
@@ -54,6 +55,7 @@ export interface TestcaseCaseReport {
   result?: BattleResult;
   simulatorScoreDelta?: number;
   simulatorStats?: SampleStats;
+  comparisonSamples?: number[];
   simulatorSampleOutcomes?: TestcaseSampleOutcome[];
   simulatorSampleDeltas?: number[];
   gameStatAdjustment?: TestcaseStatAdjustment;
@@ -97,6 +99,7 @@ export interface TestcaseRunReport {
   options: TestcaseRunOptions;
   calibrationReportPath?: string;
   artifactRoot?: string;
+  chartsArtifact?: string;
   counts: {
     filesFound: number;
     testcasesFound: number;
@@ -370,7 +373,9 @@ function applyExecutionResult(
   }
   const stats = execution.simulatorStats;
   const gameResult = (entry as { game_report_result?: unknown }).game_report_result;
-  const initialTroops = totalInputTroops(preparedCase.input!.attacker) + totalInputTroops(preparedCase.input!.defender);
+  const attackerTroops = totalInputTroops(preparedCase.input!.attacker);
+  const defenderTroops = totalInputTroops(preparedCase.input!.defender);
+  const initialTroops = attackerTroops + defenderTroops;
   const simulatorSamples = execution.simulatorSamples;
   const gameSamples = extractOutcomeScores(gameResult);
   let game = gameSamples.length > 0
@@ -378,6 +383,7 @@ function applyExecutionResult(
         candidate: { samples: simulatorSamples },
         reference: { samples: gameSamples },
         initialTroops,
+        outcomeRange: { min: -defenderTroops, max: attackerTroops },
         deterministic: result.randomness.deterministic,
         thresholds: comparison.thresholds
       })
@@ -405,6 +411,9 @@ function applyExecutionResult(
   detail.deterministic = execution.deterministic;
   detail.sampleCount = execution.sampleCount;
   detail.simulatorStats = stats;
+  if (report.options.includeSamples) {
+    detail.comparisonSamples = [...(gameStatAdjustment?.samples ?? simulatorSamples)];
+  }
   detail.simulatorScoreDelta = execution.simulatorScoreDelta;
   detail.simulatorSampleOutcomes = execution.simulatorSampleOutcomes;
   detail.simulatorSampleDeltas = execution.simulatorSampleDeltas;
@@ -435,6 +444,7 @@ interface InternalStatAdjustment {
   mode: TestcaseStatAdjustment["mode"];
   unadjusted: ParityComparisonMetrics;
   adjusted: ParityComparisonMetrics;
+  samples: number[];
 }
 
 function findGameStatAdjustment(options: {
@@ -498,6 +508,10 @@ function evaluateStatAdjustment(options: {
     candidate: { samples: candidateSamples },
     reference: { samples: options.reference },
     initialTroops: options.initialTroops,
+    outcomeRange: {
+      min: -totalInputTroops(options.input.defender),
+      max: totalInputTroops(options.input.attacker)
+    },
     deterministic: options.deterministic,
     thresholds: options.thresholds
   });
@@ -511,7 +525,8 @@ function evaluateStatAdjustment(options: {
       options.initialTroops,
       options.averageRounds,
       mean(candidateSamples) - mean(options.reference)
-    )
+    ),
+    samples: candidateSamples
   };
 }
 
@@ -603,7 +618,6 @@ function roundStatAdjustment(value: number): number {
 }
 
 function finalizeReport(report: TestcaseRunReport): void {
-  applyComparisonQValues(report);
   report.counts.warnings = report.warnings.length;
   report.counts.errors = report.errors.length;
   report.counts.comparedToGame = Object.values(report.testcases).filter((entry) => entry.game).length;
@@ -668,10 +682,6 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
       errorDetails: errorDetails(error)
     };
   }
-}
-
-export function applyComparisonQValues(report: Pick<TestcaseRunReport, "testcases">): void {
-  applyBenjaminiHochberg(Object.values(report.testcases).map((entry) => entry.game).filter((value): value is ParityComparisonMetrics => !!value));
 }
 
 export function assignDetailArtifactPaths(report: TestcaseRunReport, artifactRoot: string): void {

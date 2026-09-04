@@ -5,9 +5,11 @@ import { resolve } from "node:path";
 import { test } from "node:test";
 
 import { loadSimulatorConfig } from "../config-node";
+import { createTroopStatsRecord } from "../troopStats";
+import type { SimulatorConfig } from "../types";
 import { loadCalibrationComparison, readCalibrationCase, testcaseFileLookupVariants } from "./calibration";
-import { applyBenjaminiHochberg, compareOutcomeDistribution, type ParityComparisonMetrics } from "./parityMetrics";
-import { adaptTestcaseEntry, applyComparisonQValues, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, deterministicRoundTolerancePct, discoverTestcaseFiles, runTestcases, testcaseArmiesFromEntry, type TestcaseSummaryEntry } from "./testcases";
+import { compareOutcomeDistribution, DEFAULT_STOCHASTIC_P_THRESHOLD, type ParityComparisonMetrics } from "./parityMetrics";
+import { adaptTestcaseEntry, assignDetailArtifactPaths, battleScoreDelta, buildSummaryForOutput, deterministicRoundTolerancePct, discoverTestcaseFiles, runTestcases, testcaseArmiesFromEntry, type TestcaseSummaryEntry } from "./testcases";
 
 test("discoverTestcaseFiles follows simulator/testcases symlink and skips disabled or stale files by default", () => {
   const files = discoverTestcaseFiles();
@@ -192,22 +194,6 @@ test("runTestcases keeps executed testcase without warning when legacy baseline 
   assert.deepEqual(report.warnings, []);
 });
 
-test("applyComparisonQValues corrects game comparisons only", () => {
-  const firstGame = comparisonMetric(0.01);
-  const secondGame = comparisonMetric(0.02);
-  const ignoredBaseline = comparisonMetric(0.04);
-  const testcases: Record<string, TestcaseSummaryEntry> = {
-    "testcases/a.json#0": summaryEntry("a", 0, firstGame, ignoredBaseline),
-    "testcases/b.json#0": summaryEntry("b", 0, secondGame, null)
-  };
-
-  applyComparisonQValues({ testcases });
-
-  assert.equal(firstGame.q, 0.02);
-  assert.equal(secondGame.q, 0.02);
-  assert.equal(ignoredBaseline.q, null);
-});
-
 test("calibration lookup supports simulator symlink and source testcase path variants", () => {
   assert.deepEqual(testcaseFileLookupVariants("simulator/testcases/emulator_verified/simple_001_nc.json"), [
     "simulator/testcases/emulator_verified/simple_001_nc.json",
@@ -253,14 +239,16 @@ test("no-hero simple testcase loads, runs, compares to game result, and exposes 
   assert.equal(entry?.visibility.attacker.heroes.length, 0);
   assert.equal(entry?.visibility.defender.heroes.length, 0);
   assert.equal(entry?.calibration, undefined);
+  assert.equal(entry?.comparisonSamples, undefined);
   assert.equal(battleScoreDelta(entry?.gameResult), -186);
   assert.equal(battleScoreDelta(entry?.result), entry ? entry.result!.remaining.attacker.infantry + entry.result!.remaining.attacker.lancer + entry.result!.remaining.attacker.marksman - (entry.result!.remaining.defender.infantry + entry.result!.remaining.defender.lancer + entry.result!.remaining.defender.marksman) : undefined);
 });
 
-test("runTestcases applies possible stat rounding correction to exact deterministic misses", () => {
+test("runTestcases retains the adjusted comparison samples when requested", () => {
   const config = loadSimulatorConfig();
-  const report = runTestcases({ matching: "determinism_test_normal" }, config);
+  const report = runTestcases({ matching: "determinism_test_normal", includeSamples: true }, config);
   const summary = Object.values(report.testcases)[0];
+  const detail = report.details[0];
 
   assert.equal(summary?.testcase_id, "determinism_test_normal");
   assert.equal(summary?.deterministic, true);
@@ -269,6 +257,7 @@ test("runTestcases applies possible stat rounding correction to exact determinis
   assert.equal(summary?.gameStatAdjustment?.mode, "deterministic_exact");
   assert.equal(summary?.gameStatAdjustment?.value, 0.05);
   assert.equal(summary?.gameStatAdjustment?.unadjusted.bias_raw, -2);
+  assert.deepEqual(detail?.comparisonSamples, [summary?.game?.mu_candidate]);
 });
 
 test("deterministic testcase tolerance increases by 0.1 percent every ten rounds and caps at 0.7 percent", () => {
@@ -281,20 +270,39 @@ test("deterministic testcase tolerance increases by 0.1 percent every ten rounds
   assert.equal(deterministicRoundTolerancePct(1500), 0.7);
 });
 
-test("round-scaled deterministic tolerance accepts close Seo-yoon cases", () => {
-  const config = loadSimulatorConfig();
-  const report = runTestcases({ matching: "Seo-yoon_tc_nc.json" }, config);
-  const fourth = Object.values(report.testcases).find((summary) => summary.testcase_id === "daut_viper_4");
-  const fifth = Object.values(report.testcases).find((summary) => summary.testcase_id === "daut_viper_5");
+test("round-scaled deterministic tolerance accepts a close fixture case", () => {
+  const testcaseRoot = tempDir("simulator-round-tolerance-testcases");
+  writeFileSync(
+    resolve(testcaseRoot, "round-scaled.json"),
+    JSON.stringify({
+      test_id: "round_scaled",
+      attacker: { troops: { infantry_t1: 1000 }, heroes: {} },
+      defender: { troops: { infantry_t1: 900 }, heroes: {} },
+      game_report_result: { attacker: 264, defender: 0 }
+    })
+  );
 
-  assert.equal(fourth?.game?.passes, true);
-  assert.equal(fifth?.game?.passes, true);
+  const report = runTestcases({ testcaseRoot }, testcaseFixtureConfig());
+  const summary = Object.values(report.testcases)[0];
+
+  assert.equal(report.details[0]?.result?.rounds, 130);
+  assert.equal(summary?.game?.bias_raw, 10);
+  assert.equal(summary?.game?.passes, true);
 });
 
-test("runTestcases default round cap lets long no-hero baselines reach battle end", () => {
-  const config = loadSimulatorConfig();
-  const report = runTestcases({ matching: "1-testcases_no-heroes_t6_single-type_nc.json", repeat: 1 }, config);
-  const entry = report.details.find((item) => item.testcaseId === "daut_viper_9");
+test("runTestcases default round cap lets a long fixture battle reach its end", () => {
+  const testcaseRoot = tempDir("simulator-round-cap-testcases");
+  writeFileSync(
+    resolve(testcaseRoot, "long-battle.json"),
+    JSON.stringify({
+      test_id: "long_battle",
+      attacker: { troops: { infantry_t1: 1000 }, heroes: {} },
+      defender: { troops: { infantry_t1: 900 }, heroes: {} }
+    })
+  );
+
+  const report = runTestcases({ testcaseRoot, repeat: 1 }, testcaseFixtureConfig());
+  const entry = report.details[0];
 
   assert.equal(entry?.result?.winner, "attacker");
   assert.ok((entry?.result?.rounds ?? 0) > 100);
@@ -365,7 +373,6 @@ test("compareOutcomeDistribution matches deterministic zero-bias shape", () => {
     stat_type: "deterministic",
     stat: null,
     p: null,
-    q: null,
     passes: true
   } satisfies ParityComparisonMetrics);
 });
@@ -375,77 +382,102 @@ test("compareOutcomeDistribution calibrates one observation against same-size si
     candidate: { samples: [0, 1, 2, 3] },
     reference: { samples: [0] },
     initialTroops: 100,
+    outcomeRange: { min: 0, max: 3 },
     deterministic: false
   });
 
-  assert.equal(metrics.stat_type, "surprisal");
+  assert.equal(metrics.stat_type, "cdf_support");
   assert.equal(metrics.passes, true);
   assert.equal(metrics.bias_raw, 1.5);
-  assert.equal(metrics.stat, 1.8562);
-  assert.equal(metrics.p, 0.499285);
+  assert.ok(metrics.p! > 0.3);
+  assert.ok(metrics.cdf_p! > 0.4);
+  assert.ok(metrics.support_p! > 0.3);
 });
 
-test("compareOutcomeDistribution detects an unlikely valley even when means match", () => {
+test("stochastic parity requires odds below one in 250 to fail by default", () => {
+  assert.equal(DEFAULT_STOCHASTIC_P_THRESHOLD, 0.004);
+
+  const candidate = Array.from({ length: 10 }, (_, index) => Array(50).fill(index + 1)).flat();
   const metrics = compareOutcomeDistribution({
-    candidate: { samples: [-2, -2, 2, 2] },
+    candidate: { samples: candidate },
+    reference: { samples: [1, 1, 2, 2, 3, 3, 4, 4, 5, 5] },
+    initialTroops: 10,
+    outcomeRange: { min: 1, max: 10 },
+    deterministic: false
+  });
+
+  assert.ok(metrics.p! > DEFAULT_STOCHASTIC_P_THRESHOLD);
+  assert.ok(metrics.p! < 0.05);
+  assert.equal(metrics.passes, true);
+});
+
+test("compareOutcomeDistribution flags a gap wider than the two-point support tolerance", () => {
+  const metrics = compareOutcomeDistribution({
+    candidate: { samples: Array(50).fill(-5).concat(Array(50).fill(5)) },
     reference: { samples: [0, 0, 0, 0] },
     initialTroops: 100,
+    outcomeRange: { min: -5, max: 5 },
     deterministic: false
   });
 
   assert.equal(metrics.bias_raw, 0);
-  assert.ok(metrics.stat! > 0);
-  assert.equal(metrics.p, 0.00001);
+  assert.equal(metrics.support_mass, 0);
+  assert.equal(metrics.flag_reason, "support");
+  assert.ok(metrics.p! < 0.001);
   assert.equal(metrics.passes, false);
 });
 
-test("compareOutcomeDistribution compounds several moderately rare observations", () => {
-  const candidate = triangularSamples(100, 10);
-  const oneRare = compareOutcomeDistribution({
+test("compareOutcomeDistribution accepts radius-two neighbours but retains a wide gap", () => {
+  const candidate = Array(50).fill(42).concat(Array(50).fill(49));
+  const nearMass = compareOutcomeDistribution({
     candidate: { samples: candidate },
-    reference: { samples: [99, 100, 100, 101, 90] },
-    initialTroops: 100,
+    reference: { samples: [44] },
+    initialTroops: 20,
+    outcomeRange: { min: 40, max: 51 },
     deterministic: false
   });
-  const manyRare = compareOutcomeDistribution({
+  const insideGap = compareOutcomeDistribution({
     candidate: { samples: candidate },
-    reference: { samples: [90, 91, 92, 108, 109] },
-    initialTroops: 100,
+    reference: { samples: [45] },
+    initialTroops: 20,
+    outcomeRange: { min: 40, max: 51 },
     deterministic: false
   });
 
-  assert.equal(oneRare.stat_type, "surprisal");
-  assert.equal(oneRare.passes, true);
-  assert.ok(manyRare.stat! > oneRare.stat!);
-  assert.ok(manyRare.p! < oneRare.p!);
-  assert.equal(manyRare.passes, false);
+  assert.equal(nearMass.support_mass, 0.05555556);
+  assert.equal(nearMass.passes, true);
+  assert.equal(insideGap.support_mass, 0);
+  assert.equal(insideGap.flag_reason, "support");
+  assert.equal(insideGap.passes, false);
 });
 
-test("compareOutcomeDistribution does not dilute one extreme outlier among common observations", () => {
-  const metrics = compareOutcomeDistribution({
-    candidate: { samples: triangularSamples(100, 10) },
-    reference: { samples: [...Array(19).fill(100), 400] },
-    initialTroops: 100,
+test("compareOutcomeDistribution reserves failure for exceedingly unlikely uniform groups", () => {
+  const candidate = Array.from({ length: 10 }, (_, index) => Array(50).fill(index + 1)).flat();
+  const compare = (reference: number[]) => compareOutcomeDistribution({
+    candidate: { samples: candidate },
+    reference: { samples: reference },
+    initialTroops: 10,
+    outcomeRange: { min: 1, max: 10 },
     deterministic: false
   });
+  const typical = compare([3, 3, 4, 5, 5, 5, 6, 7, 8, 9]);
+  const tooPerfect = compare([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const concentrated = compare(Array(10).fill(6));
+  const wrongShape = compare([1, 1, 1, 1, 1, 10, 10, 10, 10, 10]);
+  const oneUnsupported = compare([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
-  assert.ok(metrics.stat! > 700);
-  assert.equal(metrics.p, 0.00001);
-  assert.equal(metrics.passes, false);
-});
-
-test("applyBenjaminiHochberg fills q values on p-valued comparisons", () => {
-  const rows = [
-    { p: 0.01, q: null },
-    { p: 0.03, q: null },
-    { p: null, q: null }
-  ];
-
-  applyBenjaminiHochberg(rows);
-
-  assert.equal(rows[0].q, 0.02);
-  assert.equal(rows[1].q, 0.03);
-  assert.equal(rows[2].q, null);
+  assert.equal(typical.cdf_rms, 0.109545);
+  assert.equal(typical.passes, true);
+  assert.equal(tooPerfect.cdf_rms, 0);
+  assert.equal(tooPerfect.passes, true);
+  assert.equal(concentrated.p, 0.00505);
+  assert.equal(concentrated.passes, true);
+  assert.equal(wrongShape.p, 0.024049);
+  assert.equal(wrongShape.passes, true);
+  assert.ok(oneUnsupported.cdf_p! > 0.05);
+  assert.equal(oneUnsupported.support_mass, 0);
+  assert.equal(oneUnsupported.flag_reason, "support");
+  assert.equal(oneUnsupported.passes, false);
 });
 
 test("calibration lookup exposes full baseline snapshot metrics", () => {
@@ -464,6 +496,23 @@ function tempDir(prefix: string): string {
   return dir;
 }
 
+function testcaseFixtureConfig(): SimulatorConfig {
+  return {
+    troopStats: {
+      infantry_t1: createTroopStatsRecord({
+        id: "infantry_t1",
+        type: "infantry",
+        tier: 1,
+        stats: { attack: 100, defense: 100, lethality: 100, health: 100 }
+      })
+    },
+    heroGenerationStats: {},
+    heroDefinitions: {},
+    troopSkills: { name: "troop skills fixture", skills: {} },
+    diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [] }
+  };
+}
+
 function comparisonMetric(p: number): ParityComparisonMetrics {
   return {
     n_candidate: 2,
@@ -475,22 +524,11 @@ function comparisonMetric(p: number): ParityComparisonMetrics {
     bias_raw: 2,
     bias_pct: 1,
     sem: 1,
-    stat_type: "surprisal",
+    stat_type: "cdf_support",
     stat: 0.2,
     p,
-    q: null,
     passes: true
   };
-}
-
-function triangularSamples(center: number, radius: number): number[] {
-  const samples: number[] = [];
-  for (let offset = -radius; offset <= radius; offset += 1) {
-    for (let count = 0; count < radius + 1 - Math.abs(offset); count += 1) {
-      samples.push(center + offset);
-    }
-  }
-  return samples;
 }
 
 function summaryEntry(testcaseId: string, idx: number, game: ParityComparisonMetrics | null, baseline: ParityComparisonMetrics | null): TestcaseSummaryEntry {

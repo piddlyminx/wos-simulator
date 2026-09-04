@@ -7,6 +7,7 @@ import {
   findRunReportForRun,
   getParityReport,
   getParityReportCase,
+  getParityReportDistributionCases,
   parityReportDetailHref,
   runReportDetailHref,
   summarizeParityReport,
@@ -78,7 +79,7 @@ function detail(name: string) {
   };
 }
 
-function writeDetail(dir: string, name: string, value = detail(name)) {
+function writeDetail(dir: string, name: string, value: unknown = detail(name)) {
   return writeJson(dir, "run/cases/000001.json", value);
 }
 
@@ -218,6 +219,72 @@ test.describe("simulator parity report helpers", () => {
     expect(parityReportDetailHref("run.json", resolved!.row)).toContain(
       "/parity/",
     );
+  });
+
+  test("getParityReportDistributionCases reads saved chart data", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "parity-charts-"));
+    writeJson(dir, "run.json", summary("chart_case", {
+      chartsArtifact: "run/charts.json",
+    }));
+    writeJson(dir, "run/charts.json", {
+      reportKind: "simulator-parity-charts",
+      schemaVersion: 1,
+      cases: [{
+        file: "testcases/chart_case.json",
+        testcaseId: "chart_case",
+        idx: 0,
+        passes: false,
+        sampleCount: 3,
+        simulatorSamples: [8, 10, 12],
+        gameSamples: [11],
+        game: metric({ passes: false }),
+      }],
+    });
+
+    expect(getParityReportDistributionCases("run.json", dir)).toEqual([
+      expect.objectContaining({
+        testcaseId: "chart_case",
+        simulatorSamples: [8, 10, 12],
+        gameSamples: [11],
+      }),
+    ]);
+  });
+
+  test("chart artifact paths cannot escape the report directory", () => {
+    const parent = fs.mkdtempSync(path.join(os.tmpdir(), "parity-chart-path-"));
+    const dir = path.join(parent, "reports");
+    fs.mkdirSync(dir);
+    writeJson(dir, "run.json", summary("chart_case", {
+      chartsArtifact: "../charts.json",
+    }));
+    writeJson(parent, "charts.json", {
+      reportKind: "simulator-parity-charts",
+      schemaVersion: 1,
+      cases: [],
+    });
+
+    expect(getParityReportDistributionCases("run.json", dir)).toEqual([]);
+  });
+
+  test("distribution cases fall back to saved case details from HTML-era artifacts", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "parity-chart-legacy-"));
+    const report = summary("legacy_case", { chartsArtifact: "run/charts.html" });
+    report.testcases["testcases/legacy_case.json#0"].deterministic = false;
+    writeJson(dir, "run.json", report);
+    writeDetail(dir, "legacy_case", {
+      ...detail("legacy_case"),
+      deterministic: false,
+      comparisonSamples: [7, 8, 9],
+      gameResult: [{ attacker: 10, defender: 0 }],
+    });
+
+    expect(getParityReportDistributionCases("run.json", dir)).toEqual([
+      expect.objectContaining({
+        testcaseId: "legacy_case",
+        simulatorSamples: [7, 8, 9],
+        gameSamples: [10],
+      }),
+    ]);
   });
 
   test("findRunReportForRun resolves stored report filename before timestamp fallback", () => {

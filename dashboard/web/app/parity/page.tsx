@@ -1,10 +1,14 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
 import MetricCard from "@/components/MetricCard";
 import ParityReportSummary from "@/components/ParityReportSummary";
+import ParityDistributionCharts from "@/components/ParityDistributionCharts";
 import TestcaseOutcomeTable from "@/components/TestcaseOutcomeTable";
 import {
   defaultParityReportDir,
   findParityReports,
   getParityReport,
+  getParityReportDistributionCases,
 } from "@/lib/parity-reports";
 
 export const dynamic = "force-dynamic";
@@ -12,12 +16,16 @@ export const dynamic = "force-dynamic";
 export default async function ParityPage({
   searchParams,
 }: {
-  searchParams: Promise<{ report?: string }>;
+  searchParams: Promise<{ report?: string; view?: string }>;
 }) {
   const params = await searchParams;
   const reports = findParityReports();
   const selectedReportId = params.report ?? reports[0]?.id;
   const report = getParityReport(selectedReportId);
+  const view = params.view === "charts" ? "charts" : "results";
+  const distributionCases = report && view === "charts"
+    ? getParityReportDistributionCases(report.id)
+    : [];
 
   return (
     <div>
@@ -30,6 +38,9 @@ export default async function ParityPage({
         </h2>
         {reports.length > 0 && (
           <form>
+            {view === "charts" && (
+              <input type="hidden" name="view" value="charts" />
+            )}
             <select
               name="report"
               defaultValue={selectedReportId}
@@ -96,9 +107,68 @@ export default async function ParityPage({
             <MetricCard label="Rows" value={String(report.rows.length)} />
           </div>
           <ParityReportSummary summary={report.summary} />
-          <TestcaseOutcomeTable reportId={report.id} rows={report.rows} />
+          <nav
+            className="mb-5 flex gap-1 border-b"
+            style={{ borderColor: "var(--border-color)" }}
+            aria-label="Run report views"
+          >
+            <ReportTab
+              href={`/parity?report=${report.id}`}
+              active={view === "results"}
+            >
+              Results
+            </ReportTab>
+            <ReportTab
+              href={`/parity?report=${report.id}&view=charts`}
+              active={view === "charts"}
+            >
+              Charts
+            </ReportTab>
+          </nav>
+          {view === "results" ? (
+            <TestcaseOutcomeTable reportId={report.id} rows={report.rows} />
+          ) : distributionCases.length > 0 ? (
+            <ParityDistributionCharts cases={distributionCases} />
+          ) : (
+            <div
+              className="rounded p-6 text-sm opacity-70"
+              style={{ border: "1px solid var(--border-color)" }}
+            >
+              This run artifact has no saved stochastic distribution data.
+              Generate a new snapshot with the current{" "}
+              <code>run_testcases.ts</code> command to include it.
+            </div>
+          )}
         </>
       )}
     </div>
+  );
+}
+
+function ReportTab({
+  href,
+  active,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className="relative px-4 py-2 text-sm font-semibold"
+      style={{
+        color: active ? "var(--sidebar-active)" : "var(--main-text)",
+        opacity: active ? 1 : 0.6,
+        borderBottom: active
+          ? "2px solid var(--sidebar-active)"
+          : "2px solid transparent",
+        marginBottom: -1,
+      }}
+    >
+      {children}
+    </Link>
   );
 }

@@ -6,6 +6,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { ingestReport } from "./dashboard_ingest";
 import { loadSimulatorConfig } from "../simulator/src/config-node";
+import { DEFAULT_STOCHASTIC_P_THRESHOLD } from "../simulator/src/tooling/parityMetrics";
 import {
   assignDetailArtifactPaths,
   buildSummaryForOutput,
@@ -21,6 +22,11 @@ import {
 } from "../simulator/src/tooling/testcases";
 import { BatchWorkerPool } from "../simulator/src/workerPool";
 import { WorkerThreadBatchWorker } from "./workerThreadBatchWorker";
+import {
+  writeTestcaseCharts,
+  writeTestcaseChartDataToPath,
+  type TestcaseChartsArtifact,
+} from "./testcase_charts";
 
 export async function main(argv = process.argv.slice(2)): Promise<void> {
   try {
@@ -41,6 +47,10 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
       console.error(JSON.stringify({ ...snapshot, ...(dbIngest ? { dbIngest } : {}) }, null, 2));
     } else {
       writeStdout(stdout);
+      const charts = options.generateCharts
+        ? writeTestcaseCharts(report, options.outputDir)
+        : undefined;
+      if (charts) console.error(JSON.stringify(charts, null, 2));
     }
     const failed = report.counts.errors > 0;
     process.exitCode = failed ? 1 : 0;
@@ -85,7 +95,7 @@ interface CliOptions {
   dbIngest: boolean;
   dbPath?: string;
   human: boolean;
-  printFailing: boolean;
+  generateCharts: boolean;
 }
 
 function parseArgs(args: string[]): CliOptions {
@@ -98,7 +108,7 @@ function parseArgs(args: string[]): CliOptions {
     saveSnapshot: false,
     dbIngest: false,
     human: false,
-    printFailing: false,
+    generateCharts: false,
   };
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -114,9 +124,10 @@ function parseArgs(args: string[]): CliOptions {
     else if (arg === "--db-ingest") options.dbIngest = true;
     else if (arg === "--db-path") options.dbPath = resolve(readOptionValue(args, ++index, arg));
     else if (arg === "--human") options.human = true;
-    else if (arg === "--print-failing") options.printFailing = true;
+    else if (arg === "--generate-charts") options.generateCharts = true;
     else throw new Error(`Unknown argument: ${arg ?? ""}`);
   }
+  if (options.saveSnapshot || options.generateCharts) testcaseOptions.includeSamples = true;
   return options;
 }
 
@@ -139,22 +150,20 @@ function readPositiveIntegerOption(args: string[], index: number, option: string
 
 export function formatStdout(
   report: TestcaseRunReport,
-  options: Pick<CliOptions, "human" | "printFailing">,
+  options: Pick<CliOptions, "human">,
   previousReport?: TestcaseRunReport
 ): string {
   if (options.human) {
     const summary = formatHumanSummary(report);
-    const traces = options.printFailing ? formatFailingStandardTracesHuman(report) : "";
     const footer = formatHumanFooter(report, previousReport);
-    return [summary, traces, footer]
+    return [summary, footer]
       .filter((section) => section.length > 0)
       .map((section) => section.trimEnd())
       .join("\n\n") + "\n";
   }
 
   const summary = buildSummaryForOutput(report);
-  if (!options.printFailing) return JSON.stringify(summary, null, 2);
-  return JSON.stringify({ ...summary, failingStandardTraces: failingStandardTraces(report) }, null, 2);
+  return JSON.stringify(summary, null, 2);
 }
 
 export function formatHumanFooter(report: TestcaseRunReport, previousReport?: TestcaseRunReport): string {
@@ -238,6 +247,7 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
     "Testcase summary",
     `Created: ${report.createdAt}`,
     `Files: ${report.counts.filesFound}  Cases: ${report.counts.testcasesFound}  Executed: ${report.counts.executed}  Errors: ${report.counts.errors}  Warnings: ${headlineWarningCount(report)}`,
+    `Stochastic failures: raw p < ${formatProbability(DEFAULT_STOCHASTIC_P_THRESHOLD)} (less than 1 in 250; no multiple-testing adjustment)`,
     ""
   ];
 
@@ -245,7 +255,7 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
     lines.push("No testcase results.");
   } else {
     lines.push(formatTable([
-      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Test", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Stat", "p", "q(BH)"],
+      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Test", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Stat", "Reason", "CDF RMS", "CDF p", "Support value", "Support mass", "Support p", "p"],
       ...rows.map((row) => [
         row.status,
         row.index,
@@ -261,37 +271,15 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
         row.simSd,
         row.gameBiasPct,
         row.stat,
-        row.p,
-        row.q
+        row.flagReason,
+        row.cdfRms,
+        row.cdfP,
+        row.supportValue,
+        row.supportMass,
+        row.supportP,
+        row.p
       ])
     ]));
-  }
-
-  const failingRepeated = Object.entries(report.testcases)
-    .sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
-    .map(([key, entry]) => ({ entry, detail: detailsByKey.get(key) ?? detailsByKey.get(caseKey(entry.file, entry.idx)) }))
-    .filter(({ entry, detail }) => testcaseStatus(entry, detail) === "FAIL" && !entry.deterministic && entry.sampleCount > 1 && samplePreviewRows(entry, detail).length > 0);
-
-  if (failingRepeated.length > 0) {
-    lines.push("", "Failing repeated stochastic sample runs (first 10)");
-    for (const { entry, detail } of failingRepeated) {
-      lines.push("", `${entry.testcase_id} (${entry.file}#${entry.idx})`);
-      lines.push(formatTable([
-        ["Run", "Attacker army", "Defender army", "A rem", "D rem", "Outcome", "Delta vs game mu", "Game SD", "Sim SD", "Run p/metric"],
-        ...samplePreviewRows(entry, detail).map((row) => [
-          `#${row.run}`,
-          row.attackerArmy,
-          row.defenderArmy,
-          row.attackerRemaining,
-          row.defenderRemaining,
-          formatNumber(row.outcome),
-          formatSignedNumber(row.deltaVsGameMu),
-          formatNumber(row.gameSd),
-          formatNumber(row.simSd),
-          row.runMetric
-        ])
-      ]));
-    }
   }
 
   if (report.errors.length > 0) {
@@ -299,49 +287,6 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
     for (const error of report.errors) lines.push(`${error.file}#${error.idx} ${error.testcase_id}: ${error.reason}`);
   }
 
-  return `${lines.join("\n")}\n`;
-}
-
-interface FailingStandardTrace {
-  file: string;
-  testcase_id: string;
-  idx: number;
-  detailArtifact?: string;
-  result?: TestcaseCaseReport["result"];
-  missingReason?: string;
-}
-
-function failingStandardTraces(report: TestcaseRunReport): FailingStandardTrace[] {
-  const detailsByKey = new Map(report.details.map((detail) => [caseKey(detail.file, detail.index), detail]));
-  return Object.entries(report.testcases)
-    .sort(([leftKey], [rightKey]) => leftKey.localeCompare(rightKey))
-    .map(([key, entry]) => {
-      const detail = detailsByKey.get(key) ?? detailsByKey.get(caseKey(entry.file, entry.idx));
-      return { entry, detail };
-    })
-    .filter(({ entry, detail }) => testcaseStatus(entry, detail) === "FAIL")
-    .map(({ entry, detail }) => ({
-      file: entry.file,
-      testcase_id: entry.testcase_id,
-      idx: entry.idx,
-      ...(entry.detailArtifact ? { detailArtifact: entry.detailArtifact } : {}),
-      ...(detail?.result ? { result: detail.result } : { missingReason: "No standard trace was produced for this failing testcase" })
-    }));
-}
-
-function formatFailingStandardTracesHuman(report: TestcaseRunReport): string {
-  const traces = failingStandardTraces(report);
-  if (traces.length === 0) return "";
-
-  const lines = ["Failing testcase standard traces"];
-  for (const trace of traces) {
-    lines.push("", `${trace.testcase_id} (${trace.file}#${trace.idx})`);
-    if (trace.result) {
-      lines.push(JSON.stringify(trace.result, null, 2));
-    } else {
-      lines.push(trace.missingReason ?? "No standard trace was produced for this failing testcase");
-    }
-  }
   return `${lines.join("\n")}\n`;
 }
 
@@ -372,8 +317,13 @@ function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | unde
     simSd: formatNumber(entry.game?.sigma_candidate),
     gameBiasPct: formatSignedPct(entry.game?.bias_pct),
     stat: formatNumber(entry.game?.stat),
-    p: formatProbability(entry.game?.p),
-    q: formatProbability(entry.game?.q)
+    flagReason: entry.game?.flag_reason ?? "-",
+    cdfRms: formatNumber(entry.game?.cdf_rms),
+    cdfP: formatProbability(entry.game?.cdf_p),
+    supportValue: formatNumber(entry.game?.support_value),
+    supportMass: formatProbability(entry.game?.support_mass),
+    supportP: formatProbability(entry.game?.support_p),
+    p: formatProbability(entry.game?.p)
   };
 }
 
@@ -382,78 +332,6 @@ function testcaseStatus(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport 
   if (entry.game) return entry.game.passes ? "PASS" : "FAIL";
   return "WARN";
 }
-
-function samplePreviewRows(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | undefined): Array<{
-  run: number;
-  attackerArmy: string;
-  defenderArmy: string;
-  attackerRemaining: string;
-  defenderRemaining: string;
-  outcome: number;
-  deltaVsGameMu: number | undefined;
-  gameSd: number | undefined;
-  simSd: number | undefined;
-  runMetric: string;
-}> {
-  if (!detail) return [];
-  if (detail.simulatorSampleOutcomes?.length) {
-    return detail.simulatorSampleOutcomes.slice(0, 10).map((sample) => ({
-      run: sample.run,
-      attackerArmy: armySummary(sample.attackerHeroes, sample.attackerTroops),
-      defenderArmy: armySummary(sample.defenderHeroes, sample.defenderTroops),
-      attackerRemaining: remainingSummary(sample.attackerRemainingByType, sample.attackerRemaining),
-      defenderRemaining: remainingSummary(sample.defenderRemainingByType, sample.defenderRemaining),
-      outcome: sample.scoreDelta,
-      deltaVsGameMu: deltaVsGameMu(entry, sample.scoreDelta),
-      gameSd: entry.game?.sigma_reference,
-      simSd: entry.game?.sigma_candidate,
-      runMetric: runMetric(entry, sample.scoreDelta)
-    }));
-  }
-  return (detail.simulatorSampleDeltas ?? []).slice(0, 10).map((scoreDelta, index) => ({
-    run: index + 1,
-    attackerArmy: armySummary(detail.visibility.attacker.heroes, detail.visibility.attacker.troops),
-    defenderArmy: armySummary(detail.visibility.defender.heroes, detail.visibility.defender.troops),
-    attackerRemaining: "-",
-    defenderRemaining: "-",
-    outcome: scoreDelta,
-    deltaVsGameMu: deltaVsGameMu(entry, scoreDelta),
-    gameSd: entry.game?.sigma_reference,
-    simSd: entry.game?.sigma_candidate,
-    runMetric: runMetric(entry, scoreDelta)
-  }));
-}
-
-function armySummary(heroes: string[] | undefined, troops: Partial<Record<string, number>> | undefined): string {
-  const heroPart = heroes?.length ? heroes.join(",") : "no heroes";
-  return `${heroPart} ${troopSummary(troops)}`;
-}
-
-function remainingSummary(troops: Partial<Record<string, number>> | undefined, total: number | undefined): string {
-  const troopPart = troopSummary(troops);
-  return total === undefined ? troopPart : `${troopPart} (${formatNumber(total)})`;
-}
-
-function troopSummary(troops: Partial<Record<string, number>> | undefined): string {
-  const infantry = formatNumber(troops?.infantry);
-  const lancer = formatNumber(troops?.lancer);
-  const marksman = formatNumber(troops?.marksman);
-  return `i:${infantry} l:${lancer} m:${marksman}`;
-}
-
-function deltaVsGameMu(entry: TestcaseSummaryEntry, outcome: number): number | undefined {
-  return entry.game ? outcome - entry.game.mu_reference : undefined;
-}
-
-function runMetric(entry: TestcaseSummaryEntry, outcome: number): string {
-  if (!entry.game) return "-";
-  const delta = outcome - entry.game.mu_reference;
-  if (entry.game.sigma_reference > 0) {
-    return formatProbability(twoSidedNormalP(Math.abs(delta) / entry.game.sigma_reference));
-  }
-  return delta === 0 ? "exact" : `abs ${formatNumber(Math.abs(delta))}`;
-}
-
 
 function formatTable(rows: string[][]): string {
   const widths = rows[0]!.map((_, column) => Math.max(...rows.map((row) => row[column]?.length ?? 0)));
@@ -472,6 +350,7 @@ function formatProbability(value: number | null | undefined): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return "-";
   if (value === 0) return "<1e-12";
   if (value < 0.0001) return value.toExponential(1).replace("e-0", "e-").replace("e+0", "e+");
+  if (value < 0.01) return value.toPrecision(2).replace(/0+$/, "").replace(/\.$/, "");
   return formatNumber(value);
 }
 
@@ -483,22 +362,6 @@ function formatSignedPct(value: number | null | undefined): string {
 function formatSignedNumber(value: number | null | undefined): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return "-";
   return `${value >= 0 ? "+" : ""}${formatNumber(value)}`;
-}
-
-function twoSidedNormalP(absZ: number): number {
-  return 2 * (1 - normalCdf(absZ));
-}
-
-function normalCdf(x: number): number {
-  return 0.5 * (1 + erf(x / Math.SQRT2));
-}
-
-function erf(x: number): number {
-  const sign = x < 0 ? -1 : 1;
-  const ax = Math.abs(x);
-  const t = 1 / (1 + 0.3275911 * ax);
-  const y = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-ax * ax);
-  return sign * y;
 }
 
 function caseKey(file: string, index: number): string {
@@ -539,10 +402,18 @@ function timestampedReportName(date = new Date()): string {
   return `simulator_parity_${date.toISOString().replace(/:/g, "-")}.json`;
 }
 
-function writeRunSnapshot(report: TestcaseRunReport, outputDir: string): { summaryPath: string; artifactRoot: string } {
+function writeRunSnapshot(
+  report: TestcaseRunReport,
+  outputDir: string,
+): { summaryPath: string; artifactRoot: string } & TestcaseChartsArtifact {
   mkdirSync(outputDir, { recursive: true });
   const { summaryPath, artifactRoot, artifactDir } = reserveSnapshotPaths(outputDir);
   assignDetailArtifactPaths(report, artifactRoot);
+  report.chartsArtifact = `${artifactRoot}/charts.json`;
+  const charts = writeTestcaseChartDataToPath(
+    report,
+    resolve(artifactDir, "charts.json"),
+  );
 
   const casesDir = resolve(artifactDir, "cases");
   mkdirSync(casesDir);
@@ -553,7 +424,7 @@ function writeRunSnapshot(report: TestcaseRunReport, outputDir: string): { summa
   }
 
   writeFileSync(summaryPath, `${JSON.stringify(buildSummaryForOutput(report), null, 2)}\n`);
-  return { summaryPath, artifactRoot };
+  return { summaryPath, artifactRoot, ...charts };
 }
 
 function reserveSnapshotPaths(outputDir: string): { summaryPath: string; artifactRoot: string; artifactDir: string } {
