@@ -2,11 +2,18 @@ export interface OutcomeDistribution {
   samples: readonly number[];
 }
 
+export interface OutcomeRange {
+  min: number;
+  max: number;
+}
+
 export interface ParityThresholds {
   p_threshold?: number;
   max_diff_ratio?: number;
   max_diff_ratio_deterministic?: number;
 }
+
+export const DEFAULT_STOCHASTIC_P_THRESHOLD = 1 / 250;
 
 export interface ParityComparisonMetrics {
   n_candidate: number;
@@ -18,17 +25,23 @@ export interface ParityComparisonMetrics {
   bias_raw: number;
   bias_pct: number;
   sem: number;
-  stat_type: "deterministic" | "surprisal";
+  stat_type: "deterministic" | "cdf_support";
   stat: number | null;
   p: number | null;
-  q: number | null;
   passes: boolean;
+  cdf_rms?: number;
+  cdf_p?: number;
+  support_value?: number;
+  support_mass?: number;
+  support_p?: number;
+  flag_reason?: "cdf" | "support" | "cdf+support";
 }
 
 export function compareOutcomeDistribution(options: {
   candidate: OutcomeDistribution;
   reference: OutcomeDistribution;
   initialTroops: number;
+  outcomeRange?: OutcomeRange;
   deterministic: boolean;
   thresholds?: ParityThresholds;
 }): ParityComparisonMetrics {
@@ -43,20 +56,30 @@ export function compareOutcomeDistribution(options: {
     ?? 0.01
   ) * 100;
 
-  let statType: ParityComparisonMetrics["stat_type"] = "deterministic";
-  let stat: number | null = null;
-  let p: number | null = null;
-  let passes = Math.abs(biasPct) <= deterministicLimit;
-
-  if (!options.deterministic) {
-    statType = "surprisal";
-    const model = fitPredictiveDensity(candidate.samples);
-    const rawStat = totalSurprisal(reference.samples, model);
-    const rawP = empiricalNullP(model.nullSurprisals, reference.n, rawStat, candidate.samples);
-    stat = round(rawStat, 4);
-    p = round(rawP, 6);
-    passes = rawP >= (options.thresholds?.p_threshold ?? 0.05);
+  if (options.deterministic) {
+    return {
+      n_candidate: candidate.n,
+      mu_candidate: round(candidate.mu, 2),
+      sigma_candidate: round(candidate.sigma, 2),
+      n_reference: reference.n,
+      mu_reference: round(reference.mu, 2),
+      sigma_reference: round(reference.sigma, 2),
+      bias_raw: biasRaw,
+      bias_pct: biasPct,
+      sem: round(candidate.sigma / Math.sqrt(candidate.n), 2),
+      stat_type: "deterministic",
+      stat: null,
+      p: null,
+      passes: Math.abs(biasPct) <= deterministicLimit
+    };
   }
+
+  const range = normalizeOutcomeRange(options.outcomeRange ?? {
+    min: -Math.abs(initialTroops),
+    max: Math.abs(initialTroops)
+  });
+  const comparison = calibratedComparison(candidate.samples, reference.samples, range);
+  const threshold = options.thresholds?.p_threshold ?? DEFAULT_STOCHASTIC_P_THRESHOLD;
 
   return {
     n_candidate: candidate.n,
@@ -68,25 +91,17 @@ export function compareOutcomeDistribution(options: {
     bias_raw: biasRaw,
     bias_pct: biasPct,
     sem: round(candidate.sigma / Math.sqrt(candidate.n), 2),
-    stat_type: statType,
-    stat,
-    p,
-    q: null,
-    passes
+    stat_type: "cdf_support",
+    stat: round(-Math.log10(comparison.overallP), 4),
+    p: round(comparison.overallP, 6),
+    passes: comparison.overallP >= threshold,
+    cdf_rms: round(comparison.cdfRms, 6),
+    cdf_p: round(comparison.cdfP, 6),
+    support_value: comparison.supportValue,
+    support_mass: round(comparison.supportMass, 8),
+    support_p: round(comparison.supportP, 6),
+    flag_reason: comparison.flagReason
   };
-}
-
-export function applyBenjaminiHochberg(rows: Array<{ p: number | null; q: number | null }>): void {
-  const ranked = rows
-    .filter((row): row is { p: number; q: number | null } => row.p !== null)
-    .sort((a, b) => a.p - b.p);
-  const m = ranked.length;
-  let runningMin = 1;
-  for (let index = m - 1; index >= 0; index -= 1) {
-    const rawQ = (ranked[index].p * m) / (index + 1);
-    runningMin = Math.min(runningMin, rawQ);
-    ranked[index].q = round(Math.min(1, runningMin), 6);
-  }
 }
 
 function summarize(samples: readonly number[], label: string): {
@@ -104,108 +119,237 @@ function summarize(samples: readonly number[], label: string): {
   return { samples, n: samples.length, mu, sigma: Math.sqrt(variance) };
 }
 
-interface PredictiveDensity {
+interface DistributionModel {
   samples: readonly number[];
-  bandwidth: number;
-  nullSurprisals: readonly number[];
+  range: OutcomeRange;
+  cutoffCount: number;
+  candidatePairTailSum: number;
+  candidateCrossTailSums: readonly number[];
+  smoothedMass: ReadonlyMap<number, number>;
 }
 
-const MIN_BANDWIDTH = 0.5;
-const BANDWIDTH_CANDIDATES = 25;
-const MAX_BANDWIDTH_SAMPLES = 200;
-const NULL_RESAMPLES = 100_000;
-const MAX_SURPRISAL = -Math.log(Number.MIN_VALUE);
-const LOG_SQRT_TWO_PI = 0.5 * Math.log(2 * Math.PI);
-
-function fitPredictiveDensity(samples: readonly number[]): PredictiveDensity {
-  const bandwidth = selectBandwidth(samples);
-  const nullSurprisals = samples.length === 1
-    ? [surprisal(samples[0]!, samples, bandwidth)]
-    : samples.map((value, index) => surprisal(value, samples, bandwidth, index));
-  return { samples, bandwidth, nullSurprisals };
+interface RawGroupMetrics {
+  cdfRms: number;
+  supportMass: number;
 }
 
-function selectBandwidth(samples: readonly number[]): number {
-  const bandwidthSamples = samples.slice(0, MAX_BANDWIDTH_SAMPLES);
-  if (bandwidthSamples.length < 2) return MIN_BANDWIDTH;
-  const sorted = [...bandwidthSamples].sort((left, right) => left - right);
-  const sigma = summarize(bandwidthSamples, "candidate").sigma;
-  const span = sorted[sorted.length - 1]! - sorted[0]!;
-  const maxBandwidth = Math.max(MIN_BANDWIDTH, sigma * 2, span / 4);
-  if (maxBandwidth === MIN_BANDWIDTH) return MIN_BANDWIDTH;
+interface ObservedGroupMetrics extends RawGroupMetrics {
+  supportValue: number;
+}
 
-  let bestBandwidth = MIN_BANDWIDTH;
-  let bestLogLikelihood = Number.NEGATIVE_INFINITY;
-  const ratio = (maxBandwidth / MIN_BANDWIDTH) ** (1 / (BANDWIDTH_CANDIDATES - 1));
-  for (let index = 0; index < BANDWIDTH_CANDIDATES; index += 1) {
-    const bandwidth = MIN_BANDWIDTH * ratio ** index;
-    const logLikelihood = bandwidthSamples.reduce(
-      (sum, value, sampleIndex) => sum + logDensity(value, bandwidthSamples, bandwidth, sampleIndex),
-      0
+interface CalibratedComparison extends ObservedGroupMetrics {
+  cdfP: number;
+  supportP: number;
+  overallP: number;
+  flagReason: "cdf" | "support" | "cdf+support";
+}
+
+const COMPONENT_NULL_RESAMPLES = 20_000;
+const JOINT_NULL_RESAMPLES = 20_000;
+const SUPPORT_KERNEL = [1, 2, 3, 2, 1] as const;
+const SUPPORT_RADIUS = 2;
+const COMPARISON_EPSILON = 1e-12;
+
+function calibratedComparison(
+  candidateSamples: readonly number[],
+  referenceSamples: readonly number[],
+  range: OutcomeRange
+): CalibratedComparison {
+  const model = buildDistributionModel(candidateSamples, range);
+  const observed = observedGroupMetrics(model, referenceSamples);
+  const random = seededRandom(candidateSamples, referenceSamples.length);
+  const componentNull = generateNullMetrics(model, referenceSamples.length, COMPONENT_NULL_RESAMPLES, random);
+  const sortedCdf = componentNull.map((metrics) => metrics.cdfRms).sort((left, right) => left - right);
+  const sortedSupport = componentNull.map((metrics) => metrics.supportMass).sort((left, right) => left - right);
+  const cdfP = upperTailEmpiricalP(sortedCdf, observed.cdfRms);
+  const supportP = lowerTailEmpiricalP(sortedSupport, observed.supportMass);
+  const observedMinP = Math.min(cdfP, supportP);
+
+  let atLeastAsExtreme = 0;
+  for (const metrics of generateNullMetrics(model, referenceSamples.length, JOINT_NULL_RESAMPLES, random)) {
+    const nullMinP = Math.min(
+      upperTailEmpiricalP(sortedCdf, metrics.cdfRms),
+      lowerTailEmpiricalP(sortedSupport, metrics.supportMass)
     );
-    if (logLikelihood > bestLogLikelihood) {
-      bestLogLikelihood = logLikelihood;
-      bestBandwidth = bandwidth;
+    if (nullMinP <= observedMinP + COMPARISON_EPSILON) atLeastAsExtreme += 1;
+  }
+  const overallP = (atLeastAsExtreme + 1) / (JOINT_NULL_RESAMPLES + 1);
+  const pDifference = Math.abs(cdfP - supportP);
+  const flagReason = pDifference <= 1 / (COMPONENT_NULL_RESAMPLES + 1)
+    ? "cdf+support"
+    : cdfP < supportP ? "cdf" : "support";
+
+  return {
+    ...observed,
+    supportValue: observed.supportValue,
+    cdfP,
+    supportP,
+    overallP,
+    flagReason
+  };
+}
+
+function buildDistributionModel(samples: readonly number[], range: OutcomeRange): DistributionModel {
+  const cutoffCount = range.max - range.min + 1;
+  const candidateCrossTailSums = samples.map((sample) => (
+    samples.reduce((sum, other) => sum + tailCutoffCount(Math.max(sample, other), range), 0)
+  ));
+  const candidatePairTailSum = candidateCrossTailSums.reduce((sum, value) => sum + value, 0);
+  const kernelMass = new Map<number, number>();
+
+  for (const sample of samples) {
+    let retainedWeight = 0;
+    for (let offset = -SUPPORT_RADIUS; offset <= SUPPORT_RADIUS; offset += 1) {
+      const target = sample + offset;
+      if (target >= range.min && target <= range.max) retainedWeight += SUPPORT_KERNEL[offset + SUPPORT_RADIUS]!;
+    }
+    for (let offset = -SUPPORT_RADIUS; offset <= SUPPORT_RADIUS; offset += 1) {
+      const target = sample + offset;
+      if (target < range.min || target > range.max) continue;
+      const weight = SUPPORT_KERNEL[offset + SUPPORT_RADIUS]! / retainedWeight;
+      kernelMass.set(target, (kernelMass.get(target) ?? 0) + weight);
     }
   }
-  return bestBandwidth;
+
+  const smoothedMass = new Map([...kernelMass].map(([value, mass]) => [value, mass / samples.length]));
+  return {
+    samples,
+    range,
+    cutoffCount,
+    candidatePairTailSum,
+    candidateCrossTailSums,
+    smoothedMass
+  };
 }
 
-function totalSurprisal(samples: readonly number[], model: PredictiveDensity): number {
-  return samples.reduce(
-    (sum, value) => sum + surprisal(value, model.samples, model.bandwidth),
-    0
-  );
-}
-
-function surprisal(
-  value: number,
-  samples: readonly number[],
-  bandwidth: number,
-  excludedIndex?: number
-): number {
-  return Math.min(MAX_SURPRISAL, Math.max(0, -logDensity(value, samples, bandwidth, excludedIndex)));
-}
-
-function logDensity(
-  value: number,
-  samples: readonly number[],
-  bandwidth: number,
-  excludedIndex?: number
-): number {
-  let maximum = Number.NEGATIVE_INFINITY;
-  const terms = samples.map((sample, index) => {
-    if (index === excludedIndex) return Number.NEGATIVE_INFINITY;
-    const standardized = (value - sample) / bandwidth;
-    const term = -0.5 * standardized * standardized;
-    maximum = Math.max(maximum, term);
-    return term;
-  });
-  const count = samples.length - (excludedIndex === undefined ? 0 : 1);
-  if (count <= 0) return Number.NEGATIVE_INFINITY;
-  const scaledSum = terms.reduce(
-    (sum, term) => term === Number.NEGATIVE_INFINITY ? sum : sum + Math.exp(term - maximum),
-    0
-  );
-  return maximum + Math.log(scaledSum) - Math.log(count) - Math.log(bandwidth) - LOG_SQRT_TWO_PI;
-}
-
-function empiricalNullP(
-  singleDrawSurprisals: readonly number[],
-  referenceN: number,
-  observedSurprisal: number,
-  seedSamples: readonly number[]
-): number {
-  const random = seededRandom(seedSamples, referenceN);
-  let atLeastAsSurprising = 0;
-  for (let sampleIndex = 0; sampleIndex < NULL_RESAMPLES; sampleIndex += 1) {
-    let nullSurprisal = 0;
-    for (let draw = 0; draw < referenceN; draw += 1) {
-      nullSurprisal += singleDrawSurprisals[Math.floor(random() * singleDrawSurprisals.length)]!;
+function observedGroupMetrics(model: DistributionModel, samples: readonly number[]): ObservedGroupMetrics {
+  const candidateCrossTailSums = samples.map((sample) => (
+    model.samples.reduce((sum, other) => sum + tailCutoffCount(Math.max(sample, other), model.range), 0)
+  ));
+  let supportValue = samples[0]!;
+  let supportMass = model.smoothedMass.get(supportValue) ?? 0;
+  for (const sample of samples.slice(1)) {
+    const mass = model.smoothedMass.get(sample) ?? 0;
+    if (mass < supportMass) {
+      supportMass = mass;
+      supportValue = sample;
     }
-    if (nullSurprisal >= observedSurprisal - 1e-12) atLeastAsSurprising += 1;
   }
-  return (atLeastAsSurprising + 1) / (NULL_RESAMPLES + 1);
+  return {
+    cdfRms: cdfRms(model, samples, candidateCrossTailSums),
+    supportMass,
+    supportValue
+  };
+}
+
+function generateNullMetrics(
+  model: DistributionModel,
+  sampleCount: number,
+  count: number,
+  random: () => number
+): RawGroupMetrics[] {
+  const metrics: RawGroupMetrics[] = [];
+  for (let sampleIndex = 0; sampleIndex < count; sampleIndex += 1) {
+    const samples: number[] = [];
+    const candidateCrossTailSums: number[] = [];
+    let supportMass = Number.POSITIVE_INFINITY;
+    for (let draw = 0; draw < sampleCount; draw += 1) {
+      const index = Math.floor(random() * model.samples.length);
+      samples.push(model.samples[index]!);
+      candidateCrossTailSums.push(model.candidateCrossTailSums[index]!);
+      supportMass = Math.min(supportMass, leaveOneOutKernelSupportMass(model, index, random));
+    }
+    metrics.push({ cdfRms: cdfRms(model, samples, candidateCrossTailSums), supportMass });
+  }
+  return metrics;
+}
+
+function leaveOneOutKernelSupportMass(model: DistributionModel, index: number, random: () => number): number {
+  const value = model.samples[index]!;
+  const range = model.range;
+  let retainedWeight = 0;
+  for (let offset = -SUPPORT_RADIUS; offset <= SUPPORT_RADIUS; offset += 1) {
+    const target = value + offset;
+    if (target >= range.min && target <= range.max) retainedWeight += SUPPORT_KERNEL[offset + SUPPORT_RADIUS]!;
+  }
+  let selectedWeight = random() * retainedWeight;
+  for (let offset = -SUPPORT_RADIUS; offset <= SUPPORT_RADIUS; offset += 1) {
+    const target = value + offset;
+    if (target < range.min || target > range.max) continue;
+    const kernelWeight = SUPPORT_KERNEL[offset + SUPPORT_RADIUS]!;
+    selectedWeight -= kernelWeight;
+    if (selectedWeight < 0) {
+      const fullMass = model.smoothedMass.get(target) ?? 0;
+      if (model.samples.length < 2) return fullMass;
+      const ownContribution = kernelWeight / retainedWeight;
+      return Math.max(0, (fullMass * model.samples.length - ownContribution) / (model.samples.length - 1));
+    }
+  }
+  return model.smoothedMass.get(value) ?? 0;
+}
+
+function cdfRms(
+  model: DistributionModel,
+  samples: readonly number[],
+  candidateCrossTailSums: readonly number[]
+): number {
+  let samplePairTailSum = 0;
+  for (const left of samples) {
+    for (const right of samples) {
+      samplePairTailSum += tailCutoffCount(Math.max(left, right), model.range);
+    }
+  }
+  const candidateCount = model.samples.length;
+  const sampleCount = samples.length;
+  const squared = (
+    model.candidatePairTailSum / candidateCount ** 2
+    + samplePairTailSum / sampleCount ** 2
+    - (2 * candidateCrossTailSums.reduce((sum, value) => sum + value, 0)) / (candidateCount * sampleCount)
+  ) / model.cutoffCount;
+  return Math.sqrt(Math.max(0, squared));
+}
+
+function tailCutoffCount(value: number, range: OutcomeRange): number {
+  const firstCutoff = Math.max(range.min, Math.ceil(value));
+  return firstCutoff > range.max ? 0 : range.max - firstCutoff + 1;
+}
+
+function upperTailEmpiricalP(sortedNull: readonly number[], observed: number): number {
+  return (sortedNull.length - lowerBound(sortedNull, observed - COMPARISON_EPSILON) + 1) / (sortedNull.length + 1);
+}
+
+function lowerTailEmpiricalP(sortedNull: readonly number[], observed: number): number {
+  return (upperBound(sortedNull, observed + COMPARISON_EPSILON) + 1) / (sortedNull.length + 1);
+}
+
+function lowerBound(sorted: readonly number[], value: number): number {
+  let low = 0;
+  let high = sorted.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (sorted[middle]! < value) low = middle + 1;
+    else high = middle;
+  }
+  return low;
+}
+
+function upperBound(sorted: readonly number[], value: number): number {
+  let low = 0;
+  let high = sorted.length;
+  while (low < high) {
+    const middle = Math.floor((low + high) / 2);
+    if (sorted[middle]! <= value) low = middle + 1;
+    else high = middle;
+  }
+  return low;
+}
+
+function normalizeOutcomeRange(range: OutcomeRange): OutcomeRange {
+  if (!Number.isFinite(range.min) || !Number.isFinite(range.max)) throw new Error("outcome range must be finite");
+  const min = Math.ceil(range.min);
+  const max = Math.floor(range.max);
+  if (min > max) throw new Error("outcome range is empty");
+  return { min, max };
 }
 
 function seededRandom(samples: readonly number[], referenceN: number): () => number {

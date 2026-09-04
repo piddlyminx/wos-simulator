@@ -185,6 +185,9 @@ Run the TypeScript testcase runner with database ingestion enabled:
 npx tsx scripts/run_testcases.ts --save-snapshot --db-ingest
 ```
 
+Each saved artifact includes stochastic distribution charts. Open **Run
+Reports → Charts** in the dashboard to view them.
+
 ## Simulator-relevant path scope
 
 Captured patches and untracked tars are scoped to **simulator-relevant paths
