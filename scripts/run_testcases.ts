@@ -254,32 +254,13 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
   if (rows.length === 0) {
     lines.push("No testcase results.");
   } else {
-    lines.push(formatTable([
-      ["Status", "#", "Testcase", "Samples", "Game N", "Mode", "Test", "Stat adj", "Sim mu", "Game mu", "Game SD", "Sim SD", "Game bias%", "Stat", "Reason", "CDF RMS", "CDF p", "Support value", "Support mass", "Support p", "p"],
-      ...rows.map((row) => [
-        row.status,
-        row.index,
-        row.testcase,
-        row.samples,
-        row.gameN,
-        row.mode,
-        row.statType,
-        row.statAdjustment,
-        row.simMu,
-        row.gameMu,
-        row.gameSd,
-        row.simSd,
-        row.gameBiasPct,
-        row.stat,
-        row.flagReason,
-        row.cdfRms,
-        row.cdfP,
-        row.supportValue,
-        row.supportMass,
-        row.supportP,
-        row.p
-      ])
-    ]));
+    const failures = rows.filter((row) => row.status === "FAIL");
+    const warnings = rows.filter((row) => row.status === "WARN" || row.status === "ERROR");
+    const passes = rows.filter((row) => row.status === "PASS");
+
+    lines.push(`Failures (${failures.length})`, failures.length > 0 ? formatHumanTable(failures) : "None.");
+    if (warnings.length > 0) lines.push("", `Warnings/errors (${warnings.length})`, formatHumanTable(warnings));
+    lines.push("", `Passes (${passes.length})`, passes.length > 0 ? formatHumanTable(passes) : "None.");
   }
 
   if (report.errors.length > 0) {
@@ -305,26 +286,48 @@ function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | unde
   return {
     status: testcaseStatus(entry, detail),
     index: String(entry.idx),
-    testcase: entry.testcase_id,
-    samples: String(entry.sampleCount),
+    testcase: truncateText(entry.testcase_id, 25),
     gameN: formatNumber(entry.game?.n_reference),
     mode: entry.deterministic ? "det" : entry.sampleCount > 1 ? "stoch" : "single",
-    statType: entry.game?.stat_type ?? "-",
-    statAdjustment: formatSignedNumber(entry.gameStatAdjustment?.value),
-    simMu: formatNumber(entry.game?.mu_candidate),
+    statType: entry.game?.stat_type === "cdf_support" ? "cdf_sup" : entry.game?.stat_type === "deterministic" ? "det" : "-",
+    statAdjustment: formatSignedPct(entry.gameStatAdjustment?.value),
     gameMu: formatNumber(entry.game?.mu_reference),
+    simMu: formatNumber(entry.game?.mu_candidate),
     gameSd: formatNumber(entry.game?.sigma_reference),
     simSd: formatNumber(entry.game?.sigma_candidate),
     gameBiasPct: formatSignedPct(entry.game?.bias_pct),
-    stat: formatNumber(entry.game?.stat),
-    flagReason: entry.game?.flag_reason ?? "-",
-    cdfRms: formatNumber(entry.game?.cdf_rms),
+    gameBiasRaw: formatSignedNumber(entry.game?.bias_raw),
+    flagReason: entry.game?.flag_reason === "cdf+support" ? "cdf+sup" : entry.game?.flag_reason ?? "-",
     cdfP: formatProbability(entry.game?.cdf_p),
     supportValue: formatNumber(entry.game?.support_value),
-    supportMass: formatProbability(entry.game?.support_mass),
     supportP: formatProbability(entry.game?.support_p),
     p: formatProbability(entry.game?.p)
   };
+}
+
+function formatHumanTable(rows: Array<Record<string, string>>): string {
+  return formatTable([
+    ["#", "Testcase", "N", "Mode", "Test", "Stat+/-", "mu G", "mu S", "SD G", "SD S", "bias%", "bias", "Reason", "CDF p", "Sup val", "Sup p", "p"],
+    ...rows.map((row) => [
+      row.index,
+      row.testcase,
+      row.gameN,
+      row.mode,
+      row.statType,
+      row.statAdjustment,
+      row.gameMu,
+      row.simMu,
+      row.gameSd,
+      row.simSd,
+      row.gameBiasPct,
+      row.gameBiasRaw,
+      row.flagReason,
+      row.cdfP,
+      row.supportValue,
+      row.supportP,
+      row.p
+    ])
+  ]);
 }
 
 function testcaseStatus(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | undefined): "PASS" | "FAIL" | "WARN" | "ERROR" {
@@ -336,8 +339,12 @@ function testcaseStatus(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport 
 function formatTable(rows: string[][]): string {
   const widths = rows[0]!.map((_, column) => Math.max(...rows.map((row) => row[column]?.length ?? 0)));
   return rows
-    .map((row) => row.map((cell, column) => cell.padEnd(widths[column]!)).join("  ").trimEnd())
+    .map((row) => row.map((cell, column) => cell.padEnd(widths[column]!)).join(" ").trimEnd())
     .join("\n");
+}
+
+function truncateText(value: string, maxLength: number): string {
+  return value.length <= maxLength ? value : `${value.slice(0, maxLength - 3)}...`;
 }
 
 function formatNumber(value: number | null | undefined): string {
@@ -356,7 +363,7 @@ function formatProbability(value: number | null | undefined): string {
 
 function formatSignedPct(value: number | null | undefined): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return "-";
-  return `${value >= 0 ? "+" : ""}${formatNumber(value)}`;
+  return `${value >= 0 ? "+" : ""}${formatNumber(value)}%`;
 }
 
 function formatSignedNumber(value: number | null | undefined): string {
