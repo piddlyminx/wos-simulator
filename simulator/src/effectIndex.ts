@@ -38,7 +38,7 @@ export interface EffectIndex {
   carriers: ActiveEffect[];
 }
 
-const DAMAGE_KINDS: DamageKind[] = ["normal", "skill", "extra"];
+const DAMAGE_KINDS: DamageKind[] = ["normal", "skill"];
 export const DAMAGE_JOB_SHAPE_SLOTS = DAMAGE_KINDS.length * 2 * 3 * 2 * 3;
 
 export function createEffectIndex(
@@ -123,9 +123,10 @@ export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?:
   }
   const bucket = (bucketOverride ?? runtimeDefinition?.name) as DynamicDamageBucket | undefined;
   if (!bucket) return EMPTY_JOB_SHAPE_SLOTS;
+  const damageKindMask = kindMask(effect.intent.applies_to_damage_kinds ?? DAMAGE_KINDS);
   const key =
-    (((DYNAMIC_BUCKET_INDEX[bucket] * 2 + sideIndex(effect.appliesTo.side)) * 8 + (effect.appliesTo.units & 7)) * 2 + sideIndex(effect.appliesVs.side)) * 8 +
-    (effect.appliesVs.units & 7);
+    ((((DYNAMIC_BUCKET_INDEX[bucket] * 2 + sideIndex(effect.appliesTo.side)) * 8 + (effect.appliesTo.units & 7)) * 2 + sideIndex(effect.appliesVs.side)) * 8 +
+      (effect.appliesVs.units & 7)) * 4 + damageKindMask;
   const cached = JOB_SHAPE_CACHE.get(key);
   if (cached) return cached;
   const slots = buildShapeSlots(effect, bucket);
@@ -138,7 +139,7 @@ const EMPTY_JOB_SHAPE_SLOTS = new Uint8Array();
 function buildShapeSlots(effect: ActiveEffect, bucket: DynamicDamageBucket): Uint8Array {
   const definition = dynamicBucketDefinition(bucket)!;
   const slots: number[] = [];
-  const jobKinds = definition.damageKind ? [definition.damageKind] : DAMAGE_KINDS;
+  const jobKinds = effect.intent.applies_to_damage_kinds ?? DAMAGE_KINDS;
   for (const jobKind of jobKinds) {
     for (const appliesToUnit of unitsFromMask(effect.appliesTo.units)) {
       for (const appliesVsUnit of unitsFromMask(effect.appliesVs.units)) {
@@ -154,6 +155,9 @@ function buildShapeSlots(effect: ActiveEffect, bucket: DynamicDamageBucket): Uin
 }
 
 function kindIndex(kind: DamageKind): number { return DAMAGE_KINDS.indexOf(kind); }
+function kindMask(kinds: DamageKind[]): number {
+  return kinds.reduce((mask, kind) => mask | (1 << kindIndex(kind)), 0);
+}
 function sideIndex(side: SideId): number { return side === "attacker" ? 0 : 1; }
 function unitIndex(unit: UnitType): number {
   if (unit === "infantry") return 0;

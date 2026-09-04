@@ -209,6 +209,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | --- | --- | --- |
 | `type` | One supported modifier/special-effect string, or omitted on a child-bearing carrier | Chooses the mechanic and, for modifiers, the damage-equation bucket. |
 | `value` | Usually a number or per-level numeric array | Percentage magnitude for modifiers; damage multiplier percentage for `extra_skill_attack`; fixed unit order for `attack_order`. |
+| `applies_to_damage_kinds` | Non-empty array containing `normal` and/or `skill` | Optional runtime-modifier applicability gate. Omitted means both kinds. Restricts eligible damage jobs without changing the bucket selected by `type`. |
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
 | `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means permanent, except that extra-attack effects default to one turn and one attack. |
 | `same_effect_stacking` | `add` or `max` | Controls overlap between live activations of the same modifier definition and scope. Omitted means `add`. |
@@ -239,13 +240,15 @@ Modifier names identify a damage-equation bucket. The general forms are:
 | `active.hero.<property>.<direction>` | `property`: `attack`, `lethality`, `health`, `defense`, `damage`, `damageTaken`; `direction`: `up`, `down` | Runtime modifier in a hero-labelled bucket. All combinations are supported even if the current hero files use only a subset. |
 | `active.troop.<property>.<direction>` | Same values as `active.hero` | Runtime modifier in a separate troop-labelled bucket. Supported by the engine but not currently used in hero definitions. A hero effect placed here is still reported as hero-sourced; only its equation bucket changes. |
 | `active.hero.shield`, `active.troop.shield` | Non-negative raw value | Taker-side protection subtracted after the percentage damage equation. |
-| `type.all.damage.<direction>` | `up`, `down` | Modifier applied to both normal and skill damage. |
-| `type.normal.damage.<direction>` | `up`, `down` | Dealer-side modifier for normal attacks only. |
-| `type.normal.damageTaken.<direction>` | `up`, `down` | Taker-side modifier for normal attacks only. |
-| `type.skill.damage.<direction>` | `up`, `down` | Dealer-side modifier for generated skill attacks only. |
-| `type.skill.damageTaken.<direction>` | `up`, `down` | Taker-side modifier for generated skill attacks only. |
+| `type.all.damage.<direction>` | `up`, `down` | Multiplicative all-damage arithmetic category. |
+| `type.normal.damage.<direction>` | `up`, `down` | Dealer-side normal-damage arithmetic category. The name does not impose job applicability. |
+| `type.normal.damageTaken.<direction>` | `up`, `down` | Taker-side normal-damage arithmetic category. The name does not impose job applicability. |
+| `type.skill.damage.<direction>` | `up`, `down` | Dealer-side skill-damage arithmetic category. The name does not impose job applicability. |
+| `type.skill.damageTaken.<direction>` | `up`, `down` | Taker-side skill-damage arithmetic category. The name does not impose job applicability. |
 
 These effects do not mutate a fighter's stored Attack, Defense, Health, or Lethality. When an applicable damage job is calculated, they contribute factors to that job's equation. Expiry therefore affects future jobs only; it does not require undoing a stat mutation.
+
+A runtime modifier may add `"applies_to_damage_kinds": ["normal"]`, `["skill"]`, or `["normal", "skill"]` to restrict which damage jobs can use it while retaining the arithmetic bucket named by `type`. Omission means both normal and skill jobs. For example, `active.hero.damageTaken.up` with `applies_to_damage_kinds: ["normal"]` adds with unrestricted `active.hero.damageTaken.up` effects on normal jobs and is absent from skill jobs. Bucket definitions do not impose damage-kind eligibility. This field is not supported on carriers or special effects such as `extra_skill_attack`; generated-job classification belongs in `trigger_damage_jobs[].damage_kind` instead.
 
 The current hero JSON files use only the subset listed by the inventory at the end of this guide. The additional combinations above are nevertheless registered native buckets. `active.hero.*` and `active.troop.*` are not source-validated: a hero definition can write to either family. The families are separate factors, so identical hero- and troop-labelled bonuses multiply rather than add together.
 
@@ -409,7 +412,7 @@ This creates an active effect that can be used by eligible normal attacks. `unit
 
 When `duration` is omitted, the active effect defaults to one turn and one applicable attack. Declare `duration` only when the extra attack needs a different lifetime or delay.
 
-`value` becomes the generated job's source multiplier: `100` means `1.0`, `25` means `0.25`, and `200` means `2.0`. The result is a **new full damage calculation**, not that percentage of the parent normal job's final kills or raw damage. The multiplier is independent of `damage_kind`; that field alone decides whether normal-only, skill-only, or neither family of type modifiers applies.
+`value` becomes the generated job's source multiplier: `100` means `1.0`, `25` means `0.25`, and `200` means `2.0`. The result is a **new full damage calculation**, not that percentage of the parent normal job's final kills or raw damage. The multiplier is independent of `damage_kind`; that classification is matched against each modifier's `applies_to_damage_kinds` eligibility.
 
 Requirements:
 
@@ -429,7 +432,7 @@ Each job has this shape:
 }
 ```
 
-An optional `damage_kind` may be `normal`, `skill`, or `extra`, and defaults to `skill`. This is the only field that classifies the generated damage. `extra` receives common damage buckets but neither normal-only nor skill-only buckets, and it is not attributed to `skillKills`.
+An optional `damage_kind` may be `normal` or `skill`, and defaults to `skill`. This is the only field that classifies the generated damage. Normal jobs are not attributed to `skillKills`.
 
 Supported `source` and `target` selectors are:
 

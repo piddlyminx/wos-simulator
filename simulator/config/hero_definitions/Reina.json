@@ -11,6 +11,7 @@
       "effects": {
         "AssassinsInstinct/1": {
           "type": "type.normal.damage.up",
+          "applies_to_damage_kinds": ["normal"],
           "value": [
             10,
             15,

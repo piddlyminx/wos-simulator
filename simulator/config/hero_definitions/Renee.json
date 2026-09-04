@@ -61,11 +61,12 @@
           },
           "trigger_effects": {
             "Dreamcatcher/1": {
-              "type": "type.marked_target.damage.up",
+              "type": "active.hero.damageTaken.up",
+              "applies_to_damage_kinds": ["normal"],
               "value": [30, 60, 90, 120, 150],
               "units": {
-                "applies_to": "parent.use.source",
-                "applies_vs": "parent.use.target"
+                "applies_to": "parent.use.target",
+                "applies_vs": "parent.use.source"
               },
               "duration": {
                 "turns": { "delay": 1, "count": 1 }
@@ -94,11 +95,12 @@
           },
           "trigger_effects": {
             "Dreamslice/1": {
-              "type": "type.marked_target.damage.up",
+              "type": "active.hero.damageTaken.up",
+              "applies_to_damage_kinds": ["normal"],
               "value": [15, 30, 45, 60, 75],
               "units": {
-                "applies_to": "all",
-                "applies_vs": "parent.use.target"
+                "applies_to": "parent.use.target",
+                "applies_vs": "any"
               },
               "duration": {
                 "turns": { "delay": 1, "count": 1 }

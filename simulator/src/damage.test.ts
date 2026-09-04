@@ -171,7 +171,7 @@ test("damage calculator preserves full positive damage precision", () => {
 });
 
 test("generated-job source multiplier is independent of damage kind", () => {
-  for (const kind of ["normal", "skill", "extra"] as const) {
+  for (const kind of ["normal", "skill"] as const) {
     const outcome = calculateIndexedDamageJob(
       { ...job, kind, sourceMultiplier: 1.6 },
       simpleFighters(),
@@ -360,8 +360,8 @@ test("static profile factoring is identical to evaluating its buckets unfactored
     unfactoredStaticProduct(dealerBuckets, "dealer", "denominator") *
     unfactoredStaticProduct(takerBuckets, "taker", "denominator");
   const unfactoredDamage =
-    unfactoredDynamicProduct(scratch.factors, job.kind, "numerator") * unfactoredStaticNumerator /
-    (100 * unfactoredDynamicProduct(scratch.factors, job.kind, "denominator") * unfactoredStaticDenominator);
+    unfactoredDynamicProduct(scratch.factors, "numerator") * unfactoredStaticNumerator /
+    (100 * unfactoredDynamicProduct(scratch.factors, "denominator") * unfactoredStaticDenominator);
 
   assert.ok(Math.abs((profiled.trace?.damageBeforeOffsets ?? 0) - unfactoredDamage) < 1e-12);
   assert.equal(profiled.trace?.atomicBuckets["player.attack"].totalPct, 50);
@@ -387,16 +387,10 @@ function unfactoredStaticProduct(
 
 function unfactoredDynamicProduct(
   factors: Float64Array,
-  kind: DamageJob["kind"],
   placement: BucketPlacement
 ): number {
   return DYNAMIC_BUCKETS.reduce(
-    (product, definition, index) => {
-      const damageKind = "damageKind" in definition ? definition.damageKind : undefined;
-      return definition.placement === placement && (!damageKind || damageKind === kind)
-        ? product * factors[index]
-        : product;
-    },
+    (product, definition, index) => definition.placement === placement ? product * factors[index] : product,
     1
   );
 }
@@ -465,7 +459,7 @@ test("damage-taken buckets use the expected damage direction", () => {
   assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
 });
 
-test("a durationless shield subtracts its full raw value from normal, skill, and extra damage jobs", () => {
+test("a durationless shield subtracts its full raw value from normal and skill damage jobs", () => {
   const fighters = simpleFighters();
   const shield = {
     ...effect("active.hero.shield", "defender", 25),
@@ -479,14 +473,9 @@ test("a durationless shield subtracts its full raw value from normal, skill, and
   const skillJob = { ...job, kind: "skill" as const, sourceMultiplier: 1 };
   const skillBaseline = calculateIndexedDamageJob(skillJob, fighters, [], { trace: true });
   const skill = calculateIndexedDamageJob(skillJob, fighters, [shield], { trace: true });
-  const extraJob = { ...job, kind: "extra" as const, sourceMultiplier: 1 };
-  const extraBaseline = calculateIndexedDamageJob(extraJob, fighters, [], { trace: true });
-  const extra = calculateIndexedDamageJob(extraJob, fighters, [shield], { trace: true });
-
   assert.equal(firstNormal.kills, Math.max(0, normalBaseline.kills - 25));
   assert.equal(secondNormal.kills, firstNormal.kills);
   assert.equal(skill.kills, Math.max(0, skillBaseline.kills - 25));
-  assert.equal(extra.kills, Math.max(0, extraBaseline.kills - 25));
   assert.equal(firstNormal.trace?.damageBeforeOffsets, normalBaseline.kills);
   assert.equal(firstNormal.trace?.offsetDamage, 25);
   assert.equal(firstNormal.trace?.aggregationGroups["active.hero.shield"].placement, "post_subtract");
@@ -609,24 +598,35 @@ test("negative passive stat bonuses route to down buckets with positive factors"
   assert.equal(Number((outcome.kills / baseline.kills).toFixed(6)), 2.05);
 });
 
-test("normal- and skill-specific buckets exclude extra damage", () => {
-  const normalEffect = effect("type.normal.damage.up", "attacker", 100);
-  const skillEffect = effect("type.skill.damage.up", "attacker", 100);
+test("bucket names do not restrict damage-job applicability", () => {
+  const namedNormal = effect("type.normal.damage.up", "attacker", 100);
   const fighters = simpleFighters();
-  const normalOutcome = calculateIndexedDamageJob(job, fighters, [normalEffect, skillEffect], { trace: true });
-  const skillOutcome = calculateIndexedDamageJob({ ...job, kind: "skill", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
-    trace: true
-  });
-  const extraOutcome = calculateIndexedDamageJob({ ...job, kind: "extra", sourceMultiplier: 1 }, fighters, [normalEffect, skillEffect], {
+  const normalOutcome = calculateIndexedDamageJob(job, fighters, [namedNormal], { trace: true });
+  const skillOutcome = calculateIndexedDamageJob({ ...job, kind: "skill", sourceMultiplier: 1 }, fighters, [namedNormal], {
     trace: true
   });
 
   assert.equal(normalOutcome.trace?.atomicBuckets["type.normal.damage.up"].totalPct, 100);
-  assert.equal(normalOutcome.trace?.aggregationGroups["type.skill.damage.up"], undefined);
-  assert.equal(skillOutcome.trace?.aggregationGroups["type.normal.damage.up"], undefined);
-  assert.equal(skillOutcome.trace?.atomicBuckets["type.skill.damage.up"].totalPct, 100);
-  assert.equal(extraOutcome.trace?.aggregationGroups["type.normal.damage.up"], undefined);
-  assert.equal(extraOutcome.trace?.aggregationGroups["type.skill.damage.up"], undefined);
+  assert.equal(skillOutcome.trace?.atomicBuckets["type.normal.damage.up"].totalPct, 100);
+});
+
+test("damage-kind applicability restricts jobs without changing the modifier bucket", () => {
+  const unrestricted = effect("active.hero.damageTaken.up", "defender", 15);
+  const normalOnly = effect("active.hero.damageTaken.up", "defender", 30);
+  normalOnly.intent = { ...normalOnly.intent, id: "normal-only-damage-taken", applies_to_damage_kinds: ["normal"] };
+  normalOnly.source = { ...normalOnly.source, effectId: "normal-only-damage-taken" };
+  const effects = [unrestricted, normalOnly];
+  const fighters = simpleFighters();
+
+  const normalOutcome = calculateIndexedDamageJob(job, fighters, effects, { trace: true });
+  const skillOutcome = calculateIndexedDamageJob({ ...job, kind: "skill" }, fighters, effects, { trace: true });
+
+  assert.equal(normalOutcome.trace?.atomicBuckets["active.hero.damageTaken.up"].totalPct, 45);
+  assert.equal(normalOutcome.trace?.atomicBuckets["active.hero.damageTaken.up"].contributors.length, 2);
+  assert.equal(skillOutcome.trace?.atomicBuckets["active.hero.damageTaken.up"].totalPct, 15);
+  assert.equal(skillOutcome.trace?.atomicBuckets["active.hero.damageTaken.up"].contributors.length, 1);
+  assert.equal(normalOutcome.trace?.atomicBuckets["type.normal.damageTaken.up"].totalPct, 0);
+  assert.equal(skillOutcome.trace?.atomicBuckets["type.normal.damageTaken.up"].totalPct, 0);
 });
 
 test("attack-duration bucket effects are charged by the applicable attack job", () => {

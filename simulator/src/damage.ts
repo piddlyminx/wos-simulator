@@ -34,7 +34,6 @@ interface DamageFactorTerm {
   bucket: NumericBucketId;
   jobSide: BucketJobSide;
   placement: "numerator" | "denominator" | "post_subtract";
-  damageKind?: DamageJob["kind"];
 }
 
 interface NumericDamageBuckets {
@@ -73,11 +72,8 @@ export type { DamageResult } from "./types";
 
 const DYNAMIC_FACTOR_TERMS = compileDamageTerms(DYNAMIC_BUCKETS);
 const STATIC_FACTOR_TERMS = compileDamageTerms(STATIC_BUCKETS);
-const DYNAMIC_EXPRESSIONS = {
-  normal: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "normal" }),
-  skill: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "skill" }),
-  extra: compileDamageExpression(DYNAMIC_FACTOR_TERMS, { kind: "extra" })
-};
+const DYNAMIC_EXPRESSION = compileDamageExpression(DYNAMIC_FACTOR_TERMS, {});
+const DYNAMIC_EXPRESSIONS = { normal: DYNAMIC_EXPRESSION, skill: DYNAMIC_EXPRESSION };
 const STATIC_EXPRESSIONS = {
   dealer: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "dealer" }),
   taker: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "taker" })
@@ -348,8 +344,7 @@ function compileDamageTerms(definitions: readonly BucketSpec[]): DamageFactorTer
   return definitions.map((definition, bucket) => ({
     bucket,
     jobSide: definition.jobSide,
-    placement: definition.placement,
-    damageKind: definition.damageKind
+    placement: definition.placement
   }));
 }
 
@@ -357,12 +352,9 @@ function compileDamageExpression(
   terms: DamageFactorTerm[],
   selection: {
     jobSide?: BucketJobSide;
-    kind?: DamageJob["kind"];
   }
 ): CompiledDamageExpression {
-  const selected = terms
-    .filter((term) => selection.jobSide === undefined || term.jobSide === selection.jobSide)
-    .filter((term) => selection.kind === undefined || !term.damageKind || term.damageKind === selection.kind);
+  const selected = terms.filter((term) => selection.jobSide === undefined || term.jobSide === selection.jobSide);
   return {
     numeratorSlots: Int32Array.from(selected.filter((term) => term.placement === "numerator").map((term) => term.bucket)),
     denominatorSlots: Int32Array.from(selected.filter((term) => term.placement === "denominator").map((term) => term.bucket)),

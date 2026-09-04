@@ -363,22 +363,22 @@ test("simulateBearBattle scores uncapped per-attack damage", () => {
   assert.ok(damage.score > defensive.score);
 });
 
-test("simulateBearBattle includes carried extra damage in score without treating it as skill kills", () => {
+test("simulateBearBattle includes fixture-carried normal damage in score without treating it as skill kills", () => {
   const result = simulateBearBattle(
     {
       troops: { lancer_t1: 1000 },
       stats: {},
       heroes: { Renee: { skill_1: 1 } }
     },
-    loadSimulatorConfig(),
-    "bear-renee-extra"
+    carriedNormalDamageConfig(),
+    "bear-renee-carried-normal"
   );
 
   const attackerDamage = result.attacks
     .filter((attack) => attack.dealerSide === "attacker")
     .reduce((total, attack) => total + attack.kills, 0);
   assert.equal(result.score, attackerDamage);
-  assert.equal(result.attacks.some((attack) => attack.kind === "extra"), true);
+  assert.equal(result.attacks.some((attack) => attack.kind === "normal" && attack.sourceEffectId === "NightmareTrace/1"), true);
   assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace")?.skillKills, 0);
 });
 
@@ -787,7 +787,7 @@ test("carried extra damage expires when the next normal attack does not match it
                     type: "extra_skill_attack",
                     value: 40,
                     units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" },
-                    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }],
+                    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "normal" }],
                     duration: { turns: { delay: 1, count: 1 }, attacks: { count: 1 } }
                   }
                 }
@@ -806,20 +806,20 @@ test("carried extra damage expires when the next normal attack does not match it
   assert.equal(lancerAttacks.some((attack) => attack.sourceEffectId === "delayed"), false);
 });
 
-test("Renee snapshots Nightmare Trace as extra damage on the even turn and only delivers it next turn", () => {
+test("carried-damage fixture snapshots normal damage on the even turn and only delivers it next turn", () => {
   const result = runOnce(
     {
       maxRounds: 3,
       attacker: {
         troops: { lancer_t1: 1000000 },
-        heroes: { Renee: { skill_1: 1, skill_2: 1, skill_3: 1 } }
+        heroes: { Renee: { skill_1: 1 } }
       },
       defender: {
         troops: { marksman_t1: 1000000 },
         heroes: {}
       }
     },
-    loadSimulatorConfig(),
+    carriedNormalDamageConfig(),
     { mode: "trace" }
   );
 
@@ -829,27 +829,24 @@ test("Renee snapshots Nightmare Trace as extra damage on the even turn and only 
   const roundThreeNormal = attackerJobs.find((attack) => attack.round === 3 && attack.kind === "normal");
 
   assert.equal(attackerJobs.some((attack) => attack.round === 2 && attack.kind === "skill"), false);
-  assert.equal(delayed?.kind, "extra");
+  assert.equal(delayed?.kind, "normal");
   assert.equal(delayed?.round, 3);
   assert.equal(delayed?.calculationRound, 2);
   assert.ok(Math.abs(delayed!.kills - roundTwoNormal!.kills * 0.4) < 1e-9);
-  assert.equal(delayed?.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
-  assert.equal(delayed?.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 0);
-  assert.equal(roundThreeNormal?.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
-  assert.equal(roundThreeNormal?.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 45);
+  assert.ok(roundThreeNormal);
 
   const nightmareTrace = result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace");
   assert.equal(nightmareTrace?.skillKills, 0);
 });
 
-test("Wu Ming skill-damage amplification does not affect Renee's carried extra damage", () => {
+test("skill-damage amplification does not affect fixture-carried normal damage", () => {
   const result = runOnce(
     {
       maxRounds: 3,
       attacker: {
         troops: { lancer_t1: 1000000 },
         heroes: {
-          WuMing: { skill_2: 1, skill_3: 1 },
+          WuMing: { skill_1: 1, skill_2: 1 },
           Renee: { skill_1: 1 }
         }
       },
@@ -858,52 +855,46 @@ test("Wu Ming skill-damage amplification does not affect Renee's carried extra d
         heroes: {}
       }
     },
-    loadSimulatorConfig(),
+    carriedNormalDamageConfig(true),
     { mode: "trace" }
   );
 
   const delayed = result.attacks.find((attack) => attack.sourceEffectId === "NightmareTrace/1");
-  assert.equal(delayed?.kind, "extra");
+  assert.equal(delayed?.kind, "normal");
   assert.equal(delayed?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 4);
-  assert.equal(delayed?.trace?.aggregationGroups["type.skill.damage.up"], undefined);
+  assert.equal(delayed?.trace?.aggregationGroups["type.skill.damage.up"].totalPct, 0);
+  assert.equal(delayed?.trace?.aggregationGroups["type.skill.damage.up"].contributors.length, 0);
   assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace")?.skillKills, 0);
 });
 
-test("Renee's marked-target bucket multiplies separately from the single-target counterfactual", () => {
-  const base = loadSimulatorConfig();
-  const heroDefinitions = structuredClone(base.heroDefinitions);
-  const reneeSkills = heroDefinitions.Renee.skills;
-  for (const [skillId, effectId] of [["Dreamcatcher", "Dreamcatcher/1"], ["Dreamslice", "Dreamslice/1"]] as const) {
-    reneeSkills[skillId].effects[`${skillId}/mark`].trigger_effects![effectId].type = "type.single_target.damage.up";
-  }
-  const singleTargetConfig = buildSimulatorConfig({
-    heroGenerationStats: base.heroGenerationStats,
-    troopSkills: base.troopSkills,
-    heroDefinitions
-  });
+test("target-side damage-taken fixture locks the marked target with source-specific scopes", () => {
   const input: BattleInput = {
     maxRounds: 3,
     attacker: {
-      troops: { lancer_t1: 1000000 },
-      heroes: { Renee: { skill_1: 1, skill_2: 1, skill_3: 1 } }
+      troops: { infantry_t1: 1000000, lancer_t1: 1000000 },
+      heroes: { ReneeFixture: { skill_1: 1, skill_2: 1, skill_3: 1 } }
     },
     defender: {
-      troops: { marksman_t1: 1000000 },
+      troops: { infantry_t1: 1000000, marksman_t1: 1000000 },
       heroes: {}
     }
   };
 
-  const shared = runOnce(input, singleTargetConfig, { mode: "trace" });
-  const separate = runOnce(input, base, { mode: "trace" });
-  const sharedNormal = shared.attacks.find((attack) => attack.round === 3 && attack.kind === "normal" && attack.dealerSide === "attacker")!;
-  const separateNormal = separate.attacks.find((attack) => attack.round === 3 && attack.kind === "normal" && attack.dealerSide === "attacker")!;
-  const separateDelayed = separate.attacks.find((attack) => attack.sourceEffectId === "NightmareTrace/1")!;
+  const result = runOnce(input, reneeDamageTakenTargetFixture(), { mode: "trace" });
+  const markedTarget = result.attacks.find((attack) =>
+    attack.round === 2 && attack.kind === "normal" && attack.dealerSide === "attacker" && attack.dealerUnit === "lancer"
+  )!.takerUnit;
+  const otherTarget: UnitType = markedTarget === "infantry" ? "marksman" : "infantry";
+  const bucketTotal = (dealer: "infantry" | "lancer", target: UnitType): number | undefined =>
+    result.attacks.find((attack) =>
+      attack.round === 3 && attack.kind === "skill" && attack.dealerSide === "attacker" &&
+      attack.dealerUnit === dealer && attack.takerUnit === target
+    )?.trace?.atomicBuckets["active.hero.damageTaken.up"].totalPct;
 
-  assert.equal(sharedNormal.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 55);
-  assert.equal(separateNormal.trace?.atomicBuckets["type.single_target.damage.up"].totalPct, 10);
-  assert.equal(separateNormal.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 45);
-  assert.ok(Math.abs(separateNormal.kills / sharedNormal.kills - (1.1 * 1.45) / 1.55) < 1e-12);
-  assert.equal(separateDelayed.trace?.atomicBuckets["type.marked_target.damage.up"].totalPct, 0);
+  assert.equal(bucketTotal("infantry", otherTarget), 0);
+  assert.equal(bucketTotal("infantry", markedTarget), 15);
+  assert.equal(bucketTotal("lancer", otherTarget), 0);
+  assert.equal(bucketTotal("lancer", markedTarget), 45);
 });
 
 test("attack-duration effects with a round cap expire after one applicable attack", () => {
@@ -3077,6 +3068,7 @@ test("extra skill de-dupe does not suppress unrelated attack-duration effect con
             effects: {
               boost: {
                 type: "type.skill.damage.up",
+                applies_to_damage_kinds: ["skill"],
                 value: 100,
                 units: { applies_to: ["marksman"], applies_vs: "any" },
                 duration: { attacks: { count: 2 } }
@@ -3605,4 +3597,113 @@ function minimalConfig(heroDefinitions: Record<string, SkillFile> = {}): Simulat
     troopSkills: { name: "troop skills", skills: {} },
     diagnostics: { legacyFields: [], effectTypes: {}, unsupportedEffects: [] }
   };
+}
+
+function reneeDamageTakenTargetFixture(): SimulatorConfig {
+  return minimalConfig({
+    ReneeFixture: {
+      name: "Renee target fixture",
+      troop_type: "lancer",
+      skills: {
+        LancerMark: {
+          trigger: { type: "turn", every: 2 },
+          effects: {
+            "LancerMark/carrier": {
+              units: { applies_to: "self.lancer", applies_vs: "enemy.any" },
+              duration: { turns: { count: 1 }, attacks: { count: 1 } },
+              trigger_effects: {
+                "LancerMark/1": {
+                  type: "active.hero.damageTaken.up",
+                  value: 30,
+                  units: { applies_to: "parent.use.target", applies_vs: "parent.use.source" },
+                  duration: { turns: { delay: 1, count: 1 } }
+                }
+              }
+            }
+          }
+        },
+        AllTroopsMark: {
+          trigger: { type: "turn", every: 2 },
+          effects: {
+            "AllTroopsMark/carrier": {
+              units: { applies_to: "self.lancer", applies_vs: "enemy.any" },
+              duration: { turns: { count: 1 }, attacks: { count: 1 } },
+              trigger_effects: {
+                "AllTroopsMark/1": {
+                  type: "active.hero.damageTaken.up",
+                  value: 15,
+                  units: { applies_to: "parent.use.target", applies_vs: "any" },
+                  duration: { turns: { delay: 1, count: 1 } }
+                }
+              }
+            }
+          }
+        },
+        ProbeAllTargets: {
+          trigger: { type: "battle_start" },
+          effects: {
+            "ProbeAllTargets/1": {
+              type: "extra_skill_attack",
+              value: 100,
+              units: { applies_to: ["infantry", "lancer"], applies_vs: "any" },
+              trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
+              duration: { turns: { count: 3 } }
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function carriedNormalDamageConfig(includeSkillAmplifier = false): SimulatorConfig {
+  const heroDefinitions: Record<string, SkillFile> = {
+    Renee: {
+      name: "Renee fixture",
+      troop_type: "lancer",
+      skills: {
+        NightmareTrace: {
+          trigger: { type: "turn", every: 2 },
+          effects: {
+            "NightmareTrace/mark": {
+              units: { applies_to: "self.lancer", applies_vs: "enemy.any" },
+              duration: { turns: { count: 1 }, attacks: { count: 1 } },
+              trigger_effects: {
+                "NightmareTrace/1": {
+                  type: "extra_skill_attack",
+                  value: 40,
+                  units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" },
+                  trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "normal" }],
+                  duration: { turns: { delay: 1, count: 1 }, attacks: { count: 1 } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  };
+
+  if (includeSkillAmplifier) {
+    heroDefinitions.WuMing = {
+      name: "Wu Ming fixture",
+      troop_type: "infantry",
+      skills: {
+        CommonDamage: {
+          trigger: { type: "battle_start" },
+          effects: {
+            common: { type: "active.hero.damage.up", value: 4 }
+          }
+        },
+        SkillDamage: {
+          trigger: { type: "battle_start" },
+          effects: {
+            skill: { type: "type.skill.damage.up", applies_to_damage_kinds: ["skill"], value: 5 }
+          }
+        }
+      }
+    };
+  }
+
+  return minimalConfig(heroDefinitions);
 }
