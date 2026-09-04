@@ -110,7 +110,8 @@
           },
           "duration": {
             "turns": {
-              "count": 2
+              "count": 2,
+              "delay": 1
             }
           }
         },
@@ -125,7 +126,8 @@
           ],
           "duration": {
             "turns": {
-              "count": 2
+              "count": 2,
+              "delay": 1
             }
           }
         }
