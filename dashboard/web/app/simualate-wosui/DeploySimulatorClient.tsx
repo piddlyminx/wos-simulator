@@ -23,7 +23,7 @@ export default function DeploySimulatorClient({
 
   function chooseMode(nextMode: DeploySimulatorMode) {
     if (nextMode === mode) return;
-    router.push(`/deploy?mode=${nextMode}`);
+    router.push(`/simualate-wosui?mode=${nextMode}`);
   }
 
   return (

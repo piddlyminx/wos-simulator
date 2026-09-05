@@ -19,5 +19,5 @@ export function deployRunHref(
     mode: deployModeForSavedKind(kind),
     run: id,
   });
-  return `/deploy?${params.toString()}`;
+  return `/simualate-wosui?${params.toString()}`;
 }

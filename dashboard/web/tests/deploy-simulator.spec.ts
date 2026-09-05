@@ -15,9 +15,9 @@ async function expectNoHorizontalOverflow(page: Page) {
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
 }
 
-test("/deploy unifies the complete Battle and Bear workspaces", async ({ page }) => {
+test("/simualate-wosui unifies the complete Battle and Bear workspaces", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  const response = await page.goto("/deploy");
+  const response = await page.goto("/simualate-wosui");
   expect(response?.status()).toBe(200);
 
   await expect(page.getByRole("heading", { name: "Deploy" })).toBeVisible();
@@ -31,7 +31,7 @@ test("/deploy unifies the complete Battle and Bear workspaces", async ({ page })
   await expect(page.getByTestId("sim-action-dock")).toHaveCSS("position", "sticky");
 
   await page.getByRole("tab", { name: /Bear Rally score/ }).click();
-  await expect(page).toHaveURL(/\/deploy\?mode=bear$/);
+  await expect(page).toHaveURL(/\/simualate-wosui\?mode=bear$/);
   await expect(page.getByRole("heading", { name: "Deploy" })).toBeVisible();
   await expect(page.getByTestId("bear-start-card")).toBeVisible();
   await expect(page.getByTestId("side-section-attacker-troops")).toBeVisible();
@@ -39,9 +39,9 @@ test("/deploy unifies the complete Battle and Bear workspaces", async ({ page })
   await expect(page.getByTestId("bear-optimize-panel")).toBeVisible();
 });
 
-test("/deploy uses game-like army controls without losing simulator inputs", async ({ page }) => {
+test("/simualate-wosui uses game-like army controls without losing simulator inputs", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
 
   const infantryCount = page.getByLabel("infantry troop count").first();
   const lancerCount = page.getByLabel("lancer troop count").first();
@@ -110,9 +110,9 @@ test("/deploy uses game-like army controls without losing simulator inputs", asy
   await page.getByRole("button", { name: "Done" }).click();
 });
 
-test("/deploy troop sliders stop at march capacity without changing other troops", async ({ page }) => {
+test("/simualate-wosui troop sliders stop at march capacity without changing other troops", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
 
   const counts = [
     page.getByLabel("infantry troop count").first(),
@@ -134,9 +134,9 @@ test("/deploy troop sliders stop at march capacity without changing other troops
   await expect(counts[2]).toHaveValue("30000");
 });
 
-test("/deploy keeps setup tools and advanced Battle modes reachable", async ({ page }) => {
+test("/simualate-wosui keeps setup tools and advanced Battle modes reachable", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
 
   await page.getByRole("button", { name: "Upload report" }).click();
   await expect(page.getByRole("dialog", { name: "Upload battle report" })).toBeVisible();
@@ -186,7 +186,7 @@ test("/deploy keeps setup tools and advanced Battle modes reachable", async ({ p
   await expect(page.getByTestId("explore-ratios-options-panel")).toBeVisible();
 });
 
-test("/deploy keeps recent-run navigation in the alternative interface", async ({ page }) => {
+test("/simualate-wosui keeps recent-run navigation in the alternative interface", async ({ page }) => {
   await page.route("**/api/simulate/runs?*", async (route) => {
     await route.fulfill({
       status: 200,
@@ -207,15 +207,15 @@ test("/deploy keeps recent-run navigation in the alternative interface", async (
     });
   });
 
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
   await page.getByTestId("recent-runs-toggle").click();
   await page.getByRole("button", { name: /Recent deployment/ }).click();
   await expect(page).toHaveURL(
-    /\/deploy\?mode=battle&run=deploy-recent-battle$/,
+    /\/simualate-wosui\?mode=battle&run=deploy-recent-battle$/,
   );
 });
 
-test("/deploy separates this browser's runs from the global archive", async ({ page }) => {
+test("/simualate-wosui separates this browser's runs from the global archive", async ({ page }) => {
   let releaseAllRuns: (() => void) | undefined;
   const allRunsCanRespond = new Promise<void>((resolve) => {
     releaseAllRuns = resolve;
@@ -247,7 +247,7 @@ test("/deploy separates this browser's runs from the global archive", async ({ p
     });
   });
 
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
   await page.getByTestId("recent-runs-toggle").click();
   const modal = page.getByTestId("recent-runs-modal");
   await expect(modal.getByRole("button", { name: "My runs" })).toHaveAttribute(
@@ -283,7 +283,7 @@ test("/deploy separates this browser's runs from the global archive", async ({ p
   await expect(modal.getByText("My deployment")).toBeVisible();
 });
 
-test("/deploy keeps a populated recent-runs modal stable while refreshing", async ({ page }) => {
+test("/simualate-wosui keeps a populated recent-runs modal stable while refreshing", async ({ page }) => {
   let requestCount = 0;
   let markRefreshStarted: (() => void) | undefined;
   let releaseRefresh: (() => void) | undefined;
@@ -315,7 +315,7 @@ test("/deploy keeps a populated recent-runs modal stable while refreshing", asyn
     });
   });
 
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
   await page.getByTestId("recent-runs-toggle").click();
   const modal = page.getByTestId("recent-runs-modal");
   const panel = modal.locator(".sim-modal");
@@ -339,7 +339,7 @@ test("/deploy keeps a populated recent-runs modal stable while refreshing", asyn
   expect(Math.abs((refreshingHeight ?? 0) - (loadedHeight ?? 0))).toBeLessThanOrEqual(1);
 });
 
-test("/deploy changes recent-run scopes in one visual transition", async ({ page }) => {
+test("/simualate-wosui changes recent-run scopes in one visual transition", async ({ page }) => {
   let markAllRunsStarted: (() => void) | undefined;
   let releaseAllRuns: (() => void) | undefined;
   const allRunsStarted = new Promise<void>((resolve) => {
@@ -381,7 +381,7 @@ test("/deploy changes recent-run scopes in one visual transition", async ({ page
     });
   });
 
-  await page.goto("/deploy?mode=battle");
+  await page.goto("/simualate-wosui?mode=battle");
   await page.getByTestId("recent-runs-toggle").click();
   const modal = page.getByTestId("recent-runs-modal");
   const panel = modal.locator(".sim-modal");
@@ -403,9 +403,9 @@ test("/deploy changes recent-run scopes in one visual transition", async ({ page
 });
 
 for (const viewport of VIEWPORTS) {
-  test(`/deploy fits the ${viewport.name} viewport`, async ({ page }) => {
+  test(`/simualate-wosui fits the ${viewport.name} viewport`, async ({ page }) => {
     await page.setViewportSize(viewport);
-    const response = await page.goto("/deploy?mode=battle");
+    const response = await page.goto("/simualate-wosui?mode=battle");
     expect(response?.status()).toBe(200);
     await expect(page.getByTestId("deploy-simulator")).toBeVisible();
     await expectNoHorizontalOverflow(page);

@@ -22,6 +22,7 @@ const DASHBOARD_GROUPS: {
     links: [
       { href: "/simulate", label: "Battle Sim" },
       { href: "/bear", label: "Bear Sim" },
+      { href: "/simualate-wosui", label: "Simulator WOS-UI" },
       { href: "/tournament", label: "Tournament" },
     ],
   },
@@ -38,6 +39,7 @@ const DASHBOARD_GROUPS: {
 const SIMULATE_LINKS: { href: string; label: string }[] = [
   { href: "/simulate", label: "Battle Sim" },
   { href: "/bear", label: "Bear Sim" },
+  { href: "/simualate-wosui", label: "Simulator WOS-UI" },
 ];
 
 function isActive(pathname: string, href: string): boolean {

@@ -16,10 +16,10 @@ test("deploy mode follows the saved-run family", () => {
 test("deploy run links retain mode and safely encode run ids", () => {
   assert.equal(
     deployRunHref("battle run/1", "simulate"),
-    "/deploy?mode=battle&run=battle+run%2F1",
+    "/simualate-wosui?mode=battle&run=battle+run%2F1",
   );
   assert.equal(
     deployRunHref("bear run/1", "bear_simulate"),
-    "/deploy?mode=bear&run=bear+run%2F1",
+    "/simualate-wosui?mode=bear&run=bear+run%2F1",
   );
 });

@@ -10,6 +10,7 @@ test("public simulate surface allows bundled example upload assets", () => {
 test("public simulate surface allows bear sim routes", () => {
   assert.equal(isAllowedPublicPath("/bear"), true);
   assert.equal(isAllowedPublicPath("/bear/"), true);
-  assert.equal(isAllowedPublicPath("/deploy"), true);
-  assert.equal(isAllowedPublicPath("/deploy/"), true);
+  assert.equal(isAllowedPublicPath("/simualate-wosui"), true);
+  assert.equal(isAllowedPublicPath("/simualate-wosui/"), true);
+  assert.equal(isAllowedPublicPath("/deploy"), false);
 });
