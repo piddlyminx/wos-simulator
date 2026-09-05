@@ -47,30 +47,91 @@ test("/deploy uses game-like army controls without losing simulator inputs", asy
   const lancerCount = page.getByLabel("lancer troop count").first();
   const marksmanCount = page.getByLabel("marksman troop count").first();
 
-  await page.getByRole("button", { name: "10 / 45 / 45" }).first().click();
-  await expect(infantryCount).toHaveValue("15000");
-  await expect(lancerCount).toHaveValue("67500");
-  await expect(marksmanCount).toHaveValue("67500");
+  const balance = page.getByRole("dialog", { name: "Attacker balance" });
+  await expect(async () => {
+    if (!(await balance.isVisible())) {
+      await page.getByRole("button", { name: "Balance" }).first().click();
+    }
+    await expect(balance).toBeVisible({ timeout: 1_000 });
+  }).toPass();
+  await balance.getByLabel("lancer balance percentage").fill("10");
+  await balance.getByRole("slider", { name: "infantry balance ratio" }).focus();
+  await page.keyboard.press("End");
+  await expect(balance.getByLabel("infantry balance percentage")).toHaveValue("56");
+  await expect(balance.getByLabel("lancer balance percentage")).toHaveValue("10");
+  await expect(balance.getByLabel("marksman balance percentage")).toHaveValue("34");
+  await balance.getByRole("button", { name: "Confirm" }).click();
+  await expect(infantryCount).toHaveValue("84000");
+  await expect(lancerCount).toHaveValue("15000");
+  await expect(marksmanCount).toHaveValue("51000");
 
   await page.getByRole("button", { name: "Choose infantry hero, currently none" }).first().click();
-  await expect(page.getByRole("dialog", { name: "Select Infantry hero" })).toBeVisible();
-  await page.getByLabel("Search heroes").fill("Gatot");
-  await expect(page.getByRole("button", { name: /Gatot/ }).locator("img")).toBeVisible();
-  await expect(page.getByRole("button", { name: /Gregory/ })).toHaveCount(0);
-  await page.getByRole("button", { name: /Gatot/ }).click();
-  await page.getByRole("button", { name: "Assign" }).click();
-  await expect(page.getByRole("button", { name: "Choose infantry hero, currently Gatot" })).toBeVisible();
+  const heroPicker = page.getByRole("dialog", { name: "Select heroes" });
+  await expect(heroPicker).toBeVisible();
+  await expect(heroPicker.getByRole("button", { name: /Choose infantry hero/ })).toBeVisible();
+  await expect(heroPicker.getByRole("button", { name: /Choose lancer hero/ })).toBeVisible();
+  await expect(heroPicker.getByRole("button", { name: /Choose marksman hero/ })).toBeVisible();
 
-  await page.getByRole("button", { name: /Stats Base \+ effective/ }).first().click();
-  await expect(page.getByRole("dialog", { name: "Attacker stats" })).toBeVisible();
-  await page.getByLabel("Infantry Attack").fill("321.5");
-  await page.getByRole("button", { name: "Done" }).click();
+  await heroPicker.getByLabel("Search heroes").fill("Gatot");
+  await expect(heroPicker.getByRole("button", { name: /Gatot/ }).locator("img")).toBeVisible();
+  await expect(heroPicker.getByRole("button", { name: /Gregory/ })).toHaveCount(0);
+  await heroPicker.getByRole("button", { name: /Gatot/ }).click();
+  await expect(heroPicker.getByRole("button", { name: /Gatot/ })).toHaveAttribute("aria-pressed", "true");
+  await heroPicker.getByRole("button", { name: /Gatot/ }).click();
+  await expect(heroPicker).toBeVisible();
+  await expect(heroPicker.getByRole("button", { name: "Choose infantry hero, currently Gatot" })).toBeVisible();
+
+  await heroPicker.getByRole("button", { name: /Choose lancer hero/ }).click();
+  await heroPicker.getByLabel("Search heroes").fill("Renee");
+  await heroPicker.getByRole("button", { name: /Renee/ }).click();
+  await heroPicker.getByRole("button", { name: /Renee/ }).click();
+  await expect(heroPicker.getByRole("button", { name: "Choose lancer hero, currently Renee" })).toBeVisible();
+
+  await heroPicker.getByRole("button", { name: /Choose marksman hero/ }).click();
+  await heroPicker.getByLabel("Search heroes").fill("Lynn");
+  await heroPicker.getByRole("button", { name: /Lynn/ }).click();
+  await heroPicker.getByRole("button", { name: /Lynn/ }).click();
+  await expect(heroPicker.getByRole("button", { name: "Choose marksman hero, currently Lynn" })).toBeVisible();
+  await heroPicker.getByRole("button", { name: "Close hero picker" }).click();
+
+  await expect(page.getByRole("button", { name: "Choose infantry hero, currently Gatot" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Choose lancer hero, currently Renee" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Choose marksman hero, currently Lynn" })).toBeVisible();
+
+  const inlineStats = page.getByTestId("side-section-attacker-stats");
+  await expect(inlineStats).toBeVisible();
+  await inlineStats.getByLabel("Infantry Attack").fill("321.5");
+  await expect(inlineStats.getByLabel("Infantry Attack")).toHaveValue("321.5");
 
   await page.getByLabel("Rally mode").check();
   await expect(page.getByRole("button", { name: /Joiners 0\/4 assigned/ }).first()).toBeVisible();
   await page.getByRole("button", { name: /Joiners 0\/4 assigned/ }).first().click();
   await page.getByLabel("attacker joiner 1").selectOption("Jessie");
   await page.getByRole("button", { name: "Done" }).click();
+});
+
+test("/deploy troop sliders stop at march capacity without changing other troops", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/deploy?mode=battle");
+
+  const counts = [
+    page.getByLabel("infantry troop count").first(),
+    page.getByLabel("lancer troop count").first(),
+    page.getByLabel("marksman troop count").first(),
+  ];
+  const infantrySlider = page.getByLabel("infantry troop ratio").first();
+
+  await counts[2].fill("30000");
+  await counts[2].blur();
+  await expect(counts[0]).toHaveValue("50000");
+  await expect(counts[1]).toHaveValue("50000");
+  await expect(counts[2]).toHaveValue("30000");
+
+  await infantrySlider.focus();
+  await page.keyboard.press("End");
+  await expect(counts[0]).toHaveValue("70000");
+  await expect(counts[1]).toHaveValue("50000");
+  await expect(counts[2]).toHaveValue("30000");
 });
 
 test("/deploy keeps setup tools and advanced Battle modes reachable", async ({ page }) => {
@@ -85,9 +146,33 @@ test("/deploy keeps setup tools and advanced Battle modes reachable", async ({ p
   await expect(page.getByTestId("recent-runs-modal")).toBeVisible();
   await page.getByRole("button", { name: /Close recent runs/i }).click();
 
-  await page.getByLabel("attacker player profile").click();
+  await page
+    .getByTestId("side-section-attacker-stats")
+    .getByLabel("attacker player profile")
+    .click();
   await expect(page.getByTestId("stat-profile-modal")).toBeVisible();
   await page.getByRole("button", { name: "Close profile modal" }).click();
+
+  const dock = page.getByTestId("deploy-setup-dock-attacker");
+  await expect(dock.getByRole("button")).toHaveCount(2);
+  const [dockBox, lastButtonBox] = await Promise.all([
+    dock.boundingBox(),
+    dock.getByRole("button").last().boundingBox(),
+  ]);
+  expect(dockBox).not.toBeNull();
+  expect(lastButtonBox).not.toBeNull();
+  expect(Math.abs(
+    (dockBox?.x ?? 0) + (dockBox?.width ?? 0) -
+    ((lastButtonBox?.x ?? 0) + (lastButtonBox?.width ?? 0)),
+  )).toBeLessThanOrEqual(1);
+
+  await dock.getByRole("button", { name: /Buffs/ }).click();
+  const buffs = page.getByRole("dialog", { name: "Attacker buffs" });
+  await expect(buffs).toBeVisible();
+  await expect(buffs.getByTestId("city-modifier-details-attacker")).toHaveCount(0);
+  await expect(buffs.getByTestId("stat-modifier-attacker-attack-0")).toBeVisible();
+  await expect(buffs.getByTestId("pet-modifier-attacker-attack")).toBeVisible();
+  await buffs.getByRole("button", { name: "Done" }).click();
 
   await page.getByRole("tab", { name: "Optimise" }).click();
   await page.getByTestId("optimize-options-toggle").click();

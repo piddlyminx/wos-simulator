@@ -13,6 +13,11 @@ import { EditableNumberInput } from "@/components/EditableNumberInput";
 import { ExperimentalBadge } from "@/components/ExperimentalBadge";
 import { TroopRatioInput } from "@/components/simulate/TroopRatioInput";
 import {
+  snapTroopPercentages,
+  troopCountsForPercentages,
+  troopPercentagesForCounts,
+} from "@/lib/simulate/troop-ratio";
+import {
   HEROES,
   Skill4Stat,
   TROOP_TIERS,
@@ -792,32 +797,26 @@ const DEPLOY_HERO_AVATARS = new Set([
   "Zinman",
 ]);
 
-type DeploySetupSheet = "stats" | "skills" | "joiners" | "bonuses";
+type DeploySetupSheet = "skills" | "joiners" | "buffs";
 
-function distributeTroopCount(
+type DeployRatios = Record<TroopCategory, number>;
+
+function clampTroopCountToCapacity(
   troops: SideState["troops"],
   category: TroopCategory,
   nextValue: number,
+  capacity: number,
 ): SideState["troops"] {
-  const total = CATEGORIES.reduce((sum, current) => sum + troops[current], 0);
-  const clamped = Math.max(0, Math.min(total, Math.round(nextValue)));
-  const otherCategories = CATEGORIES.filter((current) => current !== category);
-  const remaining = total - clamped;
-  const otherTotal = otherCategories.reduce(
-    (sum, current) => sum + troops[current],
+  const otherTotal = CATEGORIES.reduce(
+    (sum, current) => sum + (current === category ? 0 : troops[current]),
     0,
   );
-  const first = otherCategories[0];
-  const second = otherCategories[1];
-  const firstValue =
-    otherTotal > 0
-      ? Math.round((troops[first] / otherTotal) * remaining)
-      : Math.round(remaining / 2);
   return {
     ...troops,
-    [category]: clamped,
-    [first]: firstValue,
-    [second]: remaining - firstValue,
+    [category]: Math.max(
+      0,
+      Math.min(Math.max(0, capacity - otherTotal), Math.round(nextValue)),
+    ),
   };
 }
 
@@ -833,6 +832,15 @@ function troopsForPercentages(
     lancer,
     marksman: Math.max(0, total - infantry - lancer),
   };
+}
+
+function deployRatiosForTroops(troops: SideState["troops"]): DeployRatios {
+  const [infantry, lancer, marksman] = snapTroopPercentages(
+    troopPercentagesForCounts(troops),
+  );
+  return infantry + lancer + marksman === 0
+    ? { infantry: 33, lancer: 33, marksman: 34 }
+    : { infantry, lancer, marksman };
 }
 
 function DeployTypeCrest({ category }: { category: TroopCategory }) {
@@ -971,18 +979,22 @@ function applyDeployHeroSelection({
 }
 
 function DeployHeroPicker({
-  category,
-  selected,
+  initialCategory,
+  which,
+  state,
   onSelect,
   onClose,
 }: {
-  category: TroopCategory;
-  selected: string | null;
-  onSelect: (name: string | null) => void;
+  initialCategory: TroopCategory;
+  which: Side;
+  state: SideState;
+  onSelect: (category: TroopCategory, name: string | null) => void;
   onClose: () => void;
 }) {
+  const [category, setCategory] = useState(initialCategory);
   const [sort, setSort] = useState<"generation" | "name">("generation");
   const [query, setQuery] = useState("");
+  const selected = state.heroes[category].name;
   const [focused, setFocused] = useState<string | null>(selected);
   const heroes = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -1008,14 +1020,26 @@ function DeployHeroPicker({
         className={deployStyles.picker}
         role="dialog"
         aria-modal="true"
-        aria-label={`Select ${troopCategoryLabel(category)} hero`}
+        aria-label="Select heroes"
         onMouseDown={(event) => event.stopPropagation()}
       >
         <header className={deployStyles.modalHeader}>
           <span className={deployStyles.snowCap} aria-hidden="true" />
-          <h3>Select hero</h3>
+          <h3>Select Heroes</h3>
           <button type="button" onClick={onClose} aria-label="Close hero picker">×</button>
         </header>
+        <div className={deployStyles.pickerAssignments}>
+          <DeployHeroSlots
+            which={which}
+            state={state}
+            activeCategory={category}
+            onChoose={(nextCategory) => {
+              setCategory(nextCategory);
+              setFocused(state.heroes[nextCategory].name);
+              setQuery("");
+            }}
+          />
+        </div>
         <div className={deployStyles.pickerToolbar}>
           <span><DeployTypeCrest category={category} /> {troopCategoryLabel(category)}</span>
           <label className={deployStyles.heroSearch}>
@@ -1051,7 +1075,13 @@ function DeployHeroPicker({
               data-active={focused === hero.name}
               data-assigned={selected === hero.name}
               aria-pressed={focused === hero.name}
-              onClick={() => setFocused(hero.name)}
+              onClick={() => {
+                if (focused === hero.name) {
+                  onSelect(category, hero.name);
+                  return;
+                }
+                setFocused(hero.name);
+              }}
             >
               <DeployHeroPortrait name={hero.name} category={category} />
               <DeployTypeCrest category={category} />
@@ -1068,14 +1098,21 @@ function DeployHeroPicker({
           ) : null}
         </div>
         <footer className={deployStyles.modalFooter}>
-          <button type="button" className={deployStyles.secondaryButton} onClick={() => onSelect(null)}>
+          <button
+            type="button"
+            className={deployStyles.secondaryButton}
+            onClick={() => {
+              onSelect(category, null);
+              setFocused(null);
+            }}
+          >
             Clear slot
           </button>
           <button
             type="button"
             className={deployStyles.gameButton}
             disabled={!focused}
-            onClick={() => onSelect(focused)}
+            onClick={() => onSelect(category, focused)}
           >
             Assign
           </button>
@@ -1088,10 +1125,12 @@ function DeployHeroPicker({
 function DeployHeroSlots({
   which,
   state,
+  activeCategory,
   onChoose,
 }: {
   which: Side;
   state: SideState;
+  activeCategory?: TroopCategory;
   onChoose: (category: TroopCategory) => void;
 }) {
   return (
@@ -1103,6 +1142,7 @@ function DeployHeroSlots({
             key={category}
             type="button"
             className={deployStyles.heroSlot}
+            data-active={activeCategory === category}
             data-empty={!hero}
             onClick={() => onChoose(category)}
             aria-label={`Choose ${category} hero, currently ${hero?.name ?? "none"}`}
@@ -1135,11 +1175,15 @@ function DeployTroopRow({
   which,
   state,
   setState,
+  capacity,
+  setTroops,
 }: {
   category: TroopCategory;
   which: Side;
   state: SideState;
   setState: SidePanelProps["setState"];
+  capacity: number;
+  setTroops: (updater: (troops: SideState["troops"]) => SideState["troops"]) => void;
 }) {
   const selectedTier = state.tiers[category];
   const isCustom = !TROOP_TIERS.includes(selectedTier);
@@ -1147,13 +1191,14 @@ function DeployTroopRow({
   const total = CATEGORIES.reduce((sum, current) => sum + state.troops[current], 0);
   const count = state.troops[category];
   const percent = total > 0 ? Math.round((count / total) * 100) : 0;
-  const step = Math.max(1, Math.round(Math.max(total, 100) / 100));
+  const step = Math.max(1, Math.round(Math.max(capacity, 100) / 100));
+  const otherTotal = total - count;
+  const maxCount = Math.max(0, capacity - otherTotal);
 
   const setCount = (nextCount: number) => {
-    setState((previous) => ({
-      ...previous,
-      troops: { ...previous.troops, [category]: Math.max(0, Math.round(nextCount)) },
-    }));
+    setTroops((troops) =>
+      clampTroopCountToCapacity(troops, category, nextCount, capacity),
+    );
   };
 
   return (
@@ -1207,6 +1252,7 @@ function DeployTroopRow({
           <EditableNumberInput
             name={`${which}.troops.${category}.count`}
             min={0}
+            max={maxCount}
             inputMode="numeric"
             parse="int"
             value={count}
@@ -1221,18 +1267,14 @@ function DeployTroopRow({
         className={deployStyles.troopSlider}
         type="range"
         min={0}
-        max={Math.max(total, 1)}
-        value={Math.min(count, Math.max(total, 1))}
-        disabled={total === 0}
+        max={Math.max(capacity, 1)}
+        step={1}
+        value={Math.min(count, Math.max(capacity, 1))}
+        disabled={capacity === 0}
         aria-label={`${category} troop ratio`}
-        style={{ "--fill": `${percent}%` } as React.CSSProperties}
-        onChange={(event) => {
-          const next = Number(event.target.value);
-          setState((previous) => ({
-            ...previous,
-            troops: distributeTroopCount(previous.troops, category, next),
-          }));
-        }}
+        aria-valuemax={maxCount}
+        style={{ "--fill": `${capacity > 0 ? (count / capacity) * 100 : 0}%` } as React.CSSProperties}
+        onChange={(event) => setCount(Number(event.target.value))}
       />
     </div>
   );
@@ -1346,12 +1388,142 @@ function DeploySetupModal({
       <section className={deployStyles.setupModal} role="dialog" aria-modal="true" aria-label={`${title} ${sheet}`} onMouseDown={(event) => event.stopPropagation()}>
         <header className={deployStyles.modalHeader}>
           <span className={deployStyles.snowCap} aria-hidden="true" />
-          <h3>{sheet === "bonuses" ? "Battle bonuses" : sheet === "stats" ? "Stat bonuses" : sheet === "skills" ? "Hero skills" : "Rally joiners"}</h3>
+          <h3>{sheet === "buffs" ? "Battle buffs" : sheet === "skills" ? "Hero skills" : "Rally joiners"}</h3>
           <button type="button" onClick={onClose} aria-label={`Close ${sheet}`}>×</button>
         </header>
         <div className={deployStyles.setupModalBody}>{children}</div>
         <footer className={deployStyles.modalFooter}>
           <button type="button" className={deployStyles.gameButton} onClick={onClose}>Done</button>
+        </footer>
+      </section>
+    </div>
+  );
+}
+
+function DeployBalancePopover({
+  title,
+  troops,
+  capacity,
+  onApply,
+  onClose,
+}: {
+  title: string;
+  troops: SideState["troops"];
+  capacity: number;
+  onApply: (troops: SideState["troops"]) => void;
+  onClose: () => void;
+}) {
+  const [ratios, setRatios] = useState<DeployRatios>(() =>
+    deployRatiosForTroops(troops),
+  );
+  const totalRatio = CATEGORIES.reduce(
+    (sum, category) => sum + ratios[category],
+    0,
+  );
+
+  const setRatio = (category: TroopCategory, nextValue: number) => {
+    setRatios((previous) => {
+      const otherTotal = CATEGORIES.reduce(
+        (sum, current) =>
+          sum + (current === category ? 0 : previous[current]),
+        0,
+      );
+      return {
+        ...previous,
+        [category]: Math.max(
+          0,
+          Math.min(100 - otherTotal, Math.round(nextValue)),
+        ),
+      };
+    });
+  };
+
+  return (
+    <div className={deployStyles.backdrop} role="presentation" onMouseDown={onClose}>
+      <section
+        className={`${deployStyles.setupModal} ${deployStyles.balancePopover}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${title} balance`}
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <header className={deployStyles.modalHeader}>
+          <span className={deployStyles.snowCap} aria-hidden="true" />
+          <h3>Balance</h3>
+          <button type="button" onClick={onClose} aria-label="Close balance">×</button>
+        </header>
+        <div className={deployStyles.balanceBody}>
+          <div className={deployStyles.balanceCapacity} data-complete={totalRatio === 100}>
+            <span aria-hidden="true">♟</span>
+            <strong>{totalRatio}% / 100%</strong>
+          </div>
+          {CATEGORIES.map((category) => {
+            const otherTotal = totalRatio - ratios[category];
+            const maxRatio = 100 - otherTotal;
+            const label = troopCategoryLabel(category);
+            return (
+              <div className={deployStyles.balanceRow} data-category={category} key={category}>
+                <DeployTypeCrest category={category} />
+                <strong>{label}</strong>
+                <button
+                  type="button"
+                  aria-label={`Reduce ${category} balance ratio`}
+                  disabled={ratios[category] === 0}
+                  onClick={() => setRatio(category, ratios[category] - 1)}
+                >
+                  −
+                </button>
+                <input
+                  className={deployStyles.balanceSlider}
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={ratios[category]}
+                  aria-label={`${category} balance ratio`}
+                  aria-valuemax={maxRatio}
+                  style={{ "--fill": `${ratios[category]}%` } as React.CSSProperties}
+                  onChange={(event) => setRatio(category, Number(event.target.value))}
+                />
+                <button
+                  type="button"
+                  aria-label={`Increase ${category} balance ratio`}
+                  disabled={ratios[category] === maxRatio}
+                  onClick={() => setRatio(category, ratios[category] + 1)}
+                >
+                  +
+                </button>
+                <label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={maxRatio}
+                    value={ratios[category]}
+                    aria-label={`${category} balance percentage`}
+                    onChange={(event) => setRatio(category, Number(event.target.value))}
+                  />
+                  <span>%</span>
+                </label>
+              </div>
+            );
+          })}
+        </div>
+        <footer className={deployStyles.modalFooter}>
+          <button type="button" className={deployStyles.secondaryButton} onClick={onClose}>Cancel</button>
+          <button
+            type="button"
+            className={deployStyles.gameButton}
+            disabled={totalRatio !== 100 || capacity === 0}
+            onClick={() => {
+              onApply(troopCountsForPercentages(capacity, [
+                ratios.infantry,
+                ratios.lancer,
+                ratios.marksman,
+              ]));
+              onClose();
+            }}
+          >
+            Confirm
+          </button>
         </footer>
       </section>
     </div>
@@ -1372,9 +1544,25 @@ function DeployArmyPanel({
 }: SidePanelProps) {
   const [heroPicker, setHeroPicker] = useState<TroopCategory | null>(null);
   const [setupSheet, setSetupSheet] = useState<DeploySetupSheet | null>(null);
+  const [balanceOpen, setBalanceOpen] = useState(false);
   const total = CATEGORIES.reduce((sum, category) => sum + state.troops[category], 0);
+  const [capacity, setCapacity] = useState(total);
+  const localTroopUpdateRef = useRef(false);
+  useEffect(() => {
+    if (localTroopUpdateRef.current) {
+      localTroopUpdateRef.current = false;
+      return;
+    }
+    setCapacity(total);
+  }, [state.troops, total]);
+  const setTroops = (
+    updater: (troops: SideState["troops"]) => SideState["troops"],
+  ) => {
+    localTroopUpdateRef.current = true;
+    setState((previous) => ({ ...previous, troops: updater(previous.troops) }));
+  };
   const percentages = CATEGORIES.map((category) => total > 0 ? Math.round((state.troops[category] / total) * 100) : 0);
-  const activeBonuses = STAT_MODIFIER_NAMES.filter((name) => state.statModifiers[name] !== 0).length + PET_MODIFIER_NAMES.filter((name) => state.petModifiers[name] !== 0).length;
+  const activeBuffs = STAT_MODIFIER_NAMES.filter((name) => state.statModifiers[name] !== 0).length + PET_MODIFIER_NAMES.filter((name) => state.petModifiers[name] !== 0).length;
   const activeJoiners = state.joiners.filter((slot) => slot.name).length;
 
   return (
@@ -1382,20 +1570,11 @@ function DeployArmyPanel({
       <header className={deployStyles.armyHeader}>
         <span className={deployStyles.snowCap} aria-hidden="true" />
         <div><small>{title === "Player army" ? "Rally march" : which === "attacker" ? "Offensive march" : "Defensive march"}</small><h2>{title}</h2></div>
-        <button
-          type="button"
-          className={deployStyles.profileButton}
-          onClick={onOpenPreset}
-          aria-label={`${which} player profile`}
-          data-tour={which === "attacker" ? "stat-presets" : undefined}
-        >
-          <span aria-hidden="true">♙</span><span><strong>Profile</strong><small>{loadedPresetName ?? "Not loaded"}</small></span>
-        </button>
       </header>
 
       <div className={deployStyles.capacityBar}>
-        <span><b aria-hidden="true">♟</b> {total.toLocaleString()} troops</span>
-        <button type="button" onClick={() => setSetupSheet("bonuses")}><span>Battle Bonus</span><strong>{activeBonuses > 0 ? `${activeBonuses} active` : "Add bonuses"}</strong><b aria-hidden="true">+</b></button>
+        <span><b aria-hidden="true">♟</b> {total.toLocaleString()} / {capacity.toLocaleString()} troops</span>
+        <button type="button" onClick={() => setSetupSheet("buffs")}><span>Battle Buffs</span><strong>{activeBuffs > 0 ? `${activeBuffs} active` : "Add buffs"}</strong><b aria-hidden="true">+</b></button>
       </div>
 
       <DeployHeroSlots which={which} state={state} onChoose={setHeroPicker} />
@@ -1404,7 +1583,7 @@ function DeployArmyPanel({
         className={deployStyles.troopList}
         data-testid={`side-section-${which}-troops`}
       >
-        {CATEGORIES.map((category) => <DeployTroopRow key={category} category={category} which={which} state={state} setState={setState} />)}
+        {CATEGORIES.map((category) => <DeployTroopRow key={category} category={category} which={which} state={state} setState={setState} capacity={capacity} setTroops={setTroops} />)}
       </div>
 
       <div className={deployStyles.ratioStrip}>
@@ -1413,33 +1592,66 @@ function DeployArmyPanel({
       </div>
 
       <div className={deployStyles.quickActions}>
-        <button type="button" onClick={() => setState((previous) => ({ ...previous, troops: { infantry: 0, lancer: 0, marksman: 0 } }))}><span aria-hidden="true">↶</span><strong>Withdraw</strong></button>
-        <button type="button" disabled={total === 0} onClick={() => setState((previous) => ({ ...previous, troops: troopsForPercentages(total, 33.34, 33.33) }))}><span aria-hidden="true">⚖</span><strong>Equalize</strong></button>
-        <button type="button" disabled={total === 0} onClick={() => setState((previous) => ({ ...previous, troops: troopsForPercentages(total, 10, 45) }))}><span aria-hidden="true">☷</span><strong>10 / 45 / 45</strong></button>
+        <button type="button" onClick={() => setTroops(() => ({ infantry: 0, lancer: 0, marksman: 0 }))}><span aria-hidden="true">↶</span><strong>Withdraw</strong></button>
+        <button type="button" disabled={capacity === 0} onClick={() => setTroops(() => troopsForPercentages(capacity, 33.34, 33.33))}><span aria-hidden="true">⚖</span><strong>Equalize</strong></button>
+        <button type="button" disabled={capacity === 0} onClick={() => setBalanceOpen(true)}><span aria-hidden="true">☷</span><strong>Balance</strong></button>
       </div>
 
-      <div className={deployStyles.setupDock}>
-        <button type="button" onClick={() => setSetupSheet("stats")} data-testid={`side-section-${which}-stats`}><span>↑</span><strong>Stats</strong><small>Base + effective</small></button>
+      <section
+        className={deployStyles.inlineStats}
+        data-testid={`side-section-${which}-stats`}
+      >
+        <header className={deployStyles.inlineStatsHeader}>
+          <div><strong>Stat bonuses</strong><small>Base + effective</small></div>
+          <button
+            type="button"
+            className={deployStyles.profileButton}
+            onClick={onOpenPreset}
+            aria-label={`${which} player profile`}
+            data-tour={which === "attacker" ? "stat-presets" : undefined}
+          >
+            <span aria-hidden="true">♙</span><span><strong>Profile</strong><small>{loadedPresetName ?? "Not loaded"}</small></span>
+          </button>
+        </header>
+        <DeployStatsSheet
+          which={which}
+          state={state}
+          opponent={opponent}
+          rallyMode={rallyMode}
+          setState={setState}
+        />
+      </section>
+
+      <div className={deployStyles.setupDock} data-testid={`deploy-setup-dock-${which}`}>
         <button type="button" onClick={() => setSetupSheet("skills")}><span>✦</span><strong>Skills</strong><small>Skill levels</small></button>
         {rallyMode ? <button type="button" onClick={() => setSetupSheet("joiners")} data-testid={`side-section-${which}-joiners`}><span>♟</span><strong>Joiners</strong><small>{activeJoiners}/4 assigned</small></button> : null}
-        <button type="button" onClick={() => setSetupSheet("bonuses")} data-testid={`side-section-${which}-buffs`}><span>+</span><strong>Bonuses</strong><small>{activeBonuses} active</small></button>
+        <button type="button" onClick={() => setSetupSheet("buffs")} data-testid={`side-section-${which}-buffs`}><span>+</span><strong>Buffs</strong><small>{activeBuffs} active</small></button>
       </div>
 
       {heroPicker ? (
         <DeployHeroPicker
-          category={heroPicker}
-          selected={state.heroes[heroPicker].name}
+          initialCategory={heroPicker}
+          which={which}
+          state={state}
           onClose={() => setHeroPicker(null)}
-          onSelect={(name) => {
-            applyDeployHeroSelection({ category: heroPicker, newName: name, which, state, setState, rallyMode, syncStatsOnHeroChange, onStatSync });
-            setHeroPicker(null);
+          onSelect={(category, name) => {
+            applyDeployHeroSelection({ category, newName: name, which, state, setState, rallyMode, syncStatsOnHeroChange, onStatSync });
           }}
+        />
+      ) : null}
+
+      {balanceOpen ? (
+        <DeployBalancePopover
+          title={title}
+          troops={state.troops}
+          capacity={capacity}
+          onApply={(troops) => setTroops(() => troops)}
+          onClose={() => setBalanceOpen(false)}
         />
       ) : null}
 
       {setupSheet ? (
         <DeploySetupModal sheet={setupSheet} title={title} onClose={() => setSetupSheet(null)}>
-          {setupSheet === "stats" ? <DeployStatsSheet which={which} state={state} opponent={opponent} rallyMode={rallyMode} setState={setState} /> : null}
           {setupSheet === "skills" ? <DeploySkillsSheet which={which} state={state} rallyMode={rallyMode} setState={setState} /> : null}
           {setupSheet === "joiners" ? (
             <div className={deployStyles.joinerRows}>
@@ -1448,16 +1660,19 @@ function DeployArmyPanel({
               ))}
             </div>
           ) : null}
-          {setupSheet === "bonuses" ? (
-            <StatModifierControls
-              which={which}
-              modifiers={state.statModifiers}
-              petModifiers={state.petModifiers}
-              onChange={(name, value) => setState((previous) => ({ ...previous, statModifiers: { ...previous.statModifiers, [name]: value } }))}
-              onPetChange={(name, value) => setState((previous) => ({ ...previous, petModifiers: { ...previous.petModifiers, [name]: value } }))}
-              onCityPreset={(value) => setState((previous) => ({ ...previous, statModifiers: STAT_MODIFIER_NAMES.reduce((next, name) => ({ ...next, [name]: value }), {} as StatModifierState) }))}
-              onPetPreset={(enabled) => setState((previous) => ({ ...previous, petModifiers: enabled ? { attack: PET_BUFF_MAX, defense: PET_BUFF_MAX, lethality: PET_BUFF_MAX, health: PET_BUFF_MAX, enemy_defense: PET_DEFENSE_DEBUFF_MAX, enemy_lethality: PET_DEFAULT_DEBUFF_MAX, enemy_health: PET_DEFAULT_DEBUFF_MAX } : defaultPetModifiers() }))}
-            />
+          {setupSheet === "buffs" ? (
+            <div className={deployStyles.modifierSheet}>
+              <StatModifierControls
+                expanded
+                which={which}
+                modifiers={state.statModifiers}
+                petModifiers={state.petModifiers}
+                onChange={(name, value) => setState((previous) => ({ ...previous, statModifiers: { ...previous.statModifiers, [name]: value } }))}
+                onPetChange={(name, value) => setState((previous) => ({ ...previous, petModifiers: { ...previous.petModifiers, [name]: value } }))}
+                onCityPreset={(value) => setState((previous) => ({ ...previous, statModifiers: STAT_MODIFIER_NAMES.reduce((next, name) => ({ ...next, [name]: value }), {} as StatModifierState) }))}
+                onPetPreset={(enabled) => setState((previous) => ({ ...previous, petModifiers: enabled ? { attack: PET_BUFF_MAX, defense: PET_BUFF_MAX, lethality: PET_BUFF_MAX, health: PET_BUFF_MAX, enemy_defense: PET_DEFENSE_DEBUFF_MAX, enemy_lethality: PET_DEFAULT_DEBUFF_MAX, enemy_health: PET_DEFAULT_DEBUFF_MAX } : defaultPetModifiers() }))}
+              />
+            </div>
           ) : null}
         </DeploySetupModal>
       ) : null}
@@ -1474,6 +1689,7 @@ export function SidePanel(props: SidePanelProps) {
 }
 
 function StatModifierControls({
+  expanded = false,
   which,
   modifiers,
   petModifiers,
@@ -1482,6 +1698,7 @@ function StatModifierControls({
   onCityPreset,
   onPetPreset,
 }: {
+  expanded?: boolean;
   which: Side;
   modifiers: StatModifierState;
   petModifiers: PetModifierState;
@@ -1496,24 +1713,30 @@ function StatModifierControls({
   const petEnabled = PET_MODIFIER_NAMES.some((name) => petModifiers[name] !== 0);
   const [cityDetailsOpen, setCityDetailsOpen] = useState(false);
   const [petDetailsOpen, setPetDetailsOpen] = useState(false);
+  const showCityDetails = expanded || cityDetailsOpen;
+  const showPetDetails = expanded || petDetailsOpen;
   return (
-    <div className="sim-modifier-editor mt-3">
-      <div className="grid grid-cols-1 gap-2">
+    <div className="sim-modifier-editor mt-3" data-expanded={expanded}>
+      <div className="sim-modifier-groups grid grid-cols-1 gap-2">
         <div className="sim-modifier-group">
           <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
-            <button
-              type="button"
-              aria-expanded={cityDetailsOpen}
-              aria-controls={`city-modifier-fields-${which}`}
-              data-testid={`city-modifier-details-${which}`}
-              onClick={() => setCityDetailsOpen((open) => !open)}
-              className="flex min-h-[30px] w-full min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
-            >
-              <span className="w-3 text-center text-[9px] opacity-70">
-                {cityDetailsOpen ? "▼" : "▶"}
-              </span>
-              <span className="truncate">City</span>
-            </button>
+            {expanded ? (
+              <strong className="sim-modifier-title">City</strong>
+            ) : (
+              <button
+                type="button"
+                aria-expanded={cityDetailsOpen}
+                aria-controls={`city-modifier-fields-${which}`}
+                data-testid={`city-modifier-details-${which}`}
+                onClick={() => setCityDetailsOpen((open) => !open)}
+                className="flex min-h-[30px] w-full min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
+              >
+                <span className="w-3 text-center text-[9px] opacity-70">
+                  {cityDetailsOpen ? "▼" : "▶"}
+                </span>
+                <span className="truncate">City</span>
+              </button>
+            )}
             <div className="sim-segmented">
               {STAT_MODIFIER_OPTIONS.map((value) => {
                 const selected = cityPreset === value;
@@ -1534,10 +1757,10 @@ function StatModifierControls({
               })}
             </div>
           </div>
-          {cityDetailsOpen && (
+          {showCityDetails && (
             <div
               id={`city-modifier-fields-${which}`}
-              className="mt-2 grid grid-cols-1 gap-2"
+              className="sim-modifier-fields mt-2 grid grid-cols-1 gap-2"
             >
               {STAT_MODIFIER_NAMES.map((name) => (
                 <SegmentedCityModifier
@@ -1554,19 +1777,23 @@ function StatModifierControls({
 
         <div className="sim-modifier-group">
           <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
-            <button
-              type="button"
-              aria-expanded={petDetailsOpen}
-              aria-controls={`pet-modifier-fields-${which}`}
-              data-testid={`pet-modifier-details-${which}`}
-              onClick={() => setPetDetailsOpen((open) => !open)}
-              className="flex min-h-[30px] w-full min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
-            >
-              <span className="w-3 text-center text-[9px] opacity-70">
-                {petDetailsOpen ? "▼" : "▶"}
-              </span>
-              <span className="truncate">Pets</span>
-            </button>
+            {expanded ? (
+              <strong className="sim-modifier-title">Pets</strong>
+            ) : (
+              <button
+                type="button"
+                aria-expanded={petDetailsOpen}
+                aria-controls={`pet-modifier-fields-${which}`}
+                data-testid={`pet-modifier-details-${which}`}
+                onClick={() => setPetDetailsOpen((open) => !open)}
+                className="flex min-h-[30px] w-full min-w-0 items-center gap-1 text-left text-[10px] font-bold opacity-70 hover:opacity-100"
+              >
+                <span className="w-3 text-center text-[9px] opacity-70">
+                  {petDetailsOpen ? "▼" : "▶"}
+                </span>
+                <span className="truncate">Pets</span>
+              </button>
+            )}
             <button
               type="button"
               aria-label={`${which} pet buffs ${petEnabled ? "off" : "on"}`}
@@ -1580,10 +1807,10 @@ function StatModifierControls({
               {petEnabled ? "On" : "Off"}
             </button>
           </div>
-          {petDetailsOpen && (
+          {showPetDetails && (
             <div
               id={`pet-modifier-fields-${which}`}
-              className="mt-2 grid grid-cols-1 gap-2"
+              className="sim-modifier-fields mt-2 grid grid-cols-1 gap-2"
             >
               {PET_MODIFIER_NAMES.map((name) => (
                 <PetModifierInput

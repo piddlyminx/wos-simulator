@@ -1,0 +1,199 @@
+{
+  "max_rounds": 1500,
+  "ordering": "random",
+  "input_stats_include_hero_generation": {
+    "attacker": false,
+    "defender": true
+  },
+  "attacker": [
+    {
+      "name": "Attacker 1: Gatot, Sonya, Bradley",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 100000,
+          "lancer_t11_fc10": 100000,
+          "marksman_t11_fc10": 100000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 1474.9,
+            "defense": 1491.8,
+            "lethality": 1823.2,
+            "health": 2013.6
+          },
+          "lancer": {
+            "attack": 1439.2,
+            "defense": 1456.1,
+            "lethality": 2005.1,
+            "health": 1786
+          },
+          "marksman": {
+            "attack": 1437.5,
+            "defense": 1454.4,
+            "lethality": 1992.5,
+            "health": 1821.3
+          }
+        },
+        "heroes": {
+          "Gatot": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Sonya": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Bradley": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Attacker 2: Logan, Mia, Hendrik",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 100000,
+          "lancer_t11_fc10": 100000,
+          "marksman_t11_fc10": 100000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 1324.9,
+            "defense": 1391.8,
+            "lethality": 1820.2,
+            "health": 2012.1
+          },
+          "lancer": {
+            "attack": 1259.2,
+            "defense": 1276.1,
+            "lethality": 1725.1,
+            "health": 1448
+          },
+          "marksman": {
+            "attack": 1337.5,
+            "defense": 1304.4,
+            "lethality": 1991,
+            "health": 1818.3
+          }
+        },
+        "heroes": {
+          "Logan": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Mia": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Hendrik": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Attacker 3: Wu Ming, Philly, Wayne",
+      "fighter": {
+        "troops": {
+          "infantry_t11_fc10": 100000,
+          "lancer_t11_fc10": 100000,
+          "marksman_t11_fc10": 100000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 1344.9,
+            "defense": 1361.8,
+            "lethality": 1515.2,
+            "health": 1860.6
+          },
+          "lancer": {
+            "attack": 1239.2,
+            "defense": 1256.1,
+            "lethality": 1505.1,
+            "health": 1286
+          },
+          "marksman": {
+            "attack": 1237.5,
+            "defense": 1254.4,
+            "lethality": 1559.5,
+            "health": 1371.3
+          }
+        },
+        "heroes": {
+          "Wu Ming": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Philly": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Wayne": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    }
+  ],
+  "defender": [
+    {
+      "name": "Defender 1: Logan, Molly, Greg",
+      "fighter": {
+        "troops": {
+          "infantry_t10": 60000,
+          "lancer_t10": 60000,
+          "marksman_t10": 60000
+        },
+        "stats": {
+          "infantry": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 },
+          "lancer": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 },
+          "marksman": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 }
+        },
+        "heroes": {
+          "Logan": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Molly": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Greg": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Defender 2: Natalia, Philly, Alonso",
+      "fighter": {
+        "troops": {
+          "infantry_t10": 60000,
+          "lancer_t10": 60000,
+          "marksman_t10": 60000
+        },
+        "stats": {
+          "infantry": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 },
+          "lancer": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 },
+          "marksman": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 }
+        },
+        "heroes": {
+          "Natalia": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Philly": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Alonso": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    },
+    {
+      "name": "Defender 3: Flint, Mia, Lynn",
+      "fighter": {
+        "troops": {
+          "infantry_t10": 60000,
+          "lancer_t10": 60000,
+          "marksman_t10": 60000
+        },
+        "stats": {
+          "infantry": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 },
+          "lancer": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 },
+          "marksman": { "attack": 4185, "defense": 4185.6, "lethality": 3141, "health": 3141.7 }
+        },
+        "heroes": {
+          "Flint": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Mia": { "skill_1": 5, "skill_2": 5, "skill_3": 5 },
+          "Lynn": { "skill_1": 5, "skill_2": 5, "skill_3": 5 }
+        }
+      }
+    }
+  ],
+  "optimization": {
+    "side": "attacker",
+    "hero_skill_levels": [5, 5, 5, 0],
+    "unique_heroes": true,
+    "per_army_hero_pools": [
+      {
+        "infantry": ["Gatot"],
+        "lancer": ["Gordon", "Mia", "Sonya"],
+        "marksman": ["Hendrik"]
+      },
+      {
+        "infantry": ["Edith", "Wu Ming", "Jeronimo"],
+        "lancer": ["Gordon", "Mia", "Sonya"],
+        "marksman": ["Bradley", "Wayne"]
+      },
+      {
+        "infantry": ["Edith", "Wu Ming", "Jeronimo"],
+        "lancer": ["Gordon", "Mia", "Sonya"],
+        "marksman": ["Bradley", "Wayne"]
+      }
+    ]
+  }
+}

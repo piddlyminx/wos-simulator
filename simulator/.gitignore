@@ -1,5 +1,7 @@
-testcase_results/*
+testcase_results/**
+!testcase_results/**/
 !testcase_results/*.json
+!testcase_results/**/charts.json
 tournament_results/*
 node_modules
 .clinic
