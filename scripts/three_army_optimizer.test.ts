@@ -304,7 +304,7 @@ test("parallel hero optimization matches serial ranking while retaining only req
   assert.equal(parallel[0].evaluation.scenarios, 1);
 });
 
-test("large hero searches use balanced screening stages before a fresh final evaluation", async () => {
+test("large hero searches scale screening stages before a fresh final evaluation", async () => {
   const raw = definitionWithInfantry([2, 2, 2], [1, 1, 1]);
   raw.max_rounds = 1;
   const definition = parseDefinition({
@@ -348,16 +348,39 @@ test("large hero searches use balanced screening stages before a fresh final eva
   );
 
   assert.deepEqual(stageStarts.map(({ stage }) => stage), [
-    "screen-12",
+    "screen-3",
+    "screen-9",
+    "screen-18",
     "screen-36",
-    "screen-72",
-    "screen-144",
     "final"
   ]);
   assert.equal(stageStarts[0].total, 135);
   assert.equal(stageStarts.at(-1)!.total, 100);
   assert.equal(results.length, 1);
   assert.equal(results[0].evaluation.scenarios, 36);
+
+  const randomStageStarts: string[] = [];
+  const randomResults = await optimizeDefinitionParallel(
+    { ...definition, ordering: "random" },
+    simulatorConfig,
+    30,
+    42,
+    2,
+    200,
+    (completed, _total, _battles, stage = "final") => {
+      if (completed === 0) randomStageStarts.push(stage);
+    },
+    1
+  );
+
+  assert.deepEqual(randomStageStarts, [
+    "screen-3",
+    "screen-8",
+    "screen-15",
+    "screen-30",
+    "final"
+  ]);
+  assert.equal(randomResults[0].evaluation.scenarios, 30);
 });
 
 test("configuration rejects an optimization hero in the wrong troop role", () => {

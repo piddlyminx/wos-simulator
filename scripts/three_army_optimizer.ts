@@ -246,6 +246,7 @@ const ADAPTIVE_FINALISTS_PER_METRIC = 30;
 const ADAPTIVE_MAX_FINALISTS = 40;
 const ADAPTIVE_PRELIMINARY_REPS_DIVISOR = 10;
 const CONFIDENCE_Z = 1.96;
+const HERO_SCREENING_SCENARIO_FRACTIONS = [1 / 12, 1 / 4, 1 / 2, 1] as const;
 export const DEFAULT_HERO_SCREENING_POLICY: HeroScreeningPolicy = {
   retainFractions: [0.65, 0.45, 0.25, 0.1],
   minimumRetained: 100,
@@ -787,7 +788,7 @@ export async function optimizeDefinitionParallel(
     let active: HeroRaceCandidate[] | undefined;
     const screeningStages = screeningPolicy === false
       ? []
-      : heroScreeningStages(total, screeningPolicy, definition.ordering);
+      : heroScreeningStages(total, screeningPolicy, definition.ordering, reps);
     for (const stage of screeningStages) {
       const inputs = active
         ? active.map(({ candidate, result }) => ({ candidate, previous: result }))
@@ -832,29 +833,38 @@ function* initialHeroRaceInputs(
 function heroScreeningStages(
   totalCandidates: number,
   policy: HeroScreeningPolicy,
-  ordering: ArmyOrdering
+  ordering: ArmyOrdering,
+  finalReps: number
 ): HeroScreeningStage[] {
   validateHeroScreeningPolicy(policy);
   if (totalCandidates <= policy.minimumCandidates) return [];
-  const [after12, after36, after72, after144] = policy.retainFractions;
-  if (ordering === "random") {
-    return [
-      { name: "screen-12", scenarios: randomOrderingScenariosForReps(integerRange(0, 12)), retainFraction: after12 },
-      { name: "screen-36", scenarios: randomOrderingScenariosForReps(integerRange(12, 36)), retainFraction: after36 },
-      { name: "screen-72", scenarios: randomOrderingScenariosForReps(integerRange(36, 72)), retainFraction: after72 },
-      { name: "screen-144", scenarios: randomOrderingScenariosForReps(integerRange(72, 144)), retainFraction: after144 }
-    ];
+  const scenarios = heroScreeningScenarioSequence(finalReps, ordering);
+  const cumulativeTargets = HERO_SCREENING_SCENARIO_FRACTIONS.map((fraction) =>
+    Math.max(1, Math.round(scenarios.length * fraction))
+  );
+  const stages: HeroScreeningStage[] = [];
+  let previousTarget = 0;
+  for (const [index, target] of cumulativeTargets.entries()) {
+    if (target === previousTarget) {
+      stages[stages.length - 1].retainFraction = policy.retainFractions[index];
+      continue;
+    }
+    stages.push({
+      name: `screen-${target}`,
+      scenarios: scenarios.slice(previousTarget, target),
+      retainFraction: policy.retainFractions[index]
+    });
+    previousTarget = target;
   }
+  return stages;
+}
+
+function heroScreeningScenarioSequence(reps: number, ordering: ArmyOrdering): HeroOptimizationScenario[] {
+  const scenarios = allOrderingScenarios(reps, ordering);
+  if (ordering === "random") return scenarios;
   const balanced = balancedOpeningOrderScenarios();
   const balancedKeys = new Set(balanced.map(scenarioKey));
-  const remainingFirstRep = allOrderingScenarios(1, "sequential")
-    .filter((scenario) => !balancedKeys.has(scenarioKey(scenario)));
-  return [
-    { name: "screen-12", scenarios: balanced, retainFraction: after12 },
-    { name: "screen-36", scenarios: remainingFirstRep, retainFraction: after36 },
-    { name: "screen-72", scenarios: sequentialOrderingScenariosForReps([1]), retainFraction: after72 },
-    { name: "screen-144", scenarios: sequentialOrderingScenariosForReps([2, 3]), retainFraction: after144 }
-  ];
+  return [...balanced, ...scenarios.filter((scenario) => !balancedKeys.has(scenarioKey(scenario)))];
 }
 
 function validateHeroScreeningPolicy(policy: HeroScreeningPolicy): void {
@@ -2227,6 +2237,7 @@ function helpText(): string {
     "  npx tsx scripts/three_army_optimizer.ts optimize <config.json> [--reps N] [--seed N] [--jobs N] [--top N] [--max-candidates N] [--json]",
     "",
     "Set top-level ordering to sequential (default) or random. Sequential ordering evaluates all 36 attacker/defender army-order combinations per rep; random ordering runs exactly one random trajectory per rep. --reps defaults to 10, and adaptive troop screening uses one tenth of it, rounded up.",
+    "Large hero searches screen at cumulative depths of roughly 1/12, 1/4, 1/2, and 1 times the final scenario count, then freshly evaluate the finalists at the full --reps depth.",
     "troop_optimization redistributes each selected army's fixed troop total while leaving the opposing team unchanged. Set troop_optimization.side when optimization is omitted; the input hero setup is then used as the baseline.",
     "See scripts/three_army_optimizer.example.json for the configuration format. Set input_stats_include_hero_generation per side; selected heroes are always reflected in effective stats."
   ].join("\n");
