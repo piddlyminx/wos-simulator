@@ -6,7 +6,12 @@ export function isAllowedPublicPath(pathname: string): boolean {
   if (pathname === "/") return true;
   if (pathname === "/simulate" || pathname.startsWith("/simulate/")) return true;
   if (pathname === "/bear" || pathname.startsWith("/bear/")) return true;
-  if (pathname === "/deploy" || pathname.startsWith("/deploy/")) return true;
+  if (
+    pathname === "/simualate-wosui" ||
+    pathname.startsWith("/simualate-wosui/")
+  ) {
+    return true;
+  }
   if (pathname === "/healthz") return true;
   if (pathname === "/icon.svg") return true;
   if (pathname.startsWith("/examples/")) return true;

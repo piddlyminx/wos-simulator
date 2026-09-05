@@ -755,22 +755,48 @@ function DashboardSidePanel({
   );
 }
 
-const DEPLOY_CATEGORY_GLYPHS: Record<TroopCategory, string> = {
-  infantry: "◆",
-  lancer: "➤",
-  marksman: "⌁",
-};
+function DeployTroopTypeIcon({ category }: { category: TroopCategory }) {
+  if (category === "infantry") {
+    return (
+      <svg className={deployStyles.typeIcon} viewBox="0 0 24 24">
+        <path d="M5 4.5 12 2l7 2.5v5.8c0 5-2.8 8.9-7 11.7-4.2-2.8-7-6.7-7-11.7Z" />
+        <path d="M8.5 7.2v4.1c0 2.7 1.3 5 3.5 6.8" />
+      </svg>
+    );
+  }
+  if (category === "lancer") {
+    return (
+      <svg className={deployStyles.typeIcon} viewBox="0 0 24 24">
+        <path d="m5 19 12.5-12.5" />
+        <path d="m13.8 4.2 5.9.1.1 5.9Z" />
+        <path d="m3.8 20.2 3.7-1.3-2.4-2.4Z" />
+      </svg>
+    );
+  }
+  return (
+    <svg className={deployStyles.typeIcon} viewBox="0 0 24 24">
+      <path d="M7 3.5c6 3.2 6 13.8 0 17" />
+      <path d="M7 3.5c3.2 4.8 3.2 12.2 0 17" />
+      <path d="M7 12h12" />
+      <path d="m16 9 3 3-3 3" />
+    </svg>
+  );
+}
 
 const DEPLOY_HERO_AVATARS = new Set([
   "Ahmose",
   "Alonso",
   "Bahiti",
+  "Blanchette",
   "Bradley",
   "Edith",
   "Flint",
+  "Fred",
+  "Freya",
   "Gatot",
   "Gordon",
   "Greg",
+  "Gregory",
   "Gwen",
   "Hector",
   "Hendrik",
@@ -781,6 +807,7 @@ const DEPLOY_HERO_AVATARS = new Set([
   "Logan",
   "Lumak",
   "Lynn",
+  "Magnus",
   "Mia",
   "Molly",
   "Natalia",
@@ -794,6 +821,7 @@ const DEPLOY_HERO_AVATARS = new Set([
   "Sonya",
   "Wayne",
   "WuMing",
+  "Xura",
   "Zinman",
 ]);
 
@@ -850,7 +878,7 @@ function DeployTypeCrest({ category }: { category: TroopCategory }) {
       data-category={category}
       aria-hidden="true"
     >
-      {DEPLOY_CATEGORY_GLYPHS[category]}
+      <DeployTroopTypeIcon category={category} />
     </span>
   );
 }

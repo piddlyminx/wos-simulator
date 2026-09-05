@@ -89,8 +89,8 @@ omitting or reinterpreting simulator inputs.
 
 ## New information architecture
 
-- `/deploy` is the alternative, with Battle and Bear deployment tabs in one
-  game-style shell.
+- `/simualate-wosui` is the alternative, with Battle and Bear deployment tabs
+  in one game-style shell.
 - The Battle and Bear tabs use their production controllers, workers, adapters,
   persistence, and result components, but switch the shared army input to a
   dedicated deploy renderer. The normal `/simulate` and `/bear` renderers remain
@@ -104,9 +104,9 @@ omitting or reinterpreting simulator inputs.
   focused in-game sheets rather than dashboard accordions. This carries the
   extra simulator functionality without putting every field on the main march
   screen at once.
-- Saved and recent runs remain inside `/deploy` by rewriting only client-side
-  navigation destinations; canonical stored share URLs remain unchanged for
-  backward compatibility with `/simulate` and `/bear`.
+- Saved and recent runs remain inside `/simualate-wosui` by rewriting only
+  client-side navigation destinations; canonical stored share URLs remain
+  unchanged for backward compatibility with `/simulate` and `/bear`.
 
 ## Responsive contract
 
