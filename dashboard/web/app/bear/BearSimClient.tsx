@@ -1237,7 +1237,7 @@ function TopBearRatiosTable({ rows, selectedKey, onSelect }: { rows: BearOptimiz
           {rows.map((row) => {
             const selected = selectedKey === optimizeRowKey(row);
             return (
-              <tr key={optimizeRowKey(row)} onClick={() => onSelect(row)} className="cursor-pointer" style={{ borderTop: "1px solid rgba(255,255,255,0.04)", backgroundColor: selected ? "rgba(137,180,250,0.14)" : row.is_best ? "rgba(166,227,161,0.08)" : "transparent" }}>
+              <tr key={optimizeRowKey(row)} onClick={() => onSelect(row)} className="cursor-pointer" style={{ borderTop: "1px solid var(--sim-result-row-border, rgba(255,255,255,0.04))", backgroundColor: selected ? "var(--sim-result-row-selected, rgba(137,180,250,0.14))" : row.is_best ? "var(--sim-result-row-best, rgba(166,227,161,0.08))" : "transparent" }}>
                 <td className="py-1.5 pr-1 font-bold">{row.rank}</td>
                 <td className="py-1.5 pr-1 text-right">{compactNumber(row.avg_score)}</td>
                 <td className="py-1.5 pr-1 text-right">{formatComposition(bearPointForStandardChart(row))}</td>

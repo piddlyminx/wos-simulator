@@ -71,7 +71,8 @@ function HoverCard({ point }: { point: OptimizeRatioPoint }) {
     <div
       className="rounded px-3 py-2 text-xs font-mono"
       style={{
-        backgroundColor: "rgba(24, 24, 37, 0.78)",
+        backgroundColor: "var(--sim-optimize-details-bg, rgba(24, 24, 37, 0.78))",
+        color: "var(--main-text)",
         border: "1px solid var(--border-color)",
       }}
     >
@@ -153,7 +154,10 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="overflow-hidden rounded border border-[var(--border-color)] bg-[rgba(17,17,27,0.55)] p-2">
+      <div
+        className="overflow-hidden rounded border border-[var(--border-color)] p-2"
+        style={{ backgroundColor: "var(--sim-optimize-plot-bg, rgba(17, 17, 27, 0.55))" }}
+      >
         <svg
           viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
           className="h-[380px] w-full"
