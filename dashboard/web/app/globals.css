@@ -2138,6 +2138,12 @@ body {
 }
 
 .deploy-client-workspace .sim-panel-results-shell {
+  --sim-blue: #0f6091;
+  --sim-result-row-border: #a7cde3;
+  --sim-result-row-selected: #bddbef;
+  --sim-result-row-best: #d1ebdf;
+  --sim-optimize-plot-bg: #082f52;
+  --sim-optimize-details-bg: #0a3e68;
   border-color: transparent;
   background: #0a3e68;
   color: #effaff;
@@ -2196,8 +2202,12 @@ body {
 }
 
 .deploy-client-workspace .sim-panel-results-shell table {
-  color: #e8f7fd;
-  text-shadow: 0 1px 0 #062b49;
+  color: inherit;
+  text-shadow: none;
+}
+
+.deploy-client-workspace .sim-panel-results-shell :is(.opacity-50, .opacity-60, .opacity-70) {
+  opacity: 1;
 }
 
 .deploy-workspace .sim-tab {

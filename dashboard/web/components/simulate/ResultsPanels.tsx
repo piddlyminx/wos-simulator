@@ -266,11 +266,11 @@ export function OptimizeResultsPanel({
                         }
                       }}
                       style={{
-                        borderTop: "1px solid rgba(255,255,255,0.04)",
+                        borderTop: "1px solid var(--sim-result-row-border, rgba(255,255,255,0.04))",
                         backgroundColor: selected
-                          ? "rgba(137, 180, 250, 0.14)"
+                          ? "var(--sim-result-row-selected, rgba(137, 180, 250, 0.14))"
                           : row.is_best
-                            ? "rgba(166, 227, 161, 0.08)"
+                            ? "var(--sim-result-row-best, rgba(166, 227, 161, 0.08))"
                             : "transparent",
                       }}
                     >
