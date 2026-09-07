@@ -712,6 +712,20 @@ class WosEmulator:
     def swipe(self, x1: int, y1: int, x2: int, y2: int, dur_ms: int = 300) -> None:
         self.shell(f"input swipe {x1} {y1} {x2} {y2} {dur_ms}")
 
+    def scroll(self, x: int, y: int, amount: float) -> bool:
+        """Send mouse-wheel input to WOS's display without touch-release inertia."""
+        result = _adb(
+            self.serial,
+            "shell", "input", "mouse", "-d", str(self.logical_display_id or 0),
+            "scroll", str(x), str(y), "--axis", f"VSCROLL,{amount:.3f}",
+        )
+        details = result.stderr.strip() or result.stdout.strip()
+        if "Unknown command" in details or "Usage: input" in details:
+            return False
+        if result.returncode:
+            raise WosError(f"Scroll input failed for {self.serial}: {details}")
+        return True
+
     def key(self, keyevent: str) -> None:
         """Send a keyevent by name or code, e.g. 'KEYCODE_BACK' or '4'."""
         self.shell(f"input keyevent {keyevent}")

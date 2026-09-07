@@ -60,6 +60,8 @@ Screenshot capture:
 
 Full capture rapidly rewinds the current screen to its top, captures overlapping viewports until two no-progress swipes confirm the bottom, and writes one stitched image. The scrolling viewport is detected automatically. For screens with unusual fixed chrome, pass both `--content-top PX` and `--content-bottom PX`; `--max-scrolls N` changes the safety limit for either boundary search (default: 200).
 
+Capture uses calibrated wheel input followed by a short touch drag to restore WOS's scroll bounds, and falls back to touch scrolling when wheel input is unavailable or ignored. Overlap validation runs alongside capture; every join must pass before the output file is replaced.
+
 Report capture:
 
 ```bash

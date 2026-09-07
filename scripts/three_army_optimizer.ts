@@ -13,6 +13,7 @@ import type {
   BattleResult,
   FighterInput,
   HeroInputEntry,
+  PassiveEffects,
   SimulatorConfig,
   SkillFile,
   StatBlock,
@@ -48,6 +49,16 @@ export interface TroopOptimizationDefinition {
   fine_step_percent: number;
   fine_radius_percent: number;
   passes: number;
+}
+
+export interface PlayerPassiveDefinition {
+  own?: PassiveEffects;
+  enemy?: PassiveEffects;
+}
+
+interface PlayerInputDefinition {
+  armies: [ArmyDefinition, ArmyDefinition, ArmyDefinition];
+  passive: PlayerPassiveDefinition;
 }
 
 export interface ThreeArmyDefinition {
@@ -261,8 +272,18 @@ const OPTIMIZATION_WORKER_RESOURCE_LIMITS = {
 
 export function parseDefinition(raw: unknown, simulatorConfig: SimulatorConfig): ThreeArmyDefinition {
   if (!isRecord(raw)) throw new Error("Configuration must be a JSON object");
-  const attacker = parseArmies(raw.attacker, "attacker", simulatorConfig);
-  const defender = parseArmies(raw.defender, "defender", simulatorConfig);
+  const attackerPlayer = parsePlayer(raw.attacker, "attacker", simulatorConfig);
+  const defenderPlayer = parsePlayer(raw.defender, "defender", simulatorConfig);
+  const attacker = applyPlayerPassive(
+    attackerPlayer.armies,
+    attackerPlayer.passive.own,
+    defenderPlayer.passive.enemy
+  );
+  const defender = applyPlayerPassive(
+    defenderPlayer.armies,
+    defenderPlayer.passive.own,
+    attackerPlayer.passive.enemy
+  );
   const ordering = raw.ordering === undefined ? "sequential" : raw.ordering;
   if (ordering !== "sequential" && ordering !== "random") {
     throw new Error("ordering must be sequential or random");
@@ -1557,24 +1578,107 @@ function findHero(name: string, simulatorConfig: SimulatorConfig): [string, Skil
   return entry ?? [name, undefined];
 }
 
+function parsePlayer(value: unknown, side: TeamSide, simulatorConfig: SimulatorConfig): PlayerInputDefinition {
+  if (!isRecord(value)) throw new Error(`${side} must be an object containing armies and optional passive effects`);
+  for (const key of Object.keys(value)) {
+    if (key !== "armies" && key !== "passive") throw new Error(`${side}.${key} is not supported`);
+  }
+  return {
+    armies: parseArmies(value.armies, side, simulatorConfig),
+    passive: parsePlayerPassive(value.passive, `${side}.passive`)
+  };
+}
+
 function parseArmies(value: unknown, side: TeamSide, simulatorConfig: SimulatorConfig): [ArmyDefinition, ArmyDefinition, ArmyDefinition] {
-  if (!Array.isArray(value) || value.length !== 3) throw new Error(`${side} must contain exactly three armies`);
+  if (!Array.isArray(value) || value.length !== 3) throw new Error(`${side}.armies must contain exactly three armies`);
   return value.map((entry, index) => {
-    if (!isRecord(entry)) throw new Error(`${side}[${index}] must be an object`);
-    if (typeof entry.name !== "string" || entry.name.trim() === "") throw new Error(`${side}[${index}].name must be a non-empty string`);
-    if (!isRecord(entry.fighter) || !isRecord(entry.fighter.troops)) throw new Error(`${side}[${index}].fighter.troops must be an object`);
+    const path = `${side}.armies[${index}]`;
+    if (!isRecord(entry)) throw new Error(`${path} must be an object`);
+    if (typeof entry.name !== "string" || entry.name.trim() === "") throw new Error(`${path}.name must be a non-empty string`);
+    if (!isRecord(entry.fighter) || !isRecord(entry.fighter.troops)) throw new Error(`${path}.fighter.troops must be an object`);
     if (entry.fighter.joiner_heroes !== undefined) {
-      throw new Error(`${side}[${index}].fighter.joiner_heroes is not supported in this non-rally mode`);
+      throw new Error(`${path}.fighter.joiner_heroes is not supported in this non-rally mode`);
     }
     let supportedTroops = 0;
     for (const [id, count] of Object.entries(entry.fighter.troops)) {
-      if (!simulatorConfig.troopStats[id]) throw new Error(`${side}[${index}] uses unknown troop id ${JSON.stringify(id)}`);
-      if (typeof count !== "number" || !Number.isFinite(count) || count < 0) throw new Error(`${side}[${index}].fighter.troops.${id} must be a non-negative number`);
+      if (!simulatorConfig.troopStats[id]) throw new Error(`${path} uses unknown troop id ${JSON.stringify(id)}`);
+      if (typeof count !== "number" || !Number.isFinite(count) || count < 0) throw new Error(`${path}.fighter.troops.${id} must be a non-negative number`);
       supportedTroops += count;
     }
-    if (supportedTroops <= 0) throw new Error(`${side}[${index}] must contain troops`);
-    return { name: entry.name, fighter: entry.fighter as unknown as FighterInput };
+    if (supportedTroops <= 0) throw new Error(`${path} must contain troops`);
+    const fighter = { ...entry.fighter } as unknown as FighterInput;
+    if (entry.fighter.passive !== undefined) {
+      fighter.passive = parsePassiveEffects(entry.fighter.passive, `${path}.fighter.passive`);
+    }
+    return { name: entry.name, fighter };
   }) as [ArmyDefinition, ArmyDefinition, ArmyDefinition];
+}
+
+function parsePassiveEffects(value: unknown, path: string): PassiveEffects {
+  if (!isRecord(value)) throw new Error(`${path} must be an object`);
+  const passive: PassiveEffects = {};
+  for (const [stat, bucket] of Object.entries(value)) {
+    if (stat !== "attack" && stat !== "defense" && stat !== "lethality" && stat !== "health") {
+      throw new Error(`${path}.${stat} is not a supported stat`);
+    }
+    if (!isRecord(bucket)) throw new Error(`${path}.${stat} must be an object`);
+    const parsed: NonNullable<PassiveEffects[typeof stat]> = {};
+    for (const [direction, percent] of Object.entries(bucket)) {
+      if (direction !== "up" && direction !== "down") {
+        throw new Error(`${path}.${stat}.${direction} must be up or down`);
+      }
+      if (typeof percent !== "number" || !Number.isFinite(percent) || percent < 0) {
+        throw new Error(`${path}.${stat}.${direction} must be a non-negative finite percentage`);
+      }
+      parsed[direction] = percent;
+    }
+    passive[stat] = parsed;
+  }
+  return passive;
+}
+
+function parsePlayerPassive(value: unknown, path: string): PlayerPassiveDefinition {
+  if (value === undefined) return {};
+  if (!isRecord(value)) throw new Error(`${path} must be an object`);
+  for (const target of Object.keys(value)) {
+    if (target !== "own" && target !== "enemy") {
+      throw new Error(`${path}.${target} must be own or enemy`);
+    }
+  }
+  return {
+    ...(value.own === undefined ? {} : { own: parsePassiveEffects(value.own, `${path}.own`) }),
+    ...(value.enemy === undefined ? {} : { enemy: parsePassiveEffects(value.enemy, `${path}.enemy`) })
+  };
+}
+
+function applyPlayerPassive(
+  armies: [ArmyDefinition, ArmyDefinition, ArmyDefinition],
+  own: PassiveEffects | undefined,
+  enemy: PassiveEffects | undefined
+): [ArmyDefinition, ArmyDefinition, ArmyDefinition] {
+  return armies.map((army) => ({
+    ...army,
+    fighter: {
+      ...army.fighter,
+      ...mergePassiveEffects(army.fighter.passive, own, enemy)
+    }
+  })) as [ArmyDefinition, ArmyDefinition, ArmyDefinition];
+}
+
+function mergePassiveEffects(...sources: Array<PassiveEffects | undefined>): { passive?: PassiveEffects } {
+  const passive: PassiveEffects = {};
+  for (const source of sources) {
+    if (!source) continue;
+    for (const stat of ["attack", "defense", "lethality", "health"] as const) {
+      const sourceBucket = source[stat];
+      if (!sourceBucket) continue;
+      const bucket = passive[stat] ?? {};
+      if (sourceBucket.up !== undefined) bucket.up = (bucket.up ?? 0) + sourceBucket.up;
+      if (sourceBucket.down !== undefined) bucket.down = (bucket.down ?? 0) + sourceBucket.down;
+      passive[stat] = bucket;
+    }
+  }
+  return Object.keys(passive).length === 0 ? {} : { passive };
 }
 
 function parseOptimization(value: unknown, simulatorConfig: SimulatorConfig): OptimizationDefinition {
@@ -2239,6 +2343,7 @@ function helpText(): string {
     "Set top-level ordering to sequential (default) or random. Sequential ordering evaluates all 36 attacker/defender army-order combinations per rep; random ordering runs exactly one random trajectory per rep. --reps defaults to 10, and adaptive troop screening uses one tenth of it, rounded up.",
     "Large hero searches screen at cumulative depths of roughly 1/12, 1/4, 1/2, and 1 times the final scenario count, then freshly evaluate the finalists at the full --reps depth.",
     "troop_optimization redistributes each selected army's fixed troop total while leaving the opposing team unchanged. Set troop_optimization.side when optimization is omitted; the input hero setup is then used as the baseline.",
+    'Each side is an object with "armies" and optional player-level "passive". Its "own" effects apply to all three armies and its "enemy" effects apply to the opposing player. Per-fighter "passive" remains available for army-specific effects.',
     "See scripts/three_army_optimizer.example.json for the configuration format. Set input_stats_include_hero_generation per side; selected heroes are always reflected in effective stats."
   ].join("\n");
 }

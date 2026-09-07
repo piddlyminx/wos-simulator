@@ -134,6 +134,47 @@ test("/simualate-wosui troop sliders stop at march capacity without changing oth
   await expect(counts[2]).toHaveValue("30000");
 });
 
+test("/simualate-wosui mobile portraits and troop sliders clear their surrounding controls", async ({ page }) => {
+  await page.setViewportSize(VIEWPORTS[0]);
+  await page.route("**/_next/image?**", (route) => route.abort());
+  await page.goto("/simualate-wosui?mode=battle");
+
+  await page.getByRole("button", { name: "Choose infantry hero, currently none" }).first().click();
+  const heroPicker = page.getByRole("dialog", { name: "Select heroes" });
+  const gregoryPortrait = heroPicker.getByRole("button", { name: /Gregory/ }).locator("img");
+  await expect(gregoryPortrait).toHaveAttribute("src", "/hero-avatars/gregory.webp");
+  await expect.poll(() => gregoryPortrait.evaluate(
+    (image) => (image as HTMLImageElement).naturalWidth,
+  )).toBeGreaterThan(0);
+  await heroPicker.getByRole("button", { name: "Close hero picker" }).click();
+
+  const geometry = await page.getByLabel("infantry troop ratio").first().evaluate((slider) => {
+    const row = slider.closest('[data-testid^="sim-unit-row-"]');
+    const amount = slider.previousElementSibling;
+    if (!(row instanceof HTMLElement) || !(amount instanceof HTMLElement)) return null;
+
+    const rowRect = row.getBoundingClientRect();
+    const amountRect = amount.getBoundingClientRect();
+    const sliderRect = slider.getBoundingClientRect();
+    const thumbWidth = 28;
+    const thumbHeight = 34;
+    const thumbVerticalOverflow = (thumbHeight - sliderRect.height) / 2;
+
+    return {
+      bottom: rowRect.bottom - (sliderRect.bottom + thumbVerticalOverflow),
+      left: sliderRect.left - thumbWidth / 2 - rowRect.left,
+      right: rowRect.right - (sliderRect.right + thumbWidth / 2),
+      top: sliderRect.top - thumbVerticalOverflow - amountRect.bottom,
+    };
+  });
+
+  expect(geometry).not.toBeNull();
+  expect(geometry?.top ?? -1).toBeGreaterThanOrEqual(7);
+  expect(geometry?.bottom ?? -1).toBeGreaterThanOrEqual(7);
+  expect(geometry?.left ?? -1).toBeGreaterThanOrEqual(8);
+  expect(geometry?.right ?? -1).toBeGreaterThanOrEqual(8);
+});
+
 test("/simualate-wosui keeps setup tools and advanced Battle modes reachable", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/simualate-wosui?mode=battle");
@@ -400,6 +441,27 @@ test("/simualate-wosui changes recent-run scopes in one visual transition", asyn
 
   releaseAllRuns?.();
   await expect(modal.getByText("Scope transition all", { exact: true })).toBeVisible();
+});
+
+test("/simualate-wosui docks its action bars on mobile", async ({ page }) => {
+  const viewport = VIEWPORTS[0];
+  await page.setViewportSize(viewport);
+  await page.goto("/simualate-wosui?mode=battle");
+
+  const battleDock = page.getByTestId("sim-action-dock");
+  await expect(battleDock).toHaveCSS("position", "fixed");
+  const battleDockBox = await battleDock.boundingBox();
+  expect(battleDockBox).not.toBeNull();
+  expect(battleDockBox?.y ?? -1).toBeGreaterThanOrEqual(0);
+  expect((battleDockBox?.y ?? 0) + (battleDockBox?.height ?? 0)).toBeCloseTo(viewport.height, 0);
+
+  await page.getByRole("tab", { name: /Bear Rally score/ }).click();
+  const bearDock = page.getByTestId("bear-top-actions");
+  await expect(bearDock).toHaveCSS("position", "fixed");
+  const bearDockBox = await bearDock.boundingBox();
+  expect(bearDockBox).not.toBeNull();
+  expect(bearDockBox?.y ?? -1).toBeGreaterThanOrEqual(0);
+  expect((bearDockBox?.y ?? 0) + (bearDockBox?.height ?? 0)).toBeCloseTo(viewport.height, 0);
 });
 
 for (const viewport of VIEWPORTS) {

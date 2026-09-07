@@ -22,6 +22,7 @@ import {
   simulateThreeArmyMatch,
   substitutedHeroStats,
   troopOptimizationArmyLabels,
+  type PlayerPassiveDefinition,
   type ThreeArmyDefinition
 } from "./three_army_optimizer";
 
@@ -47,9 +48,14 @@ test("three-army definitions accept only sequential or random ordering", () => {
 });
 
 test("three-army match runs opening slots then the lowest-numbered survivors", () => {
-  const definition = definitionWithInfantry([10, 25, 30], [15, 15, 25]);
+  const raw = definitionWithInfantry([10, 25, 30], [15, 15, 25]);
+  for (const army of raw.attacker.armies) army.fighter.passive = { attack: { up: 20, down: 5 } };
+  for (const army of raw.defender.armies) army.fighter.passive = { health: { down: 10 } };
+  const definition = parseDefinition(JSON.parse(JSON.stringify(raw)), simulatorConfig);
   const fights: string[] = [];
   const resolver = (attacker: FighterInput, defender: FighterInput): BattleResult => {
+    assert.deepEqual(attacker.passive, { attack: { up: 20, down: 5 } });
+    assert.deepEqual(defender.passive, { health: { down: 10 } });
     fights.push(`${attacker.name}:${attacker.troops.infantry_t6} vs ${defender.name}:${defender.troops.infantry_t6}`);
     const attackerCount = attacker.troops.infantry_t6;
     const defenderCount = defender.troops.infantry_t6;
@@ -68,8 +74,91 @@ test("three-army match runs opening slots then the lowest-numbered survivors", (
   assert.deepEqual(result, { winner: "attacker", attackerRemaining: 10, defenderRemaining: 0, battles: 4 });
 });
 
+test("fighter passive buffs and debuffs affect simulated battles", () => {
+  const raw = definitionWithInfantry([1000, 1000, 1000], [1000, 1000, 1000]);
+  for (const army of raw.attacker.armies) army.fighter.passive = { attack: { up: 100 } };
+  for (const army of raw.defender.armies) army.fighter.passive = { health: { down: 50 } };
+  const definition = parseDefinition(raw, simulatorConfig);
+  const order = [0, 1, 2] as const;
+  const result = simulateThreeArmyMatch(definition, simulatorConfig, order, order, "passive");
+  assert.equal(result.winner, "attacker");
+
+  const reversed = simulateThreeArmyMatch(
+    { ...definition, attacker: definition.defender, defender: definition.attacker },
+    simulatorConfig, order, order, "passive"
+  );
+  assert.equal(reversed.winner, "defender");
+  assert.equal(result.attackerRemaining, reversed.defenderRemaining);
+});
+
+test("fighter passive effects reject malformed or silently ignored values", () => {
+  for (const passive of [null, [], 20, { speed: { up: 20 } }, { attack: 20 },
+    { attack: { boost: 20 } }, { attack: { up: "20" } }, { attack: { down: -10 } },
+    { health: { up: Infinity } }, { defense: { down: NaN } }]) {
+    const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+    Object.assign(raw.defender.armies[1].fighter, { passive });
+    assert.throws(() => parseDefinition(raw, simulatorConfig), /defender\.armies\[1\]\.fighter\.passive/);
+  }
+});
+
+test("player passive effects apply to every army and enemy effects apply to the opposing player", () => {
+  const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  raw.attacker.armies[0].fighter.passive = { attack: { up: 5 } };
+  raw.attacker.passive = {
+    own: { attack: { up: 10 }, defense: { up: 20 } },
+    enemy: { lethality: { down: 1 } }
+  };
+  raw.defender.passive = {
+    own: { health: { up: 4 } },
+    enemy: { attack: { down: 2 } }
+  };
+
+  const definition = parseDefinition(raw, simulatorConfig);
+  assert.deepEqual(definition.attacker[0].fighter.passive, {
+    attack: { up: 15, down: 2 },
+    defense: { up: 20 }
+  });
+  for (const army of definition.attacker.slice(1)) {
+    assert.deepEqual(army.fighter.passive, {
+      attack: { up: 10, down: 2 },
+      defense: { up: 20 }
+    });
+  }
+  for (const army of definition.defender) {
+    assert.deepEqual(army.fighter.passive, {
+      lethality: { down: 1 },
+      health: { up: 4 }
+    });
+  }
+});
+
+test("player passive effects reject malformed or silently ignored values", () => {
+  for (const passive of [
+    null,
+    [],
+    { ally: {} },
+    { all: {} },
+    { own: { speed: { up: 10 } } }
+  ]) {
+    const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+    Object.assign(raw.attacker, { passive });
+    assert.throws(
+      () => parseDefinition(raw, simulatorConfig),
+      /attacker\.passive/
+    );
+  }
+});
+
+test("legacy top-level army arrays are rejected", () => {
+  const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  assert.throws(
+    () => parseDefinition({ ...raw, attacker: raw.attacker.armies }, simulatorConfig),
+    /attacker must be an object containing armies/
+  );
+});
+
 test("random ordering selects any living pair before every battle", () => {
-  const definition = definitionWithInfantry([10, 20, 30], [1, 2, 3]);
+  const definition = parsedDefinitionWithInfantry([10, 20, 30], [1, 2, 3]);
   definition.ordering = "random";
   const fights: string[] = [];
   const resolver = (attacker: FighterInput, defender: FighterInput): BattleResult => {
@@ -95,7 +184,7 @@ test("random ordering selects any living pair before every battle", () => {
 });
 
 test("sequential evaluation covers every pair of army orderings for every rep", () => {
-  const definition = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  const definition = parsedDefinitionWithInfantry([10, 10, 10], [5, 5, 5]);
   const result = evaluateDefinition(
     definition,
     simulatorConfig,
@@ -112,7 +201,7 @@ test("sequential evaluation covers every pair of army orderings for every rep", 
 });
 
 test("random evaluation runs exactly the requested number of trajectories", () => {
-  const definition = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  const definition = parsedDefinitionWithInfantry([10, 10, 10], [5, 5, 5]);
   definition.ordering = "random";
   const result = evaluateDefinition(
     definition,
@@ -163,13 +252,16 @@ test("optimization candidates assign each role once per army without reusing her
 test("optimization rebases report-resolved stats before applying each candidate's heroes", () => {
   const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
   raw.input_stats_include_hero_generation = { attacker: true, defender: true };
-  for (const army of [...raw.attacker, ...raw.defender]) {
+  for (const army of [...raw.attacker.armies, ...raw.defender.armies]) {
     army.fighter.heroes = {
       Gatot: { skill_1: 5 },
       Sonya: { skill_1: 5 },
       Bradley: { skill_1: 5 }
     };
     army.fighter.stats = reportResolvedStatsForGatotSonyaBradley();
+    army.fighter.passive = {
+      attack: { up: 20, down: 5 }, defense: { up: 0 }, lethality: { up: 10 }, health: { down: 15 }
+    };
   }
   const definition = parseDefinition({
     ...raw,
@@ -199,6 +291,11 @@ test("optimization rebases report-resolved stats before applying each candidate'
   assert.equal(candidateEffective.stats?.lancer?.attack, 340.19);
   assert.equal(candidateEffective.stats?.marksman?.attack, 880.62);
   assert.deepEqual(fixedEffective.stats, reportResolvedStatsForGatotSonyaBradley());
+  assert.deepEqual(candidateEffective.passive, raw.attacker.armies[0].fighter.passive);
+  assert.deepEqual(fixedEffective.passive, raw.defender.armies[0].fighter.passive);
+  const redistributed = applyTroopComposition(candidateDefinition, "attacker", 0,
+    { infantry: 5, lancer: 3, marksman: 2, total: 10 }, simulatorConfig);
+  assert.deepEqual(redistributed.attacker[0].fighter.passive, candidateEffective.passive);
   assert.deepEqual(
     substitutedHeroStats(
       definition,
@@ -212,7 +309,7 @@ test("optimization rebases report-resolved stats before applying each candidate'
 test("hero stat rows retain their march and troop-type baselines", () => {
   const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
   raw.input_stats_include_hero_generation = { attacker: true, defender: true };
-  for (const [armyIndex, army] of [...raw.attacker, ...raw.defender].entries()) {
+  for (const [armyIndex, army] of [...raw.attacker.armies, ...raw.defender.armies].entries()) {
     army.fighter.heroes = {
       Gatot: { skill_1: 5 },
       Sonya: { skill_1: 5 },
@@ -256,6 +353,8 @@ test("hero stat rows retain their march and troop-type baselines", () => {
 
 test("parallel hero optimization matches serial ranking while retaining only requested results", async () => {
   const raw = definitionWithInfantry([2, 2, 2], [1, 1, 1]);
+  raw.attacker.armies[0].fighter.passive = { attack: { up: 20 } };
+  raw.defender.armies[0].fighter.passive = { health: { down: 10 } };
   raw.max_rounds = 1;
   raw.ordering = "random";
   const definition = parseDefinition({
@@ -408,7 +507,7 @@ test("configuration rejects rally engagement and joiner heroes", () => {
   );
 
   const withJoiner = structuredClone(base);
-  (withJoiner.attacker[0].fighter as FighterInput).joiner_heroes = { Jessie: { skill_1: 5 } };
+  (withJoiner.attacker.armies[0].fighter as FighterInput).joiner_heroes = { Jessie: { skill_1: 5 } };
   assert.throws(() => parseDefinition(withJoiner, simulatorConfig), /joiner_heroes is not supported/);
 });
 
@@ -416,7 +515,7 @@ test("included hero-generation stats treat missing heroes as zero generation", (
   const raw = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
   const expectedStats = reportResolvedStatsForGatotSonyaBradley();
   raw.input_stats_include_hero_generation.attacker = true;
-  for (const army of raw.attacker) army.fighter.stats = structuredClone(expectedStats);
+  for (const army of raw.attacker.armies) army.fighter.stats = structuredClone(expectedStats);
   const definition = parseDefinition(raw, simulatorConfig);
   let normalizedStats: FighterInput["stats"];
 
@@ -482,7 +581,7 @@ test("adaptive local search expands multiple seeds and retains boundary neighbou
 });
 
 test("applying a troop composition changes one army and leaves the opposing team static", () => {
-  const definition = definitionWithInfantry([10, 20, 30], [40, 50, 60]);
+  const definition = parsedDefinitionWithInfantry([10, 20, 30], [40, 50, 60]);
   const originalDefender = structuredClone(definition.defender);
   const changed = applyTroopComposition(
     definition,
@@ -626,7 +725,7 @@ test("CLI parser supplies stable defaults and parses optimization controls", () 
 });
 
 test("troop optimization labels use the selected heroes instead of stale input names", () => {
-  const definition = definitionWithInfantry([10, 10, 10], [5, 5, 5]);
+  const definition = parsedDefinitionWithInfantry([10, 10, 10], [5, 5, 5]);
   definition.attacker[0].name = "Attacker 1: Gatot, Sonya, Bradley";
   definition.attacker[0].fighter.heroes = {
     Gatot: { skill_1: 5 },
@@ -661,14 +760,26 @@ test("troop optimization labels use the selected heroes instead of stale input n
   );
 });
 
-function definitionWithInfantry(attackerCounts: number[], defenderCounts: number[]): ThreeArmyDefinition {
+interface TestInputDefinition {
+  attacker: { armies: ThreeArmyDefinition["attacker"]; passive?: PlayerPassiveDefinition };
+  defender: { armies: ThreeArmyDefinition["defender"]; passive?: PlayerPassiveDefinition };
+  ordering: string;
+  max_rounds?: number;
+  input_stats_include_hero_generation: { attacker: boolean; defender: boolean };
+}
+
+function definitionWithInfantry(attackerCounts: number[], defenderCounts: number[]): TestInputDefinition {
   return {
-    attacker: armies("attacker", attackerCounts),
-    defender: armies("defender", defenderCounts),
+    attacker: { armies: armies("attacker", attackerCounts) },
+    defender: { armies: armies("defender", defenderCounts) },
     ordering: "sequential",
     max_rounds: 600,
     input_stats_include_hero_generation: { attacker: false, defender: false }
   };
+}
+
+function parsedDefinitionWithInfantry(attackerCounts: number[], defenderCounts: number[]): ThreeArmyDefinition {
+  return parseDefinition(definitionWithInfantry(attackerCounts, defenderCounts), simulatorConfig);
 }
 
 function armies(prefix: string, counts: number[]): ThreeArmyDefinition["attacker"] {

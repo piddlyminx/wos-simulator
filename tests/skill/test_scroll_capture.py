@@ -42,6 +42,7 @@ class FakeScrollingEmulator:
         self.header = header
         self.footer = footer
         self.swipes: list[tuple[int, int, int, int, int]] = []
+        self.wheel_amounts: list[float] = []
 
     def screencap_bgr(self) -> np.ndarray:
         viewport = self.document[self.offset : self.offset + self.viewport_height]
@@ -50,10 +51,18 @@ class FakeScrollingEmulator:
     def swipe(self, x1: int, y1: int, x2: int, y2: int, dur_ms: int) -> None:
         self.swipes.append((x1, y1, x2, y2, dur_ms))
         maximum = len(self.document) - self.viewport_height
+        if dur_ms == 400:
+            self.offset = min(maximum, max(0, self.offset))
+            return
         if y2 > y1:
             self.offset = max(0, self.offset - self.step)
         else:
             self.offset = min(maximum, self.offset + self.step)
+
+    def scroll(self, x: int, y: int, amount: float) -> bool:
+        self.wheel_amounts.append(amount)
+        self.swipe(x, y, x, y - 1, 0)
+        return True
 
 
 class AnimatedChromeEmulator(FakeScrollingEmulator):
@@ -152,6 +161,37 @@ class ScrollCaptureTests(unittest.TestCase):
         shifts = scroll_capture._consistent_scroll_shifts([previous, current])
 
         self.assertEqual(shifts, [3])
+
+    def test_incremental_alignment_reuses_the_shared_frame_ocr(self) -> None:
+        frames = [self.document[offset : offset + 160] for offset in (0, 100, 200)]
+        anchors = [
+            {"first-one": (40, 120), "first-two": (40, 145)},
+            {
+                "first-one": (40, 20),
+                "first-two": (40, 45),
+                "next-one": (40, 120),
+                "next-two": (40, 145),
+            },
+            {"next-one": (40, 20), "next-two": (40, 45)},
+        ]
+        cache = {}
+        with (
+            patch.object(
+                scroll_capture, "estimate_vertical_scroll", return_value=(20, 0.5)
+            ),
+            patch.object(scroll_capture, "_text_anchors", side_effect=anchors) as ocr,
+        ):
+            first = scroll_capture._consistent_scroll_shifts(
+                frames[:2], anchor_cache=cache
+            )
+            second = scroll_capture._consistent_scroll_shifts(
+                frames[1:],
+                anchor_cache=cache,
+                start_index=1,
+            )
+
+        self.assertEqual(first + second, [100, 100])
+        self.assertEqual(ocr.call_count, 3)
 
     def test_text_alignment_handles_fractional_scroll_rasterization(self) -> None:
         previous = self.document[:160]
@@ -386,6 +426,128 @@ class ScrollCaptureTests(unittest.TestCase):
         self.assertTrue(result["top_reached"])
         self.assertTrue(result["bottom_reached"])
 
+    def test_wheel_calibration_preserves_the_complete_document(self) -> None:
+        class WheelEmulator(FakeScrollingEmulator):
+            def scroll(self, x: int, y: int, amount: float) -> bool:
+                self.step = round(-amount * 20)
+                return super().scroll(x, y, amount)
+
+        emulator = WheelEmulator(
+            self.document,
+            viewport_height=160,
+            initial_offset=0,
+            step=100,
+            header=self.header,
+            footer=self.footer,
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output = Path(tmpdir) / "full.png"
+            result = capture_scrolling_screenshot(
+                emulator,
+                output,
+                content_bounds=(20, 180),
+                settle_seconds=0,
+            )
+            captured = cv2.imread(str(output))
+
+        self.assertEqual(result["median_scroll_shift"], 80)
+        self.assertGreater(
+            abs(emulator.wheel_amounts[1]), abs(emulator.wheel_amounts[0])
+        )
+        np.testing.assert_array_equal(
+            captured,
+            np.concatenate([self.header, self.document, self.footer]),
+        )
+
+    def test_ignored_or_unavailable_wheel_input_falls_back_to_touch(self) -> None:
+        for supported in (True, False):
+            with self.subTest(command_supported=supported):
+                emulator = FakeScrollingEmulator(
+                    self.document,
+                    viewport_height=160,
+                    initial_offset=0,
+                    step=100,
+                    header=self.header,
+                    footer=self.footer,
+                )
+                with (
+                    tempfile.TemporaryDirectory() as tmpdir,
+                    patch.object(emulator, "scroll", return_value=supported) as wheel,
+                ):
+                    output = Path(tmpdir) / "full.png"
+                    result = capture_scrolling_screenshot(
+                        emulator,
+                        output,
+                        content_bounds=(20, 180),
+                        settle_seconds=0,
+                    )
+                    captured = cv2.imread(str(output))
+
+                wheel.assert_called_once()
+                self.assertTrue(result["bottom_reached"])
+                np.testing.assert_array_equal(
+                    captured,
+                    np.concatenate([self.header, self.document, self.footer]),
+                )
+
+    def test_wheel_overscroll_is_clamped_before_capturing_the_bottom(self) -> None:
+        class OverscrollingEmulator(FakeScrollingEmulator):
+            def scroll(self, x: int, y: int, amount: float) -> bool:
+                self.offset += self.step
+                return True
+
+        emulator = OverscrollingEmulator(
+            self.document,
+            viewport_height=160,
+            initial_offset=0,
+            step=100,
+            header=self.header,
+            footer=self.footer,
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            output = Path(tmpdir) / "full.png"
+            result = capture_scrolling_screenshot(
+                emulator,
+                output,
+                content_bounds=(20, 180),
+                settle_seconds=0,
+            )
+            captured = cv2.imread(str(output))
+
+        self.assertTrue(result["bottom_reached"])
+        np.testing.assert_array_equal(
+            captured,
+            np.concatenate([self.header, self.document, self.footer]),
+        )
+
+    def test_background_alignment_failure_preserves_existing_output(self) -> None:
+        emulator = FakeScrollingEmulator(
+            self.document,
+            viewport_height=160,
+            initial_offset=0,
+            step=100,
+            header=self.header,
+            footer=self.footer,
+        )
+        with (
+            tempfile.TemporaryDirectory() as tmpdir,
+            patch.object(
+                scroll_capture,
+                "_consistent_scroll_shifts",
+                side_effect=[[100], RuntimeError("Invalid overlap")],
+            ),
+        ):
+            output = Path(tmpdir) / "full.png"
+            output.write_bytes(b"existing capture")
+            with self.assertRaisesRegex(RuntimeError, "Invalid overlap"):
+                capture_scrolling_screenshot(
+                    emulator,
+                    output,
+                    content_bounds=(20, 180),
+                    settle_seconds=0,
+                )
+            self.assertEqual(output.read_bytes(), b"existing capture")
+
     def test_swipe_waits_for_elastic_edge_bounce_to_settle(self) -> None:
         original = np.concatenate([self.header, self.document[:160], self.footer])
         bounce_one = np.roll(original, 12, axis=0)
@@ -415,16 +577,23 @@ class ScrollCaptureTests(unittest.TestCase):
         clean = np.concatenate([self.header, self.document[:160], self.footer])
         highlighted = clean.copy()
         highlighted[70:120] = np.array([30, 80, 160], dtype=np.uint8)
-        emulator = BounceEmulator(
-            [
-                highlighted,
-                highlighted,
-                highlighted,
-                clean,
-            ]
-        )
+        elapsed = 0.0
 
-        with patch("scroll_capture.time.sleep") as sleep:
+        def sleep_for(seconds: float) -> None:
+            nonlocal elapsed
+            elapsed += seconds
+
+        emulator = BounceEmulator([])
+
+        with (
+            patch("scroll_capture.time.sleep", side_effect=sleep_for),
+            patch("scroll_capture.time.monotonic", side_effect=lambda: elapsed),
+            patch.object(
+                emulator,
+                "screencap_bgr",
+                side_effect=lambda: highlighted if elapsed < 0.5 else clean,
+            ),
+        ):
             settled = _swipe(
                 emulator,
                 clean,
@@ -432,8 +601,70 @@ class ScrollCaptureTests(unittest.TestCase):
                 settle_seconds=0.25,
             )
 
-        self.assertEqual(sleep.call_args_list[-1].args, (0.25,))
+        self.assertGreaterEqual(elapsed, 0.61)
         np.testing.assert_array_equal(settled, clean)
+
+    def test_settled_capture_uses_two_screenshots_across_release_interval(self) -> None:
+        frame = self.document[:160]
+        emulator = BounceEmulator([frame, frame])
+
+        with (
+            patch("scroll_capture.time.sleep") as sleep,
+            patch("scroll_capture.time.monotonic", return_value=0),
+        ):
+            samples = scroll_capture._capture_until_settled(
+                emulator, settle_seconds=0.25
+            )
+
+        self.assertEqual(len(samples), 2)
+        self.assertAlmostEqual(sum(call.args[0] for call in sleep.call_args_list), 0.61)
+        np.testing.assert_array_equal(samples[-1], frame)
+
+    def test_settling_keeps_sampling_when_motion_continues_after_release(self) -> None:
+        frames = [self.document[offset : offset + 160] for offset in (0, 30, 60, 60)]
+        emulator = BounceEmulator(frames)
+
+        with patch("scroll_capture.time.sleep"):
+            samples = scroll_capture._capture_until_settled(
+                emulator, settle_seconds=0.25, content_bounds=(0, 160)
+            )
+
+        self.assertEqual(len(samples), 4)
+        np.testing.assert_array_equal(samples[-1], frames[-1])
+
+    def test_screenshot_latency_counts_toward_the_sampling_interval(self) -> None:
+        elapsed = 0.0
+        frame = self.document[:160]
+
+        def sleep_for(seconds: float) -> None:
+            nonlocal elapsed
+            elapsed += seconds
+
+        def capture() -> np.ndarray:
+            sleep_for(0.2)
+            return frame
+
+        emulator = BounceEmulator([])
+        with (
+            patch("scroll_capture.time.sleep", side_effect=sleep_for),
+            patch("scroll_capture.time.monotonic", side_effect=lambda: elapsed),
+            patch.object(emulator, "screencap_bgr", side_effect=capture),
+        ):
+            scroll_capture._capture_until_settled(emulator, settle_seconds=0.25)
+
+        self.assertAlmostEqual(elapsed, 0.81)
+
+    def test_settling_rejects_continuous_motion(self) -> None:
+        frames = [self.document[offset : offset + 160] for offset in (0, 30)]
+        emulator = BounceEmulator(frames * 31)
+
+        with (
+            patch("scroll_capture.time.sleep"),
+            self.assertRaisesRegex(RuntimeError, "Scrolling did not settle"),
+        ):
+            scroll_capture._capture_until_settled(
+                emulator, settle_seconds=0.25, content_bounds=(0, 160)
+            )
 
     def test_signed_motion_distinguishes_progress_rebound_and_rest(self) -> None:
         def at(offset: int) -> np.ndarray:
@@ -553,6 +784,7 @@ class ScrollCaptureTests(unittest.TestCase):
                 scroll_capture,
                 "_capture_until_settled",
                 side_effect=[
+                    [at(100), at(100), at(100)],
                     [at(100), at(100), at(100)],
                     [bottom, bottom, bottom],
                     [bottom, bottom, bottom],

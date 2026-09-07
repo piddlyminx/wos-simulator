@@ -2106,5 +2106,74 @@
         }
       }
     }
+  },
+  "t12_skills.jpg": {
+    "_source": "Visually transcribed from t12_skills.jpg; troop labels show tier 10, FC levels come from the star badges, and the skill icon Lv.2 is not a troop tier.",
+    "left": {
+      "stat_bonuses": {
+        "infantry_attack": 2458.7,
+        "infantry_defense": 1948.5,
+        "infantry_health": 1060.9,
+        "infantry_lethality": 831.8,
+        "lancer_attack": 1339.5,
+        "lancer_defense": 1016.0,
+        "lancer_health": 745.5,
+        "lancer_lethality": 948.1,
+        "marksman_attack": 2105.0,
+        "marksman_defense": 1581.4,
+        "marksman_health": 960.4,
+        "marksman_lethality": 1182.3
+      },
+      "troops": {
+        "infantry": {
+          "count": 468131,
+          "fire_crystal_level": 7,
+          "tier": 10
+        },
+        "lancer": {
+          "count": 8629,
+          "fire_crystal_level": 8,
+          "tier": 10
+        },
+        "marksman": {
+          "count": 328080,
+          "fire_crystal_level": 7,
+          "tier": 10
+        }
+      }
+    },
+    "right": {
+      "stat_bonuses": {
+        "infantry_attack": 2549.5,
+        "infantry_defense": 2110.9,
+        "infantry_health": 959.5,
+        "infantry_lethality": 1230.7,
+        "lancer_attack": 2082.2,
+        "lancer_defense": 1749.9,
+        "lancer_health": 933.8,
+        "lancer_lethality": 1172.9,
+        "marksman_attack": 2327.6,
+        "marksman_defense": 1915.7,
+        "marksman_health": 995.1,
+        "marksman_lethality": 1259.0
+      },
+      "troops": {
+        "infantry": {
+          "count": 694544,
+          "fire_crystal_level": 9,
+          "tier": 10
+        },
+        "lancer": {
+          "count": 163055,
+          "fire_crystal_level": 9,
+          "tier": 10
+        },
+        "marksman": {
+          "count": 574631,
+          "fire_crystal_level": 9,
+          "tier": 10
+        }
+      }
+    }
   }
 }
