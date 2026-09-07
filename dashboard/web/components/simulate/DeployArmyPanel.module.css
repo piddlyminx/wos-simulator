@@ -441,8 +441,10 @@
 
 .troopSlider {
   grid-column: 1 / -1;
-  width: 100%;
+  width: calc(100% - 28px);
   height: 13px;
+  justify-self: center;
+  margin: 6px 0 5px;
   appearance: none;
   border-radius: 999px;
   background: linear-gradient(to right, var(--row-color) var(--fill), #728ca0 var(--fill));
@@ -997,6 +999,7 @@
   .troopAmount > button { min-height: 40px; border-width: 2px; font-size: 1.3rem; }
   .troopAmount input { min-height: 36px; font-size: 0.68rem; }
   .troopAmount small { min-width: 34px; padding-right: 5px; font-size: 0.55rem; }
+  .troopSlider { margin-block: 10px 9px; }
   .ratioStrip { grid-template-columns: 1fr repeat(3, auto); gap: 5px; padding: 9px 12px; font-size: 0.58rem; }
   .ratioStrip > span:first-child { font-size: 0; }
   .ratioStrip > span:first-child::after { content: "Ratio"; font-size: 0.58rem; }

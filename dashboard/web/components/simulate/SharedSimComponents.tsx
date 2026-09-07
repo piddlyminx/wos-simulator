@@ -915,14 +915,15 @@ function DeployHeroPortrait({
       data-has-avatar={Boolean(avatarPath)}
     >
       {avatarPath ? (
-      <Image
-        src={avatarPath}
-        alt=""
-        fill
-        loading="eager"
-        sizes="(max-width: 639px) 120px, 220px"
-        className={deployStyles.heroPortraitImage}
-      />
+        <Image
+          src={avatarPath}
+          alt=""
+          fill
+          unoptimized
+          loading="eager"
+          sizes="(max-width: 639px) 120px, 220px"
+          className={deployStyles.heroPortraitImage}
+        />
       ) : (
         <span>{heroInitials(name)}</span>
       )}

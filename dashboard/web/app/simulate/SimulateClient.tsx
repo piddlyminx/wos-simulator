@@ -1650,9 +1650,11 @@ export default function SimulateClient({
     hasSimulationResult: Boolean(result),
     hasOptimizeResult: Boolean(optimizeResult),
     hasSurfaceResult: Boolean(surfaceResult),
+    reportUploadOpen: uploadOpen,
     setMobileTab,
     setRunMode,
     setRunOptionsOpen,
+    openReportUpload: () => setUploadOpen(true),
     runSimulation,
     runOptimizeRatio,
     runSurfaceExplore,
@@ -1691,6 +1693,7 @@ export default function SimulateClient({
               type="button"
               onClick={() => setUploadOpen(true)}
               className="sim-upload-primary px-3 py-2"
+              data-tour="upload-report"
             >
               <span className="block text-xs font-bold">Upload report</span>
             </button>
