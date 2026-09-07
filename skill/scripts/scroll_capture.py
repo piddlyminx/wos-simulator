@@ -6,6 +6,8 @@ import itertools
 import os
 import re
 import time
+from collections import deque
+from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
 from typing import Protocol
 
@@ -27,6 +29,8 @@ class ScrollableEmulator(Protocol):
     def screencap_bgr(self) -> np.ndarray: ...
 
     def swipe(self, x1: int, y1: int, x2: int, y2: int, dur_ms: int) -> None: ...
+
+    def scroll(self, x: int, y: int, amount: float) -> bool: ...
 
 
 def _mean_frame_delta(first: np.ndarray, second: np.ndarray) -> float:
@@ -417,27 +421,33 @@ def _refine_text_shift(
     )
 
 
-def _consistent_scroll_shifts(content_frames: list[np.ndarray]) -> list[int]:
+def _consistent_scroll_shifts(
+    content_frames: list[np.ndarray],
+    *,
+    anchor_cache: dict[int, dict[str, tuple[float, float]]] | None = None,
+    start_index: int = 0,
+) -> list[int]:
     if len(content_frames) < 2:
         return []
     height = content_frames[0].shape[0]
     width = content_frames[0].shape[1]
     min_shift = 1
     max_shift = height - max(24, round(height * 0.20))
-    anchor_cache: dict[int, dict[str, tuple[float, float]]] = {}
+    if anchor_cache is None:
+        anchor_cache = {}
     shifts: list[int] = []
     for index, (previous, current) in enumerate(itertools.pairwise(content_frames)):
         shift, score = estimate_vertical_scroll(previous, current, min_shift=min_shift)
         text_supported = False
         if score > _NEAR_EXACT_ALIGNMENT_ERROR:
             for frame_index in (index, index + 1):
-                if frame_index not in anchor_cache:
-                    anchor_cache[frame_index] = _text_anchors(
+                if start_index + frame_index not in anchor_cache:
+                    anchor_cache[start_index + frame_index] = _text_anchors(
                         content_frames[frame_index]
                     )
             text_shift = _shift_from_text_anchors(
-                anchor_cache[index],
-                anchor_cache[index + 1],
+                anchor_cache[start_index + index],
+                anchor_cache[start_index + index + 1],
                 width=width,
                 min_shift=min_shift,
                 max_shift=max_shift,
@@ -727,13 +737,28 @@ def _swipe(
     toward_start: bool,
     settle_seconds: float,
     wait_until_settled: bool = True,
+    content_bounds: tuple[int, int] | None = None,
 ) -> np.ndarray:
     height, width = frame.shape[:2]
     x = round(360 * width / 720)
     upper = round(720 * height / 1280)
     lower = round(920 * height / 1280)
+    duration = 1000
+    if content_bounds is not None and not toward_start:
+        content_top, content_bottom = content_bounds
+        viewport_height = content_bottom - content_top
+        margin = max(1, round(viewport_height * 0.08))
+        distance = min(round(500 * height / 1280), round(viewport_height * 0.50))
+        lower = max(
+            content_top + margin + distance,
+            min(round(1050 * height / 1280), content_bottom - margin),
+        )
+        upper = lower - distance
+        # A longer drag at a low release velocity retains overlap without the
+        # long coast produced by a fast flick across the same distance.
+        duration = 2200
     y1, y2 = (upper, lower) if toward_start else (lower, upper)
-    emulator.swipe(x, y1, x, y2, 1000)
+    emulator.swipe(x, y1, x, y2, duration)
     if not settle_seconds:
         return emulator.screencap_bgr()
 
@@ -743,7 +768,9 @@ def _swipe(
         time.sleep(0.2)
         return emulator.screencap_bgr()
 
-    return _capture_until_settled(emulator, settle_seconds=settle_seconds)[-1]
+    return _capture_until_settled(
+        emulator, settle_seconds=settle_seconds, content_bounds=content_bounds
+    )[-1]
 
 
 def _capture_until_settled(
@@ -751,16 +778,21 @@ def _capture_until_settled(
     *,
     settle_seconds: float,
     content_bounds: tuple[int, int] | None = None,
+    initial_wait: float = 0.36,
 ) -> list[np.ndarray]:
-    """Capture promptly for overlap, then sample until scrolling has settled."""
-    time.sleep(0.2)
+    """Confirm rest across the release interval, retaining the final clean frame."""
+    # Let the initial animation pass, then compare across the whole release
+    # interval. Extra captures of an already stationary viewport only add latency.
+    time.sleep(initial_wait)
+    sample_started = time.monotonic()
     samples = [emulator.screencap_bgr()]
     candidate = samples[0]
-    stable_samples = 0
     motion: list[tuple[int, float]] = []
     max_samples = 60
     for _ in range(max_samples):
-        time.sleep(0.08)
+        interval = max(0.16, settle_seconds)
+        time.sleep(max(0.0, interval - (time.monotonic() - sample_started)))
+        sample_started = time.monotonic()
         following = emulator.screencap_bgr()
         samples.append(following)
         shift, score = estimate_signed_vertical_motion(
@@ -769,25 +801,8 @@ def _capture_until_settled(
             content_bounds=content_bounds,
         )
         motion.append((shift, score))
-        stable_samples = stable_samples + 1 if abs(shift) <= 2 else 0
-        if stable_samples >= 2:
-            # Motion can stop before the application has redrawn the row that
-            # received the swipe. Give touch feedback time to clear, then keep
-            # the post-release frame only if the scroll position stayed put.
-            time.sleep(settle_seconds)
-            released = emulator.screencap_bgr()
-            samples.append(released)
-            release_shift, release_score = estimate_signed_vertical_motion(
-                following,
-                released,
-                content_bounds=content_bounds,
-            )
-            motion.append((release_shift, release_score))
-            if abs(release_shift) <= 2:
-                return samples
-            candidate = released
-            stable_samples = 0
-            continue
+        if abs(shift) <= 2:
+            return samples
         candidate = following
     raise RuntimeError(
         f"Scrolling did not settle after {max_samples} samples "
@@ -805,7 +820,6 @@ def _scroll_to_start(
     current = emulator.screencap_bgr()
     stable = 0
     swipe_count = 0
-    motion: list[tuple[int, float, float]] = []
     while swipe_count < max_scrolls:
         before = current
         height, width = before.shape[:2]
@@ -829,9 +843,7 @@ def _scroll_to_start(
             if settle_seconds
             else emulator.screencap_bgr()
         )
-        shift, score = estimate_signed_vertical_motion(before, following)
         position_delta = _scroll_position_delta(before, following)
-        motion.append((shift, score, position_delta))
         if position_delta <= _STABLE_MEAN_THRESHOLD:
             stable += 1
             if stable >= stable_swipes:
@@ -865,65 +877,130 @@ def capture_scrolling_screenshot(
         settle_seconds=settle_seconds,
         stable_swipes=stable_swipes,
     )
+    if content_bounds is not None:
+        content_top, content_bottom = content_bounds
+        if not 0 <= content_top < content_bottom <= top_frame.shape[0]:
+            raise ValueError(
+                f"Invalid content bounds {content_bounds} for {top_frame.shape[0]}px frame"
+            )
     frames = [top_frame]
     previous = top_frame
     resolved_bounds = content_bounds
     bottom_stable = 0
     bottom_swipes = 0
     bottom_position_deltas: list[float] = []
+    wheel_amount: float | None = -3.0
+    wheel_calibrated = False
+    scroll_shifts: list[int] = []
+    pending: deque[Future[list[int]]] = deque()
+    anchor_cache: dict[int, dict[str, tuple[float, float]]] = {}
 
-    for step in range(1, max_scrolls + 1):
-        before = previous
-        height, width = before.shape[:2]
-        emulator.swipe(
-            round(360 * width / 720),
-            round(920 * height / 1280),
-            round(360 * width / 720),
-            round(720 * height / 1280),
-            1000,
-        )
-        current = (
-            _capture_until_settled(
-                emulator,
-                settle_seconds=settle_seconds,
-                content_bounds=resolved_bounds,
-            )[-1]
-            if settle_seconds
-            else emulator.screencap_bgr()
-        )
-        bottom_swipes = step
-        position_delta = _content_position_delta(
-            before,
-            current,
-            resolved_bounds,
-        )
-        bottom_position_deltas.append(position_delta)
-        if position_delta <= _STABLE_MEAN_THRESHOLD:
-            bottom_stable += 1
-            if bottom_stable >= stable_swipes:
-                break
+    # Validate joins during device waits. One worker owns the shared OCR cache;
+    # every result must succeed before the output file can be replaced.
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        for step in range(1, max_scrolls + 1):
+            while pending and pending[0].done():
+                scroll_shifts.extend(pending.popleft().result())
+            before = previous
+            height, width = before.shape[:2]
+            viewport_top, viewport_bottom = resolved_bounds or (0, height)
+            if wheel_amount is not None and not emulator.scroll(
+                round(width * 0.5),
+                round((viewport_top + viewport_bottom) / 2),
+                wheel_amount,
+            ):
+                wheel_amount = None
+            if wheel_amount is not None and not wheel_calibrated:
+                wheel_frame = (
+                    _capture_until_settled(
+                        emulator,
+                        settle_seconds=settle_seconds,
+                        content_bounds=resolved_bounds,
+                        initial_wait=0.12,
+                    )[-1]
+                    if settle_seconds
+                    else emulator.screencap_bgr()
+                )
+                if (
+                    _content_position_delta(before, wheel_frame, resolved_bounds)
+                    <= _STABLE_MEAN_THRESHOLD
+                ):
+                    wheel_amount = None
+            if wheel_amount is not None:
+                # WOS allows wheel input past its elastic bounds. A short touch drag
+                # restores those bounds before we capture or test for the end.
+                x = round(width * 0.5)
+                y = round((viewport_top + viewport_bottom) / 2)
+                distance = min(
+                    round(60 * height / 1280),
+                    max(1, (viewport_bottom - viewport_top) // 4),
+                )
+                emulator.swipe(x, y, x, y - distance, 400)
+                current = (
+                    _capture_until_settled(
+                        emulator,
+                        settle_seconds=settle_seconds,
+                        content_bounds=resolved_bounds,
+                    )[-1]
+                    if settle_seconds
+                    else emulator.screencap_bgr()
+                )
+            else:
+                current = _swipe(
+                    emulator,
+                    before,
+                    toward_start=False,
+                    settle_seconds=settle_seconds,
+                    content_bounds=resolved_bounds,
+                )
+            bottom_swipes = step
+            position_delta = _content_position_delta(
+                before,
+                current,
+                resolved_bounds,
+            )
+            bottom_position_deltas.append(position_delta)
+            if position_delta <= _STABLE_MEAN_THRESHOLD:
+                bottom_stable += 1
+                if bottom_stable >= stable_swipes:
+                    break
+                previous = current
+                continue
+
+            bottom_stable = 0
+            if resolved_bounds is None:
+                resolved_bounds = detect_content_bounds(before, current)
+                safe_bottom = resolved_bounds[1] - max(1, round(height * 0.01))
+                resolved_bounds = (resolved_bounds[0], safe_bottom)
+            content_top, content_bottom = resolved_bounds
+            alignment = executor.submit(
+                _consistent_scroll_shifts,
+                [
+                    frames[-1][content_top:content_bottom],
+                    current[content_top:content_bottom],
+                ],
+                anchor_cache=anchor_cache,
+                start_index=len(frames) - 1,
+            )
+            pending.append(alignment)
+            if wheel_amount is not None and not wheel_calibrated:
+                advance = alignment.result()[0]
+                wheel_amount *= (content_bottom - content_top) * 0.50 / advance
+                wheel_amount = max(-12.0, min(-1.0, wheel_amount))
+                wheel_calibrated = True
+            frames.append(current)
             previous = current
-            continue
+        else:
+            raise RuntimeError(
+                f"Bottom of scrollable region was not reached after {max_scrolls} swipes"
+            )
 
-        bottom_stable = 0
-        if resolved_bounds is None:
-            resolved_bounds = detect_content_bounds(before, current)
-            safe_bottom = resolved_bounds[1] - max(1, round(height * 0.01))
-            resolved_bounds = (resolved_bounds[0], safe_bottom)
-        frames.append(current)
-        previous = current
-    else:
-        raise RuntimeError(
-            f"Bottom of scrollable region was not reached after {max_scrolls} swipes"
-        )
+        for alignment in pending:
+            scroll_shifts.extend(alignment.result())
 
     if resolved_bounds is None:
         resolved_bounds = (0, frames[0].shape[0])
 
-    content_top, content_bottom = resolved_bounds
-    scroll_shifts = _consistent_scroll_shifts(
-        [frame[content_top:content_bottom] for frame in frames]
-    )
     stitched = stitch_scrolling_frames(
         frames,
         content_bounds=resolved_bounds,

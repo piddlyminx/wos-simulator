@@ -238,6 +238,40 @@ class ReportStatsParserTests(unittest.TestCase):
         self.assertEqual(len(result["right"]["stat_bonuses"]), 12)
         self.assertEqual(result["meta"]["missing_fields"], [])
 
+    def test_troop_rows_ignore_skill_levels_below_counts(self) -> None:
+        for scale in (0.75, 1.0, 1.5):
+            with self.subTest(scale=scale):
+                items = []
+
+                def add(text: str, x: float, y: float, width: float = 70) -> None:
+                    items.append({
+                        "text": text,
+                        "x1": round((x - width / 2) * scale),
+                        "x2": round((x + width / 2) * scale),
+                        "y1": round(y * scale),
+                        "y2": round((y + 20) * scale),
+                        "confidence": 1.0,
+                    })
+
+                add("Stat Bonuses", 360, 300, 200)
+                for slot, center in enumerate(report_stats_parser.TROOP_SLOT_CENTERS):
+                    add("Lv.10.6", center * 720, 130)
+                    add(str(1000 + slot), center * 720, 155)
+                    add("Lv.2", center * 720, 230)
+
+                result = extract_values_from_ocr_items(
+                    items, image_width=round(720 * scale), image_height=round(1280 * scale)
+                )
+
+                self.assertEqual(result["meta"]["slot_counts"], {
+                    str(slot): 1000 + slot for slot in range(6)
+                })
+                for side in ("left", "right"):
+                    self.assertEqual(
+                        [result[side]["levels"][troop]["tier"] for troop in TROOP_TYPES],
+                        [10, 10, 10],
+                    )
+
     def test_dashboard_report_fixtures_parse_all_values(self) -> None:
         expected_by_report = json.loads((ROOT / "tests" / "fixtures" / "dashboard_report_expected.json").read_text())
         report_dir = ROOT / "dashboard" / "test_reports"

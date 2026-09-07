@@ -56,6 +56,50 @@ test("numeric fields can be cleared before typing a replacement", async ({
   await expect(totalTroops).toHaveValue("5000");
 });
 
+test("simulate tour guides report upload before run modes and allows skipping it", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("wos-simulator.simulate-tour.v2.seen", "1");
+  });
+  await page.goto("/simulate");
+  await page.getByRole("button", { name: "Show simulate page tour" }).click();
+
+  const tour = page.locator(".sim-tour-popover");
+  await expect(tour.getByRole("heading", { name: "Battle simulator" })).toBeVisible();
+  await tour.getByRole("button", { name: "Next" }).click();
+  await expect(tour.getByRole("heading", { name: "Show raw troop counts" })).toBeVisible();
+  await expect(tour).toContainText("percentage ratio or raw numbers");
+  await expect(tour).toContainText("actual troop numbers");
+
+  await tour.getByRole("button", { name: "Next" }).click();
+  await expect(
+    tour.getByRole("heading", { name: "Upload and describe the battle" }),
+  ).toBeVisible();
+  await expect(tour).toContainText("heroes used by each army");
+  await expect(tour).toContainText("city or pet buffs");
+  await expect(tour).toContainText("normalise the imported stats");
+  await expect(tour.getByRole("button", { name: "Skip upload" })).toBeVisible();
+
+  await tour.getByRole("button", { name: "Upload report" }).click();
+  const upload = page.getByRole("dialog", { name: "Upload battle report" });
+  await expect(upload).toBeVisible();
+  await expect(tour).toBeHidden();
+  await expect(upload).toContainText("switch between the percentage ratio and raw numbers");
+  await expect(upload).toContainText("choose the heroes used in the battle");
+  await expect(upload).toContainText("city or pet buffs that were active");
+
+  await upload.getByRole("button", { name: "Close", exact: true }).click();
+  await expect(tour.getByRole("heading", { name: "Choose the rule set" })).toBeVisible();
+
+  await tour.getByRole("button", { name: "Restart" }).click();
+  await tour.getByRole("button", { name: "Next" }).click();
+  await tour.getByRole("button", { name: "Next" }).click();
+  await tour.getByRole("button", { name: "Skip upload" }).click();
+  await expect(tour.getByRole("heading", { name: "Choose the rule set" })).toBeVisible();
+  await expect(upload).toBeHidden();
+});
+
 test("server compute routes are removed", async ({ request }) => {
   await expect((await request.post("/api/simulate")).status()).toBe(404);
   await expect((await request.post("/api/simulate/optimize-ratio")).status()).toBe(404);

@@ -618,6 +618,33 @@ def _pick_numeric_for_row(numeric_items: list[OCRItem], label_item: OCRItem, *, 
     return sorted(candidates, key=lambda pair: pair[0])[0][1]
 
 
+def _troop_row_header(items: list[OCRItem], header: OCRItem, image_width: int) -> OCRItem:
+    """Anchor displaced troop rows above any intervening skill icons."""
+    scale = image_width / 720.0
+    # Dotted troop levels align across slots; skill labels such as Lv.2 do not
+    # have the numeric suffix. Keep the existing header-relative fallback.
+    levels = [
+        item for item in items
+        if header.y1 - 220 * scale < item.cy < header.y1 - 60 * scale
+        and _parse_tier(item.text) is not None
+        and re.search(r"\d{1,2}\s*[.:]\s*\d", item.text)
+    ]
+    for level in levels:
+        row = [item for item in levels if abs(item.cy - level.cy) < 12 * scale]
+        slots = {
+            min(range(6), key=lambda slot: abs(item.cx - image_width * TROOP_SLOT_CENTERS[slot]))
+            for item in row
+        }
+        if len(slots) < 2:
+            continue
+        row_y = float(np.median([item.cy for item in row]))
+        # Existing troop crops place the level row 80 units above the header.
+        anchor_y = int(round(row_y + 80 * scale))
+        if header.y1 - anchor_y > 25 * scale:
+            return dataclasses.replace(header, y1=anchor_y, y2=anchor_y + header.height)
+    return header
+
+
 def _extract_troop_count_slot_items(
     items: list[OCRItem], header: OCRItem, image_width: int, image_height: int
 ) -> dict[int, tuple[int, OCRItem]]:
@@ -749,7 +776,7 @@ def _ocr_count_crop(crop_bgr: np.ndarray) -> int | None:
 
 def _repair_troop_counts_from_slots(result: dict[str, Any], img_bgr: np.ndarray) -> None:
     image_height, image_width = img_bgr.shape[:2]
-    header = OCRItem(**result["meta"]["header_box"])
+    header = OCRItem(**result["meta"].get("troop_header_box", result["meta"]["header_box"]))
     scale = image_width / 720.0
     count_y1 = max(0, header.y1 - int(round(68 * scale)))
     count_y2 = min(image_height, header.y1 - int(round(37 * scale)))
@@ -792,7 +819,7 @@ def _slot_x_bounds(image_width: int, slot_index: int) -> tuple[int, int]:
 
 def _repair_tiers_from_slots(result: dict[str, Any], img_bgr: np.ndarray) -> None:
     image_height, image_width = img_bgr.shape[:2]
-    header = OCRItem(**result["meta"]["header_box"])
+    header = OCRItem(**result["meta"].get("troop_header_box", result["meta"]["header_box"]))
     scale = image_width / 720.0
     level_y1 = max(0, header.y1 - int(round(100 * scale)))
     level_y2 = min(image_height, header.y1 - int(round(62 * scale)))
@@ -1036,10 +1063,11 @@ def extract_values_from_ocr_items(items: Iterable[OCRItem | dict[str, Any]], *, 
                 right_stats[field] = value
 
     if has_troop_slots:
-        troop_count_slot_items = _extract_troop_count_slot_items(ocr_items, header, image_width, image_height)
+        troop_header = _troop_row_header(ocr_items, header, image_width)
+        troop_count_slot_items = _extract_troop_count_slot_items(ocr_items, troop_header, image_width, image_height)
         troop_count_slots = {slot: value for slot, (value, _item) in troop_count_slot_items.items()}
         troop_counts = _counts_by_side_from_slots(troop_count_slots)
-        levels = _extract_level_slots(ocr_items, header, image_width, image_height)
+        levels = _extract_level_slots(ocr_items, troop_header, image_width, image_height)
     else:
         troop_count_slot_items = {}
         troop_count_slots = {}
@@ -1050,6 +1078,7 @@ def extract_values_from_ocr_items(items: Iterable[OCRItem | dict[str, Any]], *, 
         "right": {"troop_counts": troop_counts["right"], "levels": levels["right"], "stat_bonuses": right_stats},
         "meta": {
             "header_box": dataclasses.asdict(header),
+            "troop_header_box": dataclasses.asdict(troop_header if has_troop_slots else header),
             "label_boxes": {field: dataclasses.asdict(item) for field, item in label_boxes.items()},
             "ocr_item_count": len(ocr_items),
             "slot_count_boxes": {
@@ -1458,6 +1487,7 @@ def _detect_fire_crystal_badge_match(
     allow_partial: bool = False,
     clip_sides: frozenset[str] = frozenset(),
     preferred_level: int | None = None,
+    layout_scale: float = 1.0,
 ) -> tuple[int | None, float]:
     """Read the fire-crystal badge number in the top-right of a troop slot.
 
@@ -1487,11 +1517,23 @@ def _detect_fire_crystal_badge_match(
     if fc_level is not None and score >= MIN_FC_BADGE_TEMPLATE_SCORE:
         return fc_level, score
 
+    if layout_scale > 1.25:
+        normalized = cv2.resize(
+            badge, None, fx=1 / layout_scale, fy=1 / layout_scale, interpolation=cv2.INTER_AREA
+        )
+        return _detect_fire_crystal_badge_match(
+            normalized,
+            crop_from_slot=False,
+            allow_partial=allow_partial,
+            clip_sides=clip_sides,
+            preferred_level=preferred_level,
+        )
+
     return None, score
 
 
 def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.ndarray) -> dict[str, list[dict[str, Any]]]:
-    header = OCRItem(**stats_result["meta"]["header_box"])
+    header = OCRItem(**stats_result["meta"].get("troop_header_box", stats_result["meta"]["header_box"]))
     image_height, image_width = img_bgr.shape[:2]
     avatar_y1 = max(0, header.y1 - int(image_height * 0.135))
     avatar_y2 = max(avatar_y1 + 10, header.y1 - int(image_height * 0.052))
@@ -1545,6 +1587,7 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
                     allow_partial=allow_partial,
                     clip_sides=clip_sides,
                     preferred_level=badge_predictions.get(slot),
+                    layout_scale=image_width / 720.0,
                 )
                 if count_fc is not None and count_fc not in (6, 8) and count_score >= MIN_FC_BADGE_TEMPLATE_SCORE:
                     fc_badge = count_fc
@@ -1555,6 +1598,7 @@ def _extract_typed_troops_from_slots(stats_result: dict[str, Any], img_bgr: np.n
                         allow_partial=allow_partial,
                         clip_sides=clip_sides,
                         preferred_level=badge_predictions.get(slot),
+                        layout_scale=image_width / 720.0,
                     )
                     fc_badge = count_fc if count_score >= fallback_score else fallback_fc
             else:
@@ -1697,7 +1741,7 @@ def extract_report_stats_and_troops(image_path: str | Path, *, debug_outdir: str
     if _is_complete_friendly_tesseract_result(result):
         strategies.append("tesseract:complete")
     elif result is not None:
-        header = OCRItem(**result["meta"]["header_box"])
+        header = OCRItem(**result["meta"].get("troop_header_box", result["meta"]["header_box"]))
         layout_scale = image_width / 720.0
         troop_y1 = max(0, header.y1 - int(round(155 * layout_scale)))
         troop_y2 = min(image_height, header.y2 + int(round(8 * layout_scale)))

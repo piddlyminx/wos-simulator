@@ -599,7 +599,7 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
   }) => {
     await page.setViewportSize({ width: 1600, height: 950 });
     await page.addInitScript(() => {
-      window.localStorage.setItem("wos-simulator.simulate-tour.v1.seen", "1");
+      window.localStorage.setItem("wos-simulator.simulate-tour.v2.seen", "1");
     });
     const response = await page.goto("/simulate");
     expect(response?.status()).toBe(200);
