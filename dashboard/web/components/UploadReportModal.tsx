@@ -393,9 +393,10 @@ export default function UploadReportModal({
                 Upload a Stat Bonuses screenshot like this example.
               </p>
               <p className="sim-modal-copy">
-                Troop counts must be shown as absolute numbers, not percentages.
-                Keep the troop avatars, troop counts, and every stat row in frame
-                so the parser can read the troop types and all bonuses.
+                Tap the troop counts in the battle report to switch between the
+                percentage ratio and raw numbers. Upload the screenshot with raw
+                counts displayed so the simulator knows each army&apos;s actual size.
+                Keep the troop avatars, counts, and every stat row in frame.
               </p>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -481,6 +482,19 @@ export default function UploadReportModal({
               </button>
             </div>
           )}
+
+          <div className="sim-tool-panel p-3 text-xs leading-relaxed">
+            <p className="sim-modal-section-title mb-1">
+              Match the battle setup
+            </p>
+            <p className="sim-modal-copy">
+              For each army you import, choose the heroes used in the battle and
+              any city or pet buffs that were active. The simulator removes
+              their effects from the report values before applying the setup,
+              so those values update correctly if you later swap heroes or
+              enable or disable buffs.
+            </p>
+          </div>
 
           {selectionMode === "single" ? (
             <div className="flex flex-col gap-3">

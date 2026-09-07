@@ -12,7 +12,7 @@ import {
 type SimWorkspaceTab = "attacker" | "defender" | "setup" | "results";
 type RunMode = "simulate" | "optimise" | "explore";
 type SimulateTourPlacement = "top" | "bottom" | "left" | "right";
-type SimulateTourRunAction = RunMode | "example";
+type SimulateTourAction = RunMode | "example" | "upload";
 type SimulateTourStartSource = "auto" | "manual" | "restart";
 
 interface SimulateTourStep {
@@ -24,8 +24,8 @@ interface SimulateTourStep {
   placement: SimulateTourPlacement;
   mobileTab?: SimWorkspaceTab;
   runMode?: RunMode;
-  runAction?: SimulateTourRunAction;
-  afterRunStepId?: string;
+  action?: SimulateTourAction;
+  afterActionStepId?: string;
   closeRunOptions?: boolean;
 }
 
@@ -43,9 +43,11 @@ interface UseSimulateTourOptions {
   hasSimulationResult: boolean;
   hasOptimizeResult: boolean;
   hasSurfaceResult: boolean;
+  reportUploadOpen: boolean;
   setMobileTab: (tab: SimWorkspaceTab) => void;
   setRunMode: (mode: RunMode) => void;
   setRunOptionsOpen: (open: boolean) => void;
+  openReportUpload: () => void;
   runSimulation: () => Promise<unknown>;
   runOptimizeRatio: () => Promise<unknown>;
   runSurfaceExplore: () => Promise<unknown>;
@@ -57,8 +59,8 @@ interface UseSimulateTourResult {
   simulateTour: ReactNode;
 }
 
-const SIMULATE_TOUR_SEEN_KEY = "wos-simulator.simulate-tour.v1.seen";
-const SIMULATE_TOUR_PROGRESS_KEY = "wos-simulator.simulate-tour.v1.progress";
+const SIMULATE_TOUR_SEEN_KEY = "wos-simulator.simulate-tour.v2.seen";
+const SIMULATE_TOUR_PROGRESS_KEY = "wos-simulator.simulate-tour.v2.progress";
 
 function markSimulateTourSeen() {
   try {
@@ -104,7 +106,8 @@ function clearSimulateTourProgress() {
   }
 }
 
-function runActionLabel(action: SimulateTourRunAction | undefined): string | null {
+function tourActionLabel(action: SimulateTourAction | undefined): string | null {
+  if (action === "upload") return "Upload report";
   if (action === "simulate") return "Run simulate now";
   if (action === "optimise") return "Run optimise now";
   if (action === "explore") return "Run explore now";
@@ -232,11 +235,21 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
       placement: "bottom",
     },
     {
-      id: "reports",
-      title: "Start from evidence",
-      text: "Upload a report screenshot to quickly populate stats and troops, saving manual entry. Recent runs is for returning to a previous simulation or comparing another setup.",
-      target: "[data-tour='simulate-start-actions']",
+      id: "report-counts",
+      title: "Show raw troop counts",
+      text: "Battle reports can show troop counts as either a percentage ratio or raw numbers. Tap the troop counts in the report to toggle between them, then take the screenshot with raw counts displayed. The simulator needs the actual troop numbers to know how many troops to use.",
+      target: "[data-tour='upload-report']",
+      fallbackTarget: "[data-tour='simulate-start-actions']",
       placement: "bottom",
+    },
+    {
+      id: "report-upload",
+      title: "Upload and describe the battle",
+      text: "Upload the report image, then choose the heroes used by each army and any city or pet buffs active in that battle. This lets the simulator normalise the imported stats, so it can update them correctly if you later swap heroes or enable or disable buffs.",
+      target: "[data-tour='upload-report']",
+      fallbackTarget: "[data-tour='simulate-start-actions']",
+      placement: "bottom",
+      action: "upload",
     },
     {
       id: "toggles",
@@ -276,8 +289,8 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
       target: "[data-tour='run-mode-command']",
       placement: "top",
       runMode: "simulate",
-      runAction: "simulate",
-      afterRunStepId: "simulate-summary",
+      action: "simulate",
+      afterActionStepId: "simulate-summary",
       closeRunOptions: true,
     },
     {
@@ -297,8 +310,8 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
       fallbackTarget: "[data-tour='results-panel']",
       placement: wideLayout ? "top" : "bottom",
       mobileTab: "results",
-      runAction: "example",
-      afterRunStepId: "simulate-trace",
+      action: "example",
+      afterActionStepId: "simulate-trace",
     },
     {
       id: "simulate-trace",
@@ -316,8 +329,8 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
       target: "[data-tour='run-mode-command']",
       placement: "top",
       runMode: "optimise",
-      runAction: "optimise",
-      afterRunStepId: "optimise-results",
+      action: "optimise",
+      afterActionStepId: "optimise-results",
       closeRunOptions: true,
     },
     {
@@ -345,8 +358,8 @@ function buildSimulateTourSteps(wideLayout: boolean): SimulateTourStep[] {
       target: "[data-tour='run-mode-command']",
       placement: "top",
       runMode: "explore",
-      runAction: "explore",
-      afterRunStepId: "explore-results",
+      action: "explore",
+      afterActionStepId: "explore-results",
       closeRunOptions: true,
     },
     {
@@ -378,9 +391,11 @@ export function useSimulateTour({
   hasSimulationResult,
   hasOptimizeResult,
   hasSurfaceResult,
+  reportUploadOpen,
   setMobileTab,
   setRunMode,
   setRunOptionsOpen,
+  openReportUpload,
   runSimulation,
   runOptimizeRatio,
   runSurfaceExplore,
@@ -538,17 +553,22 @@ export function useSimulateTour({
   }, [autoStart, initialRunId, loadingSavedRun, startSimulateTour, stepIndex]);
 
   async function runTourAction(step: SimulateTourStep, nextIndex: number) {
-    if (!step.runAction || actionLoading) return;
+    if (!step.action || actionLoading) return;
+    if (step.action === "upload") {
+      showStep(nextIndex);
+      openReportUpload();
+      return;
+    }
     setActionLoading(true);
     try {
-      if (step.runAction === "simulate") await runSimulation();
-      else if (step.runAction === "optimise") await runOptimizeRatio();
-      else if (step.runAction === "explore") await runSurfaceExplore();
+      if (step.action === "simulate") await runSimulation();
+      else if (step.action === "optimise") await runOptimizeRatio();
+      else if (step.action === "explore") await runSurfaceExplore();
       else await showRepresentativeBattleExample();
-      const afterRunIndex = step.afterRunStepId
-        ? steps.findIndex((candidate) => candidate.id === step.afterRunStepId)
+      const afterActionIndex = step.afterActionStepId
+        ? steps.findIndex((candidate) => candidate.id === step.afterActionStepId)
         : -1;
-      showStep(afterRunIndex >= 0 ? afterRunIndex : nextIndex, {
+      showStep(afterActionIndex >= 0 ? afterActionIndex : nextIndex, {
         allowResultStepWithoutState: true,
       });
     } finally {
@@ -559,11 +579,11 @@ export function useSimulateTour({
   const activeStep = stepIndex === null ? null : steps[stepIndex] ?? null;
   const activeIndex = stepIndex ?? 0;
   const isLast = stepIndex !== null && stepIndex >= steps.length - 1;
-  const actionLabel = runActionLabel(activeStep?.runAction);
+  const actionLabel = tourActionLabel(activeStep?.action);
 
   return {
     startSimulateTour,
-    simulateTour: activeStep ? (
+    simulateTour: activeStep && !reportUploadOpen ? (
       <div
         className="sim-tour-layer"
         role="dialog"
@@ -705,7 +725,7 @@ export function useSimulateTour({
                 className="sim-tour-primary"
                 disabled={actionLoading}
                 onClick={() => {
-                  if (activeStep.runAction) {
+                  if (activeStep.action) {
                     void runTourAction(activeStep, activeIndex + 1);
                   } else if (isLast) {
                     closeTour(true);
@@ -718,14 +738,14 @@ export function useSimulateTour({
                   ? "Running..."
                   : actionLabel ?? (isLast ? "Done" : "Next")}
               </button>
-              {activeStep.runAction && (
+              {activeStep.action && (
                 <button
                   type="button"
                   className="sim-tour-secondary"
                   disabled={actionLoading}
                   onClick={() => showStep(activeIndex + 1)}
                 >
-                  Skip run
+                  {activeStep.action === "upload" ? "Skip upload" : "Skip run"}
                 </button>
               )}
             </div>

@@ -2155,9 +2155,9 @@ body {
   margin-top: 1rem;
 }
 
-/* The game keeps Deploy reachable at the end of army setup. Keeping the web
-   command dock in normal flow avoids covering troop and setup controls while
-   still letting it hold at the viewport edge once the user reaches it. */
+/* On larger screens the game keeps Deploy reachable at the end of army setup.
+   The dock stays in normal flow there, then matches the fixed simulator dock
+   on mobile. */
 .deploy-client-workspace {
   padding-bottom: 2rem;
 }
@@ -2316,10 +2316,17 @@ body {
     display: none;
   }
 
+  .deploy-client-workspace {
+    padding-bottom: calc(var(--sim-action-dock-height) + 2rem + env(safe-area-inset-bottom, 0px));
+  }
+
   .deploy-workspace .sim-top-actions {
-    right: auto;
+    position: fixed;
+    right: 12px;
     bottom: 0;
-    left: auto;
+    left: 12px;
+    width: auto;
+    margin-top: 0;
     border-radius: 14px;
   }
 
