@@ -195,6 +195,8 @@ For an `attack` trigger, `source` and `target` are matched directly against each
 
 `turn` triggers reject `source` and `target`. They have no attack-shaped source or target; use concrete effect scopes. A broad turn-scoped effect can participate in every matching normal attack during its active window. For example, an `extra_skill_attack` applying to `self.any` with `turns.count: 1` can emit one extra job for each eligible troop attack that turn without matching the generated skill jobs.
 
+Ahmose's Viper Formation creates a one-turn Infantry `no_attack` effect on each scheduled turn, even without Infantry. Only using that effect to pause an attack creates its two `trigger_effects` for damage reduction. Those children start next turn and last two complete turns; an unused pause expires without granting protection. The configuration's `reason` records why activation and actual use are separate.
+
 `pre_battle` and `battle_start` never have an attack-shaped intent. Its `source` and `target` fields are compiled but never used for matching; use effect scopes, not trigger selectors, to scope a battle-start effect.
 
 ## Effects

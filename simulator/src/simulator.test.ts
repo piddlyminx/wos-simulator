@@ -559,6 +559,119 @@ test("runPrepared defaults to a 1500 round cap when no explicit maxRounds is pro
   assert.equal(result.rounds, 1500);
 });
 
+for (const scenario of [
+  { name: "expires without children when Infantry are absent", first: 1, infantry: 0, used: false },
+  { name: "still activates after Infantry die but creates no children", first: 2, infantry: 1, used: false },
+  { name: "preserves earned protection after Infantry die", first: 1, infantry: 1, used: true },
+  { name: "protects two complete following turns when used", first: 1, infantry: 1000, used: true }
+]) {
+  test(`turn-scheduled no_attack ${scenario.name}`, () => {
+    const result = runOnce({
+      maxRounds: 4,
+      attacker: {
+        troops: { infantry_t1: scenario.infantry, lancer_t1: 1000 },
+        heroes: { Protector: { skill_1: 1 } }
+      },
+      defender: { troops: { infantry_t1: 1000 }, heroes: {} }
+    }, minimalConfig({
+      Protector: {
+        name: "Protector",
+        troop_type: "infantry",
+        skills: {
+          Protection: {
+            trigger: { type: "turn", first: scenario.first, every: 4 },
+            effects: {
+              pause: {
+                type: "no_attack",
+                units: { applies_to: "self.infantry" },
+                duration: { turns: { count: 1 } },
+                trigger_effects: {
+                  protection: {
+                    type: "active.hero.damageTaken.down",
+                    value: 25,
+                    units: { applies_to: "self.any" },
+                    duration: { turns: { count: 2, delay: 1 } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }), { mode: "trace" });
+
+    assert.equal(result.rounds, 4);
+    if (scenario.infantry <= 1) assert.equal(result.trace!.rounds[1].roundStartTroops.attacker.infantry, 0);
+    assert.ok(result.remaining.attacker.lancer > 0);
+    assert.ok(result.remaining.defender.infantry > 0);
+    assert.equal(result.skillReport.attacker.find(entry => entry.skillId === "Protection")!.skillActivations, 1);
+    assert.equal(result.attackControlCounts.no_attack, Number(scenario.used));
+    const protectedRounds = result.attacks.filter(attack =>
+      attack.dealerSide === "defender" && attack.appliedEffects?.some(effect => effect.effectId === "protection")
+    ).map(attack => attack.round);
+    assert.deepEqual(protectedRounds, scenario.used ? [2, 3] : []);
+  });
+}
+
+test("turn-scheduled no_attack creates no protection when its attack target is already exhausted", () => {
+  const result = runOnce({
+    maxRounds: 2,
+    attacker: {
+      troops: { infantry_t1: 1000000, lancer_t1: 1000000 },
+      heroes: { Protector: { skill_1: 1 } }
+    },
+    defender: { troops: { infantry_t1: 1, marksman_t1: 1000000 }, heroes: {} }
+  }, minimalConfig({
+    Protector: {
+      name: "Protector",
+      skills: {
+        Protection: {
+          trigger: { type: "turn", first: 1, every: 4 },
+          effects: {
+            pause: {
+              type: "no_attack",
+              units: { applies_to: "self.lancer" },
+              duration: { turns: { count: 1 } },
+              trigger_effects: {
+                protection: {
+                  type: "active.hero.damageTaken.down",
+                  value: 25,
+                  units: { applies_to: "self.any" },
+                  duration: { turns: { count: 2, delay: 1 } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }), { mode: "trace" });
+
+  assert.equal(result.rounds, 2);
+  assert.equal(result.trace!.rounds[1].roundStartTroops.defender.infantry, 0);
+  assert.ok(result.trace!.rounds[1].roundStartTroops.attacker.lancer > 0);
+  assert.equal(result.skillReport.attacker.find(entry => entry.skillId === "Protection")!.skillActivations, 1);
+  assert.equal(result.attackControlCounts.no_attack, 0);
+  assert.equal(result.effectActivationCounts.attacker, 1);
+  assert.ok(result.attacks.every(attack => !attack.appliedEffects?.some(effect => effect.effectId === "protection")));
+});
+
+for (const fixture of [
+  { id: "ahmose_no_infantry_240l_vs_125i", attacker: { infantry: 0, lancer: 0, marksman: 0 }, defender: { infantry: 11, lancer: 0, marksman: 0 } },
+  { id: "ahmose_source_dies_001i_480l_vs_250i", attacker: { infantry: 0, lancer: 3, marksman: 0 }, defender: { infantry: 0, lancer: 0, marksman: 0 } }
+]) {
+  test(`Ahmose Viper schedules unused pauses without protection: ${fixture.id}`, () => {
+    const path = new URL(`../testcases/emulator_verified/${fixture.id}.json`, import.meta.url);
+    const [input] = JSON.parse(readFileSync(path, "utf8")) as BattleInput[];
+    const result = runOnce(input, loadSimulatorConfig());
+
+    assert.equal(result.randomness.deterministic, true);
+    assert.deepEqual(result.remaining, { attacker: fixture.attacker, defender: fixture.defender });
+    assert.equal(result.skillReport.attacker.find(entry => entry.skillId === "ViperFormation")!.skillActivations, Math.floor(result.rounds / 4));
+    assert.equal(result.attackControlCounts.no_attack, 0);
+  });
+}
+
 test("one turn-scoped extra attack effect serves every matching normal attack without recursion", () => {
   const result = runOnce(
     {

@@ -249,6 +249,8 @@ function validateTriggerDefinition(trigger: SkillFile["skills"][string]["trigger
   if (trigger.first !== undefined && trigger.every === undefined) {
     throw new Error(`trigger.first requires trigger.every at ${file}:${skillId}.trigger`);
   }
+  // Keep the round clock independent of troop survival and attack order. Source/target
+  // turn intents were deliberately removed; troop dependencies belong in effect scopes and actual uses.
   if (trigger.type === "turn" && (trigger.source !== undefined || trigger.target !== undefined)) {
     throw new Error(`turn trigger cannot define source or target at ${file}:${skillId}.trigger; scope the effect instead`);
   }

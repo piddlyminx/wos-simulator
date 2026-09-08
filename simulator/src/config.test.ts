@@ -38,14 +38,16 @@ test("loadSimulatorConfig rejects attack-relative selectors on direct turn effec
   assert.throws(() => loadSimulatorConfigFromDir(root), /turn effect cannot use attack\/use-relative selector/i);
 });
 
-test("loadSimulatorConfig rejects source and target on turn triggers", () => {
-  const root = writeConfigWithTroopEffect({
-    type: "active.hero.lethality.up",
-    value: 10,
-    units: { applies_to: "self.infantry" }
-  }, { type: "turn", source: "infantry" });
-  assert.throws(() => loadSimulatorConfigFromDir(root), /turn trigger cannot define source or target/i);
-});
+for (const field of ["source", "target"] as const) {
+  test(`loadSimulatorConfig rejects ${field} on turn triggers`, () => {
+    const root = writeConfigWithTroopEffect({
+      type: "active.hero.lethality.up",
+      value: 10,
+      units: { applies_to: "self.infantry" }
+    }, { type: "turn", [field]: "infantry" });
+    assert.throws(() => loadSimulatorConfigFromDir(root), /turn trigger cannot define source or target/i);
+  });
+}
 
 test("loadSimulatorConfig rejects legacy fields in simulator config", () => {
   const root = join(tmpdir(), `wos-simulator-config-${Date.now()}`);

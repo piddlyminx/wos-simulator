@@ -44,8 +44,7 @@
             "turns": {
               "count": 2
             }
-          },
-          "same_effect_stacking": "max"
+          }
         }
       }
     },

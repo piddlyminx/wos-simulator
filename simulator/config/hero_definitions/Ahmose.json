@@ -6,8 +6,8 @@
     "ViperFormation": {
       "description": "His infantry pauses the attack once every 4 times reducing damage taken by Lancers and Marksmen by X% and Infantry by X% for 2 turns",
       "trigger": {
-      "type": "turn",
-      "every": 4
+        "type": "turn",
+        "every": 4
       },
       "effects": {
         "ViperFormation/1": {
@@ -21,46 +21,51 @@
             "turns": {
               "count": 1
             }
-          }
-        },
-        "ViperFormation/2": {
-          "type": "active.hero.damageTaken.down",
-          "value": [
-            10,
-            15,
-            20,
-            25,
-            30
-          ],
-          "units": {
-            "applies_to": [
-              "lancer",
-              "marksman"
-            ]
           },
-          "duration": {
-            "turns": {
-              "count": 2
-            }
-          }
-        },
-        "ViperFormation/3": {
-          "type": "active.hero.damageTaken.down",
-          "value": [
-            10,
-            25,
-            40,
-            55,
-            70
-          ],
-          "units": {
-            "applies_to": [
-              "infantry"
-            ]
-          },
-          "duration": {
-            "turns": {
-              "count": 2
+          "reason": "Protection is earned by using the Infantry pause. Delay its child effects so protection covers two complete turns, independent of attack order.",
+          "trigger_effects": {
+            "ViperFormation/2": {
+              "type": "active.hero.damageTaken.down",
+              "value": [
+                10,
+                15,
+                20,
+                25,
+                30
+              ],
+              "units": {
+                "applies_to": [
+                  "lancer",
+                  "marksman"
+                ]
+              },
+              "duration": {
+                "turns": {
+                  "count": 2,
+                  "delay": 1
+                }
+              }
+            },
+            "ViperFormation/3": {
+              "type": "active.hero.damageTaken.down",
+              "value": [
+                10,
+                25,
+                40,
+                55,
+                70
+              ],
+              "units": {
+                "applies_to": [
+                  "infantry"
+                ]
+              },
+              "duration": {
+                "turns": {
+                  "count": 2,
+                  "delay": 1
+                }
+              }
             }
           }
         }

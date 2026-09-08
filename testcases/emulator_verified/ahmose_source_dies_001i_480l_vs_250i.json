@@ -1,0 +1,121 @@
+[
+  {
+    "test_id": "ahmose_source_dies_001i_480l_vs_250i",
+    "description": "Prospective deterministic Viper source-lifecycle discriminator. WIP fullAhmose110 with1 T6 Infantry and480 T6 Lancers attacks minxxx nohero250 T6 Infantry. The single ordinary Infantry must die before the first scheduled Viper activation and before3 normal attacks, checked in both frozen traces. Distinguishes initial Infantry presence from requiring surviving/attacking Infantry during battle; does not choose exact cadence. Preserve all24 fresh stats, full kits, report identity and images. Frozen package docs/mechanics-audit/probes/ahmose-no-infantry/source-death/.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 1,
+        "lancer_t6": 480
+      },
+      "stats": {
+        "inf": {
+          "attack": 336.6,
+          "defense": 337.5,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 250
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 3,
+        "defender": 0
+      }
+    ],
+    "metadata": {
+      "fixture_type": "single_hero_full_kit",
+      "skill_isolation": false,
+      "expected_stochastic": false,
+      "stats_snapshot": "all24 fresh report fields visually verified; exactly equal frozen v2 input",
+      "data_quality_notes": [
+        "Parser rejected total481 versus troop-slot OCR480 after missing the visibly recorded1 Infantry. Original images/error retained; fixture manually transcribed after checking all fields.",
+        "Mail ID and per-line attacker survivors were read from the same reopened10:33:04 report, not a second battle.",
+        "No actual Infantry death turn is reported; inferred timing stays in simulator predictions.",
+        "Displayed Viper activation dash is preserved as null."
+      ],
+      "observed_battle_outcomes": [
+        {
+          "displayed_time": "2026-09-07 10:33:04",
+          "mail_id": "2734692464128625",
+          "coordinates": {
+            "x": 787,
+            "y": 577
+          },
+          "winner": "attacker",
+          "survivors": {
+            "attacker": 3,
+            "defender": 0
+          },
+          "remaining_troops": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 3,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "skill_activations": {
+            "Ahmose": {
+              "ViperFormation": null,
+              "PrayerOfFlame": 1
+            }
+          },
+          "evidence_directory": "docs/mechanics-audit/probes/ahmose-no-infantry/source-death/capture-01"
+        }
+      ]
+    }
+  }
+]
