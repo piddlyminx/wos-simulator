@@ -1,0 +1,124 @@
+{
+  "status": "prospective_not_captured",
+  "exposure": "Both long Gwen captures were known before this design. No short-onset result exists or has been read.",
+  "objective": "Distinguish Blastmaster delivery on the fourth normal Marksman attack from first delivery on the fifth or sixth, with the existing full Gwen3/1/1 kit.",
+  "accounts": {
+    "attacker": "minxxx",
+    "defender": "WIP"
+  },
+  "formation": {
+    "attacker": {
+      "heroes": {
+        "Gwen": [
+          3,
+          1,
+          1
+        ]
+      },
+      "troops": {
+        "marksman_t6": 500
+      }
+    },
+    "defender": {
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 11100,
+        "lancer_t6": 8300,
+        "marksman_t6": 11100
+      }
+    }
+  },
+  "stats_source": "docs/mechanics-audit/probes/gwen-blastmaster/captured-input.json; same stats observed in both prior long Gwen captures. Verify the new report fields before interpreting.",
+  "primary_observables": [
+    "Defender total survivors",
+    "All three defender survivor counts, derived from report casualties when necessary"
+  ],
+  "secondary_observables": [
+    "Battle Details S2 and S3 activation counts and displayed kills; preserve zero or dash exactly",
+    "All four report stat fields for every troop type on both sides"
+  ],
+  "predictions": {
+    "first4_every5": {
+      "defender": 30449,
+      "per_line": [
+        11053,
+        8298,
+        11098
+      ],
+      "rounds": 5,
+      "s3_delivery_round": 4,
+      "s3_raw_kills": 5.781319184236381
+    },
+    "first5_every5": {
+      "defender": 30454,
+      "per_line": [
+        11054,
+        8300,
+        11100
+      ],
+      "rounds": 5,
+      "s3_delivery_round": 5,
+      "s3_raw_kills": 1.23015683433497
+    },
+    "unchanged": {
+      "defender": 30454,
+      "per_line": [
+        11054,
+        8300,
+        11100
+      ],
+      "rounds": 5,
+      "s3_delivery_round": 5
+    },
+    "phase6_every4": {
+      "defender": 30454,
+      "per_line": [
+        11054,
+        8300,
+        11100
+      ],
+      "rounds": 5,
+      "s3_delivery_round": null
+    }
+  },
+  "precision": {
+    "half_width": 0.05,
+    "live_stat_fields": 16,
+    "shared_vectors_per_variant_per_engine": 547,
+    "variants": 4,
+    "engines": 2,
+    "simulations": 4376,
+    "observed_endpoint_and_split_changes": 0,
+    "combined_endpoint_separation": 5,
+    "fixed_schedule_reason": "All defenders remain alive throughout. Both extreme all-stat corners finish in5 rounds; all active modifiers and job schedules are fixed for each variant. Source damage increases monotonically with its line count and offensive stats and decreases with target defensive stats, so these favorable/opposite corners bracket the independent displayed-stat box under this fixed-target model.512 mixed random vectors and32 single-field corners additionally agreed."
+  },
+  "interpretation": {
+    "early_model_two_unit_band": [
+      30447,
+      30451
+    ],
+    "later_models_two_unit_band": [
+      30452,
+      30456
+    ],
+    "outside_both": "Record a further model disagreement; do not tune magnitude or silently choose a new phase. Recheck exact inputs first.",
+    "supported_scope": "An endpoint near the early forecast supports fourth-attack delivery relative to the specified later-onset models, conditional on the remaining frozen full-kit mechanics.",
+    "not_resolved": [
+      "Recurrence interval: at most one S3 proc occurs.",
+      "Trigger phase versus equivalent delayed-delivery representation.",
+      "S1/S2 scope, damage grouping, or duration rules independently.",
+      "S3 source-line ownership beyond the sole Marksman formation.",
+      "Terminal activation/reporting semantics or conversion of raw skill damage to displayed kills.",
+      "The material residual in the two long captures."
+    ]
+  },
+  "reporting_caveat": "First4 S3 occurs before the terminal round here. First5 S3 is terminal and its1.23 raw kills need not change a ceiled per-line survivor count. S2 triggers at5 with0.333 raw kills in all variants. Do not choose a model using activation counts or displayed kills alone.",
+  "stock_check": "Defender commitment30500 is within parent-supplied approximate stocks13000I/10000L/13000M; attacker500 is below both prior800-Marksman probes. Actual ready troop counts remain a live readiness check for parent.",
+  "troop_cost": "Predicted attacker500 incapacitated plus46\u201351 defender casualties; game injury/loss split must be observed.",
+  "selection": "4771 stock-feasible formations scanned over stated bounded shapes/counts. This is the lowest-attacker-count qualifying5-round candidate in that grid and uses1100 fewer defenders than the qualifying4-round500-Marksman example; not a proof of global minimum.",
+  "artifacts_sha256": {
+    "input.json": "763037fb7ded72980dbc4d79fdd7dd37b0bb5b3171e7f22827c38076ee951fb0",
+    "config-snapshot.json": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+    "prediction.json": "f9d2cfd066429cab1e34d816ddd3087cf22b1be2294c51266dcffc76df60f3a4"
+  }
+}

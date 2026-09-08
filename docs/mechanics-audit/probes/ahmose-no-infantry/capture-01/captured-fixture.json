@@ -1,0 +1,101 @@
+[
+  {
+    "test_id": "ahmose_no_infantry_240l_vs_125i",
+    "description": "Prospective deterministic source-eligibility probe. WIP full Ahmose110 and240 T6 Lancers versus minxxx nohero125 T6 Infantry. No own Infantry; S2 is inapplicable and S3 actually locked. Current fixed-turn S1 protection predicts attacker15 versus defender11 if S1 needs Infantry normal attacks or an Infantry source. Preserve full fresh24 stats, report identity, troop formation, survivor counts and Battle Details. Frozen protocol and predictions in docs/mechanics-audit/probes/ahmose-no-infantry/.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 240
+      },
+      "stats": {
+        "inf": {
+          "attack": 336.6,
+          "defense": 337.5,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 125
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 11
+      }
+    ],
+    "metadata": {
+      "fixture_type": "single_hero_full_kit",
+      "skill_isolation": false,
+      "expected_stochastic": false,
+      "stats_snapshot": "all24 fresh fields visually verified",
+      "observed_battle_outcomes": [
+        {
+          "displayed_time": "2026-09-07 10:20:24",
+          "coordinates": {
+            "x": 787,
+            "y": 577
+          },
+          "winner": "defender",
+          "survivors": {
+            "attacker": 0,
+            "defender": 11
+          },
+          "skill_activations": {
+            "Ahmose": {
+              "ViperFormation": null,
+              "PrayerOfFlame": 1
+            }
+          },
+          "evidence_directory": "docs/mechanics-audit/probes/ahmose-no-infantry/capture-01"
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,231 @@
+{
+  "fixtureCount": 8,
+  "gameOutcomeCount": 25,
+  "sampleCount": 24000,
+  "tooltips": {
+    "source": "docs/mechanics-audit/hero-tooltips/minxxx-philly-2026-09-07/skill_2-panel.png",
+    "sourceSha256": "3aa554fdfdcd791d27a2c7200ccb17fb5d03218d79012f672fd40d3feaa9894c",
+    "visuallyVerified": true,
+    "currentLevel": 2,
+    "displayedChance": 25,
+    "displayedDamage": 140,
+    "preview": [
+      120,
+      140,
+      160,
+      180,
+      200
+    ]
+  },
+  "results": [
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+      "game": [
+        -2295
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": -2271.52,
+          "sigma_candidate": 9.79,
+          "p": 0.020449
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": -2311.69,
+          "sigma_candidate": 11.71,
+          "p": 0.183641
+        },
+        "normal_increment": {
+          "mu_candidate": -2273.98,
+          "sigma_candidate": 9.78,
+          "p": 0.029649
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": false
+    },
+    {
+      "key": "testcases/emulator_verified/philly_solo.json#0",
+      "game": [
+        2254,
+        2252
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": 2251.29,
+          "sigma_candidate": 84.91,
+          "p": 0.623119
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": 438.43,
+          "sigma_candidate": 586.35,
+          "p": 5e-05
+        },
+        "normal_increment": {
+          "mu_candidate": 2251.75,
+          "sigma_candidate": 84.62,
+          "p": 0.611919
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": false
+    },
+    {
+      "key": "testcases/emulator_verified/philly_solo.json#1",
+      "game": [
+        3606,
+        3637,
+        3616
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": 3622.54,
+          "sigma_candidate": 12.47,
+          "p": 0.723664
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": 3519.45,
+          "sigma_candidate": 35.6,
+          "p": 5e-05
+        },
+        "normal_increment": {
+          "mu_candidate": 3622.54,
+          "sigma_candidate": 12.47,
+          "p": 0.723664
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": true
+    },
+    {
+      "key": "testcases/emulator_verified/philly_bahiti_combo.json#0",
+      "game": [
+        -556
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": -558.38,
+          "sigma_candidate": 1.9,
+          "p": 0.446378
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": -564.02,
+          "sigma_candidate": 3.09,
+          "p": 0.015599
+        },
+        "normal_increment": {
+          "mu_candidate": -558.65,
+          "sigma_candidate": 1.84,
+          "p": 0.214039
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": false
+    },
+    {
+      "key": "testcases/emulator_verified/philly_bahiti_combo.json#1",
+      "game": [
+        -463,
+        -456,
+        -455,
+        -459
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": -454.2,
+          "sigma_candidate": 4.44,
+          "p": 0.177541
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": -477.45,
+          "sigma_candidate": 7.61,
+          "p": 5e-05
+        },
+        "normal_increment": {
+          "mu_candidate": -455.43,
+          "sigma_candidate": 4.5,
+          "p": 0.424529
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": false
+    },
+    {
+      "key": "testcases/emulator_verified/wos425_wip_philly_defense.json#0",
+      "game": [
+        769,
+        769,
+        769,
+        768,
+        768
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": 768.34,
+          "sigma_candidate": 0.61,
+          "p": 0.732113
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": 761.01,
+          "sigma_candidate": 1.89,
+          "p": 5e-05
+        },
+        "normal_increment": {
+          "mu_candidate": 768.34,
+          "sigma_candidate": 0.61,
+          "p": 0.732113
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": true
+    },
+    {
+      "key": "testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0",
+      "game": [
+        738,
+        738,
+        738,
+        738,
+        739
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": 737.78,
+          "sigma_candidate": 0.88,
+          "p": 0.386581
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": 723.21,
+          "sigma_candidate": 3.04,
+          "p": 0.00015
+        },
+        "normal_increment": {
+          "mu_candidate": 737.78,
+          "sigma_candidate": 0.88,
+          "p": 0.386581
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": true
+    },
+    {
+      "key": "testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0",
+      "game": [
+        24,
+        7,
+        32,
+        27
+      ],
+      "predictions": {
+        "current_extra_increment": {
+          "mu_candidate": 4.15,
+          "sigma_candidate": 29.76,
+          "p": 0.294235
+        },
+        "extra_full_tooltip": {
+          "mu_candidate": -271.1,
+          "sigma_candidate": 21,
+          "p": 5e-05
+        },
+        "normal_increment": {
+          "mu_candidate": 4.15,
+          "sigma_candidate": 29.76,
+          "p": 0.294235
+        }
+      },
+      "normalIncrementScoresIdenticalToCurrent": true
+    }
+  ]
+}

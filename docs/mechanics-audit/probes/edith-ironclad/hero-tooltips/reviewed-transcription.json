@@ -1,0 +1,51 @@
+{
+  "reviewed_at": "2026-09-07",
+  "source": "All three saved full skill screenshots visually reviewed after the battle; no upgrades were performed. All current Expedition skill labels areLv3.",
+  "skills": {
+    "StrategicBalance": {
+      "current_level": 3,
+      "current_values": {
+        "marksman_damage_taken_reduction_pct": 12,
+        "lancer_damage_up_pct": 12
+      },
+      "displayed_curve": [
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "recipient_text": "Marksmen protection and Lancer offense"
+    },
+    "Ironclad": {
+      "current_level": 3,
+      "current_value_pct": 12,
+      "displayed_curve": [
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "recipient_text": "reducing damage taken by12% for Infantry"
+    },
+    "SteelSentinel": {
+      "current_level": 3,
+      "current_value_pct": 15,
+      "displayed_curve": [
+        5,
+        10,
+        15,
+        20,
+        25
+      ],
+      "recipient_text": "increasing Health by15% for all troops"
+    }
+  },
+  "images_sha256": {
+    "skill_1.png": "e4ae3ed3b8e420b87e3f48a8c68792e4a1a9c97133868bbaae75e83a78383617",
+    "skill_2.png": "74f56a12d8d93c29e5a83b4e36bab60c629c7c61598dd10f5e13e48dec3c48dc",
+    "skill_3.png": "3f29573cd567429e6652722211a3920eb8dc67bd76b05a7cf2fdff6bb1451568"
+  },
+  "limitations": "Other curve levels are display evidence, not additional battle observations. Damage bucket identification comes from outcome comparisons and remains bounded."
+}

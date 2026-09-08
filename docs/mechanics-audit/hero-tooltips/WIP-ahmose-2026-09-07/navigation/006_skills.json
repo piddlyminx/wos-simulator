@@ -1,0 +1,8 @@
+{
+  "hero": "Wayne",
+  "skills": {
+    "skill_1": 3,
+    "skill_2": 3,
+    "skill_3": 3
+  }
+}

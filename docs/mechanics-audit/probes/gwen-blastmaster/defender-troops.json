@@ -1,0 +1,97 @@
+{
+  "evidence_kind": "captured_game_diagnostic_from_existing_battle",
+  "adds_independent_game_observation": false,
+  "capture_instance": "WIP",
+  "identification": {
+    "displayed_timestamp": "2026-09-07 05:05:04",
+    "coordinates": {
+      "x": 791,
+      "y": 577
+    },
+    "wip_mail_id": "2734692464121040",
+    "defender_name": "[BBQ]XxWIPxX",
+    "attacker_name": "[ARK]Piddlyminxxx",
+    "defender_initial": 1800,
+    "attacker_initial": 800,
+    "attacker_troops": {
+      "marksman_t6": 800
+    },
+    "defender_heroes": [],
+    "attacker_heroes": [
+      "Gwen"
+    ]
+  },
+  "transcription_method": "Manual reading of all three visible rows in defender-troops.png, after expanding WIP defender card with Skill Details collapsed.",
+  "rows": [
+    {
+      "troop_key": "infantry_t6",
+      "initial_troops": 600,
+      "kills_displayed": 33,
+      "losses": 0,
+      "injured_displayed": -126,
+      "lightly_injured": 233,
+      "survivors": 241
+    },
+    {
+      "troop_key": "lancer_t6",
+      "initial_troops": 600,
+      "kills_displayed": 113,
+      "losses": 0,
+      "injured_displayed": -7,
+      "lightly_injured": 12,
+      "survivors": 581
+    },
+    {
+      "troop_key": "marksman_t6",
+      "initial_troops": 600,
+      "kills_displayed": 134,
+      "losses": 0,
+      "injured_displayed": -9,
+      "lightly_injured": 16,
+      "survivors": 575
+    }
+  ],
+  "defender_survivors": {
+    "infantry": 241,
+    "lancer": 581,
+    "marksman": 575,
+    "total": 1397
+  },
+  "checks": {
+    "sum_survivors": 1397,
+    "sum_abs_injured": 142,
+    "sum_lightly_injured": 261,
+    "sum_losses": 0,
+    "matches_report_overview": true,
+    "each_initial_equals_survivors_plus_casualties": true
+  },
+  "artifacts": [
+    {
+      "path": "docs/mechanics-audit/probes/gwen-blastmaster/defender-troops.png",
+      "sha256": "6e5391c2bd8ccf6fce7f9e428e76801fc3f3650924f0d1e88f9b6b54342d6787"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/gwen-blastmaster/defender-troops-expanded-top.png",
+      "sha256": "5cf8f466b1541e7f199298fcbcbefdd9dabc99e37425aafbfea358641bcba350"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/gwen-blastmaster/defender-report-top.png",
+      "sha256": "6fa2b6f5808e204ead0f0bf42628fa0bd0fd37db002a226da84e9ec2b7084224"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/gwen-blastmaster/defender-report-bottom.png",
+      "sha256": "5674fbb3b7385213705611cf98c8fda57f6c285e44edfe3d70d70de3e438a02b"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/gwen-blastmaster/defender-report.json",
+      "sha256": "e8372ae20185ba19aa9196593379ab64a6d9fdb4f0fb85fca94fb80450f0e2ee"
+    }
+  ],
+  "notes": [
+    "Same battle as existing observation.json and report.json; this is not a second battle or testcase observation.",
+    "WIP report reverses left/right relative to minxxx: own left side is defender.",
+    "Injured values preserve their visible minus signs; abs(value) is the casualty count used in arithmetic checks.",
+    "Kills are transcribed exactly as displayed, without treating them as all enemy casualties.",
+    "Gwen skill levels 3/1/1 are part of the parent-established setup, not read from the troop breakdown screenshot."
+  ]
+}

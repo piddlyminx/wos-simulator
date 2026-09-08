@@ -1,0 +1,3679 @@
+{
+  "generatedAt": "2026-09-07T06:32:30.218Z",
+  "selection": {
+    "key": "hero:Mia:RitualDeciphering",
+    "hero": "Mia",
+    "id": "RitualDeciphering",
+    "slot": 3,
+    "coverage": {
+      "configured_fixture_count": 8,
+      "hydrated_fixture_count": 8,
+      "observation_record_count": 53,
+      "hydrated_levels": [
+        1,
+        2
+      ],
+      "levels_missing_active_fixture": [
+        3,
+        4,
+        5
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/emulator_verified/greg_mia_defender_current.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#1",
+        "testcases/emulator_verified/mia_solo.json#0",
+        "testcases/emulator_verified/mia_solo.json#1",
+        "testcases/emulator_verified/mia_solo.json#2",
+        "testcases/emulator_verified/mia_solo.json#3",
+        "testcases/emulator_verified/mia_solo.json#4"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "Grants a 40% chance of reducing damage taken by X% for all troops",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "RitualDeciphering/1": {
+          "type": "active.hero.damageTaken.down",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    }
+  },
+  "protocolSha256": "3fdd2747866302eda6e87935178ad3655074f16a767ff8f259c91123855d7e3d",
+  "repeat": 1000,
+  "seed": "mia-molly-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial-samples.json",
+    "sha256": "24b0331b1bac13a9c376164ec57a4ba0b500b21f5093a46c32a820bb4e04daf2"
+  },
+  "results": [
+    {
+      "key": "testcases/emulator_verified/greg_mia_defender_current.json#0",
+      "path": "testcases/emulator_verified/greg_mia_defender_current.json",
+      "fixtureSha256": "80fd75798e66f4bddb104a5d96cc54ebb1f8730ba53be890f323ed0921c425ef",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 237.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 316.9,
+              "defense": 325.7,
+              "lethality": 176,
+              "health": 176.5
+            },
+            "mark": {
+              "attack": 317,
+              "defense": 319.8,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 3345,
+          "defender": 0
+        },
+        {
+          "attacker": 3390,
+          "defender": 0
+        },
+        {
+          "attacker": 3320,
+          "defender": 0
+        },
+        {
+          "attacker": 3367,
+          "defender": 0
+        },
+        {
+          "attacker": 3363,
+          "defender": 0
+        },
+        {
+          "attacker": 3341,
+          "defender": 0
+        },
+        {
+          "attacker": 3360,
+          "defender": 0
+        },
+        {
+          "attacker": 3355,
+          "defender": 0
+        },
+        {
+          "attacker": 3339,
+          "defender": 0
+        },
+        {
+          "attacker": 3346,
+          "defender": 0
+        },
+        {
+          "attacker": 3344,
+          "defender": 0
+        },
+        {
+          "attacker": 3341,
+          "defender": 0
+        },
+        {
+          "attacker": 3373,
+          "defender": 0
+        },
+        {
+          "attacker": 3344,
+          "defender": 0
+        },
+        {
+          "attacker": 3329,
+          "defender": 0
+        },
+        {
+          "attacker": 3354,
+          "defender": 0
+        },
+        {
+          "attacker": 3351,
+          "defender": 0
+        },
+        {
+          "attacker": 3366,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "hero:Greg:SwordOfJustice",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:greg:0",
+          "effect_ids": [
+            "SwordOfJustice/1"
+          ]
+        },
+        {
+          "key": "hero:Greg:DeterrenceOfLaw",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:greg:0",
+          "effect_ids": [
+            "DeterrenceOfLaw/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 3969,
+        "defender": 600
+      },
+      "gameScores": [
+        3345,
+        3390,
+        3320,
+        3367,
+        3363,
+        3341,
+        3360,
+        3355,
+        3339,
+        3346,
+        3344,
+        3341,
+        3373,
+        3344,
+        3329,
+        3354,
+        3351,
+        3366
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering",
+              "SwordOfJustice",
+              "DeterrenceOfLaw"
+            ]
+          },
+          "n": 1000,
+          "mean": 3351.309,
+          "sd": 19.10970171665949,
+          "min": 3286,
+          "max": 3416,
+          "central95": [
+            3317,
+            3390
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3351.31,
+            "sigma_candidate": 19.11,
+            "n_reference": 18,
+            "mu_reference": 3351.56,
+            "sigma_reference": 16.59,
+            "bias_raw": -0.25,
+            "bias_pct": -0.01,
+            "sem": 0.6,
+            "stat_type": "cdf_support",
+            "stat": 0.1022,
+            "p": 0.79026,
+            "passes": true,
+            "cdf_rms": 0.006996,
+            "cdf_p": 0.854607,
+            "support_value": 3390,
+            "support_mass": 0.00333333,
+            "support_p": 0.553772,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 771,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 29,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 95,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 94,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 91,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 42,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 42,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 40,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.marksman": 39,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.marksman": 39,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.marksman": 36
+          },
+          "activationCounts": [
+            18,
+            10,
+            10,
+            7,
+            10,
+            9,
+            12,
+            13,
+            10,
+            11,
+            11,
+            14,
+            9,
+            14,
+            10,
+            8
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering",
+              "SwordOfJustice",
+              "DeterrenceOfLaw"
+            ]
+          },
+          "n": 1000,
+          "mean": 3378.066,
+          "sd": 15.023693133026763,
+          "min": 3329,
+          "max": 3431,
+          "central95": [
+            3348,
+            3407
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3378.07,
+            "sigma_candidate": 15.02,
+            "n_reference": 18,
+            "mu_reference": 3351.56,
+            "sigma_reference": 16.59,
+            "bias_raw": 26.51,
+            "bias_pct": 0.58,
+            "sem": 0.48,
+            "stat_type": "cdf_support",
+            "stat": 4,
+            "p": 0.0001,
+            "passes": false,
+            "cdf_rms": 0.050978,
+            "cdf_p": 0.00005,
+            "support_value": 3320,
+            "support_mass": 0,
+            "support_p": 0.036998,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 803,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            11,
+            9,
+            12,
+            7,
+            12,
+            10,
+            10,
+            15,
+            10,
+            11,
+            12,
+            11,
+            12,
+            6,
+            12,
+            8
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering",
+              "SwordOfJustice",
+              "DeterrenceOfLaw"
+            ]
+          },
+          "n": 1000,
+          "mean": 3374.931,
+          "sd": 15.472027101276103,
+          "min": 3325,
+          "max": 3428,
+          "central95": [
+            3345,
+            3404
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3374.93,
+            "sigma_candidate": 15.47,
+            "n_reference": 18,
+            "mu_reference": 3351.56,
+            "sigma_reference": 16.59,
+            "bias_raw": 23.38,
+            "bias_pct": 0.51,
+            "sem": 0.49,
+            "stat_type": "cdf_support",
+            "stat": 3.456,
+            "p": 0.00035,
+            "passes": false,
+            "cdf_rms": 0.045421,
+            "cdf_p": 0.00005,
+            "support_value": 3320,
+            "support_mass": 0,
+            "support_p": 0.043998,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 803,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 47,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 47,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 44
+          },
+          "activationCounts": [
+            11,
+            9,
+            12,
+            7,
+            12,
+            10,
+            10,
+            15,
+            10,
+            12,
+            12,
+            11,
+            12,
+            6,
+            12,
+            8
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_only_defender_current.json#0",
+      "path": "testcases/emulator_verified/mia_only_defender_current.json",
+      "fixtureSha256": "90d12726490af4e0841220be7c747b7b816b3bf0d4d1b2b6d69662bcbc91102a",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 324.9,
+              "defense": 325.7,
+              "lethality": 176,
+              "health": 176.5
+            },
+            "mark": {
+              "attack": 246.2,
+              "defense": 241,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 3560,
+          "defender": 0
+        },
+        {
+          "attacker": 3539,
+          "defender": 0
+        },
+        {
+          "attacker": 3556,
+          "defender": 0
+        },
+        {
+          "attacker": 3525,
+          "defender": 0
+        },
+        {
+          "attacker": 3551,
+          "defender": 0
+        },
+        {
+          "attacker": 3564,
+          "defender": 0
+        },
+        {
+          "attacker": 3546,
+          "defender": 0
+        },
+        {
+          "attacker": 3540,
+          "defender": 0
+        },
+        {
+          "attacker": 3528,
+          "defender": 0
+        },
+        {
+          "attacker": 3530,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 4069,
+        "defender": 600
+      },
+      "gameScores": [
+        3560,
+        3539,
+        3556,
+        3525,
+        3551,
+        3564,
+        3546,
+        3540,
+        3528,
+        3530
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 3544.451,
+          "sd": 16.716729585898307,
+          "min": 3490,
+          "max": 3588,
+          "central95": [
+            3514,
+            3577
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3544.45,
+            "sigma_candidate": 16.72,
+            "n_reference": 10,
+            "mu_reference": 3543.9,
+            "sigma_reference": 13.77,
+            "bias_raw": 0.55,
+            "bias_pct": 0.01,
+            "sem": 0.53,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 0.99995,
+            "passes": true,
+            "cdf_rms": 0.006462,
+            "cdf_p": 0.981901,
+            "support_value": 3560,
+            "support_mass": 0.01722222,
+            "support_p": 0.983351,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 959,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 96,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 95,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 93,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 51,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 51,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 48,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.marksman": 20,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.marksman": 20,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.marksman": 20
+          },
+          "activationCounts": [
+            10,
+            12,
+            14,
+            11,
+            10,
+            11,
+            10,
+            9,
+            14,
+            8,
+            6,
+            6,
+            9,
+            16,
+            6,
+            15
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 3564.358,
+          "sd": 11.327937065421747,
+          "min": 3531,
+          "max": 3615,
+          "central95": [
+            3543,
+            3586
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3564.36,
+            "sigma_candidate": 11.33,
+            "n_reference": 10,
+            "mu_reference": 3543.9,
+            "sigma_reference": 13.77,
+            "bias_raw": 20.46,
+            "bias_pct": 0.44,
+            "sem": 0.36,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.042583,
+            "cdf_p": 0.00005,
+            "support_value": 3525,
+            "support_mass": 0,
+            "support_p": 0.023349,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 993,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 26,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            11,
+            13,
+            18,
+            12,
+            10,
+            11,
+            10,
+            9,
+            11,
+            8,
+            6,
+            6,
+            15,
+            14,
+            6,
+            10
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 3560.919,
+          "sd": 11.581993851733017,
+          "min": 3526,
+          "max": 3611,
+          "central95": [
+            3539,
+            3584
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3560.92,
+            "sigma_candidate": 11.58,
+            "n_reference": 10,
+            "mu_reference": 3543.9,
+            "sigma_reference": 13.77,
+            "bias_raw": 17.02,
+            "bias_pct": 0.36,
+            "sem": 0.37,
+            "stat_type": "cdf_support",
+            "stat": 3.699,
+            "p": 0.0002,
+            "passes": false,
+            "cdf_rms": 0.035897,
+            "cdf_p": 0.00005,
+            "support_value": 3525,
+            "support_mass": 0.00022222,
+            "support_p": 0.028549,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 992,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 26,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 48,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 47,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 43
+          },
+          "activationCounts": [
+            11,
+            13,
+            18,
+            12,
+            10,
+            11,
+            10,
+            9,
+            11,
+            8,
+            6,
+            6,
+            15,
+            14,
+            6,
+            10
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_only_defender_current.json#1",
+      "path": "testcases/emulator_verified/mia_only_defender_current.json",
+      "fixtureSha256": "90d12726490af4e0841220be7c747b7b816b3bf0d4d1b2b6d69662bcbc91102a",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 324.9,
+              "defense": 325.7,
+              "lethality": 176,
+              "health": 176.5
+            },
+            "mark": {
+              "attack": 246.2,
+              "defense": 241,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 3461,
+          "defender": 0
+        },
+        {
+          "attacker": 3451,
+          "defender": 0
+        },
+        {
+          "attacker": 3442,
+          "defender": 0
+        },
+        {
+          "attacker": 3462,
+          "defender": 0
+        },
+        {
+          "attacker": 3436,
+          "defender": 0
+        },
+        {
+          "attacker": 3460,
+          "defender": 0
+        },
+        {
+          "attacker": 3431,
+          "defender": 0
+        },
+        {
+          "attacker": 3469,
+          "defender": 0
+        },
+        {
+          "attacker": 3460,
+          "defender": 0
+        },
+        {
+          "attacker": 3434,
+          "defender": 0
+        },
+        {
+          "attacker": 3449,
+          "defender": 0
+        },
+        {
+          "attacker": 3434,
+          "defender": 0
+        },
+        {
+          "attacker": 3445,
+          "defender": 0
+        },
+        {
+          "attacker": 3452,
+          "defender": 0
+        },
+        {
+          "attacker": 3422,
+          "defender": 0
+        },
+        {
+          "attacker": 3453,
+          "defender": 0
+        },
+        {
+          "attacker": 3479,
+          "defender": 0
+        },
+        {
+          "attacker": 3472,
+          "defender": 0
+        },
+        {
+          "attacker": 3438,
+          "defender": 0
+        },
+        {
+          "attacker": 3433,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 3969,
+        "defender": 600
+      },
+      "gameScores": [
+        3461,
+        3451,
+        3442,
+        3462,
+        3436,
+        3460,
+        3431,
+        3469,
+        3460,
+        3434,
+        3449,
+        3434,
+        3445,
+        3452,
+        3422,
+        3453,
+        3479,
+        3472,
+        3438,
+        3433
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 3444.551,
+          "sd": 15.873038535590862,
+          "min": 3405,
+          "max": 3489,
+          "central95": [
+            3415,
+            3476
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3444.55,
+            "sigma_candidate": 15.87,
+            "n_reference": 20,
+            "mu_reference": 3449.15,
+            "sigma_reference": 15.44,
+            "bias_raw": -4.6,
+            "bias_pct": -0.1,
+            "sem": 0.5,
+            "stat_type": "cdf_support",
+            "stat": 0.2526,
+            "p": 0.559022,
+            "passes": true,
+            "cdf_rms": 0.009955,
+            "cdf_p": 0.347933,
+            "support_value": 3479,
+            "support_mass": 0.00211111,
+            "support_p": 0.342933,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 858,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 28,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 108,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 108,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 107,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 47,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 47,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 47,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.marksman": 30,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.marksman": 30,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.marksman": 28
+          },
+          "activationCounts": [
+            14,
+            10,
+            11,
+            16,
+            10,
+            11,
+            17,
+            11,
+            6,
+            12,
+            14,
+            11,
+            11,
+            12,
+            9,
+            10
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 3463.858,
+          "sd": 10.681476018319339,
+          "min": 3431,
+          "max": 3496,
+          "central95": [
+            3444,
+            3485
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3463.86,
+            "sigma_candidate": 10.68,
+            "n_reference": 20,
+            "mu_reference": 3449.15,
+            "sigma_reference": 15.44,
+            "bias_raw": 14.71,
+            "bias_pct": 0.32,
+            "sem": 0.34,
+            "stat_type": "cdf_support",
+            "stat": 3.8239,
+            "p": 0.00015,
+            "passes": false,
+            "cdf_rms": 0.032218,
+            "cdf_p": 0.00005,
+            "support_value": 3422,
+            "support_mass": 0,
+            "support_p": 0.026549,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 892,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 26,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            14,
+            10,
+            11,
+            16,
+            10,
+            11,
+            16,
+            12,
+            6,
+            13,
+            14,
+            13,
+            13,
+            12,
+            9,
+            9
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 3460.786,
+          "sd": 10.822075647551314,
+          "min": 3430,
+          "max": 3493,
+          "central95": [
+            3440,
+            3483
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3460.79,
+            "sigma_candidate": 10.82,
+            "n_reference": 20,
+            "mu_reference": 3449.15,
+            "sigma_reference": 15.44,
+            "bias_raw": 11.64,
+            "bias_pct": 0.25,
+            "sem": 0.34,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.026443,
+            "cdf_p": 0.0001,
+            "support_value": 3422,
+            "support_mass": 0,
+            "support_p": 0.0039,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 887,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 26,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 50,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 50,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 50
+          },
+          "activationCounts": [
+            14,
+            10,
+            11,
+            16,
+            10,
+            11,
+            16,
+            12,
+            6,
+            13,
+            14,
+            13,
+            13,
+            12,
+            9,
+            9
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_solo.json#0",
+      "path": "testcases/emulator_verified/mia_solo.json",
+      "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 800,
+            "marksman_t6": 1000
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 67.4,
+              "lethality": 30.1,
+              "health": 33.1
+            },
+            "lanc": {
+              "attack": 76.3,
+              "defense": 68.7,
+              "lethality": 33.1,
+              "health": 27.8
+            },
+            "mark": {
+              "attack": 76.8,
+              "defense": 64.9,
+              "lethality": 32.6,
+              "health": 28.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 197.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 281.1,
+              "defense": 274.4,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 198.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 260
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 2800,
+        "defender": 600
+      },
+      "gameScores": [
+        -260
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": -266.826,
+          "sd": 9.172451027825554,
+          "min": -296,
+          "max": -235,
+          "central95": [
+            -290,
+            -251
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -266.83,
+            "sigma_candidate": 9.17,
+            "n_reference": 1,
+            "mu_reference": -260,
+            "sigma_reference": 0,
+            "bias_raw": -6.83,
+            "bias_pct": -0.2,
+            "sem": 0.29,
+            "stat_type": "cdf_support",
+            "stat": 0.2675,
+            "p": 0.540173,
+            "passes": true,
+            "cdf_rms": 0.03044,
+            "cdf_p": 0.473026,
+            "support_value": -260,
+            "support_mass": 0.068,
+            "support_p": 0.623069,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 62,
+              "marksman": 200
+            }
+          },
+          "firstRound": 48,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 175,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 190,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 190,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 37,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 94
+          },
+          "activationCounts": [
+            18,
+            22,
+            16,
+            20,
+            18,
+            14,
+            18,
+            19,
+            18,
+            16,
+            21,
+            15,
+            19,
+            18,
+            17,
+            15
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": -238.967,
+          "sd": 8.726514943725407,
+          "min": -259,
+          "max": -223,
+          "central95": [
+            -258,
+            -226
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -238.97,
+            "sigma_candidate": 8.73,
+            "n_reference": 1,
+            "mu_reference": -260,
+            "sigma_reference": 0,
+            "bias_raw": 21.03,
+            "bias_pct": 0.62,
+            "sem": 0.28,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.069597,
+            "cdf_p": 0.00005,
+            "support_value": -260,
+            "support_mass": 0.00422222,
+            "support_p": 0.022149,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 39,
+              "marksman": 200
+            }
+          },
+          "firstRound": 48,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            16,
+            15,
+            19,
+            21,
+            26,
+            17,
+            20,
+            21,
+            17,
+            14,
+            22,
+            18,
+            25,
+            19,
+            22,
+            14
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": -245.882,
+          "sd": 8.405636842662833,
+          "min": -268,
+          "max": -229,
+          "central95": [
+            -264,
+            -232
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -245.88,
+            "sigma_candidate": 8.41,
+            "n_reference": 1,
+            "mu_reference": -260,
+            "sigma_reference": 0,
+            "bias_raw": 14.12,
+            "bias_pct": 0.42,
+            "sem": 0.27,
+            "stat_type": "cdf_support",
+            "stat": 0.6678,
+            "p": 0.214889,
+            "passes": true,
+            "cdf_rms": 0.054888,
+            "cdf_p": 0.144593,
+            "support_value": -260,
+            "support_mass": 0.01722222,
+            "support_p": 0.180441,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 43,
+              "marksman": 200
+            }
+          },
+          "firstRound": 48,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 54,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 117
+          },
+          "activationCounts": [
+            16,
+            15,
+            19,
+            21,
+            26,
+            17,
+            20,
+            21,
+            17,
+            14,
+            22,
+            18,
+            25,
+            19,
+            19,
+            14
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_solo.json#1",
+      "path": "testcases/emulator_verified/mia_solo.json",
+      "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 700,
+            "lancer_t6": 560,
+            "marksman_t6": 700
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 67.4,
+              "lethality": 30.1,
+              "health": 33.1
+            },
+            "lanc": {
+              "attack": 76.3,
+              "defense": 68.7,
+              "lethality": 33.1,
+              "health": 27.8
+            },
+            "mark": {
+              "attack": 76.8,
+              "defense": 64.9,
+              "lethality": 32.6,
+              "health": 28.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 197.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 281.1,
+              "defense": 274.4,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 198.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 1293,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1960,
+        "defender": 300
+      },
+      "gameScores": [
+        1293
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 1299.593,
+          "sd": 9.316552428293905,
+          "min": 1271,
+          "max": 1332,
+          "central95": [
+            1286,
+            1322
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1299.59,
+            "sigma_candidate": 9.32,
+            "n_reference": 1,
+            "mu_reference": 1293,
+            "sigma_reference": 0,
+            "bias_raw": 6.59,
+            "bias_pct": 0.29,
+            "sem": 0.29,
+            "stat_type": "cdf_support",
+            "stat": 0.0979,
+            "p": 0.79826,
+            "passes": true,
+            "cdf_rms": 0.038126,
+            "cdf_p": 0.618569,
+            "support_value": 1293,
+            "support_mass": 0.04744444,
+            "support_p": 0.897455,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 47,
+              "lancer": 560,
+              "marksman": 700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 44,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 149,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 149,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 147,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 70,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 68,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 66,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.marksman": 50,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.marksman": 50,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.marksman": 50
+          },
+          "activationCounts": [
+            15,
+            19,
+            22,
+            18,
+            19,
+            10,
+            18,
+            19,
+            19,
+            19,
+            11,
+            12,
+            19,
+            16,
+            21,
+            12
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 1324.564,
+          "sd": 4.688697888314831,
+          "min": 1312,
+          "max": 1339,
+          "central95": [
+            1316,
+            1334
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1324.56,
+            "sigma_candidate": 4.69,
+            "n_reference": 1,
+            "mu_reference": 1293,
+            "sigma_reference": 0,
+            "bias_raw": 31.56,
+            "bias_pct": 1.4,
+            "sem": 0.15,
+            "stat_type": "cdf_support",
+            "stat": 4,
+            "p": 0.0001,
+            "passes": false,
+            "cdf_rms": 0.11307,
+            "cdf_p": 0.00005,
+            "support_value": 1293,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 60,
+              "lancer": 560,
+              "marksman": 700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 43,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            12,
+            20,
+            20,
+            13,
+            17,
+            10,
+            17,
+            17,
+            15,
+            13,
+            15,
+            12,
+            21,
+            15,
+            19,
+            12
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 1316.615,
+          "sd": 7.065032886667253,
+          "min": 1301,
+          "max": 1336,
+          "central95": [
+            1305,
+            1331
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1316.62,
+            "sigma_candidate": 7.07,
+            "n_reference": 1,
+            "mu_reference": 1293,
+            "sigma_reference": 0,
+            "bias_raw": 23.62,
+            "bias_pct": 1.05,
+            "sem": 0.22,
+            "stat_type": "cdf_support",
+            "stat": 3.699,
+            "p": 0.0002,
+            "passes": false,
+            "cdf_rms": 0.093103,
+            "cdf_p": 0.00005,
+            "support_value": 1293,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 49,
+              "lancer": 560,
+              "marksman": 700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 44,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 65,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 65,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 64
+          },
+          "activationCounts": [
+            15,
+            20,
+            19,
+            13,
+            19,
+            10,
+            17,
+            19,
+            15,
+            13,
+            14,
+            12,
+            24,
+            15,
+            19,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_solo.json#2",
+      "path": "testcases/emulator_verified/mia_solo.json",
+      "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 67.4,
+              "lethality": 30.1,
+              "health": 33.1
+            },
+            "lanc": {
+              "attack": 76.3,
+              "defense": 68.7,
+              "lethality": 33.1,
+              "health": 27.8
+            },
+            "mark": {
+              "attack": 76.8,
+              "defense": 64.9,
+              "lethality": 32.6,
+              "health": 28.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 197.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 281.1,
+              "defense": 274.4,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 198.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 180
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1260,
+        "defender": 300
+      },
+      "gameScores": [
+        -180
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": -181.665,
+          "sd": 3.7543135018096185,
+          "min": -195,
+          "max": -174,
+          "central95": [
+            -191,
+            -175
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -181.66,
+            "sigma_candidate": 3.75,
+            "n_reference": 1,
+            "mu_reference": -180,
+            "sigma_reference": 0,
+            "bias_raw": -1.66,
+            "bias_pct": -0.11,
+            "sem": 0.12,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0.019727,
+            "cdf_p": 1,
+            "support_value": -180,
+            "support_mass": 0.18288889,
+            "support_p": 0.99895,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 88,
+              "marksman": 100
+            }
+          },
+          "firstRound": 40,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 180,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 240,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 245,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 34
+          },
+          "activationCounts": [
+            16,
+            19,
+            18,
+            16,
+            13,
+            14,
+            16,
+            13,
+            17,
+            21,
+            17,
+            21,
+            26,
+            19,
+            21,
+            12
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": -170.333,
+          "sd": 4.164547328876762,
+          "min": -184,
+          "max": -167,
+          "central95": [
+            -180,
+            -167
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -170.33,
+            "sigma_candidate": 4.16,
+            "n_reference": 1,
+            "mu_reference": -180,
+            "sigma_reference": 0,
+            "bias_raw": 9.67,
+            "bias_pct": 0.62,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0.9743,
+            "p": 0.106095,
+            "passes": true,
+            "cdf_rms": 0.071422,
+            "cdf_p": 0.070096,
+            "support_value": -180,
+            "support_mass": 0.04011111,
+            "support_p": 0.130893,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 79,
+              "marksman": 100
+            }
+          },
+          "firstRound": 40,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            14,
+            16,
+            21,
+            17,
+            16,
+            12,
+            19,
+            14,
+            21,
+            23,
+            17,
+            22,
+            23,
+            16,
+            24,
+            12
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": -171.481,
+          "sd": 4.016935993362927,
+          "min": -185,
+          "max": -167,
+          "central95": [
+            -181,
+            -168
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -171.48,
+            "sigma_candidate": 4.02,
+            "n_reference": 1,
+            "mu_reference": -180,
+            "sigma_reference": 0,
+            "bias_raw": 8.52,
+            "bias_pct": 0.55,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0.7416,
+            "p": 0.181291,
+            "passes": true,
+            "cdf_rms": 0.066434,
+            "cdf_p": 0.138543,
+            "support_value": -180,
+            "support_mass": 0.04522222,
+            "support_p": 0.231438,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 79,
+              "marksman": 100
+            }
+          },
+          "firstRound": 40,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 10,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 56
+          },
+          "activationCounts": [
+            14,
+            16,
+            21,
+            17,
+            16,
+            12,
+            19,
+            14,
+            21,
+            23,
+            17,
+            22,
+            23,
+            16,
+            24,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_solo.json#3",
+      "path": "testcases/emulator_verified/mia_solo.json",
+      "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 67.4,
+              "lethality": 30.1,
+              "health": 33.1
+            },
+            "lanc": {
+              "attack": 76.3,
+              "defense": 68.7,
+              "lethality": 33.1,
+              "health": 27.8
+            },
+            "mark": {
+              "attack": 76.8,
+              "defense": 64.9,
+              "lethality": 32.6,
+              "health": 28.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 60,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 197.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 281.1,
+              "defense": 274.4,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 198.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 879,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1260,
+        "defender": 180
+      },
+      "gameScores": [
+        879
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 879.707,
+          "sd": 4.179068749807249,
+          "min": 865,
+          "max": 898,
+          "central95": [
+            873,
+            891
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 879.71,
+            "sigma_candidate": 4.18,
+            "n_reference": 1,
+            "mu_reference": 879,
+            "sigma_reference": 0,
+            "bias_raw": 0.71,
+            "bias_pct": 0.05,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0.024123,
+            "cdf_p": 1,
+            "support_value": 879,
+            "support_mass": 0.10866667,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 65,
+              "lancer": 360,
+              "marksman": 450
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 43,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 166,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 166,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 164,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 78,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 78,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 77,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.marksman": 51,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.marksman": 51,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.marksman": 46
+          },
+          "activationCounts": [
+            19,
+            17,
+            18,
+            21,
+            16,
+            24,
+            21,
+            15,
+            14,
+            13,
+            17,
+            20,
+            20,
+            19,
+            22,
+            19
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 891.459,
+          "sd": 3.0195093039161867,
+          "min": 882,
+          "max": 902,
+          "central95": [
+            886,
+            897
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 891.46,
+            "sigma_candidate": 3.02,
+            "n_reference": 1,
+            "mu_reference": 879,
+            "sigma_reference": 0,
+            "bias_raw": 12.46,
+            "bias_pct": 0.87,
+            "sem": 0.1,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.086439,
+            "cdf_p": 0.00005,
+            "support_value": 879,
+            "support_mass": 0,
+            "support_p": 0.00035,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 77,
+              "lancer": 360,
+              "marksman": 450
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 42,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            24,
+            17,
+            16,
+            22,
+            15,
+            25,
+            17,
+            22,
+            12,
+            13,
+            19,
+            22,
+            19,
+            20,
+            19,
+            17
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 890.385,
+          "sd": 2.994284679308364,
+          "min": 878,
+          "max": 900,
+          "central95": [
+            885,
+            896
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 890.38,
+            "sigma_candidate": 2.99,
+            "n_reference": 1,
+            "mu_reference": 879,
+            "sigma_reference": 0,
+            "bias_raw": 11.38,
+            "bias_pct": 0.79,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 3.1549,
+            "p": 0.0007,
+            "passes": false,
+            "cdf_rms": 0.08211,
+            "cdf_p": 0.0012,
+            "support_value": 879,
+            "support_mass": 0.00022222,
+            "support_p": 0.0013,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 76,
+              "lancer": 360,
+              "marksman": 450
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 42,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 86,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 86,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 84
+          },
+          "activationCounts": [
+            24,
+            17,
+            16,
+            22,
+            15,
+            25,
+            17,
+            22,
+            12,
+            13,
+            19,
+            22,
+            19,
+            20,
+            19,
+            17
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/mia_solo.json#4",
+      "path": "testcases/emulator_verified/mia_solo.json",
+      "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 450,
+            "lancer_t6": 360,
+            "marksman_t6": 450
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 67.4,
+              "lethality": 30.1,
+              "health": 33.1
+            },
+            "lanc": {
+              "attack": 76.3,
+              "defense": 68.7,
+              "lethality": 33.1,
+              "health": 27.8
+            },
+            "mark": {
+              "attack": 76.8,
+              "defense": 64.9,
+              "lethality": 32.6,
+              "health": 28.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 50,
+            "lancer_t6": 50,
+            "marksman_t6": 50
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 197.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 281.1,
+              "defense": 274.4,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 198.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 967,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:BadLuckStreak",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "BadLuckStreak/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:LuckyCharm",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "LuckyCharm/1"
+          ]
+        },
+        {
+          "key": "hero:Mia:RitualDeciphering",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:mia:0",
+          "effect_ids": [
+            "RitualDeciphering/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1260,
+        "defender": 150
+      },
+      "gameScores": [
+        967
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 972.045,
+          "sd": 4.59914417333562,
+          "min": 963,
+          "max": 985,
+          "central95": [
+            965,
+            982
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 972.04,
+            "sigma_candidate": 4.6,
+            "n_reference": 1,
+            "mu_reference": 967,
+            "sigma_reference": 0,
+            "bias_raw": 5.04,
+            "bias_pct": 0.36,
+            "sem": 0.15,
+            "stat_type": "cdf_support",
+            "stat": 0.3231,
+            "p": 0.475176,
+            "passes": true,
+            "cdf_rms": 0.043554,
+            "cdf_p": 0.40798,
+            "support_value": 967,
+            "support_mass": 0.07155556,
+            "support_p": 0.59982,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 156,
+              "lancer": 360,
+              "marksman": 450
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 39,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.infantry": 138,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.infantry": 137,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.infantry": 134,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 70,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 70,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 70,
+            "RitualDeciphering/1:normal:attacker.infantry->defender.marksman": 32,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.marksman": 32,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.marksman": 32
+          },
+          "activationCounts": [
+            19,
+            18,
+            15,
+            17,
+            22,
+            9,
+            15,
+            13,
+            10,
+            18,
+            18,
+            11,
+            15,
+            11,
+            12,
+            17
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 979.651,
+          "sd": 2.1637654403564444,
+          "min": 974,
+          "max": 986,
+          "central95": [
+            976,
+            984
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 979.65,
+            "sigma_candidate": 2.16,
+            "n_reference": 1,
+            "mu_reference": 967,
+            "sigma_reference": 0,
+            "bias_raw": 12.65,
+            "bias_pct": 0.9,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.090041,
+            "cdf_p": 0.00005,
+            "support_value": 967,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 164,
+              "lancer": 360,
+              "marksman": 450
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 38,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            17,
+            18,
+            15,
+            13,
+            15,
+            9,
+            13,
+            13,
+            10,
+            18,
+            15,
+            15,
+            17,
+            11,
+            12,
+            17
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "BadLuckStreak",
+              "LuckyCharm",
+              "RitualDeciphering"
+            ]
+          },
+          "n": 1000,
+          "mean": 978.816,
+          "sd": 2.2165416885448024,
+          "min": 972,
+          "max": 986,
+          "central95": [
+            975,
+            983
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 978.82,
+            "sigma_candidate": 2.22,
+            "n_reference": 1,
+            "mu_reference": 967,
+            "sigma_reference": 0,
+            "bias_raw": 11.82,
+            "bias_pct": 0.84,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.086573,
+            "cdf_p": 0.00005,
+            "support_value": 967,
+            "support_mass": 0,
+            "support_p": 0.00015,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 163,
+              "lancer": 360,
+              "marksman": 450
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 38,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "RitualDeciphering/1:normal:attacker.infantry->defender.lancer": 64,
+            "RitualDeciphering/1:normal:attacker.lancer->defender.lancer": 64,
+            "RitualDeciphering/1:normal:attacker.marksman->defender.lancer": 62
+          },
+          "activationCounts": [
+            17,
+            18,
+            15,
+            13,
+            15,
+            9,
+            13,
+            13,
+            10,
+            18,
+            15,
+            15,
+            17,
+            11,
+            12,
+            17
+          ]
+        }
+      }
+    }
+  ]
+}

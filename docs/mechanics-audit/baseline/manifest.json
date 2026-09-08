@@ -1,0 +1,401 @@
+{
+  "base_git_commit": "68e2532c701a4a96caa1e8e8e1c178e7a5701f88",
+  "cwd": "/home/paul/projects_wsl/wos/simulator",
+  "commands": [
+    "npx --yes tsx scripts/run_testcases.ts --human --repeat 1000 --seed mechanics-audit-2026-09-07-baseline --workers 12 --save-snapshot --output-dir tmp/mechanics-audit-2026-09-07/baseline",
+    "npx --yes tsx scripts/run_testcases.ts --human --repeat 10000 --seed mechanics-audit-2026-09-07-confirmation --workers 2 --matching 3-testcases_mixed-heroes-not-verified.json --save-snapshot --output-dir tmp/mechanics-audit-2026-09-07/baseline/confirmation-mixed",
+    "npx --yes tsx scripts/run_testcases.ts --human --repeat 10000 --seed mechanics-audit-2026-09-07-confirmation --workers 2 --matching s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json --save-snapshot --output-dir tmp/mechanics-audit-2026-09-07/baseline/confirmation-s8-11548",
+    "npx --yes tsx scripts/run_testcases.ts --human --repeat 10000 --seed mechanics-audit-2026-09-07-confirmation --workers 2 --matching s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json --save-snapshot --output-dir tmp/mechanics-audit-2026-09-07/baseline/confirmation-s8-25000",
+    "npx --yes tsx scripts/run_testcases.ts --human --repeat 10000 --seed mechanics-audit-2026-09-07-confirmation --workers 2 --matching hector_renee_wayne.json --save-snapshot --output-dir tmp/mechanics-audit-2026-09-07/baseline/confirmation-hector-renee-wayne"
+  ],
+  "raw_replay_command": "npx --yes tsx tmp/mechanics-audit-2026-09-07/baseline/preserve-raw-samples.ts",
+  "raw_replay_validation": "All 289 raw simulator sample means reproduce original unadjusted metrics within their serialization precision.",
+  "source_config_hashes": [
+    {
+      "path": "scripts/run_testcases.ts",
+      "sha256": "b897e188ce15e770b55e637b1465960d9f716c1b65aaca4b9e7e7611baa6842d"
+    },
+    {
+      "path": "scripts/testcase_worker.ts",
+      "sha256": "468ba9524a0f94aff32c74681e51e30e7da926a0b6f1f20059841c02e91396dc"
+    },
+    {
+      "path": "scripts/workerThreadBatchWorker.ts",
+      "sha256": "ad78ff88df7c3cc7f885ad32081f93aab570847d54dce2b91683ab85e66d1ffe"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Ahmose.json",
+      "sha256": "2f24d854addfe6295c05001c9d76566719b32e62c279cf4a2510800fe15b523e"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Alonso.json",
+      "sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Bahiti.json",
+      "sha256": "8c011dfae7c57979ca77241daad7aa11f2c38562c1a72e471c947992694f21cd"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Blanchette.json",
+      "sha256": "c618eed6d640fc36db6361b85948e4146886ce178392541b28b148468ce6f724"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Bradley.json",
+      "sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Edith.json",
+      "sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Flint.json",
+      "sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Fred.json",
+      "sha256": "87861c00c37f921b3e6879848ea320e81c7d83e29df460eb5fb24520903fde21"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Freya.json",
+      "sha256": "91181e5af8713996fe2f6940900f0cc1c261041c41ec4198b277d8396297e70d"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Gatot.json",
+      "sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Gordon.json",
+      "sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Greg.json",
+      "sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Gregory.json",
+      "sha256": "61ea326fa2b4438f4006075af34b8c1cbf10b4a4be1150e476925735ed2b3c16"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Gwen.json",
+      "sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Hector.json",
+      "sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Hendrik.json",
+      "sha256": "a46f49505d26ffd53f50d61992df44fa6ec323d58e281a261f265db0749c5e16"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Jasser.json",
+      "sha256": "6c9a7b443fb3be5f8603589aa4dc48aa3d52d57b0de8b04334e4bc401be4f674"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Jeronimo.json",
+      "sha256": "61c047d97a89883ec6339d45d2f9c952db6dc9e2b2577a76745b5d3240f30d2b"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Jessie.json",
+      "sha256": "dbe8105a8e483774bdb8d94ba7f6d2abe0703aaff9739c44aa9f656bac9699ce"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Ling.json",
+      "sha256": "9e6fea7158f274e41993a30bdc3249bd18f8b566160aaeac428a8e6649181755"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Logan.json",
+      "sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Lumak.json",
+      "sha256": "80c77f1631649f803dc5408a744c6b7ac6aa765450b730cd9ab1296caf87472e"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Lynn.json",
+      "sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Magnus.json",
+      "sha256": "ec00642fb156e331fcc17a9e3bd4215bcac83f942547b5f428f3519513b587b0"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Mia.json",
+      "sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Molly.json",
+      "sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Natalia.json",
+      "sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Norah.json",
+      "sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Patrick.json",
+      "sha256": "a580a36f0f78f5c153ad23ac2da06de7d94193fe8f41b268e3bb1f312ca3e345"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Philly.json",
+      "sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Reina.json",
+      "sha256": "51858f136442f7382605d25112240e6832ec75403a76c00ee14046e529ddcd52"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Renee.json",
+      "sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Seo-yoon.json",
+      "sha256": "2da25c9d7ed1fb6a04f20d39bbf76383c6ab99bcaf6f5ee10979463380be61b0"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Sergey.json",
+      "sha256": "7981e1a1b52b9ef06522c81af54d7dd840ad33ed5b1ebf2c8bf066e04b9b6f05"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Sonya.json",
+      "sha256": "f4c29c3680cbaa4e92d88b263f6f361d526e501681ce9bc4b7d1578fd3a0661b"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Wayne.json",
+      "sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708"
+    },
+    {
+      "path": "simulator/config/hero_definitions/WuMing.json",
+      "sha256": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Xura.json",
+      "sha256": "a986b1072852b76722630fa3a9a676b44fe77b5f944b96912755e89a9c31d40c"
+    },
+    {
+      "path": "simulator/config/hero_definitions/Zinman.json",
+      "sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62"
+    },
+    {
+      "path": "simulator/config/hero_generation_stats.json",
+      "sha256": "d23c83ae9b34fe03baaa71a4fb41437fb4900c545a9b54a324af4f67788b28fd"
+    },
+    {
+      "path": "simulator/config/troop_skills.json",
+      "sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba"
+    },
+    {
+      "path": "simulator/src/battleInputBuilder.ts",
+      "sha256": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5"
+    },
+    {
+      "path": "simulator/src/config-default.ts",
+      "sha256": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8"
+    },
+    {
+      "path": "simulator/src/config-node.ts",
+      "sha256": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f"
+    },
+    {
+      "path": "simulator/src/config-webpack.ts",
+      "sha256": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662"
+    },
+    {
+      "path": "simulator/src/config.test.ts",
+      "sha256": "6ac29775bc1d9994aee439b97edfcc593f4a60c1fadee137011e25afd2cf619b"
+    },
+    {
+      "path": "simulator/src/config.ts",
+      "sha256": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8"
+    },
+    {
+      "path": "simulator/src/damage.test.ts",
+      "sha256": "4fb4723406cd0fc198f943c74f858ed0663c8a58feabe80e1aa7b7ffd2c651a7"
+    },
+    {
+      "path": "simulator/src/damage.ts",
+      "sha256": "c6f800d3a680e1bcb3bf2516c7f6ae369981da2671731417892b93b40e649ef0"
+    },
+    {
+      "path": "simulator/src/damageBuckets.test.ts",
+      "sha256": "83969a9f4f1191476f6b02adce7945739120bb25e0cd5f99945a4a6c17660e69"
+    },
+    {
+      "path": "simulator/src/damageBuckets.ts",
+      "sha256": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7"
+    },
+    {
+      "path": "simulator/src/effectIndex.test.ts",
+      "sha256": "9ac795d49a5f79ebb3f04478629a40dca28c8661f4a3ea1ee8d270aa10ba7e24"
+    },
+    {
+      "path": "simulator/src/effectIndex.ts",
+      "sha256": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff"
+    },
+    {
+      "path": "simulator/src/effects.test.ts",
+      "sha256": "87b4fbd38b642a7ca1244e01426de7738968be89458b4254c911ce0e02e94c5a"
+    },
+    {
+      "path": "simulator/src/effects.ts",
+      "sha256": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69"
+    },
+    {
+      "path": "simulator/src/extraAttacks.ts",
+      "sha256": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87"
+    },
+    {
+      "path": "simulator/src/fighterResolution.ts",
+      "sha256": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774"
+    },
+    {
+      "path": "simulator/src/normalize.test.ts",
+      "sha256": "a08e82fccfe708944ac801a5c2a94a53173dbc1a43a979eb2ed579c15c8a36af"
+    },
+    {
+      "path": "simulator/src/normalize.ts",
+      "sha256": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92"
+    },
+    {
+      "path": "simulator/src/prepare.ts",
+      "sha256": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa"
+    },
+    {
+      "path": "simulator/src/recorder.test.ts",
+      "sha256": "8210425483038a4ca494333776ab7b52451790133e176b9be5f2018d9f7404b3"
+    },
+    {
+      "path": "simulator/src/recorder.ts",
+      "sha256": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917"
+    },
+    {
+      "path": "simulator/src/runtime.ts",
+      "sha256": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394"
+    },
+    {
+      "path": "simulator/src/runtimeSkills.ts",
+      "sha256": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42"
+    },
+    {
+      "path": "simulator/src/simulator.test.ts",
+      "sha256": "7d52810eaeceadcb65d4068205b6c7b5bc4d2a3d091bc84f0e1cb27cec340126"
+    },
+    {
+      "path": "simulator/src/simulator.ts",
+      "sha256": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743"
+    },
+    {
+      "path": "simulator/src/staticDamageProfile.ts",
+      "sha256": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21"
+    },
+    {
+      "path": "simulator/src/tooling/calibration.ts",
+      "sha256": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a"
+    },
+    {
+      "path": "simulator/src/tooling/exportGatotTestcases.test.ts",
+      "sha256": "d49338e4288789c3428acf5dd25eedd05b69d5f95024d0513e5408a4ddde1c92"
+    },
+    {
+      "path": "simulator/src/tooling/exportGatotTestcases.ts",
+      "sha256": "9532d34f2821aa3fe0c7bb91a0faf7af3f1012f6320751d523dadf52938895ef"
+    },
+    {
+      "path": "simulator/src/tooling/gatotEvidence.test.ts",
+      "sha256": "cbd4a58e4cad47e6f97c5333052136d03beb0a657faf19609f39137acbbd7636"
+    },
+    {
+      "path": "simulator/src/tooling/gatotEvidence.ts",
+      "sha256": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba"
+    },
+    {
+      "path": "simulator/src/tooling/histogram.test.ts",
+      "sha256": "2fd1565aed5ff8b1fb939081e99b64bebe473aa649cbf22871c1b547dae35861"
+    },
+    {
+      "path": "simulator/src/tooling/histogram.ts",
+      "sha256": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef"
+    },
+    {
+      "path": "simulator/src/tooling/index.ts",
+      "sha256": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54"
+    },
+    {
+      "path": "simulator/src/tooling/parityMetrics.ts",
+      "sha256": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579"
+    },
+    {
+      "path": "simulator/src/tooling/testcases.test.ts",
+      "sha256": "f374ec9ca0d835fb2ba5c1b71a205643bf8beca8f0fa5d19d24156970860b767"
+    },
+    {
+      "path": "simulator/src/tooling/testcases.ts",
+      "sha256": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682"
+    },
+    {
+      "path": "simulator/src/troopStats.test.ts",
+      "sha256": "239cf327ea8cadececda80222f47a8bec4f603f62d075284e41bad76a8c84060"
+    },
+    {
+      "path": "simulator/src/troopStats.ts",
+      "sha256": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c"
+    },
+    {
+      "path": "simulator/src/types.ts",
+      "sha256": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17"
+    },
+    {
+      "path": "simulator/src/webpack-context.d.ts",
+      "sha256": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281"
+    },
+    {
+      "path": "simulator/src/workerPool.test.ts",
+      "sha256": "94606260c99b0adc214c716d2e5aee37326aebfba0e45d8691e07fc39e793d76"
+    },
+    {
+      "path": "simulator/src/workerPool.ts",
+      "sha256": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4"
+    }
+  ],
+  "excluded_disabled_stale_files": [
+    "testcases/emulator_verified/jasser_solo.json.disabled",
+    "testcases/emulator_verified/ling_xue_solo.json.disabled",
+    "testcases/emulator_verified/lumak_bokan_solo.json.disabled",
+    "testcases/emulator_verified/reina_logan_combo_v2.json.stale_troops",
+    "testcases/gatot_verified/s1-10000-vs-2000.json.disabled",
+    "testcases/gatot_verified/s1-20000-vs-4000.json.disabled",
+    "testcases/gatot_verified/s1-5100-vs-1000.json.disabled",
+    "testcases/gatot_verified/s6-historical-t11-fc10-vs-10000-t6-marksmen.json.disabled",
+    "testcases/gatot_verified/s6-historical-t11-fc10-vs-3000-t6-marksmen.json.disabled"
+  ],
+  "snapshot_artifacts": [
+    {
+      "path": "tmp/mechanics-audit-2026-09-07/baseline/simulator_parity_2026-09-07T03-52-45.746Z.json",
+      "sha256": "377d9eae68c79537955fc5680c644ca53868c95870258f6edfb046e0f30334d0"
+    },
+    {
+      "path": "tmp/mechanics-audit-2026-09-07/baseline/confirmation-hector-renee-wayne/simulator_parity_2026-09-07T03-54-52.669Z.json",
+      "sha256": "1dc382f83233a5d8ca84e3413e9e8ea5747ee1586455014de6184ff0e7e38460"
+    },
+    {
+      "path": "tmp/mechanics-audit-2026-09-07/baseline/confirmation-mixed/simulator_parity_2026-09-07T03-55-11.977Z.json",
+      "sha256": "c6cb5591ff345e81faa6e77b2384e9325396db6e45b0ae1f7edc5fb6ebdaa7e3"
+    },
+    {
+      "path": "tmp/mechanics-audit-2026-09-07/baseline/confirmation-s8-11548/simulator_parity_2026-09-07T03-56-41.299Z.json",
+      "sha256": "ce1b74ce6372a96f4bc875a351be77c5eaf9e707aa2a702b85747a07ed417c9a"
+    },
+    {
+      "path": "tmp/mechanics-audit-2026-09-07/baseline/confirmation-s8-25000/simulator_parity_2026-09-07T03-54-59.237Z.json",
+      "sha256": "34a505489ae77cccead3d830f35fc0f112018c5f7a8b33a4eed3fd54498d3d62"
+    }
+  ],
+  "raw_samples": {
+    "path": "docs/mechanics-audit/baseline/raw-samples.json",
+    "sha256": "8b01fe641d2f13986041cb73651ae0ea9d2938c11b92492f2aaadca02e7a2665"
+  },
+  "flint_historical_rationale_commit": "c955f1ec80707691c1a12527c589727a3e5777ef"
+}

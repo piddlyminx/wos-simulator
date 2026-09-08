@@ -1,0 +1,57 @@
+{
+  "displayed_time": "2026-09-07 10:20:24",
+  "coordinates": {
+    "x": 787,
+    "y": 577
+  },
+  "winner": "defender",
+  "survivors": {
+    "attacker": 0,
+    "defender": 11
+  },
+  "full_kit": {
+    "Ahmose": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    }
+  },
+  "troops": {
+    "attacker": {
+      "lancer_t6": 240
+    },
+    "defender": {
+      "infantry_t6": 125
+    }
+  },
+  "all_24_stats_visually_verified": true,
+  "used_stat_blocks_match_frozen_prediction": true,
+  "skill_activations": {
+    "Ahmose": {
+      "ViperFormation": null,
+      "PrayerOfFlame": 1
+    }
+  },
+  "skill_activation_note": "Viper displays a dash, preserved as null rather than an invented numerical0. Supports absence of observed activation alongside exact zero-contribution endpoint.",
+  "displayed_skill_kills": {
+    "ViperFormation": null,
+    "PrayerOfFlame": null
+  },
+  "game_rounds": null,
+  "casualties": {
+    "attacker": {
+      "losses": 0,
+      "injured": 84,
+      "lightly_injured": 156,
+      "survivors": 0
+    },
+    "defender": {
+      "losses": 0,
+      "injured": 40,
+      "lightly_injured": 74,
+      "survivors": 11
+    }
+  },
+  "evidence_directory": "docs/mechanics-audit/probes/ahmose-no-infantry/capture-01",
+  "per_class_survivors_note": "All defenders are Infantry in the verified formation; no separate troop-details table claimed."
+}

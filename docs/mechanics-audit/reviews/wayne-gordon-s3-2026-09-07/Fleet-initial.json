@@ -1,0 +1,6167 @@
+{
+  "generatedAt": "2026-09-07T07:25:59.211Z",
+  "selection": {
+    "key": "hero:Wayne:Fleet",
+    "hero": "Wayne",
+    "id": "Fleet",
+    "slot": 3,
+    "coverage": {
+      "configured_fixture_count": 10,
+      "hydrated_fixture_count": 10,
+      "observation_record_count": 38,
+      "hydrated_levels": [
+        2,
+        3
+      ],
+      "levels_missing_active_fixture": [
+        1,
+        4,
+        5
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/emulator_verified/hector_renee_wayne.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#1",
+        "testcases/emulator_verified/wayne_reina_combo.json#0",
+        "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+        "testcases/emulator_verified/wayne_s1_solo.json#0",
+        "testcases/emulator_verified/wayne_s2_solo.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "Wayne ensures no misstep goes unpunished with an eagle's eye for weakness, granting all troops' attacks a X% Crit Rate.",
+      "trigger": {
+        "type": "attack",
+        "probability": [
+          5,
+          10,
+          15,
+          20,
+          25
+        ]
+      },
+      "effects": {
+        "Fleet/1": {
+          "type": "extra_skill_attack",
+          "value": [
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "protocolSha256": "6a23156b47627e67b8825a54c18c06e8a926cbece4dfbab3dd14b5805b78e244",
+  "repeat": 1000,
+  "seed": "wayne-gordon-s3-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial-samples.json",
+    "sha256": "8cd166ea82cf0e9a570a11b61e664d8112312b1123c75963c933f5e04b20130e"
+  },
+  "results": [
+    {
+      "key": "testcases/emulator_verified/hector_renee_wayne.json#0",
+      "path": "testcases/emulator_verified/hector_renee_wayne.json",
+      "fixtureSha256": "799c40b24f3de8774a71d2e9c66070a759d8c552f694931ecb40b20ce1671f36",
+      "entry": {
+        "test_id": "hector_renee_wayne",
+        "description": "WIP attacks minxxx with attacker heroes Hector 2/3/2, Renee 3/3/3, and Wayne 2/2/2. Attacker fields 1700 infantry_t6 only; defender has no heroes and fields 300 infantry_t6 only. Game report result: attacker 1597 survivors, defender wiped.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hector": {
+              "skill_1": 2,
+              "skill_2": 3,
+              "skill_3": 2
+            },
+            "Renee": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 1700,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 215,
+              "defense": 217.6,
+              "lethality": 50.6,
+              "health": 66.6
+            },
+            "lanc": {
+              "attack": 335.1,
+              "defense": 327.4,
+              "lethality": 69.8,
+              "health": 53.2
+            },
+            "mark": {
+              "attack": 255.1,
+              "defense": 241.6,
+              "lethality": 78.3,
+              "health": 56.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 202.2,
+              "lethality": 118.6,
+              "health": 131.7
+            },
+            "lanc": {
+              "attack": 188.9,
+              "defense": 187.2,
+              "lethality": 120.8,
+              "health": 121.6
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 203.2,
+              "lethality": 123.5,
+              "health": 124.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 1597,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hector": {
+              "skill_1": 2,
+              "skill_2": 3,
+              "skill_3": 2
+            },
+            "Renee": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 1700,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 215,
+              "defense": 217.6,
+              "lethality": 50.6,
+              "health": 66.6
+            },
+            "lanc": {
+              "attack": 335.1,
+              "defense": 327.4,
+              "lethality": 69.8,
+              "health": 53.2
+            },
+            "mark": {
+              "attack": 255.1,
+              "defense": 241.6,
+              "lethality": 78.3,
+              "health": 56.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 202.2,
+              "lethality": 118.6,
+              "health": 131.7
+            },
+            "lanc": {
+              "attack": 188.9,
+              "defense": 187.2,
+              "lethality": 120.8,
+              "health": 121.6
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 203.2,
+              "lethality": 123.5,
+              "health": 124.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 1597,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Hector:SurvivalInstincts",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:hector:0",
+          "effect_ids": [
+            "SurvivalInstincts/1"
+          ]
+        },
+        {
+          "key": "hero:Hector:Rampant",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:hector:0",
+          "effect_ids": [
+            "Rampant/1",
+            "Rampant/2"
+          ]
+        },
+        {
+          "key": "hero:Hector:Blitz",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:hector:0",
+          "effect_ids": [
+            "Blitz/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:NightmareTrace",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "NightmareTrace/mark",
+            "NightmareTrace/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:Dreamcatcher",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "Dreamcatcher/mark",
+            "Dreamcatcher/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:Dreamslice",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "Dreamslice/mark",
+            "Dreamslice/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1700,
+        "defender": 300
+      },
+      "gameScores": [
+        1597
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SurvivalInstincts",
+              "Blitz",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1588.068,
+          "sd": 2.913393873794591,
+          "min": 1579,
+          "max": 1599,
+          "central95": [
+            1582,
+            1594
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1588.07,
+            "sigma_candidate": 2.91,
+            "n_reference": 1,
+            "mu_reference": 1597,
+            "sigma_reference": 0,
+            "bias_raw": -8.93,
+            "bias_pct": -0.45,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 2.3011,
+            "p": 0.005,
+            "passes": true,
+            "cdf_rms": 0.060423,
+            "cdf_p": 0.0046,
+            "support_value": 1597,
+            "support_mass": 0.00255556,
+            "support_p": 0.00795,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1587,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 140,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 221
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 221
+          },
+          "activationCounts": [
+            13,
+            14,
+            9,
+            16,
+            9,
+            17,
+            11,
+            13,
+            8,
+            15,
+            17,
+            21,
+            6,
+            16,
+            17,
+            20
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SurvivalInstincts",
+              "Blitz",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1578.584,
+          "sd": 1.8011630098878377,
+          "min": 1573,
+          "max": 1585,
+          "central95": [
+            1575,
+            1582
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1578.58,
+            "sigma_candidate": 1.8,
+            "n_reference": 1,
+            "mu_reference": 1597,
+            "sigma_reference": 0,
+            "bias_raw": -18.42,
+            "bias_pct": -0.92,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.093299,
+            "cdf_p": 0.00005,
+            "support_value": 1597,
+            "support_mass": 0,
+            "support_p": 0.0001,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1579,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 151,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            14,
+            15,
+            10,
+            17,
+            9,
+            19,
+            11,
+            13,
+            9,
+            18,
+            17,
+            24,
+            7,
+            19,
+            19,
+            22
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SurvivalInstincts",
+              "Blitz",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1578.56,
+          "sd": 1.7508470708389916,
+          "min": 1572,
+          "max": 1584,
+          "central95": [
+            1575,
+            1582
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1578.56,
+            "sigma_candidate": 1.75,
+            "n_reference": 1,
+            "mu_reference": 1597,
+            "sigma_reference": 0,
+            "bias_raw": -18.44,
+            "bias_pct": -0.92,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.093429,
+            "cdf_p": 0.00005,
+            "support_value": 1597,
+            "support_mass": 0,
+            "support_p": 0.00035,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1577,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 155,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SurvivalInstincts",
+              "Blitz",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1588.068,
+          "sd": 2.913393873794591,
+          "min": 1579,
+          "max": 1599,
+          "central95": [
+            1582,
+            1594
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1588.07,
+            "sigma_candidate": 2.91,
+            "n_reference": 1,
+            "mu_reference": 1597,
+            "sigma_reference": 0,
+            "bias_raw": -8.93,
+            "bias_pct": -0.45,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 2.3011,
+            "p": 0.005,
+            "passes": true,
+            "cdf_rms": 0.060423,
+            "cdf_p": 0.0046,
+            "support_value": 1597,
+            "support_mass": 0.00255556,
+            "support_p": 0.00795,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1587,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 140,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 221
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 221
+          },
+          "activationCounts": [
+            13,
+            14,
+            9,
+            16,
+            9,
+            17,
+            11,
+            13,
+            8,
+            15,
+            17,
+            21,
+            6,
+            16,
+            17,
+            20
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+      "path": "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json",
+      "fixtureSha256": "829abf834ea7122083aa05a85868838422b7d08fd13b35c25b911dccc4f875ef",
+      "entry": {
+        "test_id": "renee_wayne_mixed_510_vs_888",
+        "description": "XxWIPxX attacks Piddilyminxxx with Renee 3/3/3 and Wayne 3/3/3. Attacker fields 170 infantry_t6, 150 lancer_t6, and 190 marksman_t6; defender has no heroes and fields 888 infantry_t6. Game report result: attacker 427 survivors, defender wiped. Skill details report Renee triggers 20/1/1 with no listed kills, and Wayne triggers 30/20/19 with 23/-/33 listed kills.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Renee": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Wayne": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 170,
+            "lancer_t6": 150,
+            "marksman_t6": 190
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 460.1,
+              "defense": 457.9,
+              "lethality": 243.2,
+              "health": 228.3
+            },
+            "mark": {
+              "attack": 379.7,
+              "defense": 376.5,
+              "lethality": 236.5,
+              "health": 212.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 888,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 278.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 284,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 427,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Renee": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Wayne": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 170,
+            "lancer_t6": 150,
+            "marksman_t6": 190
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 460.1,
+              "defense": 457.9,
+              "lethality": 243.2,
+              "health": 228.3
+            },
+            "mark": {
+              "attack": 379.7,
+              "defense": 376.5,
+              "lethality": 236.5,
+              "health": 212.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 888,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 278.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 284,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 427,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Renee:NightmareTrace",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "NightmareTrace/mark",
+            "NightmareTrace/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:Dreamcatcher",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "Dreamcatcher/mark",
+            "Dreamcatcher/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:Dreamslice",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "Dreamslice/mark",
+            "Dreamslice/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 510,
+        "defender": 888
+      },
+      "gameScores": [
+        427
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 423.381,
+          "sd": 1.826245923793994,
+          "min": 418,
+          "max": 430,
+          "central95": [
+            420,
+            427
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 423.38,
+            "sigma_candidate": 1.83,
+            "n_reference": 1,
+            "mu_reference": 427,
+            "sigma_reference": 0,
+            "bias_raw": -3.62,
+            "bias_pct": -0.26,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 1.1054,
+            "p": 0.078446,
+            "passes": true,
+            "cdf_rms": 0.043361,
+            "cdf_p": 0.057647,
+            "support_value": 427,
+            "support_mass": 0.04666667,
+            "support_p": 0.110194,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 80,
+              "lancer": 150,
+              "marksman": 190
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 44,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 103,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 98,
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 115
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 103,
+            "Fleet/1:skill:attacker.lancer->defender.infantry": 98,
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 115
+          },
+          "activationCounts": [
+            15,
+            22,
+            18,
+            18,
+            16,
+            12,
+            18,
+            17,
+            21,
+            23,
+            21,
+            27,
+            21,
+            26,
+            24,
+            18
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 416,
+          "sd": 0,
+          "min": 416,
+          "max": 416,
+          "central95": [
+            416,
+            416
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 416,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 427,
+            "sigma_reference": 0,
+            "bias_raw": -11,
+            "bias_pct": -0.79,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.088672,
+            "cdf_p": 0.00005,
+            "support_value": 427,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 76,
+              "lancer": 150,
+              "marksman": 190
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 46,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            16,
+            24,
+            19,
+            20,
+            18,
+            12,
+            20,
+            17,
+            22,
+            27,
+            23,
+            27,
+            23,
+            27,
+            26,
+            21
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 420.221,
+          "sd": 1.5114375420252897,
+          "min": 417,
+          "max": 425,
+          "central95": [
+            418,
+            423
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 420.22,
+            "sigma_candidate": 1.51,
+            "n_reference": 1,
+            "mu_reference": 427,
+            "sigma_reference": 0,
+            "bias_raw": -6.78,
+            "bias_pct": -0.48,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.065157,
+            "cdf_p": 0.00005,
+            "support_value": 427,
+            "support_mass": 0.00044444,
+            "support_p": 0.00055,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 78,
+              "lancer": 150,
+              "marksman": 190
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 45,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 102
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 102
+          },
+          "activationCounts": [
+            3,
+            8,
+            8,
+            7,
+            5,
+            3,
+            6,
+            3,
+            7,
+            6,
+            6,
+            11,
+            6,
+            10,
+            5,
+            8
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 425.817,
+          "sd": 2.4591784316227723,
+          "min": 419,
+          "max": 434,
+          "central95": [
+            421,
+            431
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 425.82,
+            "sigma_candidate": 2.46,
+            "n_reference": 1,
+            "mu_reference": 427,
+            "sigma_reference": 0,
+            "bias_raw": -1.18,
+            "bias_pct": -0.08,
+            "sem": 0.08,
+            "stat_type": "cdf_support",
+            "stat": 0.1095,
+            "p": 0.777061,
+            "passes": true,
+            "cdf_rms": 0.023676,
+            "cdf_p": 0.686466,
+            "support_value": 427,
+            "support_mass": 0.13366667,
+            "support_p": 0.686516,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 81,
+              "lancer": 150,
+              "marksman": 190
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 44,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 100,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 95,
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 110
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 100,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 95,
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 110
+          },
+          "activationCounts": [
+            15,
+            22,
+            18,
+            18,
+            15,
+            12,
+            16,
+            16,
+            20,
+            22,
+            21,
+            26,
+            21,
+            25,
+            24,
+            15
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_mixed_solo.json#0",
+      "path": "testcases/emulator_verified/wayne_mixed_solo.json",
+      "fixtureSha256": "afd30d8f1c326430ce7ecfd87ad6e8020202b49c850329a0516853c151ae029e",
+      "entry": {
+        "test_id": "wayne_mixed_solo",
+        "description": "WOS-111: Wayne mixed troops test. WIP 400/400/400 t6 attacking with Wayne (S1=2, S2=2, S3=3), minxxx 200/200/200 t6 defending no heroes. Tests all Wayne skills with mixed troop composition. S3 Fleet at level 3 = 15% crit chance for all troops. S2 Roundabout Hit fires every 2 attacks for marksmen vs lancers/marksmen. S1 Thunder Strike fires every 4 turns.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 74.9,
+              "defense": 77.4,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 79.9,
+              "defense": 74.7,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 256.2,
+              "defense": 242.6,
+              "lethality": 86,
+              "health": 59.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 215,
+              "defense": 202.3,
+              "lethality": 118.7,
+              "health": 131.8
+            },
+            "lanc": {
+              "attack": 189,
+              "defense": 187.3,
+              "lethality": 120.9,
+              "health": 121.7
+            },
+            "mark": {
+              "attack": 206,
+              "defense": 203.3,
+              "lethality": 123.6,
+              "health": 124.6
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 110,
+            "defender": 0
+          },
+          {
+            "attacker": 216,
+            "defender": 0
+          },
+          {
+            "attacker": 308,
+            "defender": 0
+          },
+          {
+            "attacker": 314,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 74.9,
+              "defense": 77.4,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 79.9,
+              "defense": 74.7,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 256.2,
+              "defense": 242.6,
+              "lethality": 86,
+              "health": 59.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 215,
+              "defense": 202.3,
+              "lethality": 118.7,
+              "health": 131.8
+            },
+            "lanc": {
+              "attack": 189,
+              "defense": 187.3,
+              "lethality": 120.9,
+              "health": 121.7
+            },
+            "mark": {
+              "attack": 206,
+              "defense": 203.3,
+              "lethality": 123.6,
+              "health": 124.6
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 110,
+          "defender": 0
+        },
+        {
+          "attacker": 216,
+          "defender": 0
+        },
+        {
+          "attacker": 308,
+          "defender": 0
+        },
+        {
+          "attacker": 314,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 600
+      },
+      "gameScores": [
+        110,
+        216,
+        308,
+        314
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 219.663,
+          "sd": 79.58737073544127,
+          "min": -30,
+          "max": 429,
+          "central95": [
+            60,
+            373
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 219.66,
+            "sigma_candidate": 79.59,
+            "n_reference": 4,
+            "mu_reference": 237,
+            "sigma_reference": 95.81,
+            "bias_raw": -17.34,
+            "bias_pct": -0.96,
+            "sem": 2.52,
+            "stat_type": "cdf_support",
+            "stat": 0.0666,
+            "p": 0.857807,
+            "passes": true,
+            "cdf_rms": 0.059303,
+            "cdf_p": 0.667667,
+            "support_value": 308,
+            "support_mass": 0.00211111,
+            "support_p": 0.668417,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 275
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 31,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 43,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 53,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 36,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 19,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 15,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 9
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 43,
+            "Fleet/1:skill:attacker.lancer->defender.infantry": 53,
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 36,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 19,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 15,
+            "Fleet/1:skill:attacker.lancer->defender.lancer": 9
+          },
+          "activationCounts": [
+            11,
+            13,
+            11,
+            15,
+            14,
+            11,
+            12,
+            10,
+            10,
+            10,
+            10,
+            8,
+            14,
+            10,
+            14,
+            11
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": -30,
+          "sd": 0,
+          "min": -30,
+          "max": -30,
+          "central95": [
+            -30,
+            -30
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -30,
+            "sigma_candidate": 0,
+            "n_reference": 4,
+            "mu_reference": 237,
+            "sigma_reference": 95.81,
+            "bias_raw": -267,
+            "bias_pct": -14.83,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.351881,
+            "cdf_p": 0.00005,
+            "support_value": 110,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 30
+            }
+          },
+          "firstRound": 41,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            12,
+            16,
+            13,
+            17,
+            17,
+            12,
+            13,
+            11,
+            13,
+            10,
+            11,
+            9,
+            14,
+            11,
+            16,
+            13
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 182.791,
+          "sd": 89.68932765103372,
+          "min": -35,
+          "max": 420,
+          "central95": [
+            5,
+            321
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 182.79,
+            "sigma_candidate": 89.69,
+            "n_reference": 4,
+            "mu_reference": 237,
+            "sigma_reference": 95.81,
+            "bias_raw": -54.21,
+            "bias_pct": -3.01,
+            "sem": 2.84,
+            "stat_type": "cdf_support",
+            "stat": 0.3538,
+            "p": 0.442778,
+            "passes": true,
+            "cdf_rms": 0.089005,
+            "cdf_p": 0.292235,
+            "support_value": 308,
+            "support_mass": 0.00133333,
+            "support_p": 0.432328,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 108
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 36,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 45,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 13,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 17
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 45,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 13,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 17
+          },
+          "activationCounts": [
+            4,
+            5,
+            5,
+            5,
+            6,
+            5,
+            5,
+            5,
+            4,
+            6,
+            5,
+            3,
+            5,
+            5,
+            6,
+            5
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 219.663,
+          "sd": 79.58737073544127,
+          "min": -30,
+          "max": 429,
+          "central95": [
+            60,
+            373
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 219.66,
+            "sigma_candidate": 79.59,
+            "n_reference": 4,
+            "mu_reference": 237,
+            "sigma_reference": 95.81,
+            "bias_raw": -17.34,
+            "bias_pct": -0.96,
+            "sem": 2.52,
+            "stat_type": "cdf_support",
+            "stat": 0.0666,
+            "p": 0.857807,
+            "passes": true,
+            "cdf_rms": 0.059303,
+            "cdf_p": 0.667667,
+            "support_value": 308,
+            "support_mass": 0.00211111,
+            "support_p": 0.668417,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 275
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 31,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 43,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 53,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 36,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 19,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 15,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 9
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 43,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 53,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 36,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 19,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 15,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 9
+          },
+          "activationCounts": [
+            11,
+            13,
+            11,
+            15,
+            14,
+            11,
+            12,
+            10,
+            10,
+            10,
+            10,
+            8,
+            14,
+            10,
+            14,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_mixed_solo.json#1",
+      "path": "testcases/emulator_verified/wayne_mixed_solo.json",
+      "fixtureSha256": "afd30d8f1c326430ce7ecfd87ad6e8020202b49c850329a0516853c151ae029e",
+      "entry": {
+        "test_id": "wayne_mixed_solo",
+        "description": "WOS-113: Wayne mixed troops test (second OCR capture). Same battle as entry 0 with minor OCR stat noise. Merged entries from multiple captures. Removed 1 corrupt entry (defender inf lethality OCR'd as 7.0).",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 75,
+              "defense": 79.1,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 80,
+              "defense": 76.3,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 256.2,
+              "defense": 244.3,
+              "lethality": 90.4,
+              "health": 59.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 211,
+              "defense": 202.8,
+              "lethality": 118.7,
+              "health": 131.8
+            },
+            "lanc": {
+              "attack": 185,
+              "defense": 187.8,
+              "lethality": 120.9,
+              "health": 121.7
+            },
+            "mark": {
+              "attack": 202,
+              "defense": 203.8,
+              "lethality": 123.6,
+              "health": 124.6
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 394,
+            "defender": 0
+          },
+          {
+            "attacker": 352,
+            "defender": 0
+          },
+          {
+            "attacker": 382,
+            "defender": 0
+          },
+          {
+            "attacker": 284,
+            "defender": 0
+          },
+          {
+            "attacker": 322,
+            "defender": 0
+          },
+          {
+            "attacker": 328,
+            "defender": 0
+          },
+          {
+            "attacker": 364,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 75,
+              "defense": 79.1,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 80,
+              "defense": 76.3,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 256.2,
+              "defense": 244.3,
+              "lethality": 90.4,
+              "health": 59.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 211,
+              "defense": 202.8,
+              "lethality": 118.7,
+              "health": 131.8
+            },
+            "lanc": {
+              "attack": 185,
+              "defense": 187.8,
+              "lethality": 120.9,
+              "health": 121.7
+            },
+            "mark": {
+              "attack": 202,
+              "defense": 203.8,
+              "lethality": 123.6,
+              "health": 124.6
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 394,
+          "defender": 0
+        },
+        {
+          "attacker": 352,
+          "defender": 0
+        },
+        {
+          "attacker": 382,
+          "defender": 0
+        },
+        {
+          "attacker": 284,
+          "defender": 0
+        },
+        {
+          "attacker": 322,
+          "defender": 0
+        },
+        {
+          "attacker": 328,
+          "defender": 0
+        },
+        {
+          "attacker": 364,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 600
+      },
+      "gameScores": [
+        394,
+        352,
+        382,
+        284,
+        322,
+        328,
+        364
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 308.903,
+          "sd": 47.86674018372055,
+          "min": 158,
+          "max": 517,
+          "central95": [
+            210,
+            400
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 308.9,
+            "sigma_candidate": 47.87,
+            "n_reference": 7,
+            "mu_reference": 346.57,
+            "sigma_reference": 38.08,
+            "bias_raw": -37.67,
+            "bias_pct": -2.09,
+            "sem": 1.51,
+            "stat_type": "cdf_support",
+            "stat": 1.4547,
+            "p": 0.035098,
+            "passes": true,
+            "cdf_rms": 0.077695,
+            "cdf_p": 0.034948,
+            "support_value": 328,
+            "support_mass": 0.00433333,
+            "support_p": 0.930203,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 351
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 29,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 45,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 49,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 38,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 14,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 13,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 6
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 45,
+            "Fleet/1:skill:attacker.lancer->defender.infantry": 49,
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 38,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 14,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 13,
+            "Fleet/1:skill:attacker.lancer->defender.lancer": 6
+          },
+          "activationCounts": [
+            14,
+            10,
+            15,
+            6,
+            13,
+            8,
+            15,
+            9,
+            13,
+            7,
+            10,
+            8,
+            11,
+            8,
+            9,
+            15
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 161,
+          "sd": 0,
+          "min": 161,
+          "max": 161,
+          "central95": [
+            161,
+            161
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 161,
+            "sigma_candidate": 0,
+            "n_reference": 7,
+            "mu_reference": 346.57,
+            "sigma_reference": 38.08,
+            "bias_raw": -185.57,
+            "bias_pct": -10.31,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.303354,
+            "cdf_p": 0.00005,
+            "support_value": 394,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 161
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 36,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            15,
+            10,
+            15,
+            7,
+            14,
+            10,
+            15,
+            9,
+            14,
+            7,
+            13,
+            8,
+            13,
+            9,
+            9,
+            15
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 281.831,
+          "sd": 49.49335340256332,
+          "min": 161,
+          "max": 437,
+          "central95": [
+            205,
+            382
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 281.83,
+            "sigma_candidate": 49.49,
+            "n_reference": 7,
+            "mu_reference": 346.57,
+            "sigma_reference": 38.08,
+            "bias_raw": -64.74,
+            "bias_pct": -3.6,
+            "sem": 1.57,
+            "stat_type": "cdf_support",
+            "stat": 3.398,
+            "p": 0.0004,
+            "passes": false,
+            "cdf_rms": 0.121486,
+            "cdf_p": 0.0006,
+            "support_value": 394,
+            "support_mass": 0.00244444,
+            "support_p": 0.60142,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 330
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 30,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 43,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 18,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 13
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 43,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 18,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 13
+          },
+          "activationCounts": [
+            7,
+            6,
+            9,
+            3,
+            4,
+            2,
+            6,
+            5,
+            5,
+            3,
+            4,
+            4,
+            5,
+            4,
+            6,
+            5
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 308.903,
+          "sd": 47.86674018372055,
+          "min": 158,
+          "max": 517,
+          "central95": [
+            210,
+            400
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 308.9,
+            "sigma_candidate": 47.87,
+            "n_reference": 7,
+            "mu_reference": 346.57,
+            "sigma_reference": 38.08,
+            "bias_raw": -37.67,
+            "bias_pct": -2.09,
+            "sem": 1.51,
+            "stat_type": "cdf_support",
+            "stat": 1.4547,
+            "p": 0.035098,
+            "passes": true,
+            "cdf_rms": 0.077695,
+            "cdf_p": 0.034948,
+            "support_value": 328,
+            "support_mass": 0.00433333,
+            "support_p": 0.930203,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 351
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 29,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 45,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 49,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 38,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 14,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 13,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 6
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 45,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 49,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 38,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 14,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 13,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 6
+          },
+          "activationCounts": [
+            14,
+            10,
+            15,
+            6,
+            13,
+            8,
+            15,
+            9,
+            13,
+            7,
+            10,
+            8,
+            11,
+            8,
+            9,
+            15
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_reina_combo.json#0",
+      "path": "testcases/emulator_verified/wayne_reina_combo.json",
+      "fixtureSha256": "f1e90cea5e28d207daa248eae5ca83d6929a27d01460addcd07867ddcac1ba30",
+      "entry": {
+        "test_id": "wayne_reina_combo",
+        "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) combo. WIP attacking minxxx. Exercises multi-hero extra-attack stacking for WOS-227 formula audit. Active skills: Wayne S1=2 Thunder Strike (extra, op=1010, every 4 turns), Wayne S2=2 Roundabout Hit (extra, op=1011 vs lancers / op=1012 vs marksmen, every 2 attacks), Wayne S3=3 Fleet (15% crit chance, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10% DamageUp, permanent), Reina S2=1 Swift Jive (4% dodge normal attacks). NOTE: Reina S3=0 — Shadow Blade (extra_attack=true, op=101) is INACTIVE. This combo therefore tests the normal_only + extra layer additive formula (Reina S1 + Wayne S1) but cannot discriminate multiplicative-vs-additive within the extra layer alone (requires Reina S3 unlocked). Run at least 8 battles due to Wayne S3 chance + Reina S2 dodge variance.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Reina": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 116,
+              "defense": 121.3,
+              "lethality": 100.5,
+              "health": 97.4
+            },
+            "lanc": {
+              "attack": 196.8,
+              "defense": 194.8,
+              "lethality": 108.1,
+              "health": 90.2
+            },
+            "mark": {
+              "attack": 296.7,
+              "defense": 286.5,
+              "lethality": 143.7,
+              "health": 116.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 240,
+              "defense": 224.1,
+              "lethality": 157.9,
+              "health": 160.6
+            },
+            "lanc": {
+              "attack": 226.8,
+              "defense": 217.8,
+              "lethality": 161.2,
+              "health": 146.6
+            },
+            "mark": {
+              "attack": 236.3,
+              "defense": 225.3,
+              "lethality": 175.1,
+              "health": 156.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 1613,
+            "defender": 0
+          },
+          {
+            "attacker": 1531,
+            "defender": 0
+          },
+          {
+            "attacker": 1542,
+            "defender": 0
+          },
+          {
+            "attacker": 1549,
+            "defender": 0
+          },
+          {
+            "attacker": 1568,
+            "defender": 0
+          },
+          {
+            "attacker": 1545,
+            "defender": 0
+          },
+          {
+            "attacker": 1543,
+            "defender": 0
+          },
+          {
+            "attacker": 1584,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Reina": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 116,
+              "defense": 121.3,
+              "lethality": 100.5,
+              "health": 97.4
+            },
+            "lanc": {
+              "attack": 196.8,
+              "defense": 194.8,
+              "lethality": 108.1,
+              "health": 90.2
+            },
+            "mark": {
+              "attack": 296.7,
+              "defense": 286.5,
+              "lethality": 143.7,
+              "health": 116.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 240,
+              "defense": 224.1,
+              "lethality": 157.9,
+              "health": 160.6
+            },
+            "lanc": {
+              "attack": 226.8,
+              "defense": 217.8,
+              "lethality": 161.2,
+              "health": 146.6
+            },
+            "mark": {
+              "attack": 236.3,
+              "defense": 225.3,
+              "lethality": 175.1,
+              "health": 156.8
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 1613,
+          "defender": 0
+        },
+        {
+          "attacker": 1531,
+          "defender": 0
+        },
+        {
+          "attacker": 1542,
+          "defender": 0
+        },
+        {
+          "attacker": 1549,
+          "defender": 0
+        },
+        {
+          "attacker": 1568,
+          "defender": 0
+        },
+        {
+          "attacker": 1545,
+          "defender": 0
+        },
+        {
+          "attacker": 1543,
+          "defender": 0
+        },
+        {
+          "attacker": 1584,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Reina:AssassinsInstinct",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:reina:0",
+          "effect_ids": [
+            "AssassinsInstinct/1"
+          ]
+        },
+        {
+          "key": "hero:Reina:SwiftJive",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:reina:0",
+          "effect_ids": [
+            "SwiftJive/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1800,
+        "defender": 600
+      },
+      "gameScores": [
+        1613,
+        1531,
+        1542,
+        1549,
+        1568,
+        1545,
+        1543,
+        1584
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1550.971,
+          "sd": 15.004642558165056,
+          "min": 1497,
+          "max": 1618,
+          "central95": [
+            1527,
+            1583
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1550.97,
+            "sigma_candidate": 15,
+            "n_reference": 8,
+            "mu_reference": 1559.38,
+            "sigma_reference": 27.38,
+            "bias_raw": -8.4,
+            "bias_pct": -0.35,
+            "sem": 0.47,
+            "stat_type": "cdf_support",
+            "stat": 1.0823,
+            "p": 0.082746,
+            "passes": true,
+            "cdf_rms": 0.024012,
+            "cdf_p": 0.228689,
+            "support_value": 1613,
+            "support_mass": 0,
+            "support_p": 0.041498,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 342,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 17,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 22,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 29,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 19,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 9,
+            "Fleet/1:normal:attacker.lancer->defender.marksman": 12,
+            "Fleet/1:normal:attacker.infantry->defender.lancer": 7,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 2,
+            "Fleet/1:normal:attacker.infantry->defender.marksman": 4,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 2
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 22,
+            "Fleet/1:skill:attacker.lancer->defender.infantry": 29,
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 19,
+            "Fleet/1:skill:attacker.lancer->defender.lancer": 9,
+            "Fleet/1:skill:attacker.lancer->defender.marksman": 12,
+            "Fleet/1:skill:attacker.infantry->defender.lancer": 7,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 2,
+            "Fleet/1:skill:attacker.infantry->defender.marksman": 4,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 2
+          },
+          "activationCounts": [
+            7,
+            6,
+            4,
+            5,
+            8,
+            5,
+            8,
+            5,
+            8,
+            7,
+            6,
+            9,
+            9,
+            7,
+            11,
+            7
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1506.447,
+          "sd": 9.973698695351974,
+          "min": 1494,
+          "max": 1548,
+          "central95": [
+            1494,
+            1531
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1506.45,
+            "sigma_candidate": 9.97,
+            "n_reference": 8,
+            "mu_reference": 1559.38,
+            "sigma_reference": 27.38,
+            "bias_raw": -52.93,
+            "bias_pct": -2.21,
+            "sem": 0.32,
+            "stat_type": "cdf_support",
+            "stat": 4,
+            "p": 0.0001,
+            "passes": false,
+            "cdf_rms": 0.11911,
+            "cdf_p": 0.00005,
+            "support_value": 1613,
+            "support_mass": 0,
+            "support_p": 0.00075,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 318,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 19,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            5,
+            10,
+            8,
+            8,
+            6,
+            4,
+            10,
+            8,
+            8,
+            5,
+            6,
+            10,
+            9,
+            10,
+            14,
+            13
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1541.254,
+          "sd": 18.277022009439435,
+          "min": 1494,
+          "max": 1590,
+          "central95": [
+            1501,
+            1575
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1541.25,
+            "sigma_candidate": 18.28,
+            "n_reference": 8,
+            "mu_reference": 1559.38,
+            "sigma_reference": 27.38,
+            "bias_raw": -18.12,
+            "bias_pct": -0.76,
+            "sem": 0.58,
+            "stat_type": "cdf_support",
+            "stat": 2.699,
+            "p": 0.002,
+            "passes": false,
+            "cdf_rms": 0.037826,
+            "cdf_p": 0.037298,
+            "support_value": 1613,
+            "support_mass": 0,
+            "support_p": 0.0007,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 347,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 17,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 29,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 5,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 5
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 29,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 5,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 5
+          },
+          "activationCounts": [
+            1,
+            2,
+            0,
+            2,
+            1,
+            1,
+            4,
+            0,
+            5,
+            1,
+            4,
+            3,
+            3,
+            5,
+            5,
+            5
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1552.7,
+          "sd": 15.52897772389249,
+          "min": 1497,
+          "max": 1619,
+          "central95": [
+            1527,
+            1584
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1552.7,
+            "sigma_candidate": 15.53,
+            "n_reference": 8,
+            "mu_reference": 1559.38,
+            "sigma_reference": 27.38,
+            "bias_raw": -6.67,
+            "bias_pct": -0.28,
+            "sem": 0.49,
+            "stat_type": "cdf_support",
+            "stat": 1.0937,
+            "p": 0.080596,
+            "passes": true,
+            "cdf_rms": 0.022931,
+            "cdf_p": 0.284086,
+            "support_value": 1613,
+            "support_mass": 0,
+            "support_p": 0.043998,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 354,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 16,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 22,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 29,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 19,
+            "Fleet/1:normal:attacker.infantry->defender.lancer": 8,
+            "Fleet/1:normal:attacker.lancer->defender.marksman": 11,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 3,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 7,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 3,
+            "Fleet/1:normal:attacker.infantry->defender.marksman": 1
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 22,
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 29,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 19,
+            "Fleet/1:normal:attacker.infantry->defender.lancer": 8,
+            "Fleet/1:normal:attacker.lancer->defender.marksman": 11,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 3,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 7,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 3,
+            "Fleet/1:normal:attacker.infantry->defender.marksman": 1
+          },
+          "activationCounts": [
+            7,
+            7,
+            4,
+            4,
+            7,
+            5,
+            8,
+            5,
+            8,
+            7,
+            6,
+            9,
+            8,
+            7,
+            11,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+      "path": "testcases/emulator_verified/wayne_reina_wuming_combo.json",
+      "fixtureSha256": "09c0114cdffdd125ab0a44ee5f02a51ac2d881b6d66a7c7af702cfe555a5558e",
+      "entry": {
+        "test_id": "wayne_reina_wuming_combo",
+        "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) + Wu Ming (Infantry) full-class combo. WIP attacking minxxx. Extends wayne_reina_combo with Wu Ming adding base-layer DamageUp (S2=2 Crescent Uplift, op=101, all troops) and defensive normal+extra layer DefenseUp (S1=2 Shadow's Evasion, op=111, infantry-only). Active skills: Wayne S1=2 Thunder Strike (extra, op=1010), Wayne S2=2 Roundabout Hit (extra, op=1011/op=1012), Wayne S3=3 Fleet (15% crit, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10%), Reina S2=1 Swift Jive (4% dodge), Wu Ming S1=2 Shadow's Evasion (DefenseUp benefit_on=normal+extra for infantry), Wu Ming S2=2 Crescent Uplift (+8% DamageUp base, all troops). NOTE: Reina S3=0 (Shadow Blade inactive), Wu Ming S3=0 (Elemental Resonance inactive). Wu Ming S1 exercises the defensive side of the normal/extra layer split on infantry. Run at least 8 battles due to Wayne S3 + Reina S2 variance.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            },
+            "Reina": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.1,
+              "defense": 250.4,
+              "lethality": 128.6,
+              "health": 148
+            },
+            "lanc": {
+              "attack": 196.8,
+              "defense": 194.8,
+              "lethality": 108.1,
+              "health": 90.2
+            },
+            "mark": {
+              "attack": 296.7,
+              "defense": 286.5,
+              "lethality": 143.7,
+              "health": 116.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 240,
+              "defense": 224.1,
+              "lethality": 157.9,
+              "health": 160.6
+            },
+            "lanc": {
+              "attack": 226.8,
+              "defense": 217.8,
+              "lethality": 161.2,
+              "health": 146.6
+            },
+            "mark": {
+              "attack": 236.3,
+              "defense": 225.3,
+              "lethality": 175.1,
+              "health": 156.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 1693,
+            "defender": 0
+          },
+          {
+            "attacker": 1695,
+            "defender": 0
+          },
+          {
+            "attacker": 1698,
+            "defender": 0
+          },
+          {
+            "attacker": 1694,
+            "defender": 0
+          },
+          {
+            "attacker": 1706,
+            "defender": 0
+          },
+          {
+            "attacker": 1685,
+            "defender": 0
+          },
+          {
+            "attacker": 1697,
+            "defender": 0
+          },
+          {
+            "attacker": 1684,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            },
+            "Reina": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.1,
+              "defense": 250.4,
+              "lethality": 128.6,
+              "health": 148
+            },
+            "lanc": {
+              "attack": 196.8,
+              "defense": 194.8,
+              "lethality": 108.1,
+              "health": 90.2
+            },
+            "mark": {
+              "attack": 296.7,
+              "defense": 286.5,
+              "lethality": 143.7,
+              "health": 116.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 240,
+              "defense": 224.1,
+              "lethality": 157.9,
+              "health": 160.6
+            },
+            "lanc": {
+              "attack": 226.8,
+              "defense": 217.8,
+              "lethality": 161.2,
+              "health": 146.6
+            },
+            "mark": {
+              "attack": 236.3,
+              "defense": 225.3,
+              "lethality": 175.1,
+              "health": 156.8
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 1693,
+          "defender": 0
+        },
+        {
+          "attacker": 1695,
+          "defender": 0
+        },
+        {
+          "attacker": 1698,
+          "defender": 0
+        },
+        {
+          "attacker": 1694,
+          "defender": 0
+        },
+        {
+          "attacker": 1706,
+          "defender": 0
+        },
+        {
+          "attacker": 1685,
+          "defender": 0
+        },
+        {
+          "attacker": 1697,
+          "defender": 0
+        },
+        {
+          "attacker": 1684,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Wu Ming:ShadowsEvasion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wuming:0",
+          "effect_ids": [
+            "ShadowsEvasion/1",
+            "ShadowsEvasion/2"
+          ]
+        },
+        {
+          "key": "hero:Wu Ming:CrescentUplift",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wuming:0",
+          "effect_ids": [
+            "CrescentUplift/1"
+          ]
+        },
+        {
+          "key": "hero:Reina:AssassinsInstinct",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:reina:0",
+          "effect_ids": [
+            "AssassinsInstinct/1"
+          ]
+        },
+        {
+          "key": "hero:Reina:SwiftJive",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:reina:0",
+          "effect_ids": [
+            "SwiftJive/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1800,
+        "defender": 600
+      },
+      "gameScores": [
+        1693,
+        1695,
+        1698,
+        1694,
+        1706,
+        1685,
+        1697,
+        1684
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1697.888,
+          "sd": 6.585653105564156,
+          "min": 1684,
+          "max": 1723,
+          "central95": [
+            1685,
+            1712
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1697.89,
+            "sigma_candidate": 6.59,
+            "n_reference": 8,
+            "mu_reference": 1694,
+            "sigma_reference": 7.09,
+            "bias_raw": 3.89,
+            "bias_pct": 0.16,
+            "sem": 0.21,
+            "stat_type": "cdf_support",
+            "stat": 0.4774,
+            "p": 0.333083,
+            "passes": true,
+            "cdf_rms": 0.016643,
+            "cdf_p": 0.19209,
+            "support_value": 1684,
+            "support_mass": 0.00844444,
+            "support_p": 0.290535,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 503,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 14,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 22,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 11,
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 25,
+            "Fleet/1:normal:attacker.infantry->defender.lancer": 10,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 4,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 5,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 6,
+            "Fleet/1:normal:attacker.infantry->defender.marksman": 3,
+            "Fleet/1:normal:attacker.lancer->defender.marksman": 1
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.lancer->defender.infantry": 22,
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 11,
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 25,
+            "Fleet/1:skill:attacker.infantry->defender.lancer": 10,
+            "Fleet/1:skill:attacker.lancer->defender.lancer": 4,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 5,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 6,
+            "Fleet/1:skill:attacker.infantry->defender.marksman": 3,
+            "Fleet/1:skill:attacker.lancer->defender.marksman": 1
+          },
+          "activationCounts": [
+            7,
+            3,
+            7,
+            3,
+            5,
+            6,
+            4,
+            7,
+            6,
+            4,
+            8,
+            6,
+            7,
+            7,
+            7,
+            7
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1688.817,
+          "sd": 4.222243282703901,
+          "min": 1684,
+          "max": 1706,
+          "central95": [
+            1684,
+            1699
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1688.82,
+            "sigma_candidate": 4.22,
+            "n_reference": 8,
+            "mu_reference": 1694,
+            "sigma_reference": 7.09,
+            "bias_raw": -5.18,
+            "bias_pct": -0.22,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 2.8097,
+            "p": 0.00155,
+            "passes": false,
+            "cdf_rms": 0.027195,
+            "cdf_p": 0.00095,
+            "support_value": 1706,
+            "support_mass": 0.00066667,
+            "support_p": 0.0085,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 493,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 16,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            7,
+            3,
+            9,
+            3,
+            4,
+            6,
+            7,
+            8,
+            7,
+            3,
+            11,
+            4,
+            7,
+            8,
+            7,
+            5
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1693.979,
+          "sd": 6.928243612890601,
+          "min": 1684,
+          "max": 1725,
+          "central95": [
+            1684,
+            1709
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1693.98,
+            "sigma_candidate": 6.93,
+            "n_reference": 8,
+            "mu_reference": 1694,
+            "sigma_reference": 7.09,
+            "bias_raw": -0.02,
+            "bias_pct": 0,
+            "sem": 0.22,
+            "stat_type": "cdf_support",
+            "stat": 0.157,
+            "p": 0.696665,
+            "passes": true,
+            "cdf_rms": 0.00895,
+            "cdf_p": 0.818959,
+            "support_value": 1706,
+            "support_mass": 0.01377778,
+            "support_p": 0.465427,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 509,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 14,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 22,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 6,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 4
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 22,
+            "Fleet/1:skill:attacker.marksman->defender.marksman": 6,
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 4
+          },
+          "activationCounts": [
+            3,
+            2,
+            3,
+            0,
+            2,
+            1,
+            3,
+            2,
+            0,
+            0,
+            4,
+            1,
+            3,
+            3,
+            3,
+            2
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SwiftJive",
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 1699.101,
+          "sd": 6.98595752940156,
+          "min": 1684,
+          "max": 1723,
+          "central95": [
+            1686,
+            1714
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1699.1,
+            "sigma_candidate": 6.99,
+            "n_reference": 8,
+            "mu_reference": 1694,
+            "sigma_reference": 7.09,
+            "bias_raw": 5.1,
+            "bias_pct": 0.21,
+            "sem": 0.22,
+            "stat_type": "cdf_support",
+            "stat": 0.8177,
+            "p": 0.152142,
+            "passes": true,
+            "cdf_rms": 0.020836,
+            "cdf_p": 0.086146,
+            "support_value": 1684,
+            "support_mass": 0.00544444,
+            "support_p": 0.226189,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 501,
+              "lancer": 600,
+              "marksman": 600
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 15,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 22,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 11,
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 25,
+            "Fleet/1:normal:attacker.infantry->defender.lancer": 8,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 5,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 7,
+            "Fleet/1:normal:attacker.infantry->defender.marksman": 4,
+            "Fleet/1:normal:attacker.lancer->defender.marksman": 2,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 3
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.lancer->defender.infantry": 22,
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 11,
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 25,
+            "Fleet/1:normal:attacker.infantry->defender.lancer": 8,
+            "Fleet/1:normal:attacker.lancer->defender.lancer": 5,
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 7,
+            "Fleet/1:normal:attacker.infantry->defender.marksman": 4,
+            "Fleet/1:normal:attacker.lancer->defender.marksman": 2,
+            "Fleet/1:normal:attacker.marksman->defender.marksman": 3
+          },
+          "activationCounts": [
+            6,
+            3,
+            7,
+            3,
+            5,
+            6,
+            5,
+            7,
+            6,
+            4,
+            8,
+            6,
+            7,
+            5,
+            7,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_s1_solo.json#0",
+      "path": "testcases/emulator_verified/wayne_s1_solo.json",
+      "fixtureSha256": "df7d6db899ab81d8d4cd1efe39df4e8b48e2bf6401bdbd2da541f3abb72bbd34",
+      "entry": {
+        "test_id": "wayne_s1_solo",
+        "description": "WOS-38: Wayne S1 isolation test. WIP infantry-only 500 t6 attacking with Wayne (S1=2, S3=2), minxxx infantry-only 100 t6 defending no heroes. S2 cannot trigger (no marksmen). Tests Thunder Strike: extra attack every 4 turns at 40% damage (S1=2), plus Fleet: 10% crit rate (S3=2) for all troops. WIP expected to win with ~50% casualties. Note: S3 Fleet variance explains game result variance (247-256).",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 500,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 76.4,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 78.8,
+              "defense": 71.2,
+              "lethality": 38.1,
+              "health": 28.8
+            },
+            "mark": {
+              "attack": 255.1,
+              "defense": 241.6,
+              "lethality": 78.3,
+              "health": 56.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 209.9,
+              "defense": 202.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 183.9,
+              "defense": 187.2,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 200.9,
+              "defense": 203.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 251,
+            "defender": 0
+          },
+          {
+            "attacker": 255,
+            "defender": 0
+          },
+          {
+            "attacker": 247,
+            "defender": 0
+          },
+          {
+            "attacker": 256,
+            "defender": 0
+          },
+          {
+            "attacker": 250,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 500,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 76.4,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 78.8,
+              "defense": 71.2,
+              "lethality": 38.1,
+              "health": 28.8
+            },
+            "mark": {
+              "attack": 255.1,
+              "defense": 241.6,
+              "lethality": 78.3,
+              "health": 56.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 0,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 209.9,
+              "defense": 202.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 183.9,
+              "defense": 187.2,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 200.9,
+              "defense": 203.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 251,
+          "defender": 0
+        },
+        {
+          "attacker": 255,
+          "defender": 0
+        },
+        {
+          "attacker": 247,
+          "defender": 0
+        },
+        {
+          "attacker": 256,
+          "defender": 0
+        },
+        {
+          "attacker": 250,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 500,
+        "defender": 100
+      },
+      "gameScores": [
+        251,
+        255,
+        247,
+        256,
+        250
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 253.872,
+          "sd": 4.036571553919222,
+          "min": 242,
+          "max": 270,
+          "central95": [
+            246,
+            262
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 253.87,
+            "sigma_candidate": 4.04,
+            "n_reference": 5,
+            "mu_reference": 251.8,
+            "sigma_reference": 3.7,
+            "bias_raw": 2.07,
+            "bias_pct": 0.34,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0.2001,
+            "p": 0.630768,
+            "passes": true,
+            "cdf_rms": 0.02541,
+            "cdf_p": 0.437728,
+            "support_value": 247,
+            "support_mass": 0.02444444,
+            "support_p": 0.470826,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 255,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 410,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 651
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.infantry->defender.infantry": 651
+          },
+          "activationCounts": [
+            42,
+            43,
+            42,
+            36,
+            31,
+            42,
+            48,
+            28,
+            40,
+            53,
+            44,
+            50,
+            46,
+            33,
+            43,
+            31
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 226,
+          "sd": 0,
+          "min": 226,
+          "max": 226,
+          "central95": [
+            226,
+            226
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 226,
+            "sigma_candidate": 0,
+            "n_reference": 5,
+            "mu_reference": 251.8,
+            "sigma_reference": 3.7,
+            "bias_raw": -25.8,
+            "bias_pct": -4.3,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.199667,
+            "cdf_p": 0.00005,
+            "support_value": 251,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 226,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 462,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            47,
+            47,
+            47,
+            39,
+            35,
+            48,
+            49,
+            30,
+            41,
+            59,
+            51,
+            57,
+            56,
+            42,
+            47,
+            36
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 226,
+          "sd": 0,
+          "min": 226,
+          "max": 226,
+          "central95": [
+            226,
+            226
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 226,
+            "sigma_candidate": 0,
+            "n_reference": 5,
+            "mu_reference": 251.8,
+            "sigma_reference": 3.7,
+            "bias_raw": -25.8,
+            "bias_pct": -4.3,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.199667,
+            "cdf_p": 0.00005,
+            "support_value": 251,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 226,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 462,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 253.872,
+          "sd": 4.036571553919222,
+          "min": 242,
+          "max": 270,
+          "central95": [
+            246,
+            262
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 253.87,
+            "sigma_candidate": 4.04,
+            "n_reference": 5,
+            "mu_reference": 251.8,
+            "sigma_reference": 3.7,
+            "bias_raw": 2.07,
+            "bias_pct": 0.34,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0.2001,
+            "p": 0.630768,
+            "passes": true,
+            "cdf_rms": 0.02541,
+            "cdf_p": 0.437728,
+            "support_value": 247,
+            "support_mass": 0.02444444,
+            "support_p": 0.470826,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 255,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 410,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 651
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.infantry->defender.infantry": 651
+          },
+          "activationCounts": [
+            42,
+            43,
+            42,
+            36,
+            31,
+            42,
+            48,
+            28,
+            40,
+            53,
+            44,
+            50,
+            46,
+            33,
+            43,
+            31
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_s2_solo.json#0",
+      "path": "testcases/emulator_verified/wayne_s2_solo.json",
+      "fixtureSha256": "b903ddc607d24ae8ab4712eb666abf2af6453d7173f982dc67be860167b97adc",
+      "entry": {
+        "test_id": "wayne_s2_solo",
+        "description": "WOS-38: Wayne S2 isolation test. WIP marksman-only 400 t6 attacking with Wayne (S1=2, S2=2, S3=2), minxxx lancer-only 100 t6 defending no heroes. Tests Roundabout Hit: marksmen extra attack every 2 attacks vs lancers at 16% damage (S2=2). S1 also fires every 4 turns. S3 Fleet fires for marksmen at 10% chance. minxxx expected to win with ~50% casualties.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 0,
+            "lancer_t6": 0,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 76.4,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 78.8,
+              "defense": 71.2,
+              "lethality": 38.1,
+              "health": 28.8
+            },
+            "mark": {
+              "attack": 255.1,
+              "defense": 241.6,
+              "lethality": 78.3,
+              "health": 56.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 0,
+            "lancer_t6": 100,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 209.9,
+              "defense": 202.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 183.9,
+              "defense": 187.2,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 200.9,
+              "defense": 203.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 359,
+            "defender": 0
+          },
+          {
+            "attacker": 364,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 0,
+            "lancer_t6": 0,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 76.4,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 78.8,
+              "defense": 71.2,
+              "lethality": 38.1,
+              "health": 28.8
+            },
+            "mark": {
+              "attack": 255.1,
+              "defense": 241.6,
+              "lethality": 78.3,
+              "health": 56.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 0,
+            "lancer_t6": 100,
+            "marksman_t6": 0
+          },
+          "stats": {
+            "inf": {
+              "attack": 209.9,
+              "defense": 202.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 183.9,
+              "defense": 187.2,
+              "lethality": 120.3,
+              "health": 121.1
+            },
+            "mark": {
+              "attack": 200.9,
+              "defense": 203.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 359,
+          "defender": 0
+        },
+        {
+          "attacker": 364,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 400,
+        "defender": 100
+      },
+      "gameScores": [
+        359,
+        364
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 362.385,
+          "sd": 3.00229725190376,
+          "min": 359,
+          "max": 371,
+          "central95": [
+            359,
+            369
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 362.38,
+            "sigma_candidate": 3,
+            "n_reference": 2,
+            "mu_reference": 361.5,
+            "sigma_reference": 3.54,
+            "bias_raw": 0.88,
+            "bias_pct": 0.18,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 0.0026,
+            "p": 0.99395,
+            "passes": true,
+            "cdf_rms": 0.01866,
+            "cdf_p": 1,
+            "support_value": 364,
+            "support_mass": 0.10733333,
+            "support_p": 0.948703,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 367
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 10,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 9
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 9
+          },
+          "activationCounts": [
+            2,
+            0,
+            1,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 359,
+          "sd": 0,
+          "min": 359,
+          "max": 359,
+          "central95": [
+            359,
+            359
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 359,
+            "sigma_candidate": 0,
+            "n_reference": 2,
+            "mu_reference": 361.5,
+            "sigma_reference": 3.54,
+            "bias_raw": -2.5,
+            "bias_pct": -0.5,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.04995,
+            "cdf_p": 0.00005,
+            "support_value": 364,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 359
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 12,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            2,
+            0,
+            1,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 362.385,
+          "sd": 3.00229725190376,
+          "min": 359,
+          "max": 371,
+          "central95": [
+            359,
+            369
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 362.38,
+            "sigma_candidate": 3,
+            "n_reference": 2,
+            "mu_reference": 361.5,
+            "sigma_reference": 3.54,
+            "bias_raw": 0.88,
+            "bias_pct": 0.18,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 0.0026,
+            "p": 0.99395,
+            "passes": true,
+            "cdf_rms": 0.01866,
+            "cdf_p": 1,
+            "support_value": 364,
+            "support_mass": 0.10733333,
+            "support_p": 0.948703,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 367
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 10,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 9
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.lancer": 9
+          },
+          "activationCounts": [
+            2,
+            0,
+            1,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 362.385,
+          "sd": 3.00229725190376,
+          "min": 359,
+          "max": 371,
+          "central95": [
+            359,
+            369
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 362.38,
+            "sigma_candidate": 3,
+            "n_reference": 2,
+            "mu_reference": 361.5,
+            "sigma_reference": 3.54,
+            "bias_raw": 0.88,
+            "bias_pct": 0.18,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 0.0026,
+            "p": 0.99395,
+            "passes": true,
+            "cdf_rms": 0.01866,
+            "cdf_p": 1,
+            "support_value": 364,
+            "support_mass": 0.10733333,
+            "support_p": 0.948703,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 367
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 10,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 9
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.lancer": 9
+          },
+          "activationCounts": [
+            2,
+            0,
+            1,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+      "path": "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json",
+      "fixtureSha256": "42ed6760ff638fa1b566e26e72a1e714608fe3876fdeae20f469e453ad9b8de3",
+      "entry": {
+        "test_id": "s33-current-500-marksman-wayne3-vs-5000-gatot3-inf",
+        "description": "Gatot evidence section 33: 500 T6 marksmen with Wayne 3/3/3 vs 5,000 T6 infantry; current displayed stats; defender Gatot S2 level 3",
+        "attacker": {
+          "troops": {
+            "marksman_t6": 500
+          },
+          "stats": {
+            "marksman": {
+              "attack": 369.6,
+              "defense": 365.9,
+              "lethality": 202.3,
+              "health": 183.7
+            }
+          },
+          "heroes": {
+            "Wayne": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 5000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 533.8,
+              "defense": 527.5,
+              "lethality": 218.4,
+              "health": 219.6
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 1
+            }
+          }
+        },
+        "maxRounds": 1500,
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 4977,
+            "winner": "defender"
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "troops": {
+            "marksman_t6": 500
+          },
+          "stats": {
+            "marksman": {
+              "attack": 369.6,
+              "defense": 365.9,
+              "lethality": 202.3,
+              "health": 183.7
+            }
+          },
+          "heroes": {
+            "Wayne": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 5000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 533.8,
+              "defense": 527.5,
+              "lethality": 218.4,
+              "health": 219.6
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 1
+            }
+          }
+        },
+        "maxRounds": 1500
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 4977,
+          "winner": "defender"
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 500,
+        "defender": 5000
+      },
+      "gameScores": [
+        -4977
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": -4971.956,
+          "sd": 4.627902492650617,
+          "min": -4979,
+          "max": -4955,
+          "central95": [
+            -4979,
+            -4962
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -4971.96,
+            "sigma_candidate": 4.63,
+            "n_reference": 1,
+            "mu_reference": -4977,
+            "sigma_reference": 0,
+            "bias_raw": 5.04,
+            "bias_pct": 0.09,
+            "sem": 0.15,
+            "stat_type": "cdf_support",
+            "stat": 0.4728,
+            "p": 0.336683,
+            "passes": true,
+            "cdf_rms": 0.022774,
+            "cdf_p": 0.304635,
+            "support_value": -4977,
+            "support_mass": 0.05944444,
+            "support_p": 0.453177,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 4964,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 16,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 39
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 39
+          },
+          "activationCounts": [
+            4,
+            1,
+            1,
+            3,
+            3,
+            2,
+            2,
+            3,
+            3,
+            1,
+            3,
+            4,
+            0,
+            4,
+            2,
+            3
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": -4979,
+          "sd": 0,
+          "min": -4979,
+          "max": -4979,
+          "central95": [
+            -4979,
+            -4979
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -4979,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": -4977,
+            "sigma_reference": 0,
+            "bias_raw": -2,
+            "bias_pct": -0.04,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.019068,
+            "cdf_p": 0.00005,
+            "support_value": -4977,
+            "support_mass": 0.11111111,
+            "support_p": 0.222839,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 4979,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 16,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            4,
+            1,
+            1,
+            3,
+            3,
+            2,
+            2,
+            3,
+            3,
+            1,
+            3,
+            4,
+            0,
+            4,
+            2,
+            3
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": -4971.956,
+          "sd": 4.627902492650617,
+          "min": -4979,
+          "max": -4955,
+          "central95": [
+            -4979,
+            -4962
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -4971.96,
+            "sigma_candidate": 4.63,
+            "n_reference": 1,
+            "mu_reference": -4977,
+            "sigma_reference": 0,
+            "bias_raw": 5.04,
+            "bias_pct": 0.09,
+            "sem": 0.15,
+            "stat_type": "cdf_support",
+            "stat": 0.4728,
+            "p": 0.336683,
+            "passes": true,
+            "cdf_rms": 0.022774,
+            "cdf_p": 0.304635,
+            "support_value": -4977,
+            "support_mass": 0.05944444,
+            "support_p": 0.453177,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 4964,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 16,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 39
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:attacker.marksman->defender.infantry": 39
+          },
+          "activationCounts": [
+            4,
+            1,
+            1,
+            3,
+            3,
+            2,
+            2,
+            3,
+            3,
+            1,
+            3,
+            4,
+            0,
+            4,
+            2,
+            3
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "Fleet"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": -4971.956,
+          "sd": 4.627902492650617,
+          "min": -4979,
+          "max": -4955,
+          "central95": [
+            -4979,
+            -4962
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -4971.96,
+            "sigma_candidate": 4.63,
+            "n_reference": 1,
+            "mu_reference": -4977,
+            "sigma_reference": 0,
+            "bias_raw": 5.04,
+            "bias_pct": 0.09,
+            "sem": 0.15,
+            "stat_type": "cdf_support",
+            "stat": 0.4728,
+            "p": 0.336683,
+            "passes": true,
+            "cdf_rms": 0.022774,
+            "cdf_p": 0.304635,
+            "support_value": -4977,
+            "support_mass": 0.05944444,
+            "support_p": 0.453177,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 4964,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 16,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 39
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:attacker.marksman->defender.infantry": 39
+          },
+          "activationCounts": [
+            4,
+            1,
+            1,
+            3,
+            3,
+            2,
+            2,
+            3,
+            3,
+            1,
+            3,
+            4,
+            0,
+            4,
+            2,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+      "path": "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json",
+      "fixtureSha256": "445d636b9370b3e1b70bed5ffd3dcafaa4e4f57204649b182f6f23a131f27a52",
+      "entry": {
+        "test_id": "s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf",
+        "description": "Gatot evidence section 42: 200 T6 infantry with Gatot S2 level 3 vs 450 T6 infantry with Gatot S2 level 1 and Wayne 3/3/3; extra-skill shield scope",
+        "attacker": {
+          "troops": {
+            "infantry_t6": 200
+          },
+          "stats": {
+            "infantry": {
+              "attack": 530.8,
+              "defense": 527.5,
+              "lethality": 218.4,
+              "health": 219.6
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 1
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 450
+          },
+          "stats": {
+            "infantry": {
+              "attack": 472.6,
+              "defense": 471.9,
+              "lethality": 147.5,
+              "health": 160.9
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            },
+            "Wayne": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "maxRounds": 1500,
+        "game_report_result": [
+          {
+            "attacker": 200,
+            "defender": 168,
+            "winner": "draw",
+            "rounds": 1500
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "troops": {
+            "infantry_t6": 200
+          },
+          "stats": {
+            "infantry": {
+              "attack": 530.8,
+              "defense": 527.5,
+              "lethality": 218.4,
+              "health": 219.6
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 1
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 450
+          },
+          "stats": {
+            "infantry": {
+              "attack": 472.6,
+              "defense": 471.9,
+              "lethality": 147.5,
+              "health": 160.9
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            },
+            "Wayne": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "maxRounds": 1500
+      },
+      "game": [
+        {
+          "attacker": 200,
+          "defender": 168,
+          "winner": "draw",
+          "rounds": 1500
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:Fleet",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "Fleet/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 200,
+        "defender": 450
+      },
+      "gameScores": [
+        32
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "Fleet"
+            ]
+          },
+          "n": 1000,
+          "mean": 31.23,
+          "sd": 1.80564679834136,
+          "min": 27,
+          "max": 32,
+          "central95": [
+            27,
+            32
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 31.23,
+            "sigma_candidate": 1.81,
+            "n_reference": 1,
+            "mu_reference": 32,
+            "sigma_reference": 0,
+            "bias_raw": -0.77,
+            "bias_pct": -0.12,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0.013496,
+            "cdf_p": 1,
+            "support_value": 32,
+            "support_mass": 0.282,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 1000,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 200,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 168,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1500,
+          "firstWinner": "draw",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:defender.infantry->attacker.infantry": 3636
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:skill:defender.infantry->attacker.infantry": 3636
+          },
+          "activationCounts": [
+            222,
+            227,
+            215,
+            226,
+            236,
+            223,
+            238,
+            213,
+            228,
+            235,
+            206,
+            248,
+            240,
+            224,
+            242,
+            213
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "Fleet"
+            ]
+          },
+          "n": 1000,
+          "mean": 32,
+          "sd": 0,
+          "min": 32,
+          "max": 32,
+          "central95": [
+            32,
+            32
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 32,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 32,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0,
+            "cdf_p": 1,
+            "support_value": 32,
+            "support_mass": 0.33333333,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 1000,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 200,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 168,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1500,
+          "firstWinner": "draw",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            222,
+            227,
+            215,
+            226,
+            236,
+            223,
+            238,
+            213,
+            228,
+            235,
+            206,
+            248,
+            240,
+            224,
+            242,
+            213
+          ]
+        },
+        "marksman_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "Fleet"
+            ]
+          },
+          "n": 1000,
+          "mean": 32,
+          "sd": 0,
+          "min": 32,
+          "max": 32,
+          "central95": [
+            32,
+            32
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 32,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 32,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0,
+            "cdf_p": 1,
+            "support_value": 32,
+            "support_mass": 0.33333333,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 1000,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 200,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 168,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1500,
+          "firstWinner": "draw",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "normal_kind": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "Fleet"
+            ]
+          },
+          "n": 1000,
+          "mean": 31.23,
+          "sd": 1.80564679834136,
+          "min": 27,
+          "max": 32,
+          "central95": [
+            27,
+            32
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 31.23,
+            "sigma_candidate": 1.81,
+            "n_reference": 1,
+            "mu_reference": 32,
+            "sigma_reference": 0,
+            "bias_raw": -0.77,
+            "bias_pct": -0.12,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0.013496,
+            "cdf_p": 1,
+            "support_value": 32,
+            "support_mass": 0.282,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 1000,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 200,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 168,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1500,
+          "firstWinner": "draw",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "Fleet/1:normal:defender.infantry->attacker.infantry": 3636
+          },
+          "generatedDamageJobCounts": {
+            "Fleet/1:normal:defender.infantry->attacker.infantry": 3636
+          },
+          "activationCounts": [
+            222,
+            227,
+            215,
+            226,
+            236,
+            223,
+            238,
+            213,
+            228,
+            235,
+            206,
+            248,
+            240,
+            224,
+            242,
+            213
+          ]
+        }
+      }
+    }
+  ]
+}

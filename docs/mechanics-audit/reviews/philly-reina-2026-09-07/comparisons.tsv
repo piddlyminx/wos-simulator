@@ -1,0 +1,175 @@
+skill	fixture_key	game_scores_A_minus_D	game_n	game_mean	game_sd	candidate	deterministic	sim_n	sim_mean	sim_sd	central95_low	central95_high	p	individual_score_errors_if_deterministic	initial_attacker	initial_defender
+hero:Philly:VigorTactics	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		current	False	1000	-2271.406	9.624021289761702	-2291	-2253	0.022849		11000	2500
+hero:Philly:VigorTactics	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit	False	1000	-2259.323	9.886881278816984	-2278	-2240	5e-05		11000	2500
+hero:Philly:VigorTactics	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit_attack	False	1000	-2264.176	9.682394991569614	-2283	-2245	0.00255		11000	2500
+hero:Philly:VigorTactics	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit_defense	False	1000	-2266.706	9.853865366578875	-2287	-2248	0.011499		11000	2500
+hero:Philly:VigorTactics	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		lancer_only	False	1000	-2261.669	9.716988157801692	-2281	-2243	0.00115		11000	2500
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		current	False	1000	-558.312	1.8455519667736329	-561	-556	0.446378		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		omit	False	1000	-554.081	1.7422613106174585	-558	-551	0.360682		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		omit_attack	False	1000	-555.878	1.670900328537852	-560	-553	1		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		omit_defense	False	1000	-556.611	1.91189286685586	-559	-554	0.846658		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		lancer_only	False	1000	-554.927	1.812996954756947	-559	-551	0.452977		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	current	False	1000	-454.226	4.541536034157347	-462	-446	0.189891		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	omit	False	1000	-439.35	4.421204253034125	-448	-432	5e-05		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	omit_attack	False	1000	-445.68	4.266356970742344	-454	-438	0.0001		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	omit_defense	False	1000	-448.222	4.727268033765706	-456	-440	0.00015		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	lancer_only	False	1000	-442.518	4.348630426535087	-452	-434	5e-05		1200	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	current	False	1000	2252.722	83.80477287097644	2074	2411	0.613769		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	omit	False	1000	2610.559	29.712410645155433	2536	2661	5e-05		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	omit_attack	False	1000	2510.66	63.27220378469344	2363	2601	5e-05		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	omit_defense	False	1000	2440.847	78.40953798261185	2268	2572	0.0005		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	lancer_only	False	1000	2529.596	56.748984407046734	2400	2606	5e-05		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	current	False	1000	3622.461	13.02167589225915	3598	3649	0.726664		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	omit	False	1000	3666.114	10.562507778485678	3646	3688	5e-05		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	omit_attack	False	1000	3647.844	12.285055416504486	3625	3673	0.0004		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	omit_defense	False	1000	3641.91	11.207564834053402	3620	3665	0.0024		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	lancer_only	False	1000	3653.342	9.552920720611809	3635	3671	0.00045		4069	600
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_philly_defense.json#0	769,769,769,768,768	5	768.6	0.5477225575051661	current	False	1000	768.279	0.6095330430177892	767	769	0.539523		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_philly_defense.json#0	769,769,769,768,768	5	768.6	0.5477225575051661	omit	False	1000	771.298	0.5740431390806136	770	772	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_philly_defense.json#0	769,769,769,768,768	5	768.6	0.5477225575051661	omit_attack	False	1000	770.12	0.5566955271150563	769	771	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_philly_defense.json#0	769,769,769,768,768	5	768.6	0.5477225575051661	omit_defense	False	1000	769.548	0.6033738973970089	769	771	0.00075		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_philly_defense.json#0	769,769,769,768,768	5	768.6	0.5477225575051661	lancer_only	False	1000	771.298	0.5740431390806136	770	772	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0	738,738,738,738,739	5	738.2	0.4472135954999579	current	False	1000	737.744	0.9204951446429821	736	739	0.348183		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0	738,738,738,738,739	5	738.2	0.4472135954999579	omit	False	1000	743.661	0.8583797620026938	742	745	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0	738,738,738,738,739	5	738.2	0.4472135954999579	omit_attack	False	1000	741.355	0.8424278513230056	740	743	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0	738,738,738,738,739	5	738.2	0.4472135954999579	omit_defense	False	1000	740.195	0.8773509815032724	738	742	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0	738,738,738,738,739	5	738.2	0.4472135954999579	lancer_only	False	1000	743.661	0.8583797620026938	742	745	5e-05		800	200
+hero:Philly:VigorTactics	testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0	24,7,32,27	4	22.5	10.847426730181986	current	False	1000	7.083	30.340247883655188	-51	55	0.428529		800	840
+hero:Philly:VigorTactics	testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0	24,7,32,27	4	22.5	10.847426730181986	omit	False	1000	165.549	9.32301011034084	146	183	0.0001		800	840
+hero:Philly:VigorTactics	testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0	24,7,32,27	4	22.5	10.847426730181986	omit_attack	False	1000	119.804	11.151050620005714	96	140	0.00015		800	840
+hero:Philly:VigorTactics	testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0	24,7,32,27	4	22.5	10.847426730181986	omit_defense	False	1000	93.263	13.137214979493077	65	117	5e-05		800	840
+hero:Philly:VigorTactics	testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0	24,7,32,27	4	22.5	10.847426730181986	lancer_only	False	1000	165.549	9.32301011034084	146	183	0.0001		800	840
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		current	False	1000	-558.312	1.8455519667736329	-561	-556	0.446378		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		omit	False	1000	-556.815	1.895882214002046	-559	-554	0.79296		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		infantry_only	False	1000	-558.312	1.8455519667736329	-561	-556	0.446378		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#0	-556	1	-556		normal_only	False	1000	-558.312	1.8455519667736329	-561	-556	0.446378		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	current	False	1000	-454.226	4.541536034157347	-462	-446	0.189891		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	omit	False	1000	-448.933	4.529130603551232	-456	-442	0.0001		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	infantry_only	False	1000	-454.226	4.541536034157347	-462	-446	0.189891		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_bahiti_combo.json#1	-463,-456,-455,-459	4	-458.25	3.593976442141304	normal_only	False	1000	-454.226	4.541536034157347	-462	-446	0.189891		1200	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	current	False	1000	2252.722	83.80477287097644	2074	2411	0.613769		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	omit	False	1000	2448.068	70.81139477251968	2303	2571	0.00015		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	infantry_only	False	1000	2329.175	92.44691886595163	2097	2471	0.125394		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#0	2254,2252	2	2253	1.4142135623730951	normal_only	False	1000	2252.722	83.80477287097644	2074	2411	0.613769		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	current	False	1000	3622.461	13.02167589225915	3598	3649	0.726664		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	omit	False	1000	3639.27	9.785031775464322	3620	3657	0.00255		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	infantry_only	False	1000	3624.47	12.992763828836097	3601	3650	0.60562		4069	600
+hero:Philly:NumbingSpores	testcases/emulator_verified/philly_solo.json#1	3606,3637,3616	3	3619.6666666666665	15.821925715074425	normal_only	False	1000	3622.461	13.02167589225915	3598	3649	0.726664		4069	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		current	False	1000	-444.816	6.693051691189965	-457	-431	0.371431		3611	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		omit	False	1000	-418.443	6.454332607590757	-432	-408	0.00355		3611	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		lancer_only	False	1000	-429.929	6.36258135047729	-443	-418	0.159492		3611	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		all_kinds	False	1000	-444.816	6.693051691189965	-457	-431	0.371431		3611	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		hero_bucket	False	1000	-440.449	5.763038401018309	-452	-430	0.917754		3611	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		current	False	1000	-495.836	15.96508653243034	-525	-464	0.421979		1600	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		omit	False	1000	-479.589	17.77740462258523	-512	-444	0.99785		1600	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		lancer_only	False	1000	-485.791	16.83997933205098	-517	-451	0.741363		1600	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		all_kinds	False	1000	-495.836	15.96508653243034	-525	-464	0.421979		1600	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		hero_bucket	False	1000	-495.826	15.95996379834381	-525	-464	0.420729		1600	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		current	False	1000	-1991.667	0.5462686238558851	-1992	-1990	1		220	2000
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		omit	False	1000	-1992.626	0.5817752680051468	-1993	-1991	0.473176		220	2000
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		lancer_only	False	1000	-1992.263	0.8914177615605534	-1993	-1991	0.628569		220	2000
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		all_kinds	False	1000	-1991.667	0.5462686238558851	-1992	-1990	1		220	2000
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		hero_bucket	False	1000	-1991.667	0.5462686238558851	-1992	-1990	1		220	2000
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		current	False	1000	-482.676	16.910085007916873	-513	-446	0.321784		1200	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		omit	False	1000	-464.763	18.722536269543287	-499	-426	0.021149		1200	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		lancer_only	False	1000	-471.537	17.546695344637328	-503	-433	0.074946		1200	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		all_kinds	False	1000	-482.676	16.910085007916873	-513	-446	0.321784		1200	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		hero_bucket	False	1000	-482.677	16.909482594142304	-513	-446	0.322934		1200	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		current	False	1000	-548.808	2.673627551526987	-555	-545	0.170941		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		omit	False	1000	-540.464	2.410500884570357	-545	-537	5e-05		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		lancer_only	False	1000	-543.392	2.3807570233024578	-548	-540	0.0015		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		all_kinds	False	1000	-548.808	2.673627551526987	-555	-545	0.170941		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		hero_bucket	False	1000	-548.808	2.673627551526987	-555	-545	0.170941		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	current	False	1000	-163.093	6.435974889072572	-176	-151	0.612169		350	250
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	omit	False	1000	-169.584	6.350218048954648	-182	-158	0.168742		350	250
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	lancer_only	False	1000	-163.093	6.435974889072572	-176	-151	0.612169		350	250
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	all_kinds	False	1000	-161.156	7.041963735582084	-175	-148	0.484826		350	250
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	hero_bucket	False	1000	-163.093	6.435974889072572	-176	-151	0.612169		350	250
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		current	False	1000	1991.653	0.5752581350332439	1990	1992	1		2000	220
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		omit	False	1000	1992.617	0.6022239398045198	1991	1993	0.473926		2000	220
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		lancer_only	False	1000	1992.269	0.8974655672751142	1991	1993	0.617769		2000	220
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		all_kinds	False	1000	1991.653	0.5752581350332439	1990	1992	1		2000	220
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		hero_bucket	False	1000	1991.653	0.5752581350332439	1990	1992	1		2000	220
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		current	False	1000	-295.885	30.221964564570282	-351	-240	0.670666		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		omit	False	1000	36.727	177.00933527861108	-206	408	0.035648		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		lancer_only	False	1000	-191.849	73.36507775252227	-284	-24	0.059547		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		all_kinds	False	1000	-295.885	30.221964564570282	-351	-240	0.670666		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		hero_bucket	False	1000	-295.885	30.221964564570282	-351	-240	0.670666		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	current	False	1000	1550.872	14.555737201718273	1527	1581	0.033348		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	omit	False	1000	1530.462	18.632437406945	1494	1566	0.0006		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	lancer_only	False	1000	1536.037	17.714949913856668	1498	1570	0.00415		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	all_kinds	False	1000	1555.618	14.169645544432463	1529	1585	0.058647		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	hero_bucket	False	1000	1550.872	14.555737201718273	1527	1581	0.033348		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	current	False	1000	1698.329	6.570839743513385	1685	1712	0.212039		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	omit	False	1000	1691.932	6.625803896681306	1679	1706	0.633018		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	lancer_only	False	1000	1693.527	6.2962619000415065	1683	1706	0.550372		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	all_kinds	False	1000	1700.064	6.742207454636889	1687	1714	0.047198		1800	600
+hero:Reina:AssassinsInstinct	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	hero_bucket	False	1000	1697.895	6.609815781446927	1685	1712	0.316334		1800	600
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#0	-62	1	-62		current	True	1	-62	0	-62	-62		[0]	2000	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#0	-62	1	-62		omit	True	1	392	0	392	392		[454]	2000	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#0	-62	1	-62		lancer_only	True	1	137	0	137	137		[199]	2000	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#0	-62	1	-62		all_kinds	True	1	-62	0	-62	-62		[0]	2000	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#0	-62	1	-62		hero_bucket	True	1	-62	0	-62	-62		[0]	2000	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#1	-40	1	-40		current	True	1	-40	0	-40	-40		[0]	2500	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#1	-40	1	-40		omit	True	1	596	0	596	596		[636]	2500	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#1	-40	1	-40		lancer_only	True	1	406	0	406	406		[446]	2500	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#1	-40	1	-40		all_kinds	True	1	-40	0	-40	-40		[0]	2500	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#1	-40	1	-40		hero_bucket	True	1	-40	0	-40	-40		[0]	2500	200
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	current	False	1000	1403.836	119.60771341811156	1159	1583	0.897255		3000	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	omit	False	1000	1763.761	86.8111516745116	1577	1904	5e-05		3000	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	lancer_only	False	1000	1633.625	92.78027028174445	1418	1809	0.0001		3000	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	all_kinds	False	1000	1403.836	119.60771341811156	1159	1583	0.897255		3000	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	hero_bucket	False	1000	1403.836	119.60771341811156	1159	1583	0.897255		3000	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		current	False	1000	-201.791	1.3172145057104663	-205	-200	1		1333	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		omit	False	1000	-200.738	1.334592498531716	-204	-199	0.60682		1333	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		lancer_only	False	1000	-201.369	1.235461600117686	-204	-200	0.835158		1333	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		all_kinds	False	1000	-201.791	1.3172145057104663	-205	-200	1		1333	220
+hero:Reina:AssassinsInstinct	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		hero_bucket	False	1000	-201.791	1.3172145057104663	-205	-200	1		1333	220
+hero:Reina:SwiftJive	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		current	False	1000	-444.816	6.693051691189965	-457	-431	0.371431		3611	600
+hero:Reina:SwiftJive	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		omit	False	1000	-427	0	-427	-427	5e-05		3611	600
+hero:Reina:SwiftJive	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		enemy_infantry_only	False	1000	-427.348	0.695254902449004	-429	-427	5e-05		3611	600
+hero:Reina:SwiftJive	testcases/emulator_verified/flint_reina_zinman_combo.json#0	-439	1	-439		own_infantry_only	False	1000	-444.816	6.693051691189965	-457	-431	0.371431		3611	600
+hero:Reina:SwiftJive	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		current	False	1000	-495.836	15.96508653243034	-525	-464	0.421979		1600	600
+hero:Reina:SwiftJive	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		omit	False	1000	-486.397	15.7159913267787	-515	-455	0.915904		1600	600
+hero:Reina:SwiftJive	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		enemy_infantry_only	False	1000	-488.376	16.439004375717662	-520	-454	0.648568		1600	600
+hero:Reina:SwiftJive	testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0	-482	1	-482		own_infantry_only	False	1000	-491.003	15.76189799575002	-519	-460	0.506325		1600	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		current	False	1000	-1991.667	0.5462686238558851	-1992	-1990	1		220	2000
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		omit	False	1000	-1992	0	-1992	-1992	1		220	2000
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		enemy_infantry_only	False	1000	-1991.991	0.1045463051950184	-1992	-1992	1		220	2000
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_attacker_wip.json#0	-1992	1	-1992		own_infantry_only	False	1000	-1991.7	0.4777323813896544	-1992	-1991	1		220	2000
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		current	False	1000	-482.676	16.910085007916873	-513	-446	0.321784		1200	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		omit	False	1000	-471.852	16.531769276015066	-500	-437	0.052647		1200	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		enemy_infantry_only	False	1000	-472.972	16.361078842817815	-502	-438	0.085396		1200	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_bahiti_combo_nc.json#0	-502	1	-502		own_infantry_only	False	1000	-477.947	16.393747159998075	-508	-445	0.19019		1200	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		current	False	1000	-548.808	2.673627551526987	-555	-545	0.170941		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		omit	False	1000	-544	0	-544	-544	5e-05		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		enemy_infantry_only	False	1000	-544.191	0.3932857404911493	-545	-544	5e-05		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_logan_combo_simulator.json#0	-553	1	-553		own_infantry_only	False	1000	-548.808	2.673627551526987	-555	-545	0.170941		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	current	False	1000	-163.093	6.435974889072572	-176	-151	0.612169		350	250
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	omit	False	1000	-166.705	5.915146994282062	-178	-155	0.59752		350	250
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	enemy_infantry_only	False	1000	-165.774	5.9162425513095735	-177	-154	0.722864		350	250
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0	-166,-163,-163,-157,-174	5	-164.6	6.18869937870632	own_infantry_only	False	1000	-166.474	6.231063324196771	-178	-153	0.738963		350	250
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		current	False	1000	1991.653	0.5752581350332439	1990	1992	1		2000	220
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		omit	False	1000	1992	0	1992	1992	1		2000	220
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		enemy_infantry_only	False	1000	1991.998	0.04469897088298645	1992	1992	1		2000	220
+hero:Reina:SwiftJive	testcases/emulator_verified/reina_solo_wip.json#0	1992	1	1992		own_infantry_only	False	1000	1991.701	0.47731208535592573	1991	1992	1		2000	220
+hero:Reina:SwiftJive	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		current	False	1000	-295.885	30.221964564570282	-351	-240	0.670666		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		omit	False	1000	-204	0	-204	-204	5e-05		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		enemy_infantry_only	False	1000	-204.128	2.0208165922962222	-204	-204	5e-05		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/sergey_reina_combo_nc.json#0	-295	1	-295		own_infantry_only	False	1000	-285.671	32.0499915906534	-340	-236	0.0012		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	current	False	1000	1550.872	14.555737201718273	1527	1581	0.033348		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	omit	False	1000	1540.631	11.88697350628575	1526	1564	0.00425		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	enemy_infantry_only	False	1000	1542.219	11.846407741436897	1526	1565	0.0093		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_combo.json#0	1613,1531,1542,1549,1568,1545,1543,1584	8	1559.375	27.375366925133886	own_infantry_only	False	1000	1550.872	14.555737201718273	1527	1581	0.033348		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	current	False	1000	1698.329	6.570839743513385	1685	1712	0.212039		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	omit	False	1000	1694.039	5.434059993044604	1684	1704	0.087896		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	enemy_infantry_only	False	1000	1694.277	5.551674710579896	1684	1704	0.176841		1800	600
+hero:Reina:SwiftJive	testcases/emulator_verified/wayne_reina_wuming_combo.json#0	1693,1695,1698,1694,1706,1685,1697,1684	8	1694	7.091242083423347	own_infantry_only	False	1000	1698.329	6.570839743513385	1685	1712	0.212039		1800	600
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	current	False	1000	1403.836	119.60771341811156	1159	1583	0.897255		3000	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	omit	False	1000	1710	0	1710	1710	5e-05		3000	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	enemy_infantry_only	False	1000	1709.194	5.318707799141809	1708	1710	5e-05		3000	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#2	1536,1325,1500,1333,1297,1579	6	1428.3333333333333	123.6473479969007	own_infantry_only	False	1000	1467.3	102.69768651150231	1258	1665	0.011549		3000	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		current	False	1000	-201.791	1.3172145057104663	-205	-200	1		1333	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		omit	False	1000	-200	0	-200	-200	5e-05		1333	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		enemy_infantry_only	False	1000	-200	0	-200	-200	5e-05		1333	220
+hero:Reina:SwiftJive	testcases/heroes_unittests/Reina_tc.json#3	-202	1	-202		own_infantry_only	False	1000	-201.791	1.3172145057104663	-205	-200	1		1333	220

@@ -1,0 +1,123 @@
+{
+  "evidence_kind": "five_independent_captured_game_observations",
+  "fixture_key": "testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json::0",
+  "game_report_result": [
+    {
+      "attacker": 0,
+      "defender": 166
+    },
+    {
+      "attacker": 0,
+      "defender": 163
+    },
+    {
+      "attacker": 0,
+      "defender": 163
+    },
+    {
+      "attacker": 0,
+      "defender": 157
+    },
+    {
+      "attacker": 0,
+      "defender": 174
+    }
+  ],
+  "stats_and_full_kit_identical": true,
+  "summary": {
+    "n": 5,
+    "mean_defender_survivors": 164.6,
+    "sample_sd": 6.18869937870632,
+    "sample_variance": 38.3,
+    "min": 157,
+    "max": 174
+  },
+  "cases": [
+    {
+      "game_report_result_index": 0,
+      "observation": "capture-01/observation.json",
+      "timestamp_displayed": "2026-09-07 06:43:14",
+      "defender_mail_id": "2734692464123459",
+      "defender_survivors": [
+        66,
+        50,
+        50
+      ],
+      "reina_s3": {
+        "triggered": 8,
+        "displayed_kills": 5
+      }
+    },
+    {
+      "game_report_result_index": 1,
+      "observation": "capture-02/observation.json",
+      "timestamp_displayed": "2026-09-07 06:49:54",
+      "defender_mail_id": "2734692464123578",
+      "defender_survivors": [
+        63,
+        50,
+        50
+      ],
+      "reina_s3": {
+        "triggered": 9,
+        "displayed_kills": 7
+      }
+    },
+    {
+      "game_report_result_index": 2,
+      "observation": "capture-03/observation.json",
+      "timestamp_displayed": "2026-09-07 07:00:42",
+      "defender_mail_id": "2734692464123932",
+      "defender_survivors": [
+        63,
+        50,
+        50
+      ],
+      "reina_s3": {
+        "triggered": 9,
+        "displayed_kills": 8
+      }
+    },
+    {
+      "game_report_result_index": 3,
+      "observation": "capture-04/observation.json",
+      "timestamp_displayed": "2026-09-07 07:03:34",
+      "defender_mail_id": "2734692464124006",
+      "defender_survivors": [
+        57,
+        50,
+        50
+      ],
+      "reina_s3": {
+        "triggered": 10,
+        "displayed_kills": 8
+      }
+    },
+    {
+      "game_report_result_index": 4,
+      "observation": "capture-05/observation.json",
+      "timestamp_displayed": "2026-09-07 07:05:54",
+      "defender_mail_id": "2734692464124055",
+      "defender_survivors": [
+        74,
+        50,
+        50
+      ],
+      "reina_s3": {
+        "triggered": 6,
+        "displayed_kills": 3
+      }
+    }
+  ],
+  "scope": "Each report has living front Infantry and unchanged50 Lancer/50 Marksman backlines. Current-target S3 is supported relative to all-living fanout in this formation.",
+  "coefficient_evidence": "Direct level1 tooltip120%; full upgrade preview120/140/160/180/200. Parent corrected production config. Original frozen20% models remain unchanged.",
+  "comparison_reference": "../../reviews/reina-extra-attack-magnitude/results.json",
+  "input_correction_reference": "input-correction.json",
+  "limitations": [
+    "The battle experiment exercises level1 only, with all actual hero skills enabled.",
+    "It does not uniquely establish the25% chance, skill-versus-normal damage kind, independent S1/S2 semantics or target-exhaustion behavior.",
+    "S2 displays triggered1 in all5 reports; do not identify this with observed dodge count.",
+    "No game round total shown; simulator round counts are not game observations.",
+    "Counterpart mail and Battle Details are diagnostics of each same battle, not additional independent samples."
+  ]
+}

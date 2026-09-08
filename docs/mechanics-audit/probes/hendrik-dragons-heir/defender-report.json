@@ -1,0 +1,340 @@
+{
+  "result": "left_wins",
+  "left": {
+    "role": "defender",
+    "name": "[ARK]Piddlyminxxx",
+    "troops": 600,
+    "losses": 0,
+    "injured": 47,
+    "lightly_injured": 82,
+    "survivors": 471,
+    "troop_power": {
+      "infantry": 400,
+      "lancer": 100,
+      "marksman": 100
+    },
+    "stat_bonuses": {
+      "infantry_attack": 308.2,
+      "infantry_defense": 300.5,
+      "infantry_lethality": 244.0,
+      "infantry_health": 238.4,
+      "lancer_attack": 294.9,
+      "lancer_defense": 293.7,
+      "lancer_lethality": 224.3,
+      "lancer_health": 230.0,
+      "marksman_attack": 292.2,
+      "marksman_defense": 292.7,
+      "marksman_lethality": 235.8,
+      "marksman_health": 230.3
+    },
+    "troops_detail": [
+      {
+        "type": "infantry",
+        "tier": 6,
+        "fire_crystal_level": 0,
+        "count": 400,
+        "slot": 0
+      },
+      {
+        "type": "lancer",
+        "tier": 6,
+        "fire_crystal_level": 0,
+        "count": 100,
+        "slot": 1
+      },
+      {
+        "type": "marksman",
+        "tier": 6,
+        "fire_crystal_level": 0,
+        "count": 100,
+        "slot": 2
+      }
+    ],
+    "heroes": [
+      "Vacant"
+    ]
+  },
+  "right": {
+    "role": "attacker",
+    "name": "[BBQ]XxWIPxX",
+    "troops": 250,
+    "losses": 0,
+    "injured": 88,
+    "lightly_injured": 162,
+    "survivors": 0,
+    "troop_power": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 250
+    },
+    "stat_bonuses": {
+      "infantry_attack": 248.2,
+      "infantry_defense": 249.0,
+      "infantry_lethality": 186.3,
+      "infantry_health": 191.8,
+      "lancer_attack": 208.5,
+      "lancer_defense": 207.4,
+      "lancer_lethality": 186.8,
+      "lancer_health": 181.9,
+      "marksman_attack": 465.5,
+      "marksman_defense": 458.7,
+      "marksman_lethality": 244.0,
+      "marksman_health": 218.8
+    },
+    "troops_detail": [
+      {
+        "type": "marksman",
+        "tier": 6,
+        "fire_crystal_level": 0,
+        "count": 250,
+        "slot": 5
+      }
+    ],
+    "heroes": [
+      "Hendrik"
+    ]
+  },
+  "parser_meta": {
+    "header_box": {
+      "text": "Stat Bonuses",
+      "x1": 274,
+      "y1": 347,
+      "x2": 449,
+      "y2": 381,
+      "confidence": 0.97127
+    },
+    "troop_header_box": {
+      "text": "Stat Bonuses",
+      "x1": 274,
+      "y1": 347,
+      "x2": 449,
+      "y2": 381,
+      "confidence": 0.97127
+    },
+    "label_boxes": {
+      "infantry_attack": {
+        "text": "Infantry Attack",
+        "x1": 276,
+        "y1": 414,
+        "x2": 444,
+        "y2": 438,
+        "confidence": 0.96707047
+      },
+      "lancer_attack": {
+        "text": "Lancer Attack",
+        "x1": 283,
+        "y1": 649,
+        "x2": 439,
+        "y2": 666,
+        "confidence": 0.9637970699999999
+      },
+      "lancer_defense": {
+        "text": "Lancer Defense",
+        "x1": 275,
+        "y1": 706,
+        "x2": 444,
+        "y2": 724,
+        "confidence": 0.95759506
+      },
+      "lancer_lethality": {
+        "text": "Lancer Lethality",
+        "x1": 272,
+        "y1": 765,
+        "x2": 449,
+        "y2": 789,
+        "confidence": 0.95531494
+      },
+      "lancer_health": {
+        "text": "Lancer Health",
+        "x1": 284,
+        "y1": 824,
+        "x2": 437,
+        "y2": 841,
+        "confidence": 0.9673434399999999
+      },
+      "marksman_attack": {
+        "text": "Marksman Attack",
+        "x1": 262,
+        "y1": 883,
+        "x2": 459,
+        "y2": 900,
+        "confidence": 0.96169823
+      },
+      "infantry_defense": {
+        "text": "Infantry Defense",
+        "x1": 270,
+        "y1": 472,
+        "x2": 451,
+        "y2": 496,
+        "confidence": 0.96059677
+      },
+      "infantry_lethality": {
+        "text": "Infantry Lethality",
+        "x1": 265,
+        "y1": 531,
+        "x2": 455,
+        "y2": 555,
+        "confidence": 0.96471268
+      },
+      "infantry_health": {
+        "text": "Infantry Health",
+        "x1": 277,
+        "y1": 589,
+        "x2": 442,
+        "y2": 613,
+        "confidence": 0.96298958
+      },
+      "marksman_defense": {
+        "text": "Marksman Defense",
+        "x1": 255,
+        "y1": 940,
+        "x2": 466,
+        "y2": 958,
+        "confidence": 0.9625856
+      },
+      "marksman_lethality": {
+        "text": "Marksman Lethality",
+        "x1": 251,
+        "y1": 999,
+        "x2": 469,
+        "y2": 1022,
+        "confidence": 0.9643854500000001
+      },
+      "marksman_health": {
+        "text": "Marksman Health",
+        "x1": 263,
+        "y1": 1058,
+        "x2": 457,
+        "y2": 1075,
+        "confidence": 0.95740639
+      }
+    },
+    "ocr_item_count": 73,
+    "slot_count_boxes": {
+      "0": {
+        "text": "400",
+        "x1": 55,
+        "y1": 283,
+        "x2": 100,
+        "y2": 306,
+        "confidence": 0.99989
+      },
+      "1": {
+        "text": "100",
+        "x1": 156,
+        "y1": 283,
+        "x2": 196,
+        "y2": 306,
+        "confidence": 0.99989
+      },
+      "2": {
+        "text": "100",
+        "x1": 260,
+        "y1": 288,
+        "x2": 291,
+        "y2": 303,
+        "confidence": 0.9679960599999999
+      },
+      "5": {
+        "text": "250",
+        "x1": 622,
+        "y1": 283,
+        "x2": 666,
+        "y2": 307,
+        "confidence": 0.99996
+      }
+    },
+    "slot_counts": {
+      "0": 400,
+      "1": 100,
+      "2": 100,
+      "5": 250
+    },
+    "troop_slots_present": true,
+    "missing_fields": [],
+    "ocr_strategy": [
+      "tesseract:panel",
+      "rapidocr:troop-row"
+    ],
+    "template_match_image": "original",
+    "fire_crystal_classifier": {
+      "status": "presence-only",
+      "predictions": [
+        {
+          "slot": 0,
+          "level": 0,
+          "margin": 10.3241,
+          "accepted": true
+        },
+        {
+          "slot": 1,
+          "level": 0,
+          "margin": 10.0604,
+          "accepted": true
+        },
+        {
+          "slot": 2,
+          "level": 0,
+          "margin": 7.9974,
+          "accepted": true
+        },
+        {
+          "slot": 5,
+          "level": 0,
+          "margin": 4.8966,
+          "accepted": true
+        }
+      ],
+      "missing_classes": [
+        9
+      ]
+    },
+    "troop_template_matches": [
+      {
+        "side": "left",
+        "slot": 0,
+        "positional_type": "infantry",
+        "type": "infantry",
+        "score": 1.0,
+        "template": "positional",
+        "low_confidence": false,
+        "count": 400
+      },
+      {
+        "side": "left",
+        "slot": 1,
+        "positional_type": "lancer",
+        "type": "lancer",
+        "score": 1.0,
+        "template": "positional",
+        "low_confidence": false,
+        "count": 100
+      },
+      {
+        "side": "left",
+        "slot": 2,
+        "positional_type": "marksman",
+        "type": "marksman",
+        "score": 1.0,
+        "template": "positional",
+        "low_confidence": false,
+        "count": 100
+      },
+      {
+        "side": "right",
+        "slot": 5,
+        "positional_type": "marksman",
+        "type": "marksman",
+        "score": 0.9059749245643616,
+        "template": "1d045abe-d2ab-4ebd-8ccc-dde3fb1de2d6.png",
+        "low_confidence": false,
+        "count": 250
+      }
+    ],
+    "sources": {
+      "stats": "/home/paul/projects_wsl/wos/simulator/tmp/20260907T050704Z_wos_report_war_1/report_stats.png",
+      "troops": "/home/paul/projects_wsl/wos/simulator/tmp/20260907T050704Z_wos_report_war_1/report_stats.png"
+    }
+  },
+  "debug_dir": "/home/paul/projects_wsl/wos/simulator/tmp/20260907T050704Z_wos_report_war_1"
+}

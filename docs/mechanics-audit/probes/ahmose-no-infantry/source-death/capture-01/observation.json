@@ -1,0 +1,91 @@
+{
+  "displayed_time": "2026-09-07 10:33:04",
+  "mail_id": "2734692464128625",
+  "coordinates": {
+    "x": 787,
+    "y": 577
+  },
+  "winner": "attacker",
+  "survivors": {
+    "attacker": 3,
+    "defender": 0
+  },
+  "remaining_troops": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 3,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    }
+  },
+  "all_24_stats_visually_verified": true,
+  "full_input_matches_frozen_v2": true,
+  "full_kit": {
+    "Ahmose": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    }
+  },
+  "troops": {
+    "attacker": {
+      "infantry_t6": 1,
+      "lancer_t6": 480
+    },
+    "defender": {
+      "infantry_t6": 250
+    }
+  },
+  "skill_activations": {
+    "Ahmose": {
+      "ViperFormation": null,
+      "PrayerOfFlame": 1
+    }
+  },
+  "displayed_skill_kills": {
+    "ViperFormation": null,
+    "PrayerOfFlame": null
+  },
+  "game_rounds": null,
+  "casualties": {
+    "attacker": {
+      "losses": 0,
+      "injured": 168,
+      "lightly_injured": 310,
+      "survivors": 3
+    },
+    "defender": {
+      "losses": 0,
+      "injured": 88,
+      "lightly_injured": 162,
+      "survivors": 0
+    }
+  },
+  "attacker_troop_detail": {
+    "infantry_t6": {
+      "kills": 0,
+      "losses": 0,
+      "injured": 1,
+      "lightly_injured": 0,
+      "survivors": 0
+    },
+    "lancer_t6": {
+      "kills": 88,
+      "losses": 0,
+      "injured": 167,
+      "lightly_injured": 310,
+      "survivors": 3
+    }
+  },
+  "evidence_directory": "docs/mechanics-audit/probes/ahmose-no-infantry/source-death/capture-01",
+  "notes": [
+    "Parser rejected total481 versus troop-slot OCR480 after missing the visibly recorded1 Infantry. Original images/error retained; fixture manually transcribed after checking all fields.",
+    "Mail ID and per-line attacker survivors were read from the same reopened10:33:04 report, not a second battle.",
+    "No actual Infantry death turn is reported; inferred timing stays in simulator predictions.",
+    "Displayed Viper activation dash is preserved as null."
+  ]
+}

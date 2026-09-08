@@ -1,0 +1,43 @@
+{
+  "input_exactly_matches_prediction": true,
+  "prediction_sha256": "78fd506d2837042eeca4bec562eb3c3183436a48f171cc2531b60fffbcc8de25",
+  "fixture_sha256": "1fdec53cc80a4352070a97fd1afa23791e56231c2d731c86dd0bf5c36bde80af",
+  "observed": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 3,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    }
+  },
+  "baseline": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 61,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    }
+  },
+  "source_dependent": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 3,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    }
+  },
+  "fresh_replay_required": false,
+  "reason": "Every supplied input field is exactly equal to the frozen prediction input; no new stochastic sampling or changed-stat replay is needed."
+}

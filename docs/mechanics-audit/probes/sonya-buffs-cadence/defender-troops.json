@@ -1,0 +1,126 @@
+{
+  "evidence_kind": "captured_game_diagnostic_from_existing_battle",
+  "adds_independent_game_observation": false,
+  "capture_instance": "WIP",
+  "transcribed_at_utc": "2026-09-07T04:58:19.497645+00:00",
+  "identification": {
+    "displayed_timestamp": "2026-09-07 05:52:29",
+    "coordinates": {
+      "x": 791,
+      "y": 577
+    },
+    "wip_mail_id": "2734692464122411",
+    "defender_name": "[BBQ]XxWIPxX",
+    "attacker_name": "[ARK]Piddlyminxxx",
+    "defender_initial": 1800,
+    "attacker_initial": 2200,
+    "attacker_troops": {
+      "infantry_t6": 2200
+    },
+    "defender_heroes": [
+      "Sonya"
+    ],
+    "attacker_heroes": []
+  },
+  "transcription_method": "Manual reading of all three visible rows in defender-troops.png after opening Battle Details, collapsing Skill Details and expanding WIP own defender card. Timestamp and coordinates independently checked on defender-report-top.png; mail ID read on defender-report-bottom.png.",
+  "rows": [
+    {
+      "troop_key": "infantry_t6",
+      "initial_troops": 800,
+      "kills_displayed": 79,
+      "losses": 0,
+      "injured_displayed": -219,
+      "lightly_injured": 406,
+      "survivors": 175
+    },
+    {
+      "troop_key": "lancer_t6",
+      "initial_troops": 200,
+      "kills_displayed": 247,
+      "losses": 0,
+      "injured_displayed": 0,
+      "lightly_injured": 0,
+      "survivors": 200
+    },
+    {
+      "troop_key": "marksman_t6",
+      "initial_troops": 800,
+      "kills_displayed": 444,
+      "losses": 0,
+      "injured_displayed": 0,
+      "lightly_injured": 0,
+      "survivors": 800
+    }
+  ],
+  "defender_survivors": {
+    "infantry": 175,
+    "lancer": 200,
+    "marksman": 800,
+    "total": 1175
+  },
+  "observed_battle_details": {
+    "hero": "Sonya",
+    "side": "defender",
+    "skill_rows": [
+      {
+        "slot": 1,
+        "triggered": 1,
+        "kills_displayed": "-"
+      },
+      {
+        "slot": 2,
+        "triggered": 51,
+        "kills_displayed": 16
+      }
+    ]
+  },
+  "checks": {
+    "sum_initial_troops": 1800,
+    "sum_survivors": 1175,
+    "sum_abs_injured": 219,
+    "sum_lightly_injured": 406,
+    "sum_losses": 0,
+    "sum_kills_displayed": 770,
+    "matches_report_overview": true,
+    "each_initial_equals_survivors_plus_casualties": true
+  },
+  "artifacts": [
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-troops.png",
+      "sha256": "45b9cefccb56a441915b68ab0d82f93a5b7305e7c6c406a2b942595145c7bcf9"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report-top.png",
+      "sha256": "9fa3a887a9278d4d36c4338f1766588eb49a01ec886be54867e402ccc51a0e9c"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report-bottom.png",
+      "sha256": "af13aa9486cdd384bdc638d681a67deff99a7991b810fa6a581f64cd32ec45ad"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report-stats.png",
+      "sha256": "b9c3a6019412ef89446da8f9663fbcf437effeb4abdebdc84a2aa6d8285c6e33"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-battle-details.png",
+      "sha256": "7de6a63b1f01a1ff778fdc316665eb4279797105bf5dd3ddff60da4ebcaee749"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report.json",
+      "sha256": "43218fa44727d75cee2bf374301b273d71c4f0726afac5c8dbc2351df86656bd"
+    },
+    {
+      "path": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report-first-attempt-error.json",
+      "sha256": "3b4a11c919ccddcfa88126b0b88ac8f70531e39414dcef21e6906b3990396017"
+    }
+  ],
+  "notes": [
+    "Same Sonya battle already captured for this probe; no new battle or testcase observation was created.",
+    "WIP own left side is defender; minxxx right side is attacker.",
+    "Injured values retain visible minus signs; absolute values are used for casualty arithmetic.",
+    "Kills are displayed report values and are not treated as all enemy casualties.",
+    "Initial per-line counts come from the parsed report and are independently checked by survivors plus casualties.",
+    "Sonya 1/1/0 belongs to the established full-kit setup; skill levels are not read from the troop breakdown screenshot.",
+    "The initial report reader attempt returned a Battle Details button timing error despite opening the correct panel. Its error artifact is preserved. The subsequent supported report retry succeeded and generated defender-report.json."
+  ]
+}

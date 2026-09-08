@@ -1,0 +1,43 @@
+{
+  "files": {
+    "battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
+    "config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
+    "config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
+    "config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
+    "config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
+    "damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
+    "effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
+    "fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
+    "runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
+    "runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
+    "simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
+    "tooling/exportGatotTestcases.ts": "9532d34f2821aa3fe0c7bb91a0faf7af3f1012f6320751d523dadf52938895ef",
+    "tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
+    "tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
+    "tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
+    "tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
+    "webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
+    "workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4"
+  },
+  "artifacts": {
+    "input.json": "dcbd28c3f7a0f8bacda694ebc14fb35f73004ea843c5a397089ee8b30dd0e206",
+    "variants.json": "368cbc4a593ed35b8d70d04895c3dd2d23c1c0b909d2831592e97a46f232c364",
+    "spec.json": "e41ea5253b81d23b171ae8b1b153af75096f31f37ede5f0f242969c5e919db3d",
+    "protocol.json": "d7408f6f1b04be4e5c467ee85f01371d5d0a062fd6e3dc7b5bf3929293f46322",
+    "predict.mts": "f64b9b37b7ead858d06a062c30e2c4a57b158e26c4f3e6fcc0c2d0d82d7fa440",
+    "freeze.mts": "0c276f7135e1e30914b80b3fe8897301c182aea1f648db4ff727a5870cbd8f79"
+  },
+  "archive_sha256": "2cc0224dc4140d2bd8b4174a76af623a1b3a5cc3f423631509dd9535ddce012d",
+  "description": "Current runtime verified identical to reused archive. Fractional state and inner source count ceil retained; outer army-term ceil removed."
+}

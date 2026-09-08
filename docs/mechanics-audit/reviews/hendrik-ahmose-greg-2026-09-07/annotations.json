@@ -1,0 +1,112 @@
+{
+  "hero:Hendrik:WormsRavage": {
+    "source_sha256": "fc16f4c3883a71fc6c3eb5ec3fb7bc7c2daf88cde21b35220720a34fc769e440",
+    "status": "partially_supported",
+    "context": "Current S3-first2 full-kit review of all four accepted Hendrik entries. Lancer full333 game/currentD17 reverses toA20 when S1 is omitted or restricted to enemyMarksmen. Positive250M game/currentD471 gives omissionD488 and restrictedD484; smaller gameD68/currentD71 gives D104/D97, retaining the3-troop raw residual. HistoricalRenee444+Hendrik100 game/currentA14 reverses toD17 without the S1 contribution. This supports debuff contribution beyond enemyMarksmen at levels1/3 in these preserved kits. Exact DefenseDown grouping, complete scaling, normal/skill interactions and lifecycle/mode gates are not independently established.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Ahmose:ViperFormation": {
+    "source_sha256": "2f24d854addfe6295c05001c9d76566719b32e62c279cf4a2510800fe15b523e",
+    "status": "partially_supported",
+    "context": "Two deterministic full-kit inputs with S1level1. Renee444+Ahmose113 gameA3777/current3778; omit Infantry pause3829, omit Infantry protection3745, shorten protection to1turn3762, extend pause to2turns3688. This context favors the modeled one-turn pause plus two-turn Infantry protection over those alternatives. Backline protection is unexercised there (omission unchanged3778). SoloAhmose110 game2633/current2615 retains18 residual (~0.7%); omitting backline protection predicts2640, closer to game. That nested branch is not validated, and the full-skill omission must not certify all three components. Exact shared phase and higher-level Infantry/backline protection differences remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Ahmose:PrayerOfFlame": {
+    "source_sha256": "2f24d854addfe6295c05001c9d76566719b32e62c279cf4a2510800fe15b523e",
+    "status": "partially_supported",
+    "context": "Two deterministic level1 full-kit entries. Renee444+Ahmose113 with4000Infantry+500Lancers versus13400Infantry gives game3777/current3778; omit S2 predicts3756, broaden its Infantry bonus to all own classes3872. This supports an Infantry-scoped contribution in that kit. Contradictory soloAhmose110 input remains game2633/current2615; omitting S2 predicts2634, a closer match. This18-unit (~0.7%) residual is preserved rather than tuned away or ignored. Scope support is conditional on the paired-kit case; exact coefficient/grouping, higher levels and the solo disagreement remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Ahmose:BladeOfLight": {
+    "source_sha256": "2f24d854addfe6295c05001c9d76566719b32e62c279cf4a2510800fe15b523e",
+    "status": "partially_supported",
+    "context": "Only one accepted input exercises S3: Renee444+Ahmose113, gameA3777/current3778. Omit wholeS3 gives3675; omit its Infantry offensive buff3737; omit its delayed target debuff3720. Both nested contributions matter under the retained full kit. Extending the target debuff to2turns gives3818; immediate onset3774 differs only4 from delayed3778 around3800 survivors, so exact delay is not established. Single enemyInfantry class cannot discriminate locked-target versus broader target scope. No complete mechanic dimension is certified from this one combined endpoint; damage grouping/kind, coefficients/scaling and source/target interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "duration_delay_and_order",
+      "source_and_target_scope",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Greg:SwordOfJustice": {
+    "source_sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76",
+    "status": "partially_supported",
+    "context": "Retrospective seven distinct fullGreg110 input sets with53 recorded outcomes;1000 simulations per candidate per input. Current distributions are compatible in all seven (p=.015449\u2013.955052). Stronger repeated Greg-only sets support offense outside Marksmen and a window longer than1turn: entry#2 n20 current3594.42 SD4.80 p=.788911, omission3608 SD0 p=.000050, Marksmen-only3598.80 SD3.20 p=.000050, duration1 3602.18 SD2.40 p=.000100; entry#0 n6 similarly separates narrow scope and1turn. Norah/Greg does not distinguish selected S1 alternatives; Mia/Greg and single older solo do not independently reject narrow scope. Exact20% chance,3versus2turns, max stacking, grouping and higher levels remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Greg:DeterrenceOfLaw": {
+    "source_sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76",
+    "status": "unresolved",
+    "context": "Seven fullGreg110 input sets/53 outcomes and1000 simulations per candidate/input. Omission is compatible in every set (p=.009250\u2013.885556); restricting the triggering source to Marksmen also remains plausible, so no positive contribution/source-gate claim follows from current endpoint fit. Broadening each proc to all enemy lines is rejected in Gregsolo, Norah/Greg, Mia/Greg and Greg-only#2; e.g n20 current3594.42 SD4.80 p=.788911 versus broad3576.49 SD11.17 p=.000150, but omission3594.77 SD4.77 p=.656767. That negative alternative does not validate the current target-line effect when omission fits. Broadening is closer in the six-hero mixed case and still plausible. Immediate/two-turn and delayed/one-turn alternatives also remain compatible; exact chance,delay,lifetime,scope and magnitude remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+[
+  {
+    "test_id": "renee_kind_100_lancer_control_nc",
+    "description": "No-hero 100-lancer control for the Renee lancer-source response sweep. WIP attacks 1000/800/1000 T6; minxxx defends 200 infantry, 100 lancers, and 101 marksmen T6. Total defender army remains 401 across the zero/one/100-lancer sweep.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 800,
+        "marksman_t6": 1000
+      },
+      "stats": {
+        "inf": {
+          "attack": 233.8,
+          "defense": 243.1,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 100,
+        "marksman_t6": 101
+      },
+      "stats": {
+        "inf": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 205.3,
+          "health": 206.5
+        },
+        "lanc": {
+          "attack": 264.2,
+          "defense": 258.5,
+          "lethality": 189.7,
+          "health": 191.0
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 2669,
+        "defender": 0
+      }
+    ]
+  }
+]

@@ -1,0 +1,96 @@
+{
+  "replay_sha256": "c6cff494613509a7780608aa673b778548d006028a08eb76b1610f53be209bec",
+  "unique_deterministic_fixture_entries": 31,
+  "stored_outcome_rows": 42,
+  "exact_fixture_entries": 28,
+  "within_two_fixture_entries": 31,
+  "unique_stochastic_entries_skipped": 13,
+  "count_caveat": "Stored rows and fixture entries are not asserted independent. Substantial overlap with the preceding batch reuses the same observations to review different skills. Current runtime deterministic classification does not itself prove that a game hero has no stochastic behavior.",
+  "skills": [
+    {
+      "key": "hero:Jessie:Bulwarks",
+      "source_sha256": "dbe8105a8e483774bdb8d94ba7f6d2abe0703aaff9739c44aa9f656bac9699ce",
+      "deterministic_fixture_entries": 15,
+      "skipped_stochastic_entries": 2,
+      "levels_exercised": [
+        1,
+        2
+      ],
+      "each_effect_enters_damage_jobs_in_all_reviewed_entries": {
+        "Bulwarks/1": true
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 2
+    },
+    {
+      "key": "hero:Patrick:CaloricBooster",
+      "source_sha256": "a580a36f0f78f5c153ad23ac2da06de7d94193fe8f41b268e3bb1f312ca3e345",
+      "deterministic_fixture_entries": 8,
+      "skipped_stochastic_entries": 3,
+      "levels_exercised": [
+        1,
+        2,
+        4
+      ],
+      "each_effect_enters_damage_jobs_in_all_reviewed_entries": {
+        "CaloricBooster/1": true
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0
+    },
+    {
+      "key": "hero:Sergey:DefendersEdge",
+      "source_sha256": "7981e1a1b52b9ef06522c81af54d7dd840ad33ed5b1ebf2c8bf066e04b9b6f05",
+      "deterministic_fixture_entries": 4,
+      "skipped_stochastic_entries": 8,
+      "levels_exercised": [
+        2,
+        4
+      ],
+      "each_effect_enters_damage_jobs_in_all_reviewed_entries": {
+        "DefendersEdge/1": true
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0
+    },
+    {
+      "key": "hero:Zinman:Implacable",
+      "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+      "deterministic_fixture_entries": 6,
+      "skipped_stochastic_entries": 4,
+      "levels_exercised": [
+        1
+      ],
+      "each_effect_enters_damage_jobs_in_all_reviewed_entries": {
+        "Implacable/1": true,
+        "Implacable/2": true
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0
+    },
+    {
+      "key": "hero:Zinman:PositionalBattler",
+      "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+      "deterministic_fixture_entries": 3,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        1
+      ],
+      "each_effect_enters_damage_jobs_in_all_reviewed_entries": {
+        "PositionalBattler/1": true
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0
+    }
+  ]
+}

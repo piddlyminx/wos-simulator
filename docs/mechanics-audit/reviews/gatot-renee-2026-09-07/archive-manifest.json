@@ -1,0 +1,92 @@
+[
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_100_lancer_control_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_100_lancer_control_nc.json",
+    "sha256": "f055aa26232af7cc49aee3e3b91c96917edeaa45fb5d4d545f655cf202ffe479"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_100_lancer_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_100_lancer_nc.json",
+    "sha256": "376e08a3282c0f66834cde6047b73800881ccb64fffa8b7ebbc518af55e243f4"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_25_lancer_control_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_25_lancer_control_nc.json",
+    "sha256": "ce011ded0e35d1fff4bc3a7dd33681579e1dc1dcdc22154b3f149777ee28fbd0"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_25_lancer_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_25_lancer_nc.json",
+    "sha256": "821b1f63e4ecb60bf81cabd54f546cad120edace61ed3a9cd0f1c9ff530c38d5"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_s1_damage_up_anchor_control_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_s1_damage_up_anchor_control_nc.json",
+    "sha256": "0d456bff5aedd77d226844d8d71c2e97aca4bc4f91f05b3684a5bee5c4698f08"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_s1_damage_up_anchor_edith_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_s1_damage_up_anchor_edith_nc.json",
+    "sha256": "d243cf116f201736e4f1bdfa0ccc9ea57496fd8df537944c0334735cb4ea1276"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_zero_lancer_control_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_zero_lancer_control_nc.json",
+    "sha256": "c39a16ee392555a62375064102e800af5e96355c22dca54db7304ae1038d4ac2"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_kind_zero_lancer_nc.json",
+    "storedPath": "archived-fixtures/renee_kind_zero_lancer_nc.json",
+    "sha256": "0ae6a087ff1b7bf765a673f8b25021dd55c3f59bb46cbab480859513842de0c4"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_ahmose_damage_taken_up_nc.json",
+    "sha256": "e42358f638a2dbaabd29adf2b562b37437014553bce2a21ff23a10de43aad7c4"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_ahmose_damage_taken_up_strong_nc.json",
+    "sha256": "34459042ba166d16ef000d355f1c37f09d9a3bc2544ba35cbca6c4c277ba8a70"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_edith_damage_up_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_edith_damage_up_nc.json",
+    "sha256": "c047bf3d08c69d872fb597e613defa984c9127c371847bcd5651d3734fc1ec95"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_hendrik_defense_down_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_hendrik_defense_down_nc.json",
+    "sha256": "152000825ed26309b7648474799305e8a42da44e1983d825adef5f7273d21162"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_jasser_lethality_up_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_jasser_lethality_up_nc.json",
+    "sha256": "773435efab5c740314c0b9f3c7a3bcaeb51b25dc0d9f30d15e1a895ce3123106"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_seo_yoon_attack_up_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_seo_yoon_attack_up_nc.json",
+    "sha256": "23ad043654e15c8e9f16a19d8aa42faf2e999f477ef637ef85a10c1326604044"
+  },
+  {
+    "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+    "originalPath": "testcases/emulator_verified/renee_same_kind_wu_ming_skill_damage_nc.json",
+    "storedPath": "archived-fixtures/renee_same_kind_wu_ming_skill_damage_nc.json",
+    "sha256": "c7e556c00a5dc37b288e01212e67aa7926319b6ccb1a42e5f7c3c484ec9e7f93"
+  }
+]

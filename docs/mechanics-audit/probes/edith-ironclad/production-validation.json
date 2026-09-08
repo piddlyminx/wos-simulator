@@ -1,0 +1,75 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-09-07T07:04:15.373Z",
+  "options": {
+    "workers": 2,
+    "matching": "edith_ironclad",
+    "repeat": 1000,
+    "seed": "mechanics-audit-2026-09-07-edith",
+    "includeSamples": true
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 1,
+    "testcasesFound": 1,
+    "executed": 1,
+    "warnings": 0,
+    "errors": 0,
+    "comparedToGame": 1,
+    "comparedToBaseline": 0
+  },
+  "warnings": [],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/edith_ironclad_100i_vs_400m.json#0": {
+      "file": "testcases/emulator_verified/edith_ironclad_100i_vs_400m.json",
+      "testcase_id": "edith_ironclad_100i_vs_400m",
+      "idx": 0,
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Edith": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 100
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 400
+          }
+        }
+      },
+      "armiesSource": "testcase",
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -102,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -102,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-09-07T07-04-15.557Z/cases/000001.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-09-07T07-04-15.557Z",
+  "chartsArtifact": "simulator_parity_2026-09-07T07-04-15.557Z/charts.json"
+}

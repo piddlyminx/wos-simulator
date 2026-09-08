@@ -1,0 +1,66 @@
+{
+  "results_sha256": "bf4b80a75079c4bede5bdf73da728bc31062139f106802f300a0a5504d895109",
+  "scope": "All generated Gwen jobs in the three deterministic S3 formations see exactly their normal parent Gwen S1/S2 values, with S2 target restriction preserved. All raw scores equal A-D, including any draws. All frozen artifact, source and tooltip hashes match. The damage formula and casualty commit implementation are unchanged.",
+  "checks": [
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+      "variant": "production/normal_snapshot",
+      "verified_component_jobs": 44
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+      "variant": "production/normal_augmentation",
+      "verified_component_jobs": 44
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+      "variant": "reset_after_delivery/normal_snapshot",
+      "verified_component_jobs": 35
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+      "variant": "reset_after_delivery/normal_augmentation",
+      "verified_component_jobs": 35
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+      "variant": "production/normal_snapshot",
+      "verified_component_jobs": 18
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+      "variant": "production/normal_augmentation",
+      "verified_component_jobs": 18
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+      "variant": "reset_after_delivery/normal_snapshot",
+      "verified_component_jobs": 15
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+      "variant": "reset_after_delivery/normal_augmentation",
+      "verified_component_jobs": 15
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_small_timing_550m_vs_810i_45l_45m.json#0",
+      "variant": "production/normal_snapshot",
+      "verified_component_jobs": 47
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_small_timing_550m_vs_810i_45l_45m.json#0",
+      "variant": "production/normal_augmentation",
+      "verified_component_jobs": 47
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_small_timing_550m_vs_810i_45l_45m.json#0",
+      "variant": "reset_after_delivery/normal_snapshot",
+      "verified_component_jobs": 50
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_small_timing_550m_vs_810i_45l_45m.json#0",
+      "variant": "reset_after_delivery/normal_augmentation",
+      "verified_component_jobs": 50
+    }
+  ]
+}

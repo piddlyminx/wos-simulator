@@ -1,0 +1,74 @@
+{
+  "hero:Hector:SurvivalInstincts": {
+    "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+    "status": "partially_supported",
+    "context": "All 6 accepted full-kit fixtures/14 outcomes replayed with 1000 samples per current, omission and Infantry-only model. Full Hector 3/4/3 solo: game defender 402/409/373/403/385 (mean 394.4 SD14.926), current 386.602 SD23.785 p.991; omission 219.789 p.00005, Infantry-only 384.984 p.936653. Full Norah/Hector/Zinman repeated game mean 270.4/current 269.491 SD1.367 p.334433 rejects omission 266.334 p.00025 but Infantry-only samples equal current. Five of six fixtures are exactly unchanged by Infantry-only restriction; occasional Lancer protection in solo traces is insufficient positive game evidence for backline scope. Supports protection contribution mainly at level 3, not all-troop scope, precise 40% chance, values/scaling, bucket or shared-turn lifecycle. Mixed-hero and Hector/Renee/Wayne high-tail outcomes remain explicit; the latter gameA1597 versus current1588.164 SD2.904 p.0074 this seed is not declared resolved. Levels 1/5, joiners and widget gates remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/SurvivalInstincts-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/SurvivalInstincts-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": []
+  },
+  "hero:Hector:Rampant": {
+    "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+    "status": "partially_supported",
+    "context": "All 6 accepted full-kit fixtures/14 outcomes replayed with fixed current, whole/Infantry/Marksman omission and no-decay alternatives. Full Hector 3/4/3 solo n5: gameD394.4 SD14.926/current386.602 SD23.785 p.991; omit Infantry345.432 p.0014, omit Marksman346.654 p.00185, retain initial magnitudes/10 uses without decay412.075 p.00005. Repeated Norah/Hector/Zinman independently rejects both class omissions and no-decay while current269.491 SD1.367 agrees with game270.4 p.334433. Supports both class contributions and a diminishing boost versus none at S2level4; not exact 15% decrement, 10-use boundary, generated-job consumption, target scope, bucket or all levels. No-decay improves the isolated mixed-hero and Hector/Renee/Wayne high-tail points but fails both repeated fixtures, so it is not a supported fix. Level3 single outcomes are weaker; levels1/2/5 and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Rampant-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Rampant-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Hector:Blitz": {
+    "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+    "status": "partially_supported",
+    "context": "All 6 accepted full-kit fixtures/14 outcomes replayed with 1000 samples per current, omission and Infantry-only-source model. Full Hector 3/4/3 solo n5: gameD394.4 SD14.926/current386.602 SD23.785 p.991; omission changes simulated winners with signed defender mean27.715, p.00015, Infantry-only defender mean165.968 p.00005. Repeated Norah/Hector/Zinman (S3level4) gameD270.4/current269.491 p.334433 rejects omission263.828 and Infantry-only265.188, both p.00005. Generated current jobs from all three own classes corroborate simulator execution; endpoint contrasts support positive extra contribution and activation beyond Infantry in these contexts. Hector/Patrick accepts omission and provides weak positive discrimination. Existing mixed-hero/Hector-Renee-Wayne discrepancies remain; exact 25% chance, values/scaling, damage kind versus augmentation, trigger ordering, target locking/exhaustion, attacker-side scope and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Blitz-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Blitz-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Gordon:VenomInfusion": {
+    "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+    "status": "partially_supported",
+    "context": "All 7 accepted full-kit fixtures/11 outcomes replayed; 6 deterministic, repeated Lynn-containing wos444 stochastic with 1000 samples per model. The full Flint221/Gordon221/Jasser44 wos451 S1/S2 bucket fixtures give gameD1517/1017 versus current1516/1016, within one survivor. Moving only S1 boost from type.normal.damage.up to active.hero.damage.up while retaining normal-kind restriction gives1563/1052; boost omission1798/1226 and poison omission1578/1062 also disagree. Supports both halves and normal-versus-hero stacking bucket in this interaction at level2. Stochastic wos444 gameA5065.4 SD228.015/current5049.677 SD216.571 p.372931 rejects boost omission but permits poison omission and hero bucket at the raw threshold; not a universal discriminator. Wayne fixtures retain raw3/16 survivor residuals; Gatot secondary kit retains17 survivors/10 rounds and s3-5000 retains423 survivors/114 rounds, unchanged endpoint by every selected variant. These do not identify Gordon as the cause. Exact cadence, delayed poison lifecycle, damage-kind restriction, all scope/scaling and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/VenomInfusion-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/VenomInfusion-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Gordon:ChemicalTerror": {
+    "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+    "status": "partially_supported",
+    "context": "All 7 accepted full-kit fixtures/11 outcomes replayed with current, whole/offense/enemy-debuff omission and enemy-Infantry-only alternatives. Full Flint221/Gordon221/Jasser44 wos451 fixtures give gameD1517/1017 versus current1516/1016; offense omission1796/1223 and enemy-debuff omission1576/1061 support both contributions at level2. Restricting enemies to Infantry is identical there and does not establish broader scope. Repeated wos444 gameA5065.4 SD228.015/current5049.677 SD216.571 p.372931; enemy-debuff omission5309.568 p.00225, Infantry-only5290.047 p.00585, a weak near-threshold distinction insufficient to certify all-enemy scope. Traced current debuffs hit all classes but that is simulator execution, not independent game proof. Contribution-only annotation; exact every3 timing/duration, buckets, magnitude/scaling, offense class specificity and all-enemy scope remain unreviewed. Wayne3/16 and Gatot17/423 survivor residuals plus Gatot round discrepancies remain explicit and unattributed; level3 observations do not provide clean positive closure.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": []
+  }
+}

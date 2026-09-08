@@ -1,0 +1,85 @@
+{
+  "hero:Logan:LionStrike": {
+    "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+    "status": "partially_supported",
+    "context": "Retrospective three deterministic entries at levels1/3 all exact. FullLogan333+Gwen110 with attacker600I/600L/600M versus defender200each gives game/currentD403; omit LionStrike D292, restrict to enemyInfantry D309. FullLogan333 solo gives D1134 versus D1126/D1127. This supports debuff contribution beyond enemyInfantry in these normal-attack contexts. The level1 solo game/currentD1995 is unchanged on omission, so it is not an independent magnitude discriminator. AttackDown/DamageDown/LethalityDown alternatives give identical endpoints; exact bucket and coefficient scaling remain unreviewed. Eight stochastic full-kit entries skipped.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Logan:LionIntimidation": {
+    "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+    "status": "partially_supported",
+    "context": "Retrospective two deterministic level3 entries, both exact. FullLogan333+Gwen110 game/currentD403 versus selected-skill omissionD292; fullLogan333 soloD1134 versus omissionD1126. These show a protective contribution conditional on retained full-kit mechanics. Only ownInfantry receives attacks in either case, so Infantry-only recipients and DefenseUp alternatives are exactly equivalent to current; HealthUp givesD400/D1133, a small residual that does not establish a unique bucket. All-troop scope, normal/skill interactions and scaling remain unresolved. Eight stochastic full-kit entries skipped. No complete review dimension is promoted from endpoint fit alone.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Logan:LeaderInspiration": {
+    "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+    "status": "partially_supported",
+    "context": "Retrospective two deterministic level3 entries, both exact. FullLogan333+Gwen110 game/currentD403 versus selected-skill omissionD270; fullLogan333 soloD1134 versus omissionD1124. These show a protective contribution conditional on retained full-kit mechanics. Only ownInfantry receives attacks; Infantry-only recipients and DefenseUp alternatives give identical outcomes, while DamageTakenDown givesD400/D1133. This does not identify all-troop scope, exact Health grouping or five-level scaling. Six stochastic full-kit entries skipped. No complete review dimension is promoted from endpoint fit alone.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Ling:FearsomeAura": {
+    "source_sha256": "9e6fea7158f274e41993a30bdc3249bd18f8b566160aaeac428a8e6649181755",
+    "status": "partially_supported",
+    "context": "Retrospective two full Ling11/LingXue11 solo T6 mixed entries at level1. Game/currentA2822/A2822 and A3215/A3214; omissionA2880/A3244, restricting debuff to enemyLancersA2859/A3242. This supports a normal-attack debuff beyond enemyLancers with recorded canonical and alias kits preserved. AttackDown/DamageDown/LethalityDown yield identical endpoints, so bucket is unseparated. The empty second-skill placeholder is not a combat mechanic. Higher levels, skill-kind interactions and ownership/mode gates remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Lumak:TacticalDeception": {
+    "source_sha256": "80c77f1631649f803dc5408a744c6b7ac6aa765450b730cd9ab1296caf87472e",
+    "status": "partially_supported",
+    "context": "Retrospective two full Lumak11/LumakBokan33 solo T6 mixed entries at levels1/3. Game/currentA2797/A2797 and A3127/A3126; omissionA2837/A3234, restricting debuff to enemyLancersA2834/A3204. This supports a normal-attack debuff beyond enemyLancers with recorded aliases preserved. DamageDown/AttackDown/LethalityDown alternatives give identical endpoints; bucket and full scaling curve remain unseparated. Five stochastic full-kit entries including FC/Gatot were skipped, and no combat claim applies to the empty second-skill placeholder.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  }
+}

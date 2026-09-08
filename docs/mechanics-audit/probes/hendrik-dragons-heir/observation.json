@@ -1,0 +1,57 @@
+{
+  "report_timestamp_displayed": "2026-09-07 06:02:19",
+  "world_coord": {
+    "x": 787,
+    "y": 577
+  },
+  "attacker": {
+    "troops": 250,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 88,
+    "lightly_injured": 162
+  },
+  "defender": {
+    "troops": 600,
+    "survivors": 471,
+    "losses": 0,
+    "injured": 47,
+    "lightly_injured": 82
+  },
+  "per_troop_survivors": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 313,
+      "lancer": 82,
+      "marksman": 76
+    }
+  },
+  "skill_details": {
+    "attacker": {
+      "Hendrik": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 5,
+          "displayed_kills": null
+        },
+        "skill_3": {
+          "triggered": 6,
+          "displayed_kills": 17
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "mail_ids": {
+    "defender_view": "2734692464122617"
+  },
+  "defender_troop_details_source": "docs/mechanics-audit/probes/hendrik-dragons-heir/defender-troops.json",
+  "transcription": "Visually checked report overview, all displayed stats, exact T6 troop counts, full Hendrik3/3/3 kit, Battle Details and defender troop outcomes. No explicit round total. Dash retained as null. Counterpart report is the same battle, not an additional observation."
+}

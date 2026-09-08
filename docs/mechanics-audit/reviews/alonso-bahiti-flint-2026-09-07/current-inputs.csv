@@ -1,0 +1,36 @@
+fixture_key,record_count,game_margins,current_deterministic,current_mean,current_per_battle_sd,raw_p,sample_count,interpretation
+testcases/3-testcases_mixed-heroes-not-verified.json#1,1,[-3729],False,-3729,0,1,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/3-testcases_mixed-heroes-not-verified.json#2,1,[-2823],False,-2907.58,26.67,0.00075,10000,Fixed inputs; no stat fitting; no independent-capture count inferred. Refined current sample supersedes primary p.
+testcases/3-testcases_mixed-heroes-not-verified.json#3,1,[-519],False,-516.66,7.01,0.882156,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/3-testcases_mixed-heroes-not-verified.json#4,1,[9282],False,9334.3,42.37,0.263537,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/3-testcases_mixed-heroes-not-verified.json#5,1,[-2295],False,-2271.85,9.4,0.015999,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_attacker_600_all.json#0,6,"[-269, -245, -243, -246, -270, -245]",False,-256.37,10.33,0.438028,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#0,4,"[-465, -464, -465, -464]",False,-463.36,1,0.045348,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#1,2,"[-461, -459]",False,-459.6,1.03,0.896205,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_minxxx_defender.json#0,8,"[1454, 1435, 1486, 1429, 1453, 1472, 1419, 1455]",False,1457.55,15.94,0.19184,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_norah_combo.json#0,2,"[-394, -392]",False,-392.89,2.91,0.923904,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_norah_combo.json#2,2,"[-389, -391]",False,-392.98,2.8,0.20424,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_solo.json#0,10,"[1491, 1535, 1280, 744, 964, 1451, 1550, 897, 854, 282]",False,1231.04,335.51,0.293085,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_solo_v2.json#0,6,"[-498, -539, -555, -509, -495, -486]",False,-487.4,51.13,0.302535,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_solo_v2.json#1,19,"[61, 28, 46, 71, -97, 21, -95, 66, -8, 61, 37, -39, -115, 44, 1, 30, 28, 56, 6]",False,-18.01,87.78,0.39158,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_vs_alonso.json#0,8,"[1561, 1541, 1557, 1553, 1564, 1559, 1558, 1544]",False,1553.6,15.41,0.669267,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_vs_alonso_inf_lancer.json#0,8,"[-752, -744, -737, -741, -753, -764, -745, -756]",False,-750.58,13.45,0.894505,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/alonso_wip_attacker.json#0,8,"[1770, 1766, 1770, 1766, 1778, 1770, 1766, 1765]",False,1769.36,3.56,0.810959,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/bahiti_norah_combo_nc.json#0,1,[269],False,196.25,139.23,0.681716,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/bahiti_solo.json#0,2,"[2179, 2233]",False,2229.4,50.6,0.840858,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/bahiti_solo_nc.json#0,1,[3675],False,3677.31,5.54,0.729014,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/flint_reina_zinman_combo.json#0,1,[-439],False,-444.72,6.33,0.410729,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/flint_solo_nc.json#0,1,[2862],True,2861,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/flint_zinman_combo_nc.json#0,1,[1005],True,1005,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/logan_bahiti_combo_nc.json#0,1,[-517],False,-509.22,13.03,0.669417,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0,1,[-482],False,-495.28,16.17,0.359482,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/philly_bahiti_combo.json#0,1,[-556],False,-558.4,1.89,0.453327,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/philly_bahiti_combo.json#1,4,"[-463, -456, -455, -459]",False,-454.3,4.38,0.19624,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/reina_bahiti_combo_nc.json#0,1,[-502],False,-483.28,16.85,0.297735,1000,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_bucket.json#0,1,[2736],True,2736,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_bucket.json#0,1,[2746],True,2746,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/wos451_bradley_s3_all_damage_up_bucket.json#0,1,[6151],True,6151,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0,1,[-1517],True,-1516,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0,1,[-1017],True,-1016,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/heroes_unittests/Flint_tc.json#0,5,"[-150, -151, -149, -149, -150]",True,-150,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.
+testcases/heroes_unittests/Flint_tc.json#1,6,"[5720, 5756, 5736, 5715, 5733, 5736]",True,5762,0,,1,Fixed inputs; no stat fitting; no independent-capture count inferred.

@@ -1,0 +1,147 @@
+{
+  "generated_at": "2026-09-07T04:42:50.426Z",
+  "design": "Retrospective frozen one-line counterfactual; no production edits or newly captured observations.",
+  "counts": {
+    "total": 292,
+    "acceptedEmulator": 156,
+    "deterministic": 173,
+    "stochastic": 119
+  },
+  "deterministic": {
+    "all": {
+      "rows": 173,
+      "before_outside_2": 51,
+      "after_outside_2": 23,
+      "improved": 85,
+      "worsened": 11,
+      "unchanged": 77
+    },
+    "active": {
+      "rows": 172,
+      "before_outside_2": 50,
+      "after_outside_2": 23,
+      "improved": 84,
+      "worsened": 11,
+      "unchanged": 77
+    },
+    "accepted_emulator": {
+      "rows": 84,
+      "before_outside_2": 12,
+      "after_outside_2": 6,
+      "improved": 33,
+      "worsened": 3,
+      "unchanged": 48
+    }
+  },
+  "new_deterministic_side_failures": [],
+  "stochastic": {
+    "screen_replicates": 256,
+    "confirmation_replicates": 10000,
+    "confirmed_case_count": 9,
+    "new_confirmation_failures": [],
+    "confirmation": [
+      {
+        "key": "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "game": [
+          -2823
+        ],
+        "baseline_p": 0.001,
+        "candidate_p": 0.0018
+      },
+      {
+        "key": "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "game": [
+          -2295
+        ],
+        "baseline_p": 0.019999,
+        "candidate_p": 0.017849
+      },
+      {
+        "key": "testcases/emulator_verified/alonso_solo_v2.json#0",
+        "game": [
+          -498,
+          -539,
+          -555,
+          -509,
+          -495,
+          -486
+        ],
+        "baseline_p": 0.505075,
+        "candidate_p": 0.285036
+      },
+      {
+        "key": "testcases/emulator_verified/hector_renee_wayne.json#0",
+        "game": [
+          1597
+        ],
+        "baseline_p": 0.00235,
+        "candidate_p": 0.00375
+      },
+      {
+        "key": "testcases/emulator_verified/natalia_solo.json#0",
+        "game": [
+          2664
+        ],
+        "baseline_p": 0.018049,
+        "candidate_p": 0.024799
+      },
+      {
+        "key": "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "game": [
+          39135
+        ],
+        "baseline_p": 0.006,
+        "candidate_p": 0.00655
+      },
+      {
+        "key": "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "game": [
+          11267
+        ],
+        "baseline_p": 0.00115,
+        "candidate_p": 0.005
+      },
+      {
+        "key": "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "game": [
+          11548
+        ],
+        "baseline_p": 0.00725,
+        "candidate_p": 0.014899
+      },
+      {
+        "key": "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "game": [
+          24929
+        ],
+        "baseline_p": 0.0023,
+        "candidate_p": 0.00285
+      }
+    ]
+  },
+  "config_sha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "base_git_commit": "6b130b234c39038395ee8a011cd5f9a9718f8823",
+  "baseline_manifest_source_hashes_all_match": true,
+  "artifacts": [
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/results.json",
+      "sha256": "9e2eea9f4c20ab44342e255987a2958c8778c78dd14fa202ec46d3f13618bf81"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/config.json",
+      "sha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/deterministic-details.json",
+      "sha256": "6329171b265652a5ba07ea7b1c6f8cba649bac0b524210496707e082679045ac"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/confirmation-selection.json",
+      "sha256": "c36e59f00c94b88b4686b509bd228b5278280feb7e3ae30c9a13771427a727cc"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/confirmation.json",
+      "sha256": "d820f7ebf0861aef12faa64a7f863e928fdbf115e0dbcfe04d0de56356f12f8d"
+    }
+  ]
+}

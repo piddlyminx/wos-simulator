@@ -1,0 +1,168 @@
+{
+  "current": {
+    "description": "Frozen current full-kit behavior: S1 +4% all damage; S2 every second normal Lancer attack delivers extra15% skill damage and next-turn +5% all-troop Attack.",
+    "patches": []
+  },
+  "s2_lancer_only_buff": {
+    "description": "Only S2 Attack buff scope changes to Lancers; S1 and S2 extra attack retain current behavior.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Sonya",
+          "skills",
+          "BountyTemptation",
+          "effects",
+          "BountyTemptation/2",
+          "units"
+        ],
+        "from": null,
+        "to": {
+          "applies_to": "self.lancer",
+          "applies_vs": "any"
+        }
+      }
+    ]
+  },
+  "s1_lancer_only_buff": {
+    "description": "Only S1 damage buff scope changes to Lancers; full S2 retains current behavior.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Sonya",
+          "skills",
+          "TreasureHunter",
+          "effects",
+          "TreasureHunter/1",
+          "units"
+        ],
+        "from": null,
+        "to": {
+          "applies_to": "self.lancer",
+          "applies_vs": "any"
+        }
+      }
+    ]
+  },
+  "faster_s2_cadence": {
+    "description": "S2 first fires on the second normal Lancer attack, then on every normal Lancer attack. Diagnostic faster-cadence counterfactual; not a general implementation of historical attack-counter rules.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Sonya",
+          "skills",
+          "BountyTemptation",
+          "trigger"
+        ],
+        "from": {
+          "type": "attack",
+          "every": 2,
+          "source": "lancer"
+        },
+        "to": {
+          "type": "attack",
+          "every": 1,
+          "first": 2,
+          "source": "lancer"
+        }
+      }
+    ]
+  },
+  "same_turn_s2_buff": {
+    "description": "Only S2 Attack buff delay changes from next turn to current turn, using existing simulator activation and attack ordering.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Sonya",
+          "skills",
+          "BountyTemptation",
+          "effects",
+          "BountyTemptation/2",
+          "duration",
+          "turns",
+          "delay"
+        ],
+        "from": 1,
+        "to": 0
+      }
+    ]
+  },
+  "normal_damage_boost": {
+    "description": "S2 extra skill job becomes a one-use normal-damage modifier of +15 percentage points in the hero damage bucket; not a separately multiplicative 1.15 factor.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Sonya",
+          "skills",
+          "BountyTemptation",
+          "effects",
+          "BountyTemptation/1"
+        ],
+        "from": {
+          "type": "extra_skill_attack",
+          "value": [
+            15,
+            30,
+            45,
+            60,
+            75
+          ],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
+            }
+          ]
+        },
+        "to": {
+          "type": "active.hero.damage.up",
+          "value": [
+            15,
+            30,
+            45,
+            60,
+            75
+          ],
+          "units": {
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
+          },
+          "applies_to_damage_kinds": [
+            "normal"
+          ],
+          "duration": {
+            "attacks": {
+              "count": 1
+            }
+          }
+        }
+      }
+    ]
+  },
+  "s1_attack_bucket": {
+    "description": "Only S1 uses the active hero Attack bucket instead of the active hero damage bucket.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Sonya",
+          "skills",
+          "TreasureHunter",
+          "effects",
+          "TreasureHunter/1",
+          "type"
+        ],
+        "from": "active.hero.damage.up",
+        "to": "active.hero.attack.up"
+      }
+    ]
+  }
+}

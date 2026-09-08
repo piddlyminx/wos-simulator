@@ -1,0 +1,146 @@
+[
+  {
+    "test_id": "greg_deterrence_200i_vs_400m",
+    "description": "Prospective five-outcome S2 positive-contribution probe. minxxx fullGreg1/1/0 and200 T6 Infantry attacks WIP nohero400 T6 Marksmen. One persistent enemy class avoids prior target dilution; Infantry source distinguishes all-troop S2 eligibility from Marksman-only scope. S1 chance retained, S3 actually locked. Preserve exact fresh full reportstats, reportidentity, all individual outcomes, Battle Details and per-line survivors. Frozen design and models in docs/mechanics-audit/probes/greg-deterrence/.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Greg": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 375.8,
+          "defense": 376.3,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 400
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249.0,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 113
+      },
+      {
+        "attacker": 0,
+        "defender": 108
+      },
+      {
+        "attacker": 0,
+        "defender": 109
+      }
+    ],
+    "metadata": {
+      "data_quality_notes": [
+        "Initial attacker-report notification obscured Infantry Attack on both sides. Corrected only those two OCR fields using visually checked clean counterpart stats; original fixture and images preserved in capture-01/input-correction.json."
+      ],
+      "observed_battle_outcomes": [
+        {
+          "displayed_time": "2026-09-07 08:32:39",
+          "coordinates": {
+            "x": 791,
+            "y": 577
+          },
+          "winner": "defender",
+          "survivors": {
+            "attacker": 0,
+            "defender": 113
+          },
+          "skill_activations": {
+            "Greg": {
+              "SwordOfJustice": 15,
+              "DeterrenceOfLaw": 22
+            }
+          },
+          "evidence_directory": "docs/mechanics-audit/probes/greg-deterrence/capture-01"
+        },
+        {
+          "displayed_time": "2026-09-07 09:45:59",
+          "coordinates": {
+            "x": 791,
+            "y": 577
+          },
+          "winner": "defender",
+          "survivors": {
+            "attacker": 0,
+            "defender": 108
+          },
+          "skill_activations": {
+            "Greg": {
+              "SwordOfJustice": 23,
+              "DeterrenceOfLaw": 22
+            }
+          },
+          "evidence_directory": "docs/mechanics-audit/probes/greg-deterrence/capture-02"
+        },
+        {
+          "displayed_time": "2026-09-07 09:52:08",
+          "coordinates": {
+            "x": 791,
+            "y": 577
+          },
+          "winner": "defender",
+          "survivors": {
+            "attacker": 0,
+            "defender": 109
+          },
+          "skill_activations": {
+            "Greg": {
+              "SwordOfJustice": 16,
+              "DeterrenceOfLaw": 28
+            }
+          },
+          "evidence_directory": "docs/mechanics-audit/probes/greg-deterrence/capture-03"
+        }
+      ]
+    }
+  }
+]

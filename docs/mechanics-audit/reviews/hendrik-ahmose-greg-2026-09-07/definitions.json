@@ -1,0 +1,1648 @@
+{
+  "frozenAt": "2026-09-07T07:08:21.135Z",
+  "phase": "retrospective_existing_accepted_outcomes",
+  "interpretation": "All selected recorded outcomes accepted unless explicitly invalid/obsolete; no such flags on selected entries. All existing outcomes were available before this retrospective definition. Full kits and individual input sets preserved; no coefficient fitting or production edits. S3 first2 Hendrik is current. Variants are simulator counterfactuals, not live-disabled skills.",
+  "options": {
+    "repeat": 1000,
+    "workers": 4,
+    "seed": "hendrik-ahmose-greg-review-2026-09-07"
+  },
+  "selections": [
+    {
+      "hero": "Hendrik",
+      "skill": "WormsRavage"
+    },
+    {
+      "hero": "Ahmose",
+      "skill": "ViperFormation"
+    },
+    {
+      "hero": "Ahmose",
+      "skill": "PrayerOfFlame"
+    },
+    {
+      "hero": "Ahmose",
+      "skill": "BladeOfLight"
+    },
+    {
+      "hero": "Greg",
+      "skill": "SwordOfJustice"
+    },
+    {
+      "hero": "Greg",
+      "skill": "DeterrenceOfLaw"
+    }
+  ],
+  "variantDefinitions": {
+    "Hendrik.WormsRavage.omit": {
+      "key": "hero:Hendrik:WormsRavage",
+      "description": "Omit only the selected skill effects in the simulator; retain the full recorded kit and other skills."
+    },
+    "Hendrik.WormsRavage.enemy_marksmen_only": {
+      "key": "hero:Hendrik:WormsRavage",
+      "description": "Restrict persistent DefenseDown to enemy Marksmen, testing the all-enemy scope."
+    },
+    "Ahmose.ViperFormation.omit": {
+      "key": "hero:Ahmose:ViperFormation",
+      "description": "Omit only the selected skill effects in the simulator; retain the full recorded kit and other skills."
+    },
+    "Ahmose.ViperFormation.omit_pause": {
+      "key": "hero:Ahmose:ViperFormation",
+      "description": "Omit only ViperFormation/1, preserving its sibling components."
+    },
+    "Ahmose.ViperFormation.omit_backline_protection": {
+      "key": "hero:Ahmose:ViperFormation",
+      "description": "Omit only ViperFormation/2, preserving its sibling components."
+    },
+    "Ahmose.ViperFormation.omit_infantry_protection": {
+      "key": "hero:Ahmose:ViperFormation",
+      "description": "Omit only ViperFormation/3, preserving its sibling components."
+    },
+    "Ahmose.ViperFormation.protection_one_turn": {
+      "key": "hero:Ahmose:ViperFormation",
+      "description": "Keep cadence and one-turn Infantry pause; make both protection components last one turn instead of two."
+    },
+    "Ahmose.ViperFormation.pause_two_turns": {
+      "key": "hero:Ahmose:ViperFormation",
+      "description": "Keep protection unchanged; extend only the Infantry pause from one turn to two."
+    },
+    "Ahmose.PrayerOfFlame.omit": {
+      "key": "hero:Ahmose:PrayerOfFlame",
+      "description": "Omit only the selected skill effects in the simulator; retain the full recorded kit and other skills."
+    },
+    "Ahmose.PrayerOfFlame.all_own_types": {
+      "key": "hero:Ahmose:PrayerOfFlame",
+      "description": "Broaden only the permanent Infantry offense effect to all own troop types."
+    },
+    "Ahmose.BladeOfLight.omit": {
+      "key": "hero:Ahmose:BladeOfLight",
+      "description": "Omit only the selected skill effects in the simulator; retain the full recorded kit and other skills."
+    },
+    "Ahmose.BladeOfLight.omit_offense": {
+      "key": "hero:Ahmose:BladeOfLight",
+      "description": "Omit only the Infantry attack contribution; retain the delayed target debuff."
+    },
+    "Ahmose.BladeOfLight.omit_target_debuff": {
+      "key": "hero:Ahmose:BladeOfLight",
+      "description": "Omit only the delayed target debuff; retain Infantry attack contribution."
+    },
+    "Ahmose.BladeOfLight.debuff_immediate": {
+      "key": "hero:Ahmose:BladeOfLight",
+      "description": "Start the one-turn target debuff immediately instead of next turn, testing the documented ordering uncertainty."
+    },
+    "Ahmose.BladeOfLight.debuff_two_turns": {
+      "key": "hero:Ahmose:BladeOfLight",
+      "description": "Retain next-turn onset; extend target debuff from one turn to two."
+    },
+    "Greg.SwordOfJustice.omit": {
+      "key": "hero:Greg:SwordOfJustice",
+      "description": "Omit only the selected skill effects in the simulator; retain the full recorded kit and other skills."
+    },
+    "Greg.SwordOfJustice.marksmen_only": {
+      "key": "hero:Greg:SwordOfJustice",
+      "description": "Restrict each offensive window to own Marksmen; preserve chance, duration and max stacking."
+    },
+    "Greg.SwordOfJustice.duration_one": {
+      "key": "hero:Greg:SwordOfJustice",
+      "description": "Retain chance/scope; make each offensive window last one turn instead of three."
+    },
+    "Greg.DeterrenceOfLaw.omit": {
+      "key": "hero:Greg:DeterrenceOfLaw",
+      "description": "Omit only the selected skill effects in the simulator; retain the full recorded kit and other skills."
+    },
+    "Greg.DeterrenceOfLaw.marksman_source_only": {
+      "key": "hero:Greg:DeterrenceOfLaw",
+      "description": "Permit only Marksman attacks to trigger the debuff; preserve target lock, chance and lifetime."
+    },
+    "Greg.DeterrenceOfLaw.all_enemy_targets": {
+      "key": "hero:Greg:DeterrenceOfLaw",
+      "description": "Broaden each debuff from the triggering target line to all enemies, testing the documented scope uncertainty."
+    },
+    "Greg.DeterrenceOfLaw.immediate": {
+      "key": "hero:Greg:DeterrenceOfLaw",
+      "description": "Start the two-turn target debuff immediately instead of next turn, testing the documented ordering choice."
+    },
+    "Greg.DeterrenceOfLaw.duration_one": {
+      "key": "hero:Greg:DeterrenceOfLaw",
+      "description": "Keep next-turn onset but shorten the target debuff from two turns to one."
+    }
+  },
+  "sourceHashes": {
+    "simulator/src/battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
+    "simulator/src/config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
+    "simulator/src/config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
+    "simulator/src/config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
+    "simulator/src/config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "simulator/src/effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
+    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "simulator/src/extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
+    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "simulator/src/recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
+    "simulator/src/runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
+    "simulator/src/runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
+    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "simulator/src/types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
+    "simulator/src/webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
+    "simulator/src/workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4",
+    "simulator/src/tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
+    "simulator/src/tooling/exportGatotTestcases.ts": "1f88bffca8bb34a63e71df804d7cf75ce3b6a8b75cc2c912ee8fbe0323f68324",
+    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "simulator/src/tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
+    "simulator/src/tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
+    "simulator/src/tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
+    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "simulator/config/hero_definitions/Hendrik.json": "fc16f4c3883a71fc6c3eb5ec3fb7bc7c2daf88cde21b35220720a34fc769e440",
+    "simulator/config/hero_definitions/Ahmose.json": "2f24d854addfe6295c05001c9d76566719b32e62c279cf4a2510800fe15b523e",
+    "simulator/config/hero_definitions/Greg.json": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76"
+  },
+  "configSha256": "fe09ca93cd70233e682b8d60914af150068e5a7891e64423d41f8a4894284eaa",
+  "fixtures": [
+    {
+      "key": "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+      "fixtureSha256": "a572612ee1bd384f2f3cc791d080bb0722cabd1d232601ef05543f89ce1a18ef",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 0,
+          "defender": 17
+        }
+      ],
+      "game": [
+        -17
+      ],
+      "skills": [
+        "hero:Hendrik:WormsRavage"
+      ],
+      "variantNames": [
+        "current",
+        "Hendrik.WormsRavage.omit",
+        "Hendrik.WormsRavage.enemy_marksmen_only"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0",
+      "fixtureSha256": "bbd50aac274ac67718de234822a76aadef740d7b437ab99ff3f358fe4be1047d",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 0,
+          "defender": 471
+        }
+      ],
+      "game": [
+        -471
+      ],
+      "skills": [
+        "hero:Hendrik:WormsRavage"
+      ],
+      "variantNames": [
+        "current",
+        "Hendrik.WormsRavage.omit",
+        "Hendrik.WormsRavage.enemy_marksmen_only"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0",
+      "fixtureSha256": "203c31c0604fceab12d74353b0293688276b6d0957a18ff61dc1ea53f26ece49",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 0,
+          "defender": 68
+        }
+      ],
+      "game": [
+        -68
+      ],
+      "skills": [
+        "hero:Hendrik:WormsRavage"
+      ],
+      "variantNames": [
+        "current",
+        "Hendrik.WormsRavage.omit",
+        "Hendrik.WormsRavage.enemy_marksmen_only"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+      "fixtureSha256": "6075b01541af2e9d31d241b32fbb294d0701c24eed285132cb47528ae73da90a",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Hendrik": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 120
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 586.7,
+              "defense": 587,
+              "lethality": 315.1,
+              "health": 271.1
+            },
+            "mark": {
+              "attack": 382.5,
+              "defense": 384.5,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t9": 446
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 14,
+          "defender": 0
+        }
+      ],
+      "game": [
+        14
+      ],
+      "skills": [
+        "hero:Hendrik:WormsRavage"
+      ],
+      "variantNames": [
+        "current",
+        "Hendrik.WormsRavage.omit",
+        "Hendrik.WormsRavage.enemy_marksmen_only"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/ahmose_solo_nc.json#0",
+      "fixtureSha256": "efc62fe9decf7d3f964cb99b939d76e271ab0e16a8827168b3c91f06e81ddfd2",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 309.2,
+              "defense": 290.8,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 181.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 205.7,
+              "defense": 197.3,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 2633,
+          "defender": 0
+        }
+      ],
+      "game": [
+        2633
+      ],
+      "skills": [
+        "hero:Ahmose:ViperFormation",
+        "hero:Ahmose:PrayerOfFlame"
+      ],
+      "variantNames": [
+        "current",
+        "Ahmose.ViperFormation.omit",
+        "Ahmose.ViperFormation.omit_pause",
+        "Ahmose.ViperFormation.omit_backline_protection",
+        "Ahmose.ViperFormation.omit_infantry_protection",
+        "Ahmose.ViperFormation.protection_one_turn",
+        "Ahmose.ViperFormation.pause_two_turns",
+        "Ahmose.PrayerOfFlame.omit",
+        "Ahmose.PrayerOfFlame.all_own_types"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+      "fixtureSha256": "f38dfd6f704beb3c8de180c9ff51522c041562abe577c4a56bf90b31805d19db",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 4000,
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 408.4,
+              "defense": 392.2,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 591.7,
+              "defense": 582,
+              "lethality": 315.1,
+              "health": 271.1
+            },
+            "mark": {
+              "attack": 289,
+              "defense": 281,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 13400
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 3777,
+          "defender": 0
+        }
+      ],
+      "game": [
+        3777
+      ],
+      "skills": [
+        "hero:Ahmose:ViperFormation",
+        "hero:Ahmose:PrayerOfFlame",
+        "hero:Ahmose:BladeOfLight"
+      ],
+      "variantNames": [
+        "current",
+        "Ahmose.ViperFormation.omit",
+        "Ahmose.ViperFormation.omit_pause",
+        "Ahmose.ViperFormation.omit_backline_protection",
+        "Ahmose.ViperFormation.omit_infantry_protection",
+        "Ahmose.ViperFormation.protection_one_turn",
+        "Ahmose.ViperFormation.pause_two_turns",
+        "Ahmose.PrayerOfFlame.omit",
+        "Ahmose.PrayerOfFlame.all_own_types",
+        "Ahmose.BladeOfLight.omit",
+        "Ahmose.BladeOfLight.omit_offense",
+        "Ahmose.BladeOfLight.omit_target_debuff",
+        "Ahmose.BladeOfLight.debuff_immediate",
+        "Ahmose.BladeOfLight.debuff_two_turns"
+      ]
+    },
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+      "fixtureSha256": "fd491d2771e82ec070938b01644a0e09408bd5370bf32e13e2734f01b1b98c20",
+      "input": {
+        "attacker": {
+          "name": "daut2x",
+          "heroes": {
+            "Alonso": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            },
+            "Mia": {
+              "skill_1": 1
+            },
+            "Logan": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 6000,
+            "lancer_t6": 2000,
+            "marksman_t6": 3000
+          },
+          "stats": {
+            "inf": {
+              "attack": 69.68,
+              "defense": 69.18,
+              "lethality": 1.8,
+              "health": 1.8
+            },
+            "lanc": {
+              "attack": 46.51,
+              "defense": 46.01,
+              "lethality": 1.8,
+              "health": 1.8
+            },
+            "mark": {
+              "attack": 86.72,
+              "defense": 85.72,
+              "lethality": 1.8,
+              "health": 1.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "viper2x",
+          "heroes": {
+            "Hector": {
+              "skill_1": 4,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Philly": {
+              "skill_1": 1,
+              "skill_2": 1
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 500,
+            "lancer_t6": 1000,
+            "marksman_t6": 1000
+          },
+          "stats": {
+            "inf": {
+              "attack": 441.15,
+              "defense": 440.65,
+              "lethality": 127.53,
+              "health": 232.63
+            },
+            "lanc": {
+              "attack": 224.42,
+              "defense": 216.42,
+              "lethality": 110.3,
+              "health": 100.2
+            },
+            "mark": {
+              "attack": 248.12,
+              "defense": 236.62,
+              "lethality": 117.8,
+              "health": 104.7
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 0,
+          "defender": 2295
+        }
+      ],
+      "game": [
+        -2295
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/greg_solo.json#0",
+      "fixtureSha256": "ca8b2f496633062976c44414964d8a406ddf191930051394f895c72422f6c067",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 196.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 181.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 284.6,
+              "defense": 276.2,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 2697,
+          "defender": 0
+        }
+      ],
+      "game": [
+        2697
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/norah_greg_combo.json#0",
+      "fixtureSha256": "0dd22abecca3c4ee47becc6e9854465a8499a3d1efa2e89e209c94e0d741af75",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Norah": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 150,
+            "marksman_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 221,
+              "defense": 205.8,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 286.5,
+              "defense": 282.3,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 290.8,
+              "defense": 285.6,
+              "lethality": 124.1,
+              "health": 125.7
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 0,
+          "defender": 363
+        },
+        {
+          "attacker": 0,
+          "defender": 366
+        },
+        {
+          "attacker": 0,
+          "defender": 369
+        },
+        {
+          "attacker": 0,
+          "defender": 366
+        },
+        {
+          "attacker": 0,
+          "defender": 366
+        }
+      ],
+      "game": [
+        -363,
+        -366,
+        -369,
+        -366,
+        -366
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/greg_mia_defender_current.json#0",
+      "fixtureSha256": "80fd75798e66f4bddb104a5d96cc54ebb1f8730ba53be890f323ed0921c425ef",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Mia": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 237.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 316.9,
+              "defense": 325.7,
+              "lethality": 176,
+              "health": 176.5
+            },
+            "mark": {
+              "attack": 317,
+              "defense": 319.8,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 3345,
+          "defender": 0
+        },
+        {
+          "attacker": 3390,
+          "defender": 0
+        },
+        {
+          "attacker": 3320,
+          "defender": 0
+        },
+        {
+          "attacker": 3367,
+          "defender": 0
+        },
+        {
+          "attacker": 3363,
+          "defender": 0
+        },
+        {
+          "attacker": 3341,
+          "defender": 0
+        },
+        {
+          "attacker": 3360,
+          "defender": 0
+        },
+        {
+          "attacker": 3355,
+          "defender": 0
+        },
+        {
+          "attacker": 3339,
+          "defender": 0
+        },
+        {
+          "attacker": 3346,
+          "defender": 0
+        },
+        {
+          "attacker": 3344,
+          "defender": 0
+        },
+        {
+          "attacker": 3341,
+          "defender": 0
+        },
+        {
+          "attacker": 3373,
+          "defender": 0
+        },
+        {
+          "attacker": 3344,
+          "defender": 0
+        },
+        {
+          "attacker": 3329,
+          "defender": 0
+        },
+        {
+          "attacker": 3354,
+          "defender": 0
+        },
+        {
+          "attacker": 3351,
+          "defender": 0
+        },
+        {
+          "attacker": 3366,
+          "defender": 0
+        }
+      ],
+      "game": [
+        3345,
+        3390,
+        3320,
+        3367,
+        3363,
+        3341,
+        3360,
+        3355,
+        3339,
+        3346,
+        3344,
+        3341,
+        3373,
+        3344,
+        3329,
+        3354,
+        3351,
+        3366
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/greg_only_defender_current.json#0",
+      "fixtureSha256": "894c54e3d52f4936db3594bd90d6fdc4f736f47701f4b7e54d7bfd017e1558d9",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 232.7,
+              "defense": 233.5,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 325,
+              "defense": 319.8,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 3680,
+          "defender": 0
+        },
+        {
+          "attacker": 3683,
+          "defender": 0
+        },
+        {
+          "attacker": 3686,
+          "defender": 0
+        },
+        {
+          "attacker": 3693,
+          "defender": 0
+        },
+        {
+          "attacker": 3688,
+          "defender": 0
+        },
+        {
+          "attacker": 3685,
+          "defender": 0
+        }
+      ],
+      "game": [
+        3680,
+        3683,
+        3686,
+        3693,
+        3688,
+        3685
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/greg_only_defender_current.json#1",
+      "fixtureSha256": "894c54e3d52f4936db3594bd90d6fdc4f736f47701f4b7e54d7bfd017e1558d9",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 232.7,
+              "defense": 233.5,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 325,
+              "defense": 319.8,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 3584,
+          "defender": 0
+        },
+        {
+          "attacker": 3586,
+          "defender": 0
+        }
+      ],
+      "game": [
+        3584,
+        3586
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/greg_only_defender_current.json#2",
+      "fixtureSha256": "894c54e3d52f4936db3594bd90d6fdc4f736f47701f4b7e54d7bfd017e1558d9",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1400,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 237.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 224.7,
+              "defense": 233.5,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 317,
+              "defense": 319.8,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "gameOutcomes": [
+        {
+          "attacker": 3591,
+          "defender": 0
+        },
+        {
+          "attacker": 3591,
+          "defender": 0
+        },
+        {
+          "attacker": 3603,
+          "defender": 0
+        },
+        {
+          "attacker": 3603,
+          "defender": 0
+        },
+        {
+          "attacker": 3593,
+          "defender": 0
+        },
+        {
+          "attacker": 3601,
+          "defender": 0
+        },
+        {
+          "attacker": 3590,
+          "defender": 0
+        },
+        {
+          "attacker": 3594,
+          "defender": 0
+        },
+        {
+          "attacker": 3595,
+          "defender": 0
+        },
+        {
+          "attacker": 3592,
+          "defender": 0
+        },
+        {
+          "attacker": 3598,
+          "defender": 0
+        },
+        {
+          "attacker": 3591,
+          "defender": 0
+        },
+        {
+          "attacker": 3604,
+          "defender": 0
+        },
+        {
+          "attacker": 3593,
+          "defender": 0
+        },
+        {
+          "attacker": 3594,
+          "defender": 0
+        },
+        {
+          "attacker": 3585,
+          "defender": 0
+        },
+        {
+          "attacker": 3591,
+          "defender": 0
+        },
+        {
+          "attacker": 3590,
+          "defender": 0
+        },
+        {
+          "attacker": 3594,
+          "defender": 0
+        },
+        {
+          "attacker": 3598,
+          "defender": 0
+        }
+      ],
+      "game": [
+        3591,
+        3591,
+        3603,
+        3603,
+        3593,
+        3601,
+        3590,
+        3594,
+        3595,
+        3592,
+        3598,
+        3591,
+        3604,
+        3593,
+        3594,
+        3585,
+        3591,
+        3590,
+        3594,
+        3598
+      ],
+      "skills": [
+        "hero:Greg:SwordOfJustice",
+        "hero:Greg:DeterrenceOfLaw"
+      ],
+      "variantNames": [
+        "current",
+        "Greg.SwordOfJustice.omit",
+        "Greg.SwordOfJustice.marksmen_only",
+        "Greg.SwordOfJustice.duration_one",
+        "Greg.DeterrenceOfLaw.omit",
+        "Greg.DeterrenceOfLaw.marksman_source_only",
+        "Greg.DeterrenceOfLaw.all_enemy_targets",
+        "Greg.DeterrenceOfLaw.immediate",
+        "Greg.DeterrenceOfLaw.duration_one"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+[
+  {
+    "test_id": "renee_same_kind_seo_yoon_attack_up_nc",
+    "description": "Renee 4/4/4 + Seo-yoon 3/3 all-same mechanic discriminator. WIP attacks 8000 T6 Marksmen with no heroes; minxxx defends 800 T6 Lancers with Renee and Seo-yoon. Seo-yoon's verified active.hero.attack.up makes AAA predict +2187 survivors versus +1400 for every other all-same hypothesis. Deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 8000
+      },
+      "stats": {
+        "inf": {
+          "attack": 234.6,
+          "defense": 243.9,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        },
+        "Seo-yoon": {
+          "skill_1": 3,
+          "skill_2": 3
+        }
+      },
+      "troops": {
+        "lancer_t6": 800
+      },
+      "stats": {
+        "inf": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 205.3,
+          "health": 206.5
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 340.9,
+          "defense": 335.9,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1334,
+        "defender": 0
+      }
+    ]
+  }
+]

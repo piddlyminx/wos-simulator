@@ -1,0 +1,77 @@
+{
+  "hero:Mia:BadLuckStreak": {
+    "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+    "status": "partially_supported",
+    "context": "All 14 accepted full-kit fixtures/73 outcomes replayed,1000 samples per current/omit/Lancer-only model. Current distributions all plausible. Mia 3/2/2 defender repeated fixture mia_only_defender_current#0 (n 10) gives gameA3543.9 SD13.77/current 3544.451 SD16.717 p.99995; omit 3644.98 p.00005, restrict trigger to Lancers 3587.439 p.00005. The n 20 sibling and n 18 Greg/Mia fixture reject both alternatives too. Attacker-side Mia_tc#2 has only S1level 1 configured: six game outcomes mean 1124.167 SD4.792 versus current 1124.669 SD4.668; omit 1042, Lancer-only 1088.625. This supports positive curse contribution and source activation beyond Lancers at tested levels 1/3, conditional on other current rules. Exact probability, next-turn delay, target scoping/retargeting, damage bucket, magnitude scaling and rally/joiner behavior remain unreviewed. Single mixed-hero row#5 is weaker and even favors omission without rejecting current; it is not used as main positive support.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/BadLuckStreak-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/BadLuckStreak-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Mia:LuckyCharm": {
+    "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+    "status": "partially_supported",
+    "context": "All 11 accepted full-kit fixtures/65 outcomes replayed,1000 samples per current/omit/Lancer-only model. Current distributions all plausible; every omission fails and 8 source restrictions fail. FullMia 3/2/2 repeated mia_only_defender_current#0 gives gameA3543.9 SD13.77/current 3544.451 SD16.717 p.99995 versus omission 3592.551 p.0001 and Lancer-only 3573.705 p.00005. The n 20 sibling and n 18 Greg/Mia fixture similarly distinguish both alternatives. Existing level 1 Mia_tc#1 has 7 outcomes mean 1625.14; current 1613.326 SD40.876 p.871806 versus omission 1900.09 and Lancer-only 1791.877, both rejected. Traces contain generated jobs from all 3 own classes, supporting contribution and source scope beyond Lancers in these defender contexts. Separate-skill delivery, exact 50% chance, values/level scaling, bucket, ordering, target exhaustion, attacker-side and rally/joiner behavior remain unreviewed; no Attack-boost-versus-extra-job semantic equivalence is resolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/LuckyCharm-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/LuckyCharm-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Mia:RitualDeciphering": {
+    "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+    "status": "partially_supported",
+    "context": "All 8 accepted full-kit defender fixtures/53 outcomes replayed,1000 samples per current/omit/Lancer-only model. Current distributions all plausible. FullMia 3/2/2 repeated mia_only_defender_current#0 gives gameA3543.9 SD13.77/current 3544.451 SD16.717 p.99995; omit protection 3564.358 p.00005, Lancer-only recipients 3560.919 p.0002. The n 20 sibling and n 18 Greg/Mia fixture also reject both alternatives. Traces exercise protection on Infantry,Lancers,Marksmen as lines die; contrasts support protection beyond Lancers, mainly at level 2 with repeated evidence. Sparse level 1 outcomes vary in discrimination; one accepts omission. Exact 40% shared-round chance, magnitude/level scaling, denominator bucket, per-round versus per-hit timing, stacking, exhaustion and attacker/rally/joiner behavior remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Molly:CallingOfTheStorm": {
+    "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "status": "partially_supported",
+    "context": "All 5 accepted full-kit fixtures/13 outcomes replayed,1000 samples per candidate. In fullMolly 2/2/1 solo 300T6 versus 840T6, gameA245/245/244/245/245 (mean 244.8 SD.447) is plausible under current 243.842 SD1.242 p.060497; observed spread is narrower and remains uncertain withn 5. Omit or Lancer-only protection both give 239.802 SD.768 p.00005. Only ownInfantry receive damage in these traces, so this supports protection beyond Lancers, specifically Infantry; untouched-backline protection is not independently established. FullMolly/Lynn repeated defender case currentD403.042 SD2.402 p.572471 also rejects either alternative atp.0002. Level 5/T10 single case accepts omissions and is not positive high-level evidence. Mixed-heroes#2 remains unresolved (gameD2823/current 2908.756 SD26.667 p.0021); deleting Molly protection worsens it but does not identify its cause. Exact 40% chance, magnitude/scaling, shared-round lifecycle, stacking, other target/exhaustion and mode/joiner branches remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Molly:IceDominion": {
+    "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "status": "partially_supported",
+    "context": "All 5 accepted full-kit fixtures/13 outcomes replayed,1000 samples per candidate. FullMolly 2/2/1 solo 300T6 versus 840T6 gameA245/245/244/245/245 is plausible under current 243.842 SD1.242 p.060497; omit gives 237.177 p.00005 and Lancer-only activation 241.101 p.00015. Generated attacks from all 3 ownclasses support contribution and activation beyond Lancers at level 2 in this full-kit context. FullMolly/Lynn repeated case rejects omission (p.0003) but Lancer-only remains plausible (p.022949), so that fixture alone does not certify source scope. Level 4/T10 single case accepts both alternatives and is not positive high-level support. Existing mixed-heroes#2 remains unresolved (gameD2823/current 2908.756 SD26.667 p.0021); both structural restrictions worsen it without attributing the cause. Exact 50% probability, coefficient scaling, skill-versus-normal or augmentation semantics, target locking/exhaustion, stacking and rally/joiner behavior remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/IceDominion-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/IceDominion-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  }
+}

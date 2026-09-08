@@ -1,0 +1,3836 @@
+{
+  "testcases/3-testcases_mixed-heroes-not-verified.json#5": {
+    "key": "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+    "path": "testcases/3-testcases_mixed-heroes-not-verified.json",
+    "fixtureSha256": "fd491d2771e82ec070938b01644a0e09408bd5370bf32e13e2734f01b1b98c20",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "no_heroes_t6_mixed_2x_6",
+      "time": "2025-07-13 - 17:03",
+      "attacker": {
+        "name": "daut2x",
+        "heroes": {
+          "Alonso": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          },
+          "Mia": {
+            "skill_1": 1
+          },
+          "Logan": {
+            "skill_1": 2,
+            "skill_2": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 6000,
+          "lancer_t6": 2000,
+          "marksman_t6": 3000
+        },
+        "stats": {
+          "inf": {
+            "attack": 69.68,
+            "defense": 69.18,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "lanc": {
+            "attack": 46.51,
+            "defense": 46.01,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "mark": {
+            "attack": 86.72,
+            "defense": 85.72,
+            "lethality": 1.8,
+            "health": 1.8
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper2x",
+        "heroes": {
+          "Hector": {
+            "skill_1": 4,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Philly": {
+            "skill_1": 1,
+            "skill_2": 1
+          },
+          "Greg": {
+            "skill_1": 1,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 500,
+          "lancer_t6": 1000,
+          "marksman_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 441.15,
+            "defense": 440.65,
+            "lethality": 127.53,
+            "health": 232.63
+          },
+          "lanc": {
+            "attack": 224.42,
+            "defense": 216.42,
+            "lethality": 110.3,
+            "health": 100.2
+          },
+          "mark": {
+            "attack": 248.12,
+            "defense": 236.62,
+            "lethality": 117.8,
+            "health": 104.7
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "sim_skills_used": {
+        "attacker": {
+          "Alonso- Onslaught": "4",
+          "Alonso- Iron strength": "21",
+          "Alonso- Poison harpoon": "28 - Extra: 4.5",
+          "Mia- Bad luck streak": "31",
+          "Logan- Lion strike": "17 - Extra: 18.5",
+          "Logan- Lion intimidation": "1",
+          "MARKSMEN- Ranged Strike": "1"
+        },
+        "defender": {
+          "Hector- Survival instincts": "16",
+          "Hector- Rampant": "2",
+          "Hector- Blitz": "1",
+          "Philly- Vigor tactics": "2",
+          "Philly- Dosage boost": "14 - Extra: 1704.2",
+          "Greg- Sword of justice": "3",
+          "Greg- Deterrence of law": "16",
+          "INFANTRY- Master Brawler": "1",
+          "LANCERS- Charge": "1",
+          "MARKSMEN- Ranged Strike": "1"
+        }
+      },
+      "game_report_result": {
+        "attacker": 0,
+        "defender": 2295
+      }
+    },
+    "input": {
+      "attacker": {
+        "name": "daut2x",
+        "heroes": {
+          "Alonso": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          },
+          "Mia": {
+            "skill_1": 1
+          },
+          "Logan": {
+            "skill_1": 2,
+            "skill_2": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 6000,
+          "lancer_t6": 2000,
+          "marksman_t6": 3000
+        },
+        "stats": {
+          "inf": {
+            "attack": 69.68,
+            "defense": 69.18,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "lanc": {
+            "attack": 46.51,
+            "defense": 46.01,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "mark": {
+            "attack": 86.72,
+            "defense": 85.72,
+            "lethality": 1.8,
+            "health": 1.8
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper2x",
+        "heroes": {
+          "Hector": {
+            "skill_1": 4,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Philly": {
+            "skill_1": 1,
+            "skill_2": 1
+          },
+          "Greg": {
+            "skill_1": 1,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 500,
+          "lancer_t6": 1000,
+          "marksman_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 441.15,
+            "defense": 440.65,
+            "lethality": 127.53,
+            "health": 232.63
+          },
+          "lanc": {
+            "attack": 224.42,
+            "defense": 216.42,
+            "lethality": 110.3,
+            "health": 100.2
+          },
+          "mark": {
+            "attack": 248.12,
+            "defense": 236.62,
+            "lethality": 117.8,
+            "health": 104.7
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 0,
+      "defender": 2295
+    },
+    "hydratedSkills": [
+      {
+        "key": "hero:Alonso:Onslaught",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "Onslaught/1"
+        ]
+      },
+      {
+        "key": "hero:Alonso:IronStrength",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "IronStrength/1"
+        ]
+      },
+      {
+        "key": "hero:Alonso:PoisonHarpoon",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "PoisonHarpoon/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Logan:LionStrike",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:logan:0",
+        "effect_ids": [
+          "LionStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Logan:LionIntimidation",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:logan:0",
+        "effect_ids": [
+          "LionIntimidation/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "hero:Philly:VigorTactics",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:philly:0",
+        "effect_ids": [
+          "VigorTactics/1",
+          "VigorTactics/2"
+        ]
+      },
+      {
+        "key": "hero:Philly:DosageBoost",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:philly:0",
+        "effect_ids": [
+          "DosageBoost/1"
+        ]
+      },
+      {
+        "key": "hero:Greg:SwordOfJustice",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:greg:0",
+        "effect_ids": [
+          "SwordOfJustice/1"
+        ]
+      },
+      {
+        "key": "hero:Greg:DeterrenceOfLaw",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:greg:0",
+        "effect_ids": [
+          "DeterrenceOfLaw/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/hector_patrick_combo.json#0": {
+    "key": "testcases/emulator_verified/hector_patrick_combo.json#0",
+    "path": "testcases/emulator_verified/hector_patrick_combo.json",
+    "fixtureSha256": "0e7b9ae5ab42a604731362c1ff40712b5f6e5ef4df41a4d52ba1174ed82cefb2",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "hector_patrick_combo",
+      "description": "2-hero combo: Hector+Patrick on minxxx defender. WIP no heroes. Both deterministic. Low attacker troops due to WIP availability.",
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 300,
+          "lancer_t6": 300,
+          "marksman_t6": 300
+        },
+        "stats": {
+          "inf": {
+            "attack": 66.1,
+            "defense": 63.9,
+            "lethality": 23.3,
+            "health": 26.4
+          },
+          "lanc": {
+            "attack": 68.6,
+            "defense": 65.1,
+            "lethality": 26.3,
+            "health": 21.1
+          },
+          "mark": {
+            "attack": 69.1,
+            "defense": 61.4,
+            "lethality": 25.8,
+            "health": 21.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Hector": {
+            "skill_1": 3,
+            "skill_2": 4,
+            "skill_3": 3
+          },
+          "Patrick": {
+            "skill_1": 2,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 482.7,
+            "defense": 464.3,
+            "lethality": 147.1,
+            "health": 168.1
+          },
+          "lanc": {
+            "attack": 268.7,
+            "defense": 261.3,
+            "lethality": 120.2,
+            "health": 121
+          },
+          "mark": {
+            "attack": 205.7,
+            "defense": 197.3,
+            "lethality": 122.9,
+            "health": 123.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 590
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 300,
+          "lancer_t6": 300,
+          "marksman_t6": 300
+        },
+        "stats": {
+          "inf": {
+            "attack": 66.1,
+            "defense": 63.9,
+            "lethality": 23.3,
+            "health": 26.4
+          },
+          "lanc": {
+            "attack": 68.6,
+            "defense": 65.1,
+            "lethality": 26.3,
+            "health": 21.1
+          },
+          "mark": {
+            "attack": 69.1,
+            "defense": 61.4,
+            "lethality": 25.8,
+            "health": 21.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Hector": {
+            "skill_1": 3,
+            "skill_2": 4,
+            "skill_3": 3
+          },
+          "Patrick": {
+            "skill_1": 2,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 482.7,
+            "defense": 464.3,
+            "lethality": 147.1,
+            "health": 168.1
+          },
+          "lanc": {
+            "attack": 268.7,
+            "defense": 261.3,
+            "lethality": 120.2,
+            "health": 121
+          },
+          "mark": {
+            "attack": 205.7,
+            "defense": 197.3,
+            "lethality": 122.9,
+            "health": 123.9
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 590
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "hero:Patrick:SuperNutrients",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:patrick:0",
+        "effect_ids": [
+          "SuperNutrients/1"
+        ]
+      },
+      {
+        "key": "hero:Patrick:CaloricBooster",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:patrick:0",
+        "effect_ids": [
+          "CaloricBooster/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/hector_renee_wayne.json#0": {
+    "key": "testcases/emulator_verified/hector_renee_wayne.json#0",
+    "path": "testcases/emulator_verified/hector_renee_wayne.json",
+    "fixtureSha256": "799c40b24f3de8774a71d2e9c66070a759d8c552f694931ecb40b20ce1671f36",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "hector_renee_wayne",
+      "description": "WIP attacks minxxx with attacker heroes Hector 2/3/2, Renee 3/3/3, and Wayne 2/2/2. Attacker fields 1700 infantry_t6 only; defender has no heroes and fields 300 infantry_t6 only. Game report result: attacker 1597 survivors, defender wiped.",
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {
+          "Hector": {
+            "skill_1": 2,
+            "skill_2": 3,
+            "skill_3": 2
+          },
+          "Renee": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Wayne": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 1700,
+          "lancer_t6": 0,
+          "marksman_t6": 0
+        },
+        "stats": {
+          "inf": {
+            "attack": 215,
+            "defense": 217.6,
+            "lethality": 50.6,
+            "health": 66.6
+          },
+          "lanc": {
+            "attack": 335.1,
+            "defense": 327.4,
+            "lethality": 69.8,
+            "health": 53.2
+          },
+          "mark": {
+            "attack": 255.1,
+            "defense": 241.6,
+            "lethality": 78.3,
+            "health": 56.8
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 300,
+          "lancer_t6": 0,
+          "marksman_t6": 0
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 202.2,
+            "lethality": 118.6,
+            "health": 131.7
+          },
+          "lanc": {
+            "attack": 188.9,
+            "defense": 187.2,
+            "lethality": 120.8,
+            "health": 121.6
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 203.2,
+            "lethality": 123.5,
+            "health": 124.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 1597,
+          "defender": 0
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {
+          "Hector": {
+            "skill_1": 2,
+            "skill_2": 3,
+            "skill_3": 2
+          },
+          "Renee": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Wayne": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 1700,
+          "lancer_t6": 0,
+          "marksman_t6": 0
+        },
+        "stats": {
+          "inf": {
+            "attack": 215,
+            "defense": 217.6,
+            "lethality": 50.6,
+            "health": 66.6
+          },
+          "lanc": {
+            "attack": 335.1,
+            "defense": 327.4,
+            "lethality": 69.8,
+            "health": 53.2
+          },
+          "mark": {
+            "attack": 255.1,
+            "defense": 241.6,
+            "lethality": 78.3,
+            "health": 56.8
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 300,
+          "lancer_t6": 0,
+          "marksman_t6": 0
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 202.2,
+            "lethality": 118.6,
+            "health": 131.7
+          },
+          "lanc": {
+            "attack": 188.9,
+            "defense": 187.2,
+            "lethality": 120.8,
+            "health": 121.6
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 203.2,
+            "lethality": 123.5,
+            "health": 124.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 1597,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "hero:Renee:NightmareTrace",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:renee:0",
+        "effect_ids": [
+          "NightmareTrace/mark",
+          "NightmareTrace/1"
+        ]
+      },
+      {
+        "key": "hero:Renee:Dreamcatcher",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:renee:0",
+        "effect_ids": [
+          "Dreamcatcher/mark",
+          "Dreamcatcher/1"
+        ]
+      },
+      {
+        "key": "hero:Renee:Dreamslice",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:renee:0",
+        "effect_ids": [
+          "Dreamslice/mark",
+          "Dreamslice/1"
+        ]
+      },
+      {
+        "key": "hero:Wayne:ThunderStrike",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "ThunderStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Wayne:RoundaboutHit",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "RoundaboutHit/1",
+          "RoundaboutHit/2"
+        ]
+      },
+      {
+        "key": "hero:Wayne:Fleet",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "Fleet/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/hector_solo.json#0": {
+    "key": "testcases/emulator_verified/hector_solo.json#0",
+    "path": "testcases/emulator_verified/hector_solo.json",
+    "fixtureSha256": "8fa48f3fdf20508a2efed658b6176c8d722d7fea30a9a7b23b92f38b4b04a2da",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "hector_solo",
+      "description": "Hector solo defender test. WIP attacking no heroes, minxxx defending with Hector (3/4/3). S1 Survival Instincts is 40% chance — run 5+ games. S2 Rampant and S3 Blitz are deterministic.",
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1500,
+          "lancer_t6": 1069,
+          "marksman_t6": 1500
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 76.4,
+            "lethality": 31.1,
+            "health": 38.1
+          },
+          "lanc": {
+            "attack": 78.8,
+            "defense": 71.2,
+            "lethality": 38.1,
+            "health": 28.8
+          },
+          "mark": {
+            "attack": 83.3,
+            "defense": 69.9,
+            "lethality": 37.6,
+            "health": 29.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Hector": {
+            "skill_1": 3,
+            "skill_2": 4,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 482.9,
+            "defense": 470.2,
+            "lethality": 147.7,
+            "health": 168.8
+          },
+          "lanc": {
+            "attack": 188.9,
+            "defense": 187.2,
+            "lethality": 120.8,
+            "health": 121.6
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 203.2,
+            "lethality": 123.5,
+            "health": 124.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 402
+        },
+        {
+          "attacker": 0,
+          "defender": 409
+        },
+        {
+          "attacker": 0,
+          "defender": 373
+        },
+        {
+          "attacker": 0,
+          "defender": 403
+        },
+        {
+          "attacker": 0,
+          "defender": 385
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1500,
+          "lancer_t6": 1069,
+          "marksman_t6": 1500
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 76.4,
+            "lethality": 31.1,
+            "health": 38.1
+          },
+          "lanc": {
+            "attack": 78.8,
+            "defense": 71.2,
+            "lethality": 38.1,
+            "health": 28.8
+          },
+          "mark": {
+            "attack": 83.3,
+            "defense": 69.9,
+            "lethality": 37.6,
+            "health": 29.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Hector": {
+            "skill_1": 3,
+            "skill_2": 4,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 482.9,
+            "defense": 470.2,
+            "lethality": 147.7,
+            "health": 168.8
+          },
+          "lanc": {
+            "attack": 188.9,
+            "defense": 187.2,
+            "lethality": 120.8,
+            "health": 121.6
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 203.2,
+            "lethality": 123.5,
+            "health": 124.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 402
+      },
+      {
+        "attacker": 0,
+        "defender": 409
+      },
+      {
+        "attacker": 0,
+        "defender": 373
+      },
+      {
+        "attacker": 0,
+        "defender": 403
+      },
+      {
+        "attacker": 0,
+        "defender": 385
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/norah_hector_zinman_combo.json#0": {
+    "key": "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+    "path": "testcases/emulator_verified/norah_hector_zinman_combo.json",
+    "fixtureSha256": "a2496c444185a05121517f9a64ff38d2bba07d29ae747e658c048b59ae33ade0",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "norah_hector_zinman_combo",
+      "description": "Norah+Hector+Zinman 3-hero combo — Lanc+Inf+Mark class heroes. Norah S2 splash, Zinman has chance-based skills. RNG test, run 5 battles. WIP attacks (no hero, t6 troops), minxxx defends with all three heroes.",
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 400,
+          "lancer_t6": 400,
+          "marksman_t6": 400
+        },
+        "stats": {
+          "inf": {
+            "attack": 79.3,
+            "defense": 81.9,
+            "lethality": 31.1,
+            "health": 38.1
+          },
+          "lanc": {
+            "attack": 84.3,
+            "defense": 79.1,
+            "lethality": 38.1,
+            "health": 31.3
+          },
+          "mark": {
+            "attack": 88.8,
+            "defense": 75.4,
+            "lethality": 37.6,
+            "health": 31.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Hector": {
+            "skill_1": 3,
+            "skill_2": 4,
+            "skill_3": 4
+          },
+          "Norah": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 0
+          },
+          "Zinman": {
+            "skill_1": 1,
+            "skill_2": 0,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 488.9,
+            "defense": 473.7,
+            "lethality": 148.2,
+            "health": 169.4
+          },
+          "lanc": {
+            "attack": 286.5,
+            "defense": 282.3,
+            "lethality": 121.2,
+            "health": 122.4
+          },
+          "mark": {
+            "attack": 237.2,
+            "defense": 232,
+            "lethality": 124.1,
+            "health": 125.7
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 270
+        },
+        {
+          "attacker": 0,
+          "defender": 271
+        },
+        {
+          "attacker": 0,
+          "defender": 269
+        },
+        {
+          "attacker": 0,
+          "defender": 270
+        },
+        {
+          "attacker": 0,
+          "defender": 272
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 400,
+          "lancer_t6": 400,
+          "marksman_t6": 400
+        },
+        "stats": {
+          "inf": {
+            "attack": 79.3,
+            "defense": 81.9,
+            "lethality": 31.1,
+            "health": 38.1
+          },
+          "lanc": {
+            "attack": 84.3,
+            "defense": 79.1,
+            "lethality": 38.1,
+            "health": 31.3
+          },
+          "mark": {
+            "attack": 88.8,
+            "defense": 75.4,
+            "lethality": 37.6,
+            "health": 31.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Hector": {
+            "skill_1": 3,
+            "skill_2": 4,
+            "skill_3": 4
+          },
+          "Norah": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 0
+          },
+          "Zinman": {
+            "skill_1": 1,
+            "skill_2": 0,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 488.9,
+            "defense": 473.7,
+            "lethality": 148.2,
+            "health": 169.4
+          },
+          "lanc": {
+            "attack": 286.5,
+            "defense": 282.3,
+            "lethality": 121.2,
+            "health": 122.4
+          },
+          "mark": {
+            "attack": 237.2,
+            "defense": 232,
+            "lethality": 124.1,
+            "health": 125.7
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 270
+      },
+      {
+        "attacker": 0,
+        "defender": 271
+      },
+      {
+        "attacker": 0,
+        "defender": 269
+      },
+      {
+        "attacker": 0,
+        "defender": 270
+      },
+      {
+        "attacker": 0,
+        "defender": 272
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "hero:Norah:CombinedArms",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:norah:0",
+        "effect_ids": [
+          "CombinedArms/1",
+          "CombinedArms/2"
+        ]
+      },
+      {
+        "key": "hero:Norah:SneakStrike",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:norah:0",
+        "effect_ids": [
+          "SneakStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Zinman:Implacable",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:zinman:0",
+        "effect_ids": [
+          "Implacable/1",
+          "Implacable/2"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Hector_tc.json#0": {
+    "key": "testcases/heroes_unittests/Hector_tc.json#0",
+    "path": "testcases/heroes_unittests/Hector_tc.json",
+    "fixtureSha256": "aaec002b199b07c2ef721a69cd26ffd34cf8d72d60023ed8013eca3c4b0ee129",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "hector_tc_1",
+      "time": "2025-07-21 - 01:06",
+      "attacker": {
+        "name": "daut",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 5000,
+          "lancer_t6": 2000,
+          "marksman_t6": 5000
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Hector": {
+            "skill_1": 4,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "infantry_t6": 250,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 438.15,
+            "defense": 441.65,
+            "lethality": 127.57,
+            "health": 232.61
+          },
+          "lanc": {
+            "attack": 167,
+            "defense": 163,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "sim_rounds": 104,
+      "sim_skills_used": {
+        "attacker": [
+          "MARKSMEN- Ranged Strike/1      :    1 (104)    (DamageUp)"
+        ],
+        "defender": [
+          "Hector- Survival instincts/1   :    41 (99)    (DefenseUp)",
+          "Hector- Rampant/1              :    1 (5)      (DamageUp)",
+          "Hector- Rampant/2              :    1 (5)      (DamageUp)",
+          "Hector- Blitz/1                :    92 (92) - Extra: 1765.5 (DamageUp)",
+          "INFANTRY- Master Brawler/1     :    1 (12)     (DamageUp)",
+          "LANCERS- Charge/1              :    1 (21)     (DamageUp)",
+          "MARKSMEN- Ranged Strike/1      :    1 (71)     (DamageUp)"
+        ]
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 441
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 5000,
+          "lancer_t6": 2000,
+          "marksman_t6": 5000
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Hector": {
+            "skill_1": 4,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "infantry_t6": 250,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 438.15,
+            "defense": 441.65,
+            "lethality": 127.57,
+            "health": 232.61
+          },
+          "lanc": {
+            "attack": 167,
+            "defense": 163,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 441
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": {
+    "key": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0",
+    "path": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json",
+    "fixtureSha256": "de8d5c1f2045fdeb5bd4f71618da1ecc9667d6f848041065289923eba1394e67",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "gordon_wayne_s1_extra_overlap_nc",
+      "description": "Unresolved Gordon S1 normal-hit versus Wayne extra-hit scope discriminator. minxxx attacks WIP with Gordon 2/2/1 and Wayne 1/0/0, fielding 2000 T6 lancers into 6000 T6 lancers. Captured result: 39 rounds from Gordon 19/13/9, Wayne 9 activations, and attacker 883 survivors. The current normal-only simulator produces 892 survivors in 38 rounds. All 256 +/-0.049 corners of the eight relevant displayed Lancer stats remain at 38 rounds and produce 891-894 survivors, so no corner attains the observation. Corner checks alone do not prove the complete non-monotonic interior envelope; a valid interior or dominance audit is still required. Do not infer Gordon S1's scope from this testcase until the deterministic endpoint residual is explained.",
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Wayne": {
+            "skill_1": 2,
+            "skill_2": 1,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "lancer_t6": 255
+        },
+        "stats": {
+          "inf": {
+            "attack": 285.7,
+            "defense": 279.5,
+            "lethality": 226.3,
+            "health": 221
+          },
+          "lanc": {
+            "attack": 484.9,
+            "defense": 485.2,
+            "lethality": 216.2,
+            "health": 217.5
+          },
+          "mark": {
+            "attack": 413.1,
+            "defense": 415.1,
+            "lethality": 226.3,
+            "health": 221.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "lancer_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 230.5,
+            "defense": 230.3,
+            "lethality": 171.2,
+            "health": 181.8
+          },
+          "lanc": {
+            "attack": 203.8,
+            "defense": 201.6,
+            "lethality": 181.3,
+            "health": 181.1
+          },
+          "mark": {
+            "attack": 208,
+            "defense": 204.8,
+            "lethality": 175.7,
+            "health": 176.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 5,
+          "defender": 0
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Wayne": {
+            "skill_1": 2,
+            "skill_2": 1,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "lancer_t6": 255
+        },
+        "stats": {
+          "inf": {
+            "attack": 285.7,
+            "defense": 279.5,
+            "lethality": 226.3,
+            "health": 221
+          },
+          "lanc": {
+            "attack": 484.9,
+            "defense": 485.2,
+            "lethality": 216.2,
+            "health": 217.5
+          },
+          "mark": {
+            "attack": 413.1,
+            "defense": 415.1,
+            "lethality": 226.3,
+            "health": 221.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "lancer_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 230.5,
+            "defense": 230.3,
+            "lethality": 171.2,
+            "health": 181.8
+          },
+          "lanc": {
+            "attack": 203.8,
+            "defense": 201.6,
+            "lethality": 181.3,
+            "health": 181.1
+          },
+          "mark": {
+            "attack": 208,
+            "defense": 204.8,
+            "lethality": 175.7,
+            "health": 176.4
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 5,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "hero:Wayne:ThunderStrike",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "ThunderStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Wayne:RoundaboutHit",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "RoundaboutHit/1",
+          "RoundaboutHit/2"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": {
+    "key": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0",
+    "path": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json",
+    "fixtureSha256": "e0e9d3a0dc3ed56600cd800eaecf4b913ec54cc3d86080178ee574a9fd32159e",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "gordon_wayne_s1_extra_overlap_nc",
+      "description": "Unresolved Gordon S1 normal-hit versus Wayne extra-hit scope discriminator. minxxx attacks WIP with Gordon 2/2/1 and Wayne 1/0/0, fielding 2000 T6 lancers into 6000 T6 lancers. Captured result: 39 rounds from Gordon 19/13/9, Wayne 9 activations, and attacker 883 survivors. The current normal-only simulator produces 892 survivors in 38 rounds. All 256 +/-0.049 corners of the eight relevant displayed Lancer stats remain at 38 rounds and produce 891-894 survivors, so no corner attains the observation. Corner checks alone do not prove the complete non-monotonic interior envelope; a valid interior or dominance audit is still required. Do not infer Gordon S1's scope from this testcase until the deterministic endpoint residual is explained.",
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Wayne": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "lancer_t6": 260
+        },
+        "stats": {
+          "inf": {
+            "attack": 285.7,
+            "defense": 279.5,
+            "lethality": 226.3,
+            "health": 221
+          },
+          "lanc": {
+            "attack": 484.9,
+            "defense": 485.2,
+            "lethality": 216.2,
+            "health": 217.5
+          },
+          "mark": {
+            "attack": 413.1,
+            "defense": 415.1,
+            "lethality": 226.3,
+            "health": 221.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "lancer_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 230.5,
+            "defense": 230.3,
+            "lethality": 171.2,
+            "health": 181.8
+          },
+          "lanc": {
+            "attack": 203.8,
+            "defense": 201.6,
+            "lethality": 181.3,
+            "health": 181.1
+          },
+          "mark": {
+            "attack": 208,
+            "defense": 204.8,
+            "lethality": 175.7,
+            "health": 176.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 19
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Wayne": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "lancer_t6": 260
+        },
+        "stats": {
+          "inf": {
+            "attack": 285.7,
+            "defense": 279.5,
+            "lethality": 226.3,
+            "health": 221
+          },
+          "lanc": {
+            "attack": 484.9,
+            "defense": 485.2,
+            "lethality": 216.2,
+            "health": 217.5
+          },
+          "mark": {
+            "attack": 413.1,
+            "defense": 415.1,
+            "lethality": 226.3,
+            "health": 221.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "lancer_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 230.5,
+            "defense": 230.3,
+            "lethality": 171.2,
+            "health": 181.8
+          },
+          "lanc": {
+            "attack": 203.8,
+            "defense": 201.6,
+            "lethality": 181.3,
+            "health": 181.1
+          },
+          "mark": {
+            "attack": 208,
+            "defense": 204.8,
+            "lethality": 175.7,
+            "health": 176.4
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 19
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "hero:Wayne:ThunderStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "ThunderStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Wayne:RoundaboutHit",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:wayne:0",
+        "effect_ids": [
+          "RoundaboutHit/1",
+          "RoundaboutHit/2"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0": {
+    "key": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+    "path": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json",
+    "fixtureSha256": "5cb91e84cc74ed87b29f2e20475a2752af27c98fc01ff9bec3bc90542abf4d4f",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "wos444_gordon_s22_all_enemy_damage_dealt_hero_nc",
+      "description": "WOS-444 Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends Gordon+Sergey+Lynn with 2560 T6 lancer. Candidate signed remaining scores: damage.down +558, attack.down +593, lethality.down -143.",
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2700,
+          "lancer_t6": 2700,
+          "marksman_t6": 2700
+        },
+        "stats": {
+          "inf": {
+            "attack": 221.4,
+            "defense": 221.7,
+            "lethality": 147.3,
+            "health": 155.7
+          },
+          "lanc": {
+            "attack": 194.7,
+            "defense": 193,
+            "lethality": 157.3,
+            "health": 148.4
+          },
+          "mark": {
+            "attack": 194.7,
+            "defense": 192,
+            "lethality": 148.6,
+            "health": 149.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxx",
+        "heroes": {
+          "Sergey": {
+            "skill_1": 4,
+            "skill_2": 4
+          },
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Lynn": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "lancer_t6": 2560
+        },
+        "stats": {
+          "inf": {
+            "attack": 389.8,
+            "defense": 378.5,
+            "lethality": 215.3,
+            "health": 216.5
+          },
+          "lanc": {
+            "attack": 485.5,
+            "defense": 480.8,
+            "lethality": 199.7,
+            "health": 201
+          },
+          "mark": {
+            "attack": 460.2,
+            "defense": 457.2,
+            "lethality": 275.7,
+            "health": 266.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 5274,
+          "defender": 0
+        },
+        {
+          "attacker": 4736,
+          "defender": 0
+        },
+        {
+          "attacker": 5021,
+          "defender": 0
+        },
+        {
+          "attacker": 5290,
+          "defender": 0
+        },
+        {
+          "attacker": 5006,
+          "defender": 0
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2700,
+          "lancer_t6": 2700,
+          "marksman_t6": 2700
+        },
+        "stats": {
+          "inf": {
+            "attack": 221.4,
+            "defense": 221.7,
+            "lethality": 147.3,
+            "health": 155.7
+          },
+          "lanc": {
+            "attack": 194.7,
+            "defense": 193,
+            "lethality": 157.3,
+            "health": 148.4
+          },
+          "mark": {
+            "attack": 194.7,
+            "defense": 192,
+            "lethality": 148.6,
+            "health": 149.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxx",
+        "heroes": {
+          "Sergey": {
+            "skill_1": 4,
+            "skill_2": 4
+          },
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Lynn": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "lancer_t6": 2560
+        },
+        "stats": {
+          "inf": {
+            "attack": 389.8,
+            "defense": 378.5,
+            "lethality": 215.3,
+            "health": 216.5
+          },
+          "lanc": {
+            "attack": 485.5,
+            "defense": 480.8,
+            "lethality": 199.7,
+            "health": 201
+          },
+          "mark": {
+            "attack": 460.2,
+            "defense": 457.2,
+            "lethality": 275.7,
+            "health": 266.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 5274,
+        "defender": 0
+      },
+      {
+        "attacker": 4736,
+        "defender": 0
+      },
+      {
+        "attacker": 5021,
+        "defender": 0
+      },
+      {
+        "attacker": 5290,
+        "defender": 0
+      },
+      {
+        "attacker": 5006,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Sergey:DefendersEdge",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:sergey:0",
+        "effect_ids": [
+          "DefendersEdge/1"
+        ]
+      },
+      {
+        "key": "hero:Sergey:Weaken",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:sergey:0",
+        "effect_ids": [
+          "Weaken/1"
+        ]
+      },
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "hero:Lynn:SongOfLion",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:lynn:0",
+        "effect_ids": [
+          "SongOfLion/1"
+        ]
+      },
+      {
+        "key": "hero:Lynn:MelancholicBallad",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:lynn:0",
+        "effect_ids": [
+          "MelancholicBallad/1"
+        ]
+      },
+      {
+        "key": "hero:Lynn:OonaiCadenza",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:lynn:0",
+        "effect_ids": [
+          "OonaiCadenza/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": {
+    "key": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0",
+    "path": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json",
+    "fixtureSha256": "3c1a86b6d2e26c0f51f0455d266c3389e39f14c7588fe3fe52415d4c13aeaa3d",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "wos451_gordon_s11_lancer_damage_up_bucket",
+      "description": "WOS-451 Gordon S1/1 lancer damage-dealt-up bucket discriminator. minxxx attacks WIP with Gordon + Flint + Jasser and 500 T6 lancers into 2990 T6 infantry. Candidate buckets: active.hero.damage.up, active.hero.attack.up, active.hero.lethality.up.",
+      "attacker": {
+        "name": "[ARK]Piddlyminxx",
+        "heroes": {
+          "Flint": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Jasser": {
+            "skill_1": 4,
+            "skill_2": 4
+          }
+        },
+        "troops": {
+          "lancer_t6": 500
+        },
+        "stats": {
+          "inf": {
+            "attack": 384.7,
+            "defense": 373.5,
+            "lethality": 215.3,
+            "health": 216.5
+          },
+          "lanc": {
+            "attack": 485.5,
+            "defense": 480.8,
+            "lethality": 199.7,
+            "health": 201
+          },
+          "mark": {
+            "attack": 351,
+            "defense": 348,
+            "lethality": 221.8,
+            "health": 216.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2990
+        },
+        "stats": {
+          "inf": {
+            "attack": 221.4,
+            "defense": 221.7,
+            "lethality": 147.3,
+            "health": 155.7
+          },
+          "lanc": {
+            "attack": 194.7,
+            "defense": 193,
+            "lethality": 157.3,
+            "health": 148.4
+          },
+          "mark": {
+            "attack": 194.7,
+            "defense": 192,
+            "lethality": 148.6,
+            "health": 149.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 1517
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxx",
+        "heroes": {
+          "Flint": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Jasser": {
+            "skill_1": 4,
+            "skill_2": 4
+          }
+        },
+        "troops": {
+          "lancer_t6": 500
+        },
+        "stats": {
+          "inf": {
+            "attack": 384.7,
+            "defense": 373.5,
+            "lethality": 215.3,
+            "health": 216.5
+          },
+          "lanc": {
+            "attack": 485.5,
+            "defense": 480.8,
+            "lethality": 199.7,
+            "health": 201
+          },
+          "mark": {
+            "attack": 351,
+            "defense": 348,
+            "lethality": 221.8,
+            "health": 216.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2990
+        },
+        "stats": {
+          "inf": {
+            "attack": 221.4,
+            "defense": 221.7,
+            "lethality": 147.3,
+            "health": 155.7
+          },
+          "lanc": {
+            "attack": 194.7,
+            "defense": 193,
+            "lethality": 157.3,
+            "health": 148.4
+          },
+          "mark": {
+            "attack": 194.7,
+            "defense": 192,
+            "lethality": 148.6,
+            "health": 149.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 1517
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Flint:Pyromaniac",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:flint:0",
+        "effect_ids": [
+          "Pyromaniac/1"
+        ]
+      },
+      {
+        "key": "hero:Flint:BurningResolve",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:flint:0",
+        "effect_ids": [
+          "BurningResolve/1"
+        ]
+      },
+      {
+        "key": "hero:Flint:Immolation",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:flint:0",
+        "effect_ids": [
+          "Immolation/1"
+        ]
+      },
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "hero:Jasser:TacticalGenius",
+        "side": "attacker",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:jasser:0",
+        "effect_ids": [
+          "TacticalGenius/1"
+        ]
+      },
+      {
+        "key": "hero:Jasser:NonCombatPlaceholder",
+        "side": "attacker",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:jasser:0",
+        "effect_ids": []
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": {
+    "key": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0",
+    "path": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json",
+    "fixtureSha256": "169631f8dc3c5a37986f82b24cf1433410ad80e6f2912763f96dab3c4e21fc99",
+    "inventoryHashMatched": true,
+    "entry": {
+      "test_id": "wos451_gordon_s21_lancer_damage_up_bucket",
+      "description": "WOS-451 Gordon S2/1 lancer damage-dealt-up bucket discriminator. minxxx attacks WIP with Gordon + Flint + Jasser and 360 T6 lancers into 2100 T6 infantry. Candidate buckets: active.hero.damage.up, active.hero.attack.up, active.hero.lethality.up.",
+      "attacker": {
+        "name": "[ARK]Piddlyminxx",
+        "heroes": {
+          "Flint": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Jasser": {
+            "skill_1": 4,
+            "skill_2": 4
+          }
+        },
+        "troops": {
+          "lancer_t6": 360
+        },
+        "stats": {
+          "inf": {
+            "attack": 384.7,
+            "defense": 373.5,
+            "lethality": 215.3,
+            "health": 216.5
+          },
+          "lanc": {
+            "attack": 485.5,
+            "defense": 480.8,
+            "lethality": 199.7,
+            "health": 201
+          },
+          "mark": {
+            "attack": 351,
+            "defense": 348,
+            "lethality": 221.8,
+            "health": 216.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2100
+        },
+        "stats": {
+          "inf": {
+            "attack": 221.4,
+            "defense": 221.7,
+            "lethality": 147.3,
+            "health": 155.7
+          },
+          "lanc": {
+            "attack": 194.7,
+            "defense": 193,
+            "lethality": 157.3,
+            "health": 148.4
+          },
+          "mark": {
+            "attack": 194.7,
+            "defense": 192,
+            "lethality": 148.6,
+            "health": 149.5
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "game_report_result": [
+        {
+          "attacker": 0,
+          "defender": 1017
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxx",
+        "heroes": {
+          "Flint": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Gordon": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Jasser": {
+            "skill_1": 4,
+            "skill_2": 4
+          }
+        },
+        "troops": {
+          "lancer_t6": 360
+        },
+        "stats": {
+          "inf": {
+            "attack": 384.7,
+            "defense": 373.5,
+            "lethality": 215.3,
+            "health": 216.5
+          },
+          "lanc": {
+            "attack": 485.5,
+            "defense": 480.8,
+            "lethality": 199.7,
+            "health": 201
+          },
+          "mark": {
+            "attack": 351,
+            "defense": 348,
+            "lethality": 221.8,
+            "health": 216.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2100
+        },
+        "stats": {
+          "inf": {
+            "attack": 221.4,
+            "defense": 221.7,
+            "lethality": 147.3,
+            "health": 155.7
+          },
+          "lanc": {
+            "attack": 194.7,
+            "defense": 193,
+            "lethality": 157.3,
+            "health": 148.4
+          },
+          "mark": {
+            "attack": 194.7,
+            "defense": 192,
+            "lethality": 148.6,
+            "health": 149.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 1017
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Flint:Pyromaniac",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:flint:0",
+        "effect_ids": [
+          "Pyromaniac/1"
+        ]
+      },
+      {
+        "key": "hero:Flint:BurningResolve",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:flint:0",
+        "effect_ids": [
+          "BurningResolve/1"
+        ]
+      },
+      {
+        "key": "hero:Flint:Immolation",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:flint:0",
+        "effect_ids": [
+          "Immolation/1"
+        ]
+      },
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "hero:Jasser:TacticalGenius",
+        "side": "attacker",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:jasser:0",
+        "effect_ids": [
+          "TacticalGenius/1"
+        ]
+      },
+      {
+        "key": "hero:Jasser:NonCombatPlaceholder",
+        "side": "attacker",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:jasser:0",
+        "effect_ids": []
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      }
+    ]
+  },
+  "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": {
+    "key": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+    "path": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json",
+    "fixtureSha256": "f6f71b7e0d5c219cb523fd966e5a639d9b764b02cabe9072250a658bac36814c",
+    "inventoryHashMatched": false,
+    "entry": {
+      "test_id": "s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman",
+      "description": "Gatot evidence section 15.2: 1,000 T6 infantry + 125 lancers + 125 marksmen vs 5,000 infantry; secondary heroes",
+      "attacker": {
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 125,
+          "marksman_t6": 125
+        },
+        "stats": {
+          "infantry": {
+            "attack": 326.1,
+            "defense": 330.1,
+            "lethality": 18.2,
+            "health": 18.2
+          },
+          "lancer": {
+            "attack": 284.8,
+            "defense": 288.8,
+            "lethality": 18.2,
+            "health": 18.2
+          },
+          "marksman": {
+            "attack": 284.8,
+            "defense": 288.8,
+            "lethality": 18.2,
+            "health": 18.2
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 2
+          },
+          "Gordon": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Bradley": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "defender": {
+        "troops": {
+          "infantry_t6": 5000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 295.3,
+            "defense": 293.3,
+            "lethality": 10,
+            "health": 10
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 1,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Patrick": {
+            "skill_1": 1,
+            "skill_2": 0
+          },
+          "Bradley": {
+            "skill_1": 1,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "maxRounds": 1500,
+      "game_report_result": [
+        {
+          "attacker": 851,
+          "defender": 0,
+          "winner": "attacker",
+          "rounds": 366
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 125,
+          "marksman_t6": 125
+        },
+        "stats": {
+          "infantry": {
+            "attack": 326.1,
+            "defense": 330.1,
+            "lethality": 18.2,
+            "health": 18.2
+          },
+          "lancer": {
+            "attack": 284.8,
+            "defense": 288.8,
+            "lethality": 18.2,
+            "health": 18.2
+          },
+          "marksman": {
+            "attack": 284.8,
+            "defense": 288.8,
+            "lethality": 18.2,
+            "health": 18.2
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 2
+          },
+          "Gordon": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Bradley": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "defender": {
+        "troops": {
+          "infantry_t6": 5000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 295.3,
+            "defense": 293.3,
+            "lethality": 10,
+            "health": 10
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 1,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Patrick": {
+            "skill_1": 1,
+            "skill_2": 0
+          },
+          "Bradley": {
+            "skill_1": 1,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "maxRounds": 1500
+    },
+    "game": [
+      {
+        "attacker": 851,
+        "defender": 0,
+        "winner": "attacker",
+        "rounds": 366
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Gatot:GoldenGuard",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "GoldenGuard/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:KingsBestowal",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "KingsBestowal/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:RoyalLegion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "RoyalLegion/1"
+        ]
+      },
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "hero:Bradley:VeteransMight",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:bradley:0",
+        "effect_ids": [
+          "VeteransMight/1"
+        ]
+      },
+      {
+        "key": "hero:Bradley:PowerShot",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:bradley:0",
+        "effect_ids": [
+          "PowerShot/1",
+          "PowerShot/2"
+        ]
+      },
+      {
+        "key": "hero:Bradley:TacticalAssistance",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:bradley:0",
+        "effect_ids": [
+          "TacticalAssistance/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:GoldenGuard",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "GoldenGuard/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:KingsBestowal",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "KingsBestowal/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:RoyalLegion",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "RoyalLegion/1"
+        ]
+      },
+      {
+        "key": "hero:Patrick:SuperNutrients",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:patrick:0",
+        "effect_ids": [
+          "SuperNutrients/1"
+        ]
+      },
+      {
+        "key": "hero:Bradley:VeteransMight",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:bradley:0",
+        "effect_ids": [
+          "VeteransMight/1"
+        ]
+      },
+      {
+        "key": "hero:Bradley:PowerShot",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:bradley:0",
+        "effect_ids": [
+          "PowerShot/1",
+          "PowerShot/2"
+        ]
+      },
+      {
+        "key": "hero:Bradley:TacticalAssistance",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:bradley:0",
+        "effect_ids": [
+          "TacticalAssistance/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      }
+    ]
+  },
+  "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": {
+    "key": "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+    "path": "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json",
+    "fixtureSha256": "55e7f3a717ed71f633690cc615161dab994754ddbeb4b2b3a51b8e491aaeeda2",
+    "inventoryHashMatched": false,
+    "entry": {
+      "test_id": "s3-5000-inf-vs-1000-inf-10-lancer",
+      "description": "Gatot evidence section 3: 5,000 T6 infantry vs 1,000 T6 infantry + 10 T6 lancers",
+      "attacker": {
+        "troops": {
+          "infantry_t6": 5000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 295.3,
+            "defense": 293.3,
+            "lethality": 10,
+            "health": 10
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 1,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "defender": {
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 10
+        },
+        "stats": {
+          "infantry": {
+            "attack": 326.1,
+            "defense": 330.1,
+            "lethality": 18.2,
+            "health": 18.2
+          },
+          "lancer": {
+            "attack": 284.8,
+            "defense": 288.8,
+            "lethality": 18.2,
+            "health": 18.2
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 2
+          },
+          "Gordon": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "maxRounds": 1500,
+      "game_report_result": [
+        {
+          "attacker": 4573,
+          "defender": 0,
+          "winner": "attacker",
+          "rounds": 1151
+        }
+      ]
+    },
+    "input": {
+      "attacker": {
+        "troops": {
+          "infantry_t6": 5000
+        },
+        "stats": {
+          "infantry": {
+            "attack": 295.3,
+            "defense": 293.3,
+            "lethality": 10,
+            "health": 10
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 1,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "defender": {
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 10
+        },
+        "stats": {
+          "infantry": {
+            "attack": 326.1,
+            "defense": 330.1,
+            "lethality": 18.2,
+            "health": 18.2
+          },
+          "lancer": {
+            "attack": 284.8,
+            "defense": 288.8,
+            "lethality": 18.2,
+            "health": 18.2
+          }
+        },
+        "heroes": {
+          "Gatot": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 2
+          },
+          "Gordon": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        }
+      },
+      "maxRounds": 1500
+    },
+    "game": [
+      {
+        "attacker": 4573,
+        "defender": 0,
+        "winner": "attacker",
+        "rounds": 1151
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Gatot:GoldenGuard",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "GoldenGuard/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:KingsBestowal",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "KingsBestowal/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:RoyalLegion",
+        "side": "attacker",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "RoyalLegion/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:GoldenGuard",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "GoldenGuard/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:KingsBestowal",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "KingsBestowal/1"
+        ]
+      },
+      {
+        "key": "hero:Gatot:RoyalLegion",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:gatot:0",
+        "effect_ids": [
+          "RoyalLegion/1"
+        ]
+      },
+      {
+        "key": "hero:Gordon:VenomInfusion",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "VenomInfusion/1",
+          "VenomInfusion/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ChemicalTerror",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ChemicalTerror/1",
+          "ChemicalTerror/2"
+        ]
+      },
+      {
+        "key": "hero:Gordon:ToxicRelease",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:gordon:0",
+        "effect_ids": [
+          "ToxicRelease/1",
+          "ToxicRelease/2"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      }
+    ]
+  }
+}

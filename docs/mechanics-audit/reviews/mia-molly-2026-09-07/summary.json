@@ -1,0 +1,232 @@
+{
+  "phase": "Retrospective accepted-corpus review; baseline outcomes and current discrepancies were read before candidate selection. No live actions or coefficient fit.",
+  "unique_fixtures": 19,
+  "unique_game_observations": 86,
+  "simulated_sample_rows_preserved": 129000,
+  "current_unique_flags": [
+    "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+  ],
+  "method": "Raw combined CDF/support comparisons against individual A-D outcomes, including any draws. Current/omit/Lancer-only are fixed structural comparisons. Same-case current samples exactly match across different skill workers. No stat adjustment or percentage tolerance is used to certify stochastic agreement.",
+  "skills": [
+    {
+      "key": "hero:Mia:BadLuckStreak",
+      "fixture_count": 14,
+      "observation_count": 73,
+      "hydrated_levels": [
+        1,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/greg_mia_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#1",
+          "testcases/emulator_verified/mia_solo.json#0",
+          "testcases/emulator_verified/mia_solo.json#1",
+          "testcases/emulator_verified/mia_solo.json#2",
+          "testcases/emulator_verified/mia_solo.json#3",
+          "testcases/emulator_verified/mia_solo.json#4",
+          "testcases/heroes_unittests/Mia_tc.json#0",
+          "testcases/heroes_unittests/Mia_tc.json#1",
+          "testcases/heroes_unittests/Mia_tc.json#2",
+          "testcases/heroes_unittests/Mia_tc.json#3",
+          "testcases/heroes_unittests/Mia_tc.json#4"
+        ],
+        "lancer_only": [
+          "testcases/emulator_verified/greg_mia_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#1",
+          "testcases/emulator_verified/mia_solo.json#1",
+          "testcases/emulator_verified/mia_solo.json#4",
+          "testcases/heroes_unittests/Mia_tc.json#0",
+          "testcases/heroes_unittests/Mia_tc.json#1",
+          "testcases/heroes_unittests/Mia_tc.json#2",
+          "testcases/heroes_unittests/Mia_tc.json#3"
+        ]
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/BadLuckStreak-initial.json",
+        "sha256": "963e8740028154d129cbaf9ee2b472e0b98c080b5d48821f01ea50cde5abf319"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/BadLuckStreak-initial-samples.json",
+        "sha256": "168ebf35cffc75f4c13080d9b5ac4d8c52d25c35268b6aa945c4af090634155f"
+      }
+    },
+    {
+      "key": "hero:Mia:LuckyCharm",
+      "fixture_count": 11,
+      "observation_count": 65,
+      "hydrated_levels": [
+        1,
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/greg_mia_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#1",
+          "testcases/emulator_verified/mia_solo.json#0",
+          "testcases/emulator_verified/mia_solo.json#1",
+          "testcases/emulator_verified/mia_solo.json#2",
+          "testcases/emulator_verified/mia_solo.json#3",
+          "testcases/emulator_verified/mia_solo.json#4",
+          "testcases/heroes_unittests/Mia_tc.json#0",
+          "testcases/heroes_unittests/Mia_tc.json#1",
+          "testcases/heroes_unittests/Mia_tc.json#4"
+        ],
+        "lancer_only": [
+          "testcases/emulator_verified/greg_mia_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#1",
+          "testcases/emulator_verified/mia_solo.json#1",
+          "testcases/emulator_verified/mia_solo.json#4",
+          "testcases/heroes_unittests/Mia_tc.json#0",
+          "testcases/heroes_unittests/Mia_tc.json#1",
+          "testcases/heroes_unittests/Mia_tc.json#4"
+        ]
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/LuckyCharm-initial.json",
+        "sha256": "799eac10aba62142a8a1b6d893cd6e82a9f95380233d085e3745be01bbb3139e"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/LuckyCharm-initial-samples.json",
+        "sha256": "162c3d213b166c55f01616a0999ec0e1996776a486ce108857edb5b4a3be8a2f"
+      }
+    },
+    {
+      "key": "hero:Mia:RitualDeciphering",
+      "fixture_count": 8,
+      "observation_count": 53,
+      "hydrated_levels": [
+        1,
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/greg_mia_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#1",
+          "testcases/emulator_verified/mia_solo.json#0",
+          "testcases/emulator_verified/mia_solo.json#1",
+          "testcases/emulator_verified/mia_solo.json#3",
+          "testcases/emulator_verified/mia_solo.json#4"
+        ],
+        "lancer_only": [
+          "testcases/emulator_verified/greg_mia_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#0",
+          "testcases/emulator_verified/mia_only_defender_current.json#1",
+          "testcases/emulator_verified/mia_solo.json#1",
+          "testcases/emulator_verified/mia_solo.json#3",
+          "testcases/emulator_verified/mia_solo.json#4"
+        ]
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial.json",
+        "sha256": "47f3a1de307c09525b63ffe0b62fbfc0b7a4ec1ac7c022f5e29ea7df500dfaaf"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial-samples.json",
+        "sha256": "24b0331b1bac13a9c376164ec57a4ba0b500b21f5093a46c32a820bb4e04daf2"
+      }
+    },
+    {
+      "key": "hero:Molly:CallingOfTheStorm",
+      "fixture_count": 5,
+      "observation_count": 13,
+      "hydrated_levels": [
+        2,
+        5
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "flags_by_candidate": {
+        "current": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+        ],
+        "omit": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/molly_solo.json#0",
+          "testcases/heroes_unittests/Molly_tc.json#3"
+        ],
+        "lancer_only": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/molly_solo.json#0",
+          "testcases/heroes_unittests/Molly_tc.json#3"
+        ]
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial.json",
+        "sha256": "c949508cce6415ffd0493f12a67e23ec27612ca90e13c0a27b0525602cf3c51d"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial-samples.json",
+        "sha256": "ccfd8339be1a8dfec2d3c38b1668f1c1fa7698ed52579203018a1b39afa41c40"
+      }
+    },
+    {
+      "key": "hero:Molly:IceDominion",
+      "fixture_count": 5,
+      "observation_count": 13,
+      "hydrated_levels": [
+        2,
+        4
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "flags_by_candidate": {
+        "current": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+        ],
+        "omit": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/molly_solo.json#0",
+          "testcases/heroes_unittests/Molly_tc.json#3"
+        ],
+        "lancer_only": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/molly_solo.json#0",
+          "testcases/heroes_unittests/Molly_tc.json#3"
+        ]
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/IceDominion-initial.json",
+        "sha256": "afbf45448852601cf62726eed741e4db6e28dd975798f852f87c6b8bf82f924f"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/mia-molly-2026-09-07/IceDominion-initial-samples.json",
+        "sha256": "09b47924bcae6c5a1e70c5fbf9155d34a2ae170842cca999d05dee5b6dfb5990"
+      }
+    }
+  ],
+  "post_run_source_drift": [
+    {
+      "path": "simulator/src/tooling/exportGatotTestcases.ts",
+      "frozen_sha256": "9532d34f2821aa3fe0c7bb91a0faf7af3f1012f6320751d523dadf52938895ef",
+      "current_sha256": "1f88bffca8bb34a63e71df804d7cf75ce3b6a8b75cc2c912ee8fbe0323f68324"
+    }
+  ],
+  "source_drift_note": "All five workers verified every frozen source hash before and after execution. Subsequently the parent-authorized Gatot exporter metadata edit changed tooling/exportGatotTestcases.ts only; it is not imported by these replays and none of the 19 input fixtures is a Gatot export. Original protocol hashes remain unchanged, so replay still fails safely against a changed source tree. This read-only extraction checks stored sample hashes without pretending the present source tree is identical.",
+  "trace_count_note": "appliedJobCounts records both trace annotations and explicit generated jobs. For LuckyCharm/IceDominion, normal-kind entries denote parent extra-attack annotations; skill-kind entries denote the actual generated damage jobs. Do not infer a normal damage modifier from the parent annotation."
+}

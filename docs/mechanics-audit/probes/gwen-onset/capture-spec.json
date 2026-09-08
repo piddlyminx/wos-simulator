@@ -1,0 +1,32 @@
+{
+  "test_id": "gwen_blastmaster_onset_500m_vs_11100i_8300l_11100m",
+  "description": "Prospective five-round Gwen onset discriminator. Full minxxx Gwen3/1/1 with500 T6 Marksmen attacks nohero WIP11100T6 Infantry+8300T6 Lancers+11100T6 Marksmen. Frozen fourth-attack delivery predicts30449(11053/8298/11098); later onset30454(11054/8300/11100), robust to both outerceil variants and displayed-stat precision. Fresh report stats and exact per-line survivors required. Protocol docs/mechanics-audit/probes/gwen-onset/spec.json; preserve immutable prospective forecasts.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Gwen": {
+        "skill_1": 3,
+        "skill_2": 1,
+        "skill_3": 1
+      }
+    },
+    "troops": {
+      "marksman_t6": 500
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 11100,
+      "lancer_t6": 8300,
+      "marksman_t6": 11100
+    }
+  }
+}

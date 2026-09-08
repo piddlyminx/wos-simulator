@@ -1,0 +1,28 @@
+{
+  "side": "defender",
+  "source": "docs/mechanics-audit/probes/hendrik-dragons-heir/defender-troops.png",
+  "troops": {
+    "infantry": {
+      "kills": 21,
+      "losses": 0,
+      "injured_displayed": -31,
+      "lightly_injured": 56,
+      "survivors": 313
+    },
+    "lancer": {
+      "kills": 30,
+      "losses": 0,
+      "injured_displayed": -7,
+      "lightly_injured": 11,
+      "survivors": 82
+    },
+    "marksman": {
+      "kills": 37,
+      "losses": 0,
+      "injured_displayed": -9,
+      "lightly_injured": 15,
+      "survivors": 76
+    }
+  },
+  "transcription": "Visually checked all three rows; injured signs retained exactly as displayed. Same battle as overview, not another observation."
+}

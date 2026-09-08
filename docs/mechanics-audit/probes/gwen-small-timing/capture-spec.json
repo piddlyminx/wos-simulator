@@ -1,0 +1,32 @@
+{
+  "test_id": "gwen_blastmaster_small_timing_750m_vs_760i_95l_95m",
+  "description": "Prospective small-army timing discriminator. Full minxxx Gwen3/1/1 with750T6 Marksmen attacks nohero WIP760T6 Infantry+95T6 Lancers+95T6 Marksmen. Nominal current S3first5/every4 predicts attacker77; first6/every4 attacker44; first4/every5 attacker18; first5/every5 defender17. Full-kit and mixed-target scheduling effects retained. Fresh stats and complete reports required. Frozen package docs/mechanics-audit/probes/gwen-small-timing.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Gwen": {
+        "skill_1": 3,
+        "skill_2": 1,
+        "skill_3": 1
+      }
+    },
+    "troops": {
+      "marksman_t6": 750
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 760,
+      "lancer_t6": 95,
+      "marksman_t6": 95
+    }
+  }
+}

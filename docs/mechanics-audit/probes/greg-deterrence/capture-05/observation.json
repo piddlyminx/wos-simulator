@@ -1,0 +1,56 @@
+{
+  "displayed_time": "2026-09-07 10:05:22",
+  "coordinates": {
+    "x": 791,
+    "y": 577
+  },
+  "winner": "defender",
+  "survivors": {
+    "attacker": 0,
+    "defender": 110
+  },
+  "skill_activations": {
+    "Greg": {
+      "SwordOfJustice": 20,
+      "DeterrenceOfLaw": 21
+    }
+  },
+  "evidence_directory": "docs/mechanics-audit/probes/greg-deterrence/capture-05",
+  "full_kit": {
+    "Greg": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    }
+  },
+  "all_24_stats_visually_verified": true,
+  "input_equals_first_verified_battle": true,
+  "troops": {
+    "attacker": {
+      "infantry_t6": 200
+    },
+    "defender": {
+      "marksman_t6": 400
+    }
+  },
+  "casualties": {
+    "attacker": {
+      "losses": 0,
+      "injured": 70,
+      "lightly_injured": 130,
+      "survivors": 0
+    },
+    "defender": {
+      "losses": 0,
+      "injured": 102,
+      "lightly_injured": 188,
+      "survivors": 110
+    }
+  },
+  "displayed_skill_kills": {
+    "SwordOfJustice": null,
+    "DeterrenceOfLaw": null
+  },
+  "game_rounds": null,
+  "per_class_survivors_note": "Single-class formation establishes all defender survivors are Marksmen; no separate troop-detail table claimed."
+}

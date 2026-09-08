@@ -1,0 +1,360 @@
+{
+  "frozenAt": "2026-09-08T02:53:23.467Z",
+  "exposure": "Retrospective: all game endpoints and counts known. No new live capture, parameter sweep, input fit or production change.",
+  "predictionsBeforeReplay": "Previous source strength should increase S3 damage with six scheduled activations in the471 case. Before-normal ordering should be unchanged if constant modifiers and surviving targets make order irrelevant. Neither necessarily supplies the extra game activation in the68 case; a longer battle is a separate unresolved possibility.",
+  "sourceArchiveSha256": "2cc0224dc4140d2bd8b4174a76af623a1b3a5cc3f423631509dd9535ddce012d",
+  "variants": {
+    "first3": "Frozen ordinary3/6/9 schedule and current-round source strength.",
+    "first2": "Historical adopted2/5/8 schedule; unchanged source strength and other skills.",
+    "first3_previous_source": "Only S3 uses the previous round-start Marksman count, with inner ceiling retained. Candidate represents troop strength committed one turn before delivery; constant offensive modifiers in these probes make a full modifier snapshot unnecessary here. No coefficient change.",
+    "first3_before_normal": "Resolve generated skill jobs before their accompanying normal attack, retaining round-start source strength, every3 schedule, and all coefficients."
+  },
+  "cases": [
+    {
+      "id": "lancer",
+      "folder": "hendrik-armor",
+      "heroSide": "defender",
+      "game": [
+        0,
+        17
+      ],
+      "counts": [
+        13,
+        null
+      ],
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "inputSha256": "788dfb650465831d77ed60dc56c877e6de20050742e2d72409a2bf3b70b0889d"
+    },
+    {
+      "id": "marksman471",
+      "folder": "hendrik-dragons-heir",
+      "heroSide": "attacker",
+      "game": [
+        0,
+        471
+      ],
+      "counts": [
+        5,
+        6
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "inputSha256": "c1e928b42e0697c2b215ec721aeb81b63ab6ded1df5048516718c451eac4bec4"
+    },
+    {
+      "id": "marksman68",
+      "folder": "hendrik-small-timing",
+      "heroSide": "attacker",
+      "game": [
+        0,
+        68
+      ],
+      "counts": [
+        8,
+        11
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "inputSha256": "df21dacf73e28f99b11d9f1fe9db129430259745680f97167173326ba28aa8ed"
+    }
+  ],
+  "jointCountConstraint": "With ordinary complete reporting, S2 first4/e4 count5 requires turns20..23. S3 count6 requires18..20 for first3,17..19 for first2. Only first3 intersects. Counts8/11 in the small case allow33..35 for first3,32..34 for first2. These are conditional constraints, not observed rounds.",
+  "currentProductionHendrik": {
+    "name": "Hendrik",
+    "hero_generation": "S8",
+    "troop_type": "marksman",
+    "skills": {
+      "WormsRavage": {
+        "description": "Captain Hendrik commands a gigantic naval shipworm to gnaw at the enemies' armor, reducing all enemy troops' Defense by X%.",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "WormsRavage/1": {
+            "type": "active.hero.defense.down",
+            "value": [
+              5,
+              10,
+              15,
+              20,
+              25
+            ],
+            "units": {
+              "applies_to": "enemy.any"
+            }
+          }
+        }
+      },
+      "ArmorOfBarnacles": {
+        "description": "Hendrik covers all friendly Troops with a layer of hard-shelled barnacles every 4 turns, increasing their Defense by X% for 2 turns.",
+        "trigger": {
+          "type": "turn",
+          "every": 4
+        },
+        "effects": {
+          "ArmorOfBarnacles/1": {
+            "type": "active.hero.defense.up",
+            "value": [
+              6,
+              12,
+              18,
+              24,
+              30
+            ],
+            "duration": {
+              "turns": {
+                "count": 2
+              }
+            }
+          }
+        }
+      },
+      "DragonsHeir": {
+        "description": "Every 3 turns, the ancient abyssal spirit's descendants will work together with Hendrik's Marksmen to launch an attack, dealing X% damage to all enemies.",
+        "trigger": {
+          "type": "turn",
+          "every": 3
+        },
+        "effects": {
+          "DragonsHeir/1": {
+            "type": "extra_skill_attack",
+            "value": [
+              8,
+              16,
+              24,
+              32,
+              40
+            ],
+            "units": {
+              "applies_to": "marksman",
+              "applies_vs": "any"
+            },
+            "trigger_damage_jobs": [
+              {
+                "source": "use.source",
+                "target": "enemy.living"
+              }
+            ]
+          }
+        }
+      },
+      "AbyssalBlessing": {
+        "description": "Widget bonus: Increase Attack by X% for all troops when rallying.",
+        "trigger": {
+          "type": "pre_battle"
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "effects": {
+          "AbyssalBlessing/1": {
+            "type": "passive.attack.up",
+            "value": [
+              5,
+              7.5,
+              10,
+              12.5,
+              15
+            ]
+          }
+        }
+      }
+    }
+  },
+  "currentProductionHendrikSha256": "1dc7f033bbbc5de999106d62fb5f8cf13c0e5d40b42c3fd0911809e45cd240d5"
+}

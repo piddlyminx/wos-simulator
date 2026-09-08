@@ -1,0 +1,19 @@
+{
+  "rule": "Before confirmation: minimum baseline or256-screen p<0.03, or candidate p<0.1 and drops by at least2x. Includes existing tail disagreements and Alonso v2 deterioration.",
+  "options": {
+    "repeat": 10000,
+    "seed": "mechanics-audit-2026-09-07-baseline",
+    "workers": 8
+  },
+  "keys": [
+    "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+    "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+    "testcases/emulator_verified/alonso_solo_v2.json#0",
+    "testcases/emulator_verified/hector_renee_wayne.json#0",
+    "testcases/emulator_verified/natalia_solo.json#0",
+    "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+    "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+    "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+    "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+  ]
+}

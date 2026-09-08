@@ -1,0 +1,2268 @@
+{
+  "schema_version": 1,
+  "capture_kind": "hero_expedition_tooltips",
+  "captured_at_utc": "2026-09-07T06:14:29.114659+00:00",
+  "instance_name": "minxxx",
+  "hero": "Gwen",
+  "current_skill_levels": {
+    "skill_1": 3,
+    "skill_2": 1,
+    "skill_3": 1
+  },
+  "overview": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/hero-skills.png",
+    "sha256": "90c71d10fd3fcc4d18572ed64fca686649640d4dab7c1b21df1d3da46a942325"
+  },
+  "skills": [
+    {
+      "slot": "skill_1",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        275
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/skill_1.png",
+        "sha256": "9fcd3f3c3d22deaca65518b2ed4e1b71c2ef2e4d7ec3813c13a85a71fd16bf7b"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/skill_1-panel.png",
+        "sha256": "e113aab83126d73f8ef80f559a142e7a91bbad403f749e0319e605b8c34d87f1"
+      },
+      "ocr": {
+        "title": "Eagle Vision Lv. 3",
+        "displayed_level": 3,
+        "description_text": "Gwen provides unfettered vision of enemy weakpoints during\nflights, increasing target's Damage Taken by 15%.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Enemy Damage Taken Up: 5%/10%/15%/20%/25%",
+        "raw_lines": [
+          {
+            "text": "Vision",
+            "confidence": 0.99995,
+            "box": [
+              [
+                129.0,
+                740.0
+              ],
+              [
+                209.0,
+                740.0
+              ],
+              [
+                209.0,
+                766.0
+              ],
+              [
+                129.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv. 3",
+            "confidence": 0.9035,
+            "box": [
+              [
+                213.0,
+                738.0
+              ],
+              [
+                284.0,
+                738.0
+              ],
+              [
+                284.0,
+                769.0
+              ],
+              [
+                213.0,
+                769.0
+              ]
+            ]
+          },
+          {
+            "text": "Eagle",
+            "confidence": 0.99996,
+            "box": [
+              [
+                50.0,
+                738.0
+              ],
+              [
+                126.0,
+                739.0
+              ],
+              [
+                126.0,
+                775.0
+              ],
+              [
+                49.0,
+                774.0
+              ]
+            ]
+          },
+          {
+            "text": "vision",
+            "confidence": 0.99993,
+            "box": [
+              [
+                317.0,
+                805.0
+              ],
+              [
+                374.0,
+                805.0
+              ],
+              [
+                374.0,
+                824.0
+              ],
+              [
+                317.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99982,
+            "box": [
+              [
+                380.0,
+                804.0
+              ],
+              [
+                405.0,
+                804.0
+              ],
+              [
+                405.0,
+                825.0
+              ],
+              [
+                380.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "unfettered",
+            "confidence": 0.99988,
+            "box": [
+              [
+                207.0,
+                805.0
+              ],
+              [
+                313.0,
+                805.0
+              ],
+              [
+                313.0,
+                825.0
+              ],
+              [
+                207.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "Gwen",
+            "confidence": 0.99974,
+            "box": [
+              [
+                51.0,
+                805.0
+              ],
+              [
+                110.0,
+                807.0
+              ],
+              [
+                110.0,
+                826.0
+              ],
+              [
+                50.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "provides",
+            "confidence": 0.99999,
+            "box": [
+              [
+                115.0,
+                805.0
+              ],
+              [
+                201.0,
+                804.0
+              ],
+              [
+                201.0,
+                829.0
+              ],
+              [
+                115.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "during",
+            "confidence": 0.99996,
+            "box": [
+              [
+                599.0,
+                803.0
+              ],
+              [
+                668.0,
+                803.0
+              ],
+              [
+                668.0,
+                831.0
+              ],
+              [
+                599.0,
+                831.0
+              ]
+            ]
+          },
+          {
+            "text": "weakpoints",
+            "confidence": 0.99986,
+            "box": [
+              [
+                478.0,
+                805.0
+              ],
+              [
+                597.0,
+                805.0
+              ],
+              [
+                597.0,
+                830.0
+              ],
+              [
+                478.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "enemy",
+            "confidence": 0.99997,
+            "box": [
+              [
+                407.0,
+                806.0
+              ],
+              [
+                475.0,
+                809.0
+              ],
+              [
+                474.0,
+                830.0
+              ],
+              [
+                407.0,
+                828.0
+              ]
+            ]
+          },
+          {
+            "text": "Taken",
+            "confidence": 0.99996,
+            "box": [
+              [
+                405.0,
+                832.0
+              ],
+              [
+                470.0,
+                833.0
+              ],
+              [
+                469.0,
+                854.0
+              ],
+              [
+                404.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "15%.",
+            "confidence": 0.99294,
+            "box": [
+              [
+                502.0,
+                832.0
+              ],
+              [
+                553.0,
+                832.0
+              ],
+              [
+                553.0,
+                855.0
+              ],
+              [
+                502.0,
+                855.0
+              ]
+            ]
+          },
+          {
+            "text": "increasing",
+            "confidence": 0.99992,
+            "box": [
+              [
+                123.0,
+                832.0
+              ],
+              [
+                230.0,
+                832.0
+              ],
+              [
+                230.0,
+                858.0
+              ],
+              [
+                123.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "target's",
+            "confidence": 0.96899,
+            "box": [
+              [
+                233.0,
+                832.0
+              ],
+              [
+                312.0,
+                831.0
+              ],
+              [
+                313.0,
+                858.0
+              ],
+              [
+                233.0,
+                859.0
+              ]
+            ]
+          },
+          {
+            "text": "flights,",
+            "confidence": 0.99894,
+            "box": [
+              [
+                50.0,
+                832.0
+              ],
+              [
+                119.0,
+                833.0
+              ],
+              [
+                118.0,
+                859.0
+              ],
+              [
+                49.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                317.0,
+                833.0
+              ],
+              [
+                401.0,
+                833.0
+              ],
+              [
+                401.0,
+                858.0
+              ],
+              [
+                317.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99998,
+            "box": [
+              [
+                472.0,
+                832.0
+              ],
+              [
+                501.0,
+                832.0
+              ],
+              [
+                501.0,
+                860.0
+              ],
+              [
+                472.0,
+                860.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.9999,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                943.0
+              ],
+              [
+                168.0,
+                944.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99987,
+            "box": [
+              [
+                49.0,
+                919.0
+              ],
+              [
+                162.0,
+                917.0
+              ],
+              [
+                163.0,
+                952.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Taken",
+            "confidence": 0.99999,
+            "box": [
+              [
+                212.0,
+                960.0
+              ],
+              [
+                276.0,
+                960.0
+              ],
+              [
+                276.0,
+                979.0
+              ],
+              [
+                212.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "5%/10%/15%/20%/25%",
+            "confidence": 0.99958,
+            "box": [
+              [
+                319.0,
+                960.0
+              ],
+              [
+                570.0,
+                959.0
+              ],
+              [
+                570.0,
+                981.0
+              ],
+              [
+                320.0,
+                983.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99995,
+            "box": [
+              [
+                279.0,
+                960.0
+              ],
+              [
+                316.0,
+                960.0
+              ],
+              [
+                316.0,
+                984.0
+              ],
+              [
+                279.0,
+                984.0
+              ]
+            ]
+          },
+          {
+            "text": "Enemy",
+            "confidence": 0.99996,
+            "box": [
+              [
+                51.0,
+                960.0
+              ],
+              [
+                119.0,
+                960.0
+              ],
+              [
+                119.0,
+                985.0
+              ],
+              [
+                51.0,
+                985.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                124.0,
+                959.0
+              ],
+              [
+                208.0,
+                962.0
+              ],
+              [
+                207.0,
+                986.0
+              ],
+              [
+                123.0,
+                983.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Eagle Vision Lv. 3",
+          "Gwen provides unfettered vision of enemy weakpoints during",
+          "flights, increasing target's Damage Taken by 15%.",
+          "Upgrade Preview",
+          "Enemy Damage Taken Up: 5%/10%/15%/20%/25%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_2",
+      "current_level": 1,
+      "locked": false,
+      "selected_icon_center": [
+        640,
+        435
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/skill_2.png",
+        "sha256": "e1a281d57ffed6795aa278b2256b81556a6a436ddf4d2b720a7820db16a32fc1"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/skill_2-panel.png",
+        "sha256": "e2568eaff2b92573df094fe92d3223425e9e22f572cc34168aa4bbdacd301525"
+      },
+      "ocr": {
+        "title": "Air Dominance Lv. 1",
+        "displayed_level": 1,
+        "description_text": "Gwen dominates the skies, granting all troops attack 20%\nextra damage after every five attacks, and causes the target\nto receive 5% extra damage for its next attack received.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Extra Damage Up: 20%/40%/60%/80%/100%\nEnemy Damage Taken Up: 5%/7.5%/10%/12.5%/15%",
+        "raw_lines": [
+          {
+            "text": "Lv. 1",
+            "confidence": 0.92488,
+            "box": [
+              [
+                253.0,
+                740.0
+              ],
+              [
+                308.0,
+                740.0
+              ],
+              [
+                308.0,
+                766.0
+              ],
+              [
+                253.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Air",
+            "confidence": 0.99986,
+            "box": [
+              [
+                49.0,
+                740.0
+              ],
+              [
+                95.0,
+                740.0
+              ],
+              [
+                95.0,
+                767.0
+              ],
+              [
+                49.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Dominance",
+            "confidence": 0.99987,
+            "box": [
+              [
+                99.0,
+                741.0
+              ],
+              [
+                249.0,
+                741.0
+              ],
+              [
+                249.0,
+                766.0
+              ],
+              [
+                99.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "dominates",
+            "confidence": 0.99982,
+            "box": [
+              [
+                115.0,
+                805.0
+              ],
+              [
+                219.0,
+                806.0
+              ],
+              [
+                219.0,
+                824.0
+              ],
+              [
+                115.0,
+                823.0
+              ]
+            ]
+          },
+          {
+            "text": "Gwen",
+            "confidence": 0.99992,
+            "box": [
+              [
+                51.0,
+                804.0
+              ],
+              [
+                110.0,
+                806.0
+              ],
+              [
+                110.0,
+                825.0
+              ],
+              [
+                50.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99996,
+            "box": [
+              [
+                223.0,
+                806.0
+              ],
+              [
+                257.0,
+                806.0
+              ],
+              [
+                257.0,
+                824.0
+              ],
+              [
+                223.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "20%",
+            "confidence": 0.99972,
+            "box": [
+              [
+                588.0,
+                805.0
+              ],
+              [
+                638.0,
+                804.0
+              ],
+              [
+                639.0,
+                825.0
+              ],
+              [
+                588.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "attack",
+            "confidence": 0.99997,
+            "box": [
+              [
+                519.0,
+                807.0
+              ],
+              [
+                585.0,
+                805.0
+              ],
+              [
+                585.0,
+                824.0
+              ],
+              [
+                520.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99984,
+            "box": [
+              [
+                414.0,
+                805.0
+              ],
+              [
+                439.0,
+                805.0
+              ],
+              [
+                439.0,
+                826.0
+              ],
+              [
+                414.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "skies,",
+            "confidence": 0.99984,
+            "box": [
+              [
+                261.0,
+                804.0
+              ],
+              [
+                317.0,
+                804.0
+              ],
+              [
+                317.0,
+                828.0
+              ],
+              [
+                261.0,
+                828.0
+              ]
+            ]
+          },
+          {
+            "text": "granting",
+            "confidence": 0.99997,
+            "box": [
+              [
+                323.0,
+                805.0
+              ],
+              [
+                409.0,
+                804.0
+              ],
+              [
+                409.0,
+                830.0
+              ],
+              [
+                323.0,
+                831.0
+              ]
+            ]
+          },
+          {
+            "text": "troops",
+            "confidence": 0.99996,
+            "box": [
+              [
+                443.0,
+                806.0
+              ],
+              [
+                511.0,
+                807.0
+              ],
+              [
+                511.0,
+                831.0
+              ],
+              [
+                442.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "after",
+            "confidence": 0.99995,
+            "box": [
+              [
+                193.0,
+                832.0
+              ],
+              [
+                245.0,
+                832.0
+              ],
+              [
+                245.0,
+                853.0
+              ],
+              [
+                193.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "five",
+            "confidence": 0.99862,
+            "box": [
+              [
+                311.0,
+                833.0
+              ],
+              [
+                350.0,
+                833.0
+              ],
+              [
+                350.0,
+                853.0
+              ],
+              [
+                311.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99997,
+            "box": [
+              [
+                554.0,
+                833.0
+              ],
+              [
+                590.0,
+                833.0
+              ],
+              [
+                590.0,
+                853.0
+              ],
+              [
+                554.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "and",
+            "confidence": 0.99998,
+            "box": [
+              [
+                440.0,
+                834.0
+              ],
+              [
+                479.0,
+                834.0
+              ],
+              [
+                479.0,
+                853.0
+              ],
+              [
+                440.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "extra",
+            "confidence": 0.99996,
+            "box": [
+              [
+                50.0,
+                836.0
+              ],
+              [
+                103.0,
+                836.0
+              ],
+              [
+                103.0,
+                853.0
+              ],
+              [
+                50.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "attacks,",
+            "confidence": 0.99658,
+            "box": [
+              [
+                354.0,
+                833.0
+              ],
+              [
+                435.0,
+                833.0
+              ],
+              [
+                435.0,
+                857.0
+              ],
+              [
+                354.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "causes",
+            "confidence": 0.99996,
+            "box": [
+              [
+                484.0,
+                838.0
+              ],
+              [
+                551.0,
+                838.0
+              ],
+              [
+                551.0,
+                852.0
+              ],
+              [
+                484.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                108.0,
+                833.0
+              ],
+              [
+                189.0,
+                833.0
+              ],
+              [
+                189.0,
+                858.0
+              ],
+              [
+                108.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "every",
+            "confidence": 0.99998,
+            "box": [
+              [
+                251.0,
+                835.0
+              ],
+              [
+                306.0,
+                836.0
+              ],
+              [
+                306.0,
+                858.0
+              ],
+              [
+                250.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "target",
+            "confidence": 0.99999,
+            "box": [
+              [
+                592.0,
+                835.0
+              ],
+              [
+                658.0,
+                835.0
+              ],
+              [
+                658.0,
+                858.0
+              ],
+              [
+                592.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "receive",
+            "confidence": 0.99994,
+            "box": [
+              [
+                75.0,
+                862.0
+              ],
+              [
+                149.0,
+                861.0
+              ],
+              [
+                149.0,
+                879.0
+              ],
+              [
+                76.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.9998,
+            "box": [
+              [
+                336.0,
+                860.0
+              ],
+              [
+                370.0,
+                860.0
+              ],
+              [
+                370.0,
+                881.0
+              ],
+              [
+                336.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "received.",
+            "confidence": 0.99912,
+            "box": [
+              [
+                522.0,
+                862.0
+              ],
+              [
+                612.0,
+                862.0
+              ],
+              [
+                612.0,
+                879.0
+              ],
+              [
+                522.0,
+                879.0
+              ]
+            ]
+          },
+          {
+            "text": "5%",
+            "confidence": 0.99976,
+            "box": [
+              [
+                153.0,
+                862.0
+              ],
+              [
+                188.0,
+                862.0
+              ],
+              [
+                188.0,
+                880.0
+              ],
+              [
+                153.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "attack",
+            "confidence": 0.99998,
+            "box": [
+              [
+                450.0,
+                862.0
+              ],
+              [
+                517.0,
+                861.0
+              ],
+              [
+                518.0,
+                880.0
+              ],
+              [
+                451.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "its",
+            "confidence": 0.99991,
+            "box": [
+              [
+                373.0,
+                860.0
+              ],
+              [
+                400.0,
+                864.0
+              ],
+              [
+                398.0,
+                883.0
+              ],
+              [
+                370.0,
+                879.0
+              ]
+            ]
+          },
+          {
+            "text": "extra",
+            "confidence": 0.99995,
+            "box": [
+              [
+                194.0,
+                864.0
+              ],
+              [
+                246.0,
+                864.0
+              ],
+              [
+                246.0,
+                880.0
+              ],
+              [
+                194.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "next",
+            "confidence": 0.99999,
+            "box": [
+              [
+                403.0,
+                864.0
+              ],
+              [
+                448.0,
+                864.0
+              ],
+              [
+                448.0,
+                880.0
+              ],
+              [
+                403.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "to",
+            "confidence": 0.99998,
+            "box": [
+              [
+                49.0,
+                864.0
+              ],
+              [
+                71.0,
+                864.0
+              ],
+              [
+                71.0,
+                881.0
+              ],
+              [
+                49.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                252.0,
+                861.0
+              ],
+              [
+                333.0,
+                861.0
+              ],
+              [
+                333.0,
+                886.0
+              ],
+              [
+                252.0,
+                886.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99995,
+            "box": [
+              [
+                167.0,
+                919.0
+              ],
+              [
+                276.0,
+                918.0
+              ],
+              [
+                276.0,
+                943.0
+              ],
+              [
+                167.0,
+                944.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Extra",
+            "confidence": 0.99995,
+            "box": [
+              [
+                51.0,
+                959.0
+              ],
+              [
+                106.0,
+                961.0
+              ],
+              [
+                105.0,
+                981.0
+              ],
+              [
+                50.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "20%/40%/60%/80%/100%",
+            "confidence": 0.9946,
+            "box": [
+              [
+                238.0,
+                959.0
+              ],
+              [
+                531.0,
+                959.0
+              ],
+              [
+                531.0,
+                982.0
+              ],
+              [
+                238.0,
+                982.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99996,
+            "box": [
+              [
+                198.0,
+                958.0
+              ],
+              [
+                236.0,
+                958.0
+              ],
+              [
+                236.0,
+                987.0
+              ],
+              [
+                198.0,
+                987.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                111.0,
+                959.0
+              ],
+              [
+                196.0,
+                961.0
+              ],
+              [
+                195.0,
+                987.0
+              ],
+              [
+                110.0,
+                984.0
+              ]
+            ]
+          },
+          {
+            "text": "Taken",
+            "confidence": 0.99999,
+            "box": [
+              [
+                212.0,
+                989.0
+              ],
+              [
+                277.0,
+                989.0
+              ],
+              [
+                277.0,
+                1007.0
+              ],
+              [
+                212.0,
+                1007.0
+              ]
+            ]
+          },
+          {
+            "text": "5%/7.5%/10%/12.5%/15%",
+            "confidence": 0.99921,
+            "box": [
+              [
+                320.0,
+                989.0
+              ],
+              [
+                588.0,
+                989.0
+              ],
+              [
+                588.0,
+                1009.0
+              ],
+              [
+                320.0,
+                1009.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99995,
+            "box": [
+              [
+                279.0,
+                988.0
+              ],
+              [
+                316.0,
+                988.0
+              ],
+              [
+                316.0,
+                1012.0
+              ],
+              [
+                279.0,
+                1012.0
+              ]
+            ]
+          },
+          {
+            "text": "Enemy",
+            "confidence": 0.99997,
+            "box": [
+              [
+                51.0,
+                987.0
+              ],
+              [
+                119.0,
+                988.0
+              ],
+              [
+                118.0,
+                1014.0
+              ],
+              [
+                50.0,
+                1012.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                123.0,
+                988.0
+              ],
+              [
+                209.0,
+                989.0
+              ],
+              [
+                208.0,
+                1013.0
+              ],
+              [
+                123.0,
+                1012.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Air Dominance Lv. 1",
+          "Gwen dominates the skies, granting all troops attack 20%",
+          "extra damage after every five attacks, and causes the target",
+          "to receive 5% extra damage for its next attack received.",
+          "Upgrade Preview",
+          "Extra Damage Up: 20%/40%/60%/80%/100%",
+          "Enemy Damage Taken Up: 5%/7.5%/10%/12.5%/15%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_3",
+      "current_level": 1,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        610
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/skill_3.png",
+        "sha256": "b0fa919ef044badd8fa598e0caf1a7ed8ef66eae585a00715d8b245cfa5359cf"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/minxxx-gwen-2026-09-07/skill_3-panel.png",
+        "sha256": "649fdc1f10a05341bc85c9fbd85d2d1a59479b332074df4e676ba2d8f985ae13"
+      },
+      "ocr": {
+        "title": "Blastmaster Lv.1",
+        "displayed_level": 1,
+        "description_text": "Gwen equips her Marksmen with grenades, dealing 10%\nextra damage to all enemies on the next attack of every 4\nattacks.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Extra Damage Up: 10%/20%/30%/40%/50%",
+        "raw_lines": [
+          {
+            "text": "Blastmaster",
+            "confidence": 0.99366,
+            "box": [
+              [
+                52.0,
+                741.0
+              ],
+              [
+                210.0,
+                741.0
+              ],
+              [
+                210.0,
+                766.0
+              ],
+              [
+                52.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.1",
+            "confidence": 0.99983,
+            "box": [
+              [
+                213.0,
+                740.0
+              ],
+              [
+                275.0,
+                740.0
+              ],
+              [
+                275.0,
+                767.0
+              ],
+              [
+                213.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Gwen",
+            "confidence": 0.99996,
+            "box": [
+              [
+                51.0,
+                804.0
+              ],
+              [
+                111.0,
+                806.0
+              ],
+              [
+                110.0,
+                825.0
+              ],
+              [
+                50.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "her",
+            "confidence": 0.99996,
+            "box": [
+              [
+                184.0,
+                805.0
+              ],
+              [
+                220.0,
+                805.0
+              ],
+              [
+                220.0,
+                825.0
+              ],
+              [
+                184.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "Marksmen",
+            "confidence": 0.99992,
+            "box": [
+              [
+                225.0,
+                805.0
+              ],
+              [
+                332.0,
+                806.0
+              ],
+              [
+                332.0,
+                825.0
+              ],
+              [
+                225.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "10%",
+            "confidence": 0.99962,
+            "box": [
+              [
+                571.0,
+                804.0
+              ],
+              [
+                616.0,
+                803.0
+              ],
+              [
+                617.0,
+                826.0
+              ],
+              [
+                571.0,
+                828.0
+              ]
+            ]
+          },
+          {
+            "text": "with",
+            "confidence": 0.99997,
+            "box": [
+              [
+                338.0,
+                805.0
+              ],
+              [
+                385.0,
+                805.0
+              ],
+              [
+                385.0,
+                826.0
+              ],
+              [
+                338.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "equips",
+            "confidence": 0.99985,
+            "box": [
+              [
+                115.0,
+                804.0
+              ],
+              [
+                180.0,
+                804.0
+              ],
+              [
+                180.0,
+                830.0
+              ],
+              [
+                115.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "grenades,",
+            "confidence": 0.99997,
+            "box": [
+              [
+                389.0,
+                806.0
+              ],
+              [
+                488.0,
+                804.0
+              ],
+              [
+                488.0,
+                829.0
+              ],
+              [
+                389.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "dealing",
+            "confidence": 0.99974,
+            "box": [
+              [
+                493.0,
+                805.0
+              ],
+              [
+                568.0,
+                805.0
+              ],
+              [
+                568.0,
+                830.0
+              ],
+              [
+                493.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99995,
+            "box": [
+              [
+                219.0,
+                833.0
+              ],
+              [
+                245.0,
+                833.0
+              ],
+              [
+                245.0,
+                852.0
+              ],
+              [
+                219.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "enemies",
+            "confidence": 0.9999,
+            "box": [
+              [
+                250.0,
+                833.0
+              ],
+              [
+                330.0,
+                833.0
+              ],
+              [
+                330.0,
+                852.0
+              ],
+              [
+                250.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "attack",
+            "confidence": 0.99998,
+            "box": [
+              [
+                450.0,
+                833.0
+              ],
+              [
+                517.0,
+                832.0
+              ],
+              [
+                518.0,
+                852.0
+              ],
+              [
+                450.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99998,
+            "box": [
+              [
+                365.0,
+                834.0
+              ],
+              [
+                399.0,
+                834.0
+              ],
+              [
+                399.0,
+                852.0
+              ],
+              [
+                365.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99986,
+            "box": [
+              [
+                520.0,
+                832.0
+              ],
+              [
+                547.0,
+                832.0
+              ],
+              [
+                547.0,
+                854.0
+              ],
+              [
+                520.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "4",
+            "confidence": 0.99991,
+            "box": [
+              [
+                609.0,
+                834.0
+              ],
+              [
+                627.0,
+                834.0
+              ],
+              [
+                627.0,
+                853.0
+              ],
+              [
+                609.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "extra",
+            "confidence": 0.99995,
+            "box": [
+              [
+                51.0,
+                836.0
+              ],
+              [
+                103.0,
+                836.0
+              ],
+              [
+                103.0,
+                852.0
+              ],
+              [
+                51.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "to",
+            "confidence": 0.99998,
+            "box": [
+              [
+                193.0,
+                836.0
+              ],
+              [
+                214.0,
+                836.0
+              ],
+              [
+                214.0,
+                852.0
+              ],
+              [
+                193.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "next",
+            "confidence": 0.99998,
+            "box": [
+              [
+                404.0,
+                836.0
+              ],
+              [
+                448.0,
+                836.0
+              ],
+              [
+                448.0,
+                852.0
+              ],
+              [
+                404.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "on",
+            "confidence": 0.99997,
+            "box": [
+              [
+                335.0,
+                837.0
+              ],
+              [
+                362.0,
+                837.0
+              ],
+              [
+                362.0,
+                852.0
+              ],
+              [
+                335.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                108.0,
+                833.0
+              ],
+              [
+                189.0,
+                833.0
+              ],
+              [
+                189.0,
+                858.0
+              ],
+              [
+                108.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "every",
+            "confidence": 0.99999,
+            "box": [
+              [
+                549.0,
+                833.0
+              ],
+              [
+                606.0,
+                835.0
+              ],
+              [
+                605.0,
+                859.0
+              ],
+              [
+                548.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "attacks.",
+            "confidence": 0.9997,
+            "box": [
+              [
+                49.0,
+                863.0
+              ],
+              [
+                130.0,
+                861.0
+              ],
+              [
+                130.0,
+                879.0
+              ],
+              [
+                50.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99992,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                943.0
+              ],
+              [
+                167.0,
+                944.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Extra",
+            "confidence": 0.99996,
+            "box": [
+              [
+                51.0,
+                959.0
+              ],
+              [
+                106.0,
+                961.0
+              ],
+              [
+                106.0,
+                980.0
+              ],
+              [
+                50.0,
+                978.0
+              ]
+            ]
+          },
+          {
+            "text": "10%/20%/30%/40%/50%",
+            "confidence": 0.99953,
+            "box": [
+              [
+                238.0,
+                960.0
+              ],
+              [
+                514.0,
+                959.0
+              ],
+              [
+                514.0,
+                981.0
+              ],
+              [
+                239.0,
+                982.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                111.0,
+                959.0
+              ],
+              [
+                196.0,
+                962.0
+              ],
+              [
+                195.0,
+                986.0
+              ],
+              [
+                110.0,
+                983.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99994,
+            "box": [
+              [
+                198.0,
+                960.0
+              ],
+              [
+                236.0,
+                960.0
+              ],
+              [
+                236.0,
+                985.0
+              ],
+              [
+                198.0,
+                985.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Blastmaster Lv.1",
+          "Gwen equips her Marksmen with grenades, dealing 10%",
+          "extra damage to all enemies on the next attack of every 4",
+          "attacks.",
+          "Upgrade Preview",
+          "Extra Damage Up: 10%/20%/30%/40%/50%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    }
+  ],
+  "complete": true,
+  "notes": [
+    "Selected only Expedition skill icons; Upgrade buttons are never tapped.",
+    "Current levels are read from the hero screen, not inferred from upgrade-preview values.",
+    "Missing preview OCR does not establish that a preview is unavailable; inspect the full image.",
+    "This command does not update player_hero_skills.json or create battle observations."
+  ],
+  "finished_at_utc": "2026-09-07T06:14:59.884222+00:00"
+}

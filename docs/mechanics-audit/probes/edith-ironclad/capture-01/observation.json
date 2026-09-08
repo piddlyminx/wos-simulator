@@ -1,0 +1,126 @@
+{
+  "captured_date": "2026-09-07",
+  "displayed_battle_time": "2026-09-07 07:51:41",
+  "time_note": "Transcribed as displayed; no game round count shown.",
+  "world_coord": {
+    "x": 791,
+    "y": 577
+  },
+  "counterpart_mail_id": "2734692464125008",
+  "distinct_battles": 1,
+  "fixture_key": "testcases/emulator_verified/edith_ironclad_100i_vs_400m.json::0",
+  "game_report_result_index": 0,
+  "attacker": {
+    "instance": "minxxx",
+    "full_hero_kit": {
+      "Edith": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "troops": {
+      "infantry_t6": 100
+    },
+    "survivors": 0,
+    "losses": 0,
+    "injured": 35,
+    "lightly_injured": 65
+  },
+  "defender": {
+    "instance": "WIP",
+    "heroes": {},
+    "troops": {
+      "marksman_t6": 400
+    },
+    "survivors": 102,
+    "losses": 0,
+    "injured": 105,
+    "lightly_injured": 193,
+    "displayed_troop_table": {
+      "marksman_t6": {
+        "kills": 35,
+        "losses": 0,
+        "injured": -105,
+        "lightly_injured": 193,
+        "survivors": 102
+      }
+    }
+  },
+  "skill_details": {
+    "Edith": {
+      "StrategicBalance": {
+        "triggered": 1,
+        "displayed_kills": "-"
+      },
+      "Ironclad": {
+        "triggered": 1,
+        "displayed_kills": "-"
+      },
+      "SteelSentinel": {
+        "triggered": 1,
+        "displayed_kills": "-"
+      }
+    }
+  },
+  "input_review": {
+    "status": "All24 displayed stat values manually verified against original and clean counterpart images; no OCR/input correction required.",
+    "captured_input_sha256": "3e208f0a0c887efd6d0bae880f439c51b15a8fe4a9bb39224861ec30772a2af2",
+    "fresh_Infantry_stat_delta_from_nohero_conditional": {
+      "attack": 221.7,
+      "defense": 221.6,
+      "lethality": 0,
+      "health": 0
+    },
+    "generation": "Report stats already resolved; no generation added."
+  },
+  "comparison": {
+    "current_defender_survivors": 102,
+    "current_precision_corner_defender_survivors": [
+      102,
+      102
+    ],
+    "omit_Ironclad_defender_survivors": 146,
+    "Ironclad_into_Health_defender_survivors": 108,
+    "Ironclad_into_Defense_defender_survivors": 102,
+    "omit_SteelSentinel_defender_survivors": 155,
+    "rounds_note": "Frozen current predicts143 rounds; this is not an observed game round count."
+  },
+  "counterpart_note": "The WIP mail is the same07:51:41 battle, never an additional observation.",
+  "images_sha256": {
+    "bottom_step_00_end_region.png": "34e4fc2b0c3564c902d278db1c8e4fb0a23385f2070c247aae8a0a07e4fa4c42",
+    "defender-report-stats.png": "d12e12f94958038282b0ed15fb2baaf9cc355fb5a91a2d38bc9903fd280df0e7",
+    "outcome_left_troops.png": "be17950e891351069adc873303a6157a4ce8f69d89ecb77aeda88f3816b0738e",
+    "outcome_right_troops.png": "af5b61a2fc856f267d4e6e36363c0c14d719c0ef3fdcb682462d5daed1d313a2",
+    "bd_top_full_ocr_input.png": "dd46119c52266ec918ad1c25da342bb0edc6e5877d093c0575bf88ff1a4754d3",
+    "bd_button_search.png": "612c0c9ee6ce7c2efcfecdb4ad854bf59a87e4d1a3c6a76442921393e19e6f17",
+    "bd_bot.png": "99a3caa852968691f65cc186c6a1db02f882a8e7a15846650ae3b39a5d938733",
+    "bd_top.png": "7ec4738de016c626e6d5593d05e492bed7ffdab935591d44bf816b0df33775a2",
+    "bottom_step_01_frame.png": "122348adb506fddad9f3e4f33247b9914b6f5760d53cccd9f7e68ba748f3bbb9",
+    "defender-mail-bottom.png": "a049ebb4093265e2b3ffd46fe1c971fb8055d61bf798f55fce8f144d0fcbda2c",
+    "report_stats_attempt_01.png": "675edc566f4c343a30948adc25ebf712e9e8d654b0cadadd66627c818a59dca7",
+    "defender-bd-bot.png": "5e5a12f200222fb08e28ad3b47d5720118279a6b7568393b6f41cf1fe35087f0",
+    "bottom_step_02_frame.png": "612c0c9ee6ce7c2efcfecdb4ad854bf59a87e4d1a3c6a76442921393e19e6f17",
+    "outcome_right_lightly_injured.png": "039c3c23378b0aabe7dfea483876cb7e53113cb7356c69dd45071585d996b575",
+    "bottom_step_01_end_region.png": "421b91fc29361b0cbd9b0a247a98945a3ed99a054e615f12a607e67dc5819376",
+    "outcome_left_survivors.png": "4d1f9d75b56e390dd06ab2c024d0ab71fe3b5a80b14d1de71ba751dc93c774b2",
+    "outcome_left_losses.png": "8f9b0293201381103dd7ba3fa6d9a7dc0978908e19143e9e94cdce8b5659a77c",
+    "report_top.png": "9109337e5a92e4fe14acd0eb4219b5477cec598d475741ff6b0184c4f85c40c5",
+    "defender-report-bottom.png": "329626cb046152ca7adffa1577a80eac3925e67fe6033e4ae15755ce5ddc4a2b",
+    "defender-troops.png": "7cbe72f17e64cbac8d6bbb9f915070c58791218eb36df4bbdfc114be65c7e72e",
+    "outcome_right_injured.png": "a4f6e0baaa6b6ee61630ec47f9304ac7dfc5b95f14590c7102c3f1fa2501f251",
+    "outcome_left_injured.png": "d6245be76035d1f14f2e075b604d955542190e0aafe3eaae5974e86155e5975a",
+    "bottom_step_00_frame.png": "b4eb6a5da4f22695ab20f28723f5f7e7793a7675abd324c1980344eea25d8fb5",
+    "report_stats.png": "675edc566f4c343a30948adc25ebf712e9e8d654b0cadadd66627c818a59dca7",
+    "outcome_right_survivors.png": "3290ec8f42182048200c58b5b3da15e96ccb29558becac20cfcd72a409c36d75",
+    "outcome_right_losses.png": "0fc4c71eec4cb78ffd73e1c22cbb40f85f26809ba9d6b6347a75eb1fcb60453e",
+    "bottom_step_02_end_region.png": "7ddae6157ac59dbb4da421311de785a4bb2cbcdb0d68d39ffa4c078915044dd6",
+    "defender-bd-before-collapse.png": "713d5b327317011ff2628ef6db19a84cc0419a7c094ab27ac5509eea49fb349d",
+    "defender-bd-top.png": "e44f4b882a0ab346fb88c9854349e5b7556e024fc1d519b57cc82114b9b9b978",
+    "defender-report-top.png": "57ca84d7631e61408950f576ef01293f119b0c0f2b72e4ae0be4bbf3493595d8",
+    "report_bottom.png": "612c0c9ee6ce7c2efcfecdb4ad854bf59a87e4d1a3c6a76442921393e19e6f17",
+    "outcome_left_lightly_injured.png": "e7cfcd7cfe9b2c673eaef2875297ca6b361b2fe50b19a607a0610a44cdba9fd4",
+    "report_stats_attempt_00.png": "1d0862e890577298aefa0b8fdf97cc6849d3f694bfa0ec5d61659b1c2baf2cce",
+    "report_stats_parser_ocr_input.png": "36a7c993272fdfbdd1cba12cb5da8fd87794fa5df7efac7703b2cfbc8fab4d4f"
+  }
+}

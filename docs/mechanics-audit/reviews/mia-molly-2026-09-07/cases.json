@@ -1,0 +1,3756 @@
+{
+  "testcases/3-testcases_mixed-heroes-not-verified.json#5": {
+    "key": "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+    "path": "testcases/3-testcases_mixed-heroes-not-verified.json",
+    "fixtureSha256": "fd491d2771e82ec070938b01644a0e09408bd5370bf32e13e2734f01b1b98c20",
+    "input": {
+      "attacker": {
+        "name": "daut2x",
+        "heroes": {
+          "Alonso": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          },
+          "Mia": {
+            "skill_1": 1
+          },
+          "Logan": {
+            "skill_1": 2,
+            "skill_2": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 6000,
+          "lancer_t6": 2000,
+          "marksman_t6": 3000
+        },
+        "stats": {
+          "inf": {
+            "attack": 69.68,
+            "defense": 69.18,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "lanc": {
+            "attack": 46.51,
+            "defense": 46.01,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "mark": {
+            "attack": 86.72,
+            "defense": 85.72,
+            "lethality": 1.8,
+            "health": 1.8
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper2x",
+        "heroes": {
+          "Hector": {
+            "skill_1": 4,
+            "skill_2": 3,
+            "skill_3": 3
+          },
+          "Philly": {
+            "skill_1": 1,
+            "skill_2": 1
+          },
+          "Greg": {
+            "skill_1": 1,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 500,
+          "lancer_t6": 1000,
+          "marksman_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 441.15,
+            "defense": 440.65,
+            "lethality": 127.53,
+            "health": 232.63
+          },
+          "lanc": {
+            "attack": 224.42,
+            "defense": 216.42,
+            "lethality": 110.3,
+            "health": 100.2
+          },
+          "mark": {
+            "attack": 248.12,
+            "defense": 236.62,
+            "lethality": 117.8,
+            "health": 104.7
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 0,
+      "defender": 2295
+    },
+    "hydratedSkills": [
+      {
+        "key": "hero:Alonso:Onslaught",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "Onslaught/1"
+        ]
+      },
+      {
+        "key": "hero:Alonso:IronStrength",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "IronStrength/1"
+        ]
+      },
+      {
+        "key": "hero:Alonso:PoisonHarpoon",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "PoisonHarpoon/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Logan:LionStrike",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:logan:0",
+        "effect_ids": [
+          "LionStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Logan:LionIntimidation",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:logan:0",
+        "effect_ids": [
+          "LionIntimidation/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:SurvivalInstincts",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "SurvivalInstincts/1"
+        ]
+      },
+      {
+        "key": "hero:Hector:Rampant",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Rampant/1",
+          "Rampant/2"
+        ]
+      },
+      {
+        "key": "hero:Hector:Blitz",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:hector:0",
+        "effect_ids": [
+          "Blitz/1"
+        ]
+      },
+      {
+        "key": "hero:Philly:VigorTactics",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:philly:0",
+        "effect_ids": [
+          "VigorTactics/1",
+          "VigorTactics/2"
+        ]
+      },
+      {
+        "key": "hero:Philly:DosageBoost",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:philly:0",
+        "effect_ids": [
+          "DosageBoost/1"
+        ]
+      },
+      {
+        "key": "hero:Greg:SwordOfJustice",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:greg:0",
+        "effect_ids": [
+          "SwordOfJustice/1"
+        ]
+      },
+      {
+        "key": "hero:Greg:DeterrenceOfLaw",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:greg:0",
+        "effect_ids": [
+          "DeterrenceOfLaw/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/greg_mia_defender_current.json#0": {
+    "key": "testcases/emulator_verified/greg_mia_defender_current.json#0",
+    "path": "testcases/emulator_verified/greg_mia_defender_current.json",
+    "fixtureSha256": "80fd75798e66f4bddb104a5d96cc54ebb1f8730ba53be890f323ed0921c425ef",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1400,
+          "lancer_t6": 1069,
+          "marksman_t6": 1500
+        },
+        "stats": {
+          "inf": {
+            "attack": 140.7,
+            "defense": 148.2,
+            "lethality": 117,
+            "health": 131.9
+          },
+          "lanc": {
+            "attack": 149.2,
+            "defense": 148.2,
+            "lethality": 116.5,
+            "health": 105.1
+          },
+          "mark": {
+            "attack": 153.7,
+            "defense": 143.2,
+            "lethality": 121.9,
+            "health": 112.3
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 3,
+            "skill_2": 2,
+            "skill_3": 2
+          },
+          "Greg": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 0
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 237.9,
+            "defense": 240.7,
+            "lethality": 177.2,
+            "health": 183.3
+          },
+          "lanc": {
+            "attack": 316.9,
+            "defense": 325.7,
+            "lethality": 176,
+            "health": 176.5
+          },
+          "mark": {
+            "attack": 317,
+            "defense": 319.8,
+            "lethality": 181.7,
+            "health": 176.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 3345,
+        "defender": 0
+      },
+      {
+        "attacker": 3390,
+        "defender": 0
+      },
+      {
+        "attacker": 3320,
+        "defender": 0
+      },
+      {
+        "attacker": 3367,
+        "defender": 0
+      },
+      {
+        "attacker": 3363,
+        "defender": 0
+      },
+      {
+        "attacker": 3341,
+        "defender": 0
+      },
+      {
+        "attacker": 3360,
+        "defender": 0
+      },
+      {
+        "attacker": 3355,
+        "defender": 0
+      },
+      {
+        "attacker": 3339,
+        "defender": 0
+      },
+      {
+        "attacker": 3346,
+        "defender": 0
+      },
+      {
+        "attacker": 3344,
+        "defender": 0
+      },
+      {
+        "attacker": 3341,
+        "defender": 0
+      },
+      {
+        "attacker": 3373,
+        "defender": 0
+      },
+      {
+        "attacker": 3344,
+        "defender": 0
+      },
+      {
+        "attacker": 3329,
+        "defender": 0
+      },
+      {
+        "attacker": 3354,
+        "defender": 0
+      },
+      {
+        "attacker": 3351,
+        "defender": 0
+      },
+      {
+        "attacker": 3366,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "hero:Greg:SwordOfJustice",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:greg:0",
+        "effect_ids": [
+          "SwordOfJustice/1"
+        ]
+      },
+      {
+        "key": "hero:Greg:DeterrenceOfLaw",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:greg:0",
+        "effect_ids": [
+          "DeterrenceOfLaw/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_only_defender_current.json#0": {
+    "key": "testcases/emulator_verified/mia_only_defender_current.json#0",
+    "path": "testcases/emulator_verified/mia_only_defender_current.json",
+    "fixtureSha256": "90d12726490af4e0841220be7c747b7b816b3bf0d4d1b2b6d69662bcbc91102a",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1500,
+          "lancer_t6": 1069,
+          "marksman_t6": 1500
+        },
+        "stats": {
+          "inf": {
+            "attack": 140.7,
+            "defense": 148.2,
+            "lethality": 117,
+            "health": 131.9
+          },
+          "lanc": {
+            "attack": 149.2,
+            "defense": 148.2,
+            "lethality": 116.5,
+            "health": 105.1
+          },
+          "mark": {
+            "attack": 153.7,
+            "defense": 143.2,
+            "lethality": 121.9,
+            "health": 112.3
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 3,
+            "skill_2": 2,
+            "skill_3": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 245.9,
+            "defense": 240.7,
+            "lethality": 177.2,
+            "health": 183.3
+          },
+          "lanc": {
+            "attack": 324.9,
+            "defense": 325.7,
+            "lethality": 176,
+            "health": 176.5
+          },
+          "mark": {
+            "attack": 246.2,
+            "defense": 241,
+            "lethality": 181.7,
+            "health": 176.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 3560,
+        "defender": 0
+      },
+      {
+        "attacker": 3539,
+        "defender": 0
+      },
+      {
+        "attacker": 3556,
+        "defender": 0
+      },
+      {
+        "attacker": 3525,
+        "defender": 0
+      },
+      {
+        "attacker": 3551,
+        "defender": 0
+      },
+      {
+        "attacker": 3564,
+        "defender": 0
+      },
+      {
+        "attacker": 3546,
+        "defender": 0
+      },
+      {
+        "attacker": 3540,
+        "defender": 0
+      },
+      {
+        "attacker": 3528,
+        "defender": 0
+      },
+      {
+        "attacker": 3530,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_only_defender_current.json#1": {
+    "key": "testcases/emulator_verified/mia_only_defender_current.json#1",
+    "path": "testcases/emulator_verified/mia_only_defender_current.json",
+    "fixtureSha256": "90d12726490af4e0841220be7c747b7b816b3bf0d4d1b2b6d69662bcbc91102a",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1400,
+          "lancer_t6": 1069,
+          "marksman_t6": 1500
+        },
+        "stats": {
+          "inf": {
+            "attack": 140.7,
+            "defense": 148.2,
+            "lethality": 117,
+            "health": 131.9
+          },
+          "lanc": {
+            "attack": 149.2,
+            "defense": 148.2,
+            "lethality": 116.5,
+            "health": 105.1
+          },
+          "mark": {
+            "attack": 153.7,
+            "defense": 143.2,
+            "lethality": 121.9,
+            "health": 112.3
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 3,
+            "skill_2": 2,
+            "skill_3": 2
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 245.9,
+            "defense": 240.7,
+            "lethality": 177.2,
+            "health": 183.3
+          },
+          "lanc": {
+            "attack": 324.9,
+            "defense": 325.7,
+            "lethality": 176,
+            "health": 176.5
+          },
+          "mark": {
+            "attack": 246.2,
+            "defense": 241,
+            "lethality": 181.7,
+            "health": 176.5
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 3461,
+        "defender": 0
+      },
+      {
+        "attacker": 3451,
+        "defender": 0
+      },
+      {
+        "attacker": 3442,
+        "defender": 0
+      },
+      {
+        "attacker": 3462,
+        "defender": 0
+      },
+      {
+        "attacker": 3436,
+        "defender": 0
+      },
+      {
+        "attacker": 3460,
+        "defender": 0
+      },
+      {
+        "attacker": 3431,
+        "defender": 0
+      },
+      {
+        "attacker": 3469,
+        "defender": 0
+      },
+      {
+        "attacker": 3460,
+        "defender": 0
+      },
+      {
+        "attacker": 3434,
+        "defender": 0
+      },
+      {
+        "attacker": 3449,
+        "defender": 0
+      },
+      {
+        "attacker": 3434,
+        "defender": 0
+      },
+      {
+        "attacker": 3445,
+        "defender": 0
+      },
+      {
+        "attacker": 3452,
+        "defender": 0
+      },
+      {
+        "attacker": 3422,
+        "defender": 0
+      },
+      {
+        "attacker": 3453,
+        "defender": 0
+      },
+      {
+        "attacker": 3479,
+        "defender": 0
+      },
+      {
+        "attacker": 3472,
+        "defender": 0
+      },
+      {
+        "attacker": 3438,
+        "defender": 0
+      },
+      {
+        "attacker": 3433,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_solo.json#0": {
+    "key": "testcases/emulator_verified/mia_solo.json#0",
+    "path": "testcases/emulator_verified/mia_solo.json",
+    "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 800,
+          "marksman_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 67.4,
+            "lethality": 30.1,
+            "health": 33.1
+          },
+          "lanc": {
+            "attack": 76.3,
+            "defense": 68.7,
+            "lethality": 33.1,
+            "health": 27.8
+          },
+          "mark": {
+            "attack": 76.8,
+            "defense": 64.9,
+            "lethality": 32.6,
+            "health": 28.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 200,
+          "marksman_t6": 200
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 197.2,
+            "lethality": 118.1,
+            "health": 131.2
+          },
+          "lanc": {
+            "attack": 281.1,
+            "defense": 274.4,
+            "lethality": 120.3,
+            "health": 121.1
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 198.2,
+            "lethality": 123,
+            "health": 124
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 260
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_solo.json#1": {
+    "key": "testcases/emulator_verified/mia_solo.json#1",
+    "path": "testcases/emulator_verified/mia_solo.json",
+    "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 700,
+          "lancer_t6": 560,
+          "marksman_t6": 700
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 67.4,
+            "lethality": 30.1,
+            "health": 33.1
+          },
+          "lanc": {
+            "attack": 76.3,
+            "defense": 68.7,
+            "lethality": 33.1,
+            "health": 27.8
+          },
+          "mark": {
+            "attack": 76.8,
+            "defense": 64.9,
+            "lethality": 32.6,
+            "health": 28.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 197.2,
+            "lethality": 118.1,
+            "health": 131.2
+          },
+          "lanc": {
+            "attack": 281.1,
+            "defense": 274.4,
+            "lethality": 120.3,
+            "health": 121.1
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 198.2,
+            "lethality": 123,
+            "health": 124
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 1293,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_solo.json#2": {
+    "key": "testcases/emulator_verified/mia_solo.json#2",
+    "path": "testcases/emulator_verified/mia_solo.json",
+    "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 450,
+          "lancer_t6": 360,
+          "marksman_t6": 450
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 67.4,
+            "lethality": 30.1,
+            "health": 33.1
+          },
+          "lanc": {
+            "attack": 76.3,
+            "defense": 68.7,
+            "lethality": 33.1,
+            "health": 27.8
+          },
+          "mark": {
+            "attack": 76.8,
+            "defense": 64.9,
+            "lethality": 32.6,
+            "health": 28.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 197.2,
+            "lethality": 118.1,
+            "health": 131.2
+          },
+          "lanc": {
+            "attack": 281.1,
+            "defense": 274.4,
+            "lethality": 120.3,
+            "health": 121.1
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 198.2,
+            "lethality": 123,
+            "health": 124
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 180
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_solo.json#3": {
+    "key": "testcases/emulator_verified/mia_solo.json#3",
+    "path": "testcases/emulator_verified/mia_solo.json",
+    "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 450,
+          "lancer_t6": 360,
+          "marksman_t6": 450
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 67.4,
+            "lethality": 30.1,
+            "health": 33.1
+          },
+          "lanc": {
+            "attack": 76.3,
+            "defense": 68.7,
+            "lethality": 33.1,
+            "health": 27.8
+          },
+          "mark": {
+            "attack": 76.8,
+            "defense": 64.9,
+            "lethality": 32.6,
+            "health": 28.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 60,
+          "lancer_t6": 60,
+          "marksman_t6": 60
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 197.2,
+            "lethality": 118.1,
+            "health": 131.2
+          },
+          "lanc": {
+            "attack": 281.1,
+            "defense": 274.4,
+            "lethality": 120.3,
+            "health": 121.1
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 198.2,
+            "lethality": 123,
+            "health": 124
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 879,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/mia_solo.json#4": {
+    "key": "testcases/emulator_verified/mia_solo.json#4",
+    "path": "testcases/emulator_verified/mia_solo.json",
+    "fixtureSha256": "8b4abd986096814ee5d10e3d906e934df5809fb8d61e0e0cf55e818eb80e27b8",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 450,
+          "lancer_t6": 360,
+          "marksman_t6": 450
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 67.4,
+            "lethality": 30.1,
+            "health": 33.1
+          },
+          "lanc": {
+            "attack": 76.3,
+            "defense": 68.7,
+            "lethality": 33.1,
+            "health": 27.8
+          },
+          "mark": {
+            "attack": 76.8,
+            "defense": 64.9,
+            "lethality": 32.6,
+            "health": 28.4
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 50,
+          "lancer_t6": 50,
+          "marksman_t6": 50
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 197.2,
+            "lethality": 118.1,
+            "health": 131.2
+          },
+          "lanc": {
+            "attack": 281.1,
+            "defense": 274.4,
+            "lethality": 120.3,
+            "health": 121.1
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 198.2,
+            "lethality": 123,
+            "health": 124
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 967,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:RitualDeciphering",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "RitualDeciphering/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Mia_tc.json#0": {
+    "key": "testcases/heroes_unittests/Mia_tc.json#0",
+    "path": "testcases/heroes_unittests/Mia_tc.json",
+    "fixtureSha256": "aeddaa623dc4bee861a9bb64a6310abcfc41c8169189be15c165cd135de5cc86",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2000,
+          "lancer_t6": 1000,
+          "marksman_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 200,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 184.5,
+            "defense": 188,
+            "lethality": 107.24,
+            "health": 114.18
+          },
+          "lanc": {
+            "attack": 241.09,
+            "defense": 237.09,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 0,
+      "defender": 181
+    },
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Mia_tc.json#1": {
+    "key": "testcases/heroes_unittests/Mia_tc.json#1",
+    "path": "testcases/heroes_unittests/Mia_tc.json",
+    "fixtureSha256": "aeddaa623dc4bee861a9bb64a6310abcfc41c8169189be15c165cd135de5cc86",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 2000,
+          "lancer_t6": 1000,
+          "marksman_t6": 1000
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 150,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 184.5,
+            "defense": 188,
+            "lethality": 107.24,
+            "health": 114.18
+          },
+          "lanc": {
+            "attack": 241.09,
+            "defense": 237.09,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 1670,
+        "defender": 0
+      },
+      {
+        "attacker": 1592,
+        "defender": 0
+      },
+      {
+        "attacker": 1661,
+        "defender": 0
+      },
+      {
+        "attacker": 1664,
+        "defender": 0
+      },
+      {
+        "attacker": 1594,
+        "defender": 0
+      },
+      {
+        "attacker": 1604,
+        "defender": 0
+      },
+      {
+        "attacker": 1591,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Mia_tc.json#2": {
+    "key": "testcases/heroes_unittests/Mia_tc.json#2",
+    "path": "testcases/heroes_unittests/Mia_tc.json",
+    "fixtureSha256": "aeddaa623dc4bee861a9bb64a6310abcfc41c8169189be15c165cd135de5cc86",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 500,
+          "marksman_t6": 500
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 46.55,
+            "defense": 46.05,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 50,
+          "marksman_t6": 50
+        },
+        "stats": {
+          "inf": {
+            "attack": 184.5,
+            "defense": 188,
+            "lethality": 107.24,
+            "health": 114.18
+          },
+          "lanc": {
+            "attack": 167,
+            "defense": 163,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 1127,
+        "defender": 0
+      },
+      {
+        "attacker": 1118,
+        "defender": 0
+      },
+      {
+        "attacker": 1118,
+        "defender": 0
+      },
+      {
+        "attacker": 1128,
+        "defender": 0
+      },
+      {
+        "attacker": 1127,
+        "defender": 0
+      },
+      {
+        "attacker": 1127,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Mia_tc.json#3": {
+    "key": "testcases/heroes_unittests/Mia_tc.json#3",
+    "path": "testcases/heroes_unittests/Mia_tc.json",
+    "fixtureSha256": "aeddaa623dc4bee861a9bb64a6310abcfc41c8169189be15c165cd135de5cc86",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 500,
+          "marksman_t6": 500
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 46.55,
+            "defense": 46.05,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 50,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 184.5,
+            "defense": 188,
+            "lethality": 107.24,
+            "health": 114.18
+          },
+          "lanc": {
+            "attack": 167,
+            "defense": 163,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 671,
+      "defender": 0
+    },
+    "hydratedSkills": [
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Mia_tc.json#4": {
+    "key": "testcases/heroes_unittests/Mia_tc.json#4",
+    "path": "testcases/heroes_unittests/Mia_tc.json",
+    "fixtureSha256": "aeddaa623dc4bee861a9bb64a6310abcfc41c8169189be15c165cd135de5cc86",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 500,
+          "marksman_t6": 500
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 46.55,
+            "defense": 46.05,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Mia": {
+            "skill_1": 1,
+            "skill_2": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 50,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 184.5,
+            "defense": 188,
+            "lethality": 107.24,
+            "health": 114.18
+          },
+          "lanc": {
+            "attack": 241.09,
+            "defense": 237.09,
+            "lethality": 110.31,
+            "health": 100.21
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 119
+      },
+      {
+        "attacker": 0,
+        "defender": 121
+      },
+      {
+        "attacker": 0,
+        "defender": 123
+      },
+      {
+        "attacker": 0,
+        "defender": 124
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:BadLuckStreak",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "BadLuckStreak/1"
+        ]
+      },
+      {
+        "key": "hero:Mia:LuckyCharm",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:mia:0",
+        "effect_ids": [
+          "LuckyCharm/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/3-testcases_mixed-heroes-not-verified.json#2": {
+    "key": "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+    "path": "testcases/3-testcases_mixed-heroes-not-verified.json",
+    "fixtureSha256": "fd491d2771e82ec070938b01644a0e09408bd5370bf32e13e2734f01b1b98c20",
+    "input": {
+      "attacker": {
+        "name": "daut2x",
+        "stats": {
+          "inf": {
+            "attack": 43.36,
+            "defense": 42.86,
+            "lethality": 7.13,
+            "health": 7.13
+          },
+          "lanc": {
+            "attack": 57.71,
+            "defense": 57.21,
+            "lethality": 1.8,
+            "health": 1.8
+          },
+          "mark": {
+            "attack": 61.36,
+            "defense": 60.36,
+            "lethality": 5.46,
+            "health": 5.46
+          }
+        },
+        "troops": {
+          "infantry_t6": 8000,
+          "lancer_t6": 2500,
+          "marksman_t6": 7000
+        },
+        "heroes": {
+          "Jasser": {
+            "skill_1": 2
+          },
+          "Sergey": {
+            "skill_1": 2,
+            "skill_2": 2
+          },
+          "Molly": {
+            "skill_1": 2,
+            "skill_2": 2
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper2x",
+        "stats": {
+          "inf": {
+            "attack": 228.73,
+            "defense": 228.23,
+            "lethality": 107.2,
+            "health": 114.2
+          },
+          "lanc": {
+            "attack": 268.13,
+            "defense": 260.13,
+            "lethality": 110.3,
+            "health": 100.2
+          },
+          "mark": {
+            "attack": 228.27,
+            "defense": 216.77,
+            "lethality": 117.8,
+            "health": 104.7
+          }
+        },
+        "troops": {
+          "infantry_t6": 2000,
+          "lancer_t6": 1000,
+          "marksman_t6": 1000
+        },
+        "heroes": {
+          "Natalia": {
+            "skill_1": 2,
+            "skill_2": 2
+          },
+          "Patrick": {
+            "skill_1": 2,
+            "skill_2": 1
+          },
+          "Alonso": {
+            "skill_1": 1,
+            "skill_2": 2
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 0,
+      "defender": 2823
+    },
+    "hydratedSkills": [
+      {
+        "key": "hero:Jasser:TacticalGenius",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:jasser:0",
+        "effect_ids": [
+          "TacticalGenius/1"
+        ]
+      },
+      {
+        "key": "hero:Sergey:DefendersEdge",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:sergey:0",
+        "effect_ids": [
+          "DefendersEdge/1"
+        ]
+      },
+      {
+        "key": "hero:Sergey:Weaken",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:sergey:0",
+        "effect_ids": [
+          "Weaken/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:CallingOfTheStorm",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "CallingOfTheStorm/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:IceDominion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "IceDominion/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Natalia:WildlingRoar",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:natalia:0",
+        "effect_ids": [
+          "WildlingRoar/1"
+        ]
+      },
+      {
+        "key": "hero:Natalia:QueenOfTheWild",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:natalia:0",
+        "effect_ids": [
+          "QueenOfTheWild/1"
+        ]
+      },
+      {
+        "key": "hero:Patrick:SuperNutrients",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:patrick:0",
+        "effect_ids": [
+          "SuperNutrients/1"
+        ]
+      },
+      {
+        "key": "hero:Patrick:CaloricBooster",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:patrick:0",
+        "effect_ids": [
+          "CaloricBooster/1"
+        ]
+      },
+      {
+        "key": "hero:Alonso:Onslaught",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "Onslaught/1"
+        ]
+      },
+      {
+        "key": "hero:Alonso:IronStrength",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:alonso:0",
+        "effect_ids": [
+          "IronStrength/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/molly_lynn_combo.json#0": {
+    "key": "testcases/emulator_verified/molly_lynn_combo.json#0",
+    "path": "testcases/emulator_verified/molly_lynn_combo.json",
+    "fixtureSha256": "39f57ea17d26d9cebc5e14515340c84137a24913864196a317056a1d65512c89",
+    "input": {
+      "attacker": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 400,
+          "lancer_t6": 400,
+          "marksman_t6": 400
+        },
+        "stats": {
+          "inf": {
+            "attack": 79.3,
+            "defense": 81.9,
+            "lethality": 31.1,
+            "health": 38.1
+          },
+          "lanc": {
+            "attack": 84.3,
+            "defense": 79.1,
+            "lethality": 38.1,
+            "health": 31.3
+          },
+          "mark": {
+            "attack": 88.8,
+            "defense": 75.4,
+            "lethality": 37.6,
+            "health": 31.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[ARK]Piddilyminxxx",
+        "heroes": {
+          "Molly": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          },
+          "Lynn": {
+            "skill_1": 3,
+            "skill_2": 3,
+            "skill_3": 3
+          }
+        },
+        "troops": {
+          "infantry_t6": 150,
+          "lancer_t6": 150,
+          "marksman_t6": 150
+        },
+        "stats": {
+          "inf": {
+            "attack": 221,
+            "defense": 205.8,
+            "lethality": 119.1,
+            "health": 132.4
+          },
+          "lanc": {
+            "attack": 263.2,
+            "defense": 259,
+            "lethality": 126.2,
+            "health": 127.4
+          },
+          "mark": {
+            "attack": 387.6,
+            "defense": 382.4,
+            "lethality": 188.4,
+            "health": 157.2
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 0,
+        "defender": 399
+      },
+      {
+        "attacker": 0,
+        "defender": 404
+      },
+      {
+        "attacker": 0,
+        "defender": 402
+      },
+      {
+        "attacker": 0,
+        "defender": 401
+      },
+      {
+        "attacker": 0,
+        "defender": 408
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:CallingOfTheStorm",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "CallingOfTheStorm/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:IceDominion",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "IceDominion/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:YouthfulRage",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "YouthfulRage/1"
+        ]
+      },
+      {
+        "key": "hero:Lynn:SongOfLion",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:lynn:0",
+        "effect_ids": [
+          "SongOfLion/1"
+        ]
+      },
+      {
+        "key": "hero:Lynn:MelancholicBallad",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:lynn:0",
+        "effect_ids": [
+          "MelancholicBallad/1"
+        ]
+      },
+      {
+        "key": "hero:Lynn:OonaiCadenza",
+        "side": "defender",
+        "level": 3,
+        "role": "main",
+        "instance_id": "main:lynn:0",
+        "effect_ids": [
+          "OonaiCadenza/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/emulator_verified/molly_solo.json#0": {
+    "key": "testcases/emulator_verified/molly_solo.json#0",
+    "path": "testcases/emulator_verified/molly_solo.json",
+    "fixtureSha256": "5a425573bc8cda47ec80777841c9d4bdf8c057f502c155c326900a5629bbefe3",
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Molly": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 214.9,
+            "defense": 197.2,
+            "lethality": 118.1,
+            "health": 131.2
+          },
+          "lanc": {
+            "attack": 257.1,
+            "defense": 250.4,
+            "lethality": 125.3,
+            "health": 126.1
+          },
+          "mark": {
+            "attack": 205.9,
+            "defense": 198.2,
+            "lethality": 123,
+            "health": 124
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 300,
+          "lancer_t6": 240,
+          "marksman_t6": 300
+        },
+        "stats": {
+          "inf": {
+            "attack": 73.8,
+            "defense": 67.4,
+            "lethality": 30.1,
+            "health": 33.1
+          },
+          "lanc": {
+            "attack": 76.3,
+            "defense": 68.7,
+            "lethality": 33.1,
+            "health": 27.8
+          },
+          "mark": {
+            "attack": 76.8,
+            "defense": 64.9,
+            "lethality": 32.6,
+            "health": 28.4
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": [
+      {
+        "attacker": 245,
+        "defender": 0
+      },
+      {
+        "attacker": 245,
+        "defender": 0
+      },
+      {
+        "attacker": 244,
+        "defender": 0
+      },
+      {
+        "attacker": 245,
+        "defender": 0
+      },
+      {
+        "attacker": 245,
+        "defender": 0
+      }
+    ],
+    "hydratedSkills": [
+      {
+        "key": "hero:Molly:CallingOfTheStorm",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "CallingOfTheStorm/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:IceDominion",
+        "side": "attacker",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "IceDominion/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:YouthfulRage",
+        "side": "attacker",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "YouthfulRage/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Molly_tc.json#3": {
+    "key": "testcases/heroes_unittests/Molly_tc.json#3",
+    "path": "testcases/heroes_unittests/Molly_tc.json",
+    "fixtureSha256": "bb907e2b4934c9e54386a7bf00e45165fc9d031fe1054c3603beb33d7199e848",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 100,
+          "marksman_t6": 100
+        },
+        "stats": {
+          "inf": {
+            "attack": 246.9,
+            "defense": 248.8,
+            "lethality": 186.1,
+            "health": 191.7
+          },
+          "lanc": {
+            "attack": 207.2,
+            "defense": 207.2,
+            "lethality": 186.7,
+            "health": 181.6
+          },
+          "mark": {
+            "attack": 216.2,
+            "defense": 210.4,
+            "lethality": 181.1,
+            "health": 176.9
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Molly": {
+            "skill_1": 2,
+            "skill_2": 2,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "infantry_t6": 100,
+          "lancer_t6": 30,
+          "marksman_t6": 30
+        },
+        "stats": {
+          "inf": {
+            "attack": 305.3,
+            "defense": 297.6,
+            "lethality": 244,
+            "health": 238.4
+          },
+          "lanc": {
+            "attack": 363.1,
+            "defense": 361.9,
+            "lethality": 229.3,
+            "health": 235
+          },
+          "mark": {
+            "attack": 292.2,
+            "defense": 292.7,
+            "lethality": 235.8,
+            "health": 230.3
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 1070,
+      "defender": 0
+    },
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:CallingOfTheStorm",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "CallingOfTheStorm/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:IceDominion",
+        "side": "defender",
+        "level": 2,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "IceDominion/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:YouthfulRage",
+        "side": "defender",
+        "level": 1,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "YouthfulRage/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      }
+    ]
+  },
+  "testcases/heroes_unittests/Molly_tc.json#4": {
+    "key": "testcases/heroes_unittests/Molly_tc.json#4",
+    "path": "testcases/heroes_unittests/Molly_tc.json",
+    "fixtureSha256": "bb907e2b4934c9e54386a7bf00e45165fc9d031fe1054c3603beb33d7199e848",
+    "input": {
+      "attacker": {
+        "name": "daut",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 1000,
+          "lancer_t6": 300,
+          "marksman_t6": 500
+        },
+        "stats": {
+          "inf": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "lanc": {
+            "attack": 9.94,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          },
+          "mark": {
+            "attack": 10.43,
+            "defense": 9.44,
+            "lethality": 1.75,
+            "health": 1.75
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "viper",
+        "heroes": {
+          "Molly": {
+            "skill_1": 5,
+            "skill_2": 4,
+            "skill_3": 5
+          }
+        },
+        "troops": {
+          "infantry_t10": 100,
+          "lancer_t10": 50,
+          "marksman_t10": 50
+        },
+        "stats": {
+          "inf": {
+            "attack": 184.5,
+            "defense": 188,
+            "lethality": 107.24,
+            "health": 114.18
+          },
+          "lanc": {
+            "attack": 314.79,
+            "defense": 310.79,
+            "lethality": 184.63,
+            "health": 118.38
+          },
+          "mark": {
+            "attack": 174.75,
+            "defense": 168.25,
+            "lethality": 117.75,
+            "health": 104.74
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "game": {
+      "attacker": 0,
+      "defender": 190
+    },
+    "hydratedSkills": [
+      {
+        "key": "troop:MasterBrawler",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "attacker",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:CallingOfTheStorm",
+        "side": "defender",
+        "level": 5,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "CallingOfTheStorm/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:IceDominion",
+        "side": "defender",
+        "level": 4,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "IceDominion/1"
+        ]
+      },
+      {
+        "key": "hero:Molly:YouthfulRage",
+        "side": "defender",
+        "level": 5,
+        "role": "main",
+        "instance_id": "main:molly:0",
+        "effect_ids": [
+          "YouthfulRage/1"
+        ]
+      },
+      {
+        "key": "troop:MasterBrawler",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "MasterBrawler/1"
+        ]
+      },
+      {
+        "key": "troop:BandsOfSteel",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "BandsOfSteel/1"
+        ]
+      },
+      {
+        "key": "troop:Charge",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Charge/1"
+        ]
+      },
+      {
+        "key": "troop:Ambusher",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Ambusher/1"
+        ]
+      },
+      {
+        "key": "troop:RangedStrike",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "RangedStrike/1"
+        ]
+      },
+      {
+        "key": "troop:Volley",
+        "side": "defender",
+        "level": 1,
+        "role": null,
+        "instance_id": null,
+        "effect_ids": [
+          "Volley/1"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "test_id": "gwen_blastmaster_fanout_800m_vs_600_each",
+  "description": "Prospective deterministic Gwen S3 Blastmaster target-fanout discriminator. minxxx fields its complete freshly confirmed Gwen 3/1/1 kit with 800 T6 Marksmen against WIP no heroes and 600 each T6 Infantry, Lancers and Marksmen. All hero skills remain enabled. Primary hypotheses differ only in Blastmaster target fanout: one 10% skill job per living enemy troop line versus one 10% skill job to the normal attack target. Conditional historical-stat forecasts are defender1390 (239 Infantry,579 Lancers,572 Marksmen) versus defender1441, both22 rounds. Exact captured report stats must replace estimated inputs under the frozen candidate definitions before interpretation. Prediction and source provenance are in tmp/mechanics-audit-2026-09-07/gwen/prediction.json. Preserve full Battle Details and all per-line survivors; this first fixture addresses fanout, not all Gwen timing or stacking semantics.",
+  "emulator": {
+    "attacker": { "instance": "minxxx" },
+    "defender": { "instance": "WIP" }
+  },
+  "attacker": {
+    "heroes": { "Gwen": { "skill_1": 3, "skill_2": 1, "skill_3": 1 } },
+    "troops": { "marksman_t6": 800 }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": { "infantry_t6": 600, "lancer_t6": 600, "marksman_t6": 600 }
+  }
+}

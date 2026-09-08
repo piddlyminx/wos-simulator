@@ -1,0 +1,17 @@
+{
+  "beforeCount": 63,
+  "addedKeys": [
+    "hero:Alonso:Onslaught",
+    "hero:Alonso:IronStrength",
+    "hero:Alonso:PoisonHarpoon",
+    "hero:Bahiti:SixthSense",
+    "hero:Bahiti:Fluorescence",
+    "hero:Flint:Pyromaniac",
+    "hero:Flint:BurningResolve",
+    "hero:Flint:Immolation"
+  ],
+  "afterCount": 71,
+  "everyPriorRowPreserved": true,
+  "beforeSha256": "4ae47998016f759701d77454b66de426a81a7adca923237c11c6c666abc7b6b9",
+  "afterSha256": "a5a0ab99ca2e0b12a07d7b02e597f76e219b7552710c1241fac73a1b315711f3"
+}

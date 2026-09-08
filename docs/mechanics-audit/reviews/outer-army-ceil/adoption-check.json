@@ -1,0 +1,936 @@
+{
+  "generatedAt": "2026-09-07T05:01:55.010Z",
+  "phase": "Fresh current-production replay after adopting the outer-ceil removal; original counterfactual artifacts remain unchanged.",
+  "sourceHashes": {
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damage.test.ts": "b800d9899f3c481e7627f236422114cfaa41992ba4aa4dfb6f9e5e890e110faf",
+    "simulator/src/tooling/testcases.test.ts": "39f0b6ef409254c31db1b6f2f01f0438c6a55b4f611a1b5eb87852bd8736f9c9",
+    "simulator/config/hero_definitions/WuMing.json": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3"
+  },
+  "configSha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "results": [
+    {
+      "key": "docs/mechanics-audit/reviews/wu-ming-solo-superseded.json#0",
+      "fixtureSha256": "4427c654b7144c7d6ad032f2fe20174860f61225760d9318cd36a2771314c6b6",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 200
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 170,
+            "lancer_t6": 170,
+            "marksman_t6": 170
+          },
+          "stats": {
+            "inf": {
+              "attack": 414.7,
+              "defense": 414.5,
+              "lethality": 199.3,
+              "health": 260.1
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 380,
+            "lancer_t6": 380
+          },
+          "stats": {
+            "inf": {
+              "attack": 282.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 275.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 281,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": -200,
+        "rounds": 76,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 200,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wu_ming_solo_current_nc.json#0",
+      "fixtureSha256": "66382d496abc47e485f2e36bcaa6ca8e24cf40623a48473f056fb90eefdca12e",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 223
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 170,
+            "lancer_t6": 170,
+            "marksman_t6": 170
+          },
+          "stats": {
+            "inf": {
+              "attack": 444.7,
+              "defense": 445.6,
+              "lethality": 214.4,
+              "health": 273.3
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 217.5,
+              "defense": 210.6,
+              "lethality": 181.4,
+              "health": 177
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 380,
+            "lancer_t6": 380
+          },
+          "stats": {
+            "inf": {
+              "attack": 305.3,
+              "defense": 284.6,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 280.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 279.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": -223,
+        "rounds": 75,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 223,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wu_ming_rounding_followup_nc.json#0",
+      "fixtureSha256": "c4fe1196422a11591876562316e1d54e858e52e7aca68ee022752193037f43c9",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 180
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 190,
+            "lancer_t6": 190,
+            "marksman_t6": 190
+          },
+          "stats": {
+            "inf": {
+              "attack": 414.7,
+              "defense": 414.5,
+              "lethality": 199.3,
+              "health": 260.1
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 417,
+            "lancer_t6": 417
+          },
+          "stats": {
+            "inf": {
+              "attack": 282.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 275.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 281,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": -180,
+        "rounds": 77,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 180,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wu_ming_s1_isolation_nc.json#0",
+      "fixtureSha256": "b96f4d0ac52ac9cf7a41ae035ebb23cf6af33fe84545c08ee17a9e4760572609",
+      "game": [
+        {
+          "attacker": 178,
+          "defender": 0
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 414.7,
+              "defense": 414.5,
+              "lethality": 199.3,
+              "health": 260.1
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 710
+          },
+          "stats": {
+            "inf": {
+              "attack": 282.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 275.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 281,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": 178,
+        "rounds": 100,
+        "remaining": {
+          "attacker": {
+            "infantry": 178,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wu_ming_s2_isolation_nc.json#0",
+      "fixtureSha256": "4eaf0534b369454ad63a4b8dc48af7f4f001bea10fad07f441a7108355976edb",
+      "game": [
+        {
+          "attacker": 40,
+          "defender": 0
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 414.7,
+              "defense": 414.5,
+              "lethality": 199.3,
+              "health": 260.1
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 340
+          },
+          "stats": {
+            "inf": {
+              "attack": 282.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 275.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 281,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": 40,
+        "rounds": 39,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 40,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wu_ming_marksman_vs_infantry_nc.json#0",
+      "fixtureSha256": "8871e1e74b3aa2a938a12e454b5c77dc56ed527cfb0caecc5e69a59c2cb8763c",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 11
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 414.7,
+              "defense": 414.5,
+              "lethality": 199.3,
+              "health": 260.1
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 350
+          },
+          "stats": {
+            "inf": {
+              "attack": 290.7,
+              "defense": 271.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 283.2,
+              "defense": 270.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 289,
+              "defense": 278,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": -11,
+        "rounds": 124,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 11,
+            "lancer": 0,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wu_ming_bradley_current_nc.json#0",
+      "fixtureSha256": "a5f5ab533c6216fab619d81e51ca39165bb9029ac6c263c6e83c6c9be39f6303",
+      "game": [
+        {
+          "attacker": 112,
+          "defender": 0
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Bradley": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 170,
+            "lancer_t6": 170,
+            "marksman_t6": 170
+          },
+          "stats": {
+            "inf": {
+              "attack": 414.7,
+              "defense": 414.5,
+              "lethality": 199.3,
+              "health": 260.1
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 659,
+              "defense": 655.8,
+              "lethality": 308.6,
+              "health": 261.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 900,
+            "lancer_t6": 900
+          },
+          "stats": {
+            "inf": {
+              "attack": 282.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 275.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 281,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": 112,
+        "rounds": 53,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 112
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0",
+      "fixtureSha256": "81745b7f977d0d1a000c00fc5c3cc2ad7b36c4b9c6f3f5c301c8cad72725c32c",
+      "game": [
+        {
+          "attacker": 359,
+          "defender": 0
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "lancer_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 293.4,
+              "defense": 277.2,
+              "lethality": 238,
+              "health": 232.4
+            },
+            "lanc": {
+              "attack": 611.8,
+              "defense": 602.1,
+              "lethality": 323.2,
+              "health": 285.5
+            },
+            "mark": {
+              "attack": 291.7,
+              "defense": 283.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 4000
+          },
+          "stats": {
+            "inf": {
+              "attack": 418.1,
+              "defense": 420.1,
+              "lethality": 210.2,
+              "health": 269.2
+            },
+            "lanc": {
+              "attack": 207.2,
+              "defense": 207.2,
+              "lethality": 186.7,
+              "health": 181.6
+            },
+            "mark": {
+              "attack": 216.2,
+              "defense": 210.4,
+              "lethality": 181.1,
+              "health": 176.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": 359,
+        "rounds": 103,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 359,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/retarget_lancer_screen_nc.json#0",
+      "fixtureSha256": "79eaef74511e1c13a5098d5dd3f62086d27fe003065842a1baa9ccbea3895afc",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 303
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 100,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 1,
+            "marksman_t6": 499
+          },
+          "stats": {
+            "inf": {
+              "attack": 282.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 275.2,
+              "defense": 278.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 281,
+              "defense": 286,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": -303,
+        "rounds": 16,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 303
+          }
+        },
+        "deterministic": true
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/army_term_precision_002i_003l.json#0",
+      "fixtureSha256": "b7c21a2e4da92214225683364b266c560b8f47a08bee60e2898f42b17897ffe6",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 3
+        }
+      ],
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 3
+          },
+          "stats": {
+            "inf": {
+              "attack": 290.7,
+              "defense": 266.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 283.2,
+              "defense": 265.5,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 289,
+              "defense": 273,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "simulator": {
+        "score": -3,
+        "rounds": 63,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 3,
+            "marksman": 0
+          }
+        },
+        "deterministic": true
+      }
+    }
+  ]
+}

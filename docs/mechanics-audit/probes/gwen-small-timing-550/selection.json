@@ -1,0 +1,182 @@
+{
+  "selection": "550 attacker versus900 defenders: sampled ranges remain separated by at least22 troops and every candidate keeps the same winning side across the precision screen. The750-vs950 alternative had only7 troops separating its nearest ranges and a winner flip within one candidate.",
+  "exposure": "All new candidate outcomes remain uncaptured. This is prospective simulator-only input screening after the750-vs950 candidate showed report-stat boundary sensitivity.",
+  "candidate": {
+    "attacker": 550,
+    "defender": [
+      810,
+      45,
+      45
+    ],
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Gwen": {
+            "skill_1": 3,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "marksman_t6": 550
+        },
+        "stats": {
+          "inf": {
+            "attack": 308.2,
+            "defense": 300.5,
+            "lethality": 244,
+            "health": 238.4
+          },
+          "lanc": {
+            "attack": 294.9,
+            "defense": 293.7,
+            "lethality": 224.3,
+            "health": 230
+          },
+          "mark": {
+            "attack": 443.6,
+            "defense": 444.1,
+            "lethality": 235.8,
+            "health": 230.3
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 810,
+          "lancer_t6": 45,
+          "marksman_t6": 45
+        },
+        "stats": {
+          "inf": {
+            "attack": 248.2,
+            "defense": 249,
+            "lethality": 186.3,
+            "health": 191.8
+          },
+          "lanc": {
+            "attack": 208.5,
+            "defense": 207.4,
+            "lethality": 186.8,
+            "health": 181.9
+          },
+          "mark": {
+            "attack": 217.5,
+            "defense": 210.6,
+            "lethality": 181.4,
+            "health": 177
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "phaseGap": 27,
+    "minPair": 24,
+    "span": 201,
+    "outcomes": {
+      "current": {
+        "score": 76,
+        "rounds": 78,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 76
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        }
+      },
+      "first4_every5": {
+        "score": -98,
+        "rounds": 76,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 91,
+            "lancer": 7,
+            "marksman": 0
+          }
+        }
+      },
+      "first5_every5": {
+        "score": -125,
+        "rounds": 71,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 116,
+            "lancer": 9,
+            "marksman": 0
+          }
+        }
+      },
+      "phase6": {
+        "score": 52,
+        "rounds": 83,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 52
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        }
+      }
+    }
+  },
+  "precision_screen": {
+    "current": {
+      "min": 75,
+      "max": 76,
+      "rounds": [
+        78,
+        77
+      ]
+    },
+    "first4_every5": {
+      "min": -100,
+      "max": -93,
+      "rounds": [
+        76,
+        77
+      ]
+    },
+    "first5_every5": {
+      "min": -128,
+      "max": -123,
+      "rounds": [
+        71,
+        72
+      ]
+    },
+    "phase6": {
+      "min": 51,
+      "max": 53,
+      "rounds": [
+        83
+      ]
+    }
+  },
+  "screen_source": "tmp/mechanics-audit-2026-09-07/gwen-small-robustness.json",
+  "screen_sha256": "7f26f48faa18ce4c353a779450bbb504d59cd2690dfcc99293e21e9efa8cbbb3"
+}

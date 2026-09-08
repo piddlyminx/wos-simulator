@@ -1,0 +1,44 @@
+{
+  "hero:Gwen:EagleVision": {
+    "source_sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3",
+    "status": "unresolved",
+    "context": "Current one-use/delayed S1 participates in all seven reviewed full-kit Gwen entries. Persistent S1 and sharing normal-attack modifier snapshots fail the decisive small battle and move older exact Renee/Gwen attacker318 to324 or327. These alternatives are disfavored; rejecting them does not uniquely identify current attack-delay/use accounting. Three new full311 battles remain D1397/D563/D24 versus currentD1388/D534/A76, with the last opposite winner material. Current S1 consumption on generated per-target jobs, interaction with S2/S3, full curve and scope require further discrimination. Tooltip magnitude level3=15% agrees but gives no duration. Paul reports general normal-plus-extra effect-use counting as the best current community model with prior deterministic fit support; this does not settle per-fanout consumption.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/README.md",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/results.json",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/snapshot-checks.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/README.md",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/confirmed-observation.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/group-consumption.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets",
+      "trigger_chance_and_cadence",
+      "damage_kind"
+    ]
+  },
+  "hero:Gwen:AirDominance": {
+    "source_sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3",
+    "status": "unresolved",
+    "context": "All seven reviewed full-kit Gwen entries retain S2. Tooltip describes all troops after every five attacks with20% extra damage and5% next-received-attack amplification at level1. Three fresh full311 battles report S2/S3 counts3/4,7/9,15/18, yet no tested joint timing/consumption candidate explains all endpoints and counts. Current first5/every6, modifier delay/target restriction, generated damage kind and S3 interaction remain unresolved. Sharing the normal parent modifier snapshot and normal-kind augmentation fail older exact Renee/Gwen318 and the new small opposite-winner case. Limited negative tests do not independently establish positive S2 component semantics or justify a production change.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/README.md",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/results.json",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/snapshot-checks.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/README.md",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/confirmed-observation.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/group-consumption.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets",
+      "trigger_chance_and_cadence",
+      "damage_kind"
+    ]
+  }
+}

@@ -1,0 +1,389 @@
+{
+  "frozenAt": "2026-09-07T06:42:46.131Z",
+  "phase": "retrospective_before_candidate_simulations",
+  "exposure": "All three 2026-09-07 Hendrik totals D17/D471/D68 and reported activation totals were known before this definition. Prior D471 vector313/82/76 is known. Third D68 per-line outcome is not yet supplied/inspected at this freeze. Historical Renee/Hendrik A14 is accepted and known. No reported activation count is interpreted as measured rounds.",
+  "contract": "Preserve full recorded hero kits, all accepted Hendrik fixture inputs, exact troops/stats, source-troop ceiling and fractional survivor state. No fitted coefficients, production edits or new live actions. Scoring is A-D including draws; retain each side/winner/rounds and actual modeled effect use.",
+  "sourceHashes": {
+    "simulator/src/battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
+    "simulator/src/config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
+    "simulator/src/config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
+    "simulator/src/config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
+    "simulator/src/config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "simulator/src/effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
+    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "simulator/src/extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
+    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "simulator/src/recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
+    "simulator/src/runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
+    "simulator/src/runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
+    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "simulator/src/types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
+    "simulator/src/webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
+    "simulator/src/workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4",
+    "simulator/src/tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
+    "simulator/src/tooling/exportGatotTestcases.ts": "1f88bffca8bb34a63e71df804d7cf75ce3b6a8b75cc2c912ee8fbe0323f68324",
+    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "simulator/src/tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
+    "simulator/src/tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
+    "simulator/src/tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
+    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "simulator/config/hero_definitions/Hendrik.json": "a46f49505d26ffd53f50d61992df44fa6ec323d58e281a261f265db0749c5e16"
+  },
+  "configSha256": "a8f0d2ad15ba77f4dbd02e1a73fd20be68b82a0547a2b4aa3a9e6613d3962c50",
+  "variants": {
+    "current": {
+      "description": "Unchanged S2 first4/every4, duration2; S3 first3/every3."
+    },
+    "s2_first_three": {
+      "description": "Only S2 begins one turn earlier: first3/every4; keep duration2.",
+      "s2First": 3
+    },
+    "s3_first_two": {
+      "description": "Only S3 begins one turn earlier: first2/every3.",
+      "s3First": 2
+    },
+    "shared_first_n_minus_one": {
+      "description": "Shared initial offset: S2 first3/every4 and S3 first2/every3; no interval/duration changes.",
+      "s2First": 3,
+      "s3First": 2
+    },
+    "s2_first_one": {
+      "description": "Previously frozen foil: S2 first1/every4; unchanged S3.",
+      "s2First": 1
+    },
+    "s2_delay_one": {
+      "description": "Previously frozen foil: normal S2 cadence but delay its two-turn window by one turn.",
+      "s2Delay": 1
+    },
+    "s2_duration_one": {
+      "description": "Previously reviewed disconfirmation: normal S2 cadence with only one turn of protection.",
+      "s2Duration": 1
+    },
+    "s2_damage_taken_down": {
+      "description": "Previously reviewed bucket foil: same S2 coefficient/cadence in damageTaken.down.",
+      "s2Type": "active.hero.damageTaken.down"
+    },
+    "s3_first_four": {
+      "description": "Previously reviewed opposite S3 offset: first4/every3.",
+      "s3First": 4
+    },
+    "s3_first_two_s2_first_one": {
+      "description": "Combine the already motivated S3-first2 and alternative S2-first1 schedules; no coefficient change.",
+      "s2First": 1,
+      "s3First": 2
+    }
+  },
+  "fixtures": [
+    {
+      "key": "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+      "fixtureSha256": "a572612ee1bd384f2f3cc791d080bb0722cabd1d232601ef05543f89ce1a18ef",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 17
+        }
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0",
+      "fixtureSha256": "bbd50aac274ac67718de234822a76aadef740d7b437ab99ff3f358fe4be1047d",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 471
+        }
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0",
+      "fixtureSha256": "4290e81fb1e26c6b2617283d69948a466c431455a0930ca412d6ce87dff3b508",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 68
+        }
+      ]
+    },
+    {
+      "key": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+      "fixtureSha256": "6075b01541af2e9d31d241b32fbb294d0701c24eed285132cb47528ae73da90a",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Hendrik": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 120
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 586.7,
+              "defense": 587,
+              "lethality": 315.1,
+              "health": 271.1
+            },
+            "mark": {
+              "attack": 382.5,
+              "defense": 384.5,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t9": 446
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 14,
+          "defender": 0
+        }
+      ]
+    }
+  ]
+}

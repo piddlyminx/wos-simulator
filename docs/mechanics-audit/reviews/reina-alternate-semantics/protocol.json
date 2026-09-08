@@ -1,0 +1,15 @@
+{
+  "exposure": "Allfive new Reina111 outcomes known:166,163,163,157,174. Other accepted Reina outcomes will first be hidden during input inventory/prediction, then opened for compatibility comparison. Historical fixture descriptions/aggregate audit information may previously have been seen; this is a retrospective disconfirmation audit, not a new prospective game capture.",
+  "directional_predictions": [
+    "Replacing ordinary100% damage with120% implies net additional20% if the same normal damage basis/buffs apply. Implementing the20% increment as normal rather than skill should only add S1's10% to that increment in the new111 setup, a small change, not a free120% extra job.",
+    "Shared per-round4% dodge rolls preserve average incoming protection but may widen battle variance. A successful per-incoming-attack dodge persisting to the round end increases expected protection. These are bounded timing/scope alternatives to the currently one-attack dodge, not changes to the displayed4% rate.",
+    "S3-locked accepted fixtures isolate S1/S2 from the magnitude dispute and can disconfirm alternate dodge persistence; preserve fullactualkits/stats."
+  ],
+  "constraints": [
+    "No livecalls or production edits.",
+    "No arbitrary S1/S2 magnitude fitting.",
+    "Retain inner sourceceil and fractional troopstate.",
+    "All recorded gameoutcomes accepted unless explicitlyinvalid/obsolete.",
+    "Original and corrected120 forecasts remain frozen."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "recordedAt": "2026-09-07T05:35:42.107975+00:00",
+  "evidenceType": "Parent-confirmed live report; no independent game observation added by this analysis.",
+  "reportTimestampDisplayed": "2026-09-07 06:29:43",
+  "coordinates": {
+    "x": 791,
+    "y": 577
+  },
+  "rawArtifactDirectory": "tmp/20260907T052949Z_wos_report_war_1",
+  "inputConfirmation": "Parent visually confirmed displayed stats, exact troop counts and full Gwen3/1/1 identity match the frozen550-versus900 input exactly.",
+  "game": {
+    "attackerSurvivors": 0,
+    "defenderSurvivors": 24,
+    "defenderPerLine": {
+      "infantry": 24,
+      "lancer": 0,
+      "marksman": 0
+    },
+    "skills": {
+      "EagleVision": {
+        "activations": 1,
+        "displayedKills": null
+      },
+      "AirDominance": {
+        "activations": 15,
+        "displayedKills": 7
+      },
+      "Blastmaster": {
+        "activations": 18,
+        "displayedKills": 36
+      }
+    }
+  },
+  "rounds": null,
+  "countCaveat": "No explicit game round count is inferred. Relationships between counts and round windows depend on the named simulator cadence/reporting assumptions.",
+  "prospectiveResultsSha256": "b84a2f1302b3c07c7174699ecc1abd93d1fd319cebb9440fba95b34f506a4559",
+  "defenderMailId": "2734692464123174",
+  "perLineConfirmation": "Parent visually confirmed defender-troops.png: Infantry24 survivors; Lancers and Marksmen0. Same third battle, not another observation."
+}

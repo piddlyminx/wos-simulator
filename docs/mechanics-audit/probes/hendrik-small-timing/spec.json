@@ -1,0 +1,32 @@
+{
+  "test_id": "hendrik_small_timing_250m_vs_150i_60l_60m",
+  "description": "Prospective full Hendrik3/3/3 timing discriminator. WIP250T6Marksmen versus minxxx nohero150T6Infantry/60T6Lancers/60T6Marksmen. Earlier S3 round2 versus configured round3; competing S2 timing retained. Full frozen package docs/mechanics-audit/probes/hendrik-small-timing. Fresh report stats required before interpretation.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Hendrik": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "troops": {
+      "marksman_t6": 250
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 60,
+      "marksman_t6": 60
+    }
+  }
+}

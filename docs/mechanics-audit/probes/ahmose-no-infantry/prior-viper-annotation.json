@@ -1,0 +1,22 @@
+{
+  "source_sha256": "2f24d854addfe6295c05001c9d76566719b32e62c279cf4a2510800fe15b523e",
+  "status": "partially_supported",
+  "context": "Two deterministic full-kit inputs with S1level1. Renee444+Ahmose113 gameA3777/current3778; omit Infantry pause3829, omit Infantry protection3745, shorten protection to1turn3762, extend pause to2turns3688. This context favors the modeled one-turn pause plus two-turn Infantry protection over those alternatives. Backline protection is unexercised there (omission unchanged3778). SoloAhmose110 game2633/current2615 retains18 residual (~0.7%); omitting backline protection predicts2640, closer to game. That nested branch is not validated, and the full-skill omission must not certify all three components. Exact shared phase and higher-level Infantry/backline protection differences remain unreviewed. Fresh WIP110 tooltip capture literally says once every four times, leaving attack-versus-turn semantics ambiguous; no source-alive gate is established. User reports a normal-only proc counter versus fixed-turn model as current community understanding supported by earlier deterministic improvements. Retrospective attack-counter variants: after3 normals then a delayed pause gives strong archived2709 versus2810, weaker1633 versus1631, clean attacker3778 versus3777, solo2640 versus2633. After4 gives2820/1645/3769/2633. These alter cadence and post-death protection together, so no production change is identified. A frozen prospective no-Infantry Lancer probe will discriminate source eligibility.",
+  "evidence_notes": [
+    "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+    "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+    "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+    "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json",
+    "docs/mechanics-audit/hero-tooltips/WIP-ahmose-2026-09-07/README.md",
+    "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-review.md",
+    "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-results.json"
+  ],
+  "supported_dimensions": [
+    "duration_delay_and_order"
+  ],
+  "unresolved_dimensions": [
+    "source_and_target_scope",
+    "magnitude_and_level_scaling",
+    "trigger_chance_and_cadence"
+  ]
+}

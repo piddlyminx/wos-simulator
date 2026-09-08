@@ -1,0 +1,1864 @@
+{
+  "reportKind": "simulator-parity-case-detail",
+  "schemaVersion": 1,
+  "createdAt": "2026-09-07T06:57:49.289Z",
+  "file": "testcases/emulator_verified/hendrik_armor_lancer_scope.json",
+  "testcaseId": "hendrik_armor_lancer_scope",
+  "index": 0,
+  "diagnostics": [],
+  "armies": {
+    "attacker": {
+      "heroes": {},
+      "joinerHeroes": {},
+      "troops": {
+        "lancer_t6": 100
+      }
+    },
+    "defender": {
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "joinerHeroes": {},
+      "troops": {
+        "lancer_t6": 150
+      }
+    }
+  },
+  "armiesSource": "testcase",
+  "visibility": {
+    "attacker": {
+      "heroes": [],
+      "troopSkillIds": [
+        "Charge"
+      ],
+      "troops": {
+        "infantry": 0,
+        "lancer": 100,
+        "marksman": 0
+      },
+      "skillEffectActivations": 1
+    },
+    "defender": {
+      "heroes": [
+        "Hendrik"
+      ],
+      "troopSkillIds": [
+        "Charge"
+      ],
+      "troops": {
+        "infantry": 0,
+        "lancer": 150,
+        "marksman": 0
+      },
+      "skillEffectActivations": 33
+    }
+  },
+  "result": {
+    "winner": "defender",
+    "rounds": 54,
+    "remaining": {
+      "attacker": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "defender": {
+        "infantry": 0,
+        "lancer": 17,
+        "marksman": 0
+      }
+    },
+    "attacks": [
+      {
+        "round": 1,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 4.439680627808345
+      },
+      {
+        "round": 1,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.8814760692339063,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 4.395059589516161
+      },
+      {
+        "round": 2,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.842796784019664,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 4.327265403588028
+      },
+      {
+        "round": 3,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.803583915793748,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.608806831912554,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.7537827247222113,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.549479938567893,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.7234649269317077,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 6,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 4.117190438413744
+      },
+      {
+        "round": 6,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.6825082340772033,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 7,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 4.069034507672161
+      },
+      {
+        "round": 7,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.6409164400936387,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.3861970890063646,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.5986590505916154,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 9,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.3441308958262965,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 9,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.566509453415351,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 10,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.870423839642358
+      },
+      {
+        "round": 10,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.5230061419138927,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 11,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.7932647912008184
+      },
+      {
+        "round": 11,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.4787394396749503,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 12,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.170289314829048,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 12,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.4450135220584635,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 13,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.1253183937871105,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 13,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.3993083046398174,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.606813592463329
+      },
+      {
+        "round": 14,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.3644496725374045,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 15,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.5517445022466756
+      },
+      {
+        "round": 15,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.329069377929925,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 16,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.938560524107557,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 16,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.2810421707797843,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.889985930185144,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.244347410300909,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 18,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.351885368543191
+      },
+      {
+        "round": 18,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.207042639228577,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 19,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.2925552755140166
+      },
+      {
+        "round": 19,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.169096384354943,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.7390985460809048,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.1304743692122505,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 21,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.66044769341172,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 21,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.0911391515437177,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 22,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.075900966697337
+      },
+      {
+        "round": 22,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.0510496981710675,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 23,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.011137903748495
+      },
+      {
+        "round": 23,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 2.0101608835156135,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 24,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.4957211578728438,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 24,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.9684228943153759,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 25,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.4383405875059747,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 25,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.940098786066666,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 26,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.807900573520131
+      },
+      {
+        "round": 26,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.8968197629047405,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 27,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.7368029430771856
+      },
+      {
+        "round": 27,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.8525299258567034,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 28,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.288603641468091,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 28,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.8224054804096355,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 29,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.2258902377623695,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 29,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.77626114304055,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 30,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.550402349706632
+      },
+      {
+        "round": 30,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.744820408267897,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 31,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.471909558185812
+      },
+      {
+        "round": 31,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.712802634847513,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 32,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.0607739220079053,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 32,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.663620984235661,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 33,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.990896752835931,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 33,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.6300090147056423,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 34,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.2638018155314614
+      },
+      {
+        "round": 34,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.5956891918083829,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 35,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.2198403139041725
+      },
+      {
+        "round": 35,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.5606148165663811,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 36,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.804403415956277,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 36,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.5247338175953702,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 37,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.7647413546826307,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 37,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.4879878438184173,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 38,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.9854855364336805
+      },
+      {
+        "round": 38,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.4503111501273833,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 39,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.935211919821179
+      },
+      {
+        "round": 39,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.411629215132729,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 40,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.5512942519035877,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 40,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.3718570077995285,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 41,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.5049764840028288,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 41,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.3515320766688783,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 42,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.7194809133981408
+      },
+      {
+        "round": 42,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.309936472924287,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 43,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.6007496150247142
+      },
+      {
+        "round": 43,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.266975995009279,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 44,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.3033478672446344,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 44,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.2449399488914987,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 45,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.2478605789364219,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 45,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.1996541523199087,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 46,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.3319041883425036
+      },
+      {
+        "round": 46,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.176357679277274,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 47,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.2557313112903317
+      },
+      {
+        "round": 47,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.1525904276935626,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 48,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.9954483764179655,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 48,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.1283226481937891,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 49,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.9216061151737053,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 49,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.1035213196142886,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 50,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.9927427682168403
+      },
+      {
+        "round": 50,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.0781496219261386,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 51,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.8879361255616689
+      },
+      {
+        "round": 51,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.0521662946871524,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 52,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.6516739336223172,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 52,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 1.0255248490855338,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 53,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.532089538682344,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 53,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 0.9981725905413963,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 54,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "lancer",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.44396806278083445
+      },
+      {
+        "round": 54,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "lancer",
+        "kills": 0.2839050809280559,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "defender",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      }
+    ],
+    "skillReport": {
+      "attacker": [
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "defender": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 0,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 0,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ]
+    },
+    "resolved": {
+      "attacker": {
+        "troops": {
+          "infantry": 0,
+          "lancer": 100,
+          "marksman": 0
+        },
+        "heroes": [],
+        "troopSkillIds": [
+          "Charge"
+        ],
+        "diagnostics": []
+      },
+      "defender": {
+        "troops": {
+          "infantry": 0,
+          "lancer": 150,
+          "marksman": 0
+        },
+        "heroes": [
+          {
+            "name": "Hendrik",
+            "heroGeneration": "S8",
+            "skillIds": [
+              "WormsRavage",
+              "ArmorOfBarnacles",
+              "DragonsHeir"
+            ],
+            "instanceId": "main:hendrik:0",
+            "role": "main"
+          }
+        ],
+        "troopSkillIds": [
+          "Charge"
+        ],
+        "diagnostics": []
+      }
+    },
+    "effectActivationCounts": {
+      "attacker": 1,
+      "defender": 33
+    },
+    "extraSkillAttackJobsByEffect": {},
+    "attackControlCounts": {
+      "dodge": 0,
+      "no_attack": 0
+    },
+    "randomness": {
+      "deterministic": true,
+      "chanceSkillIds": {
+        "attacker": [],
+        "defender": []
+      }
+    }
+  },
+  "deterministic": true,
+  "sampleCount": 1,
+  "simulatorStats": {
+    "n": 1,
+    "mu": -17,
+    "sigma": 0,
+    "sem": 0
+  },
+  "comparisonSamples": [
+    -17
+  ],
+  "simulatorScoreDelta": -17,
+  "simulatorSampleOutcomes": [
+    {
+      "run": 1,
+      "attackerHeroes": [],
+      "defenderHeroes": [
+        "Hendrik"
+      ],
+      "attackerTroops": {
+        "infantry": 0,
+        "lancer": 100,
+        "marksman": 0
+      },
+      "defenderTroops": {
+        "infantry": 0,
+        "lancer": 150,
+        "marksman": 0
+      },
+      "attackerRemainingByType": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "defenderRemainingByType": {
+        "infantry": 0,
+        "lancer": 17,
+        "marksman": 0
+      },
+      "attackerRemaining": 0,
+      "defenderRemaining": 17,
+      "scoreDelta": -17
+    }
+  ],
+  "simulatorSampleDeltas": [
+    -17
+  ],
+  "gameResult": [
+    {
+      "attacker": 0,
+      "defender": 17
+    }
+  ],
+  "detailArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/cases/000001.json"
+}

@@ -1,0 +1,279 @@
+{
+  "image_path": "/home/paul/projects_wsl/wos/simulator/tmp/20260907T065146Z_wos_report_war_1/report_stats.png",
+  "image_size": {
+    "height": 1280,
+    "width": 720
+  },
+  "left": {
+    "levels": {
+      "infantry": {
+        "fire_crystal_level": null,
+        "tier": 6
+      },
+      "lancer": {
+        "fire_crystal_level": null,
+        "tier": null
+      },
+      "marksman": {
+        "fire_crystal_level": null,
+        "tier": null
+      }
+    },
+    "stat_bonuses": {
+      "infantry_attack": 529.9,
+      "infantry_defense": 522.1,
+      "infantry_health": 238.4,
+      "infantry_lethality": 244.0,
+      "lancer_attack": 294.9,
+      "lancer_defense": 293.7,
+      "lancer_health": 230.0,
+      "lancer_lethality": 224.3,
+      "marksman_attack": 292.2,
+      "marksman_defense": 292.7,
+      "marksman_health": 230.3,
+      "marksman_lethality": 235.8
+    },
+    "troop_counts": {
+      "infantry": 100
+    },
+    "troops": [
+      {
+        "count": 100,
+        "fire_crystal_level": 0,
+        "slot": 0,
+        "tier": 6,
+        "type": "infantry"
+      }
+    ]
+  },
+  "meta": {
+    "fire_crystal_classifier": {
+      "missing_classes": [
+        9
+      ],
+      "predictions": [
+        {
+          "accepted": true,
+          "level": 0,
+          "margin": 7.1104,
+          "slot": 0
+        },
+        {
+          "accepted": true,
+          "level": 0,
+          "margin": 5.5724,
+          "slot": 5
+        }
+      ],
+      "status": "presence-only"
+    },
+    "header_box": {
+      "confidence": 0.99925,
+      "text": "Stat Bonuses",
+      "x1": 272,
+      "x2": 450,
+      "y1": 349,
+      "y2": 385
+    },
+    "label_boxes": {
+      "infantry_attack": {
+        "confidence": 0.9641713,
+        "text": "Infantry Attack",
+        "x1": 276,
+        "x2": 444,
+        "y1": 416,
+        "y2": 440
+      },
+      "infantry_defense": {
+        "confidence": 0.9618248,
+        "text": "Infantry Defense",
+        "x1": 270,
+        "x2": 451,
+        "y1": 475,
+        "y2": 499
+      },
+      "infantry_health": {
+        "confidence": 0.96258972,
+        "text": "Infantry Health",
+        "x1": 277,
+        "x2": 442,
+        "y1": 592,
+        "y2": 616
+      },
+      "infantry_lethality": {
+        "confidence": 0.96724197,
+        "text": "Infantry Lethality",
+        "x1": 265,
+        "x2": 455,
+        "y1": 533,
+        "y2": 557
+      },
+      "lancer_attack": {
+        "confidence": 0.95447998,
+        "text": "Lancer Attack",
+        "x1": 283,
+        "x2": 439,
+        "y1": 651,
+        "y2": 668
+      },
+      "lancer_defense": {
+        "confidence": 0.96447144,
+        "text": "Lancer Defense",
+        "x1": 275,
+        "x2": 444,
+        "y1": 709,
+        "y2": 727
+      },
+      "lancer_health": {
+        "confidence": 0.96333801,
+        "text": "Lancer Health",
+        "x1": 284,
+        "x2": 437,
+        "y1": 827,
+        "y2": 844
+      },
+      "lancer_lethality": {
+        "confidence": 0.95013161,
+        "text": "Lancer Lethality",
+        "x1": 272,
+        "x2": 449,
+        "y1": 768,
+        "y2": 791
+      },
+      "marksman_attack": {
+        "confidence": 0.96322594,
+        "text": "Marksman Attack",
+        "x1": 262,
+        "x2": 459,
+        "y1": 885,
+        "y2": 902
+      },
+      "marksman_defense": {
+        "confidence": 0.9649799299999999,
+        "text": "Marksman Defense",
+        "x1": 255,
+        "x2": 466,
+        "y1": 943,
+        "y2": 961
+      },
+      "marksman_health": {
+        "confidence": 0.94482811,
+        "text": "Marksman Health",
+        "x1": 263,
+        "x2": 457,
+        "y1": 1061,
+        "y2": 1078
+      },
+      "marksman_lethality": {
+        "confidence": 0.96474068,
+        "text": "Marksman Lethality",
+        "x1": 251,
+        "x2": 469,
+        "y1": 1002,
+        "y2": 1025
+      }
+    },
+    "missing_fields": [],
+    "ocr_item_count": 59,
+    "ocr_strategy": [
+      "tesseract:panel",
+      "rapidocr:troop-row"
+    ],
+    "slot_count_boxes": {
+      "0": {
+        "confidence": 0.99979,
+        "text": "100",
+        "x1": 58,
+        "x2": 97,
+        "y1": 287,
+        "y2": 309
+      },
+      "5": {
+        "confidence": 0.9665280900000001,
+        "text": "400",
+        "x1": 626,
+        "x2": 663,
+        "y1": 291,
+        "y2": 305
+      }
+    },
+    "slot_counts": {
+      "0": 100,
+      "5": 400
+    },
+    "template_match_image": "original",
+    "troop_header_box": {
+      "confidence": 0.99925,
+      "text": "Stat Bonuses",
+      "x1": 272,
+      "x2": 450,
+      "y1": 349,
+      "y2": 385
+    },
+    "troop_slots_present": true,
+    "troop_template_matches": [
+      {
+        "count": 100,
+        "low_confidence": false,
+        "positional_type": "infantry",
+        "score": 0.9616249203681946,
+        "side": "left",
+        "slot": 0,
+        "template": "941743c5-166c-4ca1-8106-70ce32456f2e.png",
+        "type": "infantry"
+      },
+      {
+        "count": 400,
+        "low_confidence": false,
+        "positional_type": "marksman",
+        "score": 0.9105582237243652,
+        "side": "right",
+        "slot": 5,
+        "template": "1d045abe-d2ab-4ebd-8ccc-dde3fb1de2d6.png",
+        "type": "marksman"
+      }
+    ]
+  },
+  "right": {
+    "levels": {
+      "infantry": {
+        "fire_crystal_level": null,
+        "tier": null
+      },
+      "lancer": {
+        "fire_crystal_level": null,
+        "tier": null
+      },
+      "marksman": {
+        "fire_crystal_level": null,
+        "tier": 6
+      }
+    },
+    "stat_bonuses": {
+      "infantry_attack": 248.2,
+      "infantry_defense": 249.0,
+      "infantry_health": 191.8,
+      "infantry_lethality": 186.3,
+      "lancer_attack": 208.5,
+      "lancer_defense": 207.4,
+      "lancer_health": 181.9,
+      "lancer_lethality": 186.8,
+      "marksman_attack": 217.5,
+      "marksman_defense": 210.6,
+      "marksman_health": 177.0,
+      "marksman_lethality": 181.4
+    },
+    "troop_counts": {
+      "marksman": 400
+    },
+    "troops": [
+      {
+        "count": 400,
+        "fire_crystal_level": 0,
+        "slot": 5,
+        "tier": 6,
+        "type": "marksman"
+      }
+    ]
+  }
+}

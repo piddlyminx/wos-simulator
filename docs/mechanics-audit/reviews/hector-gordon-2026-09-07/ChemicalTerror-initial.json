@@ -1,0 +1,4039 @@
+{
+  "generatedAt": "2026-09-07T06:56:49.028Z",
+  "selection": {
+    "key": "hero:Gordon:ChemicalTerror",
+    "hero": "Gordon",
+    "id": "ChemicalTerror",
+    "slot": 2,
+    "coverage": {
+      "configured_fixture_count": 7,
+      "hydrated_fixture_count": 7,
+      "observation_record_count": 11,
+      "hydrated_levels": [
+        2,
+        3
+      ],
+      "levels_missing_active_fixture": [
+        1,
+        4,
+        5
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0",
+        "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+        "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "Gordon's envenomed weapons terrorizes the field, increasing Lancers' Damage Dealt by X% and reducing Damage Dealt by enemy troops by Y% for 1 turn every 3 turns.",
+      "trigger": {
+        "type": "turn",
+        "every": 3
+      },
+      "effects": {
+        "ChemicalTerror/1": {
+          "type": "active.hero.damage.up",
+          "value": [
+            30,
+            60,
+            90,
+            120,
+            150
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ]
+          },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          },
+          "same_effect_stacking": "max"
+        },
+        "ChemicalTerror/2": {
+          "type": "active.hero.damage.down",
+          "value": [
+            6,
+            12,
+            18,
+            24,
+            30
+          ],
+          "units": {
+            "applies_to": "enemy.any",
+            "applies_vs": "self.any"
+          },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          },
+          "same_effect_stacking": "max"
+        }
+      }
+    }
+  },
+  "protocolSha256": "4a07fd349a20b7d7f764a9ace8edf302489279d691bf7d791b70484705214fbd",
+  "repeat": 1000,
+  "seed": "hector-gordon-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial-samples.json",
+    "sha256": "52f93905b1c22d9c946ba56c119aaed60505cfd9a2d142de08af0d3e9083d42a"
+  },
+  "results": [
+    {
+      "key": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0",
+      "path": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json",
+      "fixtureSha256": "de8d5c1f2045fdeb5bd4f71618da1ecc9667d6f848041065289923eba1394e67",
+      "inventoryHashMatched": true,
+      "entry": {
+        "test_id": "gordon_wayne_s1_extra_overlap_nc",
+        "description": "Unresolved Gordon S1 normal-hit versus Wayne extra-hit scope discriminator. minxxx attacks WIP with Gordon 2/2/1 and Wayne 1/0/0, fielding 2000 T6 lancers into 6000 T6 lancers. Captured result: 39 rounds from Gordon 19/13/9, Wayne 9 activations, and attacker 883 survivors. The current normal-only simulator produces 892 survivors in 38 rounds. All 256 +/-0.049 corners of the eight relevant displayed Lancer stats remain at 38 rounds and produce 891-894 survivors, so no corner attains the observation. Corner checks alone do not prove the complete non-monotonic interior envelope; a valid interior or dominance audit is still required. Do not infer Gordon S1's scope from this testcase until the deterministic endpoint residual is explained.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 255
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 484.9,
+              "defense": 485.2,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 413.1,
+              "defense": 415.1,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 1000
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 5,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Wayne": {
+              "skill_1": 2,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 255
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 484.9,
+              "defense": 485.2,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 413.1,
+              "defense": 415.1,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 1000
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 5,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 255,
+        "defender": 1000
+      },
+      "gameScores": [
+        5
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 8,
+          "sd": 0,
+          "min": 8,
+          "max": 8,
+          "central95": [
+            8,
+            8
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            3
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 3,
+              "defender": 0,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 8,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 68,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.lancer": 22,
+            "ChemicalTerror/2:normal:defender.lancer->attacker.lancer": 22,
+            "ChemicalTerror/1:skill:attacker.lancer->defender.lancer": 5
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            22
+          ]
+        },
+        "omit": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -314,
+          "sd": 0,
+          "min": -314,
+          "max": -314,
+          "central95": [
+            -314,
+            -314
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -319
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -5,
+              "defender": 314,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 314,
+              "marksman": 0
+            }
+          },
+          "firstRound": 50,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            16
+          ]
+        },
+        "omit_offense": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -280,
+          "sd": 0,
+          "min": -280,
+          "max": -280,
+          "central95": [
+            -280,
+            -280
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -285
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -5,
+              "defender": 280,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 280,
+              "marksman": 0
+            }
+          },
+          "firstRound": 53,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.lancer->attacker.lancer": 17
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            17
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -84,
+          "sd": 0,
+          "min": -84,
+          "max": -84,
+          "central95": [
+            -84,
+            -84
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -89
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -5,
+              "defender": 84,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 84,
+              "marksman": 0
+            }
+          },
+          "firstRound": 61,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.lancer": 20,
+            "ChemicalTerror/1:skill:attacker.lancer->defender.lancer": 5
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -84,
+          "sd": 0,
+          "min": -84,
+          "max": -84,
+          "central95": [
+            -84,
+            -84
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -89
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -5,
+              "defender": 84,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 84,
+              "marksman": 0
+            }
+          },
+          "firstRound": 61,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.lancer": 20,
+            "ChemicalTerror/1:skill:attacker.lancer->defender.lancer": 5
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0",
+      "path": "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json",
+      "fixtureSha256": "e0e9d3a0dc3ed56600cd800eaecf4b913ec54cc3d86080178ee574a9fd32159e",
+      "inventoryHashMatched": true,
+      "entry": {
+        "test_id": "gordon_wayne_s1_extra_overlap_nc",
+        "description": "Unresolved Gordon S1 normal-hit versus Wayne extra-hit scope discriminator. minxxx attacks WIP with Gordon 2/2/1 and Wayne 1/0/0, fielding 2000 T6 lancers into 6000 T6 lancers. Captured result: 39 rounds from Gordon 19/13/9, Wayne 9 activations, and attacker 883 survivors. The current normal-only simulator produces 892 survivors in 38 rounds. All 256 +/-0.049 corners of the eight relevant displayed Lancer stats remain at 38 rounds and produce 891-894 survivors, so no corner attains the observation. Corner checks alone do not prove the complete non-monotonic interior envelope; a valid interior or dominance audit is still required. Do not infer Gordon S1's scope from this testcase until the deterministic endpoint residual is explained.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Wayne": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 260
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 484.9,
+              "defense": 485.2,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 413.1,
+              "defense": 415.1,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 1000
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 19
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Wayne": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 260
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 484.9,
+              "defense": 485.2,
+              "lethality": 216.2,
+              "health": 217.5
+            },
+            "mark": {
+              "attack": 413.1,
+              "defense": 415.1,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 1000
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 19
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Wayne:ThunderStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "ThunderStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Wayne:RoundaboutHit",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:wayne:0",
+          "effect_ids": [
+            "RoundaboutHit/1",
+            "RoundaboutHit/2"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 260,
+        "defender": 1000
+      },
+      "gameScores": [
+        -19
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -3,
+          "sd": 0,
+          "min": -3,
+          "max": -3,
+          "central95": [
+            -3,
+            -3
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            16
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": -16,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 3,
+              "marksman": 0
+            }
+          },
+          "firstRound": 74,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.lancer": 24,
+            "ChemicalTerror/2:normal:defender.lancer->attacker.lancer": 24,
+            "ChemicalTerror/1:skill:attacker.lancer->defender.lancer": 6
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            24
+          ]
+        },
+        "omit": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -322,
+          "sd": 0,
+          "min": -322,
+          "max": -322,
+          "central95": [
+            -322,
+            -322
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -303
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 303,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 322,
+              "marksman": 0
+            }
+          },
+          "firstRound": 51,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            17
+          ]
+        },
+        "omit_offense": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -288,
+          "sd": 0,
+          "min": -288,
+          "max": -288,
+          "central95": [
+            -288,
+            -288
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -269
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 269,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 288,
+              "marksman": 0
+            }
+          },
+          "firstRound": 54,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.lancer->attacker.lancer": 18
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            18
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -100,
+          "sd": 0,
+          "min": -100,
+          "max": -100,
+          "central95": [
+            -100,
+            -100
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -81
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 81,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 100,
+              "marksman": 0
+            }
+          },
+          "firstRound": 60,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.lancer": 20,
+            "ChemicalTerror/1:skill:attacker.lancer->defender.lancer": 5
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -100,
+          "sd": 0,
+          "min": -100,
+          "max": -100,
+          "central95": [
+            -100,
+            -100
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -81
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 81,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 100,
+              "marksman": 0
+            }
+          },
+          "firstRound": 60,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.lancer": 20,
+            "ChemicalTerror/1:skill:attacker.lancer->defender.lancer": 5
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+      "path": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json",
+      "fixtureSha256": "5cb91e84cc74ed87b29f2e20475a2752af27c98fc01ff9bec3bc90542abf4d4f",
+      "inventoryHashMatched": true,
+      "entry": {
+        "test_id": "wos444_gordon_s22_all_enemy_damage_dealt_hero_nc",
+        "description": "WOS-444 Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends Gordon+Sergey+Lynn with 2560 T6 lancer. Candidate signed remaining scores: damage.down +558, attack.down +593, lethality.down -143.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Sergey": {
+              "skill_1": 4,
+              "skill_2": 4
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 2560
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.8,
+              "defense": 378.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 460.2,
+              "defense": 457.2,
+              "lethality": 275.7,
+              "health": 266.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 5274,
+            "defender": 0
+          },
+          {
+            "attacker": 4736,
+            "defender": 0
+          },
+          {
+            "attacker": 5021,
+            "defender": 0
+          },
+          {
+            "attacker": 5290,
+            "defender": 0
+          },
+          {
+            "attacker": 5006,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Sergey": {
+              "skill_1": 4,
+              "skill_2": 4
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 2560
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.8,
+              "defense": 378.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 460.2,
+              "defense": 457.2,
+              "lethality": 275.7,
+              "health": 266.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 5274,
+          "defender": 0
+        },
+        {
+          "attacker": 4736,
+          "defender": 0
+        },
+        {
+          "attacker": 5021,
+          "defender": 0
+        },
+        {
+          "attacker": 5290,
+          "defender": 0
+        },
+        {
+          "attacker": 5006,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:DefendersEdge",
+          "side": "defender",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "DefendersEdge/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:Weaken",
+          "side": "defender",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "Weaken/1"
+          ]
+        },
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 8100,
+        "defender": 2560
+      },
+      "gameScores": [
+        5274,
+        4736,
+        5021,
+        5290,
+        5006
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5049.677,
+          "sd": 216.5707218174898,
+          "min": 4164,
+          "max": 5483,
+          "central95": [
+            4596,
+            5412
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5049.68,
+            "sigma_candidate": 216.57,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": -15.72,
+            "bias_pct": -0.15,
+            "sem": 6.85,
+            "stat_type": "cdf_support",
+            "stat": 0.4284,
+            "p": 0.372931,
+            "passes": true,
+            "cdf_rms": 0.027267,
+            "cdf_p": 0.886256,
+            "support_value": 5274,
+            "support_mass": 0.00022222,
+            "support_p": 0.217539,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 2355,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 48,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:attacker.infantry->defender.lancer": 224,
+            "ChemicalTerror/2:normal:attacker.lancer->defender.lancer": 255,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.infantry": 224,
+            "ChemicalTerror/2:normal:attacker.marksman->defender.lancer": 242,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.lancer": 31
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            16,
+            15
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5841.402,
+          "sd": 50.79807910581704,
+          "min": 5653,
+          "max": 5995,
+          "central95": [
+            5741,
+            5938
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5841.4,
+            "sigma_candidate": 50.8,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": 776,
+            "bias_pct": 7.28,
+            "sem": 1.61,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.244514,
+            "cdf_p": 0.00005,
+            "support_value": 5274,
+            "support_mass": 0,
+            "support_p": 0.049898,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 423,
+              "lancer": 2700,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 45,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15
+          ]
+        },
+        "omit_offense": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5765.06,
+          "sd": 52.10586743756816,
+          "min": 5578,
+          "max": 5920,
+          "central95": [
+            5662,
+            5866
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5765.06,
+            "sigma_candidate": 52.11,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": 699.66,
+            "bias_pct": 6.56,
+            "sem": 1.65,
+            "stat_type": "cdf_support",
+            "stat": 4,
+            "p": 0.0001,
+            "passes": false,
+            "cdf_rms": 0.229251,
+            "cdf_p": 0.00005,
+            "support_value": 5274,
+            "support_mass": 0,
+            "support_p": 0.049848,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 350,
+              "lancer": 2700,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 47,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:attacker.infantry->defender.lancer": 240,
+            "ChemicalTerror/2:normal:attacker.lancer->defender.lancer": 240,
+            "ChemicalTerror/2:normal:attacker.marksman->defender.lancer": 240
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5309.568,
+          "sd": 149.45507751895292,
+          "min": 4639,
+          "max": 5568,
+          "central95": [
+            4925,
+            5497
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5309.57,
+            "sigma_candidate": 149.46,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": 244.17,
+            "bias_pct": 2.29,
+            "sem": 4.73,
+            "stat_type": "cdf_support",
+            "stat": 2.6478,
+            "p": 0.00225,
+            "passes": false,
+            "cdf_rms": 0.096271,
+            "cdf_p": 0.0024,
+            "support_value": 5274,
+            "support_mass": 0,
+            "support_p": 0.136143,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 2556,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 46,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:defender.lancer->attacker.infantry": 234,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.lancer": 6
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5290.047,
+          "sd": 157.82024591610872,
+          "min": 4473,
+          "max": 5558,
+          "central95": [
+            4908,
+            5489
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5290.05,
+            "sigma_candidate": 157.82,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": 224.65,
+            "bias_pct": 2.11,
+            "sem": 4.99,
+            "stat_type": "cdf_support",
+            "stat": 2.2329,
+            "p": 0.00585,
+            "passes": true,
+            "cdf_rms": 0.088904,
+            "cdf_p": 0.00505,
+            "support_value": 5274,
+            "support_mass": 0,
+            "support_p": 0.118844,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 2549,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 46,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:attacker.infantry->defender.lancer": 234,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.infantry": 234,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.lancer": 6
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0",
+      "path": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json",
+      "fixtureSha256": "3c1a86b6d2e26c0f51f0455d266c3389e39f14c7588fe3fe52415d4c13aeaa3d",
+      "inventoryHashMatched": true,
+      "entry": {
+        "test_id": "wos451_gordon_s11_lancer_damage_up_bucket",
+        "description": "WOS-451 Gordon S1/1 lancer damage-dealt-up bucket discriminator. minxxx attacks WIP with Gordon + Flint + Jasser and 500 T6 lancers into 2990 T6 infantry. Candidate buckets: active.hero.damage.up, active.hero.attack.up, active.hero.lethality.up.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Flint": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "troops": {
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 384.7,
+              "defense": 373.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 351,
+              "defense": 348,
+              "lethality": 221.8,
+              "health": 216.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2990
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 1517
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Flint": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "troops": {
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 384.7,
+              "defense": 373.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 351,
+              "defense": 348,
+              "lethality": 221.8,
+              "health": 216.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2990
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 1517
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Flint:Pyromaniac",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:flint:0",
+          "effect_ids": [
+            "Pyromaniac/1"
+          ]
+        },
+        {
+          "key": "hero:Flint:BurningResolve",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:flint:0",
+          "effect_ids": [
+            "BurningResolve/1"
+          ]
+        },
+        {
+          "key": "hero:Flint:Immolation",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:flint:0",
+          "effect_ids": [
+            "Immolation/1"
+          ]
+        },
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Jasser:TacticalGenius",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:jasser:0",
+          "effect_ids": [
+            "TacticalGenius/1"
+          ]
+        },
+        {
+          "key": "hero:Jasser:NonCombatPlaceholder",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:jasser:0",
+          "effect_ids": []
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 500,
+        "defender": 2990
+      },
+      "gameScores": [
+        -1517
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1516,
+          "sd": 0,
+          "min": -1516,
+          "max": -1516,
+          "central95": [
+            -1516,
+            -1516
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            1
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": -1,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1516,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 106,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.lancer": 35,
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 35
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            35
+          ]
+        },
+        "omit": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1842,
+          "sd": 0,
+          "min": -1842,
+          "max": -1842,
+          "central95": [
+            -1842,
+            -1842
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -325
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 325,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1842,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 97,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            32
+          ]
+        },
+        "omit_offense": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1796,
+          "sd": 0,
+          "min": -1796,
+          "max": -1796,
+          "central95": [
+            -1796,
+            -1796
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -279
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 279,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1796,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 101,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.lancer": 33
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            33
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1576,
+          "sd": 0,
+          "min": -1576,
+          "max": -1576,
+          "central95": [
+            -1576,
+            -1576
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -59
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 59,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1576,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 101,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 33
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            33
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1516,
+          "sd": 0,
+          "min": -1516,
+          "max": -1516,
+          "central95": [
+            -1516,
+            -1516
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            1
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": -1,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1516,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 106,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.lancer": 35,
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 35
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            35
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0",
+      "path": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json",
+      "fixtureSha256": "169631f8dc3c5a37986f82b24cf1433410ad80e6f2912763f96dab3c4e21fc99",
+      "inventoryHashMatched": true,
+      "entry": {
+        "test_id": "wos451_gordon_s21_lancer_damage_up_bucket",
+        "description": "WOS-451 Gordon S2/1 lancer damage-dealt-up bucket discriminator. minxxx attacks WIP with Gordon + Flint + Jasser and 360 T6 lancers into 2100 T6 infantry. Candidate buckets: active.hero.damage.up, active.hero.attack.up, active.hero.lethality.up.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Flint": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "troops": {
+            "lancer_t6": 360
+          },
+          "stats": {
+            "inf": {
+              "attack": 384.7,
+              "defense": 373.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 351,
+              "defense": 348,
+              "lethality": 221.8,
+              "health": 216.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2100
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 1017
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Flint": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Jasser": {
+              "skill_1": 4,
+              "skill_2": 4
+            }
+          },
+          "troops": {
+            "lancer_t6": 360
+          },
+          "stats": {
+            "inf": {
+              "attack": 384.7,
+              "defense": 373.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 351,
+              "defense": 348,
+              "lethality": 221.8,
+              "health": 216.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2100
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 1017
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Flint:Pyromaniac",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:flint:0",
+          "effect_ids": [
+            "Pyromaniac/1"
+          ]
+        },
+        {
+          "key": "hero:Flint:BurningResolve",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:flint:0",
+          "effect_ids": [
+            "BurningResolve/1"
+          ]
+        },
+        {
+          "key": "hero:Flint:Immolation",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:flint:0",
+          "effect_ids": [
+            "Immolation/1"
+          ]
+        },
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Jasser:TacticalGenius",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:jasser:0",
+          "effect_ids": [
+            "TacticalGenius/1"
+          ]
+        },
+        {
+          "key": "hero:Jasser:NonCombatPlaceholder",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:jasser:0",
+          "effect_ids": []
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 360,
+        "defender": 2100
+      },
+      "gameScores": [
+        -1017
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1016,
+          "sd": 0,
+          "min": -1016,
+          "max": -1016,
+          "central95": [
+            -1016,
+            -1016
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            1
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": -1,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1016,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 108,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.lancer": 36,
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 36
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            36
+          ]
+        },
+        "omit": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1258,
+          "sd": 0,
+          "min": -1258,
+          "max": -1258,
+          "central95": [
+            -1258,
+            -1258
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -241
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 241,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1258,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 99,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            33
+          ]
+        },
+        "omit_offense": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1223,
+          "sd": 0,
+          "min": -1223,
+          "max": -1223,
+          "central95": [
+            -1223,
+            -1223
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -206
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 206,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1223,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 104,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.lancer": 34
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            34
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1061,
+          "sd": 0,
+          "min": -1061,
+          "max": -1061,
+          "central95": [
+            -1061,
+            -1061
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -44
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": 44,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1061,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 103,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 34
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            34
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": -1016,
+          "sd": 0,
+          "min": -1016,
+          "max": -1016,
+          "central95": [
+            -1016,
+            -1016
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            1
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 0,
+              "defender": -1,
+              "rounds": null
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 1016,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 108,
+          "firstWinner": "defender",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.lancer": 36,
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 36
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            36
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+      "path": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json",
+      "fixtureSha256": "f6f71b7e0d5c219cb523fd966e5a639d9b764b02cabe9072250a658bac36814c",
+      "inventoryHashMatched": false,
+      "entry": {
+        "test_id": "s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman",
+        "description": "Gatot evidence section 15.2: 1,000 T6 infantry + 125 lancers + 125 marksmen vs 5,000 infantry; secondary heroes",
+        "attacker": {
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 125,
+            "marksman_t6": 125
+          },
+          "stats": {
+            "infantry": {
+              "attack": 326.1,
+              "defense": 330.1,
+              "lethality": 18.2,
+              "health": 18.2
+            },
+            "lancer": {
+              "attack": 284.8,
+              "defense": 288.8,
+              "lethality": 18.2,
+              "health": 18.2
+            },
+            "marksman": {
+              "attack": 284.8,
+              "defense": 288.8,
+              "lethality": 18.2,
+              "health": 18.2
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Gordon": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Bradley": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 5000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 295.3,
+              "defense": 293.3,
+              "lethality": 10,
+              "health": 10
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Patrick": {
+              "skill_1": 1,
+              "skill_2": 0
+            },
+            "Bradley": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "maxRounds": 1500,
+        "game_report_result": [
+          {
+            "attacker": 851,
+            "defender": 0,
+            "winner": "attacker",
+            "rounds": 366
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 125,
+            "marksman_t6": 125
+          },
+          "stats": {
+            "infantry": {
+              "attack": 326.1,
+              "defense": 330.1,
+              "lethality": 18.2,
+              "health": 18.2
+            },
+            "lancer": {
+              "attack": 284.8,
+              "defense": 288.8,
+              "lethality": 18.2,
+              "health": 18.2
+            },
+            "marksman": {
+              "attack": 284.8,
+              "defense": 288.8,
+              "lethality": 18.2,
+              "health": 18.2
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Gordon": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Bradley": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 5000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 295.3,
+              "defense": 293.3,
+              "lethality": 10,
+              "health": 10
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Patrick": {
+              "skill_1": 1,
+              "skill_2": 0
+            },
+            "Bradley": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "maxRounds": 1500
+      },
+      "game": [
+        {
+          "attacker": 851,
+          "defender": 0,
+          "winner": "attacker",
+          "rounds": 366
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Bradley:VeteransMight",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:bradley:0",
+          "effect_ids": [
+            "VeteransMight/1"
+          ]
+        },
+        {
+          "key": "hero:Bradley:PowerShot",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:bradley:0",
+          "effect_ids": [
+            "PowerShot/1",
+            "PowerShot/2"
+          ]
+        },
+        {
+          "key": "hero:Bradley:TacticalAssistance",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:bradley:0",
+          "effect_ids": [
+            "TacticalAssistance/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "hero:Patrick:SuperNutrients",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:patrick:0",
+          "effect_ids": [
+            "SuperNutrients/1"
+          ]
+        },
+        {
+          "key": "hero:Bradley:VeteransMight",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:bradley:0",
+          "effect_ids": [
+            "VeteransMight/1"
+          ]
+        },
+        {
+          "key": "hero:Bradley:PowerShot",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:bradley:0",
+          "effect_ids": [
+            "PowerShot/1",
+            "PowerShot/2"
+          ]
+        },
+        {
+          "key": "hero:Bradley:TacticalAssistance",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:bradley:0",
+          "effect_ids": [
+            "TacticalAssistance/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1250,
+        "defender": 5000
+      },
+      "gameScores": [
+        851
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 834,
+          "sd": 0,
+          "min": 834,
+          "max": 834,
+          "central95": [
+            834,
+            834
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -17
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -17,
+              "defender": 0,
+              "rounds": 10
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 584,
+              "lancer": 125,
+              "marksman": 125
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 376,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.infantry": 125,
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 125
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            125
+          ]
+        },
+        "omit": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 433,
+          "sd": 0,
+          "min": 433,
+          "max": 433,
+          "central95": [
+            433,
+            433
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -418
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -418,
+              "defender": 0,
+              "rounds": 102
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 183,
+              "lancer": 125,
+              "marksman": 125
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 468,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            156
+          ]
+        },
+        "omit_offense": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 697,
+          "sd": 0,
+          "min": 697,
+          "max": 697,
+          "central95": [
+            697,
+            697
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -154
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -154,
+              "defender": 0,
+              "rounds": 81
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 447,
+              "lancer": 125,
+              "marksman": 125
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 447,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.infantry": 149
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            149
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 694,
+          "sd": 0,
+          "min": 694,
+          "max": 694,
+          "central95": [
+            694,
+            694
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -157
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -157,
+              "defender": 0,
+              "rounds": 18
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 444,
+              "lancer": 125,
+              "marksman": 125
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 384,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 128
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            128
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 834,
+          "sd": 0,
+          "min": 834,
+          "max": 834,
+          "central95": [
+            834,
+            834
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            -17
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": -17,
+              "defender": 0,
+              "rounds": 10
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 584,
+              "lancer": 125,
+              "marksman": 125
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 376,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:defender.infantry->attacker.infantry": 125,
+            "ChemicalTerror/1:normal:attacker.lancer->defender.infantry": 125
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            125
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+      "path": "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json",
+      "fixtureSha256": "55e7f3a717ed71f633690cc615161dab994754ddbeb4b2b3a51b8e491aaeeda2",
+      "inventoryHashMatched": false,
+      "entry": {
+        "test_id": "s3-5000-inf-vs-1000-inf-10-lancer",
+        "description": "Gatot evidence section 3: 5,000 T6 infantry vs 1,000 T6 infantry + 10 T6 lancers",
+        "attacker": {
+          "troops": {
+            "infantry_t6": 5000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 295.3,
+              "defense": 293.3,
+              "lethality": 10,
+              "health": 10
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 10
+          },
+          "stats": {
+            "infantry": {
+              "attack": 326.1,
+              "defense": 330.1,
+              "lethality": 18.2,
+              "health": 18.2
+            },
+            "lancer": {
+              "attack": 284.8,
+              "defense": 288.8,
+              "lethality": 18.2,
+              "health": 18.2
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Gordon": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "maxRounds": 1500,
+        "game_report_result": [
+          {
+            "attacker": 4573,
+            "defender": 0,
+            "winner": "attacker",
+            "rounds": 1151
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "troops": {
+            "infantry_t6": 5000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 295.3,
+              "defense": 293.3,
+              "lethality": 10,
+              "health": 10
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 1,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "defender": {
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 10
+          },
+          "stats": {
+            "infantry": {
+              "attack": 326.1,
+              "defense": 330.1,
+              "lethality": 18.2,
+              "health": 18.2
+            },
+            "lancer": {
+              "attack": 284.8,
+              "defense": 288.8,
+              "lethality": 18.2,
+              "health": 18.2
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            },
+            "Gordon": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "maxRounds": 1500
+      },
+      "game": [
+        {
+          "attacker": 4573,
+          "defender": 0,
+          "winner": "attacker",
+          "rounds": 1151
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:GoldenGuard",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "GoldenGuard/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:KingsBestowal",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "KingsBestowal/1"
+          ]
+        },
+        {
+          "key": "hero:Gatot:RoyalLegion",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gatot:0",
+          "effect_ids": [
+            "RoyalLegion/1"
+          ]
+        },
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 5000,
+        "defender": 1010
+      },
+      "gameScores": [
+        4573
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 4996,
+          "sd": 0,
+          "min": 4996,
+          "max": 4996,
+          "central95": [
+            4996,
+            4996
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            423
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 423,
+              "defender": 0,
+              "rounds": -114
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 4996,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1037,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:attacker.infantry->defender.infantry": 345,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.infantry": 345
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            345
+          ]
+        },
+        "omit": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 4996,
+          "sd": 0,
+          "min": 4996,
+          "max": 4996,
+          "central95": [
+            4996,
+            4996
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            423
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 423,
+              "defender": 0,
+              "rounds": -358
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 4996,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 793,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            264
+          ]
+        },
+        "omit_offense": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 4996,
+          "sd": 0,
+          "min": 4996,
+          "max": 4996,
+          "central95": [
+            4996,
+            4996
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            423
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 423,
+              "defender": 0,
+              "rounds": -114
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 4996,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1037,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:attacker.infantry->defender.infantry": 345
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            345
+          ]
+        },
+        "omit_debuff": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 4996,
+          "sd": 0,
+          "min": 4996,
+          "max": 4996,
+          "central95": [
+            4996,
+            4996
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            423
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 423,
+              "defender": 0,
+              "rounds": -358
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 4996,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 793,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/1:normal:defender.lancer->attacker.infantry": 264
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            264
+          ]
+        },
+        "enemy_infantry_only": {
+          "deterministic": true,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": []
+          },
+          "n": 1,
+          "mean": 4996,
+          "sd": 0,
+          "min": 4996,
+          "max": 4996,
+          "central95": [
+            4996,
+            4996
+          ],
+          "comparison": null,
+          "perObservationErrors": [
+            423
+          ],
+          "perObservationSideErrors": [
+            {
+              "attacker": 423,
+              "defender": 0,
+              "rounds": -114
+            }
+          ],
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 4996,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 1037,
+          "firstWinner": "attacker",
+          "tracedRuns": 1,
+          "modifierAnnotationCounts": {
+            "ChemicalTerror/2:normal:attacker.infantry->defender.infantry": 345,
+            "ChemicalTerror/1:normal:defender.lancer->attacker.infantry": 345
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            345
+          ]
+        }
+      }
+    }
+  ]
+}

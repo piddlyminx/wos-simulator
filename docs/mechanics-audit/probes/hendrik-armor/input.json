@@ -1,0 +1,40 @@
+{
+  "attacker": {
+    "name": "minxxx",
+    "heroes": {},
+    "joiner_heroes": {},
+    "troops": {
+      "lancer_t6": 100
+    },
+    "stats": {
+      "lanc": {
+        "attack": 294.9,
+        "defense": 293.7,
+        "lethality": 224.3,
+        "health": 230
+      }
+    }
+  },
+  "defender": {
+    "name": "WIP",
+    "heroes": {
+      "Hendrik": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "joiner_heroes": {},
+    "troops": {
+      "lancer_t6": 150
+    },
+    "stats": {
+      "lanc": {
+        "attack": 208.5,
+        "defense": 207.4,
+        "lethality": 186.8,
+        "health": 181.9
+      }
+    }
+  }
+}

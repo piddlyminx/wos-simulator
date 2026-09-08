@@ -1,0 +1,3857 @@
+{
+  "generatedAt": "2026-09-07T08:44:28.802Z",
+  "selection": {
+    "key": "hero:Lynn:OonaiCadenza",
+    "hero": "Lynn",
+    "id": "OonaiCadenza",
+    "slot": 3,
+    "coverage": {
+      "configured_fixture_count": 6,
+      "hydrated_fixture_count": 6,
+      "observation_record_count": 20,
+      "hydrated_levels": [
+        3
+      ],
+      "levels_missing_active_fixture": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/emulator_verified/logan_lynn_combo.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#1",
+        "testcases/emulator_verified/logan_lynn_combo.json#2",
+        "testcases/emulator_verified/lynn_solo.json#0",
+        "testcases/emulator_verified/molly_lynn_combo.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "Increases her marksmen attack by X% for every 3 attacks. Stackable, and lasts until the end of battle",
+      "trigger": {
+        "type": "attack",
+        "every": 3,
+        "source": "marksman"
+      },
+      "effects": {
+        "OonaiCadenza/1": {
+          "type": "active.hero.attack.up",
+          "value": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "units": {
+            "applies_to": [
+              "marksman"
+            ]
+          },
+          "same_effect_stacking": "add"
+        }
+      }
+    }
+  },
+  "protocolSha256": "1b32dac510aa7ad7e4311f6089eafda6a14c12b61eb1866ee5ae8d03e74a48d2",
+  "repeat": 1000,
+  "seed": "remaining-ordinary-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial-samples.json",
+    "sha256": "02686ca273bfe2ee701d67c3961ebb6715a8ee9bb783296abe5f968c9cada884"
+  },
+  "results": [
+    {
+      "key": "testcases/emulator_verified/logan_lynn_combo.json#0",
+      "path": "testcases/emulator_verified/logan_lynn_combo.json",
+      "fixtureSha256": "147c25a5be371f97eab222e7c252a0c2733918d25fbae8dc2851b90ed4832d27",
+      "entry": {
+        "test_id": "logan_lynn_combo",
+        "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). WIP attacks (no hero, t6 inf+lanc+mark), minxxx defends with Logan+Lynn. Run 5 battles.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 313.2,
+              "defense": 298,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 195,
+              "defense": 190.8,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 553
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 313.2,
+              "defense": 298,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 195,
+              "defense": 190.8,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 553
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LionStrike",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LionStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LionIntimidation",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LionIntimidation/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LeaderInspiration",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LeaderInspiration/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1800,
+        "defender": 600
+      },
+      "gameScores": [
+        -553
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -550.973,
+          "sd": 1.748521755177303,
+          "min": -557,
+          "max": -547,
+          "central95": [
+            -555,
+            -547
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -550.97,
+            "sigma_candidate": 1.75,
+            "n_reference": 1,
+            "mu_reference": -553,
+            "sigma_reference": 0,
+            "bias_raw": 2.03,
+            "bias_pct": 0.08,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.6022,
+            "p": 0.249938,
+            "passes": true,
+            "cdf_rms": 0.023362,
+            "cdf_p": 0.184741,
+            "support_value": -553,
+            "support_mass": 0.11155556,
+            "support_p": 0.327784,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 20,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 380,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 307,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 281
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            7,
+            7,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -548.791,
+          "sd": 1.6643584617170273,
+          "min": -554,
+          "max": -544,
+          "central95": [
+            -552,
+            -546
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -548.79,
+            "sigma_candidate": 1.66,
+            "n_reference": 1,
+            "mu_reference": -553,
+            "sigma_reference": 0,
+            "bias_raw": 4.21,
+            "bias_pct": 0.18,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 1.9084,
+            "p": 0.012349,
+            "passes": true,
+            "cdf_rms": 0.03711,
+            "cdf_p": 0.00845,
+            "support_value": -553,
+            "support_mass": 0.02033333,
+            "support_p": 0.042948,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 150,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 22,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            7,
+            7,
+            7,
+            6,
+            6,
+            7,
+            7,
+            7,
+            7,
+            7,
+            6,
+            6,
+            6,
+            7,
+            7
+          ]
+        },
+        "max_stack": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -549.03,
+          "sd": 1.7011742985343967,
+          "min": -555,
+          "max": -546,
+          "central95": [
+            -552,
+            -546
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -549.03,
+            "sigma_candidate": 1.7,
+            "n_reference": 1,
+            "mu_reference": -553,
+            "sigma_reference": 0,
+            "bias_raw": 3.97,
+            "bias_pct": 0.17,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 1.6364,
+            "p": 0.023099,
+            "passes": true,
+            "cdf_rms": 0.035717,
+            "cdf_p": 0.017049,
+            "support_value": -553,
+            "support_mass": 0.02688889,
+            "support_p": 0.051947,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 150,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 22,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 173,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 67,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 53
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            7,
+            7,
+            6,
+            6,
+            6,
+            7,
+            7,
+            7,
+            7,
+            7,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "all_own": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -552.418,
+          "sd": 1.6643455308456923,
+          "min": -557,
+          "max": -547,
+          "central95": [
+            -555,
+            -549
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -552.42,
+            "sigma_candidate": 1.66,
+            "n_reference": 1,
+            "mu_reference": -553,
+            "sigma_reference": 0,
+            "bias_raw": 0.58,
+            "bias_pct": 0.02,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.1778,
+            "p": 0.664017,
+            "passes": true,
+            "cdf_rms": 0.015823,
+            "cdf_p": 0.490675,
+            "support_value": -553,
+            "support_mass": 0.17622222,
+            "support_p": 0.776711,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 20,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 368,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.infantry": 320,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.infantry": 316,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.lancer": 286,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.lancer": 286,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 287,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.marksman": 271,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.marksman": 259,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 269
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/logan_lynn_combo.json#1",
+      "path": "testcases/emulator_verified/logan_lynn_combo.json",
+      "fixtureSha256": "147c25a5be371f97eab222e7c252a0c2733918d25fbae8dc2851b90ed4832d27",
+      "entry": {
+        "test_id": "logan_lynn_combo",
+        "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). minxxx attacks with Logan+Lynn (600 troops), WIP defends (no hero, 1800 troops). 3:1 troop disadvantage for hero side. Placed as attackers so widget defense bonuses (S4) do not fire, making the fight competitive. Run 5 battles.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 313.2,
+              "defense": 298,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 195,
+              "defense": 190.8,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 552,
+            "defender": 0
+          },
+          {
+            "attacker": 549,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 313.2,
+              "defense": 298,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 195,
+              "defense": 190.8,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 552,
+          "defender": 0
+        },
+        {
+          "attacker": 549,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Logan:LionStrike",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LionStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LionIntimidation",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LionIntimidation/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LeaderInspiration",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LeaderInspiration/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 600,
+        "defender": 1800
+      },
+      "gameScores": [
+        552,
+        549
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 550.946,
+          "sd": 1.8128348988174225,
+          "min": 547,
+          "max": 557,
+          "central95": [
+            547,
+            555
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 550.95,
+            "sigma_candidate": 1.81,
+            "n_reference": 2,
+            "mu_reference": 550.5,
+            "sigma_reference": 2.12,
+            "bias_raw": 0.45,
+            "bias_pct": 0.02,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.0647,
+            "p": 0.861557,
+            "passes": true,
+            "cdf_rms": 0.007592,
+            "cdf_p": 0.817659,
+            "support_value": 549,
+            "support_mass": 0.11677778,
+            "support_p": 0.705715,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 19,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:attacker.marksman->defender.infantry": 384,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.lancer": 296,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.marksman": 280
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 548.789,
+          "sd": 1.766805195996589,
+          "min": 543,
+          "max": 554,
+          "central95": [
+            546,
+            552
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 548.79,
+            "sigma_candidate": 1.77,
+            "n_reference": 2,
+            "mu_reference": 550.5,
+            "sigma_reference": 2.12,
+            "bias_raw": -1.71,
+            "bias_pct": -0.07,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.3928,
+            "p": 0.40478,
+            "passes": true,
+            "cdf_rms": 0.015147,
+            "cdf_p": 0.273086,
+            "support_value": 552,
+            "support_mass": 0.05777778,
+            "support_p": 0.283786,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 152,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 21,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            7,
+            6,
+            6,
+            7,
+            7,
+            7,
+            7,
+            7,
+            6,
+            6,
+            6,
+            7,
+            6,
+            6
+          ]
+        },
+        "max_stack": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 549.069,
+          "sd": 1.8438109009978976,
+          "min": 544,
+          "max": 555,
+          "central95": [
+            546,
+            552
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 549.07,
+            "sigma_candidate": 1.84,
+            "n_reference": 2,
+            "mu_reference": 550.5,
+            "sigma_reference": 2.12,
+            "bias_raw": -1.43,
+            "bias_pct": -0.06,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.2646,
+            "p": 0.543773,
+            "passes": true,
+            "cdf_rms": 0.013551,
+            "cdf_p": 0.39758,
+            "support_value": 552,
+            "support_mass": 0.075,
+            "support_p": 0.447028,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 152,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 21,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:attacker.marksman->defender.infantry": 175,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.lancer": 69,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.marksman": 51
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            7,
+            6,
+            6,
+            7,
+            7,
+            7,
+            7,
+            7,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "all_own": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 552.456,
+          "sd": 1.6723817927915887,
+          "min": 547,
+          "max": 558,
+          "central95": [
+            549,
+            555
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 552.46,
+            "sigma_candidate": 1.67,
+            "n_reference": 2,
+            "mu_reference": 550.5,
+            "sigma_reference": 2.12,
+            "bias_raw": 1.96,
+            "bias_pct": 0.08,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.5849,
+            "p": 0.260087,
+            "passes": true,
+            "cdf_rms": 0.017004,
+            "cdf_p": 0.187841,
+            "support_value": 549,
+            "support_mass": 0.035,
+            "support_p": 0.158542,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 19,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:attacker.marksman->defender.infantry": 380,
+            "OonaiCadenza/1:normal:attacker.infantry->defender.infantry": 320,
+            "OonaiCadenza/1:normal:attacker.lancer->defender.infantry": 320,
+            "OonaiCadenza/1:normal:attacker.infantry->defender.lancer": 284,
+            "OonaiCadenza/1:normal:attacker.lancer->defender.lancer": 284,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.lancer": 285,
+            "OonaiCadenza/1:normal:attacker.infantry->defender.marksman": 285,
+            "OonaiCadenza/1:normal:attacker.lancer->defender.marksman": 261,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.marksman": 277
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/logan_lynn_combo.json#2",
+      "path": "testcases/emulator_verified/logan_lynn_combo.json",
+      "fixtureSha256": "147c25a5be371f97eab222e7c252a0c2733918d25fbae8dc2851b90ed4832d27",
+      "entry": {
+        "test_id": "logan_lynn_combo",
+        "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). minxxx attacks with Logan+Lynn (600 troops), WIP defends (no hero, 1800 troops). 3:1 troop disadvantage for hero side. Placed as attackers so widget defense bonuses (S4) do not fire, making the fight competitive. Run 5 battles.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 313.2,
+              "defense": 298,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 195,
+              "defense": 190.8,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 552,
+            "defender": 0
+          },
+          {
+            "attacker": 550,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Logan": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 313.2,
+              "defense": 298,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 195,
+              "defense": 190.8,
+              "lethality": 121.2,
+              "health": 122.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 600,
+            "lancer_t6": 600,
+            "marksman_t6": 600
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 552,
+          "defender": 0
+        },
+        {
+          "attacker": 550,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Logan:LionStrike",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LionStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LionIntimidation",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LionIntimidation/1"
+          ]
+        },
+        {
+          "key": "hero:Logan:LeaderInspiration",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:logan:0",
+          "effect_ids": [
+            "LeaderInspiration/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 600,
+        "defender": 1800
+      },
+      "gameScores": [
+        552,
+        550
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 550.982,
+          "sd": 1.7913360614035936,
+          "min": 547,
+          "max": 555,
+          "central95": [
+            547,
+            555
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 550.98,
+            "sigma_candidate": 1.79,
+            "n_reference": 2,
+            "mu_reference": 551,
+            "sigma_reference": 1.41,
+            "bias_raw": -0.02,
+            "bias_pct": 0,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.0191,
+            "p": 0.957002,
+            "passes": true,
+            "cdf_rms": 0.005228,
+            "cdf_p": 1,
+            "support_value": 550,
+            "support_mass": 0.17422222,
+            "support_p": 0.845058,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 149,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 21,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:attacker.marksman->defender.infantry": 400,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.lancer": 300,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.marksman": 284
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 548.785,
+          "sd": 1.6496958800022816,
+          "min": 543,
+          "max": 554,
+          "central95": [
+            546,
+            552
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 548.78,
+            "sigma_candidate": 1.65,
+            "n_reference": 2,
+            "mu_reference": 551,
+            "sigma_reference": 1.41,
+            "bias_raw": -2.22,
+            "bias_pct": -0.09,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.781,
+            "p": 0.165592,
+            "passes": true,
+            "cdf_rms": 0.020412,
+            "cdf_p": 0.106045,
+            "support_value": 552,
+            "support_mass": 0.05255556,
+            "support_p": 0.255387,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 149,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 21,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            7,
+            6,
+            7,
+            7,
+            6,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            7,
+            6,
+            6,
+            6,
+            7
+          ]
+        },
+        "max_stack": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 549.08,
+          "sd": 1.764288160339105,
+          "min": 544,
+          "max": 555,
+          "central95": [
+            546,
+            552
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 549.08,
+            "sigma_candidate": 1.76,
+            "n_reference": 2,
+            "mu_reference": 551,
+            "sigma_reference": 1.41,
+            "bias_raw": -1.92,
+            "bias_pct": -0.08,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.6072,
+            "p": 0.247038,
+            "passes": true,
+            "cdf_rms": 0.018302,
+            "cdf_p": 0.164692,
+            "support_value": 552,
+            "support_mass": 0.06722222,
+            "support_p": 0.334633,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 149,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 21,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:attacker.marksman->defender.infantry": 179,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.lancer": 66,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.marksman": 52
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            7,
+            6,
+            6,
+            7,
+            7,
+            7,
+            6,
+            7,
+            7,
+            6,
+            6,
+            6,
+            7
+          ]
+        },
+        "all_own": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "SongOfLion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 552.432,
+          "sd": 1.6715771505288437,
+          "min": 547,
+          "max": 555,
+          "central95": [
+            549,
+            555
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 552.43,
+            "sigma_candidate": 1.67,
+            "n_reference": 2,
+            "mu_reference": 551,
+            "sigma_reference": 1.41,
+            "bias_raw": 1.43,
+            "bias_pct": 0.06,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.3785,
+            "p": 0.418329,
+            "passes": true,
+            "cdf_rms": 0.01424,
+            "cdf_p": 0.313884,
+            "support_value": 550,
+            "support_mass": 0.09733333,
+            "support_p": 0.538973,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 152,
+              "lancer": 200,
+              "marksman": 200
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 20,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:attacker.marksman->defender.infantry": 392,
+            "OonaiCadenza/1:normal:attacker.infantry->defender.infantry": 340,
+            "OonaiCadenza/1:normal:attacker.lancer->defender.infantry": 336,
+            "OonaiCadenza/1:normal:attacker.infantry->defender.lancer": 287,
+            "OonaiCadenza/1:normal:attacker.lancer->defender.lancer": 287,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.lancer": 288,
+            "OonaiCadenza/1:normal:attacker.infantry->defender.marksman": 270,
+            "OonaiCadenza/1:normal:attacker.lancer->defender.marksman": 264,
+            "OonaiCadenza/1:normal:attacker.marksman->defender.marksman": 274
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/lynn_solo.json#0",
+      "path": "testcases/emulator_verified/lynn_solo.json",
+      "fixtureSha256": "fc2bf9ff30d528800dcd504ce0aa69a5c80bdd2db2ed9b552674e7da6ec60f44",
+      "entry": {
+        "test_id": "lynn_solo",
+        "description": "Lynn solo defender test. WIP attacking no heroes 1500/1500/1500, minxxx defending with Lynn (3/3/3). Balanced around 0 outcome.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1500,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 68.3,
+              "defense": 66.1,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 70.8,
+              "defense": 67.3,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 71.3,
+              "defense": 63.6,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 197.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 182.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 381.3,
+              "defense": 373.9,
+              "lethality": 169.7,
+              "health": 155.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 167
+          },
+          {
+            "attacker": 0,
+            "defender": 200
+          },
+          {
+            "attacker": 0,
+            "defender": 191
+          },
+          {
+            "attacker": 0,
+            "defender": 199
+          },
+          {
+            "attacker": 0,
+            "defender": 149
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1500,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 68.3,
+              "defense": 66.1,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 70.8,
+              "defense": 67.3,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 71.3,
+              "defense": 63.6,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 197.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 182.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 381.3,
+              "defense": 373.9,
+              "lethality": 169.7,
+              "health": 155.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 167
+        },
+        {
+          "attacker": 0,
+          "defender": 200
+        },
+        {
+          "attacker": 0,
+          "defender": 191
+        },
+        {
+          "attacker": 0,
+          "defender": 199
+        },
+        {
+          "attacker": 0,
+          "defender": 149
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 4500,
+        "defender": 600
+      },
+      "gameScores": [
+        -167,
+        -200,
+        -191,
+        -199,
+        -149
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -185.632,
+          "sd": 20.046157348091022,
+          "min": -241,
+          "max": -131,
+          "central95": [
+            -222,
+            -142
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -185.63,
+            "sigma_candidate": 20.05,
+            "n_reference": 5,
+            "mu_reference": -181.2,
+            "sigma_reference": 22.39,
+            "bias_raw": -4.43,
+            "bias_pct": -0.09,
+            "sem": 0.63,
+            "stat_type": "cdf_support",
+            "stat": 0.536,
+            "p": 0.291085,
+            "passes": true,
+            "cdf_rms": 0.011984,
+            "cdf_p": 0.898155,
+            "support_value": -149,
+            "support_mass": 0.00244444,
+            "support_p": 0.168492,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 192
+            }
+          },
+          "firstRound": 46,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 1980,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 1694,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 1788
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            15,
+            14,
+            15,
+            15,
+            15,
+            15,
+            15,
+            14,
+            16,
+            15
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 42.59,
+          "sd": 245.5229957487516,
+          "min": -150,
+          "max": 1143,
+          "central95": [
+            -95,
+            811
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 42.59,
+            "sigma_candidate": 245.52,
+            "n_reference": 5,
+            "mu_reference": -181.2,
+            "sigma_reference": 22.39,
+            "bias_raw": 223.79,
+            "bias_pct": 4.39,
+            "sem": 7.76,
+            "stat_type": "cdf_support",
+            "stat": 1.8681,
+            "p": 0.013549,
+            "passes": true,
+            "cdf_rms": 0.152915,
+            "cdf_p": 0.013149,
+            "support_value": -167,
+            "support_mass": 0,
+            "support_p": 0.279536,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 61
+            }
+          },
+          "firstRound": 61,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20,
+            21,
+            21,
+            22,
+            22,
+            22,
+            20,
+            20,
+            20,
+            19,
+            22,
+            21,
+            22,
+            19,
+            21,
+            21
+          ]
+        },
+        "max_stack": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -59.973,
+          "sd": 98.48548960462477,
+          "min": -176,
+          "max": 733,
+          "central95": [
+            -137,
+            245
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -59.97,
+            "sigma_candidate": 98.49,
+            "n_reference": 5,
+            "mu_reference": -181.2,
+            "sigma_reference": 22.39,
+            "bias_raw": 121.23,
+            "bias_pct": 2.38,
+            "sem": 3.11,
+            "stat_type": "cdf_support",
+            "stat": 2.7696,
+            "p": 0.0017,
+            "passes": false,
+            "cdf_rms": 0.126495,
+            "cdf_p": 0.00245,
+            "support_value": -167,
+            "support_mass": 0,
+            "support_p": 0.128044,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 98
+            }
+          },
+          "firstRound": 56,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 448,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 219,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 251
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            18,
+            19,
+            20,
+            20,
+            20,
+            20,
+            18,
+            18,
+            20,
+            18,
+            20,
+            20,
+            20,
+            18,
+            21,
+            21
+          ]
+        },
+        "all_own": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -213.4,
+          "sd": 18.67679905184027,
+          "min": -281,
+          "max": -158,
+          "central95": [
+            -246,
+            -172
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -213.4,
+            "sigma_candidate": 18.68,
+            "n_reference": 5,
+            "mu_reference": -181.2,
+            "sigma_reference": 22.39,
+            "bias_raw": -32.2,
+            "bias_pct": -0.63,
+            "sem": 0.59,
+            "stat_type": "cdf_support",
+            "stat": 3.2219,
+            "p": 0.0006,
+            "passes": false,
+            "cdf_rms": 0.052305,
+            "cdf_p": 0.00045,
+            "support_value": -149,
+            "support_mass": 0,
+            "support_p": 0.017699,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 23,
+              "marksman": 200
+            }
+          },
+          "firstRound": 43,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 1872,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.infantry": 1791,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.infantry": 1791,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.lancer": 213,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.lancer": 1500,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 1488,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.marksman": 1407,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 1570
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            14,
+            14,
+            14,
+            15,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            14,
+            15,
+            14
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/molly_lynn_combo.json#0",
+      "path": "testcases/emulator_verified/molly_lynn_combo.json",
+      "fixtureSha256": "39f57ea17d26d9cebc5e14515340c84137a24913864196a317056a1d65512c89",
+      "entry": {
+        "test_id": "molly_lynn_combo",
+        "description": "Molly+Lynn 2-hero combo — Lanc+Mark class heroes. Lynn S1 has 40% chance. RNG test, run 5 battles. WIP attacks (no hero, t6 troops), minxxx defends with Molly+Lynn.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 150,
+            "marksman_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 221,
+              "defense": 205.8,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 263.2,
+              "defense": 259,
+              "lethality": 126.2,
+              "health": 127.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 399
+          },
+          {
+            "attacker": 0,
+            "defender": 404
+          },
+          {
+            "attacker": 0,
+            "defender": 402
+          },
+          {
+            "attacker": 0,
+            "defender": 401
+          },
+          {
+            "attacker": 0,
+            "defender": 408
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 150,
+            "marksman_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 221,
+              "defense": 205.8,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 263.2,
+              "defense": 259,
+              "lethality": 126.2,
+              "health": 127.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 399
+        },
+        {
+          "attacker": 0,
+          "defender": 404
+        },
+        {
+          "attacker": 0,
+          "defender": 402
+        },
+        {
+          "attacker": 0,
+          "defender": 401
+        },
+        {
+          "attacker": 0,
+          "defender": 408
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:YouthfulRage",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "YouthfulRage/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 450
+      },
+      "gameScores": [
+        -399,
+        -404,
+        -402,
+        -401,
+        -408
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -402.802,
+          "sd": 2.2891124996461083,
+          "min": -411,
+          "max": -396,
+          "central95": [
+            -408,
+            -399
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -402.8,
+            "sigma_candidate": 2.29,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.4073,
+            "p": 0.39143,
+            "passes": true,
+            "cdf_rms": 0.008276,
+            "cdf_p": 0.775211,
+            "support_value": -408,
+            "support_mass": 0.02166667,
+            "support_p": 0.241788,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 101,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 17,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 234,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.infantry": 97,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 174,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 157,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.marksman": 71,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.lancer": 86
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            5,
+            5,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -400.914,
+          "sd": 2.346083568014606,
+          "min": -409,
+          "max": -394,
+          "central95": [
+            -406,
+            -396
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -400.91,
+            "sigma_candidate": 2.35,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": 1.89,
+            "bias_pct": 0.11,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.921,
+            "p": 0.119944,
+            "passes": true,
+            "cdf_rms": 0.014611,
+            "cdf_p": 0.213639,
+            "support_value": -408,
+            "support_mass": 0.00466667,
+            "support_p": 0.064847,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 101,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 17,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            6,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        "max_stack": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -401.731,
+          "sd": 2.303898206724199,
+          "min": -409,
+          "max": -396,
+          "central95": [
+            -407,
+            -397
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -401.73,
+            "sigma_candidate": 2.3,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": 1.07,
+            "bias_pct": 0.06,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.6839,
+            "p": 0.20704,
+            "passes": true,
+            "cdf_rms": 0.009859,
+            "cdf_p": 0.60647,
+            "support_value": -408,
+            "support_mass": 0.01011111,
+            "support_p": 0.116494,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 101,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 17,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 129,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.infantry": 55,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 52,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 38,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.marksman": 15,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.lancer": 21
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        "all_own": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -403.535,
+          "sd": 2.3004493185173733,
+          "min": -411,
+          "max": -396,
+          "central95": [
+            -408,
+            -400
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -403.54,
+            "sigma_candidate": 2.3,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": -0.74,
+            "bias_pct": -0.04,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.263,
+            "p": 0.545773,
+            "passes": true,
+            "cdf_rms": 0.011272,
+            "cdf_p": 0.461327,
+            "support_value": -399,
+            "support_mass": 0.03066667,
+            "support_p": 0.348483,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 104,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 15,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "OonaiCadenza/1:normal:defender.marksman->attacker.infantry": 222,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.infantry": 195,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.infantry": 192,
+            "OonaiCadenza/1:skill:defender.infantry->attacker.infantry": 88,
+            "OonaiCadenza/1:skill:defender.lancer->attacker.infantry": 86,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.infantry": 97,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.lancer": 178,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.lancer": 166,
+            "OonaiCadenza/1:skill:defender.lancer->attacker.lancer": 57,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.lancer": 170,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.lancer": 80,
+            "OonaiCadenza/1:skill:defender.infantry->attacker.lancer": 71,
+            "OonaiCadenza/1:normal:defender.infantry->attacker.marksman": 155,
+            "OonaiCadenza/1:normal:defender.lancer->attacker.marksman": 151,
+            "OonaiCadenza/1:skill:defender.lancer->attacker.marksman": 64,
+            "OonaiCadenza/1:normal:defender.marksman->attacker.marksman": 143,
+            "OonaiCadenza/1:skill:defender.infantry->attacker.marksman": 78,
+            "OonaiCadenza/1:skill:defender.marksman->attacker.marksman": 73
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            4,
+            4,
+            4,
+            5,
+            5,
+            5,
+            4,
+            5,
+            5,
+            5,
+            4,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+      "path": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json",
+      "fixtureSha256": "5cb91e84cc74ed87b29f2e20475a2752af27c98fc01ff9bec3bc90542abf4d4f",
+      "entry": {
+        "test_id": "wos444_gordon_s22_all_enemy_damage_dealt_hero_nc",
+        "description": "WOS-444 Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends Gordon+Sergey+Lynn with 2560 T6 lancer. Candidate signed remaining scores: damage.down +558, attack.down +593, lethality.down -143.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Sergey": {
+              "skill_1": 4,
+              "skill_2": 4
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 2560
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.8,
+              "defense": 378.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 460.2,
+              "defense": 457.2,
+              "lethality": 275.7,
+              "health": 266.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 5274,
+            "defender": 0
+          },
+          {
+            "attacker": 4736,
+            "defender": 0
+          },
+          {
+            "attacker": 5021,
+            "defender": 0
+          },
+          {
+            "attacker": 5290,
+            "defender": 0
+          },
+          {
+            "attacker": 5006,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 2700,
+            "lancer_t6": 2700,
+            "marksman_t6": 2700
+          },
+          "stats": {
+            "inf": {
+              "attack": 221.4,
+              "defense": 221.7,
+              "lethality": 147.3,
+              "health": 155.7
+            },
+            "lanc": {
+              "attack": 194.7,
+              "defense": 193,
+              "lethality": 157.3,
+              "health": 148.4
+            },
+            "mark": {
+              "attack": 194.7,
+              "defense": 192,
+              "lethality": 148.6,
+              "health": 149.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxx",
+          "heroes": {
+            "Sergey": {
+              "skill_1": 4,
+              "skill_2": 4
+            },
+            "Gordon": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 2560
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.8,
+              "defense": 378.5,
+              "lethality": 215.3,
+              "health": 216.5
+            },
+            "lanc": {
+              "attack": 485.5,
+              "defense": 480.8,
+              "lethality": 199.7,
+              "health": 201
+            },
+            "mark": {
+              "attack": 460.2,
+              "defense": 457.2,
+              "lethality": 275.7,
+              "health": 266.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 5274,
+          "defender": 0
+        },
+        {
+          "attacker": 4736,
+          "defender": 0
+        },
+        {
+          "attacker": 5021,
+          "defender": 0
+        },
+        {
+          "attacker": 5290,
+          "defender": 0
+        },
+        {
+          "attacker": 5006,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:DefendersEdge",
+          "side": "defender",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "DefendersEdge/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:Weaken",
+          "side": "defender",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "Weaken/1"
+          ]
+        },
+        {
+          "key": "hero:Gordon:VenomInfusion",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "VenomInfusion/1",
+            "VenomInfusion/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ChemicalTerror",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ChemicalTerror/1",
+            "ChemicalTerror/2"
+          ]
+        },
+        {
+          "key": "hero:Gordon:ToxicRelease",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:gordon:0",
+          "effect_ids": [
+            "ToxicRelease/1",
+            "ToxicRelease/2"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 8100,
+        "defender": 2560
+      },
+      "gameScores": [
+        5274,
+        4736,
+        5021,
+        5290,
+        5006
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5040.138,
+          "sd": 219.08047656331945,
+          "min": 4231,
+          "max": 5509,
+          "central95": [
+            4596,
+            5407
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5040.14,
+            "sigma_candidate": 219.08,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": -25.26,
+            "bias_pct": -0.24,
+            "sem": 6.93,
+            "stat_type": "cdf_support",
+            "stat": 0.4237,
+            "p": 0.376931,
+            "passes": true,
+            "cdf_rms": 0.027847,
+            "cdf_p": 0.884206,
+            "support_value": 5274,
+            "support_mass": 0.00022222,
+            "support_p": 0.224739,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 103,
+              "lancer": 2700,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 47,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5040.138,
+          "sd": 219.08047656331945,
+          "min": 4231,
+          "max": 5509,
+          "central95": [
+            4596,
+            5407
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5040.14,
+            "sigma_candidate": 219.08,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": -25.26,
+            "bias_pct": -0.24,
+            "sem": 6.93,
+            "stat_type": "cdf_support",
+            "stat": 0.4237,
+            "p": 0.376931,
+            "passes": true,
+            "cdf_rms": 0.027847,
+            "cdf_p": 0.884206,
+            "support_value": 5274,
+            "support_mass": 0.00022222,
+            "support_p": 0.224739,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 103,
+              "lancer": 2700,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 47,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "max_stack": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5040.138,
+          "sd": 219.08047656331945,
+          "min": 4231,
+          "max": 5509,
+          "central95": [
+            4596,
+            5407
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5040.14,
+            "sigma_candidate": 219.08,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": -25.26,
+            "bias_pct": -0.24,
+            "sem": 6.93,
+            "stat_type": "cdf_support",
+            "stat": 0.4237,
+            "p": 0.376931,
+            "passes": true,
+            "cdf_rms": 0.027847,
+            "cdf_p": 0.884206,
+            "support_value": 5274,
+            "support_mass": 0.00022222,
+            "support_p": 0.224739,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 103,
+              "lancer": 2700,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 47,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "all_own": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": 5040.138,
+          "sd": 219.08047656331945,
+          "min": 4231,
+          "max": 5509,
+          "central95": [
+            4596,
+            5407
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 5040.14,
+            "sigma_candidate": 219.08,
+            "n_reference": 5,
+            "mu_reference": 5065.4,
+            "sigma_reference": 228.01,
+            "bias_raw": -25.26,
+            "bias_pct": -0.24,
+            "sem": 6.93,
+            "stat_type": "cdf_support",
+            "stat": 0.4237,
+            "p": 0.376931,
+            "passes": true,
+            "cdf_rms": 0.027847,
+            "cdf_p": 0.884206,
+            "support_value": 5274,
+            "support_mass": 0.00022222,
+            "support_p": 0.224739,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 103,
+              "lancer": 2700,
+              "marksman": 2700
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 47,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  ]
+}

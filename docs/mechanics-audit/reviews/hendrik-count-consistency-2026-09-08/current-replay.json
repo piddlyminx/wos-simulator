@@ -1,0 +1,205 @@
+{
+  "generatedAt": "2026-09-08T02:57:02.134Z",
+  "sourceHash": "1dc7f033bbbc5de999106d62fb5f8cf13c0e5d40b42c3fd0911809e45cd240d5",
+  "note": "Current file already lacked first2 when inspected. This review did not edit production. Three relevant current results match the frozen ordinary-first3 engine.",
+  "actual": [
+    {
+      "id": "lancer",
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 17,
+          "marksman": 0
+        }
+      },
+      "rounds": 54,
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ]
+    },
+    {
+      "id": "marksman471",
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 314,
+          "lancer": 84,
+          "marksman": 78
+        }
+      },
+      "rounds": 20,
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 5,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 6,
+          "skillActivations": 6,
+          "effectActivations": 6,
+          "skillKills": 45.257789225339934,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "marksman",
+          "skillId": "RangedStrike",
+          "skillName": "RangedStrike",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ]
+    },
+    {
+      "id": "marksman68",
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 19,
+          "lancer": 34,
+          "marksman": 25
+        }
+      },
+      "rounds": 32,
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 8,
+          "skillActivations": 8,
+          "effectActivations": 8,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 10,
+          "skillActivations": 10,
+          "effectActivations": 10,
+          "skillKills": 71.1390787242019,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "marksman",
+          "skillId": "RangedStrike",
+          "skillName": "RangedStrike",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ]
+    }
+  ]
+}

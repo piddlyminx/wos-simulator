@@ -1,0 +1,28 @@
+{
+  "side": "defender",
+  "source": "docs/mechanics-audit/probes/gwen-small-timing-550/defender-troops.png",
+  "troops": {
+    "infantry": {
+      "kills": 91,
+      "losses": 0,
+      "injured_displayed": -276,
+      "lightly_injured": 510,
+      "survivors": 24
+    },
+    "lancer": {
+      "kills": 58,
+      "losses": 0,
+      "injured_displayed": -16,
+      "lightly_injured": 29,
+      "survivors": 0
+    },
+    "marksman": {
+      "kills": 44,
+      "losses": 0,
+      "injured_displayed": -16,
+      "lightly_injured": 29,
+      "survivors": 0
+    }
+  },
+  "transcription": "All three rows visually checked; preserve displayed injury signs. Same battle as overview."
+}

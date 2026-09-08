@@ -1,0 +1,446 @@
+{
+  "generatedAt": "2026-09-07T04:08:11.688Z",
+  "phase": "frozen_candidate_replay",
+  "configSnapshotSha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "configSnapshot": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/gwen-blastmaster/config-snapshot.json",
+  "inputPath": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/gwen-blastmaster/captured-input.json",
+  "input": {
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "marksman_t6": 800
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230
+        },
+        "mark": {
+          "attack": 443.6,
+          "defense": 444.1,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 600,
+        "lancer_t6": 600,
+        "marksman_t6": 600
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177
+        }
+      },
+      "joiner_heroes": {}
+    }
+  },
+  "candidateDefinitions": {
+    "all_living": {
+      "description": "Frozen current configuration: Blastmaster emits one skill job per enemy living troop line.",
+      "changes": []
+    },
+    "current_target": {
+      "description": "Only Blastmaster fanout changes; the full Gwen kit and all other behavior are identical.",
+      "changes": [
+        {
+          "path": "heroDefinitions.Gwen.skills.Blastmaster.effects.Blastmaster/1.trigger_damage_jobs.0.target",
+          "from": "enemy.living",
+          "to": "use.target"
+        }
+      ]
+    }
+  },
+  "provenance": {
+    "inputStats": "Exact displayed report stats and full kit from testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json, substituted through the inputPath BattleInput after capture. Stats remain report-resolved; no hero-generation bonus is added. The +/-0.05 probe models report display precision, not account drift.",
+    "heroKit": "Parent confirmed minxxx Gwen 3/1/1 by fresh capture on 2026-09-07: skill/tmp/debug/hero_skills_minxxx_20260907T035615Z_00.",
+    "outcomeExposure": "The new game outcome has been observed before this replay. Both hypothesis definitions and the config snapshot were frozen before capture; this replay changes only the supplied battle input. The original prospective prediction.json remains unchanged."
+  },
+  "uncertainty": {
+    "allowedReportStatOffsets": [
+      -0.05,
+      0.05
+    ],
+    "uncertainFields": [
+      [
+        "attacker",
+        "mark",
+        "attack"
+      ],
+      [
+        "attacker",
+        "mark",
+        "defense"
+      ],
+      [
+        "attacker",
+        "mark",
+        "lethality"
+      ],
+      [
+        "attacker",
+        "mark",
+        "health"
+      ],
+      [
+        "defender",
+        "inf",
+        "attack"
+      ],
+      [
+        "defender",
+        "inf",
+        "defense"
+      ],
+      [
+        "defender",
+        "inf",
+        "lethality"
+      ],
+      [
+        "defender",
+        "inf",
+        "health"
+      ],
+      [
+        "defender",
+        "lanc",
+        "attack"
+      ],
+      [
+        "defender",
+        "lanc",
+        "defense"
+      ],
+      [
+        "defender",
+        "lanc",
+        "lethality"
+      ],
+      [
+        "defender",
+        "lanc",
+        "health"
+      ],
+      [
+        "defender",
+        "mark",
+        "attack"
+      ],
+      [
+        "defender",
+        "mark",
+        "defense"
+      ],
+      [
+        "defender",
+        "mark",
+        "lethality"
+      ],
+      [
+        "defender",
+        "mark",
+        "health"
+      ]
+    ],
+    "randomSeed": 20260907,
+    "note": "256 independent shared stat vectors, 32 one-coordinate endpoints, and 2 common favorable corners. This is a sensitivity screen, not an exhaustive envelope or bound on account drift."
+  },
+  "candidates": {
+    "all_living": {
+      "signedRemaining": -1388,
+      "winner": "defender",
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 237,
+          "lancer": 579,
+          "marksman": 572
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "heroReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.304352126539547,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 5,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 56.3238220662236,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmasterJobs": [
+        {
+          "round": 5,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.8941340169798755
+        },
+        {
+          "round": 5,
+          "kind": "skill",
+          "target": "lancer",
+          "rawKills": 6.079199286620386
+        },
+        {
+          "round": 5,
+          "kind": "skill",
+          "target": "marksman",
+          "rawKills": 8.130537982239346
+        },
+        {
+          "round": 9,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.908997707529787
+        },
+        {
+          "round": 9,
+          "kind": "skill",
+          "target": "lancer",
+          "rawKills": 5.327742708135367
+        },
+        {
+          "round": 9,
+          "kind": "skill",
+          "target": "marksman",
+          "rawKills": 7.125513148323649
+        },
+        {
+          "round": 13,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.5973863543196951
+        },
+        {
+          "round": 13,
+          "kind": "skill",
+          "target": "lancer",
+          "rawKills": 4.45807947685495
+        },
+        {
+          "round": 13,
+          "kind": "skill",
+          "target": "marksman",
+          "rawKills": 5.962394520308854
+        },
+        {
+          "round": 17,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.0549274177901808
+        },
+        {
+          "round": 17,
+          "kind": "skill",
+          "target": "lancer",
+          "rawKills": 3.3857762693538542
+        },
+        {
+          "round": 17,
+          "kind": "skill",
+          "target": "marksman",
+          "rawKills": 4.5282579595527475
+        },
+        {
+          "round": 21,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 0.6474255299704825
+        },
+        {
+          "round": 21,
+          "kind": "skill",
+          "target": "lancer",
+          "rawKills": 1.8068731213010594
+        },
+        {
+          "round": 21,
+          "kind": "skill",
+          "target": "marksman",
+          "rawKills": 2.4165765669433616
+        }
+      ],
+      "sampledStatPrecisionRange": {
+        "min": -1388,
+        "max": -1388,
+        "sampleCount": 290
+      },
+      "everyDefenderLineSurvives": true
+    },
+    "current_target": {
+      "signedRemaining": -1439,
+      "winner": "defender",
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 239,
+          "lancer": 600,
+          "marksman": 600
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "heroReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.28014930298925,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 5,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 7.052623860306249,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmasterJobs": [
+        {
+          "round": 5,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.8941340169798755
+        },
+        {
+          "round": 9,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.9059723545859997
+        },
+        {
+          "round": 13,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.594361001375908
+        },
+        {
+          "round": 17,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 1.0470351927194315
+        },
+        {
+          "round": 21,
+          "kind": "skill",
+          "target": "infantry",
+          "rawKills": 0.6111212946450347
+        }
+      ],
+      "sampledStatPrecisionRange": {
+        "min": -1439,
+        "max": -1439,
+        "sampleCount": 290
+      },
+      "everyDefenderLineSurvives": true
+    }
+  }
+}

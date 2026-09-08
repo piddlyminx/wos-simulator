@@ -1,0 +1,48 @@
+✔ exported Gatot draw preserves both survivors, observed rounds and input cap (19.022992ms)
+✔ exported Gatot victory does not replace the input cap with observed rounds (5.306026ms)
+✔ generated Gatot testcase files stay in sync with the evidence inventory (11.465306ms)
+✔ Gatot evidence inventory contains every distinct game observation (2.960389ms)
+✔ Section 25 preserves the observed defender stat change (14.695851ms)
+✔ Section 31 preserves the displayed defender infantry stats (8.923486ms)
+✔ Section 9 preserves its two observed stat profiles (6.031311ms)
+✔ Gatot evidence runner executes the real deterministic battle path (48.453868ms)
+✔ Gatot evidence Markdown uses explicit simulator-minus-game differences (1.642596ms)
+✔ deterministic survivor error is normalized by both armies' initial troops (0.399749ms)
+✔ deterministic round tolerance allows the greater of three rounds or two percent (0.541997ms)
+✔ Gatot evidence Markdown retains non-runnable and missing-round observations (5.371663ms)
+✔ Gatot evidence Markdown assesses stochastic observations against a conditional 99% interval (1.412753ms)
+✔ discoverTestcaseFiles follows simulator/testcases symlink and skips disabled or stale files by default (6.933506ms)
+✔ discoverTestcaseFiles includes disabled and stale testcase files when requested (2.450578ms)
+✔ runTestcases returns compact summary entries and full detail entries separately (268.768165ms)
+✔ testcase artifacts retain exact troop tiers and hero skill levels (0.429234ms)
+✔ runTestcases defaults stochastic cases to 500 samples (362.245282ms)
+✔ assignDetailArtifactPaths assigns deterministic compact detail paths (270.15259ms)
+✔ buildSummaryForOutput excludes full detail artifacts from compact output (257.861191ms)
+✔ assignDetailArtifactPaths exposes failed testcase diagnostics through errors (8.689252ms)
+✔ runTestcases logs structured damage aggregation errors and continues (21.547725ms)
+✔ runTestcases keeps executed testcase without warning when legacy baseline is unavailable (29.448884ms)
+✔ calibration lookup supports simulator symlink and source testcase path variants (232.140156ms)
+✔ duplicate no-hero testcase ids keep game rows aligned by case index (267.756492ms)
+✔ no-hero simple testcase loads, runs, compares to game result, and exposes aligned core fields (320.991861ms)
+✔ runTestcases retains the adjusted comparison samples when requested (320.297932ms)
+✔ deterministic testcase tolerance increases by 0.1 percent every ten rounds and caps at 0.7 percent (1.500632ms)
+✔ round-scaled deterministic tolerance accepts a close fixture case (293.069597ms)
+✔ runTestcases default round cap lets a long fixture battle reach its end (336.782487ms)
+✔ runTestcases reports a game-focused parity summary without legacy baseline comparison (318.088875ms)
+✔ adaptTestcaseEntry promotes engagement_type to a top-level BattleInput key (0.479191ms)
+✔ adaptTestcaseEntry reads engagement_type nested under a legacy mechanics object (0.156523ms)
+✔ compareOutcomeDistribution matches deterministic zero-bias shape (0.222743ms)
+✔ compareOutcomeDistribution calibrates one observation against same-size simulator draws (49.58079ms)
+✔ stochastic parity requires odds below one in 250 to fail by default (127.118942ms)
+✔ compareOutcomeDistribution flags a gap wider than the two-point support tolerance (51.987841ms)
+✔ compareOutcomeDistribution accepts radius-two neighbours but retains a wide gap (44.500614ms)
+✔ compareOutcomeDistribution reserves failure for exceedingly unlikely uniform groups (604.486545ms)
+✔ calibration lookup exposes full baseline snapshot metrics (284.569298ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 40
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4797.868898

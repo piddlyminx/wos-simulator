@@ -1,0 +1,34 @@
+{
+  "source_image": "defender-troops.png",
+  "source_mail_id": "2734692464124635",
+  "rows": [
+    {
+      "unit": "infantry",
+      "troops": 150,
+      "kills": 15,
+      "losses": 0,
+      "injured": 47,
+      "lightly_injured": 87,
+      "survivors": 16
+    },
+    {
+      "unit": "lancer",
+      "troops": 60,
+      "kills": 33,
+      "losses": 0,
+      "injured": 11,
+      "lightly_injured": 18,
+      "survivors": 31
+    },
+    {
+      "unit": "marksman",
+      "troops": 60,
+      "kills": 40,
+      "losses": 0,
+      "injured": 14,
+      "lightly_injured": 25,
+      "survivors": 21
+    }
+  ],
+  "transcription": "Root visually checked all displayed rows. Injured UI values are negative; stored here as positive casualty counts."
+}

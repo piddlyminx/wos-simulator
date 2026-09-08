@@ -1,0 +1,32 @@
+{
+  "test_id": "reina_shadowblade_350l_vs_150i_50l_50m",
+  "description": "Prospective chance probe, first of five independent repetitions with unchanged setup: WIP full Reina1/1/1 and350 T6 Lancers attacks minxxx nohero150 T6 Infantry+50 T6 Lancers+50 T6 Marksmen. Primary S3 current-target vs all-living fanout comparison retains the defender Infantry screen. Exact fresh Reina report stats are unknown: estimated-input uses observed WIP nohero Lancer fields solely as conditional inputs. Preserve actual report stats, all three defender survivor counts and Battle Details. Replay frozen models before interpreting. See package README for batch and identifiability limits.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Reina": {
+        "skill_1": 1,
+        "skill_2": 1,
+        "skill_3": 1
+      }
+    },
+    "troops": {
+      "lancer_t6": 350
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 150,
+      "lancer_t6": 50,
+      "marksman_t6": 50
+    }
+  }
+}

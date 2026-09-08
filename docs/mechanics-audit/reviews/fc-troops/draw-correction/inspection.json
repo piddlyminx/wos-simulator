@@ -1,0 +1,517 @@
+{
+  "generatedAt": "2026-09-07T06:09:22.318Z",
+  "acceptedEntries": 296,
+  "outcomeRows": 613,
+  "bothSurvivingEntries": 15,
+  "bothSurvivingRows": 15,
+  "explicitDrawRows": 0,
+  "bothSurviving": [
+    {
+      "key": "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+      "outcomeIndex": 1,
+      "game": {
+        "attacker": 581,
+        "defender": 9
+      },
+      "inputMaxRounds": null,
+      "sourceGame": null,
+      "fixtureSha256": "1550fde3c198ad670402b3bcd5d47b808e909df17fe423b3c2060c70804b2c10"
+    },
+    {
+      "key": "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 4897,
+        "defender": 996
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4897,
+          "defender": 996
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "a7659158f90f07f8cee5db8bf01c9e63b0236208e02a9db3c3683d2634de03b2"
+    },
+    {
+      "key": "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 4947,
+        "defender": 855
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4947,
+          "defender": 855
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "cc3ee2cf9da4e210818289f0a0488f985a2e4311c8d5f3f84026f1d0934b1d28"
+    },
+    {
+      "key": "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 4997,
+        "defender": 513
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4997,
+          "defender": 513
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "57cf1360126400fc4af7d4256de2d627a24d22f7b4a6b3e1316373392f874d45"
+    },
+    {
+      "key": "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 5047,
+        "defender": 74
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5047,
+          "defender": 74
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "08261a26478d72b44126804af45399abec4d2d30b4239707c73a9d603ec4345e"
+    },
+    {
+      "key": "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 4947,
+        "defender": 904
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4947,
+          "defender": 904
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "96ed32640018c710941f843d491aae76068fce4e0372dc8badbdb42702d67110"
+    },
+    {
+      "key": "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 4997,
+        "defender": 670
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4997,
+          "defender": 670
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "a0b875ce6e2388ccd5ae81b5c42d7dad596ea96a629d50e27a60a8b26efe05be"
+    },
+    {
+      "key": "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 5047,
+        "defender": 406
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5047,
+          "defender": 406
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "5fa41b723693d8116cf2aa51f077692fcdcda34d807368d570e02c321d9f7844"
+    },
+    {
+      "key": "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 5097,
+        "defender": 80
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5097,
+          "defender": 80
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "3e72fea6a457f48f7f640992ffba3f40710f6b2ae9365e2eb409a40131a80c52"
+    },
+    {
+      "key": "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 200,
+        "defender": 168
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 200,
+          "defender": 168
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "2e1e861ec2e93882abdea5cd05fc26a5959116a82f5c575ab6b9c54f2bc27a19"
+    },
+    {
+      "key": "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 173,
+        "defender": 200
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 173,
+          "defender": 200
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "5b6b41ae2504406f31d70e1336e567f1f00b52859d5d676aa1c59cf1f4def2df"
+    },
+    {
+      "key": "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 975,
+        "defender": 498
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 975,
+          "defender": 498
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "9b8d1b75aac41ed987a46c8bf32931d4734aafec25670e7daa73c3fe1b47ecda"
+    },
+    {
+      "key": "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 9540,
+        "defender": 1
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 9540,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "92de703edb0b49ab06766edb8c051e6089c50f3efefddb4c7d6e5844e5f96fe3"
+    },
+    {
+      "key": "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 9720,
+        "defender": 1
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 9720,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "229b39a3e5d4bfafcb5a0fd30a8d5e225e6a8267e324253bc6eff3676cca784b"
+    },
+    {
+      "key": "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+      "outcomeIndex": 0,
+      "game": {
+        "attacker": 11268,
+        "defender": 1
+      },
+      "inputMaxRounds": null,
+      "sourceGame": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 11268,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "fixtureSha256": "dfe66f034b32572731a50b2a604be9bea63e098246bca53479003c47eff5d640"
+    }
+  ],
+  "explicitDraws": [],
+  "sourceDraws": [
+    {
+      "id": "s1-4900-vs-1000",
+      "section": "1",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4897,
+          "defender": 996
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s1-4950-vs-1000",
+      "section": "1",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4947,
+          "defender": 855
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s1-5000-vs-1000",
+      "section": "1",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4997,
+          "defender": 513
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s1-5050-vs-1000",
+      "section": "1",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5047,
+          "defender": 74
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s2-health-1.1-4950-vs-1000",
+      "section": "2",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4947,
+          "defender": 904
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s2-health-1.1-5000-vs-1000",
+      "section": "2",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 4997,
+          "defender": 670
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s2-health-1.1-5050-vs-1000",
+      "section": "2",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5047,
+          "defender": 406
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s2-health-1.1-5100-vs-1000",
+      "section": "2",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5097,
+          "defender": 80
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s6-historical-t11-fc10-vs-10000-t6-marksmen",
+      "section": "6",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 5895,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "runnableInput": false
+    },
+    {
+      "id": "s7-10000-t6-marksmen-vs-one-t1-fc10-infantry",
+      "section": "7",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 9540,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s8-11548-t9-marksmen-vs-one-t1-fc10-infantry",
+      "section": "8",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 11268,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s8-10000-t9-marksmen-vs-one-t1-fc10-infantry",
+      "section": "8",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 9720,
+          "defender": 1
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf",
+      "section": "42",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 200,
+          "defender": 168
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s43-current-reciprocal-shield-cap-450-inf-vs-200-inf",
+      "section": "43",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 173,
+          "defender": 200
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    },
+    {
+      "id": "s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf",
+      "section": "44",
+      "game": {
+        "winner": "draw",
+        "survivors": {
+          "attacker": 975,
+          "defender": 498
+        },
+        "rounds": 1500
+      },
+      "inputMaxRounds": 1500,
+      "runnableInput": true
+    }
+  ],
+  "extraZeroReplays": [
+    {
+      "key": "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+      "variant": "current",
+      "index": 447,
+      "seed": "fc-troop-evidence-review-2026-09-07:s9-2200-t9-lancers-vs-146-t1-fc10-lancers#447",
+      "winner": "draw",
+      "rounds": 107,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "legacyScore": 0,
+      "correctedScore": 0
+    }
+  ],
+  "sourceHashes": {
+    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "simulator/src/tooling/exportGatotTestcases.ts": "9532d34f2821aa3fe0c7bb91a0faf7af3f1012f6320751d523dadf52938895ef",
+    "docs/mechanics-audit/reviews/fc-troops/worker.mts": "34b8d3a656a48c7bf56acdb81738b00dcc156448839742851efaa8ece0f5e84e",
+    "docs/mechanics-audit/reviews/fc-troops/results.json": "d950181a498d3e496d05348e024ae7ab9bfe88149348a885a0953d9844eddb2e"
+  }
+}

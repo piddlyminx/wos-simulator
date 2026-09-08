@@ -1,0 +1,62 @@
+{
+  "reviewed_on": "2026-09-07",
+  "instance": "minxxx",
+  "hero": "Greg",
+  "current_full_kit": {
+    "skill_1": 1,
+    "skill_2": 1,
+    "skill_3": 0
+  },
+  "review_method": "All three original screenshots visually inspected. Upgrade buttons were never tapped.",
+  "skills": [
+    {
+      "slot": "skill_1",
+      "current_level": 1,
+      "locked": false,
+      "title": "Sword of Justice Lv.1",
+      "description": "Greg transforms our troops into a relentless sword of justice, granting a 20% chance of increasing damage dealt by 8% for all troops for 3 turns.",
+      "upgrade_preview_percent": [
+        8,
+        16,
+        24,
+        32,
+        40
+      ],
+      "image": "skill_1.png",
+      "sha256": "bae423e9ff1925929d7783a8973c344266df1327af237debf684c188725e860c"
+    },
+    {
+      "slot": "skill_2",
+      "current_level": 1,
+      "locked": false,
+      "title": "Deterrence of Law Lv. 1",
+      "description": "Greg uses the authority of the law to intimidate enemies, granting all troops attack a 20% chance of reducing enemy damage dealt by 10% for 2 turns.",
+      "upgrade_preview_percent": [
+        10,
+        20,
+        30,
+        40,
+        50
+      ],
+      "image": "skill_2.png",
+      "sha256": "c3b2ac1558e1be1fbe46aebc51fc45cb5c0adb74354422400105cf02dd550578"
+    },
+    {
+      "slot": "skill_3",
+      "current_level": 0,
+      "locked": true,
+      "title": "Law and Order Lv.1",
+      "description": "Greg's faith in law and order uplifts everyone, increasing Health by 5% for all troops.",
+      "upgrade_preview_percent": [
+        5,
+        10,
+        15,
+        20,
+        25
+      ],
+      "image": "skill_3.png",
+      "sha256": "fc546a386a015351bf584dbd63eb9a62fea6b2511c63a18a6574813afaa28735",
+      "interpretation": "Locked at0; the displayed Lv.1 tooltip is a preview. Visible requirement: To unlock: ascend to2-Star."
+    }
+  ]
+}

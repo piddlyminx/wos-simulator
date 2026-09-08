@@ -1,0 +1,334 @@
+{
+  "phase": "conditional_simulator_screen_for_possible_followup",
+  "note": "Twelve bounded formations. Full kit and captured stats preserved. No future game outcome exists; not a completed or authorized live capture. All retained formations preserve all three defending lines under all candidates. Exact new report stats would require frozen-candidate replay.",
+  "results": [
+    {
+      "attacker": {
+        "marksman_t6": 150
+      },
+      "defender": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "predictions": {
+        "current": {
+          "score": -236,
+          "rounds": 17,
+          "remaining": {
+            "infantry": 55,
+            "lancer": 92,
+            "marksman": 89
+          }
+        },
+        "s3_first_two": {
+          "score": -234,
+          "rounds": 17,
+          "remaining": {
+            "infantry": 55,
+            "lancer": 91,
+            "marksman": 88
+          }
+        },
+        "s2_first_one": {
+          "score": -235,
+          "rounds": 18,
+          "remaining": {
+            "infantry": 54,
+            "lancer": 92,
+            "marksman": 89
+          }
+        }
+      },
+      "primaryGap": 2,
+      "relativePrimaryGap": 0.00847457627118644
+    },
+    {
+      "attacker": {
+        "marksman_t6": 200
+      },
+      "defender": {
+        "infantry_t6": 100,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "predictions": {
+        "current": {
+          "score": -199,
+          "rounds": 21,
+          "remaining": {
+            "infantry": 30,
+            "lancer": 87,
+            "marksman": 82
+          }
+        },
+        "s3_first_two": {
+          "score": -194,
+          "rounds": 21,
+          "remaining": {
+            "infantry": 29,
+            "lancer": 85,
+            "marksman": 80
+          }
+        },
+        "s2_first_one": {
+          "score": -195,
+          "rounds": 21,
+          "remaining": {
+            "infantry": 28,
+            "lancer": 86,
+            "marksman": 81
+          }
+        }
+      },
+      "primaryGap": 5,
+      "relativePrimaryGap": 0.02512562814070352
+    },
+    {
+      "attacker": {
+        "marksman_t6": 150
+      },
+      "defender": {
+        "infantry_t6": 120,
+        "lancer_t6": 80,
+        "marksman_t6": 80
+      },
+      "predictions": {
+        "current": {
+          "score": -210,
+          "rounds": 19,
+          "remaining": {
+            "infantry": 71,
+            "lancer": 71,
+            "marksman": 68
+          }
+        },
+        "s3_first_two": {
+          "score": -207,
+          "rounds": 19,
+          "remaining": {
+            "infantry": 70,
+            "lancer": 70,
+            "marksman": 67
+          }
+        },
+        "s2_first_one": {
+          "score": -208,
+          "rounds": 19,
+          "remaining": {
+            "infantry": 70,
+            "lancer": 71,
+            "marksman": 67
+          }
+        }
+      },
+      "primaryGap": 3,
+      "relativePrimaryGap": 0.014285714285714285
+    },
+    {
+      "attacker": {
+        "marksman_t6": 200
+      },
+      "defender": {
+        "infantry_t6": 120,
+        "lancer_t6": 80,
+        "marksman_t6": 80
+      },
+      "predictions": {
+        "current": {
+          "score": -167,
+          "rounds": 23,
+          "remaining": {
+            "infantry": 42,
+            "lancer": 65,
+            "marksman": 60
+          }
+        },
+        "s3_first_two": {
+          "score": -163,
+          "rounds": 23,
+          "remaining": {
+            "infantry": 41,
+            "lancer": 64,
+            "marksman": 58
+          }
+        },
+        "s2_first_one": {
+          "score": -166,
+          "rounds": 23,
+          "remaining": {
+            "infantry": 41,
+            "lancer": 65,
+            "marksman": 60
+          }
+        }
+      },
+      "primaryGap": 4,
+      "relativePrimaryGap": 0.023952095808383235
+    },
+    {
+      "attacker": {
+        "marksman_t6": 250
+      },
+      "defender": {
+        "infantry_t6": 120,
+        "lancer_t6": 80,
+        "marksman_t6": 80
+      },
+      "predictions": {
+        "current": {
+          "score": -115,
+          "rounds": 27,
+          "remaining": {
+            "infantry": 7,
+            "lancer": 58,
+            "marksman": 50
+          }
+        },
+        "s3_first_two": {
+          "score": -109,
+          "rounds": 27,
+          "remaining": {
+            "infantry": 5,
+            "lancer": 56,
+            "marksman": 48
+          }
+        },
+        "s2_first_one": {
+          "score": -111,
+          "rounds": 27,
+          "remaining": {
+            "infantry": 5,
+            "lancer": 57,
+            "marksman": 49
+          }
+        }
+      },
+      "primaryGap": 6,
+      "relativePrimaryGap": 0.05217391304347826
+    },
+    {
+      "attacker": {
+        "marksman_t6": 150
+      },
+      "defender": {
+        "infantry_t6": 150,
+        "lancer_t6": 60,
+        "marksman_t6": 60
+      },
+      "predictions": {
+        "current": {
+          "score": -190,
+          "rounds": 21,
+          "remaining": {
+            "infantry": 95,
+            "lancer": 49,
+            "marksman": 46
+          }
+        },
+        "s3_first_two": {
+          "score": -188,
+          "rounds": 22,
+          "remaining": {
+            "infantry": 94,
+            "lancer": 49,
+            "marksman": 45
+          }
+        },
+        "s2_first_one": {
+          "score": -189,
+          "rounds": 22,
+          "remaining": {
+            "infantry": 94,
+            "lancer": 49,
+            "marksman": 46
+          }
+        }
+      },
+      "primaryGap": 2,
+      "relativePrimaryGap": 0.010526315789473684
+    },
+    {
+      "attacker": {
+        "marksman_t6": 200
+      },
+      "defender": {
+        "infantry_t6": 150,
+        "lancer_t6": 60,
+        "marksman_t6": 60
+      },
+      "predictions": {
+        "current": {
+          "score": -142,
+          "rounds": 26,
+          "remaining": {
+            "infantry": 62,
+            "lancer": 43,
+            "marksman": 37
+          }
+        },
+        "s3_first_two": {
+          "score": -137,
+          "rounds": 26,
+          "remaining": {
+            "infantry": 61,
+            "lancer": 41,
+            "marksman": 35
+          }
+        },
+        "s2_first_one": {
+          "score": -140,
+          "rounds": 26,
+          "remaining": {
+            "infantry": 60,
+            "lancer": 43,
+            "marksman": 37
+          }
+        }
+      },
+      "primaryGap": 5,
+      "relativePrimaryGap": 0.035211267605633804
+    },
+    {
+      "attacker": {
+        "marksman_t6": 250
+      },
+      "defender": {
+        "infantry_t6": 150,
+        "lancer_t6": 60,
+        "marksman_t6": 60
+      },
+      "predictions": {
+        "current": {
+          "score": -78,
+          "rounds": 32,
+          "remaining": {
+            "infantry": 19,
+            "lancer": 34,
+            "marksman": 25
+          }
+        },
+        "s3_first_two": {
+          "score": -71,
+          "rounds": 32,
+          "remaining": {
+            "infantry": 16,
+            "lancer": 32,
+            "marksman": 23
+          }
+        },
+        "s2_first_one": {
+          "score": -75,
+          "rounds": 32,
+          "remaining": {
+            "infantry": 16,
+            "lancer": 34,
+            "marksman": 25
+          }
+        }
+      },
+      "primaryGap": 7,
+      "relativePrimaryGap": 0.08974358974358974
+    }
+  ]
+}

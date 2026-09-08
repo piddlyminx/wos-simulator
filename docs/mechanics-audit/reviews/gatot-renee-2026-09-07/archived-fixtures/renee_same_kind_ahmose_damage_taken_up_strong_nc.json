@@ -1,0 +1,80 @@
+[
+  {
+    "test_id": "renee_same_kind_ahmose_damage_taken_up_strong_nc",
+    "description": "Renee 4/4/4 + Ahmose 1/1/3 strong all-same damage-taken-up discriminator, designed from the exact stats captured in the first Ahmose report. WIP attacks with 10000 T6 Marksmen and no heroes; minxxx defends 300 T6 Infantry and 500 T6 Lancers with Ahmose and Renee. Same-bucket TTT predicts +3301 survivors versus +2499 to +2530 for every other all-same hypothesis. Deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 10000
+      },
+      "stats": {
+        "inf": {
+          "attack": 234.6,
+          "defense": 243.9,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3
+        },
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 389.4,
+          "defense": 377.2,
+          "lethality": 205.3,
+          "health": 206.5
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 2810,
+        "defender": 0
+      }
+    ]
+  }
+]

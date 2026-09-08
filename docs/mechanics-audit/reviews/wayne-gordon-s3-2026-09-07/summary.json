@@ -1,0 +1,467 @@
+{
+  "phase": "Retrospective accepted-corpus structural review. Current definitions, earlier reviews and known disagreements were read before choosing these bounded alternatives. No live action, input adjustment or coefficient fit.",
+  "distinct_input_entries": 18,
+  "distinct_entry_outcome_records": 50,
+  "current_deterministic_fixture_count": 7,
+  "simulated_sample_rows_preserved": 136058,
+  "draw_rows": 13001,
+  "current_unique_stochastic_flags": [],
+  "current_deterministic_residuals": {
+    "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": {
+      "score_errors": [
+        3
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 3,
+          "defender": 0,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": {
+      "score_errors": [
+        16
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": -16,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0": {
+      "score_errors": [
+        0
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": 0,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": {
+      "score_errors": [
+        1
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": -1,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": {
+      "score_errors": [
+        1
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": -1,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": {
+      "score_errors": [
+        -17
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": -17,
+          "defender": 0,
+          "rounds": 10
+        }
+      ]
+    },
+    "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": {
+      "score_errors": [
+        423
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 423,
+          "defender": 0,
+          "rounds": -114
+        }
+      ]
+    }
+  },
+  "method": "Individual game A-D outcomes compared with per-battle samples using raw combined CDF/support diagnostics. Deterministic models run once and preserve exact per-side/round residuals without stochastic p-values. Same-case current samples verified identical across workers. No input adjustment or universal percentage/absolute materiality cutoff.",
+  "skills": [
+    {
+      "key": "hero:Wayne:ThunderStrike",
+      "fixture_count": 13,
+      "observation_count": 41,
+      "hydrated_levels": [
+        1,
+        2,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#1",
+          "testcases/emulator_verified/wayne_reina_combo.json#0",
+          "testcases/emulator_verified/wayne_s1_solo.json#0"
+        ],
+        "marksman_only": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#1",
+          "testcases/emulator_verified/wayne_s1_solo.json#0"
+        ],
+        "normal_kind": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0": [
+            0
+          ]
+        },
+        "omit": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -161
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -87
+          ],
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0": [
+            -14
+          ]
+        },
+        "marksman_only": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -161
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -87
+          ],
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0": [
+            0
+          ]
+        },
+        "normal_kind": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0": [
+            0
+          ]
+        }
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ThunderStrike-initial.json",
+        "sha256": "c0ea031133ca716928d52cb894d5d499555d6ad8ae0a0fd6a336bf56fb265508"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ThunderStrike-initial-samples.json",
+        "sha256": "dcdfbe85613a02dfac6ed54a13c31a5ce9ea595b8efe6aa978b813d8839c9312"
+      }
+    },
+    {
+      "key": "hero:Wayne:RoundaboutHit",
+      "fixture_count": 12,
+      "observation_count": 40,
+      "hydrated_levels": [
+        1,
+        2,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/wayne_mixed_solo.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#1",
+          "testcases/emulator_verified/wayne_reina_combo.json#0"
+        ],
+        "omit_lancer": [
+          "testcases/emulator_verified/wayne_mixed_solo.json#1"
+        ],
+        "omit_marksman": [
+          "testcases/emulator_verified/wayne_mixed_solo.json#1"
+        ],
+        "first_attack": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ]
+        },
+        "omit": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ]
+        },
+        "omit_lancer": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ]
+        },
+        "omit_marksman": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ]
+        },
+        "first_attack": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ]
+        }
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/RoundaboutHit-initial.json",
+        "sha256": "8e7768b5b81b43df78980a87992e7f3920a13d557fa88c5d8ef600a77ad06acc"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/RoundaboutHit-initial-samples.json",
+        "sha256": "f6733368f0f47098e88e30a2f4c972d075c2129eca07584e9e409a7267d2542a"
+      }
+    },
+    {
+      "key": "hero:Wayne:Fleet",
+      "fixture_count": 10,
+      "observation_count": 38,
+      "hydrated_levels": [
+        2,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#1",
+          "testcases/emulator_verified/wayne_reina_combo.json#0",
+          "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+          "testcases/emulator_verified/wayne_s1_solo.json#0",
+          "testcases/emulator_verified/wayne_s2_solo.json#0",
+          "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0"
+        ],
+        "marksman_only": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/wayne_mixed_solo.json#1",
+          "testcases/emulator_verified/wayne_reina_combo.json#0",
+          "testcases/emulator_verified/wayne_s1_solo.json#0"
+        ],
+        "normal_kind": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "marksman_only": {},
+        "normal_kind": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial.json",
+        "sha256": "03c51f11fe7502c35c421e9d770c8ea0fefd2e31aa37ff08c21c86802740bb4c"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial-samples.json",
+        "sha256": "8cd166ea82cf0e9a570a11b61e664d8112312b1123c75963c933f5e04b20130e"
+      }
+    },
+    {
+      "key": "hero:Gordon:ToxicRelease",
+      "fixture_count": 7,
+      "observation_count": 11,
+      "hydrated_levels": [
+        1,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "omit_infantry": [],
+        "omit_marksman": [],
+        "one_turn": [],
+        "all_enemy": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -17
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -48
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -37
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -152
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit_infantry": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -48
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -37
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -152
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit_marksman": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -17
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "one_turn": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -20
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -15
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -67
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "all_enemy": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            32
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            53
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            48
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            37
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            147
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            2
+          ]
+        }
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ToxicRelease-initial.json",
+        "sha256": "2f78b9e6b975ec3e92e5e9910bed9e16cfcf21ca8b4d50ee80f36967560f825d"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ToxicRelease-initial-samples.json",
+        "sha256": "fad6005757a26d789e51c9859ff039057150def8e958659461a648ca3ba4a28b"
+      }
+    }
+  ],
+  "post_run_source_drift": [],
+  "trace_count_note": "modifierAnnotationCounts and generatedDamageJobCounts are separate. Parent normal-attack annotations do not establish generated damage kind; separate skill jobs are recorded in generatedDamageJobCounts. Trace scope proves simulator application, while observed endpoint contrasts provide conditional evidence."
+}

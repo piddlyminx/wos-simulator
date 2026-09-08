@@ -1,0 +1,156 @@
+[
+  {
+    "test_id": "hendrik_dragons_heir_250m_vs_400i_100l_100m",
+    "description": "Prospective deterministic positive S3 fanout probe: WIP full Hendrik3/3/3 with250 T6 Marksmen attacks minxxx no heroes with400 T6 Infantry+100 T6 Lancers+100 T6 Marksmen. Current all-living S3 predicts minxxx476 survivors(314/84/78); target-only predicts516(316/100/100). Both preserve every defender line. Source report stats are conditional because roles reverse; capture fresh exact report stats before interpretation. Frozen alternative outer-army-ceil arithmetic retains same nominal outcomes. Full endpoint primary; per-line survivors diagnose positive backline damage. Package docs/mechanics-audit/probes/hendrik-dragons-heir.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "marksman_t6": 250
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249.0,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 465.5,
+          "defense": 458.7,
+          "lethality": 244.0,
+          "health": 218.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 400,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 471
+      }
+    ],
+    "metadata": {
+      "fixture_type": "single_hero_full_kit",
+      "skill_isolation": false,
+      "expected_stochastic": false,
+      "stochastic_reason": [],
+      "observed_battle_outcomes": [
+        {
+          "report_timestamp_displayed": "2026-09-07 06:02:19",
+          "world_coord": {
+            "x": 787,
+            "y": 577
+          },
+          "attacker": {
+            "troops": 250,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 88,
+            "lightly_injured": 162
+          },
+          "defender": {
+            "troops": 600,
+            "survivors": 471,
+            "losses": 0,
+            "injured": 47,
+            "lightly_injured": 82
+          },
+          "per_troop_survivors": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 313,
+              "lancer": 82,
+              "marksman": 76
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Hendrik": {
+                "skill_1": {
+                  "triggered": 1,
+                  "displayed_kills": null
+                },
+                "skill_2": {
+                  "triggered": 5,
+                  "displayed_kills": null
+                },
+                "skill_3": {
+                  "triggered": 6,
+                  "displayed_kills": 17
+                }
+              }
+            }
+          },
+          "rounds": null,
+          "mail_ids": {
+            "defender_view": "2734692464122617"
+          },
+          "defender_troop_details_source": "docs/mechanics-audit/probes/hendrik-dragons-heir/defender-troops.json",
+          "transcription": "Visually checked report overview, all displayed stats, exact T6 troop counts, full Hendrik3/3/3 kit, Battle Details and defender troop outcomes. No explicit round total. Dash retained as null. Counterpart report is the same battle, not an additional observation."
+        }
+      ],
+      "evidence": {
+        "protocol": "docs/mechanics-audit/probes/hendrik-dragons-heir/README.md",
+        "prospective_prediction": "docs/mechanics-audit/probes/hendrik-dragons-heir/prediction.json",
+        "captured_prediction": "docs/mechanics-audit/probes/hendrik-dragons-heir/captured-prediction.json",
+        "report": "docs/mechanics-audit/probes/hendrik-dragons-heir/report.json",
+        "overview_image": "docs/mechanics-audit/probes/hendrik-dragons-heir/report_top.png",
+        "stats_image": "docs/mechanics-audit/probes/hendrik-dragons-heir/report_stats.png",
+        "details_image": "docs/mechanics-audit/probes/hendrik-dragons-heir/bd_top.png",
+        "defender_troops_image": "docs/mechanics-audit/probes/hendrik-dragons-heir/defender-troops.png",
+        "original_capture_directory": "tmp/20260907T050223Z_wos_report_war_1"
+      },
+      "evidence_status": "supports_positive_s3_fanout_with_unresolved_endpoint_residual",
+      "data_quality_notes": [
+        "Fresh displayed stats match the frozen role-reversed inputs. Report stats already include hero stats; no generation bonus added. Current forecast476[314,84,78] versus game471[313,82,76], a five-unit total residual. Target-only forecast516 with no backline loss is rejected."
+      ]
+    }
+  }
+]

@@ -1,0 +1,1618 @@
+{
+  "hero:Gwen:Blastmaster": {
+    "source_sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3",
+    "status": "unresolved",
+    "context": "Three accepted full-kit Gwen 3/1/1 T6 captures: game defender survivors 1397,563,24; the third has only24 Infantry alive and exact frozen inputs, while production predicts attacker76. The first two remain unresolved under frozen timing/source-count alternatives. One-attack-earlier source counts improve first4/every5 to1396/567 but predict79 defenders in the third. A retrospective one-EagleVision-use-per-S3-fanout candidate with first5/every5 matches earlier backline vectors and the third S2/S3 counts15/18, but predicts Infantry residuals -3/-4 in the first two and attacker18 versus defender24 in the third (signed error42). No tested structural candidate explains all accepted endpoints and reporting details. All enemy troop classes take damage in the full-kit context; precise trigger/delivery representation, per-fanout modifier consumption and S1/S2 interactions remain unresolved. Raw residuals are judged at battle scale; the third opposite-winner discrepancy is substantive for550 versus900 troops. Original prospective forecasts are preserved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/gwen-blastmaster/README.md",
+      "docs/mechanics-audit/probes/gwen-blastmaster/captured-prediction.json",
+      "docs/mechanics-audit/probes/gwen-blastmaster/followup/README.md",
+      "docs/mechanics-audit/probes/gwen-blastmaster/followup/captured-prediction.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/README.md",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/results.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/README.md",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/confirmed-observation.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/group-consumption.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Wu Ming:ShadowsEvasion": {
+    "source_sha256": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3",
+    "status": "partially_supported",
+    "context": "Full Wu Ming 3/3/3, level-3 normal branch only: the frozen pre-correction review discriminates Infantry protection and rejects broadening S1 to all troops using the Lancer-only fixture. Corrected production matches the Infantry isolation +178 and Lancer-only +40 exactly. Supported scope remains Infantry protection and Lancer exclusion; positive skill-damage protection, Marksman-target exclusion, cross-level scaling, exact bucket interactions and mode/joiner behavior remain unreviewed. The archived mixed-line result is now exactly game/simulator defender200 after the core outer-ceil correction; the original 19-troop residual and counterfactual numbers remain preserved in the dated review.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wu-ming-2026-09-07.md",
+      "docs/mechanics-audit/reviews/wu-ming-2026-09-07.json",
+      "docs/mechanics-audit/reviews/outer-army-ceil/adoption.md",
+      "docs/mechanics-audit/reviews/outer-army-ceil/adoption-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Wu Ming:CrescentUplift": {
+    "source_sha256": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3",
+    "status": "partially_supported",
+    "context": "Full Wu Ming 3/3/3, level-3 contribution to normal attacks from Infantry, Lancers and Marksmen: frozen pre-correction omission/scope diagnostics are preserved in the dated review. Corrected production gives exact Lancer isolation +40, Infantry isolation +178, and Marksman versus Infantry -11. Positive skill-kind behavior and cross-level scaling remain unreviewed. The original Bradley diagnostic separated shared and separate buckets by only2 survivors, so grouping remains unresolved; the combined production endpoint stays exactly +112. The archived mixed-line result now matches defender200 after the core outer-ceil correction, without changing Wu skills.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wu-ming-2026-09-07.md",
+      "docs/mechanics-audit/reviews/wu-ming-2026-09-07.json",
+      "docs/mechanics-audit/reviews/outer-army-ceil/adoption.md",
+      "docs/mechanics-audit/reviews/outer-army-ceil/adoption-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Wu Ming:ElementalResonance": {
+    "source_sha256": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3",
+    "status": "partially_supported",
+    "context": "Full Wu Ming 3/3/3, negative damage-kind scope only: corrected production still matches Marksman versus Infantry -11. The frozen pre-correction diagnostics reject amplifying either whole normal jobs or the Ranged Strike increment; their original numerical predictions remain preserved in the dated review. All reviewed traces contain zero skill-kind jobs, so positive amplification, magnitude, level scaling, source/target scope, stacking and mode/joiner behavior remain unreviewed. The archived mixed-line result now matches defender200 after the core outer-ceil correction and does not justify broadening S3.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wu-ming-2026-09-07.md",
+      "docs/mechanics-audit/reviews/wu-ming-2026-09-07.json",
+      "docs/mechanics-audit/reviews/outer-army-ceil/adoption.md",
+      "docs/mechanics-audit/reviews/outer-army-ceil/adoption-check.json"
+    ],
+    "supported_dimensions": [
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:MasterBrawler": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted no-hero T6 Infantry-versus-Lancer fixtures support the current normal-damage class-counter contribution: norah_s2_splash_C_nc game1153/1153/1153 versus current1152 and omitted1114; opposite attacking side type_triangle_B_nc game/current -929 versus omitted -922. This is positive contextual support at10%, not proof of all target exclusions, tiers, skill-kind effects, or bucket interactions.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/troops-2026-09-07.md",
+      "docs/mechanics-audit/reviews/troops-2026-09-07.json",
+      "docs/mechanics-audit/reviews/troops-2026-09-07-replay.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:Charge": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted no-hero T6 Marksman-versus-Lancer fixture gives game/current +1504 versus omitCharge +1642, supporting defender Lancer normal-damage contribution against Marksmen. Renee full3/3/3 with T6 Lancers versus Marksmen corroborates game/current +50 versus omission -185. Exact bucket equivalence, skill-kind behavior, other tiers and full target exclusions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/troops-2026-09-07.md",
+      "docs/mechanics-audit/reviews/troops-2026-09-07.json",
+      "docs/mechanics-audit/reviews/troops-2026-09-07-replay.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:RangedStrike": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted no-hero T6 Marksman-versus-Infantry fixture gives game+1623/current+1622 versus omission+1483, supporting its current normal-damage class-counter contribution within the requested1\u20132 survivor tolerance. This does not establish skill-kind amplification, all target exclusions, other tiers, or bucket interactions.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/troops-2026-09-07.md",
+      "docs/mechanics-audit/reviews/troops-2026-09-07.json",
+      "docs/mechanics-audit/reviews/troops-2026-09-07-replay.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:BandsOfSteel": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted renee_hendrik_defense_bucket_nc has minxxx full Renee4/4/4 and Hendrik1/0/0 with120 T6 Lancers versus446 T9 Infantry. Game/current+14 versus omission+30 supports the current defender Infantry protection from Lancer normal attacks in this combined kit. No-hero isolation, other targets, skill-kind protection, precise T7 threshold and mixed-tier inheritance remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/troops-2026-09-07.md",
+      "docs/mechanics-audit/reviews/troops-2026-09-07.json",
+      "docs/mechanics-audit/reviews/troops-2026-09-07-replay.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:Ambusher": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted T9 mixed-line fixture has10 game outcomes, mean+179.30 SD2006.64. Current20% with2000 simulator samples predicts -807.72 SD1886.84, combined p0.143893;10% and30% each fail p0.00005; omission is deterministic -5725. This supports the current probabilistic Lancer-to-Marksman targeting behavior over those alternatives, not a precise20% estimate or every gate/retarget interaction. Trial2 has conflicting overall versus per-line counts; retained as recorded, with exclusion sensitivity leaving conclusions unchanged. Lancer-only simple_001_nc is non-discriminating despite exact endpoint and does not add positive Ambusher evidence.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/troops-2026-09-07.md",
+      "docs/mechanics-audit/reviews/troops-2026-09-07.json",
+      "docs/mechanics-audit/reviews/troops-2026-09-07-replay.json"
+    ],
+    "supported_dimensions": [
+      "trigger_chance_and_cadence",
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Hendrik:ArmorOfBarnacles": {
+    "source_sha256": "fc16f4c3883a71fc6c3eb5ec3fb7bc7c2daf88cde21b35220720a34fc769e440",
+    "status": "partially_supported",
+    "context": "Prospective fullHendrik333 T6 Lancer-only probe:100 nohero attackers versus150 defenders; game/current production both leave17 defending Lancers. Original frozen absence/Marksman-only S2 alternatives reversed the winner, supporting level3 Lancer protection. The original pre-core-correction duration1/delay1 forecasts were4/16; after the outer-army-term correction they are5/17. Exact S2 phase remains weakly separated: first3 gives18, first4/current17. S2 reports13 activations in the Lancer battle. Subsequent S3-first2 adoption changes no S2 field; deep config comparison confirms first4/every4, duration2, values/scope/grouping unchanged. Defense versus damageTaken grouping remains indistinguishable, and other recipients/scaling/mode interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/hendrik-armor/README.md",
+      "docs/mechanics-audit/probes/hendrik-armor/captured-prediction.json",
+      "docs/mechanics-audit/probes/hendrik-armor/observation.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.md",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/runner-verification.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/README.md",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/results.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "duration_delay_and_order",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Hendrik:DragonsHeir": {
+    "source_sha256": "1dc7f033bbbc5de999106d62fb5f8cf13c0e5d40b42c3fd0911809e45cd240d5",
+    "status": "partially_supported",
+    "context": "Current definition uses ordinary first3/every3; this review found it already restored and made no production edit. Positive level3 Marksman-to-multiple-enemy-line delivery remains supported: game471[313,82,76] versus target-only516 with untouched backlines; Lancer-only game17 supports absence of S3 damage from Lancers. Historical first2 improved476 to exact471 and78 to71 versus game68; the second improvement was prospectively predicted. These are real positive signals, but first game reported S2/S3 counts5/6 cannot share a duration under S2 first4/every4 and S3 first2/every3 with ordinary complete reporting. The usual schedules imply exactly20 rounds: S2 permits20\u201323, S3 permits18\u201320. These are inferred rounds, not a displayed game round total. The second reported8/11 is compatible with first3 at33\u201335 turns; earlier first2 attribution imported the simulator32-round duration into the game. A blanket terminal-activation omission conflicts with the second report. The most-probable explanation standard favors retaining ordinary3/6/9 and investigating remaining damage/survival differences. Frozen first3 predicts476[314,84,78] and78[19,34,25],6/10 S3 activations; current replay matches. Retrospective previous-round source strength gives473[313,83,77] and75[18,33,24] with6/10 activations, while skill-before-normal is unchanged. Neither is an identified replacement correction. Exact phase, magnitude/scaling, damage-kind interactions and lifecycle/reporting remain unresolved. Full trace review identifies a native troop-bonus interaction: RangedStrike10% applies to the normal Infantry shot and S3 Infantry hit, but not the backline S3 hits. A frozen retrospective general candidate carries the normal target selection for native10% troop matchup traits into same-source generated attacks while retaining each actual target defense. It exactly reproduces both game vectors313/82/76 and16/31/21 with S2/S3 counts5/6 and8/11, ending20/33 rounds under first3. In301 input comparisons285 are unchanged, both Hendrik cases improve, and all three deterministic Gwen cases worsen (D534\u2192D507 versus gameD563; D1388\u2192D1384 versusD1397; A76\u2192A112 versusD24). All11 affected stochastic cases remain plausible under fresh1000-sample comparisons, with limited observed sample sizes. Gwen was already unresolved; this is adverse evidence that prevents declaring a global fix, not a clean isolated disproof of inheritance. No global change or Hendrik-only exception was adopted. The modifier-inheritance hypothesis requires reconciliation with other multi-target skill evidence.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/hendrik-armor/README.md",
+      "docs/mechanics-audit/probes/hendrik-armor/captured-prediction.json",
+      "docs/mechanics-audit/probes/hendrik-armor/observation.json",
+      "docs/mechanics-audit/probes/hendrik-dragons-heir/README.md",
+      "docs/mechanics-audit/probes/hendrik-dragons-heir/captured-prediction.json",
+      "docs/mechanics-audit/probes/hendrik-dragons-heir/observation.json",
+      "docs/mechanics-audit/probes/hendrik-dragons-heir/retrospective/diagnosis.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/README.md",
+      "docs/mechanics-audit/probes/hendrik-small-timing/observation.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.md",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/runner-verification.json",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/README.md",
+      "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/results.json",
+      "docs/mechanics-audit/physical-interpretation.md",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/README.md",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/protocol.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/results.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/current-replay.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/prior-s3-annotation.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/trace-review.md",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/round-ledger.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/trait-protocol.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/trait-results.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/trait-summary.json",
+      "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/pre-trace-s3-annotation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "duration_delay_and_order"
+    ]
+  },
+  "hero:Sonya:TreasureHunter": {
+    "source_sha256": "f4c29c3680cbaa4e92d88b263f6f361d526e501681ce9bc4b7d1578fd3a0661b",
+    "status": "partially_supported",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/sonya-buffs-cadence/README.md",
+      "docs/mechanics-audit/probes/sonya-buffs-cadence/captured-prediction.json",
+      "docs/mechanics-audit/probes/sonya-buffs-cadence/observation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ],
+    "context": "Prospective full Sonya1/1/0 T6 mixed defender probe against2200 Infantry. Exact-report-input unchanged rules give1175 defenders, matching game175I/200L/800M; restricting S1 to Lancers gives1158. This supports contribution outside Lancers in this full kit. Placing S1 in Attack instead of Damage is indistinguishable here; independent magnitude, level scaling, individual non-Lancer recipient scope and mode/stacking interactions remain unreviewed."
+  },
+  "hero:Sonya:BountyTemptation": {
+    "source_sha256": "f4c29c3680cbaa4e92d88b263f6f361d526e501681ce9bc4b7d1578fd3a0661b",
+    "status": "partially_supported",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/sonya-buffs-cadence/README.md",
+      "docs/mechanics-audit/probes/sonya-buffs-cadence/captured-prediction.json",
+      "docs/mechanics-audit/probes/sonya-buffs-cadence/observation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "trigger_chance_and_cadence"
+    ],
+    "unresolved_dimensions": [
+      "duration_delay_and_order",
+      "damage_kind",
+      "stacking_and_buckets"
+    ],
+    "context": "Same prospective full Sonya1/1/0 probe: game/current1175 defenders, with51 reported S2 activations matching current every-second-normal-Lancer scheduling. Restricting its Attack buff to Lancers gives1164; firing after every normal attack from the second gives1204. This supports the exercised cadence versus that faster alternative and buff contribution outside Lancers. Same-turn versus next-turn differs by1, while15-point normal damage versus extra skill delivery is indistinguishable. Exact phase, damage kind/bucket, independent magnitude/scaling and interactions remain unreviewed."
+  },
+  "troop:CrystalShield": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted FC5 no-hero mixed fixture has 13 observations: current p=0.522674; omit CrystalShield p=0.000100; change level 2 proc from 37.5% to 25% or change the 36 denominator reduction to raw shield 36 each p=0.000050, with 1000 samples per candidate. Supports positive Infantry protection in this normal-attack mixed troop kit and the current probability model over that alternative. Does not uniquely identify exact probability, all denominator grouping, incoming skill-kind behavior, consumption, FC3 level 1 or full gate/target exclusions.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/fc-troops/README.md",
+      "docs/mechanics-audit/reviews/fc-troops/results.json",
+      "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "trigger_chance_and_cadence"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "troop:BodyOfLight": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Accepted FC9 Infantry/Gatot s4/s5 fixtures support aggregate BodyOfLight contribution. Independent 10000-sample s4 confirmation gives current mean 83394.94 SD 218.27 p=0.274036 versus omit only +4 Defense mean 82857.93 SD 227.13 p=0.001550. This supports the Defense effect in the recorded full-kit normal-attack context. Removing only the conditional CrystalShield reduction remains plausible in both cases, so that branch is not positively established. Level2 +6/+15, precise FC8 boundary, skill-kind protection and bucket identities remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/fc-troops/README.md",
+      "docs/mechanics-audit/reviews/fc-troops/results.json",
+      "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:CrystalLance": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Six accepted s9 fixtures preserve exact T9 versus T1 FC10 Lancer inputs, with IncandescentField and full recorded kits retained. Current level 2 model is plausible in all six (p=0.417979\u20130.939603); omission fails in each (p=0.000050;1000 samples/candidate). Supports positive outgoing Lancer contribution in this context. Does not uniquely identify the separate skill-job delivery,100% coefficient,15% proc rate, level 1, precise FC boundary or excluded targets.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/fc-troops/README.md",
+      "docs/mechanics-audit/reviews/fc-troops/results.json",
+      "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "troop:IncandescentField": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "partially_supported",
+    "context": "Six accepted distinct s9 T9 versus T1 FC10 Lancer setups support a joint conditional defensive contribution with CrystalLance retained: independent cross-setup endpoint-residual resampling gives current p=0.728733 versus omission p=0.000460. Each individual n=1 case alone remains compatible with omission. This retrospective inference assumes independent battle RNG conditional on recorded inputs and does not pool different setups as repetitions; no adaptive historical selection adjustment is made. Exact +100% Defense versus another half-damage bucket,15% proc, consumption, level 1/FC8 boundary and skill-kind behavior remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/fc-troops/README.md",
+      "docs/mechanics-audit/reviews/fc-troops/results.json",
+      "docs/mechanics-audit/reviews/fc-troops/confirmation.json",
+      "docs/mechanics-audit/reviews/fc-troops/incandescent-combined.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "troop:Volley": {
+    "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+    "status": "unresolved",
+    "context": "Corrected retrospective A-D replay supersedes the original draw-zero audit. The 11548 game draw has A11268/D1 at round1500, margin11267. Current mean11346.00 SD23.80 p=0.001000 and separate-job mean11346.16 SD23.79 p=0.001450 each include 999 attacker wins and one matching draw. Volley omission exactly matches both game survivor totals and cap in all1000 samples, p=1; it instead fails the 25000 and33452 game victories, giving capped draw margins24719 and33171, each p=0.000050. The unchanged independent10000-sample25000 confirmation remains current mean24962.99 SD9.40 versus game24929, p=0.001350; separate skill-job p=0.000050. Mixed evidence does not isolate Volley delivery, chance, threshold or combined FC/Gatot effects. Original raw artifacts are preserved; corrected results retain per-sample sides, winner and rounds. No production scoring change is required.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/fc-troops/README.md",
+      "docs/mechanics-audit/reviews/fc-troops/draw-correction/README.md",
+      "docs/mechanics-audit/reviews/fc-troops/draw-correction/results.json",
+      "docs/mechanics-audit/reviews/fc-troops/draw-correction/inspection.json",
+      "docs/mechanics-audit/reviews/fc-troops/results.json",
+      "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "trigger_chance_and_cadence"
+    ]
+  },
+  "hero:Jasser:TacticalGenius": {
+    "source_sha256": "6c9a7b443fb3be5f8603589aa4dc48aa3d52d57b0de8b04334e4bc401be4f674",
+    "status": "partially_supported",
+    "context": "Retrospective review of nine deterministic accepted entries at levels 1/2/4: current residuals are 0\u20131. Full Jasser1/2 solo gives game/current A2740 versus omission A2804 and Marksman-only A2761; the recorded Jasser2/3 + Patrick1/1 fixture gives D807 versus D585/D744. This supports offensive contribution outside Marksmen in those kits. Edith/Gordon overlap cases favor current placement at exact reported inputs but modest scale-relative bucket differences and other modeled pools prevent general identification. Three stochastic full-kit entries were skipped. Exact coefficients/scaling, skill-kind and mode interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Jessie:StandOfArms": {
+    "source_sha256": "dbe8105a8e483774bdb8d94ba7f6d2abe0703aaff9739c44aa9f656bac9699ce",
+    "status": "partially_supported",
+    "context": "Retrospective review of fifteen deterministic accepted entries at levels 1/2/4/5: current residuals are 0\u20132. Full Jessie4/1 solo gives game/current A79 versus omission A471 and Lancer-only A351, supporting contribution outside Lancers. Zinman S1=1/S3=1 + Jessie5/2 gives game/current D130 versus D139 if Jessie moves into a separate Damage or Attack pool; this supports their shared additive pool over those alternatives, conditional on the rest of this kit. It does not uniquely identify the bucket label or all stacking rules. Two stochastic entries were skipped; exact coefficients/scaling, skill-kind and mode interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Patrick:SuperNutrients": {
+    "source_sha256": "a580a36f0f78f5c153ad23ac2da06de7d94193fe8f41b268e3bb1f312ca3e345",
+    "status": "partially_supported",
+    "context": "Retrospective review of nine deterministic accepted entries at levels 1/2/3/4. Eight current endpoints are exact. Full Patrick2/1 solo gives game/current A2582 versus omission A2725 and Lancer-only A2696; Jasser2/3 + Patrick1/1 gives D807 versus D723/D737. This supports defensive contribution outside Lancers in those kits. The Gatot/secondary-heroes case retains game A851 versus current A834 (17 troops, about2%); omission A883 and bucket move A834 do not assign its cause to Patrick. Most Health-versus-damageTaken alternatives are identical and overlap differences remain modest. Three stochastic entries were skipped; bucket identity, exact scaling, skill-kind and mode interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Sergey:Weaken": {
+    "source_sha256": "7981e1a1b52b9ef06522c81af54d7dd840ad33ed5b1ebf2c8bf066e04b9b6f05",
+    "status": "partially_supported",
+    "context": "Retrospective review of four deterministic accepted entries at levels 2/4: all current endpoints are exact. Full Sergey4/4 mixed T6 solo gives game/current A1348 versus omission A2271 and enemy-Infantry-only A2215, supporting enemy offensive suppression outside Infantry in that kit. Attack-down versus Damage-down is identical in all four reviewed cases. Eight stochastic full-kit entries were skipped; exact bucket identity, coefficient/scaling, skill-kind and other interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Seo-yoon:RallyingBeat": {
+    "source_sha256": "2da25c9d7ed1fb6a04f20d39bbf76383c6ab99bcaf6f5ee10979463380be61b0",
+    "status": "partially_supported",
+    "context": "Retrospective review of five deterministic accepted entries at levels 1/3: all current endpoints are exact. Full recorded Seo-yoon1/3 solo gives game/current D620 versus omission D604 and Marksman-only D612. Mixed Seo-yoon S1=3 against Seo-yoon S1=1 + Jessie5/2 gives game/current A2128 versus omission A1136 and Marksman-only A1787; that diagnostic changes Seo-yoon effects on both sides. Together the cases support contribution outside Marksmen in the exercised kits. Attack-up versus Damage-up is identical in all five; bucket identity, independent coefficients/scaling, skill-kind and mode interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Jessie:Bulwarks": {
+    "source_sha256": "dbe8105a8e483774bdb8d94ba7f6d2abe0703aaff9739c44aa9f656bac9699ce",
+    "status": "partially_supported",
+    "context": "Retrospective review of fifteen accepted entries deterministic under the current runtime, levels 1/2: all current residuals are 0\u20132. Full Jessie 4/1 solo gives game/current A79 versus omission A208 and Lancer-only A186, supporting defensive contribution beyond Lancers. Moving the same value from damageTaken to Health changes none of the fifteen endpoints. One weak row improves from current A1133 to game A1131 on omission; that two-troop scale-relative change is retained and does not establish absence. Bucket identity, independent coefficients/scaling, skill-kind and other interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Patrick:CaloricBooster": {
+    "source_sha256": "a580a36f0f78f5c153ad23ac2da06de7d94193fe8f41b268e3bb1f312ca3e345",
+    "status": "partially_supported",
+    "context": "Retrospective review of eight accepted deterministic entries, levels 1/2/4: all current endpoints are exact. Recorded Jasser 2/3 + Patrick 1/1 gives game/current D807 versus omission D739 and Lancer-only D745; Patrick 2/1 solo gives A2582 versus A2686/A2659. This supports offensive contribution outside Lancers in those kits. Moving Attack to Damage or Lethality is identical in seven cases and gives A1915/A1919 versus game/current A1909 in the Edith overlap. That modest relative difference does not settle general bucket semantics; independent coefficients/scaling, skill-kind and mode interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Sergey:DefendersEdge": {
+    "source_sha256": "7981e1a1b52b9ef06522c81af54d7dd840ad33ed5b1ebf2c8bf066e04b9b6f05",
+    "status": "partially_supported",
+    "context": "Retrospective review of four accepted deterministic entries at levels 2/4: all current endpoints are exact. Full Sergey 4/4 mixed T6 solo gives game/current A1348 versus omission A2271 and Infantry-only A1621, supporting protection beyond Infantry. Moving damageTaken to Health changes only the Patrick overlap, A726 to A727, which does not identify the bucket. Eight stochastic full-kit entries were skipped. Independent coefficients/scaling, skill-kind and other interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Zinman:Implacable": {
+    "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+    "status": "partially_supported",
+    "context": "Retrospective review of six accepted entries deterministic under current runtime, all S1 level 1: current endpoints exact and both nested Defense/Health effects enter damage jobs. Zinman S1=1/S3=1 + Jessie 5/2 gives game/current D130 versus omission of both D86 and joint Marksman-only D87, supporting combined protection beyond Marksmen. Omitting either single effect gives D111, but putting both 2% contributions into one pool remains within 0\u20132 in every reviewed case. Thus combined contribution is supported; separate Defense/Health pools, each component scope, exact split and scaling are not established. The matching Flint combination does not verify Flint variability. No nested effect or whole skill is certified.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Zinman:PositionalBattler": {
+    "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+    "status": "partially_supported",
+    "context": "Retrospective review of three accepted deterministic entries with S3 level 1: all current endpoints exact. Recorded Zinman S1=1/S3=1 + Jessie 5/2 gives game/current D130 versus omission D89 and Marksman-only D105, supporting offensive contribution outside Marksmen. Moving Zinman from the pool shared with Jessie to separated Damage or Attack gives D139, supporting their shared additive pool over those alternatives in this kit. The symmetric Jessie comparison uses this same battle and is not another observation. The exact bucket label, coefficient, other levels, skill-kind and interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Bradley:VeteransMight": {
+    "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+    "status": "partially_supported",
+    "context": "Retrospective seven-entry review with full recorded kits. Five current endpoints exact; two Gatot combinations retain game D2296/current D2274 and game A851/current A834. In the strongest level 4 comparison, Wu Ming 3/3/3 + Bradley 4/4/4 gives game/current A112 versus omission D635 and Marksman-only A82, supporting contribution beyond Marksmen. Moving S1 into the existing Damage pool gives A77; moving to Lethality is identical throughout. This supports separation from the tested Damage pool, not a uniquely identified Attack label. Levels 1/3 occur in residual-bearing kits; exact scaling, skill-kind and broader interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Bradley:PowerShot": {
+    "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+    "status": "partially_supported",
+    "context": "Same seven accepted Bradley entries; five exact current endpoints and two retained Gatot residuals 22/17. Full Wu Ming 3/3/3 + Bradley 4/4/4 gives game/current A112, omission D642, Marksman-only A81. Omitting the Lancer/Infantry branch separately gives A72/D572; broadening them separately to every enemy type gives A251/A131. This supports both tested target branches and contribution beyond Marksmen. Hero-Damage placement gives A92; a normal-damage pool worsens other cases, providing contextual pooling support. All reviewed applications are normal jobs and normal-kind-only is identical, so skill-kind/single-target delivery boundaries remain unverified. Levels 3/4 present; exact coefficients and other interactions unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Bradley:TacticalAssistance": {
+    "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+    "status": "partially_supported",
+    "context": "Same seven accepted full-kit Bradley cases, with five exact current endpoints and Gatot residuals 22/17 retained. Wu Ming 3/3/3 + Bradley 4/4/4 gives game/current A112 versus omission D342 and Marksman-only A98, supporting contribution outside Marksmen. One-turn duration gives A73 and a one-turn-delayed window A97, supporting the current two-turn window over those alternatives in this kit. First turn 1 gives A113, so exact onset remains unresolved; other interrupted-attack/cadence cases are unreviewed. Attack pool gives A98, normal-damage pool A114; bucket identity and skill-kind remain unresolved or unreviewed. Level4 supports the clean comparisons; level 3 combinations retain residuals.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Edith:StrategicBalance": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "Two accepted T6 single-type fixtures preserve full Edith 3/3/3. Marksmen with Zinman 1/0/0 give game/current A1863; omit only S1 protection A1942, broaden Lancer offense to Marksmen A1772. Lancers with Patrick 3/2 + Jasser 4/4 give game/current A1909; omit only S1 offense A1978, broaden Marksman protection to Lancers A1829. Each nested effect is exercised in its own recipient fixture; these support the tested Marksman/Lancer distinction. Infantry scope, precise coefficients/scaling and skill-kind remain unreviewed. Health/Attack bucket substitutions differ only 6\u201313 at these larger endpoints, so general pool identity remains unresolved. Edith S2 has no Infantry to protect in either case and is not incidentally verified. The subsequent full333 Infantry-only100I versus400M capture also matches game/currentD102. Neither S1 branch has a deployed recipient and no S1 effect enters its simulated jobs, despite Battle Details displaying triggered1; this is only a negative-recipient context, not additional positive S1 contribution evidence. Direct UI confirms both currentLv3 values12% and both4/8/12/16/20 curves.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json",
+      "docs/mechanics-audit/probes/edith-ironclad/README.md",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/observation.json",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/replay.json",
+      "docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/reviewed-transcription.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Edith:SteelSentinel": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "Same two accepted full Edith 3/3/3 fixtures match game/current A1863 for Marksmen and A1909 for Lancers. Omitting S3 or restricting it to Infantry gives A1955/A1983, supporting level 3 contribution to each tested non-Infantry recipient. Health-to-damageTaken gives A1874/A1898; Health-to-Defense A1863/A1898. These modest scale-relative bucket differences do not settle general pool identity. Independent magnitude/scaling, other levels, skill-kind and battle-mode interactions remain unreviewed. A subsequent prospective full333 Infantry-only capture gives game/currentD102 against400 T6 Marksmen; omitting only S3 givesD155 (precision corners155\u2013156), adding positive level3 Infantry recipient evidence. All24 fresh stats are source-verified without correction. S2 remains active, and changing S2 to a Defense factor remains equivalent, so this does not identify all pools. Direct UI shows15% Health atLv3 and5/10/15/20/25 curve; other levels are UI-only here.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json",
+      "docs/mechanics-audit/probes/edith-ironclad/README.md",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/observation.json",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/replay.json",
+      "docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/reviewed-transcription.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Reina:ShadowBlade": {
+    "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+    "status": "partially_supported",
+    "context": "Five accepted solo battles with full WIP Reina1/1/1 and350 T6 Lancers against nohero150 T6 Infantry+50 T6 Lancers+50 T6 Marksmen. Exact report-resolved stats match after one source-verified OCR correction. Defender endpoints166,163,163,157,174 (mean164.6; sampleSD6.188699) retain Infantry66,63,63,57,74 and untouched50/50 backlines, with6\u201310 displayed S3 activations per battle. This supports level1 current-target delivery relative to the specified fanout alternative. Corrected additional120% predicts162.89/SD6.53, CDF/support p=.599520; old additional20% predicts179.17/SD1.97,p=.000150. A bounded retrospective challenge tested20% normal-kind increment and two4% dodge timing alternatives; all remain incompatible with the new five outcomes. Extending reactive dodge through the round also fails six older S3-locked observations, while current dodge fits them. Thus level1 magnitude is supported conditional on this full-kit implementation; exact S2 correlation remains unresolved. The directly captured upgrade preview shows120/140/160/180/200%, but levels2\u20135 have no S3-enabled battle in the14 reviewed fixtures. The first case informed the100/120 diagnostic alternatives; full exposure history remains recorded. Inner source ceiling and fractional stored-state arithmetic were retained constraints. Exact chance, independent S1/S2 behavior, all-source exclusions, ordering, stacking, target exhaustion and rally/joiner behavior remain unreviewed. S2 displayed triggered1 in all five reports is not treated as the dodge count. On2026-09-07 Paul explicitly confirmed Reina S3 is skill damage. This is accepted user-confirmed classification evidence, separate from what the five magnitude battles independently identify; the preserved normal-kind20 diagnostic is a rejected counterfactual, not an open classification proposal.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/reina-shadowblade/README.md",
+      "docs/mechanics-audit/probes/reina-shadowblade/capture-summary.json",
+      "docs/mechanics-audit/probes/reina-shadowblade/shadow-blade-upgrade-preview.json",
+      "docs/mechanics-audit/probes/reina-shadowblade/input-correction.json",
+      "docs/mechanics-audit/reviews/reina-extra-attack-magnitude/README.md",
+      "docs/mechanics-audit/reviews/reina-extra-attack-magnitude/results.json",
+      "docs/mechanics-audit/reviews/reina-alternate-semantics/README.md",
+      "docs/mechanics-audit/reviews/reina-alternate-semantics/parity.json",
+      "docs/mechanics-audit/damage-kind-confirmation-2026-09-07.md"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "magnitude_and_level_scaling",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Philly:DosageBoost": {
+    "source_sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+    "status": "partially_supported",
+    "context": "Retrospective replay of all eight accepted Philly entries (25 stored outcomes), 1000 samples per candidate per entry, preserving full kits/stats. Live level2 tooltip says25% chance of140% damage with120/140/160/180/200 preview. Current separate extra40 at level2 is compatible in all eight comparisons; interpreting displayed140 as extra140 fails six. Clean fullPhilly220 Infantry repeats gameA769/768 versus current768.34 SD0.61 p=.732113 and extra140761.01 SD1.89 p=.000050. FullSergey22+Philly220 840Inf gameA[24,7,32,27] gives currentA4.15 SD29.76 p=.294235 versus extra140D271.10 SD21 p=.000050. Normal-job+40 reproduces identical seeded outcomes in the clean Infantry cases and remains plausible elsewhere, so these endpoint replays alone do not establish separate-skill delivery. Magnitude support is bounded mainly to level2 under current25% chance and other full-kit rules; the single level1 mixed-hero record is confounded and even favors the larger alternative without rejecting current. Levels3\u20135, exact probability, scope and untested damage-kind interactions remain unreviewed. This does not transfer Philly semantics to Reina. On2026-09-07 Paul explicitly confirmed Philly S2 is skill damage. This is accepted user-confirmed classification evidence, separate from the magnitude replays; preserved normal-job diagnostic alternatives do not override that confirmation.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-dosage-interpretation/README.md",
+      "docs/mechanics-audit/reviews/philly-dosage-interpretation/results.json",
+      "docs/mechanics-audit/reviews/philly-dosage-interpretation/summary.json",
+      "docs/mechanics-audit/hero-tooltips/minxxx-philly-2026-09-07/skill_2-panel.png",
+      "docs/mechanics-audit/damage-kind-confirmation-2026-09-07.md"
+    ],
+    "supported_dimensions": [
+      "magnitude_and_level_scaling",
+      "damage_kind"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Logan:LionStrike": {
+    "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+    "status": "partially_supported",
+    "context": "Retrospective three deterministic entries at levels1/3 all exact. FullLogan333+Gwen110 with attacker600I/600L/600M versus defender200each gives game/currentD403; omit LionStrike D292, restrict to enemyInfantry D309. FullLogan333 solo gives D1134 versus D1126/D1127. This supports debuff contribution beyond enemyInfantry in these normal-attack contexts. The level1 solo game/currentD1995 is unchanged on omission, so it is not an independent magnitude discriminator. AttackDown/DamageDown/LethalityDown alternatives give identical endpoints; exact bucket and coefficient scaling remain unreviewed. Eight stochastic full-kit entries skipped.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Logan:LionIntimidation": {
+    "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+    "status": "partially_supported",
+    "context": "Retrospective two deterministic level3 entries, both exact. FullLogan333+Gwen110 game/currentD403 versus selected-skill omissionD292; fullLogan333 soloD1134 versus omissionD1126. These show a protective contribution conditional on retained full-kit mechanics. Only ownInfantry receives attacks in either case, so Infantry-only recipients and DefenseUp alternatives are exactly equivalent to current; HealthUp givesD400/D1133, a small residual that does not establish a unique bucket. All-troop scope, normal/skill interactions and scaling remain unresolved. Eight stochastic full-kit entries skipped. No complete review dimension is promoted from endpoint fit alone.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Logan:LeaderInspiration": {
+    "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+    "status": "partially_supported",
+    "context": "Retrospective two deterministic level3 entries, both exact. FullLogan333+Gwen110 game/currentD403 versus selected-skill omissionD270; fullLogan333 soloD1134 versus omissionD1124. These show a protective contribution conditional on retained full-kit mechanics. Only ownInfantry receives attacks; Infantry-only recipients and DefenseUp alternatives give identical outcomes, while DamageTakenDown givesD400/D1133. This does not identify all-troop scope, exact Health grouping or five-level scaling. Six stochastic full-kit entries skipped. No complete review dimension is promoted from endpoint fit alone.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Ling:FearsomeAura": {
+    "source_sha256": "9e6fea7158f274e41993a30bdc3249bd18f8b566160aaeac428a8e6649181755",
+    "status": "partially_supported",
+    "context": "Retrospective two full Ling11/LingXue11 solo T6 mixed entries at level1. Game/currentA2822/A2822 and A3215/A3214; omissionA2880/A3244, restricting debuff to enemyLancersA2859/A3242. This supports a normal-attack debuff beyond enemyLancers with recorded canonical and alias kits preserved. AttackDown/DamageDown/LethalityDown yield identical endpoints, so bucket is unseparated. The empty second-skill placeholder is not a combat mechanic. Higher levels, skill-kind interactions and ownership/mode gates remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Lumak:TacticalDeception": {
+    "source_sha256": "80c77f1631649f803dc5408a744c6b7ac6aa765450b730cd9ab1296caf87472e",
+    "status": "partially_supported",
+    "context": "Retrospective two full Lumak11/LumakBokan33 solo T6 mixed entries at levels1/3. Game/currentA2797/A2797 and A3127/A3126; omissionA2837/A3234, restricting debuff to enemyLancersA2834/A3204. This supports a normal-attack debuff beyond enemyLancers with recorded aliases preserved. DamageDown/AttackDown/LethalityDown alternatives give identical endpoints; bucket and full scaling curve remain unseparated. Five stochastic full-kit entries including FC/Gatot were skipped, and no combat claim applies to the empty second-skill placeholder.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/defensive-support-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Mia:BadLuckStreak": {
+    "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+    "status": "partially_supported",
+    "context": "All 14 accepted full-kit fixtures/73 outcomes replayed,1000 samples per current/omit/Lancer-only model. Current distributions all plausible. Mia 3/2/2 defender repeated fixture mia_only_defender_current#0 (n 10) gives gameA3543.9 SD13.77/current 3544.451 SD16.717 p.99995; omit 3644.98 p.00005, restrict trigger to Lancers 3587.439 p.00005. The n 20 sibling and n 18 Greg/Mia fixture reject both alternatives too. Attacker-side Mia_tc#2 has only S1level 1 configured: six game outcomes mean 1124.167 SD4.792 versus current 1124.669 SD4.668; omit 1042, Lancer-only 1088.625. This supports positive curse contribution and source activation beyond Lancers at tested levels 1/3, conditional on other current rules. Exact probability, next-turn delay, target scoping/retargeting, damage bucket, magnitude scaling and rally/joiner behavior remain unreviewed. Single mixed-hero row#5 is weaker and even favors omission without rejecting current; it is not used as main positive support.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/BadLuckStreak-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/BadLuckStreak-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Mia:LuckyCharm": {
+    "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+    "status": "partially_supported",
+    "context": "All 11 accepted full-kit fixtures/65 outcomes replayed,1000 samples per current/omit/Lancer-only model. Current distributions all plausible; every omission fails and 8 source restrictions fail. FullMia 3/2/2 repeated mia_only_defender_current#0 gives gameA3543.9 SD13.77/current 3544.451 SD16.717 p.99995 versus omission 3592.551 p.0001 and Lancer-only 3573.705 p.00005. The n 20 sibling and n 18 Greg/Mia fixture similarly distinguish both alternatives. Existing level 1 Mia_tc#1 has 7 outcomes mean 1625.14; current 1613.326 SD40.876 p.871806 versus omission 1900.09 and Lancer-only 1791.877, both rejected. Traces contain generated jobs from all 3 own classes, supporting contribution and source scope beyond Lancers in these defender contexts. Separate-skill delivery, exact 50% chance, values/level scaling, bucket, ordering, target exhaustion, attacker-side and rally/joiner behavior remain unreviewed; no Attack-boost-versus-extra-job semantic equivalence is resolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/LuckyCharm-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/LuckyCharm-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Mia:RitualDeciphering": {
+    "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+    "status": "partially_supported",
+    "context": "All 8 accepted full-kit defender fixtures/53 outcomes replayed,1000 samples per current/omit/Lancer-only model. Current distributions all plausible. FullMia 3/2/2 repeated mia_only_defender_current#0 gives gameA3543.9 SD13.77/current 3544.451 SD16.717 p.99995; omit protection 3564.358 p.00005, Lancer-only recipients 3560.919 p.0002. The n 20 sibling and n 18 Greg/Mia fixture also reject both alternatives. Traces exercise protection on Infantry,Lancers,Marksmen as lines die; contrasts support protection beyond Lancers, mainly at level 2 with repeated evidence. Sparse level 1 outcomes vary in discrimination; one accepts omission. Exact 40% shared-round chance, magnitude/level scaling, denominator bucket, per-round versus per-hit timing, stacking, exhaustion and attacker/rally/joiner behavior remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/RitualDeciphering-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Molly:CallingOfTheStorm": {
+    "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "status": "partially_supported",
+    "context": "All 5 accepted full-kit fixtures/13 outcomes replayed,1000 samples per candidate. In fullMolly 2/2/1 solo 300T6 versus 840T6, gameA245/245/244/245/245 (mean 244.8 SD.447) is plausible under current 243.842 SD1.242 p.060497; observed spread is narrower and remains uncertain withn 5. Omit or Lancer-only protection both give 239.802 SD.768 p.00005. Only ownInfantry receive damage in these traces, so this supports protection beyond Lancers, specifically Infantry; untouched-backline protection is not independently established. FullMolly/Lynn repeated defender case currentD403.042 SD2.402 p.572471 also rejects either alternative atp.0002. Level 5/T10 single case accepts omissions and is not positive high-level evidence. Mixed-heroes#2 remains unresolved (gameD2823/current 2908.756 SD26.667 p.0021); deleting Molly protection worsens it but does not identify its cause. Exact 40% chance, magnitude/scaling, shared-round lifecycle, stacking, other target/exhaustion and mode/joiner branches remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Molly:IceDominion": {
+    "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "status": "partially_supported",
+    "context": "All 5 accepted full-kit fixtures/13 outcomes replayed,1000 samples per candidate. FullMolly 2/2/1 solo 300T6 versus 840T6 gameA245/245/244/245/245 is plausible under current 243.842 SD1.242 p.060497; omit gives 237.177 p.00005 and Lancer-only activation 241.101 p.00015. Generated attacks from all 3 ownclasses support contribution and activation beyond Lancers at level 2 in this full-kit context. FullMolly/Lynn repeated case rejects omission (p.0003) but Lancer-only remains plausible (p.022949), so that fixture alone does not certify source scope. Level 4/T10 single case accepts both alternatives and is not positive high-level support. Existing mixed-heroes#2 remains unresolved (gameD2823/current 2908.756 SD26.667 p.0021); both structural restrictions worsen it without attributing the cause. Exact 50% probability, coefficient scaling, skill-versus-normal or augmentation semantics, target locking/exhaustion, stacking and rally/joiner behavior remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/IceDominion-initial.json",
+      "docs/mechanics-audit/reviews/mia-molly-2026-09-07/IceDominion-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Edith:Ironclad": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "One prospective small deterministic capture with full minxxx Edith3/3/3 and100 T6 Infantry versus WIP nohero400 T6 Marksmen. All24 fresh report stats are visually verified without correction. Game and frozen fresh-stat current leaveD102; omitting only Ironclad givesD146 (precision corners146\u2013147), while current all256 corners remainD102. This positively supports the level3 Infantry protection contribution conditional on S3 and the fullkit. Direct UI shows12% atLv3 and4/8/12/16/20 curve; other levels remain battle-unverified. S1 has no deployed recipient. Ironclad into Health givesD108\u2013109 while Defense remainsD102, so general bucket identity is not uniquely established. Current traces apply Ironclad to143 incoming normal jobs;143 is simulated, not a game round count. Skill-kind incoming damage, non-Infantry exclusions, independent level scaling, other stacking and mode interactions remain unreviewed. Battle Details triggered1/killsdash is retained as diagnostic, not independent evidence. Historical and hypothetical pre-capture stat scenarios are preserved as conditional; only the fresh report input determines agreement.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/edith-ironclad/README.md",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/observation.json",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/replay.json",
+      "docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/reviewed-transcription.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "magnitude_and_level_scaling"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Hector:SurvivalInstincts": {
+    "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+    "status": "partially_supported",
+    "context": "All 6 accepted full-kit fixtures/14 outcomes replayed with 1000 samples per current, omission and Infantry-only model. Full Hector 3/4/3 solo: game defender 402/409/373/403/385 (mean 394.4 SD14.926), current 386.602 SD23.785 p.991; omission 219.789 p.00005, Infantry-only 384.984 p.936653. Full Norah/Hector/Zinman repeated game mean 270.4/current 269.491 SD1.367 p.334433 rejects omission 266.334 p.00025 but Infantry-only samples equal current. Five of six fixtures are exactly unchanged by Infantry-only restriction; occasional Lancer protection in solo traces is insufficient positive game evidence for backline scope. Supports protection contribution mainly at level 3, not all-troop scope, precise 40% chance, values/scaling, bucket or shared-turn lifecycle. Mixed-hero and Hector/Renee/Wayne high-tail outcomes remain explicit; the latter gameA1597 versus current1588.164 SD2.904 p.0074 this seed is not declared resolved. Levels 1/5, joiners and widget gates remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/SurvivalInstincts-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/SurvivalInstincts-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": []
+  },
+  "hero:Hector:Rampant": {
+    "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+    "status": "partially_supported",
+    "context": "All 6 accepted full-kit fixtures/14 outcomes replayed with fixed current, whole/Infantry/Marksman omission and no-decay alternatives. Full Hector 3/4/3 solo n5: gameD394.4 SD14.926/current386.602 SD23.785 p.991; omit Infantry345.432 p.0014, omit Marksman346.654 p.00185, retain initial magnitudes/10 uses without decay412.075 p.00005. Repeated Norah/Hector/Zinman independently rejects both class omissions and no-decay while current269.491 SD1.367 agrees with game270.4 p.334433. Supports both class contributions and a diminishing boost versus none at S2level4; not exact 15% decrement, 10-use boundary, generated-job consumption, target scope, bucket or all levels. No-decay improves the isolated mixed-hero and Hector/Renee/Wayne high-tail points but fails both repeated fixtures, so it is not a supported fix. Level3 single outcomes are weaker; levels1/2/5 and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Rampant-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Rampant-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Hector:Blitz": {
+    "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+    "status": "partially_supported",
+    "context": "All 6 accepted full-kit fixtures/14 outcomes replayed with 1000 samples per current, omission and Infantry-only-source model. Full Hector 3/4/3 solo n5: gameD394.4 SD14.926/current386.602 SD23.785 p.991; omission changes simulated winners with signed defender mean27.715, p.00015, Infantry-only defender mean165.968 p.00005. Repeated Norah/Hector/Zinman (S3level4) gameD270.4/current269.491 p.334433 rejects omission263.828 and Infantry-only265.188, both p.00005. Generated current jobs from all three own classes corroborate simulator execution; endpoint contrasts support positive extra contribution and activation beyond Infantry in these contexts. Hector/Patrick accepts omission and provides weak positive discrimination. Existing mixed-hero/Hector-Renee-Wayne discrepancies remain; exact 25% chance, values/scaling, damage kind versus augmentation, trigger ordering, target locking/exhaustion, attacker-side scope and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Blitz-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Blitz-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Gordon:VenomInfusion": {
+    "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+    "status": "partially_supported",
+    "context": "All 7 accepted full-kit fixtures/11 outcomes replayed; 6 deterministic, repeated Lynn-containing wos444 stochastic with 1000 samples per model. The full Flint221/Gordon221/Jasser44 wos451 S1/S2 bucket fixtures give gameD1517/1017 versus current1516/1016, within one survivor. Moving only S1 boost from type.normal.damage.up to active.hero.damage.up while retaining normal-kind restriction gives1563/1052; boost omission1798/1226 and poison omission1578/1062 also disagree. Supports both halves and normal-versus-hero stacking bucket in this interaction at level2. Stochastic wos444 gameA5065.4 SD228.015/current5049.677 SD216.571 p.372931 rejects boost omission but permits poison omission and hero bucket at the raw threshold; not a universal discriminator. Wayne fixtures retain raw3/16 survivor residuals; Gatot secondary kit retains17 survivors/10 rounds and s3-5000 retains423 survivors/114 rounds, unchanged endpoint by every selected variant. These do not identify Gordon as the cause. Exact cadence, delayed poison lifecycle, damage-kind restriction, all scope/scaling and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/VenomInfusion-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/VenomInfusion-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Gordon:ChemicalTerror": {
+    "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+    "status": "partially_supported",
+    "context": "All 7 accepted full-kit fixtures/11 outcomes replayed with current, whole/offense/enemy-debuff omission and enemy-Infantry-only alternatives. Full Flint221/Gordon221/Jasser44 wos451 fixtures give gameD1517/1017 versus current1516/1016; offense omission1796/1223 and enemy-debuff omission1576/1061 support both contributions at level2. Restricting enemies to Infantry is identical there and does not establish broader scope. Repeated wos444 gameA5065.4 SD228.015/current5049.677 SD216.571 p.372931; enemy-debuff omission5309.568 p.00225, Infantry-only5290.047 p.00585, a weak near-threshold distinction insufficient to certify all-enemy scope. Traced current debuffs hit all classes but that is simulator execution, not independent game proof. Contribution-only annotation; exact every3 timing/duration, buckets, magnitude/scaling, offense class specificity and all-enemy scope remain unreviewed. Wayne3/16 and Gatot17/423 survivor residuals plus Gatot round discrepancies remain explicit and unattributed; level3 observations do not provide clean positive closure.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial.json",
+      "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": []
+  },
+  "hero:Hendrik:WormsRavage": {
+    "source_sha256": "fc16f4c3883a71fc6c3eb5ec3fb7bc7c2daf88cde21b35220720a34fc769e440",
+    "status": "partially_supported",
+    "context": "Current S3-first2 full-kit review of all four accepted Hendrik entries. Lancer full333 game/currentD17 reverses toA20 when S1 is omitted or restricted to enemyMarksmen. Positive250M game/currentD471 gives omissionD488 and restrictedD484; smaller gameD68/currentD71 gives D104/D97, retaining the3-troop raw residual. HistoricalRenee444+Hendrik100 game/currentA14 reverses toD17 without the S1 contribution. This supports debuff contribution beyond enemyMarksmen at levels1/3 in these preserved kits. Exact DefenseDown grouping, complete scaling, normal/skill interactions and lifecycle/mode gates are not independently established.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Ahmose:ViperFormation": {
+    "source_sha256": "e143491e9b102c0e5d2b05262bece0ac11e2975414722100efd1a577d974f005",
+    "status": "partially_supported",
+    "context": "Historical review under the source-gated Viper model below; its source hash is intentionally retained. Superseded on 2026-09-08: source-free turn scheduling now creates the Infantry pause, and only actual no_attack use creates protection starting next turn for two turns. Four active fixture survivor vectors are unchanged against the immediately preceding configuration; prior omission, magnitude and cadence comparisons have not been rerun. Two prospective full-kit level1 captures establish a necessary Infantry-source condition for new Viper activations. No own Infantry:240T6L versus125T6I gives gameD11, old unconditional-turn modelA15, correctedD11. Initially1T6I plus480T6L versus250T6I gives game0I/3L, old61L, corrected3L; both frozen models exhaust Infantry after only two normal attacks before any candidate activation. Actual game death turn is not observed. All24 stats and full kits verified; Viper display dashes preserved as null. Production adds only source=infantry to the existing every4-turn trigger, supported by new explicit source-liveness handling. Source-less turn schedules and previously activated effect durations are unchanged. These captures do not discriminate attack-versus-turn cadence, three-versus-four normal attacks, or post-death expiry of an already active shield. In the prior clean Renee444/Ahmose113 attacker input, game3777/current3778 and prior Infantry-pause/protection contrasts remain unchanged. Solo game2633 improves2615 to2640; archived weaker game1631 improves1622 to1633; archived strong game2810 improves2574 to2709 but retains101 unexplained survivors of error. The tooltip once every four times remains ambiguous and retrospective cadence alternatives conflict across these inputs. Positive backline magnitude, higher levels, exact phase and broader interactions remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json",
+      "docs/mechanics-audit/hero-tooltips/WIP-ahmose-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-review.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-results.json",
+      "docs/mechanics-audit/probes/ahmose-no-infantry/README.md",
+      "docs/mechanics-audit/probes/ahmose-no-infantry/capture-01/observation.json",
+      "docs/mechanics-audit/probes/ahmose-no-infantry/capture-01/captured-prediction.json",
+      "docs/mechanics-audit/probes/ahmose-no-infantry/source-death/README.md",
+      "docs/mechanics-audit/probes/ahmose-no-infantry/source-death/capture-01/observation.json",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/source-gate-adoption.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/source-gate-adoption.json",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/pre-source-gate-annotations.json"
+    ],
+    "supported_dimensions": [
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "magnitude_and_level_scaling",
+      "trigger_chance_and_cadence"
+    ]
+  },
+  "hero:Ahmose:PrayerOfFlame": {
+    "source_sha256": "e143491e9b102c0e5d2b05262bece0ac11e2975414722100efd1a577d974f005",
+    "status": "partially_supported",
+    "context": "Historical review under the source-gated Viper model below; its source hash is intentionally retained. Superseded on 2026-09-08: source-free turn scheduling now creates the Infantry pause, and only actual no_attack use creates protection starting next turn for two turns. Four active fixture survivor vectors are unchanged against the immediately preceding configuration; prior omission, magnitude and cadence comparisons have not been rerun. Level1 positive Infantry contribution is conditionally supported by the clean Renee444/Ahmose113 attacker input: game3777/current3778, omit Prayer3756, broaden to all own classes3872. These comparisons are unchanged after the Viper source correction. The solo game2633 now gives2640 with Prayer versus2659 omitted and1943 when broadened to all own classes. Its former omission near-fit2634 occurred under the old unconditional Viper model and no longer supports omitting Prayer; the original review is preserved. New full110 source probes give exact outcomes but do not positively isolate S2 magnitude (one has no Infantry, the other just one). Exact coefficient/grouping, higher levels, mode/role interactions and remaining full-kit residuals stay unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json",
+      "docs/mechanics-audit/hero-tooltips/WIP-ahmose-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/source-gate-adoption.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/source-gate-adoption.json",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/pre-source-gate-annotations.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Ahmose:BladeOfLight": {
+    "source_sha256": "e143491e9b102c0e5d2b05262bece0ac11e2975414722100efd1a577d974f005",
+    "status": "partially_supported",
+    "context": "Historical review under the source-gated Viper model below; its source hash is intentionally retained. Superseded on 2026-09-08: source-free turn scheduling now creates the Infantry pause, and only actual no_attack use creates protection starting next turn for two turns. Four active fixture survivor vectors are unchanged against the immediately preceding configuration; prior omission, magnitude and cadence comparisons have not been rerun. Three known accepted full-kit inputs exercise S3level3: the clean Renee444/Ahmose113 attacker input and two archived Renee/Ahmose defender inputs. The clean input still gives game3777/current3778 after the Viper source correction; prior S3 omission3675, offensive-buff omission3737 and delayed-target-debuff omission3720 remain contextual evidence for both contributions. Infantry survive throughout that input, so Viper source gating does not alter its comparison. Prior target-debuff2turns3818 versus immediate3774/current3778 does not firmly identify exact delay at this battle scale. Archived strong game2810/current2709 still disagrees materially; archived weaker game1631/current1633 is close after source gating. They exercise S3 in a combined kit without isolating its branches. Single enemy class in the clean input cannot distinguish locked versus broad targets. New110 captures have S3 locked and provide no positive S3 evidence. Damage grouping/kind, coefficients/scaling, exact delay and source/target interactions remain unreviewed or unresolved; no complete mechanic dimension is certified.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json",
+      "docs/mechanics-audit/hero-tooltips/WIP-ahmose-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/source-gate-adoption.md",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/source-gate-adoption.json",
+      "docs/mechanics-audit/reviews/renee-ahmose-lifecycle/pre-source-gate-annotations.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "duration_delay_and_order",
+      "source_and_target_scope",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Greg:SwordOfJustice": {
+    "source_sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76",
+    "status": "partially_supported",
+    "context": "Retrospective seven distinct fullGreg110 input sets with53 recorded outcomes;1000 simulations per candidate per input. Current distributions are compatible in all seven (p=.015449\u2013.955052). Stronger repeated Greg-only sets support offense outside Marksmen and a window longer than1turn: entry#2 n20 current3594.42 SD4.80 p=.788911, omission3608 SD0 p=.000050, Marksmen-only3598.80 SD3.20 p=.000050, duration1 3602.18 SD2.40 p=.000100; entry#0 n6 similarly separates narrow scope and1turn. Norah/Greg does not distinguish selected S1 alternatives; Mia/Greg and single older solo do not independently reject narrow scope. Exact20% chance,3versus2turns, max stacking, grouping and higher levels remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "stacking_and_buckets",
+      "magnitude_and_level_scaling"
+    ]
+  },
+  "hero:Greg:DeterrenceOfLaw": {
+    "source_sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76",
+    "status": "partially_supported",
+    "context": "Prospective fullGreg110,200T6 Infantry versus nohero400T6 Marksmen: five verified gamesD113/108/109/113/110, mean110.6 SD2.302. Frozen current predicts111.049 SD4.326 p0.840858; S2 omission124.271 SD2.833 p0.000100. Positive S2 contribution from an Infantry source is supported, distinguishing it from omission/Marksman-only eligibility, unlike the seven earlier input sets which accepted omission. S1 chance remains in the full kit; S3 is actually locked. All24 stats and report identities verified, screenshots preserved; first-battle two-field OCR correction backed by clean counterpart and original data retained. Used stats match original forecast and every4096 endpoint/model row matches verified-input replay. One persistent enemy line cannot identify target lock versus all-enemy scope. Exact20% chance,10% magnitude, delay1/two-turn duration, stacking, higher levels and role behavior remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/hendrik-ahmose-greg-2026-09-07/definitions.json",
+      "docs/mechanics-audit/probes/greg-deterrence/README.md",
+      "docs/mechanics-audit/probes/greg-deterrence/comparison-five-battles.json",
+      "docs/mechanics-audit/probes/greg-deterrence/capture-01/input-correction.json",
+      "docs/mechanics-audit/probes/greg-deterrence/production-validation.json",
+      "docs/mechanics-audit/probes/greg-deterrence/capture-manifest.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "duration_delay_and_order",
+      "stacking_and_buckets",
+      "damage_kind"
+    ]
+  },
+  "hero:Gatot:GoldenGuard": {
+    "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "status": "partially_supported",
+    "context": "All63 active Gatot entries/63 stored outcome records replayed (500 per stochastic candidate, one per deterministic). Single-Gatot s34 gives exact D236@179 and s35 D314@167; removing GoldenGuard changes them to A468 and D131. This supports positive protection contribution in those full-kit contexts. Broadening recipients to all own classes leaves61/63 fixture samples/endpoints unchanged; the other differences are only4/5 survivors at larger scales, so exclusive Infantry scope is not established. Exact defense bucket identity, level curve, other damage-kind interactions and joiners remain unreviewed. Existing Gatot s3 gameA4573@1151/current4996@1037, s15.3 A1281@907/current1327@898 and stochastic S8tails remain explicit and unattributed; no counts, levels or established fractional/source-ceiling arithmetic were changed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/gatot-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/GoldenGuard-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/GoldenGuard-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": []
+  },
+  "hero:Gatot:KingsBestowal": {
+    "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "status": "partially_supported",
+    "context": "All63 active Gatot entries/63 stored outcome records replayed, retaining A-D draw margins, both sides, winner and rounds. Small s42 Wayne battle gameA200/D168@1500 is reproduced exactly424/500 times; remaining76 areA199/D172@1500. Restricting only Gatot shield eligibility to normal damage eliminates the attacker in all500 runs (meanD407.216, rounds918-1148); current traces shield9485 Wayne skill jobs across16 runs. Supports genuine skill-damage protection. Single-Gatot s34/s35 exact D236@179/D314@167 reject omission, while s41 exactA939@196 and accepted per-source kills corroborate the established conserved sequential pool across Infantry/Lancer/Marksman attacks. Reciprocal s43/s44 draws exactly173/200 and975/498 at1500 retain source-count-cap context. No fixed per-formation pool, fractional-state or inner source-ceiling alternatives were reopened. S3gameA4573@1151/current4996@1037, S15.3 and S8rare-tail contradictions remain. Exact all-level formula, delay, stacking and joiner branches are not closed by this review.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/gatot-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/KingsBestowal-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/KingsBestowal-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "damage_kind",
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Gatot:RoyalLegion": {
+    "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "status": "partially_supported",
+    "context": "All63 active Gatot entries/63 stored outcome records replayed. Single-Gatot s34 with enemy2100L/2100M gives exactD236@179; removing RoyalLegion or restricting its recipients to enemy Infantry changes winner to A112. s35 with enemy3000L/1000M gives exactD314@167 versusD168 under either alternative. Bilateral s38 exactD224@343 changes to A812 when limited to enemy Infantry. These support enemy scope beyond Infantry and positive contribution in tested level contexts; they do not uniquely establish attack-down bucket identity, all values/levels or skill-kind applicability. S3current4996@1037 versusgame4573@1151 remains far off under omission4974 or Infantry-only4982. Larger-scale residuals and stochastic S8tails remain explicit; no arbitrary coefficient fitting, fixture correction or arithmetic change.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/gatot-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/RoyalLegion-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/RoyalLegion-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Renee:NightmareTrace": {
+    "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "status": "partially_supported",
+    "context": "Reviewed all9 active Renee entries plus15 accepted archived entries and one standalone recorded Gwen input:25 distinct input entries/39 outcome records, including3 existing nohero controls; independence not inferred and no cross-file pooling. Active WuMing reduction discriminator gameA359/51activations is exact current; only switching S1 to skill gives347/52, immediate delivery367/51. Opposite-side archived WuMing skill-boost overlap gameA1639/current1637 gives1299 as skill and1531 immediate, strongly supporting normal classification and delayed delivery in those contexts. Archived zero-Lancer full kit2688 exact versus broad S1carrier2667, plus100L game/current2352 versus broad2409, supports Lancer source gating. Current all-kit component omissions materially disagree elsewhere. Ambusher10records admit both current and immediate distributions and preserve trial2 conflicting totals/class counts; they do not decide delivery. Archived strong Ahmose game2810/current2574 and high-level Hendrik/FC game46014/current48221.448 SD638.778 p.001 remain unresolved. Exact preparation snapshot, blocked-source cadence, retargeting, coefficient curve and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/renee-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/NightmareTrace-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/NightmareTrace-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "damage_kind",
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Renee:Dreamcatcher": {
+    "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "status": "partially_supported",
+    "context": "Reviewed8 active entries plus15 archived entries and standalone recorded Gwen input:24 distinct entries/29 outcome records (including3 existing nohero controls); records are not assumed independent across files. Full-kit Ahmose attacker gameA3777/current3778 changes to3857 when only S2 is broadened beyond marking Lancers; archived100L game/current2352 changes to2297,25L game2515/current2516 changes to2457. This supports the tested Lancer source scope and positive component contribution; pure-Lancer Charge game/current50 becomesD402 if S2 is omitted. Broader damage-kind eligibility yields Gwen2000L current/game1221 versus1233, but modest scale-relative differences and improved Wayne/archived Hendrik stochastic compatibility leave normal-only eligibility unreviewed. Renee solo omission differs by only1 and is not a strong individual-component discriminator. Strong archived Ahmose236-survivor residual and high-level Hendrik/FC tail remain explicit; no inference that S2 uniquely causes either. Exact buckets, all-level coefficients, mark timing/target locking/exhaustion and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/renee-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamcatcher-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamcatcher-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Renee:Dreamslice": {
+    "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "status": "partially_supported",
+    "context": "Reviewed8 active entries plus15 archived entries and standalone recorded Gwen input:24 distinct entries/29 outcome records (including3 existing nohero controls), no cross-file pooling or assumed report independence. Full-kit Ahmose attacker gameA3777/current3778 falls to3732 with S3 restricted to marking Lancers; archived100L game/current2352 changes to2380 and25L game2515/current2516 changes to2545. These support damage contribution beyond marking Lancers in those contexts. Charge game/current50 changes toD191 without S3. Solo game/currentD554 changes only1 on omission, so that fixture does not independently identify S3. Broader normal+skill eligibility yields recorded Gwen1221/current1221 versus1227 but improves the Wayne stochastic point; modest larger-scale gaps do not certify normal-only eligibility. Strong archived Ahmose game2810/current2574 and high-level Hendrik/FC tail remain unresolved. Exact all-class/target rules, damage-kind restriction, bucket, values/scaling, cadence/exhaustion and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/renee-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamslice-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamslice-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Alonso:Onslaught": {
+    "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+    "status": "partially_supported",
+    "context": "15 distinct full-kit inputs/86 records overlap S2; levels1/3. Repeated clean attacker110 and defender334/344 cases reject omission, Marksmen-only scope and two-turn rather than one-turn windows. No-Marksman attacker110 still needs the contribution. Mixed six-hero#2 remains a genuine conditional disagreement after10000 current simulations: gameD2823 versusD2907.58 SD26.67 p=.000750; omission is closer there, but clean cases reject omission. One insensitive mixed entry staysD3729 without S1. Context supports scope beyond Marksmen and tested window length, not exact40% chance, phase, full scaling or universal agreement.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Alonso:IronStrength": {
+    "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+    "status": "partially_supported",
+    "context": "15 inputs/86 records; levels1/2/3/4. Positive contribution in defender344 entry: currentA1457.55 SD15.94 p=.191840, omissionA1479.85 p=.000300, all-enemy recipientA1345.61 p=.000100. Bilateral110vs344 without Marksmen gives gameD737\u2013764/currentD750.58 SD13.45 p=.894505; omission p=.001050 and Marksman-source-only p=.001750 support non-Marksman triggering somewhere in the combined kit, not separate side ownership. All-enemy scope fails14/15, while omission remains plausible13/15 and immediate/delayed-one-turn alternatives remain plausible in positive cases. Exact phase/duration/chance/max stacking remain unresolved. Mixed six-hero#2 current10k p=.000750 retained without assigning its cause to this skill.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "duration_delay_and_order",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Alonso:PoisonHarpoon": {
+    "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+    "status": "partially_supported",
+    "context": "Nine full-kit inputs/64 records hydrate levels1/4. Omission rejected8/9; Marksman-source-only rejected5/9. Clean defender334 solo currentA1231.04 SD335.51 p=.293085 versus omissionA2391.72 p=.000050 and Marksman-source-onlyA1637.78 p=.000050; independent defender344 and attacker344 repeated input sets also separate non-Marksman contribution. Only level1 context is mixed six-hero#5 where omission and restricted-source remain plausible. No exact50% probability, coefficient curve, extra-job versus ordinary delivery, target lock after exhaustion or damage-kind interaction is established by this scope-only batch.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "damage_kind",
+      "troop_exhaustion_and_retargeting"
+    ]
+  },
+  "hero:Bahiti:SixthSense": {
+    "source_sha256": "8c011dfae7c57979ca77241daad7aa11f2c38562c1a72e471c947992694f21cd",
+    "status": "partially_supported",
+    "context": "10 defender-only full-kit inputs/14 records, levels2/5. Every current distribution plausible; omission and Marksmen-only protection each rejected5/10. Level2 solo recordsA2179/2233 match current2229.40 SD50.60 p=.840858; omission2558.20 p=.000150 and Marksmen-only2534.20 p=.000050. Repeated Philly221/Bahiti22 entry#1 also separates both alternatives. Logan/Reina combinations and Philly/Bahiti#0 are insensitive enough that omission remains plausible. Context supports protection beyond Marksmen, not exact DamageTaken grouping, complete curve or incoming-kind/mode interactions.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets",
+      "damage_kind",
+      "battle_mode_and_joiner_gates"
+    ]
+  },
+  "hero:Bahiti:Fluorescence": {
+    "source_sha256": "8c011dfae7c57979ca77241daad7aa11f2c38562c1a72e471c947992694f21cd",
+    "status": "partially_supported",
+    "context": "10 defender-only full-kit inputs/14 records, levels2/4; all current distributions plausible despite several_nc filenames. Omission rejected6/10 and Marksman-source-only4/10, including level2 solo and repeated Philly/Bahiti#1, supporting offensive contribution beyond Marksmen. One-turn versus current one-attack lifetime stays plausible10/10 and yields identical primary samples7/10; Norah/Bahiti and both Philly/Bahiti entries differ through extra-job interactions, but do not discriminate. Philly/Bahiti#1 currentD454.30 SD4.38 p=.196240 versus one-turnD455.46 SD4.50 p=.408930. Exact one-attack boundary, chance50%, lethality-versus-damage bucket, curve and kind interactions remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "duration_delay_and_order",
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets",
+      "damage_kind"
+    ]
+  },
+  "hero:Flint:Pyromaniac": {
+    "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+    "status": "partially_supported",
+    "context": "10 full-kit inputs/19 records at levels1/2/4. Deterministic Flint221 solo gameA2862/current2861 versus omission2901/all-own2139; Flint221+Zinman100 game/current1005 versus omission1078/all-ownD188 supports Infantry-scoped contribution. Lancer-only Gordon inputs leave S1 unexercised; currentD1516/1016 versus game1517/1017, all-ownD841/500 rejects broadened recipients. Bradley mixed S1 is applied but omission endpoint6151 unchanged. ArchivedFlint444 recordsD149\u2013151 versus150 andA5715\u20135756 versus5762 retain unexplained deterministic spread/residual6\u201347; no chance model fitted. Scope is partial in these contexts; grouping/scaling and historical variability unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Flint:BurningResolve": {
+    "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+    "status": "partially_supported",
+    "context": "10 full-kit inputs/19 records at levels1/2/4. Flint221 solo game2862/current2861 versus omit2972/Infantry-only2959; Zinman combo game/current1005 versus1196/1183. Lancer-only Gordon inputs gameD1517/1017/currentD1516/1016 versus omission or Infantry-only1674/1134, supporting contribution beyond Infantry. Weak Bradley endpoint shifts1\u20132 do not add strong causal proof. ArchivedFlint444 current5762 versus records5715\u20135756 retains unexplained deterministic spread and excess6\u201347; S2/S3 each20% there, with identical omission/restricted predictions, so their arithmetic groupings are not separately identified. Exact bucket/curve and historical variability remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Flint:Immolation": {
+    "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+    "status": "partially_supported",
+    "context": "Seven full-kit inputs/16 records at levels1/4. Flint221 solo game2862/current2861 versus omit2919/Infantry-only2913; Zinman combo game/current1005 versus1114 either alternative. Lancer-only Gordon inputs gameD1517/1017/currentD1516/1016 versus omission or Infantry-only1587/1069 support contribution beyond Infantry. ArchivedFlint444 current5762 versus records5715\u20135756 retains unexplained spread and excess6\u201347; equal20% S2/S3 yield identical omitted/restricted endpoints, so exact Lethality versus Attack grouping is not isolated. Stochastic Flint/Reina/Zinman outcome is plausible with S3 omitted and adds no positive S3 separation. Full scaling, grouping and historical variability remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Wayne:ThunderStrike": {
+    "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+    "status": "partially_supported",
+    "context": "Full Wayne222 Infantry-only gameA251/255/247/256/250 versus current253.872 SD4.037 p.630768; omission and Marksman-only226.131 SD4.854 p.00005. Deterministic750M Gatot case game/currentD2738 versus omission2752. Supports Infantry and Marksman contributions in these contexts. Gordon/Wayne retains raw3/16 survivor residuals and conflicting stale description; Hector/Renee/Wayne game1597 versus1588.068 SD2.913 p.005 remains a concern despite this seed crossing the flag threshold. Normal-kind S1 alternative remains plausible everywhere, usually sample-identical; exact cadence, coefficients, all scope/levels/lifecycle and kind remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ThunderStrike-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ThunderStrike-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Wayne:RoundaboutHit": {
+    "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+    "status": "partially_supported",
+    "context": "Two separately retained mixed Wayne entries gameA110/216/308/314 and394/352/382/284/322/328/364 fit current219.663 SD79.587 p.857807 and308.903 SD47.867 p.035098. Whole omission fails both; in second entry removing Lancer or Marksman component gives246.874 p.0007 or274.413 p.0015, supporting both contextual target contributions. First entry accepts individual omissions. Named S2 solo359/364 accepts current362.385 SD3.002 and omission360.279 SD3.087, so title alone is not positive evidence. First-attack phase remains plausible everywhere. Mixed entries contain ambiguous same-battle/OCR description and are not pooled or assumed independent. Damage kind, exact source gate/cadence, coefficients, levels and depletion behavior remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/RoundaboutHit-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/RoundaboutHit-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Wayne:Fleet": {
+    "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+    "status": "partially_supported",
+    "context": "Full Wayne222 Infantry-only gameA247-256 across5 records fits current253.872 SD4.037; omission or Marksman-only source is constant226 and rejected. Mixed Wayne/Renee/Reina inputs also reject omission, supporting variable contribution outside Marksmen. Marksman solo359/364 fits current362.385 SD3.002 versus omissionconstant359, limited positive Marksman chance evidence. Exact chance/multiplier not uniquely identified. Normal-kind alternative remains plausible everywhere; Renee/Wayne improves423.381 SD1.826 to425.817 SD2.459 versusgame427 while both plausible, so no kind change. Draws retained per-side, and prior Hector/Renee/Wayne high-tail concern remains. All levels, probability dependence, delivery/exhaustion and joiners unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Gordon:ToxicRelease": {
+    "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+    "status": "partially_supported",
+    "context": "Full Flint/Gordon/Jasser gameD1517/1017 versus current1516/1016; Infantry-component omission1565/1054 and one-turn1537/1032 support positive Infantry vulnerability with more than one-turn duration. Broad both-components all-enemy1469/980 fails. Repeated Lynn/Gordon exercises Marksman reduction but its omission remains plausible5136.663 SD194.853 p.19439 versus game5065.4/current5019.535 SD215.873 p.260287, so Marksman contribution remains unresolved. Gatot secondary case retains17survivor/10round residual. Gatot s3 currentA4996 round1037 vs gameA4573 round1151; all-enemy net4575 is actually1500round drawA4996/D421, not agreement. No production change. Exact phase, buckets, damage-kind interactions, level curve and source/target lifecycle remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ToxicRelease-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ToxicRelease-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Philly:VigorTactics": {
+    "source_sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+    "status": "partially_supported",
+    "context": "Two full-kit solo inputs gameA2254/2252 and3606/3637/3616 fit current2252.722 SD83.805 and3622.461 SD13.022. Attack-component omission2510.660/3647.844 and Defense omission2440.847/3641.910 fail; Lancer-only also fails both and stronger Philly/Bahiti. Supports both components and recipients beyond Lancers at recorded levels1/2. Small Infantry-only repeated endpoint differences are retained without treating statistical significance alone as materiality. An earlier Philly/Bahiti observation accepts all tested omissions. Exact buckets, every recipient/level, stacking and role/lifecycle remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/VigorTactics-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/VigorTactics-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Philly:NumbingSpores": {
+    "source_sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+    "status": "partially_supported",
+    "context": "Four accepted input sets at level1: two solo current2252.722 SD83.805/3622.461 SD13.022 agree, while omission2448.068 SD70.811/3639.270 SD9.785 fails. Stronger repeated Philly/Bahiti also rejects omission. Infantry-only protection remains plausible everywhere, so positive backline scope is unresolved; normal-only protection is sample-identical throughout, so incoming skill-damage protection is unexercised. Supports contextual protection contribution, not exact40% chance, shared-round timing, value/bucket, all recipients or higher levels.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/NumbingSpores-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/NumbingSpores-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ]
+  },
+  "hero:Reina:AssassinsInstinct": {
+    "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+    "status": "partially_supported",
+    "context": "Two accepted S2/S3-locked deterministic cases game/currentD62 andD40, versus omissionA392/A596 or Lancer-onlyA137/A406, strongly support S1 and recipients beyond Lancers. Six-outcome S3-locked case currentA1403.836 SD119.608 p.897255 rejects omission1763.761 and Lancer-only1633.625. Many single mixed inputs and the new S3 five-battle probe accept omission and are not positive S1 discriminators. Allowing skill damage or changing to hero damage bucket remains plausible in every case, often identical. Exact normal-only eligibility/bucket and full coefficient/level/role/lifecycle remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/AssassinsInstinct-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/AssassinsInstinct-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Reina:SwiftJive": {
+    "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+    "status": "partially_supported",
+    "context": "Six accepted S3-locked outcomes gameA1297-1579 fit current1403.836 SD119.608; omissionconstant1710 and enemy-Infantry-only1709.194 SD5.319 fail. Flint/Reina/Zinman and Reina/Logan also reject both, supporting chance protection against sources beyond enemy Infantry. Own-Infantry-only remains plausible in six-outcome case1467.300 SD102.698 p.011549 and most others; one Sergey/Reina case rejects it but does not close broad recipient scope. New S3 five-battle set accepts S2 omission. Earlier specific shared/reactive-round alternatives remain disfavored separately. Exact chance, kind/delivery/cancellation, target exhaustion, all recipients/levels remain open; production TBD retained.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/SwiftJive-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/SwiftJive-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "duration_delay_and_order"
+    ]
+  },
+  "hero:Lynn:SongOfLion": {
+    "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "status": "partially_supported",
+    "context": "Six entries/20 outcomes, level3. Lancer-only Gordon/Lynn defender gives game attacker mean5065.4, current5040.138 SD219.080 p0.376931; omission and Marksman-only5605 fail. Solo current185.632 defender SD20.046 fits five outcomes, omission99 fails. Contribution outside Marksmen supported; lethality versus hero-damage bucket remains plausible everywhere. Exact magnitude/chance/duration, full curve and unexercised interactions remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Lynn:MelancholicBallad": {
+    "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "status": "partially_supported",
+    "context": "Six entries/20 outcomes, level3. Solo game defenders167/200/191/199/149 fit current185.632 SD20.046; omission62.499 SD49.045 and enemy-Infantry-only103.374 SD28.658 fail. Both alternatives fail every reviewed entry, supporting contribution beyond enemy Infantry damage sources. Normal-only samples identical throughout: skill-kind protection unexercised. Exact curve/bucket/role/lifecycle remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/MelancholicBallad-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/MelancholicBallad-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Lynn:OonaiCadenza": {
+    "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "status": "unresolved",
+    "context": "Six entries/20 outcomes, level3. Current fits all, but omission remains plausible in every set. Solo omission signedA-D42.590 SD245.523 p0.013549 can produce observed defender wins167/200/191/199/149; currentD185.632 SD20.046 p0.291085. Max-stack and all-own alternatives fail that solo, but do not establish positive contribution or current stacking while omission is plausible. Need a less variable positive-contribution discriminator; full timing/stacking/scope remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Norah:CombinedArms": {
+    "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "status": "partially_supported",
+    "context": "Thirteen entries/34 outcomes, hydrated levels1/2. Strong four-record norah_s2_inf_only_A gameA643/643/646/645 fits643.944 SD2.848. Omit674.323, omit offense657.365, omit protection661.012, Infantry-only657.390 and all-own629.684 fail. Both components and I/M recipient scope supported in this context; Lancer-only splash-D is unchanged by omission but rejects expansion to Lancers. Other full-kit sets may accept omission. Exact coefficient/curve, kind and bucket interactions remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/CombinedArms-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/CombinedArms-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Norah:SneakStrike": {
+    "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "status": "partially_supported",
+    "context": "Thirteen entries/34 outcomes, hydrated levels1/2. Seven solo outcomesA2703-2833 fit2740.246 SD53.097; omission2898, primary-target-only2880.242 SD5.969 and all-sources2489.321 SD95.275 fail. Five-record Norah/Greg also rejects these alternatives, supporting positive fanout and constrained source scope. Normal-kind alternative has identical samples throughout; skill classification not identified. Exact chance/curve, proc timing and lifecycle remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SneakStrike-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SneakStrike-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "trigger_chance_and_cadence"
+    ]
+  },
+  "hero:Norah:Momentum": {
+    "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "status": "partially_supported",
+    "context": "Three entries/six outcomes, hydrated levels1/2. Four-record norah_s2_inf_only_A currentA643.944 SD2.848 fits643/643/646/645; omission669.172, omit offense658.090, omit protection656.867, immediate onset651.031 and one-turn656.800 fail. Supports both components, next-turn onset and two-versus-one duration in this context. All-enemy offense samples identical because only one enemy class; two mixed single outcomes accept alternatives. Target lock, full cadence/curve and kind/bucket behavior remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/Momentum-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/Momentum-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "trigger_chance_and_cadence",
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Molly:YouthfulRage": {
+    "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "status": "partially_supported",
+    "context": "Four entries/12 outcomes, hydrated levels1/5. Solo five outcomesA245/245/244/245/245 fit243.907 SD1.175 p0.077146; omission241.172 and Marksman-only242.559 flagged, with only small1-4-survivor differences. Historical Molly_tc#3 game1070 fits1070.990 SD2.300, omission1077.160 p0.0028 flags, Marksman-only1074.020 plausible. Other sets accept omission. Limited positive contextual contribution; broader recipient and bucket claims remain unresolved, hero-damage bucket plausible throughout.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/YouthfulRage-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/YouthfulRage-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Natalia:WildlingRoar": {
+    "source_sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab",
+    "status": "unresolved",
+    "context": "Single solo gameA2664 fits current2617.141 SD20.342 p0.032898 in its upper tail; omission2706 and Infantry-only2647.094 fail. The closer Infantry-only mean lies between discrete clusters and no sampled scores2658-2668, unlike current. Conditional solo support conflicts with accepted mixed six-hero#2: gameD2823/current2907.495 SD26.089 p0.0012, omission2827.680 p0.823359. Do not attribute mixed-kit defect to Natalia or discard that evidence. Normal-only alternative does not identify kind; more independent observations and interactions required.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Natalia:QueenOfTheWild": {
+    "source_sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab",
+    "status": "unresolved",
+    "context": "Single solo gameA2664 is plausible under current2617.141 SD20.342 p0.032898; omission2752.379 and Infantry-only2741.862 fail. Conditional positive contribution and broad scope conflict with mixed six-hero#2 gameD2823/current2907.495 p0.0012: omission2808.573 p0.651817 or Infantry-only2823.654 p0.998500 improve. No attribution or production fix from confounded mixed kit. Hero-damage bucket identical solo but does not fix mixed discrepancy. Exact scope/bucket/curve remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/QueenOfTheWild-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/QueenOfTheWild-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Gwen:EagleVision": {
+    "source_sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3",
+    "status": "unresolved",
+    "context": "Current one-use/delayed S1 participates in all seven reviewed full-kit Gwen entries. Persistent S1 and sharing normal-attack modifier snapshots fail the decisive small battle and move older exact Renee/Gwen attacker318 to324 or327. These alternatives are disfavored; rejecting them does not uniquely identify current attack-delay/use accounting. Three new full311 battles remain D1397/D563/D24 versus currentD1388/D534/A76, with the last opposite winner material. Current S1 consumption on generated per-target jobs, interaction with S2/S3, full curve and scope require further discrimination. Tooltip magnitude level3=15% agrees but gives no duration. Paul reports general normal-plus-extra effect-use counting as the best current community model with prior deterministic fit support; this does not settle per-fanout consumption.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/README.md",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/results.json",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/snapshot-checks.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/README.md",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/confirmed-observation.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/group-consumption.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets",
+      "trigger_chance_and_cadence",
+      "damage_kind"
+    ]
+  },
+  "hero:Gwen:AirDominance": {
+    "source_sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3",
+    "status": "unresolved",
+    "context": "All seven reviewed full-kit Gwen entries retain S2. Tooltip describes all troops after every five attacks with20% extra damage and5% next-received-attack amplification at level1. Three fresh full311 battles report S2/S3 counts3/4,7/9,15/18, yet no tested joint timing/consumption candidate explains all endpoints and counts. Current first5/every6, modifier delay/target restriction, generated damage kind and S3 interaction remain unresolved. Sharing the normal parent modifier snapshot and normal-kind augmentation fail older exact Renee/Gwen318 and the new small opposite-winner case. Limited negative tests do not independently establish positive S2 component semantics or justify a production change.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/README.md",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/results.json",
+      "docs/mechanics-audit/reviews/gwen-tooltip-scope/snapshot-checks.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/README.md",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/confirmed-observation.json",
+      "docs/mechanics-audit/reviews/gwen-preparation-snapshot/post-capture/group-consumption.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets",
+      "trigger_chance_and_cadence",
+      "damage_kind"
+    ]
+  }
+}

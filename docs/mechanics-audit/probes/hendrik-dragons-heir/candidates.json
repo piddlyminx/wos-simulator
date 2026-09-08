@@ -1,0 +1,54 @@
+{
+  "current_all_living": {
+    "runtime": "current",
+    "description": "Current full kit: S3 sends24% skill damage to each living enemy line every3 turns.",
+    "patches": []
+  },
+  "current_target_only": {
+    "runtime": "current",
+    "description": "Only S3 fanout changes: one24% skill job to the normal attack current target. Full S1/S2 and cadence unchanged.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Hendrik",
+          "skills",
+          "DragonsHeir",
+          "effects",
+          "DragonsHeir/1",
+          "trigger_damage_jobs",
+          0,
+          "target"
+        ],
+        "from": "enemy.living",
+        "to": "use.target"
+      }
+    ]
+  },
+  "outer_ceil_removed_all_living": {
+    "runtime": "outer_army_ceil_removed",
+    "description": "All-living S3 plus independent isolated removal of outer army-term ceiling.",
+    "patches": []
+  },
+  "outer_ceil_removed_target_only": {
+    "runtime": "outer_army_ceil_removed",
+    "description": "Target-only S3 plus the same isolated arithmetic change.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Hendrik",
+          "skills",
+          "DragonsHeir",
+          "effects",
+          "DragonsHeir/1",
+          "trigger_damage_jobs",
+          0,
+          "target"
+        ],
+        "from": "enemy.living",
+        "to": "use.target"
+      }
+    ]
+  }
+}

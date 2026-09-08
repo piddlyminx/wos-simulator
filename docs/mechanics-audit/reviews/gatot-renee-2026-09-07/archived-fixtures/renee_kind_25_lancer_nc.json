@@ -1,0 +1,82 @@
+[
+  {
+    "test_id": "renee_kind_25_lancer_nc",
+    "description": "Renee 4/4/4 25-lancer response fixture paired with renee_kind_25_lancer_control_nc and the zero/100-lancer pairs. WIP attacks 1000/800/1000 T6; minxxx defends with Renee, 200 infantry, 25 lancers, and 176 marksmen T6. Candidate predictions use the exact sqrt(troops[unit])*sqrt(min_army) term; no assumption is made that a small lancer body contributes linearly. Fixed full kit, deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1000,
+        "lancer_t6": 800,
+        "marksman_t6": 1000
+      },
+      "stats": {
+        "inf": {
+          "attack": 233.8,
+          "defense": 243.1,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 25,
+        "marksman_t6": 176
+      },
+      "stats": {
+        "inf": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 205.3,
+          "health": 206.5
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 2515,
+        "defender": 0
+      },
+      {
+        "attacker": 2515,
+        "defender": 0
+      }
+    ]
+  }
+]

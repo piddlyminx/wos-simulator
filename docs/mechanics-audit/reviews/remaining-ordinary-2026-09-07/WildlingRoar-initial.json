@@ -1,0 +1,1377 @@
+{
+  "generatedAt": "2026-09-07T08:44:06.600Z",
+  "selection": {
+    "key": "hero:Natalia:WildlingRoar",
+    "hero": "Natalia",
+    "id": "WildlingRoar",
+    "slot": 1,
+    "coverage": {
+      "configured_fixture_count": 2,
+      "hydrated_fixture_count": 2,
+      "observation_record_count": 2,
+      "hydrated_levels": [
+        2
+      ],
+      "levels_missing_active_fixture": [
+        1,
+        3,
+        4,
+        5
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/emulator_verified/natalia_solo.json#0"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "granting a 40% chance of reducing all troops' Damage taken by X%",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "WildlingRoar/1": {
+          "type": "active.hero.damageTaken.down",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "all"
+          },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "protocolSha256": "1b32dac510aa7ad7e4311f6089eafda6a14c12b61eb1866ee5ae8d03e74a48d2",
+  "repeat": 1000,
+  "seed": "remaining-ordinary-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial-samples.json",
+    "sha256": "41d00e21c9b4460492901cfdbd52817e01160ee754b51e0fd2b4965292b18b09"
+  },
+  "results": [
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+      "path": "testcases/3-testcases_mixed-heroes-not-verified.json",
+      "fixtureSha256": "fd491d2771e82ec070938b01644a0e09408bd5370bf32e13e2734f01b1b98c20",
+      "entry": {
+        "test_id": "no_heroes_t6_mixed_2x_3",
+        "time": "2025-07-13 - 13:45",
+        "attacker": {
+          "name": "daut2x",
+          "stats": {
+            "inf": {
+              "attack": 43.36,
+              "defense": 42.86,
+              "lethality": 7.13,
+              "health": 7.13
+            },
+            "lanc": {
+              "attack": 57.71,
+              "defense": 57.21,
+              "lethality": 1.8,
+              "health": 1.8
+            },
+            "mark": {
+              "attack": 61.36,
+              "defense": 60.36,
+              "lethality": 5.46,
+              "health": 5.46
+            }
+          },
+          "troops": {
+            "infantry_t6": 8000,
+            "lancer_t6": 2500,
+            "marksman_t6": 7000
+          },
+          "heroes": {
+            "Jasser": {
+              "skill_1": 2
+            },
+            "Sergey": {
+              "skill_1": 2,
+              "skill_2": 2
+            },
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "viper2x",
+          "stats": {
+            "inf": {
+              "attack": 228.73,
+              "defense": 228.23,
+              "lethality": 107.2,
+              "health": 114.2
+            },
+            "lanc": {
+              "attack": 268.13,
+              "defense": 260.13,
+              "lethality": 110.3,
+              "health": 100.2
+            },
+            "mark": {
+              "attack": 228.27,
+              "defense": 216.77,
+              "lethality": 117.8,
+              "health": 104.7
+            }
+          },
+          "troops": {
+            "infantry_t6": 2000,
+            "lancer_t6": 1000,
+            "marksman_t6": 1000
+          },
+          "heroes": {
+            "Natalia": {
+              "skill_1": 2,
+              "skill_2": 2
+            },
+            "Patrick": {
+              "skill_1": 2,
+              "skill_2": 1
+            },
+            "Alonso": {
+              "skill_1": 1,
+              "skill_2": 2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "sim_skills_used": {
+          "attacker": {
+            "Jasser- Tactical genius": "1",
+            "Sergey- Defender's edge": "1",
+            "Sergey- Weaken": "1",
+            "Molly- Calling of the storm": "3",
+            "Molly- Ice Dominion": "31 - Extra: 49.0",
+            "MARKSMEN- Ranged Strike": "1"
+          },
+          "defender": {
+            "Natalia- Wildling roar": "9",
+            "Natalia- Queen of the wild": "1",
+            "Patrick- Super nutrients": "1",
+            "Patrick- Caloric booster": "1",
+            "Alonso- Onslaught": "7",
+            "Alonso- Iron strength": "29",
+            "INFANTRY- Master Brawler": "1",
+            "LANCERS- Charge": "1",
+            "MARKSMEN- Ranged Strike": "1"
+          }
+        },
+        "game_report_result": {
+          "attacker": 0,
+          "defender": 2823
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "daut2x",
+          "stats": {
+            "inf": {
+              "attack": 43.36,
+              "defense": 42.86,
+              "lethality": 7.13,
+              "health": 7.13
+            },
+            "lanc": {
+              "attack": 57.71,
+              "defense": 57.21,
+              "lethality": 1.8,
+              "health": 1.8
+            },
+            "mark": {
+              "attack": 61.36,
+              "defense": 60.36,
+              "lethality": 5.46,
+              "health": 5.46
+            }
+          },
+          "troops": {
+            "infantry_t6": 8000,
+            "lancer_t6": 2500,
+            "marksman_t6": 7000
+          },
+          "heroes": {
+            "Jasser": {
+              "skill_1": 2
+            },
+            "Sergey": {
+              "skill_1": 2,
+              "skill_2": 2
+            },
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "viper2x",
+          "stats": {
+            "inf": {
+              "attack": 228.73,
+              "defense": 228.23,
+              "lethality": 107.2,
+              "health": 114.2
+            },
+            "lanc": {
+              "attack": 268.13,
+              "defense": 260.13,
+              "lethality": 110.3,
+              "health": 100.2
+            },
+            "mark": {
+              "attack": 228.27,
+              "defense": 216.77,
+              "lethality": 117.8,
+              "health": 104.7
+            }
+          },
+          "troops": {
+            "infantry_t6": 2000,
+            "lancer_t6": 1000,
+            "marksman_t6": 1000
+          },
+          "heroes": {
+            "Natalia": {
+              "skill_1": 2,
+              "skill_2": 2
+            },
+            "Patrick": {
+              "skill_1": 2,
+              "skill_2": 1
+            },
+            "Alonso": {
+              "skill_1": 1,
+              "skill_2": 2
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": {
+        "attacker": 0,
+        "defender": 2823
+      },
+      "hydratedSkills": [
+        {
+          "key": "hero:Jasser:TacticalGenius",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:jasser:0",
+          "effect_ids": [
+            "TacticalGenius/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:DefendersEdge",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "DefendersEdge/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:Weaken",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "Weaken/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Natalia:WildlingRoar",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:natalia:0",
+          "effect_ids": [
+            "WildlingRoar/1"
+          ]
+        },
+        {
+          "key": "hero:Natalia:QueenOfTheWild",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:natalia:0",
+          "effect_ids": [
+            "QueenOfTheWild/1"
+          ]
+        },
+        {
+          "key": "hero:Patrick:SuperNutrients",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:patrick:0",
+          "effect_ids": [
+            "SuperNutrients/1"
+          ]
+        },
+        {
+          "key": "hero:Patrick:CaloricBooster",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:patrick:0",
+          "effect_ids": [
+            "CaloricBooster/1"
+          ]
+        },
+        {
+          "key": "hero:Alonso:Onslaught",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:alonso:0",
+          "effect_ids": [
+            "Onslaught/1"
+          ]
+        },
+        {
+          "key": "hero:Alonso:IronStrength",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:alonso:0",
+          "effect_ids": [
+            "IronStrength/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 17500,
+        "defender": 4000
+      },
+      "gameScores": [
+        -2823
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2907.495,
+          "sd": 26.089013235682394,
+          "min": -2988,
+          "max": -2823,
+          "central95": [
+            -2957,
+            -2857
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2907.49,
+            "sigma_candidate": 26.09,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -84.49,
+            "bias_pct": -0.39,
+            "sem": 0.83,
+            "stat_type": "cdf_support",
+            "stat": 2.9208,
+            "p": 0.0012,
+            "passes": false,
+            "cdf_rms": 0.056976,
+            "cdf_p": 0.0011,
+            "support_value": -2823,
+            "support_mass": 0.00033333,
+            "support_p": 0.0099,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 918,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 42,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "WildlingRoar/1:normal:attacker.infantry->defender.infantry": 206,
+            "WildlingRoar/1:skill:attacker.infantry->defender.infantry": 101,
+            "WildlingRoar/1:normal:attacker.lancer->defender.infantry": 224,
+            "WildlingRoar/1:normal:attacker.marksman->defender.infantry": 279,
+            "WildlingRoar/1:skill:attacker.marksman->defender.infantry": 141,
+            "WildlingRoar/1:skill:attacker.lancer->defender.infantry": 121
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            14,
+            19,
+            20,
+            15,
+            17,
+            18,
+            14,
+            22,
+            18,
+            20,
+            18,
+            13,
+            20,
+            17,
+            18,
+            16
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2827.68,
+          "sd": 22.43695650076046,
+          "min": -2885,
+          "max": -2755,
+          "central95": [
+            -2871,
+            -2779
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2827.68,
+            "sigma_candidate": 22.44,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -4.68,
+            "bias_pct": -0.02,
+            "sem": 0.71,
+            "stat_type": "cdf_support",
+            "stat": 0.0844,
+            "p": 0.823359,
+            "passes": true,
+            "cdf_rms": 0.015927,
+            "cdf_p": 0.850507,
+            "support_value": -2823,
+            "support_mass": 0.01744444,
+            "support_p": 0.735613,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 855,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 42,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            14,
+            19,
+            20,
+            15,
+            14,
+            18,
+            14,
+            22,
+            18,
+            22,
+            18,
+            13,
+            20,
+            17,
+            18,
+            16
+          ]
+        },
+        "infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2907.495,
+          "sd": 26.089013235682394,
+          "min": -2988,
+          "max": -2823,
+          "central95": [
+            -2957,
+            -2857
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2907.49,
+            "sigma_candidate": 26.09,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -84.49,
+            "bias_pct": -0.39,
+            "sem": 0.83,
+            "stat_type": "cdf_support",
+            "stat": 2.9208,
+            "p": 0.0012,
+            "passes": false,
+            "cdf_rms": 0.056976,
+            "cdf_p": 0.0011,
+            "support_value": -2823,
+            "support_mass": 0.00033333,
+            "support_p": 0.0099,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 918,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 42,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "WildlingRoar/1:normal:attacker.infantry->defender.infantry": 206,
+            "WildlingRoar/1:skill:attacker.infantry->defender.infantry": 101,
+            "WildlingRoar/1:normal:attacker.lancer->defender.infantry": 224,
+            "WildlingRoar/1:normal:attacker.marksman->defender.infantry": 279,
+            "WildlingRoar/1:skill:attacker.marksman->defender.infantry": 141,
+            "WildlingRoar/1:skill:attacker.lancer->defender.infantry": 121
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            14,
+            19,
+            20,
+            15,
+            17,
+            18,
+            14,
+            22,
+            18,
+            20,
+            18,
+            13,
+            20,
+            17,
+            18,
+            16
+          ]
+        },
+        "normal_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2900.272,
+          "sd": 25.701061467584584,
+          "min": -2978,
+          "max": -2819,
+          "central95": [
+            -2949,
+            -2851
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2900.27,
+            "sigma_candidate": 25.7,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -77.27,
+            "bias_pct": -0.36,
+            "sem": 0.81,
+            "stat_type": "cdf_support",
+            "stat": 2.8539,
+            "p": 0.0014,
+            "passes": false,
+            "cdf_rms": 0.054048,
+            "cdf_p": 0.00215,
+            "support_value": -2823,
+            "support_mass": 0,
+            "support_p": 0.00285,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 912,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 42,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "WildlingRoar/1:normal:attacker.infantry->defender.infantry": 206,
+            "WildlingRoar/1:normal:attacker.lancer->defender.infantry": 224,
+            "WildlingRoar/1:normal:attacker.marksman->defender.infantry": 279
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            14,
+            19,
+            20,
+            15,
+            17,
+            18,
+            14,
+            22,
+            18,
+            20,
+            18,
+            13,
+            20,
+            17,
+            18,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/natalia_solo.json#0",
+      "path": "testcases/emulator_verified/natalia_solo.json",
+      "fixtureSha256": "3e992c1d39ada0b2f0009f94471f96cc84a70b8dd74828de18f25b442ceee548",
+      "entry": {
+        "test_id": "natalia_solo",
+        "description": "Natalia solo defender test. WIP attacking no heroes 1500/1069/1500, minxxx defending with Natalia (2/2). Attacker wins with 2664 survivors.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Natalia": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 255.9,
+              "defense": 237.5,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 181.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 205.7,
+              "defense": 197.3,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 2664,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Natalia": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 255.9,
+              "defense": 237.5,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 181.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 205.7,
+              "defense": 197.3,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 2664,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Natalia:WildlingRoar",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:natalia:0",
+          "effect_ids": [
+            "WildlingRoar/1"
+          ]
+        },
+        {
+          "key": "hero:Natalia:QueenOfTheWild",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:natalia:0",
+          "effect_ids": [
+            "QueenOfTheWild/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 4069,
+        "defender": 600
+      },
+      "gameScores": [
+        2664
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "WildlingRoar"
+            ]
+          },
+          "n": 1000,
+          "mean": 2617.141,
+          "sd": 20.34180198281135,
+          "min": 2523,
+          "max": 2679,
+          "central95": [
+            2573,
+            2658
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2617.14,
+            "sigma_candidate": 20.34,
+            "n_reference": 1,
+            "mu_reference": 2664,
+            "sigma_reference": 0,
+            "bias_raw": -46.86,
+            "bias_pct": -1,
+            "sem": 0.64,
+            "stat_type": "cdf_support",
+            "stat": 1.4828,
+            "p": 0.032898,
+            "passes": true,
+            "cdf_rms": 0.08774,
+            "cdf_p": 0.022999,
+            "support_value": 2664,
+            "support_mass": 0.00222222,
+            "support_p": 0.047398,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 37,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 51,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "WildlingRoar/1:normal:attacker.infantry->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.lancer->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.marksman->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.infantry->defender.lancer": 64,
+            "WildlingRoar/1:normal:attacker.lancer->defender.lancer": 64,
+            "WildlingRoar/1:normal:attacker.marksman->defender.lancer": 62,
+            "WildlingRoar/1:normal:attacker.infantry->defender.marksman": 49,
+            "WildlingRoar/1:normal:attacker.lancer->defender.marksman": 49,
+            "WildlingRoar/1:normal:attacker.marksman->defender.marksman": 46
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20,
+            19,
+            19,
+            22,
+            20,
+            20,
+            21,
+            17,
+            25,
+            20,
+            22,
+            18,
+            21,
+            29,
+            18,
+            23
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "WildlingRoar"
+            ]
+          },
+          "n": 1000,
+          "mean": 2706,
+          "sd": 0,
+          "min": 2706,
+          "max": 2706,
+          "central95": [
+            2706,
+            2706
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2706,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 2664,
+            "sigma_reference": 0,
+            "bias_raw": 42,
+            "bias_pct": 0.9,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.094834,
+            "cdf_p": 0.00005,
+            "support_value": 2664,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "cdf+support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 137,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 47,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20,
+            18,
+            17,
+            21,
+            19,
+            18,
+            19,
+            17,
+            23,
+            19,
+            20,
+            17,
+            19,
+            26,
+            17,
+            22
+          ]
+        },
+        "infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "WildlingRoar"
+            ]
+          },
+          "n": 1000,
+          "mean": 2647.094,
+          "sd": 19.194624184849157,
+          "min": 2601,
+          "max": 2705,
+          "central95": [
+            2603,
+            2672
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2647.09,
+            "sigma_candidate": 19.19,
+            "n_reference": 1,
+            "mu_reference": 2664,
+            "sigma_reference": 0,
+            "bias_raw": -16.91,
+            "bias_pct": -0.36,
+            "sem": 0.61,
+            "stat_type": "cdf_support",
+            "stat": 3.699,
+            "p": 0.0002,
+            "passes": false,
+            "cdf_rms": 0.050983,
+            "cdf_p": 0.40103,
+            "support_value": 2664,
+            "support_mass": 0,
+            "support_p": 0.00015,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 67,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 50,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "WildlingRoar/1:normal:attacker.infantry->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.lancer->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.marksman->defender.infantry": 221
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20,
+            19,
+            18,
+            21,
+            19,
+            19,
+            21,
+            17,
+            25,
+            20,
+            22,
+            17,
+            19,
+            29,
+            17,
+            22
+          ]
+        },
+        "normal_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "WildlingRoar"
+            ]
+          },
+          "n": 1000,
+          "mean": 2617.141,
+          "sd": 20.34180198281135,
+          "min": 2523,
+          "max": 2679,
+          "central95": [
+            2573,
+            2658
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2617.14,
+            "sigma_candidate": 20.34,
+            "n_reference": 1,
+            "mu_reference": 2664,
+            "sigma_reference": 0,
+            "bias_raw": -46.86,
+            "bias_pct": -1,
+            "sem": 0.64,
+            "stat_type": "cdf_support",
+            "stat": 1.4828,
+            "p": 0.032898,
+            "passes": true,
+            "cdf_rms": 0.08774,
+            "cdf_p": 0.022999,
+            "support_value": 2664,
+            "support_mass": 0.00222222,
+            "support_p": 0.047398,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 37,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 51,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "WildlingRoar/1:normal:attacker.infantry->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.lancer->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.marksman->defender.infantry": 221,
+            "WildlingRoar/1:normal:attacker.infantry->defender.lancer": 64,
+            "WildlingRoar/1:normal:attacker.lancer->defender.lancer": 64,
+            "WildlingRoar/1:normal:attacker.marksman->defender.lancer": 62,
+            "WildlingRoar/1:normal:attacker.infantry->defender.marksman": 49,
+            "WildlingRoar/1:normal:attacker.lancer->defender.marksman": 49,
+            "WildlingRoar/1:normal:attacker.marksman->defender.marksman": 46
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            20,
+            19,
+            19,
+            22,
+            20,
+            20,
+            21,
+            17,
+            25,
+            20,
+            22,
+            18,
+            21,
+            29,
+            18,
+            23
+          ]
+        }
+      }
+    }
+  ]
+}

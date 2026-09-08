@@ -1,0 +1,31 @@
+{
+  "test_id": "ahmose_source_dies_001i_480l_vs_250i",
+  "description": "Prospective deterministic Viper source-lifecycle discriminator. WIP fullAhmose110 with1 T6 Infantry and480 T6 Lancers attacks minxxx nohero250 T6 Infantry. The single ordinary Infantry must die before the first scheduled Viper activation and before3 normal attacks, checked in both frozen traces. Distinguishes initial Infantry presence from requiring surviving/attacking Infantry during battle; does not choose exact cadence. Preserve all24 fresh stats, full kits, report identity and images. Frozen package docs/mechanics-audit/probes/ahmose-no-infantry/source-death/.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Ahmose": {
+        "skill_1": 1,
+        "skill_2": 1,
+        "skill_3": 0
+      }
+    },
+    "troops": {
+      "infantry_t6": 1,
+      "lancer_t6": 480
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 250
+    }
+  }
+}

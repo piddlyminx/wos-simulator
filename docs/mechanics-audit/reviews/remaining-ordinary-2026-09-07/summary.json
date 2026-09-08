@@ -1,0 +1,416 @@
+{
+  "phase": "Retrospective accepted-corpus structural review. Current definitions, earlier reviews and known disagreements were read before choosing these bounded alternatives. No live action, input adjustment or coefficient fit.",
+  "distinct_input_entries": 24,
+  "distinct_entry_outcome_records": 63,
+  "current_deterministic_fixture_count": 0,
+  "simulated_sample_rows_preserved": 268000,
+  "draw_rows": 0,
+  "current_unique_stochastic_flags": [
+    "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+  ],
+  "current_deterministic_residuals": {},
+  "method": "Individual game A-D outcomes compared with per-battle samples using raw combined CDF/support diagnostics. Deterministic models run once and preserve exact per-side/round residuals without stochastic p-values. Same-case current samples verified identical across workers. No input adjustment or universal percentage/absolute materiality cutoff.",
+  "skills": [
+    {
+      "key": "hero:Lynn:SongOfLion",
+      "fixture_count": 6,
+      "observation_count": 20,
+      "hydrated_levels": [
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/logan_lynn_combo.json#1",
+          "testcases/emulator_verified/logan_lynn_combo.json#2",
+          "testcases/emulator_verified/lynn_solo.json#0",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "marksman_only": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "hero_damage_bucket": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "marksman_only": {},
+        "hero_damage_bucket": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial.json",
+        "sha256": "5b5dbc2753ad12d0b216cf1be2fb9cd843b69ebc48fff1486df244464df91732"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial-samples.json",
+        "sha256": "fda06e879162fe30fbf64612c21f48b49832b814d665832f0c4d08b815bdefb8"
+      }
+    },
+    {
+      "key": "hero:Lynn:MelancholicBallad",
+      "fixture_count": 6,
+      "observation_count": 20,
+      "hydrated_levels": [
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/logan_lynn_combo.json#1",
+          "testcases/emulator_verified/logan_lynn_combo.json#2",
+          "testcases/emulator_verified/lynn_solo.json#0",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "enemy_infantry_only": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/logan_lynn_combo.json#1",
+          "testcases/emulator_verified/logan_lynn_combo.json#2",
+          "testcases/emulator_verified/lynn_solo.json#0",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "normal_only": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "enemy_infantry_only": {},
+        "normal_only": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/MelancholicBallad-initial.json",
+        "sha256": "0e51c6835e6de5c104e831886f8ce261b4fcb60d1d4df91b67a3d8ae692a4760"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/MelancholicBallad-initial-samples.json",
+        "sha256": "18d7f4c7b466b60ce5429f7cbfae09ea6d7a82cdbc5bc29a999aa35d4b5c31f7"
+      }
+    },
+    {
+      "key": "hero:Lynn:OonaiCadenza",
+      "fixture_count": 6,
+      "observation_count": 20,
+      "hydrated_levels": [
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [],
+        "max_stack": [
+          "testcases/emulator_verified/lynn_solo.json#0"
+        ],
+        "all_own": [
+          "testcases/emulator_verified/lynn_solo.json#0"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "max_stack": {},
+        "all_own": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial.json",
+        "sha256": "3aa7d3b7da10e319f90a089c222f3a9cc2a22264e36a25b5be2fa0ab9b2f3e2e"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial-samples.json",
+        "sha256": "02686ca273bfe2ee701d67c3961ebb6715a8ee9bb783296abe5f968c9cada884"
+      }
+    },
+    {
+      "key": "hero:Norah:CombinedArms",
+      "fixture_count": 13,
+      "observation_count": 34,
+      "hydrated_levels": [
+        1,
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/norah_zinman_combo_nc.json#0"
+        ],
+        "omit_offense": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "omit_protection": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "infantry_only": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "all_own": [
+          "testcases/emulator_verified/alonso_norah_combo.json#1",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_D.json#0"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "omit_offense": {},
+        "omit_protection": {},
+        "infantry_only": {},
+        "all_own": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/CombinedArms-initial.json",
+        "sha256": "56f511c17f296aa994cbd320a6645445696d0e487fe91b1b72d5bc135450cfc1"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/CombinedArms-initial-samples.json",
+        "sha256": "e6a6980bf2e6440660ea6d39fc5037d50e8baf623f32a0ab3973aa3c52560191"
+      }
+    },
+    {
+      "key": "hero:Norah:SneakStrike",
+      "fixture_count": 13,
+      "observation_count": 34,
+      "hydrated_levels": [
+        1,
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/alonso_norah_combo.json#1",
+          "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+          "testcases/emulator_verified/norah_greg_combo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_D.json#0",
+          "testcases/emulator_verified/norah_solo.json#0",
+          "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+          "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0"
+        ],
+        "primary_target_only": [
+          "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+          "testcases/emulator_verified/norah_greg_combo.json#0",
+          "testcases/emulator_verified/norah_s2_splash_A.json#0",
+          "testcases/emulator_verified/norah_solo.json#0",
+          "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+          "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0"
+        ],
+        "normal_kind": [],
+        "all_sources": [
+          "testcases/emulator_verified/alonso_norah_combo.json#1",
+          "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+          "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+          "testcases/emulator_verified/norah_greg_combo.json#0",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/norah_solo.json#0",
+          "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "primary_target_only": {},
+        "normal_kind": {},
+        "all_sources": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SneakStrike-initial.json",
+        "sha256": "9b2ab31a893d13602d261cf44e88b5c86360c6859202bec8e7ca79257071f0b1"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SneakStrike-initial-samples.json",
+        "sha256": "c022b546e4024a1855ffb5beef6119b3f7223b3d0142a2094b032248d9c90761"
+      }
+    },
+    {
+      "key": "hero:Norah:Momentum",
+      "fixture_count": 3,
+      "observation_count": 6,
+      "hydrated_levels": [
+        1,
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "omit_offense": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "omit_protection": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "immediate": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "one_turn": [
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0"
+        ],
+        "all_enemy": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "omit_offense": {},
+        "omit_protection": {},
+        "immediate": {},
+        "one_turn": {},
+        "all_enemy": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/Momentum-initial.json",
+        "sha256": "b4f1bc0c45c86a64bc9bfc004cabc99e4e0b04fd956a5adfe4b250ca68fdaef6"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/Momentum-initial-samples.json",
+        "sha256": "5e232f9576a16622fa672b2f8d6929ed4dc8c2a045a63a9298b6c2fb08ef9e98"
+      }
+    },
+    {
+      "key": "hero:Molly:YouthfulRage",
+      "fixture_count": 4,
+      "observation_count": 12,
+      "hydrated_levels": [
+        1,
+        5
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/molly_solo.json#0",
+          "testcases/heroes_unittests/Molly_tc.json#3"
+        ],
+        "marksman_only": [
+          "testcases/emulator_verified/molly_solo.json#0"
+        ],
+        "hero_damage_bucket": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "marksman_only": {},
+        "hero_damage_bucket": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/YouthfulRage-initial.json",
+        "sha256": "841d3837ee37ca584ca102b27e7a801f74295f18136967cdf18a4ddd3a57dc58"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/YouthfulRage-initial-samples.json",
+        "sha256": "8b68505b203e4d93d8467911a7e434819be4852980a9479c8ba3a6051b0cfde6"
+      }
+    },
+    {
+      "key": "hero:Natalia:WildlingRoar",
+      "fixture_count": 2,
+      "observation_count": 2,
+      "hydrated_levels": [
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+        ],
+        "omit": [
+          "testcases/emulator_verified/natalia_solo.json#0"
+        ],
+        "infantry_only": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/natalia_solo.json#0"
+        ],
+        "normal_only": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "infantry_only": {},
+        "normal_only": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial.json",
+        "sha256": "5e9e1b379ced85966b283e9dcdcb52f6fb618e9891944897dbb79e438bd7c98b"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial-samples.json",
+        "sha256": "41d00e21c9b4460492901cfdbd52817e01160ee754b51e0fd2b4965292b18b09"
+      }
+    },
+    {
+      "key": "hero:Natalia:QueenOfTheWild",
+      "fixture_count": 2,
+      "observation_count": 2,
+      "hydrated_levels": [
+        2
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+        ],
+        "omit": [
+          "testcases/emulator_verified/natalia_solo.json#0"
+        ],
+        "infantry_only": [
+          "testcases/emulator_verified/natalia_solo.json#0"
+        ],
+        "hero_damage_bucket": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "infantry_only": {},
+        "hero_damage_bucket": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/QueenOfTheWild-initial.json",
+        "sha256": "a19df3c2b7c4878e62e1af70c6f8e50571e5ee72b4629ecfcae0226d64d962c2"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/QueenOfTheWild-initial-samples.json",
+        "sha256": "e74db71e71c83380304e60cf498ee37d314faa12b53a75d38d40c27e4f8ed905"
+      }
+    }
+  ],
+  "post_run_source_drift": [],
+  "trace_count_note": "modifierAnnotationCounts and generatedDamageJobCounts are separate. Parent normal-attack annotations do not establish generated damage kind; separate skill jobs are recorded in generatedDamageJobCounts. Trace scope proves simulator application, while observed endpoint contrasts provide conditional evidence."
+}

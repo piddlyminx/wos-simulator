@@ -1,0 +1,165 @@
+{
+  "replay_sha256": "7fa7017dad7a428d70060b9edbdeaeb4bc183f4652f4a24e08bb453c2ece05cd",
+  "unique_deterministic_fixture_entries": 9,
+  "stored_outcome_rows": 9,
+  "exact_fixture_entries": 7,
+  "within_two_fixture_entries": 7,
+  "unique_stochastic_entries_skipped": 0,
+  "count_caveat": "Overlapping entries are the same game evidence used for different skills. Current runtime deterministic classification is not independent proof of game determinism.",
+  "skills": [
+    {
+      "key": "hero:Bradley:VeteransMight",
+      "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+      "deterministic_fixture_entries": 7,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        1,
+        3,
+        4
+      ],
+      "effect_exercised_fixture_counts": {
+        "VeteransMight/1": 7
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 22,
+      "residual_entries": [
+        {
+          "key": "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+          "game": [
+            -2296
+          ],
+          "prediction": -2274,
+          "residual": [
+            22
+          ]
+        },
+        {
+          "key": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "game": [
+            851
+          ],
+          "prediction": 834,
+          "residual": [
+            -17
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero:Bradley:PowerShot",
+      "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+      "deterministic_fixture_entries": 7,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        3,
+        4
+      ],
+      "effect_exercised_fixture_counts": {
+        "PowerShot/1": 4,
+        "PowerShot/2": 6
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 22,
+      "residual_entries": [
+        {
+          "key": "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+          "game": [
+            -2296
+          ],
+          "prediction": -2274,
+          "residual": [
+            22
+          ]
+        },
+        {
+          "key": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "game": [
+            851
+          ],
+          "prediction": 834,
+          "residual": [
+            -17
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero:Bradley:TacticalAssistance",
+      "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+      "deterministic_fixture_entries": 7,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        3,
+        4
+      ],
+      "effect_exercised_fixture_counts": {
+        "TacticalAssistance/1": 7
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 22,
+      "residual_entries": [
+        {
+          "key": "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+          "game": [
+            -2296
+          ],
+          "prediction": -2274,
+          "residual": [
+            22
+          ]
+        },
+        {
+          "key": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "game": [
+            851
+          ],
+          "prediction": 834,
+          "residual": [
+            -17
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero:Edith:StrategicBalance",
+      "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+      "deterministic_fixture_entries": 2,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        3
+      ],
+      "effect_exercised_fixture_counts": {
+        "StrategicBalance/1": 1,
+        "StrategicBalance/2": 1
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0,
+      "residual_entries": []
+    },
+    {
+      "key": "hero:Edith:SteelSentinel",
+      "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+      "deterministic_fixture_entries": 2,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        3
+      ],
+      "effect_exercised_fixture_counts": {
+        "SteelSentinel/1": 2
+      },
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0,
+      "residual_entries": []
+    }
+  ]
+}

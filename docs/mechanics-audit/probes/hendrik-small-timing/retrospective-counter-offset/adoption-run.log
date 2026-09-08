@@ -1,0 +1,28 @@
+Testcase summary
+Created: 2026-09-07T06:57:49.289Z
+Files: 4  Cases: 4  Executed: 4  Errors: 0  Warnings: 0
+Stochastic failures: raw p < 0.004 (less than 1 in 250; no multiple-testing adjustment)
+
+Failures (0)
+None.
+
+Passes (4)
+# Testcase                  N Mode Test Stat+/- mu G mu S SD G SD S bias%  bias Reason CDF p Sup val Sup p p
+0 hendrik_armor_lancer_s... 1 det  det  -       -17  -17  0    0    +0%    +0   -      -     -       -     -
+0 hendrik_dragons_heir_2... 1 det  det  -       -471 -471 0    0    +0%    +0   -      -     -       -     -
+0 hendrik_small_timing_2... 1 det  det  +0.05%  -68  -70  0    0    -0.38% -2   -      -     -       -     -
+0 renee_hendrik_defense_... 1 det  det  -       14   14   0    0    +0%    +0   -      -     -       -     -
+
+Final totals
+Testcases run: 4
+Failed vs game: 0
+Improved vs game: 0
+Worse vs game: 0
+Average signed error: -0.10%
+{
+  "summaryPath": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption-run/simulator_parity_2026-09-07T06-57-49.354Z.json",
+  "artifactRoot": "simulator_parity_2026-09-07T06-57-49.354Z",
+  "chartsPath": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption-run/simulator_parity_2026-09-07T06-57-49.354Z/charts.json",
+  "chartCount": 0,
+  "failingChartCount": 0
+}

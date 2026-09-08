@@ -1,0 +1,693 @@
+{
+  "createdAt": "2026-09-07T09:11:40.897Z",
+  "exposure": "Retrospective. All four accepted outcomes and the earlier source-death traces were known before this comparison. No new live battle, input adjustment or coefficient fitting.",
+  "motivation": "Fresh Ahmose tooltip says pauses once every four times; user describes normal-only proc counters, fixed turn schedules and effect-use counters as current community understanding with reported deterministic improvements.",
+  "hypotheses": {
+    "current": "Existing battle turns4,8,12,..., including after Infantry die.",
+    "after_three_normals": "After each third completed Infantry normal attack, schedule the pause and both protective components for the following turn. Protection keeps its2-turn duration. In an uninterrupted living line this means3 attacks then1 pause, matching every fourth opportunity; after line death no new cycles can be initiated.",
+    "after_four_normals": "Literal every4 completed Infantry normal attacks, then pause/protect from the following turn. This gives4 attacks then1 pause and shifts cadence even without other interruptions."
+  },
+  "predictionsBeforeVariantOutput": [
+    "After-three-normal should preserve the uninterrupted3-attack/1-pause trajectory while Infantry remain. It should keep the clean opposite-side case close if there are no other missed Infantry attacks.",
+    "If continuing Viper protection after Infantry death explains the strong archived surplus damage, after-three-normal should reduce that protection and increase the surviving nohero attacker toward2810; the weaker case should show less change.",
+    "After-four-normal changes pause/protection cadence across the whole battle and may violate the clean counterpart. Better fit to one outcome cannot establish it."
+  ],
+  "constraints": [
+    "All recorded full kits/stats/troop keys unchanged.",
+    "No production edit or generic source-alive gate.",
+    "Scheduled effects created before death retain their declared duration.",
+    "No actual game round count is inferred from a simulator trace."
+  ],
+  "hashes": {
+    "originalProtocol": "c28e7abff19ee9e4ede0a60ee7a07e3bdebb936ed874c80116c16d8be78d51f5",
+    "script": "50d116dc919a69415647a55744c752657670e442d9ce1fe67e1d321fd440c705",
+    "soloFixture": "efc62fe9decf7d3f964cb99b939d76e271ab0e16a8827168b3c91f06e81ddfd2",
+    "tooltip": "18e0c6b9cbbc41e175367e8faaf106f239c218eedce17e814e459b7154517b76"
+  },
+  "cases": {
+    "strong": {
+      "key": "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0",
+      "path": "testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json",
+      "fixtureSha256": "34459042ba166d16ef000d355f1c37f09d9a3bc2544ba35cbca6c4c277ba8a70",
+      "entry": {
+        "test_id": "renee_same_kind_ahmose_damage_taken_up_strong_nc",
+        "description": "Renee 4/4/4 + Ahmose 1/1/3 strong all-same damage-taken-up discriminator, designed from the exact stats captured in the first Ahmose report. WIP attacks with 10000 T6 Marksmen and no heroes; minxxx defends 300 T6 Infantry and 500 T6 Lancers with Ahmose and Renee. Same-bucket TTT predicts +3301 survivors versus +2499 to +2530 for every other all-same hypothesis. Deterministic.",
+        "attacker": {
+          "name": "[ARK]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 10000
+          },
+          "stats": {
+            "inf": {
+              "attack": 234.6,
+              "defense": 243.9,
+              "lethality": 157.5,
+              "health": 170.9
+            },
+            "lanc": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 167.5,
+              "health": 163.6
+            },
+            "mark": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 158.8,
+              "health": 164.7
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]Piddlyminxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.4,
+              "defense": 377.2,
+              "lethality": 205.3,
+              "health": 206.5
+            },
+            "lanc": {
+              "attack": 572.7,
+              "defense": 567,
+              "lethality": 288.6,
+              "health": 244.6
+            },
+            "mark": {
+              "attack": 270,
+              "defense": 265,
+              "lethality": 211.8,
+              "health": 206.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 2810,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 10000
+          },
+          "stats": {
+            "inf": {
+              "attack": 234.6,
+              "defense": 243.9,
+              "lethality": 157.5,
+              "health": 170.9
+            },
+            "lanc": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 167.5,
+              "health": 163.6
+            },
+            "mark": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 158.8,
+              "health": 164.7
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]Piddlyminxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.4,
+              "defense": 377.2,
+              "lethality": 205.3,
+              "health": 206.5
+            },
+            "lanc": {
+              "attack": 572.7,
+              "defense": 567,
+              "lethality": 288.6,
+              "health": 244.6
+            },
+            "mark": {
+              "attack": 270,
+              "defense": 265,
+              "lethality": 211.8,
+              "health": 206.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 2810,
+          "defender": 0
+        }
+      ],
+      "provenance": {
+        "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+        "originalPath": "testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json",
+        "storedPath": "archived-fixtures/renee_same_kind_ahmose_damage_taken_up_strong_nc.json",
+        "sha256": "34459042ba166d16ef000d355f1c37f09d9a3bc2544ba35cbca6c4c277ba8a70"
+      }
+    },
+    "weaker": {
+      "key": "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0",
+      "path": "testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json",
+      "fixtureSha256": "e42358f638a2dbaabd29adf2b562b37437014553bce2a21ff23a10de43aad7c4",
+      "entry": {
+        "test_id": "renee_same_kind_ahmose_damage_taken_up_nc",
+        "description": "Renee 4/4/4 + Ahmose 1/1/3 all-same mechanic discriminator. WIP attacks 5000 T6 Marksmen with no heroes; minxxx defends 300 T6 Infantry and 100 T6 Lancers with Ahmose and Renee. Ahmose's deterministic BladeOfLight damage-taken-up makes TTT predict +2017 survivors versus +1687 to +1711 for every other all-same hypothesis. Deterministic.",
+        "attacker": {
+          "name": "[ARK]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 5000
+          },
+          "stats": {
+            "inf": {
+              "attack": 234.6,
+              "defense": 243.9,
+              "lethality": 157.5,
+              "health": 170.9
+            },
+            "lanc": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 167.5,
+              "health": 163.6
+            },
+            "mark": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 158.8,
+              "health": 164.7
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]Piddlyminxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.4,
+              "defense": 377.2,
+              "lethality": 205.3,
+              "health": 206.5
+            },
+            "lanc": {
+              "attack": 572.7,
+              "defense": 567,
+              "lethality": 288.6,
+              "health": 244.6
+            },
+            "mark": {
+              "attack": 270,
+              "defense": 265,
+              "lethality": 211.8,
+              "health": 206.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 1631,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 5000
+          },
+          "stats": {
+            "inf": {
+              "attack": 234.6,
+              "defense": 243.9,
+              "lethality": 157.5,
+              "health": 170.9
+            },
+            "lanc": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 167.5,
+              "health": 163.6
+            },
+            "mark": {
+              "attack": 207.8,
+              "defense": 215.1,
+              "lethality": 158.8,
+              "health": 164.7
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]Piddlyminxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 389.4,
+              "defense": 377.2,
+              "lethality": 205.3,
+              "health": 206.5
+            },
+            "lanc": {
+              "attack": 572.7,
+              "defense": 567,
+              "lethality": 288.6,
+              "health": 244.6
+            },
+            "mark": {
+              "attack": 270,
+              "defense": 265,
+              "lethality": 211.8,
+              "health": 206.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 1631,
+          "defender": 0
+        }
+      ],
+      "provenance": {
+        "gitTree": "626dd08c012b5d85e6494e2a8260b9646fc007c0",
+        "originalPath": "testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json",
+        "storedPath": "archived-fixtures/renee_same_kind_ahmose_damage_taken_up_nc.json",
+        "sha256": "e42358f638a2dbaabd29adf2b562b37437014553bce2a21ff23a10de43aad7c4"
+      }
+    },
+    "attacker": {
+      "key": "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+      "path": "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json",
+      "fixtureSha256": "f38dfd6f704beb3c8de180c9ff51522c041562abe577c4a56bf90b31805d19db",
+      "entry": {
+        "test_id": "renee_ahmose_damage_taken_overlap_attacker_nc",
+        "description": "Deterministic Renee/Ahmose damage-taken bucket overlap discriminator frozen before capture. minxxx attacks WIP with Ahmose 1/1/3 and Renee 4/4/4, fielding 4000 T6 Infantry plus 500 T6 Lancers into 13400 T6 Infantry. Infantry attacks before Lancers; Blade of Light contributes 15% active.hero.damageTaken.up to the shared target before every eligible Renee marked Lancer attack. Using current account stats, Renee sharing active.hero.damageTaken.up with Ahmose predicts minxxx wins with 3757-3759 total survivors; Renee in a separate numerator bucket predicts 3809-3811. Both candidates leave all 500 Lancers and more than 3200 Ahmose Infantry alive, so the target dies first. Capture exact report stats, then rerun these unchanged candidate mechanics before interpreting the observation.",
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 4000,
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 408.4,
+              "defense": 392.2,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 591.7,
+              "defense": 582,
+              "lethality": 315.1,
+              "health": 271.1
+            },
+            "mark": {
+              "attack": 289,
+              "defense": 281,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 13400
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 3777,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            },
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "troops": {
+            "infantry_t6": 4000,
+            "lancer_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 408.4,
+              "defense": 392.2,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 591.7,
+              "defense": 582,
+              "lethality": 315.1,
+              "health": 271.1
+            },
+            "mark": {
+              "attack": 289,
+              "defense": 281,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 13400
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 3777,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Ahmose:ViperFormation",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:ahmose:0",
+          "effect_ids": [
+            "ViperFormation/1",
+            "ViperFormation/2",
+            "ViperFormation/3"
+          ]
+        },
+        {
+          "key": "hero:Ahmose:PrayerOfFlame",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:ahmose:0",
+          "effect_ids": [
+            "PrayerOfFlame/1"
+          ]
+        },
+        {
+          "key": "hero:Ahmose:BladeOfLight",
+          "side": "attacker",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:ahmose:0",
+          "effect_ids": [
+            "BladeOfLight/1",
+            "BladeOfLight/2"
+          ]
+        },
+        {
+          "key": "hero:Renee:NightmareTrace",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "NightmareTrace/mark",
+            "NightmareTrace/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:Dreamcatcher",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "Dreamcatcher/mark",
+            "Dreamcatcher/1"
+          ]
+        },
+        {
+          "key": "hero:Renee:Dreamslice",
+          "side": "attacker",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:renee:0",
+          "effect_ids": [
+            "Dreamslice/mark",
+            "Dreamslice/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        }
+      ],
+      "provenance": "Active accepted corpus"
+    },
+    "solo": {
+      "key": "testcases/emulator_verified/ahmose_solo_nc.json#0",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Ahmose": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 309.2,
+              "defense": 290.8,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 188.7,
+              "defense": 181.3,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 205.7,
+              "defense": 197.3,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 2633,
+          "defender": 0
+        }
+      ]
+    }
+  }
+}

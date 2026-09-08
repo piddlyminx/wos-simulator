@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-09-07T06:42:04.622Z",
+  "exposure": "No new Edith Ironclad Infantry battle outcome exists or has been read. Older accepted Edith Marksman/Lancer outcomes were read, but neither positively exercises Ironclad.",
+  "question": "A positive Infantry recipient for Ironclad, under the actual full kit, absent from both prior Edith fixtures.",
+  "known_stats": "Latest observed nohero Infantry and Marksman blocks from Reina capture1; Edith-selected Infantry stats are unknown.",
+  "sensitivity": "Added0/80/160/240 Attack and Defense are hypothetical scenarios, not measured hero bonuses or exhaustive bounds.",
+  "variants": [
+    "current",
+    "omit Ironclad",
+    "Ironclad into Health",
+    "Ironclad into Defense",
+    "omit SteelSentinel"
+  ],
+  "constraints": [
+    "No live control",
+    "Full actual roster kits",
+    "T6 only",
+    "No generation added to report stats",
+    "Sub1000 per side",
+    "Preserve fractional state and living-source ceil"
+  ]
+}

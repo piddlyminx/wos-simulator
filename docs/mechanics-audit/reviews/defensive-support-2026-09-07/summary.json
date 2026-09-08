@@ -1,0 +1,203 @@
+{
+  "distinctDeterministicFixtureEntries": 7,
+  "distinctStoredGameOutcomes": 7,
+  "distinctStochasticSkippedEntries": 13,
+  "allResidualsWithinOne": true,
+  "results": [
+    {
+      "key": "hero:Logan:LionStrike",
+      "reviewedEntries": 3,
+      "skippedEntries": 8,
+      "levels": [
+        1,
+        3
+      ],
+      "fixtures": [
+        {
+          "key": "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
+          "game": [
+            -403
+          ],
+          "predictions": {
+            "current": -403,
+            "omit": -292,
+            "hero_class_only": -309,
+            "bucket_active.hero.damage.down": -403,
+            "bucket_active.hero.lethality.down": -403
+          }
+        },
+        {
+          "key": "testcases/emulator_verified/logan_solo_minxxx_nc.json#0",
+          "game": [
+            -1995
+          ],
+          "predictions": {
+            "current": -1995,
+            "omit": -1995,
+            "hero_class_only": -1995,
+            "bucket_active.hero.damage.down": -1995,
+            "bucket_active.hero.lethality.down": -1995
+          }
+        },
+        {
+          "key": "testcases/emulator_verified/logan_solo_v2_nc.json#0",
+          "game": [
+            -1134
+          ],
+          "predictions": {
+            "current": -1134,
+            "omit": -1126,
+            "hero_class_only": -1127,
+            "bucket_active.hero.damage.down": -1134,
+            "bucket_active.hero.lethality.down": -1134
+          }
+        }
+      ]
+    },
+    {
+      "key": "hero:Logan:LionIntimidation",
+      "reviewedEntries": 2,
+      "skippedEntries": 8,
+      "levels": [
+        3
+      ],
+      "fixtures": [
+        {
+          "key": "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
+          "game": [
+            -403
+          ],
+          "predictions": {
+            "current": -403,
+            "omit": -292,
+            "hero_class_only": -403,
+            "bucket_active.hero.health.up": -400,
+            "bucket_active.hero.defense.up": -403
+          }
+        },
+        {
+          "key": "testcases/emulator_verified/logan_solo_v2_nc.json#0",
+          "game": [
+            -1134
+          ],
+          "predictions": {
+            "current": -1134,
+            "omit": -1126,
+            "hero_class_only": -1134,
+            "bucket_active.hero.health.up": -1133,
+            "bucket_active.hero.defense.up": -1134
+          }
+        }
+      ]
+    },
+    {
+      "key": "hero:Logan:LeaderInspiration",
+      "reviewedEntries": 2,
+      "skippedEntries": 6,
+      "levels": [
+        3
+      ],
+      "fixtures": [
+        {
+          "key": "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
+          "game": [
+            -403
+          ],
+          "predictions": {
+            "current": -403,
+            "omit": -270,
+            "hero_class_only": -403,
+            "bucket_active.hero.damageTaken.down": -400,
+            "bucket_active.hero.defense.up": -403
+          }
+        },
+        {
+          "key": "testcases/emulator_verified/logan_solo_v2_nc.json#0",
+          "game": [
+            -1134
+          ],
+          "predictions": {
+            "current": -1134,
+            "omit": -1124,
+            "hero_class_only": -1134,
+            "bucket_active.hero.damageTaken.down": -1133,
+            "bucket_active.hero.defense.up": -1134
+          }
+        }
+      ]
+    },
+    {
+      "key": "hero:Ling:FearsomeAura",
+      "reviewedEntries": 2,
+      "skippedEntries": 0,
+      "levels": [
+        1
+      ],
+      "fixtures": [
+        {
+          "key": "testcases/emulator_verified/ling_xue_solo_nc.json#0",
+          "game": [
+            2822
+          ],
+          "predictions": {
+            "current": 2822,
+            "omit": 2880,
+            "hero_class_only": 2859,
+            "bucket_active.hero.damage.down": 2822,
+            "bucket_active.hero.lethality.down": 2822
+          }
+        },
+        {
+          "key": "testcases/emulator_verified/ling_xue_solo_nc.json#1",
+          "game": [
+            3215
+          ],
+          "predictions": {
+            "current": 3214,
+            "omit": 3244,
+            "hero_class_only": 3242,
+            "bucket_active.hero.damage.down": 3214,
+            "bucket_active.hero.lethality.down": 3214
+          }
+        }
+      ]
+    },
+    {
+      "key": "hero:Lumak:TacticalDeception",
+      "reviewedEntries": 2,
+      "skippedEntries": 5,
+      "levels": [
+        1,
+        3
+      ],
+      "fixtures": [
+        {
+          "key": "testcases/emulator_verified/lumak_bokan_solo_nc.json#0",
+          "game": [
+            2797
+          ],
+          "predictions": {
+            "current": 2797,
+            "omit": 2837,
+            "hero_class_only": 2834,
+            "bucket_active.hero.attack.down": 2797,
+            "bucket_active.hero.lethality.down": 2797
+          }
+        },
+        {
+          "key": "testcases/emulator_verified/lumak_bokan_solo_nc.json#1",
+          "game": [
+            3127
+          ],
+          "predictions": {
+            "current": 3126,
+            "omit": 3234,
+            "hero_class_only": 3204,
+            "bucket_active.hero.attack.down": 3126,
+            "bucket_active.hero.lethality.down": 3126
+          }
+        }
+      ]
+    }
+  ]
+}

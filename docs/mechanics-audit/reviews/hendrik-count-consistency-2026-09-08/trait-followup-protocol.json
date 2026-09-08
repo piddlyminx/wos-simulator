@@ -1,0 +1,25 @@
+{
+  "createdAt": "2026-09-08T03:50:43.314Z",
+  "exposure": "Retrospective follow-up after the301-input structural screen. Trace Hendrik counts and run1000 shared-seed samples for every affected stochastic input. No changes to the frozen candidate.",
+  "selected": [
+    "testcases/emulator_verified/alonso_norah_combo.json#1",
+    "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+    "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+    "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+    "testcases/emulator_verified/gwen_blastmaster_small_timing_550m_vs_810i_45l_45m.json#0",
+    "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+    "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+    "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0",
+    "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0",
+    "testcases/emulator_verified/norah_greg_combo.json#0",
+    "testcases/emulator_verified/norah_s2_splash_A.json#0",
+    "testcases/emulator_verified/norah_solo.json#0",
+    "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+    "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+    "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0",
+    "testcases/emulator_verified/wayne_mixed_solo.json#0",
+    "testcases/emulator_verified/wayne_mixed_solo.json#1",
+    "testcases/emulator_verified/wayne_reina_combo.json#0"
+  ],
+  "samples": 1000
+}

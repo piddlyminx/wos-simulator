@@ -6,6 +6,10 @@ Read this before collecting emulator testcase observations or deciding whether s
 
 This document owns the capture-count and parity-acceptance policy. Other workflow documents should link here rather than restating the rules.
 
+## Accepted Game Evidence
+
+All recorded game outcomes are accepted evidence regardless of testcase folder, unless explicitly flagged invalid or obsolete, as Paul clarified on September 7, 2026. Report images are not required to accept existing outcomes. Preserve available images for new captures. Missing images, age or simulator disagreement alone do not invalidate an observation.
+
 ## Determine Whether The Testcase Is Stochastic
 
 Use the hydrated simulator skills to classify the testcase. A testcase is stochastic when an applicable hydrated skill contains a chance trigger. The filename is not evidence of determinism; do not add `_nc` to testcase filenames as a classification mechanism.
@@ -22,41 +26,30 @@ Preserve every captured observation under `game_report_result`; do not replace t
 
 ## Deterministic Parity
 
-A deterministic testcase should produce exactly the same endpoint in the game and simulator. Unless a testcase explicitly defines another primary result, the endpoint is the signed remaining-troop result: which side survives and how many troops remain.
+Compare the winning side and survivor count. Unless a testcase explicitly defines another primary result, use the signed remaining-troop result. Also preserve both sides' survivor counts when a battle reaches the round limit; a score of zero need not mean both armies were eliminated.
 
-Battle Details values such as skill activations and source-attributed kills are diagnostic views of the same battle trajectory. They can help locate a discrepancy, but they are not independent observations and must not be used to bypass an unexplained endpoint mismatch. For example, a skill's attributed kills looking close does not establish that skill's mechanic when the same deterministic battle has the wrong survivor count or round count.
+Paul clarified the practical accuracy target on September 7, 2026:
 
-A difference of one or two surviving units may be treated as matching when it is attributable to rounding.
+- For the usual armies below 1,000 troops, aim for agreement within roughly 1–2 survivors. An identified rounding explanation is not required to accept that tolerance.
+- Allow more flexibility for larger armies. For example, 30,449 versus 30,454 survivors on a 30k scale is effectively equal, and that gap alone is a weak basis for choosing a mechanic.
+- The shared [audit README](../../docs/mechanics-audit/README.md) also gives 0.1% of combined initial troops as an accuracy aim and investigation diagnostic. It explicitly does not make that percentage a universal hard failure or a percentage PASS sufficient evidence.
+- Judge a residual in context: absolute difference, army scale, winning side, sensitivity to recorded inputs, and whether the discrepancy would change the mechanic conclusion. There is no universal percentage cutoff or rigid absolute threshold for every army size.
 
-A larger error may be treated as matching only when all of the following are true:
+Raw errors above 2 and the runner's percentage-based PASS flag are diagnostics, not final materiality judgments. Prefer small, informative probes with a substantial separation between competing predictions. Do not declare alternatives distinguishable merely because narrow fixed tolerance bands do not overlap.
 
-- the absolute error is still very small
-- the uncertain input and its plausible interval are identified from the capture, such as a one-decimal report stat lying within `displayed ± 0.05`
-- simulator sensitivity runs show that this plausible input region reaches a discrete battle-state boundary, such as a different final round, troop-line exhaustion round, target schedule, or integer source-count state
-- the observed game endpoint is attained by an input inside that plausible region
+Battle Details values such as skill activations and source-attributed kills are diagnostic views of the same battle trajectory, not independent observations. They can locate a discrepancy or corroborate a mechanism, but cannot bypass a material endpoint mismatch. Preserve unexplained differences even when the endpoint is close enough for practical agreement; matching a combined full kit does not identify every individual component.
 
-The exception is about demonstrated boundary sensitivity, not general closeness. Smoothly moving the result by one troop, finding a discontinuity only outside the plausible input interval, or merely observing that battles can be discontinuous is insufficient.
+When input uncertainty is a plausible explanation, identify the uncertain input and its supported interval (for example a one-decimal report stat within displayed ± 0.05), and report the resulting simulator sensitivity separately from the nominal forecast. Preserve every varied input, the range of outcomes, and any changes in final round, troop-line exhaustion, target schedule or integer source count. Reaching the observed endpoint inside that supported region is useful compatibility evidence; it is not a measured input or proof of the mechanic.
 
-When using this exception, record:
+Checking only interval corners does not establish the complete envelope when a battle is non-monotonic. Establish a valid dominance argument or inspect relevant interior combinations. A state discontinuity found only outside a plausible input interval does not explain the recorded battle. Do not silently adjust stats or replace observations with fitted values.
 
-- the displayed baseline input and endpoint
-- every varied input and its allowed interval
-- the boundary location and the lifecycle change across it
-- an in-range input that attains the exact observed endpoint
-
-Checking only the interval corners does not establish the complete envelope when the battle is non-monotonic. Either establish a valid dominance/monotonicity argument for this testcase or also inspect the relevant interior combinations.
-
-A small percentage error by itself is not sufficient, and a generic percentage-based `passes` flag does not establish deterministic parity. If the observed endpoint is not attained under the requirements above, classify the case as an unexplained deterministic mismatch and do not use it to confirm the mechanic whose prediction depends on that mismatch being understood.
-
-Use this decision table:
-
-| Comparison | Classification |
+| Comparison | Interpretation |
 |---|---|
-| Exact endpoint, or one/two units with an identified rounding cause | Deterministic match |
-| Larger small residual; plausible input interval straddles a state discontinuity; an in-range input attains the exact observation | Boundary-compatible match; record the sensitivity evidence |
-| A nearby or in-range discontinuity exists, but no tested in-range input attains the observation | Unresolved deterministic mismatch |
-| The required discontinuity or exact observation appears only outside the plausible input interval | Deterministic mismatch |
-| Battle Details attribution agrees while the survivor endpoint remains mismatched | Diagnostic agreement only; mechanic conclusion remains unresolved |
+| Exact endpoint, or roughly 1–2 survivors for a sub-1,000 army | Practical deterministic agreement in the exercised context |
+| Small residual at a larger scale, such as 5 out of 30k | May be practically equivalent; retain the numeric residual and do not overclaim discrimination |
+| Material residual reached by a supported input sensitivity | Input-compatible result; retain nominal mismatch and sensitivity evidence |
+| Material residual unexplained by recorded inputs or supported sensitivity | Unresolved deterministic disagreement |
+| Battle Details agrees while a material endpoint mismatch remains | Diagnostic support only; affected mechanic conclusion remains unresolved |
 
 ### Terminology For Battle Boundaries
 

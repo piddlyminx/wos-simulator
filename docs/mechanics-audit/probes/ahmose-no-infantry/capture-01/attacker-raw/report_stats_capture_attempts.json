@@ -1,0 +1,36 @@
+{
+  "selected_attempt": 1,
+  "selected_path": "/home/paul/projects_wsl/wos/simulator/tmp/20260907T092027Z_wos_report_war_1/report_stats.png",
+  "attempts": [
+    {
+      "attempt": 0,
+      "sb_box": [
+        216,
+        253,
+        0.998912513256073
+      ],
+      "sb_top": 216,
+      "band": [
+        280,
+        429
+      ],
+      "parseable": false,
+      "score": -63.00108748674393
+    },
+    {
+      "attempt": 1,
+      "sb_box": [
+        332,
+        369,
+        0.9942654371261597
+      ],
+      "sb_top": 332,
+      "band": [
+        280,
+        429
+      ],
+      "parseable": true,
+      "score": 0.9942654371261597
+    }
+  ]
+}

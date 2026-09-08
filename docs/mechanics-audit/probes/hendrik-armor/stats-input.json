@@ -1,0 +1,17 @@
+{
+  "minxxx": {
+    "lanc": { "attack": 294.9, "defense": 293.7, "lethality": 224.3, "health": 230.0 }
+  },
+  "WIP": {
+    "lanc": { "attack": 208.5, "defense": 207.4, "lethality": 186.8, "health": 181.9 }
+  },
+  "provenance": {
+    "source": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json",
+    "raw_capture": "docs/mechanics-audit/probes/gwen-blastmaster/report_stats.png",
+    "reported_at": "2026-09-07",
+    "verification": "Parent visually verified these exact Lancer report bonuses in the fresh Gwen capture.",
+    "assumption": "The fresh Gwen and nohero WIP Lancer bonus fields remain applicable after changing to nohero minxxx and full Hendrik3/3/3 WIP. Neither Gwen nor Hendrik is a Lancer hero. Exact Hendrik report stats must replace these estimates before interpretation; no hero-generation stats are added.",
+    "hero_kit": "WIP Hendrik3/3/3 from skill/tmp/debug/hero_skills_WIP_20260907T035709Z_00.",
+    "outcome_exposure": "No game result from this proposed Hendrik formation has been opened. Older different formations and the fresh Gwen result are known."
+  }
+}

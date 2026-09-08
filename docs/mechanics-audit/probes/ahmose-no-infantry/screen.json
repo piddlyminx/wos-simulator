@@ -1,0 +1,757 @@
+{
+  "exposure": "Input-only prospective design. No battle on this formation has been captured.",
+  "sourceFixture": "/home/paul/projects_wsl/wos/simulator/testcases/emulator_verified/greg_deterrence_200i_vs_400m.json",
+  "sourceSha256": "7fccd61b781186615249b80925130d7c5d535bd0d1a55c37dab87abf0a7d5805",
+  "input": {
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 200
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230
+        },
+        "mark": {
+          "attack": 375.8,
+          "defense": 376.3,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    }
+  },
+  "stats": "Used WIP Lancer and minxxx Infantry blocks are visually verified in all five Greg reports; selected Ahmose Infantry and nohero minxxx Marksman blocks are unused estimates copied from those earlier reports and require fresh verification.",
+  "hypotheses": "Current fixed-turn Viper protects Lancers without Infantry. A rule requiring Infantry attacks or a living Infantry source creates no Viper effects here; model only that zero-contribution alternative.",
+  "rows": [
+    {
+      "lancers": 160,
+      "infantry": 100,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 37,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 121
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 41,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 113
+        }
+      }
+    },
+    {
+      "lancers": 160,
+      "infantry": 125,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 73,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 87
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 76,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 83
+        }
+      }
+    },
+    {
+      "lancers": 160,
+      "infantry": 150,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 104,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 70
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 106,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 66
+        }
+      }
+    },
+    {
+      "lancers": 160,
+      "infantry": 175,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 133,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 61
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 135,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 58
+        }
+      }
+    },
+    {
+      "lancers": 160,
+      "infantry": 200,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 162,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 56
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 163,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 54
+        }
+      }
+    },
+    {
+      "lancers": 160,
+      "infantry": 250,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 216,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 49
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 218,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 47
+        }
+      }
+    },
+    {
+      "lancers": 200,
+      "infantry": 100,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 35,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "attacker",
+          "rounds": 159
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 20,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "attacker",
+          "rounds": 172
+        }
+      }
+    },
+    {
+      "lancers": 200,
+      "infantry": 125,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 46,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 121
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 51,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 113
+        }
+      }
+    },
+    {
+      "lancers": 200,
+      "infantry": 150,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 83,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 92
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 86,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 87
+        }
+      }
+    },
+    {
+      "lancers": 200,
+      "infantry": 175,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 115,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 76
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 118,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 72
+        }
+      }
+    },
+    {
+      "lancers": 200,
+      "infantry": 200,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 145,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 65
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 147,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 62
+        }
+      }
+    },
+    {
+      "lancers": 200,
+      "infantry": 250,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 202,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 56
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 204,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 54
+        }
+      }
+    },
+    {
+      "lancers": 240,
+      "infantry": 100,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 106,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "attacker",
+          "rounds": 123
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 98,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "attacker",
+          "rounds": 125
+        }
+      }
+    },
+    {
+      "lancers": 240,
+      "infantry": 125,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 15,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "attacker",
+          "rounds": 183
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 11,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 172
+        }
+      }
+    },
+    {
+      "lancers": 240,
+      "infantry": 150,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 55,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 121
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 61,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 113
+        }
+      }
+    },
+    {
+      "lancers": 240,
+      "infantry": 175,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 92,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 96
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 97,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 91
+        }
+      }
+    },
+    {
+      "lancers": 240,
+      "infantry": 200,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 125,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 81
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 129,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 76
+        }
+      }
+    },
+    {
+      "lancers": 240,
+      "infantry": 250,
+      "candidates": {
+        "current": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 185,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 63
+        },
+        "requires_infantry_source": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 188,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "winner": "defender",
+          "rounds": 60
+        }
+      }
+    }
+  ]
+}

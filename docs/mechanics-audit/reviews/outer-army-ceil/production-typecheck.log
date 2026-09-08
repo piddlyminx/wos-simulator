@@ -1,0 +1,4 @@
+
+> wos-simulator@0.1.0 typecheck
+> npx --yes --package typescript --package @types/node tsc --noEmit
+

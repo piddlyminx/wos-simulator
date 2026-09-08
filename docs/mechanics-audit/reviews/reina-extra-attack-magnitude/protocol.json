@@ -1,0 +1,13 @@
+{
+  "exposure": "First new Reina game known: defender166[66,50,50], S2=1/S3=8 and S3displayedkills5. No outcomes from remaining four planned battles have been read by this reviewer. These are retrospective first-case diagnostics and frozen conditional predictions for unread repeats, not new game evidence.",
+  "hypotheses": {
+    "current_extra20": "Configured separate attack has20% of damage basis.",
+    "whole_extra_attack100": "A full additional attack has100% of the basis; tests whether the new attack itself is whole-strength. This is a named semantic alternative, not an estimated best-fit coefficient.",
+    "base_attack_plus20": "An additional attack deals its100% base plus20% enhancement, for120% total. This tests an interpretation of extra-attack wording, not verified game tooltip content."
+  },
+  "directional_prediction": "Increasing only S3 extra-attack strength should increase Infantry casualties while the current target scope leaves backlines intact. The current prediction is179.17 defenders; the first game is166. Actual skill tooltip will be checked independently before choosing an interpretation.",
+  "preserved": "Complete Reina111 kit, exact fresh reportstats,350T6L against150I/50L/50M,25%S3 proc,4%S2 dodge, damagekind/target rules and all other effects. No stat fit or coefficient grid.",
+  "config_sha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "input_sha256": "0ba2771b61f97abdefcecf9d51b02d14fbba95f19732ff143ee94f2df6f9d8c6",
+  "script_sha256": "826d24cb665703acb2c44dad51dcf7e58b9b962aa4ed896ce2667bcbf9552335"
+}

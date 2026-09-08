@@ -1,0 +1,68 @@
+{
+  "hero:Wayne:ThunderStrike": {
+    "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+    "status": "partially_supported",
+    "context": "Full Wayne222 Infantry-only gameA251/255/247/256/250 versus current253.872 SD4.037 p.630768; omission and Marksman-only226.131 SD4.854 p.00005. Deterministic750M Gatot case game/currentD2738 versus omission2752. Supports Infantry and Marksman contributions in these contexts. Gordon/Wayne retains raw3/16 survivor residuals and conflicting stale description; Hector/Renee/Wayne game1597 versus1588.068 SD2.913 p.005 remains a concern despite this seed crossing the flag threshold. Normal-kind S1 alternative remains plausible everywhere, usually sample-identical; exact cadence, coefficients, all scope/levels/lifecycle and kind remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ThunderStrike-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ThunderStrike-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Wayne:RoundaboutHit": {
+    "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+    "status": "partially_supported",
+    "context": "Two separately retained mixed Wayne entries gameA110/216/308/314 and394/352/382/284/322/328/364 fit current219.663 SD79.587 p.857807 and308.903 SD47.867 p.035098. Whole omission fails both; in second entry removing Lancer or Marksman component gives246.874 p.0007 or274.413 p.0015, supporting both contextual target contributions. First entry accepts individual omissions. Named S2 solo359/364 accepts current362.385 SD3.002 and omission360.279 SD3.087, so title alone is not positive evidence. First-attack phase remains plausible everywhere. Mixed entries contain ambiguous same-battle/OCR description and are not pooled or assumed independent. Damage kind, exact source gate/cadence, coefficients, levels and depletion behavior remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/RoundaboutHit-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/RoundaboutHit-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Wayne:Fleet": {
+    "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+    "status": "partially_supported",
+    "context": "Full Wayne222 Infantry-only gameA247-256 across5 records fits current253.872 SD4.037; omission or Marksman-only source is constant226 and rejected. Mixed Wayne/Renee/Reina inputs also reject omission, supporting variable contribution outside Marksmen. Marksman solo359/364 fits current362.385 SD3.002 versus omissionconstant359, limited positive Marksman chance evidence. Exact chance/multiplier not uniquely identified. Normal-kind alternative remains plausible everywhere; Renee/Wayne improves423.381 SD1.826 to425.817 SD2.459 versusgame427 while both plausible, so no kind change. Draws retained per-side, and prior Hector/Renee/Wayne high-tail concern remains. All levels, probability dependence, delivery/exhaustion and joiners unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Gordon:ToxicRelease": {
+    "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+    "status": "partially_supported",
+    "context": "Full Flint/Gordon/Jasser gameD1517/1017 versus current1516/1016; Infantry-component omission1565/1054 and one-turn1537/1032 support positive Infantry vulnerability with more than one-turn duration. Broad both-components all-enemy1469/980 fails. Repeated Lynn/Gordon exercises Marksman reduction but its omission remains plausible5136.663 SD194.853 p.19439 versus game5065.4/current5019.535 SD215.873 p.260287, so Marksman contribution remains unresolved. Gatot secondary case retains17survivor/10round residual. Gatot s3 currentA4996 round1037 vs gameA4573 round1151; all-enemy net4575 is actually1500round drawA4996/D421, not agreement. No production change. Exact phase, buckets, damage-kind interactions, level curve and source/target lifecycle remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ToxicRelease-initial.json",
+      "docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/ToxicRelease-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": []
+  }
+}

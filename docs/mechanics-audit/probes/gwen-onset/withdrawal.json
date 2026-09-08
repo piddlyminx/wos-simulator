@@ -1,0 +1,8 @@
+{
+  "status": "withdrawn_before_deployment",
+  "date": "2026-09-07",
+  "reason": "Paul clarified that30449 versus30454 survivors on a30k scale is effectively equal. The original \u00b12 absolute acceptance bands are not a defensible materiality distinction at this scale.",
+  "capture": "Interrupted during alliance readiness checks before any deployment or attack; exit130. No new game outcome or testcase was created.",
+  "log": "tmp/mechanics-audit-2026-09-07/gwen-onset-capture.log",
+  "preservation": "Original spec, forecasts and runtime snapshots retained as design history, not accepted validation or a ready probe."
+}

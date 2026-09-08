@@ -1,0 +1,2298 @@
+{
+  "full_result_gzip": "trait-followup.json.gz",
+  "uncompressed_sha256": "44a6dc8a9a12253d50ebb8d87b203fb89132e853355218e81774e47d61d27a20",
+  "summaries": [
+    {
+      "key": "testcases/emulator_verified/alonso_norah_combo.json#1",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 349
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": -353.455,
+          "sd": 2.6994929639216036,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -353.45,
+            "sigma_candidate": 2.7,
+            "n_reference": 1,
+            "mu_reference": -349,
+            "sigma_reference": 0,
+            "bias_raw": -4.45,
+            "bias_pct": -0.27,
+            "sem": 0.09,
+            "stat_type": "cdf_support",
+            "stat": 0.5816,
+            "p": 0.262037,
+            "passes": true,
+            "cdf_rms": 0.043707,
+            "cdf_p": 0.152642,
+            "support_value": -349,
+            "support_mass": 0.06677778,
+            "support_p": 0.326834,
+            "flag_reason": "cdf"
+          }
+        },
+        "candidate": {
+          "mean": -353.223,
+          "sd": 2.6393630362716713,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -353.22,
+            "sigma_candidate": 2.64,
+            "n_reference": 1,
+            "mu_reference": -349,
+            "sigma_reference": 0,
+            "bias_raw": -4.22,
+            "bias_pct": -0.26,
+            "sem": 0.08,
+            "stat_type": "cdf_support",
+            "stat": 0.5812,
+            "p": 0.262287,
+            "passes": true,
+            "cdf_rms": 0.042417,
+            "cdf_p": 0.19239,
+            "support_value": -349,
+            "support_mass": 0.06933333,
+            "support_p": 0.39618,
+            "flag_reason": "cdf"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+      "observed": [
+        {
+          "attacker": 269,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 201.164,
+          "sd": 141.39729948022452,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 201.16,
+            "sigma_candidate": 141.4,
+            "n_reference": 1,
+            "mu_reference": 269,
+            "sigma_reference": 0,
+            "bias_raw": -67.84,
+            "bias_pct": -2.83,
+            "sem": 4.47,
+            "stat_type": "cdf_support",
+            "stat": 0.1131,
+            "p": 0.770761,
+            "passes": true,
+            "cdf_rms": 0.123295,
+            "cdf_p": 0.682216,
+            "support_value": 269,
+            "support_mass": 0.004,
+            "support_p": 0.680666,
+            "flag_reason": "support"
+          }
+        },
+        "candidate": {
+          "mean": 210.312,
+          "sd": 139.24342493413246,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 210.31,
+            "sigma_candidate": 139.24,
+            "n_reference": 1,
+            "mu_reference": 269,
+            "sigma_reference": 0,
+            "bias_raw": -58.69,
+            "bias_pct": -2.45,
+            "sem": 4.4,
+            "stat_type": "cdf_support",
+            "stat": 0.0821,
+            "p": 0.827709,
+            "passes": true,
+            "cdf_rms": 0.117302,
+            "cdf_p": 0.732413,
+            "support_value": 269,
+            "support_mass": 0.00588889,
+            "support_p": 0.890455,
+            "flag_reason": "cdf"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 563
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 444,
+              "lancer": 53,
+              "marksman": 37
+            }
+          },
+          "rounds": 48,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "EagleVision",
+                "skillName": "EagleVision",
+                "level": 3,
+                "triggersSeen": 48,
+                "skillActivations": 48,
+                "effectActivations": 48,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "AirDominance",
+                "skillName": "AirDominance",
+                "level": 1,
+                "triggersSeen": 8,
+                "skillActivations": 8,
+                "effectActivations": 16,
+                "skillKills": 23.693266473412432,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "Blastmaster",
+                "skillName": "Blastmaster",
+                "level": 1,
+                "triggersSeen": 11,
+                "skillActivations": 11,
+                "effectActivations": 11,
+                "skillKills": 126.93234654091614,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 431,
+              "lancer": 47,
+              "marksman": 29
+            }
+          },
+          "rounds": 49,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "EagleVision",
+                "skillName": "EagleVision",
+                "level": 3,
+                "triggersSeen": 49,
+                "skillActivations": 49,
+                "effectActivations": 49,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "AirDominance",
+                "skillName": "AirDominance",
+                "level": 1,
+                "triggersSeen": 8,
+                "skillActivations": 8,
+                "effectActivations": 16,
+                "skillKills": 24.075182439809446,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "Blastmaster",
+                "skillName": "Blastmaster",
+                "level": 1,
+                "triggersSeen": 12,
+                "skillActivations": 12,
+                "effectActivations": 12,
+                "skillKills": 141.67957689980486,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 1397
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 237,
+              "lancer": 579,
+              "marksman": 572
+            }
+          },
+          "rounds": 22,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "EagleVision",
+                "skillName": "EagleVision",
+                "level": 3,
+                "triggersSeen": 22,
+                "skillActivations": 22,
+                "effectActivations": 22,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "AirDominance",
+                "skillName": "AirDominance",
+                "level": 1,
+                "triggersSeen": 3,
+                "skillActivations": 3,
+                "effectActivations": 6,
+                "skillKills": 10.301162295093835,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "Blastmaster",
+                "skillName": "Blastmaster",
+                "level": 1,
+                "triggersSeen": 5,
+                "skillActivations": 5,
+                "effectActivations": 5,
+                "skillKills": 56.30481093958784,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 237,
+              "lancer": 577,
+              "marksman": 570
+            }
+          },
+          "rounds": 22,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "EagleVision",
+                "skillName": "EagleVision",
+                "level": 3,
+                "triggersSeen": 22,
+                "skillActivations": 22,
+                "effectActivations": 22,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "AirDominance",
+                "skillName": "AirDominance",
+                "level": 1,
+                "triggersSeen": 3,
+                "skillActivations": 3,
+                "effectActivations": 6,
+                "skillKills": 10.301162295093835,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "Blastmaster",
+                "skillName": "Blastmaster",
+                "level": 1,
+                "triggersSeen": 5,
+                "skillActivations": 5,
+                "effectActivations": 5,
+                "skillKills": 61.27140349244421,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_blastmaster_small_timing_550m_vs_810i_45l_45m.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 24
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 76
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 78,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "EagleVision",
+                "skillName": "EagleVision",
+                "level": 3,
+                "triggersSeen": 78,
+                "skillActivations": 78,
+                "effectActivations": 78,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "AirDominance",
+                "skillName": "AirDominance",
+                "level": 1,
+                "triggersSeen": 13,
+                "skillActivations": 13,
+                "effectActivations": 26,
+                "skillKills": 26.124165851286826,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "Blastmaster",
+                "skillName": "Blastmaster",
+                "level": 1,
+                "triggersSeen": 19,
+                "skillActivations": 19,
+                "effectActivations": 19,
+                "skillKills": 108.11032164175872,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 112
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 73,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "EagleVision",
+                "skillName": "EagleVision",
+                "level": 3,
+                "triggersSeen": 73,
+                "skillActivations": 73,
+                "effectActivations": 73,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "AirDominance",
+                "skillName": "AirDominance",
+                "level": 1,
+                "triggersSeen": 12,
+                "skillActivations": 12,
+                "effectActivations": 24,
+                "skillKills": 25.88737706914652,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Gwen",
+                "skillId": "Blastmaster",
+                "skillName": "Blastmaster",
+                "level": 1,
+                "triggersSeen": 18,
+                "skillActivations": 18,
+                "effectActivations": 18,
+                "skillKills": 107.57069783912601,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+      "observed": [
+        {
+          "attacker": 2668,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 2695.308,
+          "sd": 58.11721557978109,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2695.31,
+            "sigma_candidate": 58.12,
+            "n_reference": 1,
+            "mu_reference": 2668,
+            "sigma_reference": 0,
+            "bias_raw": 27.31,
+            "bias_pct": 0.58,
+            "sem": 1.84,
+            "stat_type": "cdf_support",
+            "stat": 0.1176,
+            "p": 0.762712,
+            "passes": true,
+            "cdf_rms": 0.061191,
+            "cdf_p": 0.675216,
+            "support_value": 2668,
+            "support_mass": 0.00833333,
+            "support_p": 0.906705,
+            "flag_reason": "cdf"
+          }
+        },
+        "candidate": {
+          "mean": 2702.655,
+          "sd": 55.85765885760929,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2702.66,
+            "sigma_candidate": 55.86,
+            "n_reference": 1,
+            "mu_reference": 2668,
+            "sigma_reference": 0,
+            "bias_raw": 34.66,
+            "bias_pct": 0.74,
+            "sem": 1.77,
+            "stat_type": "cdf_support",
+            "stat": 0.1439,
+            "p": 0.717914,
+            "passes": true,
+            "cdf_rms": 0.065631,
+            "cdf_p": 0.59207,
+            "support_value": 2668,
+            "support_mass": 0.00633333,
+            "support_p": 0.657067,
+            "flag_reason": "cdf"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 17
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 3,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "ArmorOfBarnacles",
+                "skillName": "ArmorOfBarnacles",
+                "level": 3,
+                "triggersSeen": 13,
+                "skillActivations": 13,
+                "effectActivations": 13,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "DragonsHeir",
+                "skillName": "DragonsHeir",
+                "level": 3,
+                "triggersSeen": 18,
+                "skillActivations": 18,
+                "effectActivations": 18,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 3,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "ArmorOfBarnacles",
+                "skillName": "ArmorOfBarnacles",
+                "level": 3,
+                "triggersSeen": 13,
+                "skillActivations": 13,
+                "effectActivations": 13,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "DragonsHeir",
+                "skillName": "DragonsHeir",
+                "level": 3,
+                "triggersSeen": 18,
+                "skillActivations": 18,
+                "effectActivations": 18,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 471
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 3,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "ArmorOfBarnacles",
+                "skillName": "ArmorOfBarnacles",
+                "level": 3,
+                "triggersSeen": 5,
+                "skillActivations": 5,
+                "effectActivations": 5,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "DragonsHeir",
+                "skillName": "DragonsHeir",
+                "level": 3,
+                "triggersSeen": 6,
+                "skillActivations": 6,
+                "effectActivations": 6,
+                "skillKills": 45.257789225339934,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 313,
+              "lancer": 82,
+              "marksman": 76
+            }
+          },
+          "rounds": 20,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 3,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "ArmorOfBarnacles",
+                "skillName": "ArmorOfBarnacles",
+                "level": 3,
+                "triggersSeen": 5,
+                "skillActivations": 5,
+                "effectActivations": 5,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "DragonsHeir",
+                "skillName": "DragonsHeir",
+                "level": 3,
+                "triggersSeen": 6,
+                "skillActivations": 6,
+                "effectActivations": 6,
+                "skillKills": 49.3414145675838,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 68
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 19,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 3,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "ArmorOfBarnacles",
+                "skillName": "ArmorOfBarnacles",
+                "level": 3,
+                "triggersSeen": 8,
+                "skillActivations": 8,
+                "effectActivations": 8,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "DragonsHeir",
+                "skillName": "DragonsHeir",
+                "level": 3,
+                "triggersSeen": 10,
+                "skillActivations": 10,
+                "effectActivations": 10,
+                "skillKills": 71.1390787242019,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 16,
+              "lancer": 31,
+              "marksman": 21
+            }
+          },
+          "rounds": 33,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 3,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "ArmorOfBarnacles",
+                "skillName": "ArmorOfBarnacles",
+                "level": 3,
+                "triggersSeen": 8,
+                "skillActivations": 8,
+                "effectActivations": 8,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "DragonsHeir",
+                "skillName": "DragonsHeir",
+                "level": 3,
+                "triggersSeen": 11,
+                "skillActivations": 11,
+                "effectActivations": 11,
+                "skillKills": 78.89865943705276,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "marksman",
+                "skillId": "RangedStrike",
+                "skillName": "RangedStrike",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/norah_greg_combo.json#0",
+      "observed": [
+        {
+          "attacker": 0,
+          "defender": 363
+        },
+        {
+          "attacker": 0,
+          "defender": 366
+        },
+        {
+          "attacker": 0,
+          "defender": 369
+        },
+        {
+          "attacker": 0,
+          "defender": 366
+        },
+        {
+          "attacker": 0,
+          "defender": 366
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": -366.214,
+          "sd": 2.348130685826018,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -366.21,
+            "sigma_candidate": 2.35,
+            "n_reference": 5,
+            "mu_reference": -366,
+            "sigma_reference": 2.12,
+            "bias_raw": -0.21,
+            "bias_pct": -0.01,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.0301,
+            "p": 0.933103,
+            "passes": true,
+            "cdf_rms": 0.007932,
+            "cdf_p": 0.835458,
+            "support_value": -363,
+            "support_mass": 0.06655556,
+            "support_p": 0.746313,
+            "flag_reason": "support"
+          }
+        },
+        "candidate": {
+          "mean": -366.065,
+          "sd": 2.290856395111442,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -366.06,
+            "sigma_candidate": 2.29,
+            "n_reference": 5,
+            "mu_reference": -366,
+            "sigma_reference": 2.12,
+            "bias_raw": -0.06,
+            "bias_pct": 0,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.0404,
+            "p": 0.911104,
+            "passes": true,
+            "cdf_rms": 0.007334,
+            "cdf_p": 0.879906,
+            "support_value": -369,
+            "support_mass": 0.06055556,
+            "support_p": 0.721864,
+            "flag_reason": "support"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/norah_s2_splash_A.json#0",
+      "observed": [
+        {
+          "attacker": 1780,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 1782.023,
+          "sd": 15.050481320807922,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1782.02,
+            "sigma_candidate": 15.05,
+            "n_reference": 1,
+            "mu_reference": 1780,
+            "sigma_reference": 0,
+            "bias_raw": 2.02,
+            "bias_pct": 0.09,
+            "sem": 0.48,
+            "stat_type": "cdf_support",
+            "stat": 0.2419,
+            "p": 0.572971,
+            "passes": true,
+            "cdf_rms": 0.041753,
+            "cdf_p": 0.879456,
+            "support_value": 1780,
+            "support_mass": 0.02188889,
+            "support_p": 0.517474,
+            "flag_reason": "support"
+          }
+        },
+        "candidate": {
+          "mean": 1785.458,
+          "sd": 13.846803601191489,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1785.46,
+            "sigma_candidate": 13.85,
+            "n_reference": 1,
+            "mu_reference": 1780,
+            "sigma_reference": 0,
+            "bias_raw": 5.46,
+            "bias_pct": 0.25,
+            "sem": 0.44,
+            "stat_type": "cdf_support",
+            "stat": 0.0815,
+            "p": 0.828959,
+            "passes": true,
+            "cdf_rms": 0.043972,
+            "cdf_p": 0.724764,
+            "support_value": 1780,
+            "support_mass": 0.02866667,
+            "support_p": 0.963652,
+            "flag_reason": "cdf"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/norah_solo.json#0",
+      "observed": [
+        {
+          "attacker": 2731,
+          "defender": 0
+        },
+        {
+          "attacker": 2750,
+          "defender": 0
+        },
+        {
+          "attacker": 2703,
+          "defender": 0
+        },
+        {
+          "attacker": 2787,
+          "defender": 0
+        },
+        {
+          "attacker": 2704,
+          "defender": 0
+        },
+        {
+          "attacker": 2833,
+          "defender": 0
+        },
+        {
+          "attacker": 2764,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 2740.329,
+          "sd": 52.967048881991374,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2740.33,
+            "sigma_candidate": 52.97,
+            "n_reference": 7,
+            "mu_reference": 2753.14,
+            "sigma_reference": 46.67,
+            "bias_raw": -12.81,
+            "bias_pct": -0.27,
+            "sem": 1.67,
+            "stat_type": "cdf_support",
+            "stat": 0.1667,
+            "p": 0.681166,
+            "passes": true,
+            "cdf_rms": 0.018605,
+            "cdf_p": 0.855707,
+            "support_value": 2833,
+            "support_mass": 0.00188889,
+            "support_p": 0.462077,
+            "flag_reason": "support"
+          }
+        },
+        "candidate": {
+          "mean": 2748.085,
+          "sd": 50.44137297008384,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2748.09,
+            "sigma_candidate": 50.44,
+            "n_reference": 7,
+            "mu_reference": 2753.14,
+            "sigma_reference": 46.67,
+            "bias_raw": -5.06,
+            "bias_pct": -0.11,
+            "sem": 1.6,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 0.9999,
+            "passes": true,
+            "cdf_rms": 0.014108,
+            "cdf_p": 0.973601,
+            "support_value": 2764,
+            "support_mass": 0.00511111,
+            "support_p": 0.966502,
+            "flag_reason": "support"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+      "observed": [
+        {
+          "attacker": 670,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 678.932,
+          "sd": 72.28597816062694,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 678.93,
+            "sigma_candidate": 72.29,
+            "n_reference": 1,
+            "mu_reference": 670,
+            "sigma_reference": 0,
+            "bias_raw": 8.93,
+            "bias_pct": 0.37,
+            "sem": 2.29,
+            "stat_type": "cdf_support",
+            "stat": 0.0905,
+            "p": 0.811859,
+            "passes": true,
+            "cdf_rms": 0.079286,
+            "cdf_p": 0.720764,
+            "support_value": 670,
+            "support_mass": 0.01033333,
+            "support_p": 0.820909,
+            "flag_reason": "cdf"
+          }
+        },
+        "candidate": {
+          "mean": 685.882,
+          "sd": 72.91579245121588,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 685.88,
+            "sigma_candidate": 72.92,
+            "n_reference": 1,
+            "mu_reference": 670,
+            "sigma_reference": 0,
+            "bias_raw": 15.88,
+            "bias_pct": 0.66,
+            "sem": 2.31,
+            "stat_type": "cdf_support",
+            "stat": 0.0314,
+            "p": 0.930203,
+            "passes": true,
+            "cdf_rms": 0.076217,
+            "cdf_p": 0.826009,
+            "support_value": 670,
+            "support_mass": 0.01277778,
+            "support_p": 0.933653,
+            "flag_reason": "cdf"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+      "observed": [
+        {
+          "attacker": 14,
+          "defender": 0
+        }
+      ],
+      "deterministic": true,
+      "variants": {
+        "baseline": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Renee",
+                "skillId": "NightmareTrace",
+                "skillName": "NightmareTrace",
+                "level": 4,
+                "triggersSeen": 61,
+                "skillActivations": 61,
+                "effectActivations": 122,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Renee",
+                "skillId": "Dreamcatcher",
+                "skillName": "Dreamcatcher",
+                "level": 4,
+                "triggersSeen": 61,
+                "skillActivations": 61,
+                "effectActivations": 122,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Renee",
+                "skillId": "Dreamslice",
+                "skillName": "Dreamslice",
+                "level": 4,
+                "triggersSeen": 61,
+                "skillActivations": 61,
+                "effectActivations": 122,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "BandsOfSteel",
+                "skillName": "BandsOfSteel",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        },
+        "candidate": {
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillReport": {
+            "attacker": [
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Renee",
+                "skillId": "NightmareTrace",
+                "skillName": "NightmareTrace",
+                "level": 4,
+                "triggersSeen": 61,
+                "skillActivations": 61,
+                "effectActivations": 122,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Renee",
+                "skillId": "Dreamcatcher",
+                "skillName": "Dreamcatcher",
+                "level": 4,
+                "triggersSeen": 61,
+                "skillActivations": 61,
+                "effectActivations": 122,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Renee",
+                "skillId": "Dreamslice",
+                "skillName": "Dreamslice",
+                "level": 4,
+                "triggersSeen": 61,
+                "skillActivations": 61,
+                "effectActivations": 122,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "hero_skill",
+                "heroName": "Hendrik",
+                "skillId": "WormsRavage",
+                "skillName": "WormsRavage",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "lancer",
+                "skillId": "Charge",
+                "skillName": "Charge",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ],
+            "defender": [
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "MasterBrawler",
+                "skillName": "MasterBrawler",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              },
+              {
+                "sourceKind": "troop_skill",
+                "troopType": "infantry",
+                "skillId": "BandsOfSteel",
+                "skillName": "BandsOfSteel",
+                "level": 1,
+                "triggersSeen": 1,
+                "skillActivations": 1,
+                "effectActivations": 1,
+                "skillKills": 0,
+                "unsupportedEffects": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0",
+      "observed": [
+        {
+          "attacker": 1372,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 1342.529,
+          "sd": 56.75013424421777,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1342.53,
+            "sigma_candidate": 56.75,
+            "n_reference": 1,
+            "mu_reference": 1372,
+            "sigma_reference": 0,
+            "bias_raw": -29.47,
+            "bias_pct": -0.98,
+            "sem": 1.79,
+            "stat_type": "cdf_support",
+            "stat": 0.0154,
+            "p": 0.965052,
+            "passes": true,
+            "cdf_rms": 0.07203,
+            "cdf_p": 0.854157,
+            "support_value": 1372,
+            "support_mass": 0.01422222,
+            "support_p": 1,
+            "flag_reason": "cdf"
+          }
+        },
+        "candidate": {
+          "mean": 1350.484,
+          "sd": 51.93074760242284,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1350.48,
+            "sigma_candidate": 51.93,
+            "n_reference": 1,
+            "mu_reference": 1372,
+            "sigma_reference": 0,
+            "bias_raw": -21.52,
+            "bias_pct": -0.72,
+            "sem": 1.64,
+            "stat_type": "cdf_support",
+            "stat": 0.0325,
+            "p": 0.928004,
+            "passes": true,
+            "cdf_rms": 0.067303,
+            "cdf_p": 0.925904,
+            "support_value": 1372,
+            "support_mass": 0.01211111,
+            "support_p": 0.815959,
+            "flag_reason": "support"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_mixed_solo.json#0",
+      "observed": [
+        {
+          "attacker": 110,
+          "defender": 0
+        },
+        {
+          "attacker": 216,
+          "defender": 0
+        },
+        {
+          "attacker": 308,
+          "defender": 0
+        },
+        {
+          "attacker": 314,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 220.457,
+          "sd": 82.52397443990061,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 220.46,
+            "sigma_candidate": 82.52,
+            "n_reference": 4,
+            "mu_reference": 237,
+            "sigma_reference": 95.81,
+            "bias_raw": -16.54,
+            "bias_pct": -0.92,
+            "sem": 2.61,
+            "stat_type": "cdf_support",
+            "stat": 0.1357,
+            "p": 0.731613,
+            "passes": true,
+            "cdf_rms": 0.05921,
+            "cdf_p": 0.679016,
+            "support_value": 308,
+            "support_mass": 0.00155556,
+            "support_p": 0.510324,
+            "flag_reason": "support"
+          }
+        },
+        "candidate": {
+          "mean": 228.542,
+          "sd": 83.81322624080818,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 228.54,
+            "sigma_candidate": 83.81,
+            "n_reference": 4,
+            "mu_reference": 237,
+            "sigma_reference": 95.81,
+            "bias_raw": -8.46,
+            "bias_pct": -0.47,
+            "sem": 2.65,
+            "stat_type": "cdf_support",
+            "stat": 0.2233,
+            "p": 0.59802,
+            "passes": true,
+            "cdf_rms": 0.053934,
+            "cdf_p": 0.776561,
+            "support_value": 308,
+            "support_mass": 0.00122222,
+            "support_p": 0.39148,
+            "flag_reason": "support"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_mixed_solo.json#1",
+      "observed": [
+        {
+          "attacker": 394,
+          "defender": 0
+        },
+        {
+          "attacker": 352,
+          "defender": 0
+        },
+        {
+          "attacker": 382,
+          "defender": 0
+        },
+        {
+          "attacker": 284,
+          "defender": 0
+        },
+        {
+          "attacker": 322,
+          "defender": 0
+        },
+        {
+          "attacker": 328,
+          "defender": 0
+        },
+        {
+          "attacker": 364,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 313.106,
+          "sd": 47.760693544460345,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 313.11,
+            "sigma_candidate": 47.76,
+            "n_reference": 7,
+            "mu_reference": 346.57,
+            "sigma_reference": 38.08,
+            "bias_raw": -33.47,
+            "bias_pct": -1.86,
+            "sem": 1.51,
+            "stat_type": "cdf_support",
+            "stat": 1.2844,
+            "p": 0.051947,
+            "passes": true,
+            "cdf_rms": 0.071907,
+            "cdf_p": 0.051747,
+            "support_value": 328,
+            "support_mass": 0.00333333,
+            "support_p": 0.80361,
+            "flag_reason": "cdf"
+          }
+        },
+        "candidate": {
+          "mean": 318.379,
+          "sd": 49.07865190765808,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 318.38,
+            "sigma_candidate": 49.08,
+            "n_reference": 7,
+            "mu_reference": 346.57,
+            "sigma_reference": 38.08,
+            "bias_raw": -28.19,
+            "bias_pct": -1.57,
+            "sem": 1.55,
+            "stat_type": "cdf_support",
+            "stat": 0.6632,
+            "p": 0.217189,
+            "passes": true,
+            "cdf_rms": 0.061869,
+            "cdf_p": 0.130693,
+            "support_value": 328,
+            "support_mass": 0.00333333,
+            "support_p": 0.80846,
+            "flag_reason": "cdf"
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wayne_reina_combo.json#0",
+      "observed": [
+        {
+          "attacker": 1613,
+          "defender": 0
+        },
+        {
+          "attacker": 1531,
+          "defender": 0
+        },
+        {
+          "attacker": 1542,
+          "defender": 0
+        },
+        {
+          "attacker": 1549,
+          "defender": 0
+        },
+        {
+          "attacker": 1568,
+          "defender": 0
+        },
+        {
+          "attacker": 1545,
+          "defender": 0
+        },
+        {
+          "attacker": 1543,
+          "defender": 0
+        },
+        {
+          "attacker": 1584,
+          "defender": 0
+        }
+      ],
+      "deterministic": false,
+      "variants": {
+        "baseline": {
+          "mean": 1551.113,
+          "sd": 14.655750476247277,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1551.11,
+            "sigma_candidate": 14.66,
+            "n_reference": 8,
+            "mu_reference": 1559.38,
+            "sigma_reference": 27.38,
+            "bias_raw": -8.26,
+            "bias_pct": -0.34,
+            "sem": 0.46,
+            "stat_type": "cdf_support",
+            "stat": 1.398,
+            "p": 0.039998,
+            "passes": true,
+            "cdf_rms": 0.024897,
+            "cdf_p": 0.185591,
+            "support_value": 1613,
+            "support_mass": 0,
+            "support_p": 0.019099,
+            "flag_reason": "support"
+          }
+        },
+        "candidate": {
+          "mean": 1552.064,
+          "sd": 14.590503308206559,
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1552.06,
+            "sigma_candidate": 14.59,
+            "n_reference": 8,
+            "mu_reference": 1559.38,
+            "sigma_reference": 27.38,
+            "bias_raw": -7.31,
+            "bias_pct": -0.3,
+            "sem": 0.46,
+            "stat_type": "cdf_support",
+            "stat": 1.4597,
+            "p": 0.034698,
+            "passes": true,
+            "cdf_rms": 0.024556,
+            "cdf_p": 0.19524,
+            "support_value": 1613,
+            "support_mass": 0,
+            "support_p": 0.015549,
+            "flag_reason": "support"
+          }
+        }
+      }
+    }
+  ]
+}
