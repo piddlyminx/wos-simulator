@@ -1,0 +1,1826 @@
+{
+  "createdAt": "2026-09-07T07:19:34.617Z",
+  "protocol_sha256": "cda9be7fbad2cbcda1608aee256d6c0acf6413e2fd97bd0ff52d98f3d2a13998",
+  "rows": [
+    {
+      "marksmen": 150,
+      "infantry": 300,
+      "results": {
+        "current": {
+          "score": 71,
+          "rounds": 79,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 71
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 70,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 70
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 70,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 70
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 70,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 70
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 70,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 70
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 150,
+      "infantry": 500,
+      "results": {
+        "current": {
+          "score": -227,
+          "rounds": 92,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 227,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": -229,
+          "rounds": 92,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 229,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": -229,
+          "rounds": 91,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 229,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": -231,
+          "rounds": 91,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 231,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": -228,
+          "rounds": 92,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 228,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 150,
+      "infantry": 700,
+      "results": {
+        "current": {
+          "score": -487,
+          "rounds": 70,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 487,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": -488,
+          "rounds": 70,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 488,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": -489,
+          "rounds": 70,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 489,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": -489,
+          "rounds": 70,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 489,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": -488,
+          "rounds": 70,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 488,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 150,
+      "infantry": 900,
+      "results": {
+        "current": {
+          "score": -717,
+          "rounds": 60,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 717,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": -718,
+          "rounds": 60,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 718,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": -718,
+          "rounds": 60,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 718,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": -719,
+          "rounds": 60,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 719,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": -718,
+          "rounds": 60,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 718,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 250,
+      "infantry": 300,
+      "results": {
+        "current": {
+          "score": 194,
+          "rounds": 42,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 194
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 194,
+          "rounds": 42,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 194
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 193,
+          "rounds": 43,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 193
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 193,
+          "rounds": 43,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 193
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 194,
+          "rounds": 42,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 194
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 250,
+      "infantry": 500,
+      "results": {
+        "current": {
+          "score": 117,
+          "rounds": 79,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 117
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 117,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 117
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 116,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 116
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 116,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 116
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 117,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 117
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 250,
+      "infantry": 700,
+      "results": {
+        "current": {
+          "score": -153,
+          "rounds": 115,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 153,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": -157,
+          "rounds": 115,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 157,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": -158,
+          "rounds": 115,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 158,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": -162,
+          "rounds": 114,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 162,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": -156,
+          "rounds": 115,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 156,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 250,
+      "infantry": 900,
+      "results": {
+        "current": {
+          "score": -474,
+          "rounds": 85,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 474,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": -476,
+          "rounds": 85,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 476,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": -477,
+          "rounds": 85,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 477,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": -479,
+          "rounds": 85,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 479,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": -476,
+          "rounds": 85,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 476,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 350,
+      "infantry": 300,
+      "results": {
+        "current": {
+          "score": 303,
+          "rounds": 32,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 303
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 303,
+          "rounds": 32,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 303
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 303,
+          "rounds": 32,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 303
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 303,
+          "rounds": 32,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 303
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 303,
+          "rounds": 32,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 303
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 350,
+      "infantry": 500,
+      "results": {
+        "current": {
+          "score": 246,
+          "rounds": 52,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 246
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 245,
+          "rounds": 52,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 245
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 245,
+          "rounds": 52,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 245
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 245,
+          "rounds": 52,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 245
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 245,
+          "rounds": 52,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 245
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 350,
+      "infantry": 700,
+      "results": {
+        "current": {
+          "score": 164,
+          "rounds": 79,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 164
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 163,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 163
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 163,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 163
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 162,
+          "rounds": 81,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 162
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 163,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 163
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 350,
+      "infantry": 900,
+      "results": {
+        "current": {
+          "score": 22,
+          "rounds": 139,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 22
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 18,
+          "rounds": 141,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 18
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 17,
+          "rounds": 143,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 17
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 12,
+          "rounds": 146,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 12
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 19,
+          "rounds": 141,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 19
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 450,
+      "infantry": 300,
+      "results": {
+        "current": {
+          "score": 409,
+          "rounds": 28,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 409
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 409,
+          "rounds": 28,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 409
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 409,
+          "rounds": 28,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 409
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 409,
+          "rounds": 28,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 409
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 409,
+          "rounds": 28,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 409
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 450,
+      "infantry": 500,
+      "results": {
+        "current": {
+          "score": 360,
+          "rounds": 39,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 360
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 360,
+          "rounds": 39,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 360
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 359,
+          "rounds": 39,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 359
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 359,
+          "rounds": 39,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 359
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 360,
+          "rounds": 39,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 360
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 450,
+      "infantry": 700,
+      "results": {
+        "current": {
+          "score": 296,
+          "rounds": 57,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 296
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 295,
+          "rounds": 57,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 295
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 294,
+          "rounds": 58,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 294
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 294,
+          "rounds": 58,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 294
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 295,
+          "rounds": 57,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 295
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 450,
+      "infantry": 900,
+      "results": {
+        "current": {
+          "score": 211,
+          "rounds": 79,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 211
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 210,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 210
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 209,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 209
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 208,
+          "rounds": 81,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 208
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 210,
+          "rounds": 80,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 210
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 550,
+      "infantry": 300,
+      "results": {
+        "current": {
+          "score": 513,
+          "rounds": 25,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 513
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 513,
+          "rounds": 25,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 513
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 513,
+          "rounds": 25,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 513
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 513,
+          "rounds": 25,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 513
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 513,
+          "rounds": 25,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 513
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 550,
+      "infantry": 500,
+      "results": {
+        "current": {
+          "score": 470,
+          "rounds": 33,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 470
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 469,
+          "rounds": 33,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 469
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 469,
+          "rounds": 33,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 469
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 469,
+          "rounds": 33,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 469
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 469,
+          "rounds": 33,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 469
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 550,
+      "infantry": 700,
+      "results": {
+        "current": {
+          "score": 414,
+          "rounds": 45,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 414
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 413,
+          "rounds": 45,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 413
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 413,
+          "rounds": 46,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 413
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 412,
+          "rounds": 46,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 412
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 413,
+          "rounds": 45,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 413
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "marksmen": 550,
+      "infantry": 900,
+      "results": {
+        "current": {
+          "score": 344,
+          "rounds": 61,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 344
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first5_every5": {
+          "score": 344,
+          "rounds": 61,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 344
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first4_every5": {
+          "score": 343,
+          "rounds": 61,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 343
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "first6_every4": {
+          "score": 342,
+          "rounds": 61,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 342
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "no_s3": {
+          "score": 344,
+          "rounds": 61,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 344
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

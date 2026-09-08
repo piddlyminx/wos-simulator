@@ -1,0 +1,157 @@
+[
+  {
+    "test_id": "hendrik_small_timing_250m_vs_150i_60l_60m",
+    "description": "Prospective full Hendrik3/3/3 timing discriminator. WIP250T6Marksmen versus minxxx nohero150T6Infantry/60T6Lancers/60T6Marksmen. Earlier S3 round2 versus configured round3; competing S2 timing retained. Full frozen package docs/mechanics-audit/probes/hendrik-small-timing. Fresh report stats required before interpretation.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "marksman_t6": 250
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249.0,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 465.5,
+          "defense": 458.7,
+          "lethality": 244.0,
+          "health": 218.8
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 150,
+        "lancer_t6": 60,
+        "marksman_t6": 60
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 68
+      }
+    ],
+    "metadata": {
+      "fixture_type": "single_hero_full_kit",
+      "skill_isolation": false,
+      "expected_stochastic": false,
+      "stochastic_reason": [],
+      "observed_battle_outcomes": [
+        {
+          "report_timestamp_displayed": "2026-09-07 07:31:27",
+          "world_coord": {
+            "x": 787,
+            "y": 577
+          },
+          "attacker": {
+            "troops": 250,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 88,
+            "lightly_injured": 162
+          },
+          "defender": {
+            "troops": 270,
+            "survivors": 68,
+            "losses": 0,
+            "injured": 72,
+            "lightly_injured": 130
+          },
+          "per_troop_survivors": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 16,
+              "lancer": 31,
+              "marksman": 21
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Hendrik": {
+                "skill_1": {
+                  "triggered": 1,
+                  "displayed_kills": null
+                },
+                "skill_2": {
+                  "triggered": 8,
+                  "displayed_kills": null
+                },
+                "skill_3": {
+                  "triggered": 11,
+                  "displayed_kills": 27
+                }
+              }
+            }
+          },
+          "rounds": null,
+          "mail_ids": {
+            "attacker_view": "2734692464124634",
+            "defender_view": "2734692464124635"
+          },
+          "defender_troop_details_source": "docs/mechanics-audit/probes/hendrik-small-timing/defender-troops.json",
+          "transcription": "Root visually checked both report identities, exact T6 troops, all24 displayed stats, unchanged full Hendrik3/3/3 kit, both Battle Details views and defender troop rows. No observed round count. Dash is null. Counterpart report is the same battle, not another observation."
+        }
+      ],
+      "evidence": {
+        "protocol": "docs/mechanics-audit/probes/hendrik-small-timing/README.md",
+        "prospective_prediction": "docs/mechanics-audit/probes/hendrik-small-timing/prediction.json",
+        "captured_prediction": "docs/mechanics-audit/probes/hendrik-small-timing/captured-prediction.json",
+        "report": "docs/mechanics-audit/probes/hendrik-small-timing/report.json",
+        "overview_image": "docs/mechanics-audit/probes/hendrik-small-timing/report_top.png",
+        "stats_image": "docs/mechanics-audit/probes/hendrik-small-timing/report_stats.png",
+        "details_image": "docs/mechanics-audit/probes/hendrik-small-timing/bd_top.png",
+        "defender_troops_image": "docs/mechanics-audit/probes/hendrik-small-timing/defender-troops.png",
+        "original_capture_directory": "tmp/20260907T063132Z_wos_report_war_1"
+      },
+      "evidence_status": "supports_earlier_s3_timing_with_residual_uncertainty",
+      "data_quality_notes": [
+        "Exact fresh stats, troop counts and full kit match the frozen input. Game68[16,31,21] versus current78[19,34,25] and S3-first2 nominal71[16,32,23]. No fitted stats or generation additions. Every casualty sum checked."
+      ]
+    }
+  }
+]

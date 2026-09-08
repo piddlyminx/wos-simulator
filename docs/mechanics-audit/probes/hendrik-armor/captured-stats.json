@@ -1,0 +1,47 @@
+{
+  "minxxx": {
+    "inf": {
+      "attack": 308.2,
+      "defense": 300.5,
+      "lethality": 244.0,
+      "health": 238.4
+    },
+    "lanc": {
+      "attack": 294.9,
+      "defense": 293.7,
+      "lethality": 224.3,
+      "health": 230.0
+    },
+    "mark": {
+      "attack": 292.2,
+      "defense": 292.7,
+      "lethality": 235.8,
+      "health": 230.3
+    }
+  },
+  "WIP": {
+    "inf": {
+      "attack": 248.2,
+      "defense": 249.0,
+      "lethality": 186.3,
+      "health": 191.8
+    },
+    "lanc": {
+      "attack": 208.5,
+      "defense": 207.4,
+      "lethality": 186.8,
+      "health": 181.9
+    },
+    "mark": {
+      "attack": 465.5,
+      "defense": 458.7,
+      "lethality": 244.0,
+      "health": 218.8
+    }
+  },
+  "provenance": {
+    "source": "testcases/emulator_verified/hendrik_armor_lancer_scope.json",
+    "report": "2026-09-07 05:42:10",
+    "verification": "Every displayed stat and troop tier/count visually checked; Lancer inputs identical to frozen estimate. No generation bonuses added."
+  }
+}

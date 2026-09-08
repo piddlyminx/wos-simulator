@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "renee_kind_s1_damage_up_anchor_edith_nc",
+    "description": "Renee 4/4/4 plus Edith 3/3/3 interaction anchor for Renee S1. WIP attacks with 3000 T6 infantry; minxxx defends with Renee, Edith, and 100 T6 lancers. Edith S1/2 is emulator-verified active.hero.damage.up for lancers. Using the captured report stats, all-extra-attack Renee predicts about +2705 remaining while changing Renee S1 to active.hero.damage.up predicts about +2715; the game gives +2703. Pair with renee_kind_s1_damage_up_anchor_control_nc. Fixed full kits, deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 3000
+      },
+      "stats": {
+        "inf": {
+          "attack": 233.8,
+          "defense": 243.1,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Edith": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 478.4,
+          "defense": 466.2,
+          "lethality": 263.9,
+          "health": 286.7
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 2703,
+        "defender": 0
+      }
+    ]
+  }
+]

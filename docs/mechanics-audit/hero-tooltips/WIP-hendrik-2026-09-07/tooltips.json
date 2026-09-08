@@ -1,0 +1,2158 @@
+{
+  "schema_version": 1,
+  "capture_kind": "hero_expedition_tooltips",
+  "captured_at_utc": "2026-09-07T06:18:11.638962+00:00",
+  "instance_name": "WIP",
+  "hero": "Hendrik",
+  "current_skill_levels": {
+    "skill_1": 3,
+    "skill_2": 3,
+    "skill_3": 3
+  },
+  "overview": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/hero-skills.png",
+    "sha256": "123a0c6b0f8b7d9811291fc957deaf3833b3f0e34927697fdaafff1205489430"
+  },
+  "skills": [
+    {
+      "slot": "skill_1",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        275
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/skill_1.png",
+        "sha256": "e9f17341bbf802dafe491af4530b1745437690403113de41b91038c3c97f832e"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/skill_1-panel.png",
+        "sha256": "68b0118af8834f136db0052c86123fcb36951a3cc27dc661fd17dfbeb5f3b1c7"
+      },
+      "ocr": {
+        "title": "Worm's Ravage Lv. 3",
+        "displayed_level": 3,
+        "description_text": "Captain Hendrik commands a gigantic naval shipworm gnaw\nat the enemies armor, reducing all enemy troops' Defense by\n15%.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Enemy Defense Down: 5%/10%/15%/20%/25%",
+        "raw_lines": [
+          {
+            "text": "Worm's",
+            "confidence": 0.99967,
+            "box": [
+              [
+                50.0,
+                739.0
+              ],
+              [
+                157.0,
+                739.0
+              ],
+              [
+                157.0,
+                767.0
+              ],
+              [
+                50.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "3",
+            "confidence": 0.99999,
+            "box": [
+              [
+                311.0,
+                741.0
+              ],
+              [
+                329.0,
+                741.0
+              ],
+              [
+                329.0,
+                766.0
+              ],
+              [
+                311.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.",
+            "confidence": 0.99982,
+            "box": [
+              [
+                261.0,
+                740.0
+              ],
+              [
+                307.0,
+                740.0
+              ],
+              [
+                307.0,
+                769.0
+              ],
+              [
+                261.0,
+                769.0
+              ]
+            ]
+          },
+          {
+            "text": "Ravage",
+            "confidence": 0.99992,
+            "box": [
+              [
+                160.0,
+                739.0
+              ],
+              [
+                260.0,
+                741.0
+              ],
+              [
+                259.0,
+                775.0
+              ],
+              [
+                160.0,
+                773.0
+              ]
+            ]
+          },
+          {
+            "text": "Hendrik",
+            "confidence": 0.9999,
+            "box": [
+              [
+                133.0,
+                805.0
+              ],
+              [
+                215.0,
+                805.0
+              ],
+              [
+                215.0,
+                825.0
+              ],
+              [
+                133.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "commands",
+            "confidence": 0.99998,
+            "box": [
+              [
+                219.0,
+                806.0
+              ],
+              [
+                329.0,
+                806.0
+              ],
+              [
+                329.0,
+                824.0
+              ],
+              [
+                219.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "naval",
+            "confidence": 0.99991,
+            "box": [
+              [
+                437.0,
+                807.0
+              ],
+              [
+                491.0,
+                805.0
+              ],
+              [
+                492.0,
+                825.0
+              ],
+              [
+                437.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "a",
+            "confidence": 0.99996,
+            "box": [
+              [
+                334.0,
+                809.0
+              ],
+              [
+                348.0,
+                810.0
+              ],
+              [
+                346.0,
+                826.0
+              ],
+              [
+                332.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "Captain",
+            "confidence": 0.99996,
+            "box": [
+              [
+                50.0,
+                805.0
+              ],
+              [
+                129.0,
+                805.0
+              ],
+              [
+                129.0,
+                830.0
+              ],
+              [
+                50.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "gigantic",
+            "confidence": 0.99995,
+            "box": [
+              [
+                350.0,
+                804.0
+              ],
+              [
+                433.0,
+                804.0
+              ],
+              [
+                433.0,
+                831.0
+              ],
+              [
+                350.0,
+                831.0
+              ]
+            ]
+          },
+          {
+            "text": "shipworm",
+            "confidence": 0.99969,
+            "box": [
+              [
+                495.0,
+                804.0
+              ],
+              [
+                603.0,
+                805.0
+              ],
+              [
+                602.0,
+                831.0
+              ],
+              [
+                495.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "gnaw",
+            "confidence": 0.99996,
+            "box": [
+              [
+                603.0,
+                810.0
+              ],
+              [
+                665.0,
+                810.0
+              ],
+              [
+                665.0,
+                831.0
+              ],
+              [
+                603.0,
+                831.0
+              ]
+            ]
+          },
+          {
+            "text": "enemies",
+            "confidence": 0.99994,
+            "box": [
+              [
+                112.0,
+                833.0
+              ],
+              [
+                196.0,
+                832.0
+              ],
+              [
+                196.0,
+                852.0
+              ],
+              [
+                113.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99997,
+            "box": [
+              [
+                75.0,
+                834.0
+              ],
+              [
+                108.0,
+                834.0
+              ],
+              [
+                108.0,
+                852.0
+              ],
+              [
+                75.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "Defense",
+            "confidence": 0.99995,
+            "box": [
+              [
+                549.0,
+                831.0
+              ],
+              [
+                633.0,
+                832.0
+              ],
+              [
+                633.0,
+                855.0
+              ],
+              [
+                548.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99993,
+            "box": [
+              [
+                373.0,
+                832.0
+              ],
+              [
+                399.0,
+                832.0
+              ],
+              [
+                399.0,
+                855.0
+              ],
+              [
+                373.0,
+                855.0
+              ]
+            ]
+          },
+          {
+            "text": "at",
+            "confidence": 0.99997,
+            "box": [
+              [
+                48.0,
+                837.0
+              ],
+              [
+                73.0,
+                835.0
+              ],
+              [
+                75.0,
+                852.0
+              ],
+              [
+                49.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "reducing",
+            "confidence": 0.99998,
+            "box": [
+              [
+                281.0,
+                833.0
+              ],
+              [
+                369.0,
+                833.0
+              ],
+              [
+                369.0,
+                858.0
+              ],
+              [
+                281.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99996,
+            "box": [
+              [
+                635.0,
+                832.0
+              ],
+              [
+                662.0,
+                833.0
+              ],
+              [
+                662.0,
+                859.0
+              ],
+              [
+                634.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "armor,",
+            "confidence": 0.99989,
+            "box": [
+              [
+                204.0,
+                835.0
+              ],
+              [
+                274.0,
+                838.0
+              ],
+              [
+                273.0,
+                856.0
+              ],
+              [
+                203.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "troops'",
+            "confidence": 0.99838,
+            "box": [
+              [
+                472.0,
+                832.0
+              ],
+              [
+                543.0,
+                832.0
+              ],
+              [
+                543.0,
+                860.0
+              ],
+              [
+                472.0,
+                860.0
+              ]
+            ]
+          },
+          {
+            "text": "enemy",
+            "confidence": 0.99996,
+            "box": [
+              [
+                403.0,
+                834.0
+              ],
+              [
+                470.0,
+                836.0
+              ],
+              [
+                470.0,
+                860.0
+              ],
+              [
+                403.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "15%.",
+            "confidence": 0.9979,
+            "box": [
+              [
+                48.0,
+                861.0
+              ],
+              [
+                97.0,
+                860.0
+              ],
+              [
+                97.0,
+                881.0
+              ],
+              [
+                49.0,
+                882.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99995,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                944.0
+              ],
+              [
+                167.0,
+                945.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                919.0
+              ],
+              [
+                163.0,
+                917.0
+              ],
+              [
+                163.0,
+                952.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Defense",
+            "confidence": 0.99961,
+            "box": [
+              [
+                124.0,
+                959.0
+              ],
+              [
+                206.0,
+                959.0
+              ],
+              [
+                206.0,
+                979.0
+              ],
+              [
+                124.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "Down:",
+            "confidence": 0.99991,
+            "box": [
+              [
+                210.0,
+                960.0
+              ],
+              [
+                278.0,
+                961.0
+              ],
+              [
+                278.0,
+                980.0
+              ],
+              [
+                209.0,
+                978.0
+              ]
+            ]
+          },
+          {
+            "text": "5%/10%/15%/20%/25%",
+            "confidence": 0.99864,
+            "box": [
+              [
+                283.0,
+                960.0
+              ],
+              [
+                533.0,
+                960.0
+              ],
+              [
+                533.0,
+                981.0
+              ],
+              [
+                283.0,
+                981.0
+              ]
+            ]
+          },
+          {
+            "text": "Enemy",
+            "confidence": 0.99996,
+            "box": [
+              [
+                51.0,
+                960.0
+              ],
+              [
+                119.0,
+                960.0
+              ],
+              [
+                119.0,
+                984.0
+              ],
+              [
+                51.0,
+                984.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Worm's Ravage Lv. 3",
+          "Captain Hendrik commands a gigantic naval shipworm gnaw",
+          "at the enemies armor, reducing all enemy troops' Defense by",
+          "15%.",
+          "Upgrade Preview",
+          "Enemy Defense Down: 5%/10%/15%/20%/25%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_2",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        640,
+        435
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/skill_2.png",
+        "sha256": "42eaf77de30977b95f6a57cbbe850910e4f96dd5d3bdd4ee5afe2f854372384a"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/skill_2-panel.png",
+        "sha256": "db2d0d63df8e997677847f4ff48f11e74fdaa16acdbab25f133488251577a006"
+      },
+      "ocr": {
+        "title": "Armor of Barnacles Lv. 3",
+        "displayed_level": 3,
+        "description_text": "Hendrik covers all Troops with a layer of hard-shelled\nbarnacles every 4 turns, increasing their Defense by 18% for\n2 turns.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Defense Up: 6%/12%/18%/24%/30%",
+        "raw_lines": [
+          {
+            "text": "Barnacles",
+            "confidence": 0.99977,
+            "box": [
+              [
+                178.0,
+                740.0
+              ],
+              [
+                311.0,
+                740.0
+              ],
+              [
+                311.0,
+                765.0
+              ],
+              [
+                178.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.",
+            "confidence": 0.99973,
+            "box": [
+              [
+                313.0,
+                739.0
+              ],
+              [
+                370.0,
+                741.0
+              ],
+              [
+                369.0,
+                767.0
+              ],
+              [
+                312.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "3",
+            "confidence": 0.99997,
+            "box": [
+              [
+                361.0,
+                741.0
+              ],
+              [
+                380.0,
+                741.0
+              ],
+              [
+                380.0,
+                765.0
+              ],
+              [
+                361.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "Armor",
+            "confidence": 0.99994,
+            "box": [
+              [
+                50.0,
+                740.0
+              ],
+              [
+                140.0,
+                741.0
+              ],
+              [
+                139.0,
+                767.0
+              ],
+              [
+                50.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99998,
+            "box": [
+              [
+                142.0,
+                739.0
+              ],
+              [
+                176.0,
+                739.0
+              ],
+              [
+                176.0,
+                768.0
+              ],
+              [
+                142.0,
+                768.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99988,
+            "box": [
+              [
+                440.0,
+                804.0
+              ],
+              [
+                465.0,
+                804.0
+              ],
+              [
+                465.0,
+                825.0
+              ],
+              [
+                440.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "Hendrik",
+            "confidence": 0.99993,
+            "box": [
+              [
+                50.0,
+                805.0
+              ],
+              [
+                132.0,
+                805.0
+              ],
+              [
+                132.0,
+                825.0
+              ],
+              [
+                50.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99989,
+            "box": [
+              [
+                207.0,
+                805.0
+              ],
+              [
+                233.0,
+                805.0
+              ],
+              [
+                233.0,
+                825.0
+              ],
+              [
+                207.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "hard-shelled",
+            "confidence": 0.99806,
+            "box": [
+              [
+                467.0,
+                805.0
+              ],
+              [
+                593.0,
+                805.0
+              ],
+              [
+                593.0,
+                825.0
+              ],
+              [
+                467.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "with",
+            "confidence": 0.99962,
+            "box": [
+              [
+                314.0,
+                805.0
+              ],
+              [
+                362.0,
+                805.0
+              ],
+              [
+                362.0,
+                826.0
+              ],
+              [
+                314.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "a",
+            "confidence": 0.99991,
+            "box": [
+              [
+                366.0,
+                808.0
+              ],
+              [
+                379.0,
+                808.0
+              ],
+              [
+                379.0,
+                825.0
+              ],
+              [
+                366.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "Troops",
+            "confidence": 0.99997,
+            "box": [
+              [
+                236.0,
+                804.0
+              ],
+              [
+                310.0,
+                806.0
+              ],
+              [
+                309.0,
+                830.0
+              ],
+              [
+                236.0,
+                829.0
+              ]
+            ]
+          },
+          {
+            "text": "covers",
+            "confidence": 0.99987,
+            "box": [
+              [
+                136.0,
+                811.0
+              ],
+              [
+                203.0,
+                811.0
+              ],
+              [
+                203.0,
+                824.0
+              ],
+              [
+                136.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "layer",
+            "confidence": 0.99976,
+            "box": [
+              [
+                384.0,
+                805.0
+              ],
+              [
+                436.0,
+                805.0
+              ],
+              [
+                436.0,
+                830.0
+              ],
+              [
+                384.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "barnacles",
+            "confidence": 0.99997,
+            "box": [
+              [
+                50.0,
+                833.0
+              ],
+              [
+                148.0,
+                834.0
+              ],
+              [
+                148.0,
+                852.0
+              ],
+              [
+                50.0,
+                851.0
+              ]
+            ]
+          },
+          {
+            "text": "18%",
+            "confidence": 0.99988,
+            "box": [
+              [
+                578.0,
+                832.0
+              ],
+              [
+                624.0,
+                832.0
+              ],
+              [
+                624.0,
+                853.0
+              ],
+              [
+                578.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "4",
+            "confidence": 0.99986,
+            "box": [
+              [
+                215.0,
+                834.0
+              ],
+              [
+                231.0,
+                834.0
+              ],
+              [
+                231.0,
+                852.0
+              ],
+              [
+                215.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "Defense",
+            "confidence": 0.99994,
+            "box": [
+              [
+                463.0,
+                832.0
+              ],
+              [
+                546.0,
+                832.0
+              ],
+              [
+                546.0,
+                854.0
+              ],
+              [
+                463.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99974,
+            "box": [
+              [
+                626.0,
+                832.0
+              ],
+              [
+                661.0,
+                832.0
+              ],
+              [
+                661.0,
+                854.0
+              ],
+              [
+                626.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "their",
+            "confidence": 0.99995,
+            "box": [
+              [
+                409.0,
+                833.0
+              ],
+              [
+                459.0,
+                833.0
+              ],
+              [
+                459.0,
+                854.0
+              ],
+              [
+                409.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "turns,",
+            "confidence": 0.99991,
+            "box": [
+              [
+                234.0,
+                834.0
+              ],
+              [
+                294.0,
+                835.0
+              ],
+              [
+                293.0,
+                857.0
+              ],
+              [
+                234.0,
+                856.0
+              ]
+            ]
+          },
+          {
+            "text": "increasing",
+            "confidence": 0.99991,
+            "box": [
+              [
+                299.0,
+                832.0
+              ],
+              [
+                405.0,
+                832.0
+              ],
+              [
+                405.0,
+                859.0
+              ],
+              [
+                299.0,
+                859.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99998,
+            "box": [
+              [
+                548.0,
+                831.0
+              ],
+              [
+                577.0,
+                833.0
+              ],
+              [
+                575.0,
+                860.0
+              ],
+              [
+                546.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "every",
+            "confidence": 0.99998,
+            "box": [
+              [
+                153.0,
+                836.0
+              ],
+              [
+                211.0,
+                838.0
+              ],
+              [
+                210.0,
+                858.0
+              ],
+              [
+                152.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "2",
+            "confidence": 0.99998,
+            "box": [
+              [
+                49.0,
+                861.0
+              ],
+              [
+                66.0,
+                861.0
+              ],
+              [
+                66.0,
+                882.0
+              ],
+              [
+                49.0,
+                882.0
+              ]
+            ]
+          },
+          {
+            "text": "turns.",
+            "confidence": 0.99996,
+            "box": [
+              [
+                68.0,
+                864.0
+              ],
+              [
+                129.0,
+                864.0
+              ],
+              [
+                129.0,
+                881.0
+              ],
+              [
+                68.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.94058,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                918.0
+              ],
+              [
+                276.0,
+                943.0
+              ],
+              [
+                168.0,
+                945.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Defense",
+            "confidence": 0.99983,
+            "box": [
+              [
+                51.0,
+                957.0
+              ],
+              [
+                133.0,
+                960.0
+              ],
+              [
+                132.0,
+                981.0
+              ],
+              [
+                51.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "6%/12%/18%/24%/30%",
+            "confidence": 0.99973,
+            "box": [
+              [
+                176.0,
+                960.0
+              ],
+              [
+                429.0,
+                960.0
+              ],
+              [
+                429.0,
+                982.0
+              ],
+              [
+                176.0,
+                982.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99997,
+            "box": [
+              [
+                135.0,
+                959.0
+              ],
+              [
+                172.0,
+                959.0
+              ],
+              [
+                172.0,
+                985.0
+              ],
+              [
+                135.0,
+                985.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Armor of Barnacles Lv. 3",
+          "Hendrik covers all Troops with a layer of hard-shelled",
+          "barnacles every 4 turns, increasing their Defense by 18% for",
+          "2 turns.",
+          "Upgrade Preview",
+          "Defense Up: 6%/12%/18%/24%/30%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_3",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        610
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/skill_3.png",
+        "sha256": "89534cc016e951cd4821c915f3a35bd8e4f4a7214c7d157f95c74bc88e8ce1eb"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/hero-tooltips/WIP-hendrik-2026-09-07/skill_3-panel.png",
+        "sha256": "d8103b5a26162bda295ce85ced98710a20cb15e891656941ec3f1ce455e2e398"
+      },
+      "ocr": {
+        "title": "Dagon's Heir Lv.3",
+        "displayed_level": 3,
+        "description_text": "Every 3 turns, the ancient abyssal spirit's descendents will\nwork together with Hendrik's Marksmen to launch an attack,\ndealing 24% damage to all enemies.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Damage Up: 8%/16%/24%/32%/40%",
+        "raw_lines": [
+          {
+            "text": "Heir",
+            "confidence": 0.99992,
+            "box": [
+              [
+                160.0,
+                740.0
+              ],
+              [
+                220.0,
+                740.0
+              ],
+              [
+                220.0,
+                767.0
+              ],
+              [
+                160.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.3",
+            "confidence": 0.99992,
+            "box": [
+              [
+                222.0,
+                740.0
+              ],
+              [
+                289.0,
+                740.0
+              ],
+              [
+                289.0,
+                767.0
+              ],
+              [
+                222.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Dagon's",
+            "confidence": 0.99989,
+            "box": [
+              [
+                50.0,
+                738.0
+              ],
+              [
+                158.0,
+                738.0
+              ],
+              [
+                158.0,
+                774.0
+              ],
+              [
+                50.0,
+                774.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99996,
+            "box": [
+              [
+                195.0,
+                805.0
+              ],
+              [
+                230.0,
+                803.0
+              ],
+              [
+                231.0,
+                824.0
+              ],
+              [
+                196.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "3",
+            "confidence": 0.9999,
+            "box": [
+              [
+                113.0,
+                805.0
+              ],
+              [
+                128.0,
+                805.0
+              ],
+              [
+                128.0,
+                825.0
+              ],
+              [
+                113.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "ancient",
+            "confidence": 0.99993,
+            "box": [
+              [
+                235.0,
+                806.0
+              ],
+              [
+                309.0,
+                806.0
+              ],
+              [
+                309.0,
+                824.0
+              ],
+              [
+                235.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "descendents",
+            "confidence": 0.99998,
+            "box": [
+              [
+                466.0,
+                806.0
+              ],
+              [
+                588.0,
+                806.0
+              ],
+              [
+                588.0,
+                824.0
+              ],
+              [
+                466.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "will",
+            "confidence": 0.99998,
+            "box": [
+              [
+                593.0,
+                805.0
+              ],
+              [
+                632.0,
+                805.0
+              ],
+              [
+                632.0,
+                825.0
+              ],
+              [
+                593.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "spirit's",
+            "confidence": 0.99555,
+            "box": [
+              [
+                391.0,
+                804.0
+              ],
+              [
+                461.0,
+                802.0
+              ],
+              [
+                462.0,
+                829.0
+              ],
+              [
+                391.0,
+                831.0
+              ]
+            ]
+          },
+          {
+            "text": "Every",
+            "confidence": 0.99997,
+            "box": [
+              [
+                50.0,
+                804.0
+              ],
+              [
+                109.0,
+                805.0
+              ],
+              [
+                109.0,
+                831.0
+              ],
+              [
+                49.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "abyssal",
+            "confidence": 0.99997,
+            "box": [
+              [
+                313.0,
+                806.0
+              ],
+              [
+                388.0,
+                806.0
+              ],
+              [
+                388.0,
+                829.0
+              ],
+              [
+                313.0,
+                829.0
+              ]
+            ]
+          },
+          {
+            "text": "turns,",
+            "confidence": 0.99996,
+            "box": [
+              [
+                130.0,
+                806.0
+              ],
+              [
+                192.0,
+                808.0
+              ],
+              [
+                192.0,
+                830.0
+              ],
+              [
+                130.0,
+                828.0
+              ]
+            ]
+          },
+          {
+            "text": "work",
+            "confidence": 0.99998,
+            "box": [
+              [
+                50.0,
+                832.0
+              ],
+              [
+                107.0,
+                833.0
+              ],
+              [
+                106.0,
+                853.0
+              ],
+              [
+                50.0,
+                851.0
+              ]
+            ]
+          },
+          {
+            "text": "with",
+            "confidence": 0.99998,
+            "box": [
+              [
+                203.0,
+                833.0
+              ],
+              [
+                249.0,
+                833.0
+              ],
+              [
+                249.0,
+                852.0
+              ],
+              [
+                203.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "Hendrik's",
+            "confidence": 0.99988,
+            "box": [
+              [
+                253.0,
+                833.0
+              ],
+              [
+                349.0,
+                833.0
+              ],
+              [
+                349.0,
+                852.0
+              ],
+              [
+                253.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "Marksmen",
+            "confidence": 0.99994,
+            "box": [
+              [
+                355.0,
+                834.0
+              ],
+              [
+                463.0,
+                834.0
+              ],
+              [
+                463.0,
+                852.0
+              ],
+              [
+                355.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "launch",
+            "confidence": 0.99979,
+            "box": [
+              [
+                493.0,
+                834.0
+              ],
+              [
+                561.0,
+                834.0
+              ],
+              [
+                561.0,
+                852.0
+              ],
+              [
+                493.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "to",
+            "confidence": 0.99998,
+            "box": [
+              [
+                466.0,
+                836.0
+              ],
+              [
+                488.0,
+                836.0
+              ],
+              [
+                488.0,
+                852.0
+              ],
+              [
+                466.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "attack,",
+            "confidence": 0.99994,
+            "box": [
+              [
+                595.0,
+                832.0
+              ],
+              [
+                668.0,
+                832.0
+              ],
+              [
+                668.0,
+                857.0
+              ],
+              [
+                595.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "together",
+            "confidence": 0.99998,
+            "box": [
+              [
+                110.0,
+                833.0
+              ],
+              [
+                196.0,
+                832.0
+              ],
+              [
+                197.0,
+                857.0
+              ],
+              [
+                110.0,
+                859.0
+              ]
+            ]
+          },
+          {
+            "text": "an",
+            "confidence": 0.99999,
+            "box": [
+              [
+                565.0,
+                839.0
+              ],
+              [
+                592.0,
+                839.0
+              ],
+              [
+                592.0,
+                852.0
+              ],
+              [
+                565.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99996,
+            "box": [
+              [
+                293.0,
+                861.0
+              ],
+              [
+                319.0,
+                861.0
+              ],
+              [
+                319.0,
+                881.0
+              ],
+              [
+                293.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "enemies.",
+            "confidence": 0.99992,
+            "box": [
+              [
+                324.0,
+                861.0
+              ],
+              [
+                411.0,
+                861.0
+              ],
+              [
+                411.0,
+                881.0
+              ],
+              [
+                324.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "24%",
+            "confidence": 0.99989,
+            "box": [
+              [
+                127.0,
+                861.0
+              ],
+              [
+                178.0,
+                861.0
+              ],
+              [
+                178.0,
+                882.0
+              ],
+              [
+                127.0,
+                882.0
+              ]
+            ]
+          },
+          {
+            "text": "to",
+            "confidence": 0.99998,
+            "box": [
+              [
+                267.0,
+                864.0
+              ],
+              [
+                289.0,
+                864.0
+              ],
+              [
+                289.0,
+                881.0
+              ],
+              [
+                267.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "dealing",
+            "confidence": 0.99998,
+            "box": [
+              [
+                49.0,
+                861.0
+              ],
+              [
+                123.0,
+                861.0
+              ],
+              [
+                123.0,
+                886.0
+              ],
+              [
+                49.0,
+                886.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                183.0,
+                861.0
+              ],
+              [
+                265.0,
+                862.0
+              ],
+              [
+                265.0,
+                887.0
+              ],
+              [
+                182.0,
+                886.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99996,
+            "box": [
+              [
+                167.0,
+                919.0
+              ],
+              [
+                276.0,
+                917.0
+              ],
+              [
+                277.0,
+                944.0
+              ],
+              [
+                167.0,
+                945.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "8%/16%/24%/32%/40%",
+            "confidence": 0.99915,
+            "box": [
+              [
+                178.0,
+                960.0
+              ],
+              [
+                440.0,
+                959.0
+              ],
+              [
+                440.0,
+                982.0
+              ],
+              [
+                178.0,
+                983.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99996,
+            "box": [
+              [
+                137.0,
+                959.0
+              ],
+              [
+                175.0,
+                959.0
+              ],
+              [
+                175.0,
+                986.0
+              ],
+              [
+                137.0,
+                986.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                50.0,
+                959.0
+              ],
+              [
+                136.0,
+                961.0
+              ],
+              [
+                135.0,
+                986.0
+              ],
+              [
+                50.0,
+                985.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Dagon's Heir Lv.3",
+          "Every 3 turns, the ancient abyssal spirit's descendents will",
+          "work together with Hendrik's Marksmen to launch an attack,",
+          "dealing 24% damage to all enemies.",
+          "Upgrade Preview",
+          "Damage Up: 8%/16%/24%/32%/40%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    }
+  ],
+  "complete": true,
+  "notes": [
+    "Selected only Expedition skill icons; Upgrade buttons are never tapped.",
+    "Current levels are read from the hero screen, not inferred from upgrade-preview values.",
+    "Missing preview OCR does not establish that a preview is unavailable; inspect the full image.",
+    "This command does not update player_hero_skills.json or create battle observations."
+  ],
+  "finished_at_utc": "2026-09-07T06:18:42.182420+00:00"
+}

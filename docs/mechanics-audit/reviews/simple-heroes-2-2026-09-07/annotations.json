@@ -1,0 +1,81 @@
+{
+  "hero:Jessie:Bulwarks": {
+    "source_sha256": "dbe8105a8e483774bdb8d94ba7f6d2abe0703aaff9739c44aa9f656bac9699ce",
+    "status": "partially_supported",
+    "context": "Retrospective review of fifteen accepted entries deterministic under the current runtime, levels 1/2: all current residuals are 0\u20132. Full Jessie 4/1 solo gives game/current A79 versus omission A208 and Lancer-only A186, supporting defensive contribution beyond Lancers. Moving the same value from damageTaken to Health changes none of the fifteen endpoints. One weak row improves from current A1133 to game A1131 on omission; that two-troop scale-relative change is retained and does not establish absence. Bucket identity, independent coefficients/scaling, skill-kind and other interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Patrick:CaloricBooster": {
+    "source_sha256": "a580a36f0f78f5c153ad23ac2da06de7d94193fe8f41b268e3bb1f312ca3e345",
+    "status": "partially_supported",
+    "context": "Retrospective review of eight accepted deterministic entries, levels 1/2/4: all current endpoints are exact. Recorded Jasser 2/3 + Patrick 1/1 gives game/current D807 versus omission D739 and Lancer-only D745; Patrick 2/1 solo gives A2582 versus A2686/A2659. This supports offensive contribution outside Lancers in those kits. Moving Attack to Damage or Lethality is identical in seven cases and gives A1915/A1919 versus game/current A1909 in the Edith overlap. That modest relative difference does not settle general bucket semantics; independent coefficients/scaling, skill-kind and mode interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Sergey:DefendersEdge": {
+    "source_sha256": "7981e1a1b52b9ef06522c81af54d7dd840ad33ed5b1ebf2c8bf066e04b9b6f05",
+    "status": "partially_supported",
+    "context": "Retrospective review of four accepted deterministic entries at levels 2/4: all current endpoints are exact. Full Sergey 4/4 mixed T6 solo gives game/current A1348 versus omission A2271 and Infantry-only A1621, supporting protection beyond Infantry. Moving damageTaken to Health changes only the Patrick overlap, A726 to A727, which does not identify the bucket. Eight stochastic full-kit entries were skipped. Independent coefficients/scaling, skill-kind and other interactions remain unresolved or unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Zinman:Implacable": {
+    "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+    "status": "partially_supported",
+    "context": "Retrospective review of six accepted entries deterministic under current runtime, all S1 level 1: current endpoints exact and both nested Defense/Health effects enter damage jobs. Zinman S1=1/S3=1 + Jessie 5/2 gives game/current D130 versus omission of both D86 and joint Marksman-only D87, supporting combined protection beyond Marksmen. Omitting either single effect gives D111, but putting both 2% contributions into one pool remains within 0\u20132 in every reviewed case. Thus combined contribution is supported; separate Defense/Health pools, each component scope, exact split and scaling are not established. The matching Flint combination does not verify Flint variability. No nested effect or whole skill is certified.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Zinman:PositionalBattler": {
+    "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+    "status": "partially_supported",
+    "context": "Retrospective review of three accepted deterministic entries with S3 level 1: all current endpoints exact. Recorded Zinman S1=1/S3=1 + Jessie 5/2 gives game/current D130 versus omission D89 and Marksman-only D105, supporting offensive contribution outside Marksmen. Moving Zinman from the pool shared with Jessie to separated Damage or Attack gives D139, supporting their shared additive pool over those alternatives in this kit. The symmetric Jessie comparison uses this same battle and is not another observation. The exact bucket label, coefficient, other levels, skill-kind and interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/simple-heroes-2-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  }
+}

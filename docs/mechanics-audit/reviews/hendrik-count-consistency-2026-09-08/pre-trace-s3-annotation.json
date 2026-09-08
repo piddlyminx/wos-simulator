@@ -1,0 +1,34 @@
+{
+  "source_sha256": "1dc7f033bbbc5de999106d62fb5f8cf13c0e5d40b42c3fd0911809e45cd240d5",
+  "status": "partially_supported",
+  "context": "Current definition uses ordinary first3/every3; this review found it already restored and made no production edit. Positive level3 Marksman-to-multiple-enemy-line delivery remains supported: game471[313,82,76] versus target-only516 with untouched backlines; Lancer-only game17 supports absence of S3 damage from Lancers. Historical first2 improved476 to exact471 and78 to71 versus game68; the second improvement was prospectively predicted. These are real positive signals, but first game reported S2/S3 counts5/6 cannot share a duration under S2 first4/every4 and S3 first2/every3 with ordinary complete reporting. The usual schedules imply exactly20 rounds: S2 permits20\u201323, S3 permits18\u201320. These are inferred rounds, not a displayed game round total. The second reported8/11 is compatible with first3 at33\u201335 turns; earlier first2 attribution imported the simulator32-round duration into the game. A blanket terminal-activation omission conflicts with the second report. The most-probable explanation standard favors retaining ordinary3/6/9 and investigating remaining damage/survival differences. Frozen first3 predicts476[314,84,78] and78[19,34,25],6/10 S3 activations; current replay matches. Retrospective previous-round source strength gives473[313,83,77] and75[18,33,24] with6/10 activations, while skill-before-normal is unchanged. Neither is an identified replacement correction. Exact phase, magnitude/scaling, damage-kind interactions and lifecycle/reporting remain unresolved.",
+  "evidence_notes": [
+    "docs/mechanics-audit/probes/hendrik-armor/README.md",
+    "docs/mechanics-audit/probes/hendrik-armor/captured-prediction.json",
+    "docs/mechanics-audit/probes/hendrik-armor/observation.json",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/README.md",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/captured-prediction.json",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/observation.json",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/retrospective/diagnosis.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/README.md",
+    "docs/mechanics-audit/probes/hendrik-small-timing/observation.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.md",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/runner-verification.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/README.md",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/results.json",
+    "docs/mechanics-audit/physical-interpretation.md",
+    "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/README.md",
+    "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/protocol.json",
+    "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/results.json",
+    "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/current-replay.json",
+    "docs/mechanics-audit/reviews/hendrik-count-consistency-2026-09-08/prior-s3-annotation.json"
+  ],
+  "supported_dimensions": [
+    "source_and_target_scope"
+  ],
+  "unresolved_dimensions": [
+    "trigger_chance_and_cadence",
+    "duration_delay_and_order"
+  ]
+}

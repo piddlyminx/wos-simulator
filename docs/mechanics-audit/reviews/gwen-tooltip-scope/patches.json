@@ -1,0 +1,27 @@
+[
+  {
+    "file": "simulator/src/simulator.ts",
+    "from": "        let normalKills = 0;",
+    "to": "        (runtime as any).auditGwenNormalSnapshot = undefined;\n        let normalKills = 0;"
+  },
+  {
+    "file": "simulator/src/simulator.ts",
+    "from": "          chargeUsedEffectsForJob(runtime, job, recorder);",
+    "to": "          (runtime as any).auditGwenNormalSnapshot = runtime.usedEffects.filter(effect =>\n            effect.source.heroName === \"Gwen\" && [\"EagleVision/1\", \"AirDominance/2\"].includes(effect.source.effectId ?? effect.intent.id)\n          ).map(effect => {\n            if (effect.triggerEffects?.length) throw new Error(\"Unspecified Gwen child lifecycle\");\n            return {...effect, expired: false, remainingAttackDelay: 0};\n          });\n          chargeUsedEffectsForJob(runtime, job, recorder);"
+  },
+  {
+    "file": "simulator/src/extraAttacks.ts",
+    "from": "            const result = calculateDamageJob(job, fighters, damageJobOptions);",
+    "to": "            const result = auditCalculateDamageJob(job, fighters, damageJobOptions, runtime);"
+  },
+  {
+    "file": "simulator/src/extraAttacks.ts",
+    "from": "          const result = calculateDamageJob(job, fighters, { ...damageJobOptions, capToTakerTroops: false });",
+    "to": "          const result = auditCalculateDamageJob(job, fighters, { ...damageJobOptions, capToTakerTroops: false }, runtime);"
+  },
+  {
+    "file": "simulator/src/extraAttacks.ts",
+    "from": "export function captureTriggeredExtraDamage(",
+    "to": "function auditIsGwenModifier(effect: ActiveEffect): boolean {\n  return effect.source.heroName === \"Gwen\" && [\"EagleVision/1\", \"AirDominance/2\"].includes(effect.source.effectId ?? effect.intent.id);\n}\n\nfunction auditCalculateDamageJob(job: DamageJob, fighters: Record<SideId, ResolvedFighter>, options: DamageJobOptions, runtime: Runtime) {\n  const snapshot: ActiveEffect[] | undefined = (runtime as any).auditGwenNormalSnapshot;\n  if (!snapshot) return calculateDamageJob(job, fighters, options);\n  const borrowed = new Set(snapshot);\n  const liveEffectsByGroup = options.effectIndex.liveEffectsByGroup.map((live, ordinal) => [\n    ...live.filter(effect => !auditIsGwenModifier(effect)),\n    ...snapshot.filter(effect => effect.effectGroup?.ordinal === ordinal)\n  ]);\n  const result = calculateDamageJob(job, fighters, {...options, effectIndex: {...options.effectIndex, liveEffectsByGroup}});\n  for (const list of [runtime.usedEffects, runtime.primaryUsedEffects]) {\n    for (let index = list.length - 1; index >= 0; index--) {\n      if (borrowed.has(list[index])) list.splice(index, 1);\n    }\n  }\n  return result;\n}\n\nexport function captureTriggeredExtraDamage("
+  }
+]

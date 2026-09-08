@@ -1,0 +1,490 @@
+{
+  "phase": "Retrospective accepted-corpus structural review. Existing outcomes and discrepancies were inspected before candidate selection. No live actions, input adjustment or coefficient fit.",
+  "unique_fixtures": 13,
+  "unique_game_observations": 25,
+  "current_deterministic_fixture_count": 6,
+  "simulated_sample_rows_preserved": 76060,
+  "draw_rows": 0,
+  "current_unique_stochastic_flags": [],
+  "current_deterministic_residuals": {
+    "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": {
+      "score_errors": [
+        3
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 3,
+          "defender": 0,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": {
+      "score_errors": [
+        16
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": -16,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": {
+      "score_errors": [
+        1
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": -1,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": {
+      "score_errors": [
+        1
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 0,
+          "defender": -1,
+          "rounds": null
+        }
+      ]
+    },
+    "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": {
+      "score_errors": [
+        -17
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": -17,
+          "defender": 0,
+          "rounds": 10
+        }
+      ]
+    },
+    "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": {
+      "score_errors": [
+        423
+      ],
+      "per_side_and_round_errors": [
+        {
+          "attacker": 423,
+          "defender": 0,
+          "rounds": -114
+        }
+      ]
+    }
+  },
+  "method": "Individual game A-D outcomes compared with per-battle samples using raw combined CDF/support diagnostics. Deterministic models run once and preserve exact per-side/round residuals without stochastic p-values. Same-case current samples verified identical across workers. No input adjustment or universal percentage/absolute materiality cutoff.",
+  "skills": [
+    {
+      "key": "hero:Hector:SurvivalInstincts",
+      "fixture_count": 6,
+      "observation_count": 14,
+      "hydrated_levels": [
+        2,
+        3,
+        4
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+          "testcases/heroes_unittests/Hector_tc.json#0"
+        ],
+        "infantry_only": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "infantry_only": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/SurvivalInstincts-initial.json",
+        "sha256": "34f36e161f1b0d7d4cc655b5205d7330937160261764ac76890fa4db1645c54d"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/SurvivalInstincts-initial-samples.json",
+        "sha256": "eb56370be45954198466f2e593e8ce6ee70a91a713a6ba50e42da8d57e729464"
+      }
+    },
+    {
+      "key": "hero:Hector:Rampant",
+      "fixture_count": 6,
+      "observation_count": 14,
+      "hydrated_levels": [
+        3,
+        4
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+          "testcases/emulator_verified/hector_patrick_combo.json#0",
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0"
+        ],
+        "omit_infantry": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0"
+        ],
+        "omit_marksman": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0"
+        ],
+        "no_decay": [
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "omit_infantry": {},
+        "omit_marksman": {},
+        "no_decay": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Rampant-initial.json",
+        "sha256": "232e095d012aad925543364d098d90a74fee300442215f5e38fdf82648b00a42"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Rampant-initial-samples.json",
+        "sha256": "dda5b506e872b13071e2b0390e63ee44b6e6e64bc20a124720fc6fe38f88f180"
+      }
+    },
+    {
+      "key": "hero:Hector:Blitz",
+      "fixture_count": 6,
+      "observation_count": 14,
+      "hydrated_levels": [
+        2,
+        3,
+        4
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0"
+        ],
+        "infantry_only": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+          "testcases/emulator_verified/hector_solo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+          "testcases/heroes_unittests/Hector_tc.json#0"
+        ]
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {},
+        "omit": {},
+        "infantry_only": {}
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Blitz-initial.json",
+        "sha256": "142f446fc62fe1179ef7a4df46cb03963ca5e5d12c3a65e6d7e23174adad64e3"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/Blitz-initial-samples.json",
+        "sha256": "4ef2fddef55973f50d66e48893052435bdce3735a189e9c94c38b4a5cda25765"
+      }
+    },
+    {
+      "key": "hero:Gordon:VenomInfusion",
+      "fixture_count": 7,
+      "observation_count": 11,
+      "hydrated_levels": [
+        2,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "omit_boost": [
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "omit_poison": [],
+        "hero_bucket": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -17
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -310
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -300
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -328
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -243
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -486
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit_boost": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -274
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -265
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -281
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -209
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -170
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit_poison": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -90
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -82
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -61
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -45
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -167
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "hero_bucket": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -65
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -61
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -46
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -35
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -49
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        }
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/VenomInfusion-initial.json",
+        "sha256": "d858c99c2a2c01a05b4cca34e3efa3ed10787237250910f01c76e8a09569f2af"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/VenomInfusion-initial-samples.json",
+        "sha256": "ea8f3c87977dd7716d9ed253e44f3fe82e9d268f12c04a5531a27187face56de"
+      }
+    },
+    {
+      "key": "hero:Gordon:ChemicalTerror",
+      "fixture_count": 7,
+      "observation_count": 11,
+      "hydrated_levels": [
+        2,
+        3
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "stochastic_flags_by_candidate": {
+        "current": [],
+        "omit": [
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "omit_offense": [
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "omit_debuff": [
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "enemy_infantry_only": []
+      },
+      "deterministic_errors_by_candidate": {
+        "current": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            3
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            16
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -17
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -319
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -303
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -325
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -241
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -418
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit_offense": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -285
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -269
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -279
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -206
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -154
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "omit_debuff": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -89
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -81
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            -59
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            -44
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -157
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        },
+        "enemy_infantry_only": {
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0": [
+            -89
+          ],
+          "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0": [
+            -81
+          ],
+          "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0": [
+            1
+          ],
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0": [
+            -17
+          ],
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0": [
+            423
+          ]
+        }
+      },
+      "result": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial.json",
+        "sha256": "673e1516ad649243e039087a4ff112eb133e752ad5f26c6032e810c9509bf633"
+      },
+      "raw_samples": {
+        "path": "docs/mechanics-audit/reviews/hector-gordon-2026-09-07/ChemicalTerror-initial-samples.json",
+        "sha256": "52f93905b1c22d9c946ba56c119aaed60505cfd9a2d142de08af0d3e9083d42a"
+      }
+    }
+  ],
+  "post_run_source_drift": [],
+  "trace_count_note": "modifierAnnotationCounts and generatedDamageJobCounts are separate. Blitz parent normal-attack annotations do not establish normal damage kind; its separate skill jobs are recorded in generatedDamageJobCounts. Trace scope proves simulator application, while observed endpoint contrasts provide conditional evidence."
+}

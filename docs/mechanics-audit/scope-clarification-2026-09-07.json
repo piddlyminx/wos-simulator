@@ -1,0 +1,7 @@
+{
+  "source": "docs/mechanics-audit/README.md",
+  "source_sha256": "1cd224664e5d891d3eae48b2038dde610bc2131edda14c637521eaf49b209fb9",
+  "source_mtime_ns": 1788770983587875812,
+  "clarification": "All skill_4 widgets are excluded from this audit as separately validated. Preserve them in the complete inventory without counting their absent fixtures as pending in-scope gaps.",
+  "provenance": "Clarification read in the existing shared audit README, not a new independent widget validation."
+}

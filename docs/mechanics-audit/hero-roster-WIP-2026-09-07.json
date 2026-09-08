@@ -1,0 +1,169 @@
+{
+  "instance": "WIP",
+  "source_capture_directory": "skill/tmp/debug/hero_skills_WIP_20260907T035709Z_00",
+  "captured_on": "2026-09-07",
+  "heroes": {
+    "Bradley": {
+      "skill_1": 4,
+      "skill_2": 4,
+      "skill_3": 4
+    },
+    "Gatot": {
+      "skill_1": 2,
+      "skill_2": 2,
+      "skill_3": 2
+    },
+    "Renee": {
+      "skill_1": 3,
+      "skill_2": 3,
+      "skill_3": 3
+    },
+    "Hendrik": {
+      "skill_1": 3,
+      "skill_2": 3,
+      "skill_3": 3
+    },
+    "Wu Ming": {
+      "skill_1": 3,
+      "skill_2": 3,
+      "skill_3": 3
+    },
+    "Sonya": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Wayne": {
+      "skill_1": 3,
+      "skill_2": 3,
+      "skill_3": 3
+    },
+    "Gordon": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Hector": {
+      "skill_1": 2,
+      "skill_2": 3,
+      "skill_3": 3
+    },
+    "Edith": {
+      "skill_1": 2,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Norah": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 1
+    },
+    "Lynn": {
+      "skill_1": 3,
+      "skill_2": 2,
+      "skill_3": 2
+    },
+    "Bahiti": {
+      "skill_1": 2,
+      "skill_2": 2
+    },
+    "Sergey": {
+      "skill_1": 2,
+      "skill_2": 2
+    },
+    "Patrick": {
+      "skill_1": 4,
+      "skill_2": 4
+    },
+    "Cloris": {
+      "skill_1": 4,
+      "skill_2": 4
+    },
+    "Greg": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Jasser": {
+      "skill_1": 2,
+      "skill_2": 4
+    },
+    "Alonso": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 1
+    },
+    "Jessie": {
+      "skill_1": 1,
+      "skill_2": 1
+    },
+    "Charlie": {
+      "skill_1": 2,
+      "skill_2": 2
+    },
+    "Eugene": {
+      "skill_1": 2,
+      "skill_2": 1
+    },
+    "Molly": {
+      "skill_1": 2,
+      "skill_2": 2,
+      "skill_3": 0
+    },
+    "Smith": {
+      "skill_1": 2,
+      "skill_2": 1
+    },
+    "Reina": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 1
+    },
+    "Gina": {
+      "skill_1": 4,
+      "skill_2": 3
+    },
+    "Seo-yoon": {
+      "skill_1": 4,
+      "skill_2": 3
+    },
+    "Gwen": {
+      "skill_1": 2,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Lumak Bokan": {
+      "skill_1": 3,
+      "skill_2": 1
+    },
+    "Philly": {
+      "skill_1": 2,
+      "skill_2": 2,
+      "skill_3": 1
+    },
+    "Ahmose": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Flint": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    },
+    "Ling Xue": {
+      "skill_1": 1,
+      "skill_2": 1
+    },
+    "Mia": {
+      "skill_1": 2,
+      "skill_2": 2,
+      "skill_3": 0
+    },
+    "Logan": {
+      "skill_1": 1,
+      "skill_2": 0,
+      "skill_3": 0
+    }
+  }
+}

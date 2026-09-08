@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "renee_same_kind_hendrik_defense_down_nc",
+    "description": "Renee 5/5/5 + Hendrik 5/5/5 final all-same defense-down discriminator. The run-testcase capture rejected the requested 60000 T9 Marksmen because the verified march-capacity deployment was 57400; this entry preserves that same deterministic battle from the immediately re-read war report rather than repeating it.",
+    "attacker": {
+      "name": "[BBQ]Piddlyminxoxx",
+      "heroes": {},
+      "troops": {
+        "marksman_t9": 57400
+      },
+      "stats": {
+        "inf": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 205.3,
+          "health": 206.5
+        },
+        "lanc": {
+          "attack": 264.2,
+          "defense": 258.5,
+          "lethality": 189.7,
+          "health": 191.0
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        },
+        "Hendrik": {
+          "skill_1": 5,
+          "skill_2": 5,
+          "skill_3": 5
+        }
+      },
+      "troops": {
+        "lancer_t11_fc10": 40
+      },
+      "stats": {
+        "inf": {
+          "attack": 1172.0,
+          "defense": 1198.9,
+          "lethality": 1141.1,
+          "health": 1315.4
+        },
+        "lanc": {
+          "attack": 1712.4,
+          "defense": 1739.4,
+          "lethality": 1451.8,
+          "health": 1246.3
+        },
+        "mark": {
+          "attack": 2152.6,
+          "defense": 2179.6,
+          "lethality": 2105.2,
+          "health": 1914.4
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 46014,
+        "defender": 0
+      }
+    ]
+  }
+]

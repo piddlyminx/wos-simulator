@@ -1,0 +1,107 @@
+{
+  "replay_sha256": "2302b67b436783405773097c89b148a88fa8abb2a8be6979919fde385702270d",
+  "unique_deterministic_fixture_entries": 35,
+  "stored_outcome_rows": 48,
+  "exact_fixture_entries": 29,
+  "within_two_fixture_entries": 34,
+  "unique_stochastic_entries_skipped": 10,
+  "count_caveat": "Fixture entries and stored outcome rows are not asserted to be independent battles. No stochastic agreement judgment is made by this review.",
+  "skills": [
+    {
+      "key": "hero:Jasser:TacticalGenius",
+      "source_sha256": "6c9a7b443fb3be5f8603589aa4dc48aa3d52d57b0de8b04334e4bc401be4f674",
+      "deterministic_fixture_entries": 9,
+      "skipped_stochastic_entries": 3,
+      "levels_exercised": [
+        1,
+        2,
+        4
+      ],
+      "effect_enters_damage_jobs_in_all_reviewed_entries": true,
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 1,
+      "entries_outside_two": []
+    },
+    {
+      "key": "hero:Jessie:StandOfArms",
+      "source_sha256": "dbe8105a8e483774bdb8d94ba7f6d2abe0703aaff9739c44aa9f656bac9699ce",
+      "deterministic_fixture_entries": 15,
+      "skipped_stochastic_entries": 2,
+      "levels_exercised": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "effect_enters_damage_jobs_in_all_reviewed_entries": true,
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 2,
+      "entries_outside_two": []
+    },
+    {
+      "key": "hero:Patrick:SuperNutrients",
+      "source_sha256": "a580a36f0f78f5c153ad23ac2da06de7d94193fe8f41b268e3bb1f312ca3e345",
+      "deterministic_fixture_entries": 9,
+      "skipped_stochastic_entries": 3,
+      "levels_exercised": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "effect_enters_damage_jobs_in_all_reviewed_entries": true,
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 17,
+      "entries_outside_two": [
+        {
+          "key": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "game_scores": [
+            851
+          ],
+          "prediction": 834,
+          "signed_residuals": [
+            -17
+          ]
+        }
+      ]
+    },
+    {
+      "key": "hero:Sergey:Weaken",
+      "source_sha256": "7981e1a1b52b9ef06522c81af54d7dd840ad33ed5b1ebf2c8bf066e04b9b6f05",
+      "deterministic_fixture_entries": 4,
+      "skipped_stochastic_entries": 8,
+      "levels_exercised": [
+        2,
+        4
+      ],
+      "effect_enters_damage_jobs_in_all_reviewed_entries": true,
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0,
+      "entries_outside_two": []
+    },
+    {
+      "key": "hero:Seo-yoon:RallyingBeat",
+      "source_sha256": "2da25c9d7ed1fb6a04f20d39bbf76383c6ab99bcaf6f5ee10979463380be61b0",
+      "deterministic_fixture_entries": 5,
+      "skipped_stochastic_entries": 0,
+      "levels_exercised": [
+        1,
+        3
+      ],
+      "effect_enters_damage_jobs_in_all_reviewed_entries": true,
+      "damage_kinds_in_reviewed_applications": [
+        "normal"
+      ],
+      "maximum_current_absolute_residual": 0,
+      "entries_outside_two": []
+    }
+  ]
+}

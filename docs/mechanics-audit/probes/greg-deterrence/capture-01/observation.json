@@ -1,0 +1,49 @@
+{
+  "identity": {
+    "displayed_time": "2026-09-07 08:32:39",
+    "coordinates": {
+      "x": 791,
+      "y": 577
+    },
+    "attacker_troops": 200,
+    "defender_troops": 400,
+    "survivors": {
+      "attacker": 0,
+      "defender": 113
+    }
+  },
+  "full_kit": {
+    "Greg": {
+      "skill_1": 1,
+      "skill_2": 1,
+      "skill_3": 0
+    }
+  },
+  "skill_activations": {
+    "Greg": {
+      "SwordOfJustice": 15,
+      "DeterrenceOfLaw": 22
+    }
+  },
+  "displayed_skill_kills": {
+    "SwordOfJustice": null,
+    "DeterrenceOfLaw": null
+  },
+  "casualties": {
+    "attacker": {
+      "troops": 200,
+      "losses": 0,
+      "injured": 70,
+      "lightly_injured": 130,
+      "survivors": 0
+    },
+    "defender": {
+      "troops": 400,
+      "losses": 0,
+      "injured": 101,
+      "lightly_injured": 186,
+      "survivors": 113
+    }
+  },
+  "provenance": "Both report sides are the same battle, not two observations. All24 stat fields and both report headers visually checked. No explicit game round count."
+}

@@ -1,0 +1,87 @@
+{
+  "evidence_kind": "captured_game_observation",
+  "battle_number": 5,
+  "timestamp_displayed": "2026-09-07 07:05:54",
+  "coordinate": {
+    "x": 787,
+    "y": 577
+  },
+  "defender_mail_id": "2734692464124055",
+  "attacker": {
+    "initial": 350,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 123,
+    "lightly_injured": 227
+  },
+  "defender": {
+    "initial": 250,
+    "survivors": 174,
+    "losses": 0,
+    "injured": 27,
+    "lightly_injured": 49
+  },
+  "defender_rows": [
+    {
+      "troop_key": "infantry_t6",
+      "initial": 150,
+      "kills_displayed": 25,
+      "losses": 0,
+      "injured_displayed": -27,
+      "lightly_injured": 49,
+      "survivors": 74
+    },
+    {
+      "troop_key": "lancer_t6",
+      "initial": 50,
+      "kills_displayed": 42,
+      "losses": 0,
+      "injured_displayed": 0,
+      "lightly_injured": 0,
+      "survivors": 50
+    },
+    {
+      "troop_key": "marksman_t6",
+      "initial": 50,
+      "kills_displayed": 56,
+      "losses": 0,
+      "injured_displayed": 0,
+      "lightly_injured": 0,
+      "survivors": 50
+    }
+  ],
+  "skill_details": {
+    "attacker": {
+      "Reina": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_3": {
+          "triggered": 6,
+          "displayed_kills": 3
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "verification": "Visually verified original WIP report and minxxx counterpart identity, exact T6 setup and all24 stat fields; expanded defender table manually transcribed. Counterpart mail is same battle, not additional observation. No game round total shown.",
+  "artifact_sha256": {
+    "defender-report-stats.png": "81a15a1d4239c9b7a76e3cd311e48383865ee9b3394c0d5344467d22d3cceaf0",
+    "bd_bot.png": "4aa0deb23b56152826ddba09681d84dfe47370e3cfdef6414e3305649a9a818a",
+    "bd_top.png": "56f93d352ade05b07725851ac7467f6b662f37dad00bfb8a8560dfcd097660eb",
+    "defender-bd-bot.png": "e14895272330f6742b3e01b8f8bb16184277e81613beaca1d7d1c13a3a0e17be",
+    "report_top.png": "237f8a2cf9ddb381c8db0abf6d8c54727a70a8c2c6ab5380beee460128114988",
+    "defender-report-bottom.png": "8b93cb3f83eca226c3ce88f81b0ea6bfa7997cc877c8b8d0c66b1e07012b5eae",
+    "defender-troops.png": "a79f4b116f0f8393f3c62c6e261d8c7d43c489db068ceafc6377b52c6c965a3c",
+    "report_stats.png": "52ab3609f012e0af4e62146b55f5a868237685baa6f82046cca57a00522c8fd3",
+    "defender-bd-top.png": "7177555a43b82edcefa2bfec9a95e8533c91a1abd31c9b505b96df1af428eb25",
+    "defender-report-top.png": "a69e66e1d5d0030f5bb142a39f76775ec2becce8b36c7b91d04a9bf01d25b911",
+    "report_bottom.png": "cc35567d7c6f2cec3c3fb7867850b9157a7045bd17ea6cdca1a427646930b2fd"
+  },
+  "stats_match_capture_01": true
+}

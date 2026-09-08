@@ -1,0 +1,1042 @@
+{
+  "writtenAt": "2026-09-07T07:11:47.676Z",
+  "phase": "Retrospective accepted active and archived corpus review. Existing game observations and prior causal notes were read before fixed alternatives. No live action, coefficient fitting, stat changes or production edits.",
+  "selections": [
+    {
+      "key": "hero:Gatot:GoldenGuard",
+      "hero": "Gatot",
+      "id": "GoldenGuard",
+      "slot": 1,
+      "activeCoverage": {
+        "configured_fixture_count": 63,
+        "hydrated_fixture_count": 63,
+        "observation_record_count": 63,
+        "hydrated_levels": [
+          1,
+          2,
+          5
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+          "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+          "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+          "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+          "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+          "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+          "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+          "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+          "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+          "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+          "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+          "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+          "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+          "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+          "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+          "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+          "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+          "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+          "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "fixtureKeys": [
+        "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+        "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+        "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+        "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "definition": {
+        "description": "Gatot commands his troops with imperial guard tactics, increasing his Infantry's Defense by X%.",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "GoldenGuard/1": {
+            "type": "active.hero.defense.up",
+            "value": [
+              6,
+              12,
+              18,
+              24,
+              30
+            ],
+            "units": {
+              "applies_to": [
+                "infantry"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Gatot:KingsBestowal",
+      "hero": "Gatot",
+      "id": "KingsBestowal",
+      "slot": 2,
+      "activeCoverage": {
+        "configured_fixture_count": 63,
+        "hydrated_fixture_count": 63,
+        "observation_record_count": 63,
+        "hydrated_levels": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "levels_missing_active_fixture": [
+          4
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+          "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+          "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+          "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+          "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+          "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+          "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+          "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+          "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+          "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+          "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+          "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+          "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+          "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+          "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+          "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+          "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+          "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+          "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "fixtureKeys": [
+        "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+        "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+        "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+        "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "definition": {
+        "description": "The great kings bless Gatot's Infantry, granting Infantry a Shield with protection equal to Attack * X% each time they attack, for 1 turn.",
+        "trigger": {
+          "type": "attack",
+          "source": "infantry"
+        },
+        "effects": {
+          "KingsBestowal/1": {
+            "type": "active.hero.shield",
+            "value": [
+              6,
+              12,
+              18,
+              24,
+              30
+            ],
+            "value_formula": {
+              "type": "percent_of",
+              "source": "trigger.source_attack"
+            },
+            "units": {
+              "applies_to": "trigger.source",
+              "applies_vs": "enemy.any"
+            },
+            "duration": {
+              "turns": {
+                "delay": 1,
+                "count": 1
+              }
+            },
+            "same_effect_stacking": "max"
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Gatot:RoyalLegion",
+      "hero": "Gatot",
+      "id": "RoyalLegion",
+      "slot": 3,
+      "activeCoverage": {
+        "configured_fixture_count": 63,
+        "hydrated_fixture_count": 63,
+        "observation_record_count": 63,
+        "hydrated_levels": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "levels_missing_active_fixture": [
+          4
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+          "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+          "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+          "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+          "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+          "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+          "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+          "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+          "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+          "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+          "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+          "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+          "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+          "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+          "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+          "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+          "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+          "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+          "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+          "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+          "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+          "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+          "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+          "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+          "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+          "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+          "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "fixtureKeys": [
+        "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+        "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+        "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+        "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "definition": {
+        "description": "Gatot's formidable legion instills fear in enemies, reducing their Attack by X%.",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "RoyalLegion/1": {
+            "type": "active.hero.attack.down",
+            "value": [
+              5,
+              10,
+              15,
+              20,
+              25
+            ],
+            "units": {
+              "applies_to": "enemy.any"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Renee:NightmareTrace",
+      "hero": "Renee",
+      "id": "NightmareTrace",
+      "slot": 1,
+      "activeCoverage": {
+        "configured_fixture_count": 9,
+        "hydrated_fixture_count": 9,
+        "observation_record_count": 22,
+        "hydrated_levels": [
+          1,
+          3,
+          4
+        ],
+        "levels_missing_active_fixture": [
+          2,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+          "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+          "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+          "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+          "testcases/emulator_verified/renee_solo_nc.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 2,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "fixtureKeys": [
+        "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+        "testcases/emulator_verified/hector_renee_wayne.json#0",
+        "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+        "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+        "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_solo_nc.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_100_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_100_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_25_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_25_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_edith_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_zero_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_zero_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_edith_damage_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_hendrik_defense_down_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_jasser_lethality_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_seo_yoon_attack_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_wu_ming_skill_damage_nc.json#0",
+        "archive:skill/tmp/renee_gwen_2k_discriminator.ts#observed"
+      ],
+      "definition": {
+        "description": "Troops place Dream Marks on targets every two turns, dealing extra Lancer damage once next turn",
+        "trigger": {
+          "type": "turn",
+          "every": 2
+        },
+        "effects": {
+          "NightmareTrace/mark": {
+            "units": {
+              "applies_to": "self.lancer",
+              "applies_vs": "enemy.any"
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              },
+              "attacks": {
+                "count": 1
+              }
+            },
+            "trigger_effects": {
+              "NightmareTrace/1": {
+                "type": "extra_skill_attack",
+                "value": [
+                  40,
+                  80,
+                  120,
+                  160,
+                  200
+                ],
+                "units": {
+                  "applies_to": "parent.use.source",
+                  "applies_vs": "parent.use.target"
+                },
+                "trigger_damage_jobs": [
+                  {
+                    "source": "use.source",
+                    "target": "use.target",
+                    "damage_kind": "normal"
+                  }
+                ],
+                "duration": {
+                  "turns": {
+                    "delay": 1,
+                    "count": 1
+                  },
+                  "attacks": {
+                    "count": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Renee:Dreamcatcher",
+      "hero": "Renee",
+      "id": "Dreamcatcher",
+      "slot": 2,
+      "activeCoverage": {
+        "configured_fixture_count": 8,
+        "hydrated_fixture_count": 8,
+        "observation_record_count": 12,
+        "hydrated_levels": [
+          3,
+          4
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          2,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+          "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+          "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+          "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+          "testcases/emulator_verified/renee_solo_nc.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 1,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "fixtureKeys": [
+        "testcases/emulator_verified/hector_renee_wayne.json#0",
+        "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+        "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+        "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_solo_nc.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_100_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_100_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_25_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_25_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_edith_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_zero_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_zero_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_edith_damage_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_hendrik_defense_down_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_jasser_lethality_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_seo_yoon_attack_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_wu_ming_skill_damage_nc.json#0",
+        "archive:skill/tmp/renee_gwen_2k_discriminator.ts#observed"
+      ],
+      "definition": {
+        "description": "Dream Marks highlight enemy vulnerabilities, increasing damage dealt by Lancers to marked targets",
+        "trigger": {
+          "type": "turn",
+          "every": 2
+        },
+        "effects": {
+          "Dreamcatcher/mark": {
+            "units": {
+              "applies_to": "self.lancer",
+              "applies_vs": "enemy.any"
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              },
+              "attacks": {
+                "count": 1
+              }
+            },
+            "trigger_effects": {
+              "Dreamcatcher/1": {
+                "type": "active.hero.damageTaken.up",
+                "applies_to_damage_kinds": [
+                  "normal"
+                ],
+                "value": [
+                  30,
+                  60,
+                  90,
+                  120,
+                  150
+                ],
+                "units": {
+                  "applies_to": "parent.use.target",
+                  "applies_vs": "parent.use.source"
+                },
+                "duration": {
+                  "turns": {
+                    "delay": 1,
+                    "count": 1
+                  }
+                },
+                "same_effect_stacking": "max"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Renee:Dreamslice",
+      "hero": "Renee",
+      "id": "Dreamslice",
+      "slot": 3,
+      "activeCoverage": {
+        "configured_fixture_count": 8,
+        "hydrated_fixture_count": 8,
+        "observation_record_count": 12,
+        "hydrated_levels": [
+          3,
+          4
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          2,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/hector_renee_wayne.json#0",
+          "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+          "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+          "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+          "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+          "testcases/emulator_verified/renee_solo_nc.json#0",
+          "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+          "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 1,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "fixtureKeys": [
+        "testcases/emulator_verified/hector_renee_wayne.json#0",
+        "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+        "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+        "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_solo_nc.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_100_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_100_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_25_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_25_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_edith_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_zero_lancer_control_nc.json#0",
+        "archive:testcases/emulator_verified/renee_kind_zero_lancer_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_edith_damage_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_hendrik_defense_down_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_jasser_lethality_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_seo_yoon_attack_up_nc.json#0",
+        "archive:testcases/emulator_verified/renee_same_kind_wu_ming_skill_damage_nc.json#0",
+        "archive:skill/tmp/renee_gwen_2k_discriminator.ts#observed"
+      ],
+      "definition": {
+        "description": "Dream Marks expose enemy weaknesses, increasing damage taken by marked targets for all troops",
+        "trigger": {
+          "type": "turn",
+          "every": 2
+        },
+        "effects": {
+          "Dreamslice/mark": {
+            "units": {
+              "applies_to": "self.lancer",
+              "applies_vs": "enemy.any"
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              },
+              "attacks": {
+                "count": 1
+              }
+            },
+            "trigger_effects": {
+              "Dreamslice/1": {
+                "type": "active.hero.damageTaken.up",
+                "applies_to_damage_kinds": [
+                  "normal"
+                ],
+                "value": [
+                  15,
+                  30,
+                  45,
+                  60,
+                  75
+                ],
+                "units": {
+                  "applies_to": "parent.use.target",
+                  "applies_vs": "any"
+                },
+                "duration": {
+                  "turns": {
+                    "delay": 1,
+                    "count": 1
+                  }
+                },
+                "same_effect_stacking": "max"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "sourceHashes": {
+    "simulator/src/battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
+    "simulator/src/config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
+    "simulator/src/config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
+    "simulator/src/config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
+    "simulator/src/config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "simulator/src/effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
+    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "simulator/src/extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
+    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "simulator/src/recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
+    "simulator/src/runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
+    "simulator/src/runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
+    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "simulator/src/tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
+    "simulator/src/tooling/exportGatotTestcases.ts": "1f88bffca8bb34a63e71df804d7cf75ce3b6a8b75cc2c912ee8fbe0323f68324",
+    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "simulator/src/tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
+    "simulator/src/tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
+    "simulator/src/tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
+    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "simulator/src/types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
+    "simulator/src/webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
+    "simulator/src/workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4",
+    "simulator/config/hero_definitions/Gatot.json": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "simulator/config/hero_definitions/Renee.json": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "skill/tmp/renee_gwen_2k_discriminator.ts": "ed9e82056aed56c2ea4d087037ba97d3e85428571179b9727da1a5771377f921"
+  },
+  "artifacts": {
+    "config.json": "fe09ca93cd70233e682b8d60914af150068e5a7891e64423d41f8a4894284eaa",
+    "cases.json": "12582a0e98b8945db77b648f6a38514c80585d207fbba136bdc36e866644f58c",
+    "freeze.mts": "ece9c577273d49057a642e5b9664354b0ddb30c8dc0d655ee82ed4f53225996b",
+    "worker.mts": "3c1b5809522a8673ea7ac40e2aebce9e2010701b32a9df7b8f453204fd684f5c",
+    "archive-manifest.json": "cd8ea6e377146a44520cae8d6a65a2539400c191d2efdc28ececea3e1603e785",
+    "archived-fixtures/renee_kind_100_lancer_control_nc.json": "f055aa26232af7cc49aee3e3b91c96917edeaa45fb5d4d545f655cf202ffe479",
+    "archived-fixtures/renee_kind_100_lancer_nc.json": "376e08a3282c0f66834cde6047b73800881ccb64fffa8b7ebbc518af55e243f4",
+    "archived-fixtures/renee_kind_25_lancer_control_nc.json": "ce011ded0e35d1fff4bc3a7dd33681579e1dc1dcdc22154b3f149777ee28fbd0",
+    "archived-fixtures/renee_kind_25_lancer_nc.json": "821b1f63e4ecb60bf81cabd54f546cad120edace61ed3a9cd0f1c9ff530c38d5",
+    "archived-fixtures/renee_kind_s1_damage_up_anchor_control_nc.json": "0d456bff5aedd77d226844d8d71c2e97aca4bc4f91f05b3684a5bee5c4698f08",
+    "archived-fixtures/renee_kind_s1_damage_up_anchor_edith_nc.json": "d243cf116f201736e4f1bdfa0ccc9ea57496fd8df537944c0334735cb4ea1276",
+    "archived-fixtures/renee_kind_zero_lancer_control_nc.json": "c39a16ee392555a62375064102e800af5e96355c22dca54db7304ae1038d4ac2",
+    "archived-fixtures/renee_kind_zero_lancer_nc.json": "0ae6a087ff1b7bf765a673f8b25021dd55c3f59bb46cbab480859513842de0c4",
+    "archived-fixtures/renee_same_kind_ahmose_damage_taken_up_nc.json": "e42358f638a2dbaabd29adf2b562b37437014553bce2a21ff23a10de43aad7c4",
+    "archived-fixtures/renee_same_kind_ahmose_damage_taken_up_strong_nc.json": "34459042ba166d16ef000d355f1c37f09d9a3bc2544ba35cbca6c4c277ba8a70",
+    "archived-fixtures/renee_same_kind_edith_damage_up_nc.json": "c047bf3d08c69d872fb597e613defa984c9127c371847bcd5651d3734fc1ec95",
+    "archived-fixtures/renee_same_kind_hendrik_defense_down_nc.json": "152000825ed26309b7648474799305e8a42da44e1983d825adef5f7273d21162",
+    "archived-fixtures/renee_same_kind_jasser_lethality_up_nc.json": "773435efab5c740314c0b9f3c7a3bcaeb51b25dc0d9f30d15e1a895ce3123106",
+    "archived-fixtures/renee_same_kind_seo_yoon_attack_up_nc.json": "23ad043654e15c8e9f16a19d8aa42faf2e999f477ef637ef85a10c1326604044",
+    "archived-fixtures/renee_same_kind_wu_ming_skill_damage_nc.json": "c7e556c00a5dc37b288e01212e67aa7926319b6ccb1a42e5f7c3c484ec9e7f93",
+    "check-provenance.mts": "9003178201f736bf19a1816becf8b19183bfc73b40035c49b3d81b91b4437b79",
+    "provenance-check.json": "eedb08f5c76d639f653ba4ef3bee0ce968148212a1f0497d3123c2830988b1cb"
+  },
+  "variants": {
+    "GoldenGuard": [
+      "current",
+      "omit",
+      "all_own"
+    ],
+    "KingsBestowal": [
+      "current",
+      "omit",
+      "normal_only"
+    ],
+    "RoyalLegion": [
+      "current",
+      "omit",
+      "enemy_infantry_only"
+    ],
+    "NightmareTrace": [
+      "current",
+      "omit",
+      "skill_kind",
+      "immediate_delivery",
+      "carrier_all_sources"
+    ],
+    "Dreamcatcher": [
+      "current",
+      "omit",
+      "both_kinds",
+      "all_sources"
+    ],
+    "Dreamslice": [
+      "current",
+      "omit",
+      "both_kinds",
+      "lancer_only"
+    ]
+  },
+  "definitions": {
+    "current": "Complete current config. Established sequential conserved shield pool, fractional casualty state and ceil(source survivors) attack/shield strength are preserved.",
+    "omit": "Remove selected skill effects only; all actual heroes, levels and remaining kit stay configured.",
+    "all_own": "GoldenGuard recipients broadened from own Infantry to self.any.",
+    "normal_only": "KingsBestowal protects only normal damage; conserved sequential pool and all magnitudes unchanged.",
+    "enemy_infantry_only": "RoyalLegion affects enemy Infantry only.",
+    "skill_kind": "NightmareTrace generated job damage_kind skill instead of normal; carrier/target/magnitude unchanged.",
+    "immediate_delivery": "NightmareTrace child turns.delay=0 instead of1; no other lifecycle or arithmetic edit.",
+    "carrier_all_sources": "NightmareTrace mark can be consumed by any own class instead of only Lancers; one-use carrier and child target/source binding retained.",
+    "both_kinds": "Selected Dreamcatcher/Dreamslice child applies to both normal and skill damage.",
+    "all_sources": "Dreamcatcher child applies_vs any instead of parent.use.source.",
+    "lancer_only": "Dreamslice child applies_vs parent.use.source instead of any."
+  },
+  "sampling": {
+    "gatotRepeat": 500,
+    "reneeRepeat": 1000,
+    "seed": "gatot-renee-review-2026-09-07:<fixture-key>:<run-index>",
+    "traceRuns": 16,
+    "score": "A-D including draws; retain exact both-side totals, per-class vectors, winner and rounds in each sample.",
+    "deterministic": "Run once and preserve all individual observation residuals; no universal >2 materiality rule or stochastic p-value."
+  },
+  "limits": [
+    "Active and archived records are accepted game evidence unless explicitly invalid/obsolete; distinct records alone do not establish independent battles. Frozen model outputs are not game evidence.",
+    "Archived no-hero controls are existing observations included unchanged for completeness; no new controls were captured.",
+    "Ambusher trial2 has explicitly contradictory total versus per-class source data: preserve primary A581/D9 (score572), metadata and conflict; do not silently repair.",
+    "Gatot game round-cap winners in fixtures are normalized to draw; prior evidence says UI awarded defender. Retain that semantic distinction and score A-D.",
+    "Historical incomplete-input observations in Gatot ledger remain documented but cannot be silently reconstructed.",
+    "Component omissions and scope contrasts provide conditional support, not unique identification of all probabilities, magnitudes, buckets, lifecycle or joiner branches.",
+    "Shared seeds do not ensure paired proc sequences after an omission alters RNG consumption."
+  ],
+  "provenanceGrouping": "Before simulation, resolved-input signatures found no identical input groups among88 entries and metadata supplied no stable report IDs/timestamps. Independence remains unverified. Keep each stored entry a separate comparison; never pool records across paths. See provenance-check.json."
+}

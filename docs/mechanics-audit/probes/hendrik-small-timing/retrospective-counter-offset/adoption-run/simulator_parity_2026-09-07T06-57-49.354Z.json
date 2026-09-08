@@ -1,0 +1,244 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-09-07T06:57:49.289Z",
+  "options": {
+    "workers": 2,
+    "matching": "hendrik",
+    "repeat": 1,
+    "seed": "hendrik-first-two-adoption-2026-09-07",
+    "includeSamples": true
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 4,
+    "testcasesFound": 4,
+    "executed": 4,
+    "warnings": 0,
+    "errors": 0,
+    "comparedToGame": 4,
+    "comparedToBaseline": 0
+  },
+  "warnings": [],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0": {
+      "file": "testcases/emulator_verified/hendrik_armor_lancer_scope.json",
+      "testcase_id": "hendrik_armor_lancer_scope",
+      "idx": 0,
+      "armies": {
+        "attacker": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 100
+          }
+        },
+        "defender": {
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 150
+          }
+        }
+      },
+      "armiesSource": "testcase",
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -17,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -17,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/cases/000001.json"
+    },
+    "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0": {
+      "file": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json",
+      "testcase_id": "hendrik_dragons_heir_250m_vs_400i_100l_100m",
+      "idx": 0,
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 250
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          }
+        }
+      },
+      "armiesSource": "testcase",
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -471,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -471,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/cases/000002.json"
+    },
+    "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0": {
+      "file": "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json",
+      "testcase_id": "hendrik_small_timing_250m_vs_150i_60l_60m",
+      "idx": 0,
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 250
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          }
+        }
+      },
+      "armiesSource": "testcase",
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": -70,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": -68,
+        "sigma_reference": 0,
+        "bias_raw": -2,
+        "bias_pct": -0.38,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "passes": true
+      },
+      "baseline": null,
+      "gameStatAdjustment": {
+        "value": 0.05,
+        "mode": "best_effort",
+        "unadjusted": {
+          "n_candidate": 1,
+          "mu_candidate": -71,
+          "sigma_candidate": 0,
+          "n_reference": 1,
+          "mu_reference": -68,
+          "sigma_reference": 0,
+          "bias_raw": -3,
+          "bias_pct": -0.58,
+          "sem": 0,
+          "stat_type": "deterministic",
+          "stat": null,
+          "p": null,
+          "passes": false
+        }
+      },
+      "detailArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/cases/000003.json"
+    },
+    "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0": {
+      "file": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json",
+      "testcase_id": "renee_hendrik_defense_bucket_nc",
+      "idx": 0,
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Hendrik": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "lancer_t6": 120
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t9": 446
+          }
+        }
+      },
+      "armiesSource": "testcase",
+      "deterministic": true,
+      "sampleCount": 1,
+      "game": {
+        "n_candidate": 1,
+        "mu_candidate": 14,
+        "sigma_candidate": 0,
+        "n_reference": 1,
+        "mu_reference": 14,
+        "sigma_reference": 0,
+        "bias_raw": 0,
+        "bias_pct": 0,
+        "sem": 0,
+        "stat_type": "deterministic",
+        "stat": null,
+        "p": null,
+        "passes": true
+      },
+      "baseline": null,
+      "detailArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/cases/000004.json"
+    }
+  },
+  "artifactRoot": "simulator_parity_2026-09-07T06-57-49.354Z",
+  "chartsArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/charts.json"
+}

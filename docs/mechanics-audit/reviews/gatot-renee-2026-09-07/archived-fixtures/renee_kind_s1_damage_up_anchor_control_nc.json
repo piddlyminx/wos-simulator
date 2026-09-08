@@ -1,0 +1,74 @@
+[
+  {
+    "test_id": "renee_kind_s1_damage_up_anchor_control_nc",
+    "description": "Renee 4/4/4 control for the Edith damage-up interaction anchor. WIP attacks with 3000 T6 infantry; minxxx defends with Renee and 100 T6 lancers. Pair with renee_kind_s1_damage_up_anchor_edith_nc. Fixed full kit, deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 3000
+      },
+      "stats": {
+        "inf": {
+          "attack": 233.8,
+          "defense": 243.1,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.0,
+          "defense": 214.3,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 271.7,
+          "defense": 259.5,
+          "lethality": 205.3,
+          "health": 206.5
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 2772,
+        "defender": 0
+      }
+    ]
+  }
+]

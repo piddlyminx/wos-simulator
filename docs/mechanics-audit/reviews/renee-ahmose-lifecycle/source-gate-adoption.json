@@ -1,0 +1,364 @@
+{
+  "createdAt": "2026-09-07T09:47:37.070Z",
+  "scope": "Production matches all303 frozen private-candidate results under one identical seed per input. This includes297 non-Ahmose inputs unchanged versus the old engine, not a fresh distribution test of those cases.",
+  "rowsMatched": 303,
+  "unrelatedUnchanged": 297,
+  "sourceHashes": {
+    "simulator/src/runtimeSkills.ts": "04178915dbb7f8d2dca247bb2ea8f3242cb121916c870507356a853013ad414d",
+    "simulator/src/simulator.ts": "db3abee5037727c79f4a4653024ed0d413e7d327cdf508176b37eff0e4b30c9d",
+    "simulator/src/config.ts": "da48b4e670d0902ba900a4c98baba9a1aa62b8553bb99df2413c9fa9c856f4c1",
+    "simulator/config/hero_definitions/Ahmose.json": "e143491e9b102c0e5d2b05262bece0ac11e2975414722100efd1a577d974f005"
+  },
+  "newFixtures": [
+    {
+      "path": "testcases/emulator_verified/ahmose_no_infantry_240l_vs_125i.json",
+      "sha256": "bdb95a0189dfa48595e599d4fd353ba36740292c36a2974ea5f6825e96d00fc5",
+      "winner": "defender",
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 11,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    },
+    {
+      "path": "testcases/emulator_verified/ahmose_source_dies_001i_480l_vs_250i.json",
+      "sha256": "1fdec53cc80a4352070a97fd1afa23791e56231c2d731c86dd0bf5c36bde80af",
+      "winner": "attacker",
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 3,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    }
+  ],
+  "ahmoseComparisons": [
+    {
+      "key": "testcases/emulator_verified/ahmose_solo_nc.json#0",
+      "game": [
+        {
+          "attacker": 2633,
+          "defender": 0
+        }
+      ],
+      "before": {
+        "attacker": {
+          "infantry": 46,
+          "lancer": 1069,
+          "marksman": 1500
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "after": {
+        "attacker": {
+          "infantry": 71,
+          "lancer": 1069,
+          "marksman": 1500
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+      "game": [
+        {
+          "attacker": 3777,
+          "defender": 0
+        }
+      ],
+      "before": {
+        "attacker": {
+          "infantry": 3278,
+          "lancer": 500,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "after": {
+        "attacker": {
+          "infantry": 3278,
+          "lancer": 500,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/ahmose_no_infantry_240l_vs_125i.json#0",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 11
+        }
+      ],
+      "before": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 15,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "after": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 11,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    },
+    {
+      "key": "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0",
+      "game": [
+        {
+          "attacker": 2810,
+          "defender": 0
+        }
+      ],
+      "before": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 2574
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "after": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 2709
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    },
+    {
+      "key": "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0",
+      "game": [
+        {
+          "attacker": 1631,
+          "defender": 0
+        }
+      ],
+      "before": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 1622
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "after": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 1633
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    },
+    {
+      "key": "prospective:source-death",
+      "game": null,
+      "before": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 61,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "after": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 3,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      }
+    }
+  ],
+  "prayerReview": [
+    {
+      "key": "testcases/emulator_verified/ahmose_solo_nc.json#0",
+      "game": [
+        {
+          "attacker": 2633,
+          "defender": 0
+        }
+      ],
+      "variants": {
+        "current": {
+          "winner": "attacker",
+          "rounds": 54,
+          "remaining": {
+            "attacker": {
+              "infantry": 71,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "omitPrayer": {
+          "winner": "attacker",
+          "rounds": 54,
+          "remaining": {
+            "attacker": {
+              "infantry": 90,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "prayerAllOwn": {
+          "winner": "attacker",
+          "rounds": 56,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 443,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+      "game": [
+        {
+          "attacker": 3777,
+          "defender": 0
+        }
+      ],
+      "variants": {
+        "current": {
+          "winner": "attacker",
+          "rounds": 77,
+          "remaining": {
+            "attacker": {
+              "infantry": 3278,
+              "lancer": 500,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "omitPrayer": {
+          "winner": "attacker",
+          "rounds": 79,
+          "remaining": {
+            "attacker": {
+              "infantry": 3256,
+              "lancer": 500,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        },
+        "prayerAllOwn": {
+          "winner": "attacker",
+          "rounds": 67,
+          "remaining": {
+            "attacker": {
+              "infantry": 3372,
+              "lancer": 500,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          }
+        }
+      }
+    }
+  ],
+  "prayerReviewExposure": "Retrospective: all existing outcomes and the new source-dependence evidence were known before this conditional re-review."
+}

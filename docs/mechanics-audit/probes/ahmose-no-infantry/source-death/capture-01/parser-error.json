@@ -1,0 +1,80 @@
+{
+  "argv": [
+    "/home/paul/projects_wsl/wos/simulator/skill/scripts/wosctl",
+    "--instance",
+    "WIP",
+    "--debug",
+    "run-testcase",
+    "docs/mechanics-audit/probes/ahmose-no-infantry/source-death/spec-v2.json",
+    "--repeat",
+    "1"
+  ],
+  "cwd": "/home/paul/projects_wsl/wos/simulator",
+  "error_type": "RuntimeError",
+  "error": "left outcome troop total 481 does not match the independently parsed troop slots total 480; refusing to emit inconsistent report data Debug artifacts: /home/paul/projects_wsl/wos/simulator/tmp/20260907T093308Z_wos_report_war_1",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 774, in read_battle_report_from_open_inbox\n    return _capture_and_parse_open_report(emulator, debug_dir=debug_dir)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 426, in _capture_and_parse_open_report\n    report = _capture_and_parse(debug_dir, debug=True)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 418, in _capture_and_parse\n    return _parse_captured_report(\n        capture,\n        debug_dir=debug_dir,\n        battle_details=parsed_details,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 370, in _parse_captured_report\n    report = parse_battle_report(\n        capture[\"report_top\"],\n        capture[\"report_stats\"],\n        debug_outdir=debug_outdir,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/parse_report.py\", line 440, in parse_battle_report\n    raise RuntimeError(\n    ...<3 lines>...\n    )\nRuntimeError: left outcome troop total 481 does not match the independently parsed troop slots total 480; refusing to emit inconsistent report data\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/wosctl\", line 1161, in cmd_run_testcase\n    result = run_testcase(\n        spec,\n    ...<3 lines>...\n        preferred_world_coord=preferred_world_coord,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/run_testcase.py\", line 738, in run_testcase\n    report = _capture_war_report(execution.attacker_emulator, debug=debug, inbox_open=True)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/run_testcase.py\", line 222, in _capture_war_report\n    report = read_battle_report_from_open_inbox(\n        emulator,\n    ...<2 lines>...\n        debug=debug,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 777, in read_battle_report_from_open_inbox\n    raise type(exc)(f\"{exc} Debug artifacts: {debug_dir.resolve()}\") from exc\nRuntimeError: left outcome troop total 481 does not match the independently parsed troop slots total 480; refusing to emit inconsistent report data Debug artifacts: /home/paul/projects_wsl/wos/simulator/tmp/20260907T093308Z_wos_report_war_1\n",
+  "frames": [
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/wosctl",
+      "line": 1161,
+      "function": "cmd_run_testcase",
+      "locals": {
+        "debug": "True",
+        "dry_run": "False",
+        "exc": "RuntimeError('left outcome troop total 481 does not match the independently parsed troop slots total 480; refusing to emit inconsistent report data Debug artifacts: /home/paul/projects_wsl/wos/simulator/tmp/20260907T093308Z_wos_report_war_1')",
+        "instance_names": "['minxxx', 'WIP']",
+        "lock_context": "<contextlib._GeneratorContextManager object at 0x7fb4847392b0>",
+        "preferred_world_coord": "None",
+        "preset_mode": "None",
+        "repeat": "1",
+        "results": "[]",
+        "run_number": "1",
+        "run_testcase": "<function run_testcase at 0x7fb48476dda0>",
+        "spec": "'docs/mechanics-audit/probes/ahmose-no-infantry/source-death/spec-v2.json'"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/run_testcase.py",
+      "line": 738,
+      "function": "run_testcase",
+      "locals": {
+        "debug": "True",
+        "dry_run": "False",
+        "execution": "BattleExecution(spec_path='docs/mechanics-audit/probes/ahmose-no-infantry/source-death/spec-v2.json', spec={'test_id': 'ahmose_source_dies_001i_480l_vs_250i', 'description': 'Prospective deterministic Viper source-lifecycle discriminator. WIP fullAhmose110 with1 T6 Infantry and480 T6 Lancers attacks minxxx nohero250 T6 Infantry. The single ordinary Infantry must die before the first scheduled Viper activation and before3 normal attacks, checked in both frozen traces. Distinguishes initial Infant...<truncated>",
+        "preferred_world_coord": "None",
+        "preset_mode": "None",
+        "report_detected_at": "997368.9054518",
+        "spec": "{'test_id': 'ahmose_source_dies_001i_480l_vs_250i', 'description': 'Prospective deterministic Viper source-lifecycle discriminator. WIP fullAhmose110 with1 T6 Infantry and480 T6 Lancers attacks minxxx nohero250 T6 Infantry. The single ordinary Infantry must die before the first scheduled Viper activation and before3 normal attacks, checked in both frozen traces. Distinguishes initial Infantry presence from requiring surviving/attacking Infantry during battle; does not choose exact cadence. Prese...<truncated>",
+        "spec_path": "'docs/mechanics-audit/probes/ahmose-no-infantry/source-death/spec-v2.json'"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/run_testcase.py",
+      "line": 222,
+      "function": "_capture_war_report",
+      "locals": {
+        "debug": "True",
+        "emulator": "WosEmulator(name='WIP', idx=3, serial='127.0.0.1:16480')",
+        "inbox_open": "True",
+        "read_battle_report": "<function read_battle_report at 0x7fb3b8302fc0>",
+        "read_battle_report_from_open_inbox": "<function read_battle_report_from_open_inbox at 0x7fb3b8302f20>"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py",
+      "line": 777,
+      "function": "read_battle_report_from_open_inbox",
+      "locals": {
+        "debug": "True",
+        "debug_dir": "PosixPath('/home/paul/projects_wsl/wos/simulator/tmp/20260907T093308Z_wos_report_war_1')",
+        "emulator": "WosEmulator(name='WIP', idx=3, serial='127.0.0.1:16480')",
+        "index": "1",
+        "tab": "'war'"
+      }
+    }
+  ],
+  "saved_images": [
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T093333Z_2957116/emulator_screenshot.png"
+  ],
+  "diagnostic_errors": []
+}

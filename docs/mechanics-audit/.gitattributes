@@ -1,0 +1,9 @@
+# Preserve captured and generated artifact bytes for their recorded hashes.
+* -text
+
+# Exported tables retain CRLF and empty final columns; logs and plots retain
+# their generators' formatting.
+*.csv whitespace=-blank-at-eol,cr-at-eol
+*.tsv whitespace=-blank-at-eol,cr-at-eol
+*.log whitespace=-blank-at-eof
+*.svg whitespace=-blank-at-eol

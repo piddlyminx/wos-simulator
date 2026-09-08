@@ -1,0 +1,30 @@
+{
+  "test_id": "ahmose_no_infantry_240l_vs_125i",
+  "description": "Prospective deterministic source-eligibility probe. WIP full Ahmose110 and240 T6 Lancers versus minxxx nohero125 T6 Infantry. No own Infantry; S2 is inapplicable and S3 actually locked. Current fixed-turn S1 protection predicts attacker15 versus defender11 if S1 needs Infantry normal attacks or an Infantry source. Preserve full fresh24 stats, report identity, troop formation, survivor counts and Battle Details. Frozen protocol and predictions in docs/mechanics-audit/probes/ahmose-no-infantry/.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Ahmose": {
+        "skill_1": 1,
+        "skill_2": 1,
+        "skill_3": 0
+      }
+    },
+    "troops": {
+      "lancer_t6": 240
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 125
+    }
+  }
+}

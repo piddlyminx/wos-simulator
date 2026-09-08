@@ -1,0 +1,158 @@
+[
+  {
+    "test_id": "gwen_blastmaster_fanout_800m_vs_600_each",
+    "description": "Prospective deterministic Gwen S3 Blastmaster target-fanout discriminator. minxxx fields its complete freshly confirmed Gwen 3/1/1 kit with 800 T6 Marksmen against WIP no heroes and 600 each T6 Infantry, Lancers and Marksmen. All hero skills remain enabled. Primary hypotheses differ only in Blastmaster target fanout: one 10% skill job per living enemy troop line versus one 10% skill job to the normal attack target. Conditional historical-stat forecasts are defender1390 (239 Infantry,579 Lancers,572 Marksmen) versus defender1441, both22 rounds. Exact captured report stats must replace estimated inputs under the frozen candidate definitions before interpretation. Prediction and source provenance are in tmp/mechanics-audit-2026-09-07/gwen/prediction.json. Preserve full Battle Details and all per-line survivors; this first fixture addresses fanout, not all Gwen timing or stacking semantics.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "marksman_t6": 800
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 443.6,
+          "defense": 444.1,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 600,
+        "lancer_t6": 600,
+        "marksman_t6": 600
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249.0,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 1397
+      }
+    ],
+    "metadata": {
+      "fixture_type": "single_hero_full_kit",
+      "skill_isolation": false,
+      "expected_stochastic": false,
+      "stochastic_reason": [],
+      "stats_snapshot": "Fresh displayed report stats, 2026-09-07 05:05:04; no generation bonus added.",
+      "observed_battle_outcomes": [
+        {
+          "report_timestamp_displayed": "2026-09-07 05:05:04",
+          "world_coord": {
+            "x": 791,
+            "y": 577
+          },
+          "attacker": {
+            "troops": 800,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 280,
+            "lightly_injured": 520
+          },
+          "defender": {
+            "troops": 1800,
+            "survivors": 1397,
+            "losses": 0,
+            "injured": 142,
+            "lightly_injured": 261
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "skill_1": {
+                  "triggered": 1,
+                  "displayed_kills": null
+                },
+                "skill_2": {
+                  "triggered": 3,
+                  "displayed_kills": 3
+                },
+                "skill_3": {
+                  "triggered": 4,
+                  "displayed_kills": 17
+                }
+              }
+            }
+          },
+          "rounds": null,
+          "per_troop_survivors": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 241,
+              "lancer": 581,
+              "marksman": 575
+            }
+          },
+          "transcription": "Visually checked overview, complete stats, skill details and defender troop details. Dash preserved as null. No explicit round total shown. Counterpart inbox capture is the same battle, not an additional observation.",
+          "mail_ids": {
+            "attacker_view": "2734692464121039",
+            "defender_view": "2734692464121040"
+          },
+          "defender_troop_details_source": "docs/mechanics-audit/probes/gwen-blastmaster/defender-troops.json"
+        }
+      ],
+      "evidence": {
+        "protocol": "docs/mechanics-audit/probes/gwen-blastmaster/README.md",
+        "prospective_prediction": "docs/mechanics-audit/probes/gwen-blastmaster/prediction.json",
+        "report": "docs/mechanics-audit/probes/gwen-blastmaster/report.json",
+        "overview_image": "docs/mechanics-audit/probes/gwen-blastmaster/report_top.png",
+        "stats_image": "docs/mechanics-audit/probes/gwen-blastmaster/report_stats.png",
+        "details_image": "docs/mechanics-audit/probes/gwen-blastmaster/bd_top.png",
+        "hero_levels_image": "docs/mechanics-audit/probes/gwen-blastmaster/hero-skills.png",
+        "original_capture_directory": "tmp/20260907T040507Z_wos_report_war_1",
+        "defender_troops_image": "docs/mechanics-audit/probes/gwen-blastmaster/defender-troops.png"
+      },
+      "evidence_status": "unresolved_deterministic_disagreement",
+      "data_quality_notes": [
+        "Captured overview, exact troops, every displayed stat and hero kit visually checked. Displayed skill kills are preserved as report values, not equated to raw simulator kill totals."
+      ]
+    }
+  }
+]

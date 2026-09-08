@@ -1,0 +1,22 @@
+{
+  "createdAt": "2026-09-07T09:16:22.352042+00:00",
+  "exposure": "Prospective. No game battle using this formation has been captured. Eighteen input-only deterministic formations were screened; selected240L/125I maximizes a meaningful opposite-winner separation at small scale. Existing Ahmose residuals and retrospective cadence results were already known.",
+  "hypotheses": {
+    "current": "Current fixed-turn Viper protection applies to Lancers even with zero Infantry from battle start.",
+    "requires_infantry_source": "Viper contributes nothing without Infantry. Represents either an Infantry normal-attack trigger or a source-alive condition, which this battle cannot separate."
+  },
+  "planned_battles": 1,
+  "preserve": [
+    "Full actual WIP110 kit confirmed in current tooltip capture; no disabled live skills.",
+    "T6 troop keys and exact counts.",
+    "All24 fresh report stats, image evidence, identity, actual winner and every survivor.",
+    "All game observations regardless of fit. No fitted stats or coefficient changes."
+  ],
+  "stats_provenance": "Used WIP Lancer and minxxx Infantry blocks are visually verified in all five Greg reports; selected Ahmose Infantry and nohero minxxx Marksman blocks are unused estimates copied from those earlier reports and require fresh verification.",
+  "limits": [
+    "An initially absent line is distinct from the death of a formerly living line.",
+    "Does not identify3-versus4-normal cadence, precise turn phase, full coefficient curve or stacking.",
+    "All256 used-stat corners are a sensitivity screen, not a guaranteed interior envelope.",
+    "If actual inputs change, preserve original forecast and replay with fresh complete input."
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "created_from": "tmp/mechanics-audit-2026-09-07/gwen-small-design.json",
+  "search_simulations": 18144,
+  "exposure": "Earlier two long Gwen game outcomes are known. No small-formation outcomes have been captured or read. Withdrawn30k onset trial was stopped before deployment. Retrospective model choices; prospective inputs.",
+  "chosen": {
+    "attacker": 750,
+    "defender": [
+      760,
+      95,
+      95
+    ],
+    "input": {
+      "attacker": {
+        "name": "[ARK]Piddlyminxxx",
+        "heroes": {
+          "Gwen": {
+            "skill_1": 3,
+            "skill_2": 1,
+            "skill_3": 1
+          }
+        },
+        "troops": {
+          "marksman_t6": 750
+        },
+        "stats": {
+          "inf": {
+            "attack": 308.2,
+            "defense": 300.5,
+            "lethality": 244,
+            "health": 238.4
+          },
+          "lanc": {
+            "attack": 294.9,
+            "defense": 293.7,
+            "lethality": 224.3,
+            "health": 230
+          },
+          "mark": {
+            "attack": 443.6,
+            "defense": 444.1,
+            "lethality": 235.8,
+            "health": 230.3
+          }
+        },
+        "joiner_heroes": {}
+      },
+      "defender": {
+        "name": "[BBQ]XxWIPxX",
+        "heroes": {},
+        "troops": {
+          "infantry_t6": 760,
+          "lancer_t6": 95,
+          "marksman_t6": 95
+        },
+        "stats": {
+          "inf": {
+            "attack": 248.2,
+            "defense": 249,
+            "lethality": 186.3,
+            "health": 191.8
+          },
+          "lanc": {
+            "attack": 208.5,
+            "defense": 207.4,
+            "lethality": 186.8,
+            "health": 181.9
+          },
+          "mark": {
+            "attack": 217.5,
+            "defense": 210.6,
+            "lethality": 181.4,
+            "health": 177
+          }
+        },
+        "joiner_heroes": {}
+      }
+    },
+    "phaseGap": 35,
+    "minPair": 26,
+    "span": 94,
+    "outcomes": {
+      "current": {
+        "score": 77,
+        "rounds": 50,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 77
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        }
+      },
+      "first4_every5": {
+        "score": 18,
+        "rounds": 56,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 18
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        }
+      },
+      "first5_every5": {
+        "score": -17,
+        "rounds": 57,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 17
+          }
+        }
+      },
+      "phase6": {
+        "score": 44,
+        "rounds": 54,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 44
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          }
+        }
+      }
+    }
+  },
+  "source_sha256": "943b9a3770615b4542cc193040c6f5d0e48bc8a1a178525ecb8f90a7a5778145"
+}

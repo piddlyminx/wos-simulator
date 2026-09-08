@@ -1,0 +1,25 @@
+Testcase summary
+Created: 2026-09-07T07:04:15.373Z
+Files: 1  Cases: 1  Executed: 1  Errors: 0  Warnings: 0
+Stochastic failures: raw p < 0.004 (less than 1 in 250; no multiple-testing adjustment)
+
+Failures (0)
+None.
+
+Passes (1)
+# Testcase                  N Mode Test Stat+/- mu G mu S SD G SD S bias% bias Reason CDF p Sup val Sup p p
+0 edith_ironclad_100i_vs... 1 det  det  -       -102 -102 0    0    +0%   +0   -      -     -       -     -
+
+Final totals
+Testcases run: 1
+Failed vs game: 0
+Improved vs game: 0
+Worse vs game: 0
+Average signed error: +0.00%
+{
+  "summaryPath": "/home/paul/projects_wsl/wos/simulator/tmp/mechanics-audit-2026-09-07/edith-production/simulator_parity_2026-09-07T07-04-15.557Z.json",
+  "artifactRoot": "simulator_parity_2026-09-07T07-04-15.557Z",
+  "chartsPath": "/home/paul/projects_wsl/wos/simulator/tmp/mechanics-audit-2026-09-07/edith-production/simulator_parity_2026-09-07T07-04-15.557Z/charts.json",
+  "chartCount": 0,
+  "failingChartCount": 0
+}

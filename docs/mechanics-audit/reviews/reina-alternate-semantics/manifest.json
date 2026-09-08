@@ -1,0 +1,10 @@
+{
+  "screen.mts": "1d4cc9dcc03064ff81f4d161d868ac0e1541e906fcb299c55ba04079b6c29d0c",
+  "compare.mts": "7b7b5ca6506354a5009dc2548090bfab8b9ecc948b48c2ee936d7892759eecb2",
+  "comparison.json": "efd672a2e5de46540562125b5afdb31c39e6e7d0b1ade59a478a051b064960d1",
+  "inputs.json": "0b04c29bbaea0e5a6e9b8ba0bc1188d5996a93d4b786d7ccd70062aa09357808",
+  "predictions.json": "8d31cf9e48eb6ccb608994fee7920399cb6ba9f9f52a0a2e41dbd19d426f160b",
+  "protocol.json": "71a223ff2cd82e13cd7c64e73509903f1529177b706176880b6a73f297f34d79",
+  "parity.json": "bf44fc72f7c87e8bba5701b4c8b96db29830ed7a25c6e0691e7b11ee4be87d7d",
+  "full_scratch_predictions_sha256": "72fba9cdb34eb60e1d2dafbe216b66498f379889a8c8f59d3d30b578e69f989e"
+}

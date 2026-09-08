@@ -1,0 +1,39 @@
+[
+  {
+    "key": "s6-historical-t11-fc10-vs-10000-t6-marksmen",
+    "game": {
+      "attacker": 5895,
+      "defender": 1,
+      "winner": "draw",
+      "rounds": 1500
+    },
+    "source": "simulator/src/tooling/gatotEvidence.ts",
+    "missing": "Complete attacker report stats and historical T11 FC10 catalogue.",
+    "source_sha256": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "status": "accepted_recorded_outcome_not_replayed_in_this_review"
+  },
+  {
+    "key": "s6-historical-t11-fc10-vs-3000-t6-marksmen",
+    "game": {
+      "attacker": 0,
+      "defender": 1,
+      "winner": "defender",
+      "rounds": 1086
+    },
+    "source": "simulator/src/tooling/gatotEvidence.ts",
+    "missing": "Complete attacker report stats and historical T11 FC10 catalogue.",
+    "source_sha256": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "status": "accepted_recorded_outcome_not_replayed_in_this_review"
+  },
+  {
+    "key": "legacy-renee-gwen-620l-vs-920i",
+    "game": {
+      "attacker": 453,
+      "defender": 0
+    },
+    "source": "docs/renee-mechanic-investigation-2026-08.md",
+    "missing": "Complete exact input not established in bounded archive recovery; do not substitute neighboring report/search values.",
+    "source_sha256": "7893530dc46d0b269e3e8deb87acc622a549c67b973f34e3f298b5340c4fa06c",
+    "status": "accepted_recorded_outcome_not_replayed_in_this_review"
+  }
+]

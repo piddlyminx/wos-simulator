@@ -1,0 +1,44 @@
+{
+  "evidence_kind": "captured_in_game_skill_upgrade_previews",
+  "instance": "WIP",
+  "hero": "Reina",
+  "full_expedition_kit": {
+    "skill_1": 1,
+    "skill_2": 1,
+    "skill_3": 1
+  },
+  "skills": [
+    {
+      "skill": 1,
+      "title": "Assassin's Instinct Lv. 1",
+      "text": "Reina targets enemy weak spots, increasing normal attack damage by 10% for all troops.",
+      "upgrade_preview_percent": [
+        10,
+        15,
+        20,
+        25,
+        30
+      ],
+      "image": "assassins-instinct-upgrade-preview.png",
+      "sha256": "17249f0286435e37c866308bbad6fcca39619dbaddbd0666bc1fba731e4cf256"
+    },
+    {
+      "skill": 2,
+      "title": "Swift Jive Lv. 1",
+      "text": "Reina's adept leadership grants all troops a 4% chance of dodging normal attacks.",
+      "upgrade_preview_percent": [
+        4,
+        8,
+        12,
+        16,
+        20
+      ],
+      "image": "swift-jive-upgrade-preview.png",
+      "sha256": "587124bd72748041916def98ec7a8eb2f5797dc0a4e03c2f8f9f083e249d2442"
+    }
+  ],
+  "notes": [
+    "Captured between second and third battles while inspecting S3. No upgrades or account modifications performed.",
+    "Tooltip supports stated scope/kind/probability; timing and shared-versus-independent dodge rolls still need battle evidence."
+  ]
+}

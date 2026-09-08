@@ -1,0 +1,105 @@
+{
+  "hero:Gatot:GoldenGuard": {
+    "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "status": "partially_supported",
+    "context": "All63 active Gatot entries/63 stored outcome records replayed (500 per stochastic candidate, one per deterministic). Single-Gatot s34 gives exact D236@179 and s35 D314@167; removing GoldenGuard changes them to A468 and D131. This supports positive protection contribution in those full-kit contexts. Broadening recipients to all own classes leaves61/63 fixture samples/endpoints unchanged; the other differences are only4/5 survivors at larger scales, so exclusive Infantry scope is not established. Exact defense bucket identity, level curve, other damage-kind interactions and joiners remain unreviewed. Existing Gatot s3 gameA4573@1151/current4996@1037, s15.3 A1281@907/current1327@898 and stochastic S8tails remain explicit and unattributed; no counts, levels or established fractional/source-ceiling arithmetic were changed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/gatot-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/GoldenGuard-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/GoldenGuard-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": []
+  },
+  "hero:Gatot:KingsBestowal": {
+    "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "status": "partially_supported",
+    "context": "All63 active Gatot entries/63 stored outcome records replayed, retaining A-D draw margins, both sides, winner and rounds. Small s42 Wayne battle gameA200/D168@1500 is reproduced exactly424/500 times; remaining76 areA199/D172@1500. Restricting only Gatot shield eligibility to normal damage eliminates the attacker in all500 runs (meanD407.216, rounds918-1148); current traces shield9485 Wayne skill jobs across16 runs. Supports genuine skill-damage protection. Single-Gatot s34/s35 exact D236@179/D314@167 reject omission, while s41 exactA939@196 and accepted per-source kills corroborate the established conserved sequential pool across Infantry/Lancer/Marksman attacks. Reciprocal s43/s44 draws exactly173/200 and975/498 at1500 retain source-count-cap context. No fixed per-formation pool, fractional-state or inner source-ceiling alternatives were reopened. S3gameA4573@1151/current4996@1037, S15.3 and S8rare-tail contradictions remain. Exact all-level formula, delay, stacking and joiner branches are not closed by this review.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/gatot-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/KingsBestowal-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/KingsBestowal-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "damage_kind",
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Gatot:RoyalLegion": {
+    "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+    "status": "partially_supported",
+    "context": "All63 active Gatot entries/63 stored outcome records replayed. Single-Gatot s34 with enemy2100L/2100M gives exactD236@179; removing RoyalLegion or restricting its recipients to enemy Infantry changes winner to A112. s35 with enemy3000L/1000M gives exactD314@167 versusD168 under either alternative. Bilateral s38 exactD224@343 changes to A812 when limited to enemy Infantry. These support enemy scope beyond Infantry and positive contribution in tested level contexts; they do not uniquely establish attack-down bucket identity, all values/levels or skill-kind applicability. S3current4996@1037 versusgame4573@1151 remains far off under omission4974 or Infantry-only4982. Larger-scale residuals and stochastic S8tails remain explicit; no arbitrary coefficient fitting, fixture correction or arithmetic change.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/gatot-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/RoyalLegion-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/RoyalLegion-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Renee:NightmareTrace": {
+    "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "status": "partially_supported",
+    "context": "Reviewed all9 active Renee entries plus15 accepted archived entries and one standalone recorded Gwen input:25 distinct input entries/39 outcome records, including3 existing nohero controls; independence not inferred and no cross-file pooling. Active WuMing reduction discriminator gameA359/51activations is exact current; only switching S1 to skill gives347/52, immediate delivery367/51. Opposite-side archived WuMing skill-boost overlap gameA1639/current1637 gives1299 as skill and1531 immediate, strongly supporting normal classification and delayed delivery in those contexts. Archived zero-Lancer full kit2688 exact versus broad S1carrier2667, plus100L game/current2352 versus broad2409, supports Lancer source gating. Current all-kit component omissions materially disagree elsewhere. Ambusher10records admit both current and immediate distributions and preserve trial2 conflicting totals/class counts; they do not decide delivery. Archived strong Ahmose game2810/current2574 and high-level Hendrik/FC game46014/current48221.448 SD638.778 p.001 remain unresolved. Exact preparation snapshot, blocked-source cadence, retargeting, coefficient curve and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/renee-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/NightmareTrace-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/NightmareTrace-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "damage_kind",
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Renee:Dreamcatcher": {
+    "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "status": "partially_supported",
+    "context": "Reviewed8 active entries plus15 archived entries and standalone recorded Gwen input:24 distinct entries/29 outcome records (including3 existing nohero controls); records are not assumed independent across files. Full-kit Ahmose attacker gameA3777/current3778 changes to3857 when only S2 is broadened beyond marking Lancers; archived100L game/current2352 changes to2297,25L game2515/current2516 changes to2457. This supports the tested Lancer source scope and positive component contribution; pure-Lancer Charge game/current50 becomesD402 if S2 is omitted. Broader damage-kind eligibility yields Gwen2000L current/game1221 versus1233, but modest scale-relative differences and improved Wayne/archived Hendrik stochastic compatibility leave normal-only eligibility unreviewed. Renee solo omission differs by only1 and is not a strong individual-component discriminator. Strong archived Ahmose236-survivor residual and high-level Hendrik/FC tail remain explicit; no inference that S2 uniquely causes either. Exact buckets, all-level coefficients, mark timing/target locking/exhaustion and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/renee-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamcatcher-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamcatcher-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Renee:Dreamslice": {
+    "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+    "status": "partially_supported",
+    "context": "Reviewed8 active entries plus15 archived entries and standalone recorded Gwen input:24 distinct entries/29 outcome records (including3 existing nohero controls), no cross-file pooling or assumed report independence. Full-kit Ahmose attacker gameA3777/current3778 falls to3732 with S3 restricted to marking Lancers; archived100L game/current2352 changes to2380 and25L game2515/current2516 changes to2545. These support damage contribution beyond marking Lancers in those contexts. Charge game/current50 changes toD191 without S3. Solo game/currentD554 changes only1 on omission, so that fixture does not independently identify S3. Broader normal+skill eligibility yields recorded Gwen1221/current1221 versus1227 but improves the Wayne stochastic point; modest larger-scale gaps do not certify normal-only eligibility. Strong archived Ahmose game2810/current2574 and high-level Hendrik/FC tail remain unresolved. Exact all-class/target rules, damage-kind restriction, bucket, values/scaling, cadence/exhaustion and joiners remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/renee-notes.md",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamslice-initial.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/Dreamslice-initial-samples.json",
+      "docs/mechanics-audit/reviews/gatot-renee-2026-09-07/provenance-check.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  }
+}

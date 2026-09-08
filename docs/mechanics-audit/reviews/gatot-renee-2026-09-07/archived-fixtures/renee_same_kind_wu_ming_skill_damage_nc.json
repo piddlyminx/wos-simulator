@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "renee_same_kind_wu_ming_skill_damage_nc",
+    "description": "Renee 4/4/4 + Wu Ming 3/3/2 all-same mechanic discriminator. WIP attacks 8000 T6 Marksmen with no heroes; minxxx defends 800 T6 Lancers with Renee and Wu Ming. Wu Ming's verified skill-damage-up makes EEE predict +1039 survivors versus +1696 for ordinary non-U modifiers and +2285 for UUU. Deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 8000
+      },
+      "stats": {
+        "inf": {
+          "attack": 234.6,
+          "defense": 243.9,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 2
+        },
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 800
+      },
+      "stats": {
+        "inf": {
+          "attack": 455.9,
+          "defense": 443.6,
+          "lethality": 211.9,
+          "health": 242.9
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 1639,
+        "defender": 0
+      }
+    ]
+  }
+]

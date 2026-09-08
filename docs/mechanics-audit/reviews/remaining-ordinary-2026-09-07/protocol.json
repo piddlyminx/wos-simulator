@@ -1,0 +1,757 @@
+{
+  "writtenAt": "2026-09-07T08:43:19.323Z",
+  "phase": "Retrospective accepted-corpus structural review. Current definitions, earlier reviews and known disagreements were read before choosing these bounded alternatives. No live action, input adjustment or coefficient fit.",
+  "selections": [
+    {
+      "key": "hero:Lynn:SongOfLion",
+      "hero": "Lynn",
+      "id": "SongOfLion",
+      "slot": 1,
+      "coverage": {
+        "configured_fixture_count": 6,
+        "hydrated_fixture_count": 6,
+        "observation_record_count": 20,
+        "hydrated_levels": [
+          3
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/logan_lynn_combo.json#1",
+          "testcases/emulator_verified/logan_lynn_combo.json#2",
+          "testcases/emulator_verified/lynn_solo.json#0",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Granting a 40% chance of increasing damage dealt by X% for all troops",
+        "trigger": {
+          "type": "turn",
+          "probability": [
+            40,
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "effects": {
+          "SongOfLion/1": {
+            "type": "active.hero.lethality.up",
+            "value": [
+              10,
+              20,
+              30,
+              40,
+              50
+            ],
+            "duration": {
+              "turns": {
+                "count": 1
+              }
+            },
+            "same_effect_stacking": "max"
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Lynn:MelancholicBallad",
+      "hero": "Lynn",
+      "id": "MelancholicBallad",
+      "slot": 2,
+      "coverage": {
+        "configured_fixture_count": 6,
+        "hydrated_fixture_count": 6,
+        "observation_record_count": 20,
+        "hydrated_levels": [
+          3
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/logan_lynn_combo.json#1",
+          "testcases/emulator_verified/logan_lynn_combo.json#2",
+          "testcases/emulator_verified/lynn_solo.json#0",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Reducing damage dealt by X% for all enemy troops",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "MelancholicBallad/1": {
+            "type": "active.hero.damage.down",
+            "value": [
+              4,
+              8,
+              12,
+              16,
+              20
+            ],
+            "units": {
+              "applies_to": "enemy.any"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Lynn:OonaiCadenza",
+      "hero": "Lynn",
+      "id": "OonaiCadenza",
+      "slot": 3,
+      "coverage": {
+        "configured_fixture_count": 6,
+        "hydrated_fixture_count": 6,
+        "observation_record_count": 20,
+        "hydrated_levels": [
+          3
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/logan_lynn_combo.json#0",
+          "testcases/emulator_verified/logan_lynn_combo.json#1",
+          "testcases/emulator_verified/logan_lynn_combo.json#2",
+          "testcases/emulator_verified/lynn_solo.json#0",
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Increases her marksmen attack by X% for every 3 attacks. Stackable, and lasts until the end of battle",
+        "trigger": {
+          "type": "attack",
+          "every": 3,
+          "source": "marksman"
+        },
+        "effects": {
+          "OonaiCadenza/1": {
+            "type": "active.hero.attack.up",
+            "value": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "units": {
+              "applies_to": [
+                "marksman"
+              ]
+            },
+            "same_effect_stacking": "add"
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Norah:CombinedArms",
+      "hero": "Norah",
+      "id": "CombinedArms",
+      "slot": 1,
+      "coverage": {
+        "configured_fixture_count": 13,
+        "hydrated_fixture_count": 13,
+        "observation_record_count": 34,
+        "hydrated_levels": [
+          1,
+          2
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/alonso_norah_combo.json#0",
+          "testcases/emulator_verified/alonso_norah_combo.json#1",
+          "testcases/emulator_verified/alonso_norah_combo.json#2",
+          "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+          "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+          "testcases/emulator_verified/norah_greg_combo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_D.json#0",
+          "testcases/emulator_verified/norah_solo.json#0",
+          "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+          "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Decreasing damage taken by X% and boosting damage dealt by X% for infantry and marksmen",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "CombinedArms/1": {
+            "type": "active.hero.damageTaken.down",
+            "value": [
+              3,
+              6,
+              9,
+              12,
+              15
+            ],
+            "units": {
+              "applies_to": [
+                "infantry",
+                "marksman"
+              ]
+            }
+          },
+          "CombinedArms/2": {
+            "type": "active.hero.damage.up",
+            "value": [
+              3,
+              6,
+              9,
+              12,
+              15
+            ],
+            "units": {
+              "applies_to": [
+                "infantry",
+                "marksman"
+              ],
+              "applies_vs": "any"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Norah:SneakStrike",
+      "hero": "Norah",
+      "id": "SneakStrike",
+      "slot": 2,
+      "coverage": {
+        "configured_fixture_count": 13,
+        "hydrated_fixture_count": 13,
+        "observation_record_count": 34,
+        "hydrated_levels": [
+          1,
+          2
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/alonso_norah_combo.json#0",
+          "testcases/emulator_verified/alonso_norah_combo.json#1",
+          "testcases/emulator_verified/alonso_norah_combo.json#2",
+          "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+          "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+          "testcases/emulator_verified/norah_greg_combo.json#0",
+          "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_A.json#0",
+          "testcases/emulator_verified/norah_s2_splash_D.json#0",
+          "testcases/emulator_verified/norah_solo.json#0",
+          "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+          "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Granting her lancers a 20% chance of dealing X% extra damage to all enemies on attack",
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            20,
+            20,
+            20,
+            20,
+            20
+          ],
+          "source": "lancer"
+        },
+        "effects": {
+          "SneakStrike/1": {
+            "type": "extra_skill_attack",
+            "value": [
+              20,
+              40,
+              60,
+              80,
+              100
+            ],
+            "units": {
+              "applies_to": [
+                "lancer"
+              ],
+              "applies_vs": "any"
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              }
+            },
+            "trigger_damage_jobs": [
+              {
+                "source": "use.source",
+                "target": "enemy.living"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Norah:Momentum",
+      "hero": "Norah",
+      "id": "Momentum",
+      "slot": 3,
+      "coverage": {
+        "configured_fixture_count": 3,
+        "hydrated_fixture_count": 3,
+        "observation_record_count": 6,
+        "hydrated_levels": [
+          1,
+          2
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+          "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+          "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Increasing all troops damage dealt by X% and reducing their damage taken by X%, every five attacks made by lancers for 2 turns",
+        "trigger": {
+          "type": "attack",
+          "every": 5,
+          "source": "lancer"
+        },
+        "effects": {
+          "Momentum/1": {
+            "type": "active.hero.damage.up",
+            "value": [
+              5,
+              10,
+              15,
+              20,
+              25
+            ],
+            "units": {
+              "applies_to": "all",
+              "applies_vs": "trigger.target"
+            },
+            "duration": {
+              "turns": {
+                "count": 2,
+                "delay": 1
+              }
+            }
+          },
+          "Momentum/2": {
+            "type": "active.hero.damageTaken.down",
+            "value": [
+              5,
+              10,
+              15,
+              20,
+              25
+            ],
+            "duration": {
+              "turns": {
+                "count": 2,
+                "delay": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Molly:YouthfulRage",
+      "hero": "Molly",
+      "id": "YouthfulRage",
+      "slot": 3,
+      "coverage": {
+        "configured_fixture_count": 4,
+        "hydrated_fixture_count": 4,
+        "observation_record_count": 12,
+        "hydrated_levels": [
+          1,
+          5
+        ],
+        "levels_missing_active_fixture": [
+          2,
+          3,
+          4
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/molly_lynn_combo.json#0",
+          "testcases/emulator_verified/molly_solo.json#0",
+          "testcases/heroes_unittests/Molly_tc.json#3",
+          "testcases/heroes_unittests/Molly_tc.json#4"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Increasing damage dealt by X% for all troops",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "YouthfulRage/1": {
+            "type": "active.hero.lethality.up",
+            "value": [
+              5,
+              10,
+              15,
+              20,
+              25
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Natalia:WildlingRoar",
+      "hero": "Natalia",
+      "id": "WildlingRoar",
+      "slot": 1,
+      "coverage": {
+        "configured_fixture_count": 2,
+        "hydrated_fixture_count": 2,
+        "observation_record_count": 2,
+        "hydrated_levels": [
+          2
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/natalia_solo.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "granting a 40% chance of reducing all troops' Damage taken by X%",
+        "trigger": {
+          "type": "turn",
+          "probability": [
+            40,
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "effects": {
+          "WildlingRoar/1": {
+            "type": "active.hero.damageTaken.down",
+            "value": [
+              10,
+              20,
+              30,
+              40,
+              50
+            ],
+            "units": {
+              "applies_to": "all"
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Natalia:QueenOfTheWild",
+      "hero": "Natalia",
+      "id": "QueenOfTheWild",
+      "slot": 2,
+      "coverage": {
+        "configured_fixture_count": 2,
+        "hydrated_fixture_count": 2,
+        "observation_record_count": 2,
+        "hydrated_levels": [
+          2
+        ],
+        "levels_missing_active_fixture": [
+          1,
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+          "testcases/emulator_verified/natalia_solo.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Increasing Attack by X% for all troops",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "QueenOfTheWild/1": {
+            "type": "active.hero.attack.up",
+            "value": [
+              5,
+              10,
+              15,
+              20,
+              25
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "sourceHashes": {
+    "simulator/src/battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
+    "simulator/src/config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
+    "simulator/src/config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
+    "simulator/src/config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
+    "simulator/src/config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "simulator/src/effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
+    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "simulator/src/extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
+    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "simulator/src/recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
+    "simulator/src/runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
+    "simulator/src/runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
+    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "simulator/src/tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
+    "simulator/src/tooling/exportGatotTestcases.ts": "1f88bffca8bb34a63e71df804d7cf75ce3b6a8b75cc2c912ee8fbe0323f68324",
+    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "simulator/src/tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
+    "simulator/src/tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
+    "simulator/src/tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
+    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "simulator/src/types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
+    "simulator/src/webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
+    "simulator/src/workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4",
+    "simulator/config/hero_definitions/Lynn.json": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "simulator/config/hero_definitions/Norah.json": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "simulator/config/hero_definitions/Molly.json": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "simulator/config/hero_definitions/Natalia.json": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab"
+  },
+  "artifacts": {
+    "config.json": "fe09ca93cd70233e682b8d60914af150068e5a7891e64423d41f8a4894284eaa",
+    "cases.json": "252f8fa32cfe998e38d6bbbb3b393830582d6c0ecfdc100a0dcab126b6cede72",
+    "freeze.mts": "fa476f342372207d180d48e060fe415643744ba0cc29ee352260ba6cfa48a81f",
+    "worker.mts": "1499b2ccdb07c2b009713507cb11b575309f781243a0934363aaf2a2593f8903"
+  },
+  "variants": {
+    "SongOfLion": [
+      "current",
+      "omit",
+      "marksman_only",
+      "hero_damage_bucket"
+    ],
+    "MelancholicBallad": [
+      "current",
+      "omit",
+      "enemy_infantry_only",
+      "normal_only"
+    ],
+    "OonaiCadenza": [
+      "current",
+      "omit",
+      "max_stack",
+      "all_own"
+    ],
+    "CombinedArms": [
+      "current",
+      "omit",
+      "omit_offense",
+      "omit_protection",
+      "infantry_only",
+      "all_own"
+    ],
+    "SneakStrike": [
+      "current",
+      "omit",
+      "primary_target_only",
+      "normal_kind",
+      "all_sources"
+    ],
+    "Momentum": [
+      "current",
+      "omit",
+      "omit_offense",
+      "omit_protection",
+      "immediate",
+      "one_turn",
+      "all_enemy"
+    ],
+    "YouthfulRage": [
+      "current",
+      "omit",
+      "marksman_only",
+      "hero_damage_bucket"
+    ],
+    "WildlingRoar": [
+      "current",
+      "omit",
+      "infantry_only",
+      "normal_only"
+    ],
+    "QueenOfTheWild": [
+      "current",
+      "omit",
+      "infantry_only",
+      "hero_damage_bucket"
+    ]
+  },
+  "definitions": {
+    "current": "Complete current runtime and full real kits, with already adopted arithmetic, Reina and Hendrik changes.",
+    "omit": "Remove only selected skill effects, retain levels and companion skills.",
+    "marksman_only": "Restrict selected offensive effect recipients to own Marksmen.",
+    "infantry_only": "Restrict selected own protection/offense recipients to Infantry.",
+    "enemy_infantry_only": "Restrict MelancholicBallad to enemy Infantry damage sources.",
+    "normal_only": "Restrict selected defensive effect to incoming normal damage.",
+    "hero_damage_bucket": "Move selected offensive effect to active.hero.damage.up, retain scope/value/trigger.",
+    "max_stack": "Replace cumulative OonaiCadenza stacking with maximum value only.",
+    "all_own": "Expand OonaiCadenza or CombinedArms recipients to all own troop classes, preserve trigger source.",
+    "omit_offense": "Remove only selected offensive component.",
+    "omit_protection": "Remove only selected damage-taken protection component.",
+    "primary_target_only": "SneakStrike hits only its source normal attack target instead of fanout.",
+    "normal_kind": "SneakStrike generated jobs use normal kind, keep exact coefficient/schedule/targets.",
+    "all_sources": "SneakStrike may trigger from any own troop source instead of Lancers only.",
+    "immediate": "Momentum components start on trigger turn rather than next turn.",
+    "one_turn": "Momentum components last1 turn instead of2, preserve next-turn delay.",
+    "all_enemy": "Momentum offense applies against all enemy lines instead of locked trigger target."
+  },
+  "sampling": {
+    "repeat": 1000,
+    "seed": "remaining-ordinary-review-2026-09-07:<fixture-key>:<run-index>",
+    "traceRuns": 16,
+    "score": "Attacker minus defender survivors, preserving both sides in draws.",
+    "deterministic": "One exact simulation with per-side survivors, rounds and every game record. No deterministic p-value or universal two-troop cutoff."
+  },
+  "limits": [
+    "Full-kit agreement does not identify all nested components, timing, grouping, kind, levels or probabilities.",
+    "Shared seed strings need not yield paired skill activations after RNG consumption changes.",
+    "Active-corpus coverage only; archived evidence remains accepted and is not claimed exhaustively searched by this batch.",
+    "The mixed six-hero discrepancy remains accepted evidence, not an exclusion criterion.",
+    "Current Norah Momentum delay is included; historical code-test timing repairs are not themselves new game evidence. Each omission/scope contrast remains conditional on the other complete skills."
+  ]
+}

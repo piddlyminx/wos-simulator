@@ -1,0 +1,2048 @@
+{
+  "schema_version": 1,
+  "capture_kind": "hero_expedition_tooltips",
+  "captured_at_utc": "2026-09-07T06:53:17.923828+00:00",
+  "instance_name": "minxxx",
+  "hero": "Edith",
+  "current_skill_levels": {
+    "skill_1": 3,
+    "skill_2": 3,
+    "skill_3": 3
+  },
+  "overview": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/hero-skills.png",
+    "sha256": "517468275d667c8821aae2cf2bcd145d8e1c03b5c5a53e18eeeab066eb0aad0d"
+  },
+  "skills": [
+    {
+      "slot": "skill_1",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        275
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/skill_1.png",
+        "sha256": "e4ae3ed3b8e420b87e3f48a8c68792e4a1a9c97133868bbaae75e83a78383617"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/skill_1-panel.png",
+        "sha256": "ae493c2380f2078be76dcd276b9de9276360a3a9c3cb7c2e92b1d2db9cf27c26"
+      },
+      "ocr": {
+        "title": "Strategic Balance Lv.3",
+        "displayed_level": 3,
+        "description_text": "Mr Tin's colossal presence automatically shields friendly ranged\nunits, reducing Damage Taken by 12% for Marksmen, and\nsuppresses the enemy, increasing Damage Dealt by 12% for\nLancers.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Damage Taken Down: 4%/8%/12%/16%/20%\nDamage Up: 4%/8%/12%/16%/20%",
+        "raw_lines": [
+          {
+            "text": "Balance",
+            "confidence": 0.99996,
+            "box": [
+              [
+                175.0,
+                740.0
+              ],
+              [
+                282.0,
+                740.0
+              ],
+              [
+                282.0,
+                766.0
+              ],
+              [
+                175.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.3",
+            "confidence": 0.99994,
+            "box": [
+              [
+                285.0,
+                739.0
+              ],
+              [
+                355.0,
+                739.0
+              ],
+              [
+                355.0,
+                768.0
+              ],
+              [
+                285.0,
+                768.0
+              ]
+            ]
+          },
+          {
+            "text": "Strategic",
+            "confidence": 0.99997,
+            "box": [
+              [
+                50.0,
+                740.0
+              ],
+              [
+                170.0,
+                740.0
+              ],
+              [
+                170.0,
+                774.0
+              ],
+              [
+                50.0,
+                774.0
+              ]
+            ]
+          },
+          {
+            "text": "Tin's",
+            "confidence": 0.9995,
+            "box": [
+              [
+                86.0,
+                803.0
+              ],
+              [
+                130.0,
+                803.0
+              ],
+              [
+                130.0,
+                822.0
+              ],
+              [
+                86.0,
+                822.0
+              ]
+            ]
+          },
+          {
+            "text": "Mr",
+            "confidence": 0.99964,
+            "box": [
+              [
+                50.0,
+                805.0
+              ],
+              [
+                80.0,
+                805.0
+              ],
+              [
+                80.0,
+                822.0
+              ],
+              [
+                50.0,
+                822.0
+              ]
+            ]
+          },
+          {
+            "text": "colossal",
+            "confidence": 0.99997,
+            "box": [
+              [
+                134.0,
+                804.0
+              ],
+              [
+                207.0,
+                805.0
+              ],
+              [
+                206.0,
+                824.0
+              ],
+              [
+                133.0,
+                822.0
+              ]
+            ]
+          },
+          {
+            "text": "shields",
+            "confidence": 0.99996,
+            "box": [
+              [
+                428.0,
+                805.0
+              ],
+              [
+                492.0,
+                804.0
+              ],
+              [
+                492.0,
+                823.0
+              ],
+              [
+                428.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "automatically",
+            "confidence": 0.99998,
+            "box": [
+              [
+                296.0,
+                803.0
+              ],
+              [
+                425.0,
+                804.0
+              ],
+              [
+                425.0,
+                827.0
+              ],
+              [
+                295.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "friendly",
+            "confidence": 0.99995,
+            "box": [
+              [
+                492.0,
+                803.0
+              ],
+              [
+                567.0,
+                804.0
+              ],
+              [
+                566.0,
+                828.0
+              ],
+              [
+                492.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "ranged",
+            "confidence": 0.99999,
+            "box": [
+              [
+                568.0,
+                805.0
+              ],
+              [
+                635.0,
+                804.0
+              ],
+              [
+                635.0,
+                827.0
+              ],
+              [
+                569.0,
+                828.0
+              ]
+            ]
+          },
+          {
+            "text": "presence",
+            "confidence": 0.99998,
+            "box": [
+              [
+                211.0,
+                808.0
+              ],
+              [
+                294.0,
+                808.0
+              ],
+              [
+                294.0,
+                826.0
+              ],
+              [
+                211.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99987,
+            "box": [
+              [
+                399.0,
+                827.0
+              ],
+              [
+                431.0,
+                829.0
+              ],
+              [
+                430.0,
+                848.0
+              ],
+              [
+                398.0,
+                846.0
+              ]
+            ]
+          },
+          {
+            "text": "12%",
+            "confidence": 0.9997,
+            "box": [
+              [
+                356.0,
+                828.0
+              ],
+              [
+                397.0,
+                828.0
+              ],
+              [
+                397.0,
+                848.0
+              ],
+              [
+                356.0,
+                848.0
+              ]
+            ]
+          },
+          {
+            "text": "Taken",
+            "confidence": 0.99999,
+            "box": [
+              [
+                270.0,
+                829.0
+              ],
+              [
+                330.0,
+                829.0
+              ],
+              [
+                330.0,
+                849.0
+              ],
+              [
+                270.0,
+                849.0
+              ]
+            ]
+          },
+          {
+            "text": "units,",
+            "confidence": 0.99994,
+            "box": [
+              [
+                50.0,
+                828.0
+              ],
+              [
+                100.0,
+                829.0
+              ],
+              [
+                100.0,
+                852.0
+              ],
+              [
+                49.0,
+                850.0
+              ]
+            ]
+          },
+          {
+            "text": "Marksmen,",
+            "confidence": 0.99996,
+            "box": [
+              [
+                432.0,
+                828.0
+              ],
+              [
+                541.0,
+                830.0
+              ],
+              [
+                540.0,
+                851.0
+              ],
+              [
+                431.0,
+                850.0
+              ]
+            ]
+          },
+          {
+            "text": "and",
+            "confidence": 0.99999,
+            "box": [
+              [
+                539.0,
+                830.0
+              ],
+              [
+                576.0,
+                830.0
+              ],
+              [
+                576.0,
+                850.0
+              ],
+              [
+                539.0,
+                850.0
+              ]
+            ]
+          },
+          {
+            "text": "reducing",
+            "confidence": 0.94065,
+            "box": [
+              [
+                105.0,
+                828.0
+              ],
+              [
+                186.0,
+                829.0
+              ],
+              [
+                185.0,
+                853.0
+              ],
+              [
+                105.0,
+                851.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99998,
+            "box": [
+              [
+                330.0,
+                830.0
+              ],
+              [
+                354.0,
+                830.0
+              ],
+              [
+                354.0,
+                851.0
+              ],
+              [
+                330.0,
+                851.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                190.0,
+                829.0
+              ],
+              [
+                268.0,
+                830.0
+              ],
+              [
+                268.0,
+                853.0
+              ],
+              [
+                189.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99996,
+            "box": [
+              [
+                152.0,
+                853.0
+              ],
+              [
+                184.0,
+                853.0
+              ],
+              [
+                184.0,
+                872.0
+              ],
+              [
+                152.0,
+                872.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99989,
+            "box": [
+              [
+                558.0,
+                852.0
+              ],
+              [
+                591.0,
+                852.0
+              ],
+              [
+                591.0,
+                873.0
+              ],
+              [
+                558.0,
+                873.0
+              ]
+            ]
+          },
+          {
+            "text": "Dealt",
+            "confidence": 0.99985,
+            "box": [
+              [
+                437.0,
+                854.0
+              ],
+              [
+                488.0,
+                854.0
+              ],
+              [
+                488.0,
+                872.0
+              ],
+              [
+                437.0,
+                872.0
+              ]
+            ]
+          },
+          {
+            "text": "12%",
+            "confidence": 0.99976,
+            "box": [
+              [
+                515.0,
+                854.0
+              ],
+              [
+                558.0,
+                852.0
+              ],
+              [
+                559.0,
+                872.0
+              ],
+              [
+                516.0,
+                874.0
+              ]
+            ]
+          },
+          {
+            "text": "increasing",
+            "confidence": 0.99988,
+            "box": [
+              [
+                257.0,
+                854.0
+              ],
+              [
+                352.0,
+                854.0
+              ],
+              [
+                352.0,
+                876.0
+              ],
+              [
+                257.0,
+                876.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                356.0,
+                853.0
+              ],
+              [
+                435.0,
+                855.0
+              ],
+              [
+                434.0,
+                878.0
+              ],
+              [
+                355.0,
+                876.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99996,
+            "box": [
+              [
+                488.0,
+                853.0
+              ],
+              [
+                516.0,
+                853.0
+              ],
+              [
+                516.0,
+                878.0
+              ],
+              [
+                488.0,
+                878.0
+              ]
+            ]
+          },
+          {
+            "text": "enemy,",
+            "confidence": 0.99988,
+            "box": [
+              [
+                187.0,
+                855.0
+              ],
+              [
+                252.0,
+                856.0
+              ],
+              [
+                251.0,
+                877.0
+              ],
+              [
+                187.0,
+                875.0
+              ]
+            ]
+          },
+          {
+            "text": "suppresses",
+            "confidence": 0.99991,
+            "box": [
+              [
+                49.0,
+                858.0
+              ],
+              [
+                150.0,
+                856.0
+              ],
+              [
+                151.0,
+                876.0
+              ],
+              [
+                50.0,
+                878.0
+              ]
+            ]
+          },
+          {
+            "text": "Lancers.",
+            "confidence": 0.99995,
+            "box": [
+              [
+                51.0,
+                880.0
+              ],
+              [
+                129.0,
+                880.0
+              ],
+              [
+                129.0,
+                896.0
+              ],
+              [
+                51.0,
+                896.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99993,
+            "box": [
+              [
+                167.0,
+                919.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                944.0
+              ],
+              [
+                167.0,
+                944.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Down:",
+            "confidence": 0.99988,
+            "box": [
+              [
+                207.0,
+                960.0
+              ],
+              [
+                276.0,
+                961.0
+              ],
+              [
+                276.0,
+                980.0
+              ],
+              [
+                207.0,
+                978.0
+              ]
+            ]
+          },
+          {
+            "text": "Taken",
+            "confidence": 0.99999,
+            "box": [
+              [
+                138.0,
+                961.0
+              ],
+              [
+                204.0,
+                961.0
+              ],
+              [
+                204.0,
+                979.0
+              ],
+              [
+                138.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "4%/8%/12%/16%/20%",
+            "confidence": 0.99766,
+            "box": [
+              [
+                280.0,
+                960.0
+              ],
+              [
+                521.0,
+                960.0
+              ],
+              [
+                521.0,
+                981.0
+              ],
+              [
+                280.0,
+                981.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99996,
+            "box": [
+              [
+                51.0,
+                958.0
+              ],
+              [
+                135.0,
+                961.0
+              ],
+              [
+                135.0,
+                986.0
+              ],
+              [
+                50.0,
+                984.0
+              ]
+            ]
+          },
+          {
+            "text": "4%/8%/12%/16%/20%",
+            "confidence": 0.99971,
+            "box": [
+              [
+                179.0,
+                989.0
+              ],
+              [
+                418.0,
+                988.0
+              ],
+              [
+                418.0,
+                1009.0
+              ],
+              [
+                179.0,
+                1010.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                51.0,
+                986.0
+              ],
+              [
+                135.0,
+                989.0
+              ],
+              [
+                134.0,
+                1014.0
+              ],
+              [
+                50.0,
+                1011.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99996,
+            "box": [
+              [
+                137.0,
+                987.0
+              ],
+              [
+                174.0,
+                987.0
+              ],
+              [
+                174.0,
+                1014.0
+              ],
+              [
+                137.0,
+                1014.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Strategic Balance Lv.3",
+          "Mr Tin's colossal presence automatically shields friendly ranged",
+          "units, reducing Damage Taken by 12% for Marksmen, and",
+          "suppresses the enemy, increasing Damage Dealt by 12% for",
+          "Lancers.",
+          "Upgrade Preview",
+          "Damage Taken Down: 4%/8%/12%/16%/20%",
+          "Damage Up: 4%/8%/12%/16%/20%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_2",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        640,
+        435
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/skill_2.png",
+        "sha256": "74f56a12d8d93c29e5a83b4e36bab60c629c7c61598dd10f5e13e48dec3c48dc"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/skill_2-panel.png",
+        "sha256": "a92be734ffd9326181391c550dd147c4294f27ba60bab55d20d13edcd4a1fe55"
+      },
+      "ocr": {
+        "title": null,
+        "displayed_level": null,
+        "description_text": "Ironclad Lv.: 3\nMr. Tin's metallic body functions as a fortified wall on the\nfield, reducing damage taken by 12% for Infantry.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Damage Taken Down: 4%/8%/12%/16%/20%",
+        "raw_lines": [
+          {
+            "text": "Ironclad",
+            "confidence": 0.99758,
+            "box": [
+              [
+                51.0,
+                740.0
+              ],
+              [
+                160.0,
+                740.0
+              ],
+              [
+                160.0,
+                766.0
+              ],
+              [
+                51.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.:",
+            "confidence": 0.92557,
+            "box": [
+              [
+                165.0,
+                741.0
+              ],
+              [
+                218.0,
+                741.0
+              ],
+              [
+                218.0,
+                766.0
+              ],
+              [
+                165.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "3",
+            "confidence": 0.99985,
+            "box": [
+              [
+                210.0,
+                744.0
+              ],
+              [
+                228.0,
+                742.0
+              ],
+              [
+                230.0,
+                763.0
+              ],
+              [
+                212.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "fortified",
+            "confidence": 0.99934,
+            "box": [
+              [
+                429.0,
+                804.0
+              ],
+              [
+                514.0,
+                804.0
+              ],
+              [
+                514.0,
+                824.0
+              ],
+              [
+                429.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "Tin's",
+            "confidence": 0.99962,
+            "box": [
+              [
+                91.0,
+                804.0
+              ],
+              [
+                141.0,
+                803.0
+              ],
+              [
+                142.0,
+                824.0
+              ],
+              [
+                92.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "Mr.",
+            "confidence": 0.99963,
+            "box": [
+              [
+                50.0,
+                805.0
+              ],
+              [
+                87.0,
+                805.0
+              ],
+              [
+                87.0,
+                825.0
+              ],
+              [
+                50.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "metallic",
+            "confidence": 0.99985,
+            "box": [
+              [
+                147.0,
+                805.0
+              ],
+              [
+                225.0,
+                805.0
+              ],
+              [
+                225.0,
+                825.0
+              ],
+              [
+                147.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "functions",
+            "confidence": 0.99954,
+            "box": [
+              [
+                285.0,
+                806.0
+              ],
+              [
+                378.0,
+                806.0
+              ],
+              [
+                378.0,
+                824.0
+              ],
+              [
+                285.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99997,
+            "box": [
+              [
+                596.0,
+                805.0
+              ],
+              [
+                631.0,
+                805.0
+              ],
+              [
+                631.0,
+                825.0
+              ],
+              [
+                596.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "wall",
+            "confidence": 0.99987,
+            "box": [
+              [
+                517.0,
+                806.0
+              ],
+              [
+                564.0,
+                806.0
+              ],
+              [
+                564.0,
+                825.0
+              ],
+              [
+                517.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "on",
+            "confidence": 0.99996,
+            "box": [
+              [
+                567.0,
+                807.0
+              ],
+              [
+                596.0,
+                807.0
+              ],
+              [
+                596.0,
+                824.0
+              ],
+              [
+                567.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "a",
+            "confidence": 0.99995,
+            "box": [
+              [
+                411.0,
+                811.0
+              ],
+              [
+                424.0,
+                811.0
+              ],
+              [
+                424.0,
+                823.0
+              ],
+              [
+                411.0,
+                823.0
+              ]
+            ]
+          },
+          {
+            "text": "body",
+            "confidence": 0.99996,
+            "box": [
+              [
+                230.0,
+                805.0
+              ],
+              [
+                280.0,
+                805.0
+              ],
+              [
+                280.0,
+                830.0
+              ],
+              [
+                230.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "as",
+            "confidence": 0.99996,
+            "box": [
+              [
+                383.0,
+                811.0
+              ],
+              [
+                406.0,
+                811.0
+              ],
+              [
+                406.0,
+                824.0
+              ],
+              [
+                383.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "12%",
+            "confidence": 0.99965,
+            "box": [
+              [
+                376.0,
+                833.0
+              ],
+              [
+                419.0,
+                833.0
+              ],
+              [
+                419.0,
+                853.0
+              ],
+              [
+                376.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.9998,
+            "box": [
+              [
+                424.0,
+                832.0
+              ],
+              [
+                458.0,
+                834.0
+              ],
+              [
+                457.0,
+                854.0
+              ],
+              [
+                423.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "taken",
+            "confidence": 0.99997,
+            "box": [
+              [
+                285.0,
+                834.0
+              ],
+              [
+                343.0,
+                834.0
+              ],
+              [
+                343.0,
+                853.0
+              ],
+              [
+                285.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "field,",
+            "confidence": 0.99474,
+            "box": [
+              [
+                50.0,
+                831.0
+              ],
+              [
+                102.0,
+                833.0
+              ],
+              [
+                102.0,
+                858.0
+              ],
+              [
+                49.0,
+                856.0
+              ]
+            ]
+          },
+          {
+            "text": "reducing",
+            "confidence": 0.99101,
+            "box": [
+              [
+                106.0,
+                832.0
+              ],
+              [
+                194.0,
+                833.0
+              ],
+              [
+                194.0,
+                858.0
+              ],
+              [
+                105.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99997,
+            "box": [
+              [
+                346.0,
+                832.0
+              ],
+              [
+                373.0,
+                833.0
+              ],
+              [
+                372.0,
+                859.0
+              ],
+              [
+                344.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "Infantry.",
+            "confidence": 0.99987,
+            "box": [
+              [
+                459.0,
+                831.0
+              ],
+              [
+                548.0,
+                833.0
+              ],
+              [
+                548.0,
+                859.0
+              ],
+              [
+                458.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                200.0,
+                832.0
+              ],
+              [
+                281.0,
+                833.0
+              ],
+              [
+                281.0,
+                859.0
+              ],
+              [
+                199.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99994,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                944.0
+              ],
+              [
+                168.0,
+                945.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                49.0,
+                919.0
+              ],
+              [
+                163.0,
+                917.0
+              ],
+              [
+                163.0,
+                952.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Taken",
+            "confidence": 0.99999,
+            "box": [
+              [
+                138.0,
+                961.0
+              ],
+              [
+                204.0,
+                961.0
+              ],
+              [
+                204.0,
+                979.0
+              ],
+              [
+                138.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "Down:",
+            "confidence": 0.99991,
+            "box": [
+              [
+                208.0,
+                961.0
+              ],
+              [
+                276.0,
+                962.0
+              ],
+              [
+                276.0,
+                979.0
+              ],
+              [
+                207.0,
+                978.0
+              ]
+            ]
+          },
+          {
+            "text": "4%/8%/12%/16%/20%",
+            "confidence": 0.99967,
+            "box": [
+              [
+                281.0,
+                960.0
+              ],
+              [
+                521.0,
+                960.0
+              ],
+              [
+                521.0,
+                981.0
+              ],
+              [
+                281.0,
+                981.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99996,
+            "box": [
+              [
+                50.0,
+                959.0
+              ],
+              [
+                135.0,
+                961.0
+              ],
+              [
+                135.0,
+                986.0
+              ],
+              [
+                50.0,
+                984.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Ironclad Lv.: 3",
+          "Mr. Tin's metallic body functions as a fortified wall on the",
+          "field, reducing damage taken by 12% for Infantry.",
+          "Upgrade Preview",
+          "Damage Taken Down: 4%/8%/12%/16%/20%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_3",
+      "current_level": 3,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        610
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/skill_3.png",
+        "sha256": "3f29573cd567429e6652722211a3920eb8dc67bd76b05a7cf2fdff6bb1451568"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/skill_3-panel.png",
+        "sha256": "52f427db8fca8f15bfed03e203313c8f6785e0bbf3572e4ca938bfb6b7eefc40"
+      },
+      "ocr": {
+        "title": "Steel Sentinel Lv.3",
+        "displayed_level": 3,
+        "description_text": "Edith's mobile defense system is reliable, increasing Health by\n15% for all troops.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Health Up: 5%/10%/15%/20%/25%",
+        "raw_lines": [
+          {
+            "text": "Sentinel",
+            "confidence": 0.99986,
+            "box": [
+              [
+                120.0,
+                740.0
+              ],
+              [
+                227.0,
+                740.0
+              ],
+              [
+                227.0,
+                766.0
+              ],
+              [
+                120.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Steel",
+            "confidence": 0.99992,
+            "box": [
+              [
+                50.0,
+                740.0
+              ],
+              [
+                115.0,
+                740.0
+              ],
+              [
+                115.0,
+                767.0
+              ],
+              [
+                50.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.3",
+            "confidence": 0.9999,
+            "box": [
+              [
+                231.0,
+                739.0
+              ],
+              [
+                300.0,
+                739.0
+              ],
+              [
+                300.0,
+                768.0
+              ],
+              [
+                231.0,
+                768.0
+              ]
+            ]
+          },
+          {
+            "text": "Edith's",
+            "confidence": 0.99965,
+            "box": [
+              [
+                50.0,
+                804.0
+              ],
+              [
+                119.0,
+                804.0
+              ],
+              [
+                119.0,
+                825.0
+              ],
+              [
+                50.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "mobile",
+            "confidence": 0.99952,
+            "box": [
+              [
+                122.0,
+                805.0
+              ],
+              [
+                189.0,
+                805.0
+              ],
+              [
+                189.0,
+                825.0
+              ],
+              [
+                122.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "defense",
+            "confidence": 0.99997,
+            "box": [
+              [
+                194.0,
+                805.0
+              ],
+              [
+                272.0,
+                805.0
+              ],
+              [
+                272.0,
+                825.0
+              ],
+              [
+                194.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "is",
+            "confidence": 0.99986,
+            "box": [
+              [
+                350.0,
+                806.0
+              ],
+              [
+                370.0,
+                806.0
+              ],
+              [
+                370.0,
+                824.0
+              ],
+              [
+                350.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "Health",
+            "confidence": 0.9999,
+            "box": [
+              [
+                569.0,
+                805.0
+              ],
+              [
+                637.0,
+                805.0
+              ],
+              [
+                637.0,
+                826.0
+              ],
+              [
+                569.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "reliable, increasing",
+            "confidence": 0.99903,
+            "box": [
+              [
+                371.0,
+                804.0
+              ],
+              [
+                566.0,
+                805.0
+              ],
+              [
+                566.0,
+                831.0
+              ],
+              [
+                371.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "system",
+            "confidence": 0.99999,
+            "box": [
+              [
+                276.0,
+                807.0
+              ],
+              [
+                349.0,
+                805.0
+              ],
+              [
+                349.0,
+                829.0
+              ],
+              [
+                277.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99995,
+            "box": [
+              [
+                638.0,
+                803.0
+              ],
+              [
+                668.0,
+                805.0
+              ],
+              [
+                666.0,
+                833.0
+              ],
+              [
+                636.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99983,
+            "box": [
+              [
+                97.0,
+                831.0
+              ],
+              [
+                132.0,
+                834.0
+              ],
+              [
+                130.0,
+                854.0
+              ],
+              [
+                95.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "15%",
+            "confidence": 0.9998,
+            "box": [
+              [
+                50.0,
+                833.0
+              ],
+              [
+                92.0,
+                833.0
+              ],
+              [
+                92.0,
+                853.0
+              ],
+              [
+                50.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99995,
+            "box": [
+              [
+                133.0,
+                833.0
+              ],
+              [
+                160.0,
+                833.0
+              ],
+              [
+                160.0,
+                853.0
+              ],
+              [
+                133.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "troops.",
+            "confidence": 0.99995,
+            "box": [
+              [
+                162.0,
+                834.0
+              ],
+              [
+                236.0,
+                835.0
+              ],
+              [
+                236.0,
+                859.0
+              ],
+              [
+                161.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99991,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                944.0
+              ],
+              [
+                168.0,
+                945.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                163.0,
+                918.0
+              ],
+              [
+                163.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Health",
+            "confidence": 0.99983,
+            "box": [
+              [
+                50.0,
+                959.0
+              ],
+              [
+                117.0,
+                960.0
+              ],
+              [
+                117.0,
+                980.0
+              ],
+              [
+                50.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "5%/10%/15%/20%/25%",
+            "confidence": 0.99979,
+            "box": [
+              [
+                160.0,
+                960.0
+              ],
+              [
+                411.0,
+                959.0
+              ],
+              [
+                411.0,
+                982.0
+              ],
+              [
+                160.0,
+                983.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99996,
+            "box": [
+              [
+                119.0,
+                959.0
+              ],
+              [
+                157.0,
+                959.0
+              ],
+              [
+                157.0,
+                986.0
+              ],
+              [
+                119.0,
+                986.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Steel Sentinel Lv.3",
+          "Edith's mobile defense system is reliable, increasing Health by",
+          "15% for all troops.",
+          "Upgrade Preview",
+          "Health Up: 5%/10%/15%/20%/25%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    }
+  ],
+  "complete": true,
+  "notes": [
+    "Selected only Expedition skill icons; Upgrade buttons are never tapped.",
+    "Current levels are read from the hero screen, not inferred from upgrade-preview values.",
+    "Missing preview OCR does not establish that a preview is unavailable; inspect the full image.",
+    "This command does not update player_hero_skills.json or create battle observations."
+  ],
+  "finished_at_utc": "2026-09-07T06:53:44.426618+00:00"
+}

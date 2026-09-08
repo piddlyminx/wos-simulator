@@ -1,0 +1,53 @@
+{
+  "report_timestamp_displayed": "2026-09-07 05:42:10",
+  "world_coord": {
+    "x": 791,
+    "y": 577
+  },
+  "attacker": {
+    "troops": 100,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 35,
+    "lightly_injured": 65
+  },
+  "defender": {
+    "troops": 150,
+    "survivors": 17,
+    "losses": 0,
+    "injured": 47,
+    "lightly_injured": 86
+  },
+  "per_troop_survivors": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 0,
+      "lancer": 17,
+      "marksman": 0
+    }
+  },
+  "skill_details": {
+    "defender": {
+      "Hendrik": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 13,
+          "displayed_kills": null
+        },
+        "skill_3": {
+          "triggered": null,
+          "displayed_kills": null
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "transcription": "Visually checked overview, full report stats, exact T6 Lancer counts, hero identity and Battle Details. Dash retained as null; S3 shows no activation or kills. Per-type survivors follow directly from each single-type army. No explicit round total shown."
+}

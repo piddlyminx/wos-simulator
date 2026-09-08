@@ -1,0 +1,975 @@
+{
+  "generatedAt": "2026-09-07T04:12:49.121Z",
+  "phase": "prospective_followup",
+  "inputPath": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/gwen-blastmaster/followup/input.json",
+  "inputSha256": "c824fb7ae6e6027d70558e0ab5a4aad497a41bc723de2406226960172b7d4da9",
+  "input": {
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "marksman_t6": 800
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230
+        },
+        "mark": {
+          "attack": 443.6,
+          "defense": 444.1,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 1200,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177
+        }
+      },
+      "joiner_heroes": {}
+    }
+  },
+  "configSnapshot": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/gwen-blastmaster/config-snapshot.json",
+  "configSnapshotSha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "candidateDefinitions": {
+    "unchanged": {
+      "first": 5,
+      "every": 4,
+      "target": "enemy.living"
+    },
+    "every_fifth": {
+      "first": 5,
+      "every": 5,
+      "target": "enemy.living"
+    },
+    "first_sixth_every_fourth": {
+      "first": 6,
+      "every": 4,
+      "target": "enemy.living"
+    },
+    "every_fifth_current_target": {
+      "first": 5,
+      "every": 5,
+      "target": "use.target"
+    }
+  },
+  "provenance": {
+    "designExposure": "The first 800-Marksman versus 600-each report (1397 defenders) was observed before designing this follow-up. These are competing Blastmaster timing/fanout hypotheses selected from that retrospective discrepancy.",
+    "forecastExposure": "No result from this new 800-Marksman versus 1200/100/100 formation was opened before this prediction was frozen.",
+    "statsSource": "Exact displayed stats from testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json, with troop counts changed for the new prospective formation. Account state may change; replace with the follow-up report stats after capture.",
+    "fullKit": "Freshly confirmed minxxx Gwen 3/1/1; no skill disabled. WIP no heroes. All troops T6."
+  },
+  "uncertainty": {
+    "statInterval": [
+      -0.05,
+      0.05
+    ],
+    "fields": [
+      [
+        "attacker",
+        "mark",
+        "attack"
+      ],
+      [
+        "attacker",
+        "mark",
+        "defense"
+      ],
+      [
+        "attacker",
+        "mark",
+        "lethality"
+      ],
+      [
+        "attacker",
+        "mark",
+        "health"
+      ],
+      [
+        "defender",
+        "inf",
+        "attack"
+      ],
+      [
+        "defender",
+        "inf",
+        "defense"
+      ],
+      [
+        "defender",
+        "inf",
+        "lethality"
+      ],
+      [
+        "defender",
+        "inf",
+        "health"
+      ],
+      [
+        "defender",
+        "lanc",
+        "attack"
+      ],
+      [
+        "defender",
+        "lanc",
+        "defense"
+      ],
+      [
+        "defender",
+        "lanc",
+        "lethality"
+      ],
+      [
+        "defender",
+        "lanc",
+        "health"
+      ],
+      [
+        "defender",
+        "mark",
+        "attack"
+      ],
+      [
+        "defender",
+        "mark",
+        "defense"
+      ],
+      [
+        "defender",
+        "mark",
+        "lethality"
+      ],
+      [
+        "defender",
+        "mark",
+        "health"
+      ]
+    ],
+    "seed": 20260907,
+    "note": "290 shared stat vectors: 256 interior, 32 coordinate endpoints, 2 common favorable corners. Sensitivity screen, not an exhaustive interval proof."
+  },
+  "candidates": {
+    "unchanged": {
+      "signedRemaining": -535,
+      "rounds": 48,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 445,
+          "lancer": 53,
+          "marksman": 37
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "heroReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 48,
+          "skillActivations": 48,
+          "effectActivations": 48,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 8,
+          "skillActivations": 8,
+          "effectActivations": 16,
+          "skillKills": 23.66431072630427,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 11,
+          "skillActivations": 11,
+          "effectActivations": 11,
+          "skillKills": 126.86569158357126,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmasterJobs": [
+        {
+          "round": 5,
+          "target": "infantry",
+          "rawKills": 1.9941022012093692
+        },
+        {
+          "round": 5,
+          "target": "lancer",
+          "rawKills": 6.400045915636461
+        },
+        {
+          "round": 5,
+          "target": "marksman",
+          "rawKills": 8.559649709079757
+        },
+        {
+          "round": 9,
+          "target": "infantry",
+          "rawKills": 2.1601020018641335
+        },
+        {
+          "round": 9,
+          "target": "lancer",
+          "rawKills": 6.028539292565218
+        },
+        {
+          "round": 9,
+          "target": "marksman",
+          "rawKills": 8.062783499054019
+        },
+        {
+          "round": 13,
+          "target": "infantry",
+          "rawKills": 2.026986472337492
+        },
+        {
+          "round": 13,
+          "target": "lancer",
+          "rawKills": 5.6570326694939705
+        },
+        {
+          "round": 13,
+          "target": "marksman",
+          "rawKills": 7.565917289028281
+        },
+        {
+          "round": 17,
+          "target": "infantry",
+          "rawKills": 1.6415828147158926
+        },
+        {
+          "round": 17,
+          "target": "lancer",
+          "rawKills": 5.2686393817376675
+        },
+        {
+          "round": 17,
+          "target": "marksman",
+          "rawKills": 7.046466251274101
+        },
+        {
+          "round": 21,
+          "target": "infantry",
+          "rawKills": 1.7456286485652726
+        },
+        {
+          "round": 21,
+          "target": "lancer",
+          "rawKills": 4.871802761638837
+        },
+        {
+          "round": 21,
+          "target": "marksman",
+          "rawKills": 6.515722799655698
+        },
+        {
+          "round": 25,
+          "target": "infantry",
+          "rawKills": 1.5973863543196951
+        },
+        {
+          "round": 25,
+          "target": "lancer",
+          "rawKills": 4.45807947685495
+        },
+        {
+          "round": 25,
+          "target": "marksman",
+          "rawKills": 5.962394520308854
+        },
+        {
+          "round": 29,
+          "target": "infantry",
+          "rawKills": 1.2522330445589178
+        },
+        {
+          "round": 29,
+          "target": "lancer",
+          "rawKills": 4.019026195043478
+        },
+        {
+          "round": 29,
+          "target": "marksman",
+          "rawKills": 5.375188999369345
+        },
+        {
+          "round": 33,
+          "target": "infantry",
+          "rawKills": 1.2736735893344537
+        },
+        {
+          "round": 33,
+          "target": "lancer",
+          "rawKills": 3.5546429162044206
+        },
+        {
+          "round": 33,
+          "target": "marksman",
+          "rawKills": 4.754106236837173
+        },
+        {
+          "round": 37,
+          "target": "infantry",
+          "rawKills": 1.086101706819641
+        },
+        {
+          "round": 37,
+          "target": "lancer",
+          "rawKills": 3.0311563109676642
+        },
+        {
+          "round": 37,
+          "target": "marksman",
+          "rawKills": 4.053976577255452
+        },
+        {
+          "round": 41,
+          "target": "infantry",
+          "rawKills": 0.7576536067919503
+        },
+        {
+          "round": 41,
+          "target": "lancer",
+          "rawKills": 2.4316797146481544
+        },
+        {
+          "round": 41,
+          "target": "marksman",
+          "rawKills": 3.2522151928957386
+        },
+        {
+          "round": 45,
+          "target": "infantry",
+          "rawKills": 0.592969176982311
+        },
+        {
+          "round": 45,
+          "target": "lancer",
+          "rawKills": 1.6548931391355495
+        },
+        {
+          "round": 45,
+          "target": "marksman",
+          "rawKills": 2.213313117387378
+        }
+      ],
+      "statSensitivity": {
+        "samples": 290,
+        "min": -536,
+        "max": -534,
+        "minDefenderLine": 37
+      }
+    },
+    "every_fifth": {
+      "signedRemaining": -580,
+      "rounds": 46,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 467,
+          "lancer": 63,
+          "marksman": 50
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "heroReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 46,
+          "skillActivations": 46,
+          "effectActivations": 46,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 7,
+          "skillActivations": 7,
+          "effectActivations": 14,
+          "skillKills": 22.59938649009114,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 9,
+          "skillActivations": 9,
+          "effectActivations": 9,
+          "skillKills": 101.70313999233763,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmasterJobs": [
+        {
+          "round": 5,
+          "target": "infantry",
+          "rawKills": 1.9941022012093692
+        },
+        {
+          "round": 5,
+          "target": "lancer",
+          "rawKills": 6.400045915636461
+        },
+        {
+          "round": 5,
+          "target": "marksman",
+          "rawKills": 8.559649709079757
+        },
+        {
+          "round": 10,
+          "target": "infantry",
+          "rawKills": 2.12984847242626
+        },
+        {
+          "round": 10,
+          "target": "lancer",
+          "rawKills": 5.944105969139933
+        },
+        {
+          "round": 10,
+          "target": "marksman",
+          "rawKills": 7.949859360411806
+        },
+        {
+          "round": 15,
+          "target": "infantry",
+          "rawKills": 1.9574033546303842
+        },
+        {
+          "round": 15,
+          "target": "lancer",
+          "rawKills": 5.462836025615819
+        },
+        {
+          "round": 15,
+          "target": "marksman",
+          "rawKills": 7.306191770151192
+        },
+        {
+          "round": 20,
+          "target": "infantry",
+          "rawKills": 1.7758821780031457
+        },
+        {
+          "round": 20,
+          "target": "lancer",
+          "rawKills": 4.956236085064121
+        },
+        {
+          "round": 20,
+          "target": "marksman",
+          "rawKills": 6.628646938297912
+        },
+        {
+          "round": 25,
+          "target": "infantry",
+          "rawKills": 1.5852849425445457
+        },
+        {
+          "round": 25,
+          "target": "lancer",
+          "rawKills": 4.424306147484836
+        },
+        {
+          "round": 25,
+          "target": "marksman",
+          "rawKills": 5.917224864851969
+        },
+        {
+          "round": 30,
+          "target": "infantry",
+          "rawKills": 1.3795609423670094
+        },
+        {
+          "round": 30,
+          "target": "lancer",
+          "rawKills": 3.850159548192911
+        },
+        {
+          "round": 30,
+          "target": "marksman",
+          "rawKills": 5.149340722084919
+        },
+        {
+          "round": 35,
+          "target": "infantry",
+          "rawKills": 0.9970511006046846
+        },
+        {
+          "round": 35,
+          "target": "lancer",
+          "rawKills": 3.2000229578182307
+        },
+        {
+          "round": 35,
+          "target": "marksman",
+          "rawKills": 4.2798248545398785
+        },
+        {
+          "round": 40,
+          "target": "infantry",
+          "rawKills": 0.8652509419231682
+        },
+        {
+          "round": 40,
+          "target": "lancer",
+          "rawKills": 2.414793049963098
+        },
+        {
+          "round": 40,
+          "target": "marksman",
+          "rawKills": 3.229630365167296
+        },
+        {
+          "round": 45,
+          "target": "infantry",
+          "rawKills": 0.4447268827367332
+        },
+        {
+          "round": 45,
+          "target": "lancer",
+          "rawKills": 1.2411698543516623
+        },
+        {
+          "round": 45,
+          "target": "marksman",
+          "rawKills": 1.6599848380405333
+        }
+      ],
+      "statSensitivity": {
+        "samples": 290,
+        "min": -581,
+        "max": -579,
+        "minDefenderLine": 50
+      }
+    },
+    "first_sixth_every_fourth": {
+      "signedRemaining": -555,
+      "rounds": 47,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 460,
+          "lancer": 55,
+          "marksman": 40
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "heroReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 47,
+          "skillActivations": 47,
+          "effectActivations": 47,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 8,
+          "skillActivations": 8,
+          "effectActivations": 16,
+          "skillKills": 23.343623314262818,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 11,
+          "skillActivations": 11,
+          "effectActivations": 11,
+          "skillKills": 122.70508552054461,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmasterJobs": [
+        {
+          "round": 6,
+          "target": "infantry",
+          "rawKills": 2.259938649009114
+        },
+        {
+          "round": 6,
+          "target": "lancer",
+          "rawKills": 6.307169259868651
+        },
+        {
+          "round": 6,
+          "target": "marksman",
+          "rawKills": 8.435433156573323
+        },
+        {
+          "round": 10,
+          "target": "infantry",
+          "rawKills": 2.1268231194824727
+        },
+        {
+          "round": 10,
+          "target": "lancer",
+          "rawKills": 5.935662636797405
+        },
+        {
+          "round": 10,
+          "target": "marksman",
+          "rawKills": 7.938566946547584
+        },
+        {
+          "round": 14,
+          "target": "infantry",
+          "rawKills": 1.990682237012044
+        },
+        {
+          "round": 14,
+          "target": "lancer",
+          "rawKills": 5.555712681383629
+        },
+        {
+          "round": 14,
+          "target": "marksman",
+          "rawKills": 7.430408322657625
+        },
+        {
+          "round": 18,
+          "target": "infantry",
+          "rawKills": 1.8484906486540413
+        },
+        {
+          "round": 18,
+          "target": "lancer",
+          "rawKills": 5.1588760612848
+        },
+        {
+          "round": 18,
+          "target": "marksman",
+          "rawKills": 6.899664871039223
+        },
+        {
+          "round": 22,
+          "target": "infantry",
+          "rawKills": 1.7032737073522504
+        },
+        {
+          "round": 22,
+          "target": "lancer",
+          "rawKills": 4.753596108843442
+        },
+        {
+          "round": 22,
+          "target": "marksman",
+          "rawKills": 6.357629005556601
+        },
+        {
+          "round": 26,
+          "target": "infantry",
+          "rawKills": 1.5520060601628856
+        },
+        {
+          "round": 26,
+          "target": "lancer",
+          "rawKills": 4.331429491717026
+        },
+        {
+          "round": 26,
+          "target": "marksman",
+          "rawKills": 5.793008312345535
+        },
+        {
+          "round": 30,
+          "target": "infantry",
+          "rawKills": 1.3886370011983713
+        },
+        {
+          "round": 30,
+          "target": "lancer",
+          "rawKills": 3.8754895452204967
+        },
+        {
+          "round": 30,
+          "target": "marksman",
+          "rawKills": 5.183217963677585
+        },
+        {
+          "round": 34,
+          "target": "infantry",
+          "rawKills": 1.2101411775149205
+        },
+        {
+          "round": 34,
+          "target": "lancer",
+          "rawKills": 3.377332937011326
+        },
+        {
+          "round": 34,
+          "target": "marksman",
+          "rawKills": 4.516965545688526
+        },
+        {
+          "round": 38,
+          "target": "infantry",
+          "rawKills": 1.013493236168746
+        },
+        {
+          "round": 38,
+          "target": "lancer",
+          "rawKills": 2.8285163347469853
+        },
+        {
+          "round": 38,
+          "target": "marksman",
+          "rawKills": 3.7829586445141405
+        },
+        {
+          "round": 42,
+          "target": "infantry",
+          "rawKills": 0.7775157065533363
+        },
+        {
+          "round": 42,
+          "target": "lancer",
+          "rawKills": 2.169936412029777
+        },
+        {
+          "round": 42,
+          "target": "marksman",
+          "rawKills": 2.9021503631048784
+        },
+        {
+          "round": 46,
+          "target": "infantry",
+          "rawKills": 0.43867617684915855
+        },
+        {
+          "round": 46,
+          "target": "lancer",
+          "rawKills": 1.2242831896666055
+        },
+        {
+          "round": 46,
+          "target": "marksman",
+          "rawKills": 1.6374000103120907
+        }
+      ],
+      "statSensitivity": {
+        "samples": 290,
+        "min": -556,
+        "max": -554,
+        "minDefenderLine": 40
+      }
+    },
+    "every_fifth_current_target": {
+      "signedRemaining": -723,
+      "rounds": 42,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 523,
+          "lancer": 100,
+          "marksman": 100
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "heroReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 42,
+          "skillActivations": 42,
+          "effectActivations": 42,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 7,
+          "skillActivations": 7,
+          "effectActivations": 14,
+          "skillKills": 21.177470606511104,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 8,
+          "skillActivations": 8,
+          "effectActivations": 8,
+          "skillKills": 12.021963376103658,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmasterJobs": [
+        {
+          "round": 5,
+          "target": "infantry",
+          "rawKills": 1.9941022012093692
+        },
+        {
+          "round": 10,
+          "target": "infantry",
+          "rawKills": 2.1237977665386856
+        },
+        {
+          "round": 15,
+          "target": "infantry",
+          "rawKills": 1.9453019428552347
+        },
+        {
+          "round": 20,
+          "target": "infantry",
+          "rawKills": 1.74865400150906
+        },
+        {
+          "round": 25,
+          "target": "infantry",
+          "rawKills": 1.5338539425001614
+        },
+        {
+          "round": 30,
+          "target": "infantry",
+          "rawKills": 1.285775001109603
+        },
+        {
+          "round": 35,
+          "target": "infantry",
+          "rawKills": 0.8549910493311939
+        },
+        {
+          "round": 40,
+          "target": "infantry",
+          "rawKills": 0.5354874710503522
+        }
+      ],
+      "statSensitivity": {
+        "samples": 290,
+        "min": -724,
+        "max": -722,
+        "minDefenderLine": 100
+      }
+    }
+  }
+}

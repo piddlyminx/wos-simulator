@@ -1,0 +1,27 @@
+{
+  "evidence_kind": "captured_in_game_skill_upgrade_preview",
+  "instance": "WIP",
+  "hero": "Reina",
+  "skill": "Shadow Blade",
+  "level": 1,
+  "chance_percent": 25,
+  "damage_percent_by_level": [
+    120,
+    140,
+    160,
+    180,
+    200
+  ],
+  "text": "With Reina's clever tactics, her Lancers have a 25% chance of performing an extra attack, dealing 120% damage.",
+  "full_expedition_kit": {
+    "skill_1": 1,
+    "skill_2": 1,
+    "skill_3": 1
+  },
+  "source": "docs/mechanics-audit/probes/reina-shadowblade/shadow-blade-upgrade-preview.png",
+  "sha256": "09de62f45a827a14101d419158243a9e885b7324acb5c9c5704ad091408b7d41",
+  "notes": [
+    "Observed between second and third battles. No upgrades or other hero modifications performed.",
+    "Upgrade Preview shows all five values directly; future level endpoints have not been battle-tested by this level1 fixture."
+  ]
+}

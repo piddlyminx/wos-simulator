@@ -1,0 +1,84 @@
+{
+  "hero:Bradley:VeteransMight": {
+    "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+    "status": "partially_supported",
+    "context": "Retrospective seven-entry review with full recorded kits. Five current endpoints exact; two Gatot combinations retain game D2296/current D2274 and game A851/current A834. In the strongest level 4 comparison, Wu Ming 3/3/3 + Bradley 4/4/4 gives game/current A112 versus omission D635 and Marksman-only A82, supporting contribution beyond Marksmen. Moving S1 into the existing Damage pool gives A77; moving to Lethality is identical throughout. This supports separation from the tested Damage pool, not a uniquely identified Attack label. Levels 1/3 occur in residual-bearing kits; exact scaling, skill-kind and broader interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Bradley:PowerShot": {
+    "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+    "status": "partially_supported",
+    "context": "Same seven accepted Bradley entries; five exact current endpoints and two retained Gatot residuals 22/17. Full Wu Ming 3/3/3 + Bradley 4/4/4 gives game/current A112, omission D642, Marksman-only A81. Omitting the Lancer/Infantry branch separately gives A72/D572; broadening them separately to every enemy type gives A251/A131. This supports both tested target branches and contribution beyond Marksmen. Hero-Damage placement gives A92; a normal-damage pool worsens other cases, providing contextual pooling support. All reviewed applications are normal jobs and normal-kind-only is identical, so skill-kind/single-target delivery boundaries remain unverified. Levels 3/4 present; exact coefficients and other interactions unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Bradley:TacticalAssistance": {
+    "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+    "status": "partially_supported",
+    "context": "Same seven accepted full-kit Bradley cases, with five exact current endpoints and Gatot residuals 22/17 retained. Wu Ming 3/3/3 + Bradley 4/4/4 gives game/current A112 versus omission D342 and Marksman-only A98, supporting contribution outside Marksmen. One-turn duration gives A73 and a one-turn-delayed window A97, supporting the current two-turn window over those alternatives in this kit. First turn 1 gives A113, so exact onset remains unresolved; other interrupted-attack/cadence cases are unreviewed. Attack pool gives A98, normal-damage pool A114; bucket identity and skill-kind remain unresolved or unreviewed. Level4 supports the clean comparisons; level 3 combinations retain residuals.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Edith:StrategicBalance": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "Two accepted T6 single-type fixtures preserve full Edith 3/3/3. Marksmen with Zinman 1/0/0 give game/current A1863; omit only S1 protection A1942, broaden Lancer offense to Marksmen A1772. Lancers with Patrick 3/2 + Jasser 4/4 give game/current A1909; omit only S1 offense A1978, broaden Marksman protection to Lancers A1829. Each nested effect is exercised in its own recipient fixture; these support the tested Marksman/Lancer distinction. Infantry scope, precise coefficients/scaling and skill-kind remain unreviewed. Health/Attack bucket substitutions differ only 6\u201313 at these larger endpoints, so general pool identity remains unresolved. Edith S2 has no Infantry to protect in either case and is not incidentally verified.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Edith:SteelSentinel": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "Same two accepted full Edith 3/3/3 fixtures match game/current A1863 for Marksmen and A1909 for Lancers. Omitting S3 or restricting it to Infantry gives A1955/A1983, supporting level 3 contribution to each tested non-Infantry recipient. Health-to-damageTaken gives A1874/A1898; Health-to-Defense A1863/A1898. These modest scale-relative bucket differences do not settle general pool identity. Infantry recipients, independent magnitude/scaling, other levels, skill-kind and battle-mode interactions remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  }
+}

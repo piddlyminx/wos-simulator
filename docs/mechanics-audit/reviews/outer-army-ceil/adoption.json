@@ -1,0 +1,48 @@
+{
+  "verified_at_utc": "2026-09-07T05:05:57.730504+00:00",
+  "status": "adopted_with_remaining_disagreements",
+  "production_source_sha256": {
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damage.test.ts": "b800d9899f3c481e7627f236422114cfaa41992ba4aa4dfb6f9e5e890e110faf",
+    "simulator/src/tooling/testcases.test.ts": "39f0b6ef409254c31db1b6f2f01f0438c6a55b4f611a1b5eb87852bd8736f9c9",
+    "simulator/config/hero_definitions/WuMing.json": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3"
+  },
+  "compiled_config_sha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "implementation_review": "Exact audited outer-ceil removal. Fractional survivor storage and the established inner attack-count ceiling are retained. No blocking correctness or test-weakening finding.",
+  "tests": {
+    "passed": 210,
+    "failed": 0,
+    "typecheck_exit_code": 0,
+    "typecheck_repeated_after_final_test_edit": true
+  },
+  "raw_parity_counts": {
+    "total": 293,
+    "deterministic": 174,
+    "stochastic": 119,
+    "deterministic_raw_gt2": 23,
+    "deterministic_raw_side_gt2": 23,
+    "stochastic_raw_failures": 3,
+    "deterministic_varying_game_outcomes": 2
+  },
+  "isolated_candidate_matches_all_172_overlapping_deterministic_endpoints": true,
+  "original_frozen_audit_artifact_hashes_unchanged": true,
+  "evidence_policy": "All recorded game outcomes are accepted unless explicitly flagged invalid or obsolete.",
+  "artifacts": [
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/adoption-check.json",
+      "sha256": "877eb97bbb03604e7e92dd1f02cc7b7d49982ec54556d2b85ae735683ba7df1b"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/production-parity.json",
+      "sha256": "605afbc0f96d249ba4ce24b6a23a9af04421f5c59fe4a70d224da17c50a52562"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/production-tests.log",
+      "sha256": "587991ab1255ff2d77995861bbfd2115c8905df1ddee2815e3bbf4d4fc502f4c"
+    },
+    {
+      "path": "docs/mechanics-audit/reviews/outer-army-ceil/production-typecheck.log",
+      "sha256": "d42a344b5f8b95549f9fbe080efb0212ad94024dc6903b72d6490d39b838ec64"
+    }
+  ]
+}

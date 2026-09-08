@@ -1,0 +1,1 @@
+{"n_candidate":10000,"mu_candidate":-2907.58,"sigma_candidate":26.67,"n_reference":1,"mu_reference":-2823,"sigma_reference":0,"bias_raw":-84.58,"bias_pct":-0.39,"sem":0.27,"stat_type":"cdf_support","stat":3.125,"p":0.00075,"passes":false,"cdf_rms":0.056855,"cdf_p":0.0016,"support_value":-2823,"support_mass":0.00002222,"support_p":0.0008,"flag_reason":"support"}

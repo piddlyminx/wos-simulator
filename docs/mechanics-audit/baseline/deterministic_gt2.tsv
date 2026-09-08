@@ -1,0 +1,49 @@
+file	idx	testcase_id	raw_sim_endpoint	game_endpoints	raw_errors	max_abs_raw_error	adjusted_endpoint	max_abs_adjusted_error	reported_pass	adjustment	mode
+testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json	0	s3-5000-inf-vs-1000-inf-10-lancer	4996	[4573]	[423]	423	4996	423	False	-0.05	best_effort
+testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json	0	s15.3-2000-inf-0-lancer-1000-marksman	1339	[1281]	[58]	58	1281	0	True	-0.032	deterministic_exact
+testcases/heroes_unittests/Flint_tc.json	1	flint_tc_2	5761	[5720, 5756, 5736, 5715, 5733, 5736]	[41, 5, 25, 46, 28, 25]	46	5759	44	True	-0.05	best_effort
+testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json	0	s25-3000-inf-1000-marksman-vs-5000-inf	520	[554]	[-34]	34	555	1	True	0.019	deterministic_within_one
+testcases/emulator_verified/ahmose_solo_nc.json	0	ahmose_solo	2612	[2633]	[-21]	21	2614	19	True	0.05	best_effort
+testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json	0	gordon_wayne_s1_extra_overlap_nc	1	[-19]	[20]	20	-6	13	False	-0.05	best_effort
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	17	no_heroes_single_t6__26	781	[798]	[-17]	17	798	0	True	0.015	deterministic_exact
+testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json	0	s10-bradley-1000-inf-125-marksman-vs-5000-inf	-2279	[-2296]	[17]	17	-2297	1	True	-0.016	deterministic_within_one
+testcases/gatot_verified/s1-4950-vs-1000.json	0	s1-4950-vs-1000	4108	[4092]	[16]	16	4092	0	True	-0.015	deterministic_exact
+testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json	0	s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman	835	[851]	[-16]	16	839	12	True	0.05	best_effort
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	5	no_heroes_single_t6__14	511	[525]	[-14]	14	525	0	True	0.01	deterministic_exact
+testcases/2-testcases_no-heroes_t6_mixed_nc.json	3	no_heroes_t6_mixed_4	341	[353]	[-12]	12	343	10	True	0.05	best_effort
+testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json	0	s15.3-1000-inf-1000-lancer-1000-marksman	-3052	[-3064]	[12]	12	-3064	0	True	-0.05	deterministic_exact
+testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json	0	s2-health-1.1-4950-vs-1000	4055	[4043]	[12]	12	4043	0	True	-0.015	deterministic_exact
+testcases/2-testcases_no-heroes_t6_mixed_nc.json	2	no_heroes_t6_mixed_3	767	[778]	[-11]	11	769	9	True	0.05	best_effort
+testcases/emulator_verified/damage_precision_325l_009i_325m.json	0	damage_precision_325l_009i_325m	-242	[-253]	[11]	11	-253	0	True	-0.05	deterministic_exact
+testcases/gatot_verified/s1-5000-vs-1000.json	0	s1-5000-vs-1000	4495	[4484]	[11]	11	4484	0	True	-0.009	deterministic_exact
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	13	no_heroes_single_t6__22	1299	[1309]	[-10]	10	1309	0	True	0.015	deterministic_exact
+testcases/2-testcases_no-heroes_t6_mixed_nc.json	0	no_heroes_t6_mixed_1	732	[741]	[-9]	9	734	7	True	0.05	best_effort
+testcases/3-testcases_mixed-heroes-not-verified.json	0	no_heroes_t6_mixed_2x_1	333	[342]	[-9]	9	343	1	True	0.041	deterministic_within_one
+testcases/2-testcases_no-heroes_t6_mixed_nc.json	4	no_heroes_t6_mixed_5	256	[264]	[-8]	8	262	2	True	0.05	best_effort
+testcases/gatot_verified/s1-5050-vs-1000.json	0	s1-5050-vs-1000	4981	[4973]	[8]	8	4974	1	True	-0.004	deterministic_within_one
+testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json	0	s2-health-1.1-5000-vs-1000	4335	[4327]	[8]	8	4327	0	True	-0.009	deterministic_exact
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	8	no_heroes_single_t6__17	979	[986]	[-7]	7	986	0	True	0.014	deterministic_exact
+testcases/heroes_unittests/Jessie_tc_nc.json	3	jessie_tc_4	210	[217]	[-7]	7	214	3	True	0.05	best_effort
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	11	no_heroes_single_t6__20	706	[712]	[-6]	6	712	0	True	0.043	deterministic_exact
+testcases/emulator_verified/jessie_solo_nc.json	0	jessie_solo	73	[79, 79, 79]	[-6, -6, -6]	6	75	4	True	0.027	best_effort
+testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json	0	s15.3-2000-inf-1000-lancer-0-marksman	-4332	[-4338]	[6]	6	-4338	0	True	-0.043	deterministic_exact
+testcases/heroes_unittests/Seo-yoon_tc_nc.json	4	seoyoon_tc_5	3799	[3805]	[-6]	6	3801	4	True	0.05	best_effort
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	7	no_heroes_single_t6__16	1420	[1425]	[-5]	5	1425	0	True	0.029	deterministic_exact
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	15	no_heroes_single_t6__24	580	[585]	[-5]	5	585	0	True	0.05	deterministic_exact
+testcases/emulator_verified/norah_s2_inf_only_B_nc.json	0	norah_s2_inf_only_B	502	[507, 507, 507]	[-5, -5, -5]	5	503	4	True	0.05	best_effort
+testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json	0	s2-health-1.1-5050-vs-1000	4646	[4641]	[5]	5	4641	0	True	-0.005	deterministic_exact
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	0	no_heroes_single_t6__9	5298	[5302]	[-4]	4	5302	0	True	0.025	deterministic_exact
+testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json	0	gordon_wayne_s1_extra_overlap_nc	9	[5]	[4]	4	8	3	True	-0.05	best_effort
+testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json	0	s15.3-1000-inf-0-lancer-1000-marksman	-4487	[-4491]	[4]	4	-4491	0	True	-0.05	deterministic_exact
+testcases/1-testcases_no-heroes_t6_single-type_nc.json	4	no_heroes_single_t6__13	1459	[1462]	[-3]	3	1461	1	True	0.05	deterministic_within_one
+testcases/emulator_verified/flint_solo_nc.json	0	flint_solo	2859	[2862]	[-3]	3	2861	1	True	0.05	deterministic_within_one
+testcases/emulator_verified/gwen_solo_nc.json	0	gwen_solo	3009	[3006, 3006, 3006, 3006, 3006]	[3, 3, 3, 3, 3]	3	3008	2	True	-0.05	best_effort
+testcases/emulator_verified/patrick_solo_nc.json	0	patrick_solo	2579	[2582]	[-3]	3	2580	2	True	0.004	best_effort
+testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json	0	wos451_gordon_s11_lancer_damage_up_bucket	-1514	[-1517]	[3]	3	-1516	1	True	-0.05	deterministic_within_one
+testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json	0	s2-health-1.1-5100-vs-1000	5020	[5017]	[3]	3	5016	1	True	-0.002	deterministic_within_one
+testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json	0	s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf	-221	[-224]	[3]	3	-223	1	True	-0.05	deterministic_within_one
+testcases/heroes_unittests/Jessie_tc_nc.json	2	jessie_tc_3	478	[481]	[-3]	3	480	1	True	0.05	deterministic_within_one
+testcases/heroes_unittests/Jessie_tc_nc.json	4	jessie_tc_5	575	[578]	[-3]	3	576	2	True	0.05	best_effort
+testcases/heroes_unittests/Molly_tc.json	2	molly_tc_3	478	[481]	[-3]	3	480	1	True	0.05	deterministic_within_one
+testcases/heroes_unittests/Seo-yoon_tc_nc.json	2	seoyoon_tc_3	478	[481]	[-3]	3	480	1	True	0.05	deterministic_within_one
+testcases/heroes_unittests/Seo-yoon_tc_nc.json	3	seoyoon_tc_4	4338	[4341]	[-3]	3	4339	2	True	0.05	best_effort

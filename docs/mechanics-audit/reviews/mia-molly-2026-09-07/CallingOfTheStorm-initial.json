@@ -1,0 +1,2351 @@
+{
+  "generatedAt": "2026-09-07T06:32:20.150Z",
+  "selection": {
+    "key": "hero:Molly:CallingOfTheStorm",
+    "hero": "Molly",
+    "id": "CallingOfTheStorm",
+    "slot": 1,
+    "coverage": {
+      "configured_fixture_count": 5,
+      "hydrated_fixture_count": 5,
+      "observation_record_count": 13,
+      "hydrated_levels": [
+        2,
+        5
+      ],
+      "levels_missing_active_fixture": [
+        1,
+        3,
+        4
+      ],
+      "side_roles": [
+        "attacker:main",
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/emulator_verified/molly_lynn_combo.json#0",
+        "testcases/emulator_verified/molly_solo.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "granting a 40% chance of reducing all troops' Damage taken by X%",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "CallingOfTheStorm/1": {
+          "type": "active.hero.damageTaken.down",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "all"
+          },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "protocolSha256": "3fdd2747866302eda6e87935178ad3655074f16a767ff8f259c91123855d7e3d",
+  "repeat": 1000,
+  "seed": "mia-molly-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/mia-molly-2026-09-07/CallingOfTheStorm-initial-samples.json",
+    "sha256": "ccfd8339be1a8dfec2d3c38b1668f1c1fa7698ed52579203018a1b39afa41c40"
+  },
+  "results": [
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+      "path": "testcases/3-testcases_mixed-heroes-not-verified.json",
+      "fixtureSha256": "fd491d2771e82ec070938b01644a0e09408bd5370bf32e13e2734f01b1b98c20",
+      "input": {
+        "attacker": {
+          "name": "daut2x",
+          "stats": {
+            "inf": {
+              "attack": 43.36,
+              "defense": 42.86,
+              "lethality": 7.13,
+              "health": 7.13
+            },
+            "lanc": {
+              "attack": 57.71,
+              "defense": 57.21,
+              "lethality": 1.8,
+              "health": 1.8
+            },
+            "mark": {
+              "attack": 61.36,
+              "defense": 60.36,
+              "lethality": 5.46,
+              "health": 5.46
+            }
+          },
+          "troops": {
+            "infantry_t6": 8000,
+            "lancer_t6": 2500,
+            "marksman_t6": 7000
+          },
+          "heroes": {
+            "Jasser": {
+              "skill_1": 2
+            },
+            "Sergey": {
+              "skill_1": 2,
+              "skill_2": 2
+            },
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "viper2x",
+          "stats": {
+            "inf": {
+              "attack": 228.73,
+              "defense": 228.23,
+              "lethality": 107.2,
+              "health": 114.2
+            },
+            "lanc": {
+              "attack": 268.13,
+              "defense": 260.13,
+              "lethality": 110.3,
+              "health": 100.2
+            },
+            "mark": {
+              "attack": 228.27,
+              "defense": 216.77,
+              "lethality": 117.8,
+              "health": 104.7
+            }
+          },
+          "troops": {
+            "infantry_t6": 2000,
+            "lancer_t6": 1000,
+            "marksman_t6": 1000
+          },
+          "heroes": {
+            "Natalia": {
+              "skill_1": 2,
+              "skill_2": 2
+            },
+            "Patrick": {
+              "skill_1": 2,
+              "skill_2": 1
+            },
+            "Alonso": {
+              "skill_1": 1,
+              "skill_2": 2
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": {
+        "attacker": 0,
+        "defender": 2823
+      },
+      "hydratedSkills": [
+        {
+          "key": "hero:Jasser:TacticalGenius",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:jasser:0",
+          "effect_ids": [
+            "TacticalGenius/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:DefendersEdge",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "DefendersEdge/1"
+          ]
+        },
+        {
+          "key": "hero:Sergey:Weaken",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:sergey:0",
+          "effect_ids": [
+            "Weaken/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Natalia:WildlingRoar",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:natalia:0",
+          "effect_ids": [
+            "WildlingRoar/1"
+          ]
+        },
+        {
+          "key": "hero:Natalia:QueenOfTheWild",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:natalia:0",
+          "effect_ids": [
+            "QueenOfTheWild/1"
+          ]
+        },
+        {
+          "key": "hero:Patrick:SuperNutrients",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:patrick:0",
+          "effect_ids": [
+            "SuperNutrients/1"
+          ]
+        },
+        {
+          "key": "hero:Patrick:CaloricBooster",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:patrick:0",
+          "effect_ids": [
+            "CaloricBooster/1"
+          ]
+        },
+        {
+          "key": "hero:Alonso:Onslaught",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:alonso:0",
+          "effect_ids": [
+            "Onslaught/1"
+          ]
+        },
+        {
+          "key": "hero:Alonso:IronStrength",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:alonso:0",
+          "effect_ids": [
+            "IronStrength/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 17500,
+        "defender": 4000
+      },
+      "gameScores": [
+        -2823
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2908.756,
+          "sd": 26.66660030021773,
+          "min": -3001,
+          "max": -2797,
+          "central95": [
+            -2959,
+            -2857
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2908.76,
+            "sigma_candidate": 26.67,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -85.76,
+            "bias_pct": -0.4,
+            "sem": 0.84,
+            "stat_type": "cdf_support",
+            "stat": 2.6778,
+            "p": 0.0021,
+            "passes": false,
+            "cdf_rms": 0.0574,
+            "cdf_p": 0.00165,
+            "support_value": -2823,
+            "support_mass": 0,
+            "support_p": 0.00465,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 918,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 42,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:defender.infantry->attacker.infantry": 197,
+            "CallingOfTheStorm/1:normal:defender.lancer->attacker.infantry": 196,
+            "CallingOfTheStorm/1:normal:defender.marksman->attacker.infantry": 194,
+            "CallingOfTheStorm/1:normal:defender.infantry->attacker.lancer": 27,
+            "CallingOfTheStorm/1:normal:defender.lancer->attacker.lancer": 27,
+            "CallingOfTheStorm/1:normal:defender.marksman->attacker.lancer": 26,
+            "CallingOfTheStorm/1:normal:defender.infantry->attacker.marksman": 54,
+            "CallingOfTheStorm/1:normal:defender.lancer->attacker.marksman": 54,
+            "CallingOfTheStorm/1:normal:defender.marksman->attacker.marksman": 52
+          },
+          "activationCounts": [
+            11,
+            14,
+            14,
+            20,
+            16,
+            18,
+            18,
+            21,
+            18,
+            19,
+            13,
+            19,
+            21,
+            19,
+            20,
+            17
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2968.789,
+          "sd": 21.915993926577688,
+          "min": -3052,
+          "max": -2902,
+          "central95": [
+            -3016,
+            -2926
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2968.79,
+            "sigma_candidate": 21.92,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -145.79,
+            "bias_pct": -0.68,
+            "sem": 0.69,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.078804,
+            "cdf_p": 0.00005,
+            "support_value": -2823,
+            "support_mass": 0,
+            "support_p": 0.00315,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 962,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 41,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            12,
+            14,
+            12,
+            19,
+            15,
+            20,
+            18,
+            19,
+            19,
+            16,
+            10,
+            19,
+            16,
+            17,
+            18,
+            17
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": [
+              "WildlingRoar",
+              "Onslaught",
+              "IronStrength"
+            ]
+          },
+          "n": 1000,
+          "mean": -2967.685,
+          "sd": 22.12060342974614,
+          "min": -3052,
+          "max": -2902,
+          "central95": [
+            -3015,
+            -2926
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -2967.68,
+            "sigma_candidate": 22.12,
+            "n_reference": 1,
+            "mu_reference": -2823,
+            "sigma_reference": 0,
+            "bias_raw": -144.68,
+            "bias_pct": -0.67,
+            "sem": 0.7,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.078443,
+            "cdf_p": 0.00005,
+            "support_value": -2823,
+            "support_mass": 0,
+            "support_p": 0.00275,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 961,
+              "lancer": 1000,
+              "marksman": 1000
+            }
+          },
+          "firstRound": 41,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:defender.infantry->attacker.lancer": 24,
+            "CallingOfTheStorm/1:normal:defender.lancer->attacker.lancer": 24,
+            "CallingOfTheStorm/1:normal:defender.marksman->attacker.lancer": 20
+          },
+          "activationCounts": [
+            12,
+            14,
+            12,
+            19,
+            13,
+            19,
+            19,
+            18,
+            18,
+            16,
+            10,
+            19,
+            16,
+            17,
+            18,
+            17
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/molly_lynn_combo.json#0",
+      "path": "testcases/emulator_verified/molly_lynn_combo.json",
+      "fixtureSha256": "39f57ea17d26d9cebc5e14515340c84137a24913864196a317056a1d65512c89",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 79.3,
+              "defense": 81.9,
+              "lethality": 31.1,
+              "health": 38.1
+            },
+            "lanc": {
+              "attack": 84.3,
+              "defense": 79.1,
+              "lethality": 38.1,
+              "health": 31.3
+            },
+            "mark": {
+              "attack": 88.8,
+              "defense": 75.4,
+              "lethality": 37.6,
+              "health": 31.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddilyminxxx",
+          "heroes": {
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Lynn": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 150,
+            "marksman_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 221,
+              "defense": 205.8,
+              "lethality": 119.1,
+              "health": 132.4
+            },
+            "lanc": {
+              "attack": 263.2,
+              "defense": 259,
+              "lethality": 126.2,
+              "health": 127.4
+            },
+            "mark": {
+              "attack": 387.6,
+              "defense": 382.4,
+              "lethality": 188.4,
+              "health": 157.2
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 399
+        },
+        {
+          "attacker": 0,
+          "defender": 404
+        },
+        {
+          "attacker": 0,
+          "defender": 402
+        },
+        {
+          "attacker": 0,
+          "defender": 401
+        },
+        {
+          "attacker": 0,
+          "defender": 408
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:YouthfulRage",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "YouthfulRage/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:SongOfLion",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "SongOfLion/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:MelancholicBallad",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "MelancholicBallad/1"
+          ]
+        },
+        {
+          "key": "hero:Lynn:OonaiCadenza",
+          "side": "defender",
+          "level": 3,
+          "role": "main",
+          "instance_id": "main:lynn:0",
+          "effect_ids": [
+            "OonaiCadenza/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 450
+      },
+      "gameScores": [
+        -399,
+        -404,
+        -402,
+        -401,
+        -408
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -403.042,
+          "sd": 2.4016669219531748,
+          "min": -410,
+          "max": -396,
+          "central95": [
+            -408,
+            -398
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -403.04,
+            "sigma_candidate": 2.4,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": -0.24,
+            "bias_pct": -0.01,
+            "sem": 0.08,
+            "stat_type": "cdf_support",
+            "stat": 0.2422,
+            "p": 0.572471,
+            "passes": true,
+            "cdf_rms": 0.008767,
+            "cdf_p": 0.751312,
+            "support_value": -408,
+            "support_mass": 0.02811111,
+            "support_p": 0.378781,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 103,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 16,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:attacker.infantry->defender.infantry": 64,
+            "CallingOfTheStorm/1:normal:attacker.lancer->defender.infantry": 84,
+            "CallingOfTheStorm/1:normal:attacker.marksman->defender.infantry": 100
+          },
+          "activationCounts": [
+            5,
+            5,
+            4,
+            3,
+            7,
+            6,
+            5,
+            7,
+            5,
+            7,
+            7,
+            6,
+            9,
+            10,
+            8,
+            6
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -399.589,
+          "sd": 2.300297887311642,
+          "min": -405,
+          "max": -394,
+          "central95": [
+            -405,
+            -394
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -399.59,
+            "sigma_candidate": 2.3,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": 3.21,
+            "bias_pct": 0.19,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 3.699,
+            "p": 0.0002,
+            "passes": false,
+            "cdf_rms": 0.024727,
+            "cdf_p": 0.010299,
+            "support_value": -408,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 100,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 16,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            5,
+            5,
+            4,
+            3,
+            7,
+            6,
+            5,
+            7,
+            5,
+            7,
+            7,
+            8,
+            9,
+            10,
+            8,
+            6
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "SongOfLion"
+            ]
+          },
+          "n": 1000,
+          "mean": -399.589,
+          "sd": 2.300297887311642,
+          "min": -405,
+          "max": -394,
+          "central95": [
+            -405,
+            -394
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -399.59,
+            "sigma_candidate": 2.3,
+            "n_reference": 5,
+            "mu_reference": -402.8,
+            "sigma_reference": 3.42,
+            "bias_raw": 3.21,
+            "bias_pct": 0.19,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 3.699,
+            "p": 0.0002,
+            "passes": false,
+            "cdf_rms": 0.024727,
+            "cdf_p": 0.010299,
+            "support_value": -408,
+            "support_mass": 0,
+            "support_p": 0.00005,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 100,
+              "lancer": 150,
+              "marksman": 150
+            }
+          },
+          "firstRound": 16,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            5,
+            5,
+            4,
+            3,
+            7,
+            6,
+            5,
+            7,
+            5,
+            7,
+            7,
+            8,
+            9,
+            10,
+            8,
+            6
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/molly_solo.json#0",
+      "path": "testcases/emulator_verified/molly_solo.json",
+      "fixtureSha256": "5a425573bc8cda47ec80777841c9d4bdf8c057f502c155c326900a5629bbefe3",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.9,
+              "defense": 197.2,
+              "lethality": 118.1,
+              "health": 131.2
+            },
+            "lanc": {
+              "attack": 257.1,
+              "defense": 250.4,
+              "lethality": 125.3,
+              "health": 126.1
+            },
+            "mark": {
+              "attack": 205.9,
+              "defense": 198.2,
+              "lethality": 123,
+              "health": 124
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 300,
+            "lancer_t6": 240,
+            "marksman_t6": 300
+          },
+          "stats": {
+            "inf": {
+              "attack": 73.8,
+              "defense": 67.4,
+              "lethality": 30.1,
+              "health": 33.1
+            },
+            "lanc": {
+              "attack": 76.3,
+              "defense": 68.7,
+              "lethality": 33.1,
+              "health": 27.8
+            },
+            "mark": {
+              "attack": 76.8,
+              "defense": 64.9,
+              "lethality": 32.6,
+              "health": 28.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 245,
+          "defender": 0
+        },
+        {
+          "attacker": 245,
+          "defender": 0
+        },
+        {
+          "attacker": 244,
+          "defender": 0
+        },
+        {
+          "attacker": 245,
+          "defender": 0
+        },
+        {
+          "attacker": 245,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "attacker",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:YouthfulRage",
+          "side": "attacker",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "YouthfulRage/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 300,
+        "defender": 840
+      },
+      "gameScores": [
+        245,
+        245,
+        244,
+        245,
+        245
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 243.842,
+          "sd": 1.2420058689791151,
+          "min": 239,
+          "max": 248,
+          "central95": [
+            241,
+            246
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 243.84,
+            "sigma_candidate": 1.24,
+            "n_reference": 5,
+            "mu_reference": 244.8,
+            "sigma_reference": 0.45,
+            "bias_raw": -0.96,
+            "bias_pct": -0.08,
+            "sem": 0.04,
+            "stat_type": "cdf_support",
+            "stat": 1.2183,
+            "p": 0.060497,
+            "passes": true,
+            "cdf_rms": 0.018818,
+            "cdf_p": 0.038148,
+            "support_value": 245,
+            "support_mass": 0.19255556,
+            "support_p": 0.978801,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 47,
+              "lancer": 100,
+              "marksman": 100
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:defender.infantry->attacker.infantry": 112,
+            "CallingOfTheStorm/1:normal:defender.lancer->attacker.infantry": 142,
+            "CallingOfTheStorm/1:normal:defender.marksman->attacker.infantry": 173
+          },
+          "activationCounts": [
+            17,
+            13,
+            11,
+            12,
+            9,
+            11,
+            10,
+            14,
+            7,
+            13,
+            9,
+            10,
+            13,
+            6,
+            8,
+            10
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 239.802,
+          "sd": 0.7677143905029925,
+          "min": 237,
+          "max": 243,
+          "central95": [
+            237,
+            240
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 239.8,
+            "sigma_candidate": 0.77,
+            "n_reference": 5,
+            "mu_reference": 244.8,
+            "sigma_reference": 0.45,
+            "bias_raw": -5,
+            "bias_pct": -0.44,
+            "sem": 0.02,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.063646,
+            "cdf_p": 0.00005,
+            "support_value": 245,
+            "support_mass": 0.00033333,
+            "support_p": 0.00185,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 40,
+              "lancer": 100,
+              "marksman": 100
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            17,
+            13,
+            11,
+            12,
+            10,
+            11,
+            10,
+            14,
+            7,
+            13,
+            9,
+            11,
+            15,
+            6,
+            8,
+            10
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ],
+            "defender": []
+          },
+          "n": 1000,
+          "mean": 239.802,
+          "sd": 0.7677143905029925,
+          "min": 237,
+          "max": 243,
+          "central95": [
+            237,
+            240
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 239.8,
+            "sigma_candidate": 0.77,
+            "n_reference": 5,
+            "mu_reference": 244.8,
+            "sigma_reference": 0.45,
+            "bias_raw": -5,
+            "bias_pct": -0.44,
+            "sem": 0.02,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.063646,
+            "cdf_p": 0.00005,
+            "support_value": 245,
+            "support_mass": 0.00033333,
+            "support_p": 0.00185,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 40,
+              "lancer": 100,
+              "marksman": 100
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            17,
+            13,
+            11,
+            12,
+            10,
+            11,
+            10,
+            14,
+            7,
+            13,
+            9,
+            11,
+            15,
+            6,
+            8,
+            10
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/heroes_unittests/Molly_tc.json#3",
+      "path": "testcases/heroes_unittests/Molly_tc.json",
+      "fixtureSha256": "bb907e2b4934c9e54386a7bf00e45165fc9d031fe1054c3603beb33d7199e848",
+      "input": {
+        "attacker": {
+          "name": "daut",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 246.9,
+              "defense": 248.8,
+              "lethality": 186.1,
+              "health": 191.7
+            },
+            "lanc": {
+              "attack": 207.2,
+              "defense": 207.2,
+              "lethality": 186.7,
+              "health": 181.6
+            },
+            "mark": {
+              "attack": 216.2,
+              "defense": 210.4,
+              "lethality": 181.1,
+              "health": 176.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "viper",
+          "heroes": {
+            "Molly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 100,
+            "lancer_t6": 30,
+            "marksman_t6": 30
+          },
+          "stats": {
+            "inf": {
+              "attack": 305.3,
+              "defense": 297.6,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 363.1,
+              "defense": 361.9,
+              "lethality": 229.3,
+              "health": 235
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": {
+        "attacker": 1070,
+        "defender": 0
+      },
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:YouthfulRage",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "YouthfulRage/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 160
+      },
+      "gameScores": [
+        1070
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ]
+          },
+          "n": 1000,
+          "mean": 1070.959,
+          "sd": 2.215000050840924,
+          "min": 1065,
+          "max": 1078,
+          "central95": [
+            1067,
+            1075
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1070.96,
+            "sigma_candidate": 2.22,
+            "n_reference": 1,
+            "mu_reference": 1070,
+            "sigma_reference": 0,
+            "bias_raw": 0.96,
+            "bias_pct": 0.07,
+            "sem": 0.07,
+            "stat_type": "cdf_support",
+            "stat": 0.1469,
+            "p": 0.713014,
+            "passes": true,
+            "cdf_rms": 0.022392,
+            "cdf_p": 0.60072,
+            "support_value": 1070,
+            "support_mass": 0.14677778,
+            "support_p": 0.655617,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 873,
+              "lancer": 100,
+              "marksman": 100
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 44,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:attacker.infantry->defender.infantry": 233,
+            "CallingOfTheStorm/1:normal:attacker.lancer->defender.infantry": 232,
+            "CallingOfTheStorm/1:normal:attacker.marksman->defender.infantry": 228,
+            "CallingOfTheStorm/1:normal:attacker.infantry->defender.lancer": 33,
+            "CallingOfTheStorm/1:normal:attacker.lancer->defender.lancer": 27,
+            "CallingOfTheStorm/1:normal:attacker.marksman->defender.lancer": 27,
+            "CallingOfTheStorm/1:normal:attacker.infantry->defender.marksman": 23,
+            "CallingOfTheStorm/1:normal:attacker.lancer->defender.marksman": 23,
+            "CallingOfTheStorm/1:normal:attacker.marksman->defender.marksman": 21
+          },
+          "activationCounts": [
+            17,
+            18,
+            21,
+            18,
+            15,
+            23,
+            21,
+            15,
+            14,
+            19,
+            19,
+            17,
+            17,
+            15,
+            15,
+            25
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ]
+          },
+          "n": 1000,
+          "mean": 1079.702,
+          "sd": 1.1209158989203598,
+          "min": 1076,
+          "max": 1083,
+          "central95": [
+            1078,
+            1082
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1079.7,
+            "sigma_candidate": 1.12,
+            "n_reference": 1,
+            "mu_reference": 1070,
+            "sigma_reference": 0,
+            "bias_raw": 9.7,
+            "bias_pct": 0.71,
+            "sem": 0.04,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.081727,
+            "cdf_p": 0.00005,
+            "support_value": 1070,
+            "support_mass": 0,
+            "support_p": 0.00025,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 882,
+              "lancer": 100,
+              "marksman": 100
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 41,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            17,
+            17,
+            21,
+            17,
+            16,
+            22,
+            20,
+            13,
+            12,
+            17,
+            15,
+            16,
+            15,
+            16,
+            15,
+            23
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion"
+            ]
+          },
+          "n": 1000,
+          "mean": 1078.01,
+          "sd": 1.328783528519843,
+          "min": 1074,
+          "max": 1083,
+          "central95": [
+            1076,
+            1081
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 1078.01,
+            "sigma_candidate": 1.33,
+            "n_reference": 1,
+            "mu_reference": 1070,
+            "sigma_reference": 0,
+            "bias_raw": 8.01,
+            "bias_pct": 0.59,
+            "sem": 0.04,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 0.00005,
+            "passes": false,
+            "cdf_rms": 0.073165,
+            "cdf_p": 0.00005,
+            "support_value": 1070,
+            "support_mass": 0,
+            "support_p": 0.00015,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 880,
+              "lancer": 100,
+              "marksman": 100
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 42,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:attacker.infantry->defender.lancer": 37,
+            "CallingOfTheStorm/1:normal:attacker.lancer->defender.lancer": 27,
+            "CallingOfTheStorm/1:normal:attacker.marksman->defender.lancer": 26
+          },
+          "activationCounts": [
+            18,
+            17,
+            20,
+            16,
+            15,
+            21,
+            19,
+            13,
+            12,
+            17,
+            16,
+            17,
+            17,
+            18,
+            16,
+            21
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/heroes_unittests/Molly_tc.json#4",
+      "path": "testcases/heroes_unittests/Molly_tc.json",
+      "fixtureSha256": "bb907e2b4934c9e54386a7bf00e45165fc9d031fe1054c3603beb33d7199e848",
+      "input": {
+        "attacker": {
+          "name": "daut",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1000,
+            "lancer_t6": 300,
+            "marksman_t6": 500
+          },
+          "stats": {
+            "inf": {
+              "attack": 9.94,
+              "defense": 9.44,
+              "lethality": 1.75,
+              "health": 1.75
+            },
+            "lanc": {
+              "attack": 9.94,
+              "defense": 9.44,
+              "lethality": 1.75,
+              "health": 1.75
+            },
+            "mark": {
+              "attack": 10.43,
+              "defense": 9.44,
+              "lethality": 1.75,
+              "health": 1.75
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "viper",
+          "heroes": {
+            "Molly": {
+              "skill_1": 5,
+              "skill_2": 4,
+              "skill_3": 5
+            }
+          },
+          "troops": {
+            "infantry_t10": 100,
+            "lancer_t10": 50,
+            "marksman_t10": 50
+          },
+          "stats": {
+            "inf": {
+              "attack": 184.5,
+              "defense": 188,
+              "lethality": 107.24,
+              "health": 114.18
+            },
+            "lanc": {
+              "attack": 314.79,
+              "defense": 310.79,
+              "lethality": 184.63,
+              "health": 118.38
+            },
+            "mark": {
+              "attack": 174.75,
+              "defense": 168.25,
+              "lethality": 117.75,
+              "health": 104.74
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": {
+        "attacker": 0,
+        "defender": 190
+      },
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:CallingOfTheStorm",
+          "side": "defender",
+          "level": 5,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "CallingOfTheStorm/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:IceDominion",
+          "side": "defender",
+          "level": 4,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "IceDominion/1"
+          ]
+        },
+        {
+          "key": "hero:Molly:YouthfulRage",
+          "side": "defender",
+          "level": 5,
+          "role": "main",
+          "instance_id": "main:molly:0",
+          "effect_ids": [
+            "YouthfulRage/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:BandsOfSteel",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "BandsOfSteel/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:Ambusher",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Ambusher/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "troop:Volley",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Volley/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1800,
+        "defender": 200
+      },
+      "gameScores": [
+        -190
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "Ambusher",
+              "Volley"
+            ]
+          },
+          "n": 1000,
+          "mean": -190.559,
+          "sd": 1.5201413848158458,
+          "min": -194,
+          "max": -187,
+          "central95": [
+            -193,
+            -188
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -190.56,
+            "sigma_candidate": 1.52,
+            "n_reference": 1,
+            "mu_reference": -190,
+            "sigma_reference": 0,
+            "bias_raw": -0.56,
+            "bias_pct": -0.03,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.0227,
+            "p": 0.949153,
+            "passes": true,
+            "cdf_rms": 0.014461,
+            "cdf_p": 0.780261,
+            "support_value": -190,
+            "support_mass": 0.19455556,
+            "support_p": 0.973201,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 90,
+              "lancer": 50,
+              "marksman": 50
+            }
+          },
+          "firstRound": 21,
+          "tracedRuns": 16,
+          "appliedJobCounts": {
+            "CallingOfTheStorm/1:normal:attacker.infantry->defender.infantry": 117,
+            "CallingOfTheStorm/1:normal:attacker.lancer->defender.infantry": 131,
+            "CallingOfTheStorm/1:normal:attacker.marksman->defender.infantry": 123
+          },
+          "activationCounts": [
+            9,
+            10,
+            9,
+            9,
+            8,
+            5,
+            10,
+            12,
+            10,
+            5,
+            8,
+            8,
+            8,
+            9,
+            6,
+            11
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "Ambusher",
+              "Volley"
+            ]
+          },
+          "n": 1000,
+          "mean": -189.025,
+          "sd": 1.6736714660219798,
+          "min": -193,
+          "max": -185,
+          "central95": [
+            -192,
+            -186
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -189.03,
+            "sigma_candidate": 1.67,
+            "n_reference": 1,
+            "mu_reference": -190,
+            "sigma_reference": 0,
+            "bias_raw": 0.97,
+            "bias_pct": 0.05,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.1517,
+            "p": 0.705215,
+            "passes": true,
+            "cdf_rms": 0.01786,
+            "cdf_p": 0.60047,
+            "support_value": -190,
+            "support_mass": 0.16288889,
+            "support_p": 0.616069,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 88,
+              "lancer": 50,
+              "marksman": 50
+            }
+          },
+          "firstRound": 21,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            9,
+            10,
+            9,
+            9,
+            8,
+            5,
+            10,
+            11,
+            10,
+            5,
+            8,
+            8,
+            8,
+            9,
+            6,
+            11
+          ]
+        },
+        "lancer_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "CallingOfTheStorm",
+              "IceDominion",
+              "Ambusher",
+              "Volley"
+            ]
+          },
+          "n": 1000,
+          "mean": -189.025,
+          "sd": 1.6736714660219798,
+          "min": -193,
+          "max": -185,
+          "central95": [
+            -192,
+            -186
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -189.03,
+            "sigma_candidate": 1.67,
+            "n_reference": 1,
+            "mu_reference": -190,
+            "sigma_reference": 0,
+            "bias_raw": 0.97,
+            "bias_pct": 0.05,
+            "sem": 0.05,
+            "stat_type": "cdf_support",
+            "stat": 0.1517,
+            "p": 0.705215,
+            "passes": true,
+            "cdf_rms": 0.01786,
+            "cdf_p": 0.60047,
+            "support_value": -190,
+            "support_mass": 0.16288889,
+            "support_p": 0.616069,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 88,
+              "lancer": 50,
+              "marksman": 50
+            }
+          },
+          "firstRound": 21,
+          "tracedRuns": 16,
+          "appliedJobCounts": {},
+          "activationCounts": [
+            9,
+            10,
+            9,
+            9,
+            8,
+            5,
+            10,
+            11,
+            10,
+            5,
+            8,
+            8,
+            8,
+            9,
+            6,
+            11
+          ]
+        }
+      }
+    }
+  ]
+}

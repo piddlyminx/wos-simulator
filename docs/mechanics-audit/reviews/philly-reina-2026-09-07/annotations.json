@@ -1,0 +1,69 @@
+{
+  "hero:Philly:VigorTactics": {
+    "source_sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+    "status": "partially_supported",
+    "context": "Two full-kit solo inputs gameA2254/2252 and3606/3637/3616 fit current2252.722 SD83.805 and3622.461 SD13.022. Attack-component omission2510.660/3647.844 and Defense omission2440.847/3641.910 fail; Lancer-only also fails both and stronger Philly/Bahiti. Supports both components and recipients beyond Lancers at recorded levels1/2. Small Infantry-only repeated endpoint differences are retained without treating statistical significance alone as materiality. An earlier Philly/Bahiti observation accepts all tested omissions. Exact buckets, every recipient/level, stacking and role/lifecycle remain unreviewed.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/VigorTactics-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/VigorTactics-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": []
+  },
+  "hero:Philly:NumbingSpores": {
+    "source_sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+    "status": "partially_supported",
+    "context": "Four accepted input sets at level1: two solo current2252.722 SD83.805/3622.461 SD13.022 agree, while omission2448.068 SD70.811/3639.270 SD9.785 fails. Stronger repeated Philly/Bahiti also rejects omission. Infantry-only protection remains plausible everywhere, so positive backline scope is unresolved; normal-only protection is sample-identical throughout, so incoming skill-damage protection is unexercised. Supports contextual protection contribution, not exact40% chance, shared-round timing, value/bucket, all recipients or higher levels.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/NumbingSpores-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/NumbingSpores-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "damage_kind"
+    ]
+  },
+  "hero:Reina:AssassinsInstinct": {
+    "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+    "status": "partially_supported",
+    "context": "Two accepted S2/S3-locked deterministic cases game/currentD62 andD40, versus omissionA392/A596 or Lancer-onlyA137/A406, strongly support S1 and recipients beyond Lancers. Six-outcome S3-locked case currentA1403.836 SD119.608 p.897255 rejects omission1763.761 and Lancer-only1633.625. Many single mixed inputs and the new S3 five-battle probe accept omission and are not positive S1 discriminators. Allowing skill damage or changing to hero damage bucket remains plausible in every case, often identical. Exact normal-only eligibility/bucket and full coefficient/level/role/lifecycle remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/AssassinsInstinct-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/AssassinsInstinct-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Reina:SwiftJive": {
+    "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+    "status": "partially_supported",
+    "context": "Six accepted S3-locked outcomes gameA1297-1579 fit current1403.836 SD119.608; omissionconstant1710 and enemy-Infantry-only1709.194 SD5.319 fail. Flint/Reina/Zinman and Reina/Logan also reject both, supporting chance protection against sources beyond enemy Infantry. Own-Infantry-only remains plausible in six-outcome case1467.300 SD102.698 p.011549 and most others; one Sergey/Reina case rejects it but does not close broad recipient scope. New S3 five-battle set accepts S2 omission. Earlier specific shared/reactive-round alternatives remain disfavored separately. Exact chance, kind/delivery/cancellation, target exhaustion, all recipients/levels remain open; production TBD retained.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/SwiftJive-initial.json",
+      "docs/mechanics-audit/reviews/philly-reina-2026-09-07/SwiftJive-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "duration_delay_and_order"
+    ]
+  }
+}

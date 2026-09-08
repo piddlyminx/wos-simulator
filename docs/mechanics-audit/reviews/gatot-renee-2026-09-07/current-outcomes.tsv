@@ -1,0 +1,103 @@
+fixture_key	record_index	game_A	game_D	game_winner	game_rounds	initial_A	initial_D	max_rounds	deterministic	sim_n	score_mean	score_sd	p	sim_A_first	sim_D_first	sim_first_round	sim_first_winner	score_error_if_deterministic	A_error_if_deterministic	D_error_if_deterministic	round_error_if_known	sim_score_at_or_below_game	sim_score_at_or_above_game	sim_exact_sides	sim_exact_sides_and_known_round
+testcases/gatot_verified/s1-4900-vs-1000.json#0	0	4897	996	draw	1500	4900	1000	1500	True	1	3901	0		4897	996	1500	draw	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s1-4950-vs-1000.json#0	0	4947	855	draw	1500	4950	1000	1500	True	1	4085	0		4947	862	1500	draw	-7	0	7	0	1	0	0	0
+testcases/gatot_verified/s1-5000-vs-1000.json#0	0	4997	513	draw	1500	5000	1000	1500	True	1	4475	0		4997	522	1500	draw	-9	0	9	0	1	0	0	0
+testcases/gatot_verified/s1-5050-vs-1000.json#0	0	5047	74	draw	1500	5050	1000	1500	True	1	4959	0		5047	88	1500	draw	-14	0	14	0	1	0	0	0
+testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0	0	0	2296	defender	875	1125	5000	1500	True	1	-2274	0		0	2274	881	defender	22	0	-22	6	0	1	0	0
+testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	0	851	0	attacker	366	1250	5000	1500	True	1	834	0		834	0	376	attacker	-17	-17	0	10	1	0	0	0
+testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0	0	0	4491	defender	278	2000	5000	1500	True	1	-4488	0		0	4488	278	defender	3	0	-3	0	0	1	0	0
+testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0	0	0	4973	defender	266	2000	5000	1500	True	1	-4972	0		0	4972	266	defender	1	0	-1	0	0	1	0	0
+testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0	0	0	3064	defender	238	3000	5000	1500	True	1	-3054	0		0	3054	239	defender	10	0	-10	1	0	1	0	0
+testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0	0	1281	0	attacker	907	3000	5000	1500	True	1	1327	0		1327	0	898	attacker	46	46	0	-9	0	1	0	0
+testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0	0	0	4338	defender	545	3000	5000	1500	True	1	-4334	0		0	4334	546	defender	4	0	-4	1	0	1	0	0
+testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0	0	2777	0	attacker		3000	1000	1500	True	1	2777	0		2777	0	74	attacker	0	0	0		1	1	1	1
+testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0	0	3809	0	attacker		4000	1000	1500	True	1	3809	0		3809	0	63	attacker	0	0	0		1	1	1	1
+testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0	0	396	0	attacker		4000	5000	1500	True	1	394	0		394	0	196	attacker	-2	-2	0		1	0	0	0
+testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0	0	0	2513	defender		7500	5000	1500	True	1	-2514	0		0	2514	406	defender	-1	0	1		1	0	0	0
+testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0	0	4947	904	draw	1500	4950	1000	1500	True	1	4038	0		4947	909	1500	draw	-5	0	5	0	1	0	0	0
+testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0	0	4997	670	draw	1500	5000	1000	1500	True	1	4321	0		4997	676	1500	draw	-6	0	6	0	1	0	0	0
+testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0	0	5047	406	draw	1500	5050	1000	1500	True	1	4634	0		5047	413	1500	draw	-7	0	7	0	1	0	0	0
+testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0	0	5097	80	draw	1500	5100	1000	1500	True	1	5007	0		5097	90	1500	draw	-10	0	10	0	1	0	0	0
+testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0	0	5147	0	attacker		5150	1000	1500	True	1	5147	0		5147	0	1414	attacker	0	0	0		1	1	1	1
+testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0	0	0	2110	defender	109	4000	5000	1500	True	1	-2111	0		0	2111	109	defender	-1	0	1	0	1	0	0	0
+testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0	0	3441	0	attacker	92	4000	2000	1500	True	1	3440	0		3440	0	92	attacker	-1	-1	0	0	1	0	0	0
+testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0	0	2959	0	attacker	115	4000	3000	1500	True	1	2959	0		2959	0	115	attacker	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0	0	2365	0	attacker	136	4000	4000	1500	True	1	2365	0		2365	0	136	attacker	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0	0	554	0	attacker	241	4000	5000	1500	True	1	552	0		552	0	241	attacker	-2	-2	0	0	1	0	0	0
+testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	0	4573	0	attacker	1151	5000	1010	1500	True	1	4996	0		4996	0	1037	attacker	423	423	0	-114	0	1	0	0
+testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0	0	2291	0	attacker	148	4000	5000	1500	True	1	2290	0		2290	0	148	attacker	-1	-1	0	0	1	0	0	0
+testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0	0	0	2738	defender		750	3000	1500	True	1	-2738	0		0	2738	43	defender	0	0	0		1	1	1	1
+testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0	0	0	4977	defender		500	5000	1500	False	500	-4972.116	4.5426661368916985	0.360982	0	4977	16	defender					78	444	22	22
+testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0	0	0	236	defender	179	4200	1100	1500	True	1	-236	0		0	236	179	defender	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0	0	0	314	defender	167	4000	1100	1500	True	1	-314	0		0	314	167	defender	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0	0	0	1058	defender	36	1200	1100	1500	True	1	-1058	0		0	1058	36	defender	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0	0	3782	0	attacker	125	4000	5000	1500	True	1	3782	0		3782	0	125	attacker	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0	0	0	224	defender	343	1600	1100	1500	True	1	-224	0		0	224	343	defender	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0	0	0	397	defender	101	1400	500	1500	True	1	-397	0		0	397	101	defender	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s4-fc9-gatot-10000.json#0	0	9992	0	attacker	923	10000	10000	1500	False	500	9993.158	1.4619543841182225	1	9992	0	968	attacker					307	500	307	0
+testcases/gatot_verified/s4-fc9-gatot-20000.json#0	0	19983	0	attacker	702	20000	20000	1500	False	500	19985.184	2.8897829834405906	1	19983	0	701	attacker					318	500	318	9
+testcases/gatot_verified/s4-fc9-gatot-40000.json#0	0	39135	0	attacker	610	40000	40000	1500	False	500	39252.358	43.40846029116561	0.014899	39317	0	606	attacker					0	500	0	0
+testcases/gatot_verified/s4-fc9-gatot-90000.json#0	0	83565	0	attacker	560	90000	90000	1500	False	500	83398.882	208.80816501169457	0.420579	83219	0	567	attacker					404	97	1	0
+testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0	0	2802	0	attacker	189	3000	5000	1500	True	1	2802	0		2802	0	189	attacker	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0	0	939	0	attacker	196	1100	500	1500	True	1	939	0		939	0	196	attacker	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0	0	200	168	draw	1500	200	450	1500	False	500	31.24	1.7969022553914464	1	200	168	1500	draw					500	424	424	424
+testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0	0	173	200	draw	1500	450	200	1500	True	1	-27	0		173	200	1500	draw	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0	0	975	498	draw	1500	2500	500	1500	True	1	477	0		975	498	1500	draw	0	0	0	0	1	1	1	1
+testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0	0	19986	0	attacker	705	20000	20000	1500	False	500	19987.84	2.413721629394824	1	19991	0	717	attacker					316	500	316	24
+testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0	0	39914	0	attacker	598	40000	40000	1500	False	500	39914.57	7.6392287327493005	0.647268	39921	0	604	attacker					251	267	18	0
+testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0	0	86767	0	attacker	554	90000	90000	1500	False	500	86801.584	143.95736309330465	0.459227	86799	0	547	attacker					214	286	0	0
+testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0	0	9540	1	draw	1500	10000	1	1500	False	500	9539	0	1	9540	1	1500	draw					500	500	500	500
+testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	9720	1	draw	1500	10000	1	1500	False	500	9719	0	1	9720	1	1500	draw					500	500	500	500
+testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	11268	1	draw	1500	11548	1	1500	False	500	11344.842	25.174919844526954	0.00175	11315	0	1247	attacker					1	500	1	1
+testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	11548	0	attacker	1300	11791	1	1500	False	500	11605.97	22.886692670694178	0.014999	11620	0	914	attacker					5	496	1	0
+testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	11791	0	attacker	1121	12000	1	1500	False	500	11826.482	22.44962465821175	0.131093	11837	0	871	attacker					35	467	2	0
+testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	19943	0	attacker	308	20000	1	1500	False	500	19942.93	12.41472314235814	0.975351	19958	0	229	attacker					251	267	18	4
+testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	24929	0	attacker	329	25000	1	1500	False	500	24963.074	9.46317215602189	0.00255	24957	0	231	attacker					1	499	0	0
+testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	30081	0	attacker	189	30116	1	1500	False	500	30087.208	8.194818246439926	0.416379	30084	0	173	attacker					109	408	17	1
+testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	30116	0	attacker	123	30139	1	1500	False	500	30110.914	8.358848287256992	0.681466	30117	0	122	attacker					365	156	21	4
+testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	30139	0	attacker	216	30179	1	1500	False	500	30150.136	8.669938850958435	0.173191	30147	0	172	attacker					57	447	4	0
+testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	30179	0	attacker	139	30205	1	1500	False	500	30176.21	7.874128764988224	0.863057	30185	0	111	attacker					324	209	33	4
+testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	30205	0	attacker	123	30228	1	1500	False	500	30199.966	7.805042047466808	0.707215	30213	0	85	attacker					373	153	26	6
+testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	33401	0	attacker	144	33427	1	1500	False	500	33402.77	6.840664396004051	0.867557	33406	0	113	attacker					203	327	30	7
+testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	33427	0	attacker	135	33452	1	1500	False	500	33426.856	7.472009492211779	0.876706	33426	0	141	attacker					245	279	24	5
+testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	33452	0	attacker	160	33481	1	1500	False	500	33456.22	6.9466619483352146	0.427029	33450	0	170	attacker					135	386	21	6
+testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0	0	33481	0	attacker	157	33510	1	1500	False	500	33485.798	7.2706892275552315	0.432728	33473	0	199	attacker					127	392	19	3
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	0	2057	0			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					934	67	1	1
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	1	581	9			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					692	308	0	0
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	2	0	2668			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					159	842	1	1
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	3	1547	0			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					823	178	1	1
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	4	2428	0			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					972	28	0	0
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	5	2199	0			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					949	51	0	0
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	6	0	1731			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					393	607	0	0
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	7	1178	0			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					769	231	0	0
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	8	0	1580			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					421	579	0	0
+testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0	9	0	2209			7500	10000	1500	False	1000	-777.058	1876.2845013926249	0.154992	1596	0	111	attacker					271	729	0	0
+testcases/emulator_verified/hector_renee_wayne.json#0	0	1597	0			1700	300	1500	False	1000	1588.157	2.8214023660781535	0.00525	1590	0	141	attacker					999	3	2	2
+testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0	0	3777	0			4500	13400	1500	True	1	3778	0		3778	0	77	attacker	1	1	0		0	1	0	0
+testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0	0	50	0			500	1490	1500	True	1	50	0		50	0	31	attacker	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0	0	318	0			500	900	1500	True	1	318	0		318	0	55	attacker	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0	0	14	0			120	446	1500	True	1	14	0		14	0	122	attacker	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_solo_nc.json#0	0	0	554			1260	600	1500	True	1	-554	0		0	554	11	defender	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_solo_nc.json#0	1	0	554			1260	600	1500	True	1	-554	0		0	554	11	defender	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_solo_nc.json#0	2	0	554			1260	600	1500	True	1	-554	0		0	554	11	defender	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_solo_nc.json#0	3	0	554			1260	600	1500	True	1	-554	0		0	554	11	defender	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_solo_nc.json#0	4	0	554			1260	600	1500	True	1	-554	0		0	554	11	defender	0	0	0		1	1	1	1
+testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0	0	427	0			510	888	1500	False	1000	423.311	1.7468057506003072	0.072396	423	0	43	attacker					991	40	31	31
+testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0	0	359	0			1500	4000	1500	True	1	359	0		359	0	103	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_100_lancer_control_nc.json#0	0	2669	0			2800	401	1500	True	1	2669	0		2669	0	22	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_100_lancer_nc.json#0	0	2352	0			2800	401	1500	True	1	2352	0		2352	0	26	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_25_lancer_control_nc.json#0	0	2672	0			2800	401	1500	True	1	2672	0		2672	0	21	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_25_lancer_nc.json#0	0	2515	0			2800	401	1500	True	1	2516	0		2516	0	23	attacker	1	1	0		0	1	0	0
+archive:testcases/emulator_verified/renee_kind_25_lancer_nc.json#0	1	2515	0			2800	401	1500	True	1	2516	0		2516	0	23	attacker	1	1	0		0	1	0	0
+archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_control_nc.json#0	0	2772	0			3000	100	1500	True	1	2772	0		2772	0	46	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_s1_damage_up_anchor_edith_nc.json#0	0	2703	0			3000	100	1500	True	1	2703	0		2703	0	53	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_zero_lancer_control_nc.json#0	0	2688	0			2800	401	1500	True	1	2688	0		2688	0	21	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_kind_zero_lancer_nc.json#0	0	2688	0			2800	401	1500	True	1	2688	0		2688	0	21	attacker	0	0	0		1	1	1	1
+archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0	0	1631	0			5000	400	1500	True	1	1622	0		1622	0	42	attacker	-9	-9	0		1	0	0	0
+archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0	0	2810	0			10000	800	1500	True	1	2574	0		2574	0	38	attacker	-236	-236	0		1	0	0	0
+archive:testcases/emulator_verified/renee_same_kind_edith_damage_up_nc.json#0	0	4883	0			8000	500	1500	True	1	4882	0		4882	0	24	attacker	-1	-1	0		1	0	0	0
+archive:testcases/emulator_verified/renee_same_kind_hendrik_defense_down_nc.json#0	0	46014	0			57400	40	1500	False	1000	48221.448	638.7782564841706	0.001	47469	0	38	attacker					1	999	0	0
+archive:testcases/emulator_verified/renee_same_kind_jasser_lethality_up_nc.json#0	0	791	0			8000	800	1500	True	1	787	0		787	0	35	attacker	-4	-4	0		1	0	0	0
+archive:testcases/emulator_verified/renee_same_kind_seo_yoon_attack_up_nc.json#0	0	1334	0			8000	800	1500	True	1	1326	0		1326	0	33	attacker	-8	-8	0		1	0	0	0
+archive:testcases/emulator_verified/renee_same_kind_wu_ming_skill_damage_nc.json#0	0	1639	0			8000	800	1500	True	1	1637	0		1637	0	32	attacker	-2	-2	0		1	0	0	0
+archive:skill/tmp/renee_gwen_2k_discriminator.ts#observed	0	1221	0			2000	10000	1500	True	1	1221	0		1221	0	67	attacker	0	0	0		1	1	1	1

@@ -1,0 +1,158 @@
+{
+  "hero:Lynn:SongOfLion": {
+    "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "status": "partially_supported",
+    "context": "Six entries/20 outcomes, level3. Lancer-only Gordon/Lynn defender gives game attacker mean5065.4, current5040.138 SD219.080 p0.376931; omission and Marksman-only5605 fail. Solo current185.632 defender SD20.046 fits five outcomes, omission99 fails. Contribution outside Marksmen supported; lethality versus hero-damage bucket remains plausible everywhere. Exact magnitude/chance/duration, full curve and unexercised interactions remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Lynn:MelancholicBallad": {
+    "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "status": "partially_supported",
+    "context": "Six entries/20 outcomes, level3. Solo game defenders167/200/191/199/149 fit current185.632 SD20.046; omission62.499 SD49.045 and enemy-Infantry-only103.374 SD28.658 fail. Both alternatives fail every reviewed entry, supporting contribution beyond enemy Infantry damage sources. Normal-only samples identical throughout: skill-kind protection unexercised. Exact curve/bucket/role/lifecycle remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/MelancholicBallad-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/MelancholicBallad-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind"
+    ]
+  },
+  "hero:Lynn:OonaiCadenza": {
+    "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+    "status": "unresolved",
+    "context": "Six entries/20 outcomes, level3. Current fits all, but omission remains plausible in every set. Solo omission signedA-D42.590 SD245.523 p0.013549 can produce observed defender wins167/200/191/199/149; currentD185.632 SD20.046 p0.291085. Max-stack and all-own alternatives fail that solo, but do not establish positive contribution or current stacking while omission is plausible. Need a less variable positive-contribution discriminator; full timing/stacking/scope remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/OonaiCadenza-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Norah:CombinedArms": {
+    "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "status": "partially_supported",
+    "context": "Thirteen entries/34 outcomes, hydrated levels1/2. Strong four-record norah_s2_inf_only_A gameA643/643/646/645 fits643.944 SD2.848. Omit674.323, omit offense657.365, omit protection661.012, Infantry-only657.390 and all-own629.684 fail. Both components and I/M recipient scope supported in this context; Lancer-only splash-D is unchanged by omission but rejects expansion to Lancers. Other full-kit sets may accept omission. Exact coefficient/curve, kind and bucket interactions remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/CombinedArms-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/CombinedArms-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Norah:SneakStrike": {
+    "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "status": "partially_supported",
+    "context": "Thirteen entries/34 outcomes, hydrated levels1/2. Seven solo outcomesA2703-2833 fit2740.246 SD53.097; omission2898, primary-target-only2880.242 SD5.969 and all-sources2489.321 SD95.275 fail. Five-record Norah/Greg also rejects these alternatives, supporting positive fanout and constrained source scope. Normal-kind alternative has identical samples throughout; skill classification not identified. Exact chance/curve, proc timing and lifecycle remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SneakStrike-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SneakStrike-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "damage_kind",
+      "trigger_chance_and_cadence"
+    ]
+  },
+  "hero:Norah:Momentum": {
+    "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+    "status": "partially_supported",
+    "context": "Three entries/six outcomes, hydrated levels1/2. Four-record norah_s2_inf_only_A currentA643.944 SD2.848 fits643/643/646/645; omission669.172, omit offense658.090, omit protection656.867, immediate onset651.031 and one-turn656.800 fail. Supports both components, next-turn onset and two-versus-one duration in this context. All-enemy offense samples identical because only one enemy class; two mixed single outcomes accept alternatives. Target lock, full cadence/curve and kind/bucket behavior remain open.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/Momentum-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/Momentum-initial-samples.json"
+    ],
+    "supported_dimensions": [
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "trigger_chance_and_cadence",
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Molly:YouthfulRage": {
+    "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+    "status": "partially_supported",
+    "context": "Four entries/12 outcomes, hydrated levels1/5. Solo five outcomesA245/245/244/245/245 fit243.907 SD1.175 p0.077146; omission241.172 and Marksman-only242.559 flagged, with only small1-4-survivor differences. Historical Molly_tc#3 game1070 fits1070.990 SD2.300, omission1077.160 p0.0028 flags, Marksman-only1074.020 plausible. Other sets accept omission. Limited positive contextual contribution; broader recipient and bucket claims remain unresolved, hero-damage bucket plausible throughout.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/YouthfulRage-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/YouthfulRage-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Natalia:WildlingRoar": {
+    "source_sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab",
+    "status": "unresolved",
+    "context": "Single solo gameA2664 fits current2617.141 SD20.342 p0.032898 in its upper tail; omission2706 and Infantry-only2647.094 fail. The closer Infantry-only mean lies between discrete clusters and no sampled scores2658-2668, unlike current. Conditional solo support conflicts with accepted mixed six-hero#2: gameD2823/current2907.495 SD26.089 p0.0012, omission2827.680 p0.823359. Do not attribute mixed-kit defect to Natalia or discard that evidence. Normal-only alternative does not identify kind; more independent observations and interactions required.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/WildlingRoar-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "damage_kind",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Natalia:QueenOfTheWild": {
+    "source_sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab",
+    "status": "unresolved",
+    "context": "Single solo gameA2664 is plausible under current2617.141 SD20.342 p0.032898; omission2752.379 and Infantry-only2741.862 fail. Conditional positive contribution and broad scope conflict with mixed six-hero#2 gameD2823/current2907.495 p0.0012: omission2808.573 p0.651817 or Infantry-only2823.654 p0.998500 improve. No attribution or production fix from confounded mixed kit. Hero-damage bucket identical solo but does not fix mixed discrepancy. Exact scope/bucket/curve remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/QueenOfTheWild-initial.json",
+      "docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/QueenOfTheWild-initial-samples.json"
+    ],
+    "supported_dimensions": [],
+    "unresolved_dimensions": [
+      "source_and_target_scope",
+      "stacking_and_buckets"
+    ]
+  }
+}

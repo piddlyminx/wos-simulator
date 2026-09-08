@@ -1,0 +1,53 @@
+{
+  "report_timestamp_displayed": "2026-09-07 05:52:29",
+  "world_coord": {
+    "x": 791,
+    "y": 577
+  },
+  "attacker": {
+    "troops": 2200,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 770,
+    "lightly_injured": 1430
+  },
+  "defender": {
+    "troops": 1800,
+    "survivors": 1175,
+    "losses": 0,
+    "injured": 219,
+    "lightly_injured": 406
+  },
+  "per_troop_survivors": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 175,
+      "lancer": 200,
+      "marksman": 800
+    }
+  },
+  "skill_details": {
+    "defender": {
+      "Sonya": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 51,
+          "displayed_kills": 16
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "mail_ids": {
+    "defender_view": "2734692464122411"
+  },
+  "defender_troop_details_source": "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-troops.json",
+  "transcription": "Visually checked overview, every displayed stat, exact T6 troop counts, Sonya identity and full1/1/0 kit, Battle Details and defender troop outcomes. Explicit round total unavailable. Counterpart report is the same battle, not an additional observation. Dash retained as null."
+}

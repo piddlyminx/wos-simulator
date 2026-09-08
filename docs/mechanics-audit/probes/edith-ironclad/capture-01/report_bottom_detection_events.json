@@ -1,0 +1,20 @@
+[
+  {
+    "step": 0,
+    "event": "detect",
+    "end_found": false,
+    "snippet": "battle_details_button template not found"
+  },
+  {
+    "step": 1,
+    "event": "detect",
+    "end_found": false,
+    "snippet": "battle_details_button template not found"
+  },
+  {
+    "step": 2,
+    "event": "detect",
+    "end_found": true,
+    "snippet": "battle_details_button found at (197,1035) score=0.977"
+  }
+]

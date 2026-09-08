@@ -1,0 +1,13 @@
+{
+  "evidence_kind": "captured_in_game_skill_tooltip",
+  "capture_context": "Second battle minxxx defender Battle Details, tapping opposing Reina S3 icon. Same battle as capture-02; no new observation.",
+  "title": "Shadow Blade Lv. 1",
+  "text": "With Reina's clever tactics, her Lancers have a 25% chance of performing an extra attack, dealing 120% damage.",
+  "displayed_damage_percent": 120,
+  "displayed_chance_percent": 25,
+  "hero": "Reina",
+  "skill": 3,
+  "level": 1,
+  "sha256": "3cab51dab706ca8ac2cb6222c2b1ba06d0d6e031acd15f8f28fb98ebaa0b92a2",
+  "exposure": "Read after capture2 endpoint163 and after parent communicated frozen100/120 alternatives. Text directly observed; no fitted numeric value."
+}

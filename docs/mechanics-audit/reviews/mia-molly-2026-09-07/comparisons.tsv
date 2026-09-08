@@ -1,0 +1,130 @@
+skill	fixture_key	game_scores_A_minus_D	game_n	game_mean	game_sd	candidate	sim_n	sim_mean	sim_sd	central95_low	central95_high	p	initial_attacker	initial_defender
+hero:Mia:BadLuckStreak	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		current	1000	-2271.998	9.850737689789176	-2291	-2254	0.014949	11000	2500
+hero:Mia:BadLuckStreak	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit	1000	-2289.613	9.010461665165634	-2307	-2273	0.651917	11000	2500
+hero:Mia:BadLuckStreak	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		lancer_only	1000	-2279.602	8.910499031647635	-2297	-2262	0.104045	11000	2500
+hero:Mia:BadLuckStreak	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	current	1000	3351.309	19.10970171665949	3317	3390	0.79026	3969	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	omit	1000	3469.65	12.809980312069007	3446	3496	0.0001	3969	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	lancer_only	1000	3401.643	19.78274267911076	3362	3440	5e-05	3969	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	current	1000	3544.451	16.716729585898307	3514	3577	0.99995	4069	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	omit	1000	3644.98	10.939436515253954	3627	3664	5e-05	4069	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	lancer_only	1000	3587.439	17.705755357306085	3554	3623	5e-05	4069	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	current	1000	3444.551	15.873038535590862	3415	3476	0.559022	3969	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	omit	1000	3545.584	10.73490485203211	3528	3565	5e-05	3969	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	lancer_only	1000	3487.445	17.72182377855162	3453	3519	5e-05	3969	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		current	1000	-266.826	9.172451027825554	-290	-251	0.540173	2800	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		omit	1000	-206.285	16.07377183927721	-218	-156	0.00265	2800	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		lancer_only	1000	-241.507	12.414026706071615	-264	-217	0.264437	2800	600
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		current	1000	1299.593	9.316552428293905	1286	1322	0.79826	1960	300
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		omit	1000	1351.614	8.26385474795484	1339	1371	5e-05	1960	300
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		lancer_only	1000	1321.868	10.649506466873856	1305	1346	0.0005	1960	300
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		current	1000	-181.665	3.7543135018096185	-191	-175	1	1260	300
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		omit	1000	-161.669	3.7514680476464677	-169	-157	0.0001	1260	300
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		lancer_only	1000	-175.028	4.3761131573996455	-183	-168	0.627469	1260	300
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#3	879	1	879		current	1000	879.707	4.179068749807249	873	891	1	1260	180
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#3	879	1	879		omit	1000	908.335	3.3965145828203687	904	918	5e-05	1260	180
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#3	879	1	879		lancer_only	1000	892.095	4.538565144797813	884	904	0.00735	1260	180
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#4	967	1	967		current	1000	972.045	4.59914417333562	965	982	0.475176	1260	150
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#4	967	1	967		omit	1000	993.542	3.9787015552898852	988	1001	5e-05	1260	150
+hero:Mia:BadLuckStreak	testcases/emulator_verified/mia_solo.json#4	967	1	967		lancer_only	1000	981.347	4.703053232710597	974	991	5e-05	1260	150
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#0	-181	1	-181		current	1000	-172.297	4.163667509195111	-181	-169	0.141643	4000	400
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#0	-181	1	-181		omit	1000	-114.279	7.976514513481692	-130	-106	5e-05	4000	400
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#0	-181	1	-181		lancer_only	1000	-151.477	6.102024721820281	-164	-139	5e-05	4000	400
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#1	1670,1592,1661,1664,1594,1604,1591	7	1625.142857142857	37.61395384441157	current	1000	1613.326	40.87586770406904	1522	1675	0.871806	4000	350
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#1	1670,1592,1661,1664,1594,1604,1591	7	1625.142857142857	37.61395384441157	omit	1000	2021.572	8.266992147036259	2005	2038	0.00015	4000	350
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#1	1670,1592,1661,1664,1594,1604,1591	7	1625.142857142857	37.61395384441157	lancer_only	1000	1808.888	41.784056329697876	1729	1892	5e-05	4000	350
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#2	1127,1118,1118,1128,1127,1127	6	1124.1666666666667	4.792355023020171	current	1000	1124.669	4.667678890650699	1113	1128	0.890055	2000	200
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#2	1127,1118,1118,1128,1127,1127	6	1124.1666666666667	4.792355023020171	omit	1000	1042	0	1042	1042	5e-05	2000	200
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#2	1127,1118,1118,1128,1127,1127	6	1124.1666666666667	4.792355023020171	lancer_only	1000	1088.625	6.6112088972504175	1072	1102	5e-05	2000	200
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#3	671	1	671		current	1000	662.537	13.667751769711034	623	672	0.307085	2000	250
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#3	671	1	671		omit	1000	292	0	292	292	5e-05	2000	250
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#3	671	1	671		lancer_only	1000	554.718	31.1035674466436	467	619	5e-05	2000	250
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#4	-119,-121,-123,-124	4	-121.75	2.217355782608345	current	1000	-123.146	2.9734702832759923	-129	-119	0.535623	2000	250
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#4	-119,-121,-123,-124	4	-121.75	2.217355782608345	omit	1000	-123.99	3.9781560710617954	-129	-117	0.0006	2000	250
+hero:Mia:BadLuckStreak	testcases/heroes_unittests/Mia_tc.json#4	-119,-121,-123,-124	4	-121.75	2.217355782608345	lancer_only	1000	-124.058	3.9344778708382933	-130	-116	0.274386	2000	250
+hero:Mia:LuckyCharm	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	current	1000	3351.309	19.10970171665949	3317	3390	0.79026	3969	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	omit	1000	3407.493	15.837258909602065	3378	3442	0.0001	3969	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	lancer_only	1000	3388.313	16.09453525470882	3358	3421	5e-05	3969	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	current	1000	3544.451	16.716729585898307	3514	3577	0.99995	4069	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	omit	1000	3592.551	13.651364721475971	3570	3618	0.0001	4069	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	lancer_only	1000	3573.705	14.491859404127121	3549	3604	5e-05	4069	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	current	1000	3444.551	15.873038535590862	3415	3476	0.559022	3969	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	omit	1000	3492.213	13.032477756607767	3470	3518	5e-05	3969	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	lancer_only	1000	3474.269	14.4263910857761	3449	3502	0.0001	3969	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		current	1000	-266.826	9.172451027825554	-290	-251	0.540173	2800	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		omit	1000	-229.241	6.6697379562022	-238	-212	0.0015	2800	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		lancer_only	1000	-243.869	13.339256904894478	-273	-227	0.327934	2800	600
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		current	1000	1299.593	9.316552428293905	1286	1322	0.79826	1960	300
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		omit	1000	1333.829	8.487154457813928	1321	1354	5e-05	1960	300
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		lancer_only	1000	1320.406	9.615488631454069	1308	1344	5e-05	1960	300
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		current	1000	-181.665	3.7543135018096185	-191	-175	1	1260	300
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		omit	1000	-171.078	2.9530724062637996	-175	-167	0.00305	1260	300
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		lancer_only	1000	-176.35	4.367674046512205	-184	-168	0.80536	1260	300
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#3	879	1	879		current	1000	879.707	4.179068749807249	873	891	1	1260	180
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#3	879	1	879		omit	1000	898.237	3.5061551768460215	894	908	5e-05	1260	180
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#3	879	1	879		lancer_only	1000	891.085	3.8637680706408233	885	902	0.00515	1260	180
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#4	967	1	967		current	1000	972.045	4.59914417333562	965	982	0.475176	1260	150
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#4	967	1	967		omit	1000	985.828	4.094286162346171	981	994	5e-05	1260	150
+hero:Mia:LuckyCharm	testcases/emulator_verified/mia_solo.json#4	967	1	967		lancer_only	1000	980.713	4.314074899934192	975	989	5e-05	1260	150
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#0	-181	1	-181		current	1000	-172.297	4.163667509195111	-181	-169	0.141643	4000	400
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#0	-181	1	-181		omit	1000	-139.18	3.3338738300533715	-150	-137	5e-05	4000	400
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#0	-181	1	-181		lancer_only	1000	-154.8	5.714950626266225	-164	-145	5e-05	4000	400
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#1	1670,1592,1661,1664,1594,1604,1591	7	1625.142857142857	37.61395384441157	current	1000	1613.326	40.87586770406904	1522	1675	0.871806	4000	350
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#1	1670,1592,1661,1664,1594,1604,1591	7	1625.142857142857	37.61395384441157	omit	1000	1900.09	23.118701831512325	1856	1952	0.0001	4000	350
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#1	1670,1592,1661,1664,1594,1604,1591	7	1625.142857142857	37.61395384441157	lancer_only	1000	1791.877	28.214498558877988	1733	1857	5e-05	4000	350
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#4	-119,-121,-123,-124	4	-121.75	2.217355782608345	current	1000	-123.146	2.9734702832759923	-129	-119	0.535623	2000	250
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#4	-119,-121,-123,-124	4	-121.75	2.217355782608345	omit	1000	-105.584	1.8331132819071323	-110	-100	5e-05	2000	250
+hero:Mia:LuckyCharm	testcases/heroes_unittests/Mia_tc.json#4	-119,-121,-123,-124	4	-121.75	2.217355782608345	lancer_only	1000	-112.178	3.7641047387771245	-120	-106	5e-05	2000	250
+hero:Mia:RitualDeciphering	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	current	1000	3351.309	19.10970171665949	3317	3390	0.79026	3969	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	omit	1000	3378.066	15.023693133026763	3348	3407	0.0001	3969	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/greg_mia_defender_current.json#0	3345,3390,3320,3367,3363,3341,3360,3355,3339,3346,3344,3341,3373,3344,3329,3354,3351,3366	18	3351.5555555555557	16.589231880321794	lancer_only	1000	3374.931	15.472027101276103	3345	3404	0.00035	3969	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	current	1000	3544.451	16.716729585898307	3514	3577	0.99995	4069	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	omit	1000	3564.358	11.327937065421747	3543	3586	5e-05	4069	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_only_defender_current.json#0	3560,3539,3556,3525,3551,3564,3546,3540,3528,3530	10	3543.9	13.771548771127943	lancer_only	1000	3560.919	11.581993851733017	3539	3584	0.0002	4069	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	current	1000	3444.551	15.873038535590862	3415	3476	0.559022	3969	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	omit	1000	3463.858	10.681476018319339	3444	3485	0.00015	3969	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_only_defender_current.json#1	3461,3451,3442,3462,3436,3460,3431,3469,3460,3434,3449,3434,3445,3452,3422,3453,3479,3472,3438,3433	20	3449.15	15.435008055851819	lancer_only	1000	3460.786	10.822075647551314	3440	3483	5e-05	3969	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		current	1000	-266.826	9.172451027825554	-290	-251	0.540173	2800	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		omit	1000	-238.967	8.726514943725407	-258	-226	5e-05	2800	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#0	-260	1	-260		lancer_only	1000	-245.882	8.405636842662833	-264	-232	0.214889	2800	600
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		current	1000	1299.593	9.316552428293905	1286	1322	0.79826	1960	300
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		omit	1000	1324.564	4.688697888314831	1316	1334	0.0001	1960	300
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#1	1293	1	1293		lancer_only	1000	1316.615	7.065032886667253	1305	1331	0.0002	1960	300
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		current	1000	-181.665	3.7543135018096185	-191	-175	1	1260	300
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		omit	1000	-170.333	4.164547328876762	-180	-167	0.106095	1260	300
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#2	-180	1	-180		lancer_only	1000	-171.481	4.016935993362927	-181	-168	0.181291	1260	300
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#3	879	1	879		current	1000	879.707	4.179068749807249	873	891	1	1260	180
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#3	879	1	879		omit	1000	891.459	3.0195093039161867	886	897	5e-05	1260	180
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#3	879	1	879		lancer_only	1000	890.385	2.994284679308364	885	896	0.0007	1260	180
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#4	967	1	967		current	1000	972.045	4.59914417333562	965	982	0.475176	1260	150
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#4	967	1	967		omit	1000	979.651	2.1637654403564444	976	984	5e-05	1260	150
+hero:Mia:RitualDeciphering	testcases/emulator_verified/mia_solo.json#4	967	1	967		lancer_only	1000	978.816	2.2165416885448024	975	983	5e-05	1260	150
+hero:Molly:CallingOfTheStorm	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		current	1000	-2908.756	26.66660030021773	-2959	-2857	0.0021	17500	4000
+hero:Molly:CallingOfTheStorm	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		omit	1000	-2968.789	21.915993926577688	-3016	-2926	5e-05	17500	4000
+hero:Molly:CallingOfTheStorm	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		lancer_only	1000	-2967.685	22.12060342974614	-3015	-2926	5e-05	17500	4000
+hero:Molly:CallingOfTheStorm	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	current	1000	-403.042	2.4016669219531748	-408	-398	0.572471	1200	450
+hero:Molly:CallingOfTheStorm	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	omit	1000	-399.589	2.300297887311642	-405	-394	0.0002	1200	450
+hero:Molly:CallingOfTheStorm	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	lancer_only	1000	-399.589	2.300297887311642	-405	-394	0.0002	1200	450
+hero:Molly:CallingOfTheStorm	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	current	1000	243.842	1.2420058689791151	241	246	0.060497	300	840
+hero:Molly:CallingOfTheStorm	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	omit	1000	239.802	0.7677143905029925	237	240	5e-05	300	840
+hero:Molly:CallingOfTheStorm	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	lancer_only	1000	239.802	0.7677143905029925	237	240	5e-05	300	840
+hero:Molly:CallingOfTheStorm	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		current	1000	1070.959	2.215000050840924	1067	1075	0.713014	1200	160
+hero:Molly:CallingOfTheStorm	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		omit	1000	1079.702	1.1209158989203598	1078	1082	5e-05	1200	160
+hero:Molly:CallingOfTheStorm	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		lancer_only	1000	1078.01	1.328783528519843	1076	1081	5e-05	1200	160
+hero:Molly:CallingOfTheStorm	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		current	1000	-190.559	1.5201413848158458	-193	-188	0.949153	1800	200
+hero:Molly:CallingOfTheStorm	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		omit	1000	-189.025	1.6736714660219798	-192	-186	0.705215	1800	200
+hero:Molly:CallingOfTheStorm	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		lancer_only	1000	-189.025	1.6736714660219798	-192	-186	0.705215	1800	200
+hero:Molly:IceDominion	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		current	1000	-2908.756	26.66660030021773	-2959	-2857	0.0021	17500	4000
+hero:Molly:IceDominion	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		omit	1000	-3010.201	22.01838796116573	-3049	-2964	5e-05	17500	4000
+hero:Molly:IceDominion	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		lancer_only	1000	-2988.524	22.353861391695165	-3030	-2945	5e-05	17500	4000
+hero:Molly:IceDominion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	current	1000	-403.042	2.4016669219531748	-408	-398	0.572471	1200	450
+hero:Molly:IceDominion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	omit	1000	-398.389	2.0143824703210456	-402	-395	0.0003	1200	450
+hero:Molly:IceDominion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	lancer_only	1000	-399.79	2.399929094715025	-405	-396	0.022949	1200	450
+hero:Molly:IceDominion	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	current	1000	243.842	1.2420058689791151	241	246	0.060497	300	840
+hero:Molly:IceDominion	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	omit	1000	237.177	1.30359900673879	235	241	5e-05	300	840
+hero:Molly:IceDominion	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	lancer_only	1000	241.101	1.1375821258674568	239	243	0.00015	300	840
+hero:Molly:IceDominion	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		current	1000	1070.959	2.215000050840924	1067	1075	0.713014	1200	160
+hero:Molly:IceDominion	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		omit	1000	1082.82	1.8261804223391942	1080	1086	5e-05	1200	160
+hero:Molly:IceDominion	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		lancer_only	1000	1078.561	1.9504058764993057	1075	1083	5e-05	1200	160
+hero:Molly:IceDominion	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		current	1000	-190.559	1.5201413848158458	-193	-188	0.949153	1800	200
+hero:Molly:IceDominion	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		omit	1000	-188.719	1.6101650945265304	-192	-186	0.677516	1800	200
+hero:Molly:IceDominion	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		lancer_only	1000	-189.977	1.6766878905396458	-193	-187	1	1800	200

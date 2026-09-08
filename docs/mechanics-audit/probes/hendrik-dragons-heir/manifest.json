@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-09-07T04:53:44.304399+00:00",
+  "gitHead": "6b130b234c39038395ee8a011cd5f9a9718f8823",
+  "guardedFiles": {
+    "candidates.json": "b1087abc72a00c98242caf574136e55e633f4967415e68ffca3052243972ca20",
+    "config-snapshot.json": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+    "estimated-input.json": "faa0fee99fdb2ab91b653c53c7899936fdba0d9f435054d97ed5f01062407c08",
+    "predict.mts": "aea38fc877787604d2dd095025963b094ef8e8f7a4a2582c2415d7f8669ee6f7",
+    "runtime-snapshot.json": "ec1f674d2b9d41cb93742606ae5dc2f815175a8e8f67308de02c60f7881b13bf",
+    "spec.json": "67d8a96114e57f0b4896ec992bb570dc9ac288c138e22371f2ed68348cd46c82"
+  },
+  "originalReportInput": {
+    "path": "docs/mechanics-audit/probes/hendrik-armor/captured-input.json",
+    "sha256": "788dfb650465831d77ed60dc56c877e6de20050742e2d72409a2bf3b70b0889d",
+    "displayTimestamp": "2026-09-07 05:42:10"
+  },
+  "rosterSource": {
+    "path": "docs/mechanics-audit/hero-roster-WIP-2026-09-07.json",
+    "sha256": "fb542a461a55fb657790e8176381d3992c451963d14cd917b09dd9e31721daaf"
+  },
+  "designScreen": {
+    "path": "tmp/mechanics-audit-2026-09-07/hendrik-s3-design.json",
+    "sha256": "4b52b5cda854ffd66f4eeba473a122ab6887350f11466b96509ef97800d6efa0",
+    "formations": 9,
+    "attackerCounts": 19
+  },
+  "command": "npx --yes tsx docs/mechanics-audit/probes/hendrik-dragons-heir/predict.mts docs/mechanics-audit/probes/hendrik-dragons-heir/estimated-input.json docs/mechanics-audit/probes/hendrik-dragons-heir/prediction.json prospective"
+}

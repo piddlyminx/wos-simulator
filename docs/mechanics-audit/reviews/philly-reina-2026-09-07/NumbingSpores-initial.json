@@ -1,0 +1,2514 @@
+{
+  "generatedAt": "2026-09-07T07:32:24.599Z",
+  "selection": {
+    "key": "hero:Philly:NumbingSpores",
+    "hero": "Philly",
+    "id": "NumbingSpores",
+    "slot": 3,
+    "coverage": {
+      "configured_fixture_count": 4,
+      "hydrated_fixture_count": 4,
+      "observation_record_count": 10,
+      "hydrated_levels": [
+        1
+      ],
+      "levels_missing_active_fixture": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "side_roles": [
+        "defender:main"
+      ],
+      "fixture_keys": [
+        "testcases/emulator_verified/philly_bahiti_combo.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#1",
+        "testcases/emulator_verified/philly_solo.json#0",
+        "testcases/emulator_verified/philly_solo.json#1"
+      ],
+      "present_but_not_hydrated_fixture_keys": [],
+      "disabled_fixture_keys": [],
+      "direct_artifact_reference_fixture_count": 0,
+      "observed_battle_details_fixture_count": 0,
+      "causal_coverage": "not_assessed",
+      "parity": "not_assessed"
+    },
+    "definition": {
+      "description": "granting a 40% chance of reducing all troops' Damage taken by X%",
+      "trigger": {
+        "type": "turn",
+        "probability": [
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      "effects": {
+        "NumbingSpores/1": {
+          "type": "active.hero.damageTaken.down",
+          "value": [
+            10,
+            20,
+            30,
+            40,
+            50
+          ],
+          "units": {
+            "applies_to": "all"
+          },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "protocolSha256": "2e08024006648551a7083730e770365d31f4f0d1bb32086402890db7418eb5d2",
+  "repeat": 1000,
+  "seed": "philly-reina-review-2026-09-07:<fixture-key>:<run-index>",
+  "rawSamples": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/philly-reina-2026-09-07/NumbingSpores-initial-samples.json",
+    "sha256": "ea0e68c9f35aa9aa169dd176ec25828f3d104a032469412d3c6cfcccd0cc44fd"
+  },
+  "results": [
+    {
+      "key": "testcases/emulator_verified/philly_bahiti_combo.json#0",
+      "path": "testcases/emulator_verified/philly_bahiti_combo.json",
+      "fixtureSha256": "5c37553d9936d0d0ad74cf54a6b6f14daa1e04b368f7e978eaf9baba9bf5eaa4",
+      "entry": {
+        "test_id": "philly_bahiti_combo",
+        "description": "2-hero combo: Philly+Bahiti on minxxx defender. WIP attacking no heroes. Tests multi-hero defensive interaction with RNG (Bahiti 50% chance, Philly 40% chance + 25% extra).",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Bahiti": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 196.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 270.5,
+              "defense": 263.1,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 294.7,
+              "defense": 286.3,
+              "lethality": 127.7,
+              "health": 128.2
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 556
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Bahiti": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 196.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 270.5,
+              "defense": 263.1,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 294.7,
+              "defense": 286.3,
+              "lethality": 127.7,
+              "health": 128.2
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 556
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:VigorTactics",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "VigorTactics/1",
+            "VigorTactics/2"
+          ]
+        },
+        {
+          "key": "hero:Philly:DosageBoost",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "DosageBoost/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:NumbingSpores",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "NumbingSpores/1"
+          ]
+        },
+        {
+          "key": "hero:Bahiti:SixthSense",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:bahiti:0",
+          "effect_ids": [
+            "SixthSense/1"
+          ]
+        },
+        {
+          "key": "hero:Bahiti:Fluorescence",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:bahiti:0",
+          "effect_ids": [
+            "Fluorescence/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 600
+      },
+      "gameScores": [
+        -556
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -558.312,
+          "sd": 1.8455519667736329,
+          "min": -562,
+          "max": -554,
+          "central95": [
+            -561,
+            -556
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -558.31,
+            "sigma_candidate": 1.85,
+            "n_reference": 1,
+            "mu_reference": -556,
+            "sigma_reference": 0,
+            "bias_raw": -2.31,
+            "bias_pct": -0.13,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.3503,
+            "p": 0.446378,
+            "passes": true,
+            "cdf_rms": 0.027371,
+            "cdf_p": 0.299635,
+            "support_value": -556,
+            "support_mass": 0.12666667,
+            "support_p": 0.410329,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 15,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 52,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 73,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 84
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            4,
+            6,
+            4,
+            4,
+            5,
+            6,
+            7,
+            5,
+            5,
+            4,
+            3,
+            8,
+            4,
+            7,
+            5,
+            7
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -556.815,
+          "sd": 1.895882214002046,
+          "min": -559,
+          "max": -552,
+          "central95": [
+            -559,
+            -554
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -556.82,
+            "sigma_candidate": 1.9,
+            "n_reference": 1,
+            "mu_reference": -556,
+            "sigma_reference": 0,
+            "bias_raw": -0.82,
+            "bias_pct": -0.05,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.1007,
+            "p": 0.79296,
+            "passes": true,
+            "cdf_rms": 0.020931,
+            "cdf_p": 1,
+            "support_value": -556,
+            "support_mass": 0.13288889,
+            "support_p": 0.674716,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 153,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 15,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            4,
+            6,
+            4,
+            4,
+            5,
+            6,
+            7,
+            5,
+            5,
+            4,
+            3,
+            8,
+            4,
+            7,
+            5,
+            7
+          ]
+        },
+        "infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -558.312,
+          "sd": 1.8455519667736329,
+          "min": -562,
+          "max": -554,
+          "central95": [
+            -561,
+            -556
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -558.31,
+            "sigma_candidate": 1.85,
+            "n_reference": 1,
+            "mu_reference": -556,
+            "sigma_reference": 0,
+            "bias_raw": -2.31,
+            "bias_pct": -0.13,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.3503,
+            "p": 0.446378,
+            "passes": true,
+            "cdf_rms": 0.027371,
+            "cdf_p": 0.299635,
+            "support_value": -556,
+            "support_mass": 0.12666667,
+            "support_p": 0.410329,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 15,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 52,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 73,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 84
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            4,
+            6,
+            4,
+            4,
+            5,
+            6,
+            7,
+            5,
+            5,
+            4,
+            3,
+            8,
+            4,
+            7,
+            5,
+            7
+          ]
+        },
+        "normal_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -558.312,
+          "sd": 1.8455519667736329,
+          "min": -562,
+          "max": -554,
+          "central95": [
+            -561,
+            -556
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -558.31,
+            "sigma_candidate": 1.85,
+            "n_reference": 1,
+            "mu_reference": -556,
+            "sigma_reference": 0,
+            "bias_raw": -2.31,
+            "bias_pct": -0.13,
+            "sem": 0.06,
+            "stat_type": "cdf_support",
+            "stat": 0.3503,
+            "p": 0.446378,
+            "passes": true,
+            "cdf_rms": 0.027371,
+            "cdf_p": 0.299635,
+            "support_value": -556,
+            "support_mass": 0.12666667,
+            "support_p": 0.410329,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 154,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 15,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 52,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 73,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 84
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            4,
+            6,
+            4,
+            4,
+            5,
+            6,
+            7,
+            5,
+            5,
+            4,
+            3,
+            8,
+            4,
+            7,
+            5,
+            7
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/philly_bahiti_combo.json#1",
+      "path": "testcases/emulator_verified/philly_bahiti_combo.json",
+      "fixtureSha256": "5c37553d9936d0d0ad74cf54a6b6f14daa1e04b368f7e978eaf9baba9bf5eaa4",
+      "entry": {
+        "test_id": "philly_bahiti_combo",
+        "description": "2-hero combo: Philly+Bahiti on minxxx defender. WIP attacking no heroes. Tests multi-hero defensive interaction with RNG (Bahiti 50% chance, Philly 40% chance + 25% extra).",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Bahiti": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 320.1,
+              "defense": 320.9,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 343.3,
+              "defense": 338.1,
+              "lethality": 186.6,
+              "health": 180.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 0,
+            "defender": 463
+          },
+          {
+            "attacker": 0,
+            "defender": 456
+          },
+          {
+            "attacker": 0,
+            "defender": 455
+          },
+          {
+            "attacker": 0,
+            "defender": 459
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 400,
+            "marksman_t6": 400
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            },
+            "Bahiti": {
+              "skill_1": 2,
+              "skill_2": 2
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 320.1,
+              "defense": 320.9,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 343.3,
+              "defense": 338.1,
+              "lethality": 186.6,
+              "health": 180.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 463
+        },
+        {
+          "attacker": 0,
+          "defender": 456
+        },
+        {
+          "attacker": 0,
+          "defender": 455
+        },
+        {
+          "attacker": 0,
+          "defender": 459
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:VigorTactics",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "VigorTactics/1",
+            "VigorTactics/2"
+          ]
+        },
+        {
+          "key": "hero:Philly:DosageBoost",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "DosageBoost/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:NumbingSpores",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "NumbingSpores/1"
+          ]
+        },
+        {
+          "key": "hero:Bahiti:SixthSense",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:bahiti:0",
+          "effect_ids": [
+            "SixthSense/1"
+          ]
+        },
+        {
+          "key": "hero:Bahiti:Fluorescence",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:bahiti:0",
+          "effect_ids": [
+            "Fluorescence/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 1200,
+        "defender": 600
+      },
+      "gameScores": [
+        -463,
+        -456,
+        -455,
+        -459
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -454.226,
+          "sd": 4.541536034157347,
+          "min": -468,
+          "max": -440,
+          "central95": [
+            -462,
+            -446
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -454.23,
+            "sigma_candidate": 4.54,
+            "n_reference": 4,
+            "mu_reference": -458.25,
+            "sigma_reference": 3.59,
+            "bias_raw": 4.02,
+            "bias_pct": 0.22,
+            "sem": 0.14,
+            "stat_type": "cdf_support",
+            "stat": 0.7215,
+            "p": 0.189891,
+            "passes": true,
+            "cdf_rms": 0.025926,
+            "cdf_p": 0.112744,
+            "support_value": -463,
+            "support_mass": 0.00955556,
+            "support_p": 0.134043,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 56,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 26,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 112,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 141,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 173
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            13,
+            13,
+            4,
+            12,
+            10,
+            10,
+            10,
+            13,
+            8,
+            12,
+            6,
+            15,
+            12,
+            11,
+            13,
+            11
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -448.933,
+          "sd": 4.529130603551232,
+          "min": -462,
+          "max": -435,
+          "central95": [
+            -456,
+            -442
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -448.93,
+            "sigma_candidate": 4.53,
+            "n_reference": 4,
+            "mu_reference": -458.25,
+            "sigma_reference": 3.59,
+            "bias_raw": 9.32,
+            "bias_pct": 0.52,
+            "sem": 0.14,
+            "stat_type": "cdf_support",
+            "stat": 4,
+            "p": 0.0001,
+            "passes": false,
+            "cdf_rms": 0.0537,
+            "cdf_p": 0.0001,
+            "support_value": -463,
+            "support_mass": 0.00155556,
+            "support_p": 0.028249,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 50,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 26,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            13,
+            13,
+            4,
+            12,
+            10,
+            10,
+            11,
+            13,
+            8,
+            10,
+            6,
+            15,
+            12,
+            11,
+            13,
+            11
+          ]
+        },
+        "infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -454.226,
+          "sd": 4.541536034157347,
+          "min": -468,
+          "max": -440,
+          "central95": [
+            -462,
+            -446
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -454.23,
+            "sigma_candidate": 4.54,
+            "n_reference": 4,
+            "mu_reference": -458.25,
+            "sigma_reference": 3.59,
+            "bias_raw": 4.02,
+            "bias_pct": 0.22,
+            "sem": 0.14,
+            "stat_type": "cdf_support",
+            "stat": 0.7215,
+            "p": 0.189891,
+            "passes": true,
+            "cdf_rms": 0.025926,
+            "cdf_p": 0.112744,
+            "support_value": -463,
+            "support_mass": 0.00955556,
+            "support_p": 0.134043,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 56,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 26,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 112,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 141,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 173
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            13,
+            13,
+            4,
+            12,
+            10,
+            10,
+            10,
+            13,
+            8,
+            12,
+            6,
+            15,
+            12,
+            11,
+            13,
+            11
+          ]
+        },
+        "normal_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores",
+              "Fluorescence"
+            ]
+          },
+          "n": 1000,
+          "mean": -454.226,
+          "sd": 4.541536034157347,
+          "min": -468,
+          "max": -440,
+          "central95": [
+            -462,
+            -446
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": -454.23,
+            "sigma_candidate": 4.54,
+            "n_reference": 4,
+            "mu_reference": -458.25,
+            "sigma_reference": 3.59,
+            "bias_raw": 4.02,
+            "bias_pct": 0.22,
+            "sem": 0.14,
+            "stat_type": "cdf_support",
+            "stat": 0.7215,
+            "p": 0.189891,
+            "passes": true,
+            "cdf_rms": 0.025926,
+            "cdf_p": 0.112744,
+            "support_value": -463,
+            "support_mass": 0.00955556,
+            "support_p": 0.134043,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 56,
+              "lancer": 200,
+              "marksman": 200
+            }
+          },
+          "firstRound": 26,
+          "firstWinner": "defender",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 112,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 141,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 173
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            13,
+            13,
+            4,
+            12,
+            10,
+            10,
+            10,
+            13,
+            8,
+            12,
+            6,
+            15,
+            12,
+            11,
+            13,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/philly_solo.json#0",
+      "path": "testcases/emulator_verified/philly_solo.json",
+      "fixtureSha256": "6fabf3205d815466a8903bb2b793431adaed96323adef6d99a6c713772037ccb",
+      "entry": {
+        "test_id": "philly_solo",
+        "description": "Philly solo defender test. WIP attacking no heroes 1500/1500/1500, minxxx defending with Philly (2/2/1). Stats populated from war report.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 196.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 270.5,
+              "defense": 263.1,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 205.7,
+              "defense": 197.3,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 2254,
+            "defender": 0
+          },
+          {
+            "attacker": 2252,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 66.1,
+              "defense": 63.9,
+              "lethality": 23.3,
+              "health": 26.4
+            },
+            "lanc": {
+              "attack": 68.6,
+              "defense": 65.1,
+              "lethality": 26.3,
+              "health": 21.1
+            },
+            "mark": {
+              "attack": 69.1,
+              "defense": 61.4,
+              "lethality": 25.8,
+              "health": 21.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 214.7,
+              "defense": 196.3,
+              "lethality": 118,
+              "health": 131.1
+            },
+            "lanc": {
+              "attack": 270.5,
+              "defense": 263.1,
+              "lethality": 120.2,
+              "health": 121
+            },
+            "mark": {
+              "attack": 205.7,
+              "defense": 197.3,
+              "lethality": 122.9,
+              "health": 123.9
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 2254,
+          "defender": 0
+        },
+        {
+          "attacker": 2252,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:VigorTactics",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "VigorTactics/1",
+            "VigorTactics/2"
+          ]
+        },
+        {
+          "key": "hero:Philly:DosageBoost",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "DosageBoost/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:NumbingSpores",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "NumbingSpores/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 4069,
+        "defender": 600
+      },
+      "gameScores": [
+        2254,
+        2252
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 2252.722,
+          "sd": 83.80477287097644,
+          "min": 1961,
+          "max": 2554,
+          "central95": [
+            2074,
+            2411
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2252.72,
+            "sigma_candidate": 83.8,
+            "n_reference": 2,
+            "mu_reference": 2253,
+            "sigma_reference": 1.41,
+            "bias_raw": -0.28,
+            "bias_pct": -0.01,
+            "sem": 2.65,
+            "stat_type": "cdf_support",
+            "stat": 0.212,
+            "p": 0.613769,
+            "passes": true,
+            "cdf_rms": 0.062111,
+            "cdf_p": 0.473126,
+            "support_value": 2254,
+            "support_mass": 0.00644444,
+            "support_p": 0.9912,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 737,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 51,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 201,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 201,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 199,
+            "NumbingSpores/1:normal:attacker.infantry->defender.lancer": 75,
+            "NumbingSpores/1:normal:attacker.lancer->defender.lancer": 77,
+            "NumbingSpores/1:normal:attacker.marksman->defender.lancer": 74,
+            "NumbingSpores/1:normal:attacker.lancer->defender.marksman": 54,
+            "NumbingSpores/1:normal:attacker.marksman->defender.marksman": 51,
+            "NumbingSpores/1:normal:attacker.infantry->defender.marksman": 4
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            26,
+            24,
+            24,
+            25,
+            21,
+            15,
+            27,
+            15,
+            13,
+            22,
+            23,
+            18,
+            19,
+            24,
+            19,
+            17
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 2448.068,
+          "sd": 70.81139477251968,
+          "min": 2133,
+          "max": 2605,
+          "central95": [
+            2303,
+            2571
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2448.07,
+            "sigma_candidate": 70.81,
+            "n_reference": 2,
+            "mu_reference": 2253,
+            "sigma_reference": 1.41,
+            "bias_raw": 195.07,
+            "bias_pct": 4.18,
+            "sem": 2.24,
+            "stat_type": "cdf_support",
+            "stat": 3.8239,
+            "p": 0.00015,
+            "passes": false,
+            "cdf_rms": 0.182412,
+            "cdf_p": 0.00015,
+            "support_value": 2254,
+            "support_mass": 0,
+            "support_p": 0.022749,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 996,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 48,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            22,
+            24,
+            22,
+            24,
+            19,
+            17,
+            23,
+            11,
+            20,
+            23,
+            19,
+            24,
+            18,
+            20,
+            16,
+            17
+          ]
+        },
+        "infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 2329.175,
+          "sd": 92.44691886595163,
+          "min": 1980,
+          "max": 2582,
+          "central95": [
+            2097,
+            2471
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2329.18,
+            "sigma_candidate": 92.45,
+            "n_reference": 2,
+            "mu_reference": 2253,
+            "sigma_reference": 1.41,
+            "bias_raw": 76.18,
+            "bias_pct": 1.63,
+            "sem": 2.92,
+            "stat_type": "cdf_support",
+            "stat": 0.9017,
+            "p": 0.125394,
+            "passes": true,
+            "cdf_rms": 0.106518,
+            "cdf_p": 0.084646,
+            "support_value": 2252,
+            "support_mass": 0.00155556,
+            "support_p": 0.348433,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 817,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 49,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 201,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 201,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 199
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            26,
+            24,
+            23,
+            27,
+            21,
+            19,
+            23,
+            14,
+            16,
+            19,
+            22,
+            21,
+            19,
+            25,
+            18,
+            14
+          ]
+        },
+        "normal_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 2252.722,
+          "sd": 83.80477287097644,
+          "min": 1961,
+          "max": 2554,
+          "central95": [
+            2074,
+            2411
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 2252.72,
+            "sigma_candidate": 83.8,
+            "n_reference": 2,
+            "mu_reference": 2253,
+            "sigma_reference": 1.41,
+            "bias_raw": -0.28,
+            "bias_pct": -0.01,
+            "sem": 2.65,
+            "stat_type": "cdf_support",
+            "stat": 0.212,
+            "p": 0.613769,
+            "passes": true,
+            "cdf_rms": 0.062111,
+            "cdf_p": 0.473126,
+            "support_value": 2254,
+            "support_mass": 0.00644444,
+            "support_p": 0.9912,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 737,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 51,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 201,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 201,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 199,
+            "NumbingSpores/1:normal:attacker.infantry->defender.lancer": 75,
+            "NumbingSpores/1:normal:attacker.lancer->defender.lancer": 77,
+            "NumbingSpores/1:normal:attacker.marksman->defender.lancer": 74,
+            "NumbingSpores/1:normal:attacker.lancer->defender.marksman": 54,
+            "NumbingSpores/1:normal:attacker.marksman->defender.marksman": 51,
+            "NumbingSpores/1:normal:attacker.infantry->defender.marksman": 4
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            26,
+            24,
+            24,
+            25,
+            21,
+            15,
+            27,
+            15,
+            13,
+            22,
+            23,
+            18,
+            19,
+            24,
+            19,
+            17
+          ]
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/philly_solo.json#1",
+      "path": "testcases/emulator_verified/philly_solo.json",
+      "fixtureSha256": "6fabf3205d815466a8903bb2b793431adaed96323adef6d99a6c713772037ccb",
+      "entry": {
+        "test_id": "philly_solo",
+        "description": "Philly solo defender test. WIP attacking no heroes 1500/1500/1500, minxxx defending with Philly (2/2/1). Stats populated from war report.",
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 320.1,
+              "defense": 320.9,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 246.2,
+              "defense": 241,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "game_report_result": [
+          {
+            "attacker": 3606,
+            "defender": 0
+          },
+          {
+            "attacker": 3637,
+            "defender": 0
+          },
+          {
+            "attacker": 3616,
+            "defender": 0
+          }
+        ]
+      },
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 1500,
+            "lancer_t6": 1069,
+            "marksman_t6": 1500
+          },
+          "stats": {
+            "inf": {
+              "attack": 140.7,
+              "defense": 148.2,
+              "lethality": 117,
+              "health": 131.9
+            },
+            "lanc": {
+              "attack": 149.2,
+              "defense": 148.2,
+              "lethality": 116.5,
+              "health": 105.1
+            },
+            "mark": {
+              "attack": 153.7,
+              "defense": 143.2,
+              "lethality": 121.9,
+              "health": 112.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Philly": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "troops": {
+            "infantry_t6": 200,
+            "lancer_t6": 200,
+            "marksman_t6": 200
+          },
+          "stats": {
+            "inf": {
+              "attack": 245.9,
+              "defense": 240.7,
+              "lethality": 177.2,
+              "health": 183.3
+            },
+            "lanc": {
+              "attack": 320.1,
+              "defense": 320.9,
+              "lethality": 171.7,
+              "health": 171.7
+            },
+            "mark": {
+              "attack": 246.2,
+              "defense": 241,
+              "lethality": 181.7,
+              "health": 176.5
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 3606,
+          "defender": 0
+        },
+        {
+          "attacker": 3637,
+          "defender": 0
+        },
+        {
+          "attacker": 3616,
+          "defender": 0
+        }
+      ],
+      "hydratedSkills": [
+        {
+          "key": "troop:MasterBrawler",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "attacker",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:VigorTactics",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "VigorTactics/1",
+            "VigorTactics/2"
+          ]
+        },
+        {
+          "key": "hero:Philly:DosageBoost",
+          "side": "defender",
+          "level": 2,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "DosageBoost/1"
+          ]
+        },
+        {
+          "key": "hero:Philly:NumbingSpores",
+          "side": "defender",
+          "level": 1,
+          "role": "main",
+          "instance_id": "main:philly:0",
+          "effect_ids": [
+            "NumbingSpores/1"
+          ]
+        },
+        {
+          "key": "troop:MasterBrawler",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "MasterBrawler/1"
+          ]
+        },
+        {
+          "key": "troop:Charge",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "Charge/1"
+          ]
+        },
+        {
+          "key": "troop:RangedStrike",
+          "side": "defender",
+          "level": 1,
+          "role": null,
+          "instance_id": null,
+          "effect_ids": [
+            "RangedStrike/1"
+          ]
+        }
+      ],
+      "initial": {
+        "attacker": 4069,
+        "defender": 600
+      },
+      "gameScores": [
+        3606,
+        3637,
+        3616
+      ],
+      "predictions": {
+        "current": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 3622.461,
+          "sd": 13.02167589225915,
+          "min": 3582,
+          "max": 3661,
+          "central95": [
+            3598,
+            3649
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3622.46,
+            "sigma_candidate": 13.02,
+            "n_reference": 3,
+            "mu_reference": 3619.67,
+            "sigma_reference": 15.82,
+            "bias_raw": 2.79,
+            "bias_pct": 0.06,
+            "sem": 0.41,
+            "stat_type": "cdf_support",
+            "stat": 0.1387,
+            "p": 0.726664,
+            "passes": true,
+            "cdf_rms": 0.013997,
+            "cdf_p": 0.872206,
+            "support_value": 3637,
+            "support_mass": 0.01366667,
+            "support_p": 0.520474,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1059,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 100,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 97,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 97,
+            "NumbingSpores/1:normal:attacker.infantry->defender.lancer": 51,
+            "NumbingSpores/1:normal:attacker.lancer->defender.lancer": 50,
+            "NumbingSpores/1:normal:attacker.marksman->defender.lancer": 47,
+            "NumbingSpores/1:normal:attacker.infantry->defender.marksman": 21,
+            "NumbingSpores/1:normal:attacker.lancer->defender.marksman": 21,
+            "NumbingSpores/1:normal:attacker.marksman->defender.marksman": 21
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            9,
+            12,
+            9,
+            7,
+            17,
+            8,
+            9,
+            7,
+            12,
+            13,
+            15,
+            13,
+            9,
+            14,
+            10,
+            8
+          ]
+        },
+        "omit": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 3639.27,
+          "sd": 9.785031775464322,
+          "min": 3604,
+          "max": 3669,
+          "central95": [
+            3620,
+            3657
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3639.27,
+            "sigma_candidate": 9.79,
+            "n_reference": 3,
+            "mu_reference": 3619.67,
+            "sigma_reference": 15.82,
+            "bias_raw": 19.6,
+            "bias_pct": 0.42,
+            "sem": 0.31,
+            "stat_type": "cdf_support",
+            "stat": 2.5935,
+            "p": 0.00255,
+            "passes": false,
+            "cdf_rms": 0.044295,
+            "cdf_p": 0.00295,
+            "support_value": 3606,
+            "support_mass": 0.00011111,
+            "support_p": 0.0041,
+            "flag_reason": "cdf"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1075,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 26,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {},
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            9,
+            12,
+            9,
+            7,
+            14,
+            8,
+            8,
+            7,
+            11,
+            11,
+            14,
+            15,
+            9,
+            13,
+            10,
+            8
+          ]
+        },
+        "infantry_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 3624.47,
+          "sd": 12.992763828836097,
+          "min": 3584,
+          "max": 3663,
+          "central95": [
+            3601,
+            3650
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3624.47,
+            "sigma_candidate": 12.99,
+            "n_reference": 3,
+            "mu_reference": 3619.67,
+            "sigma_reference": 15.82,
+            "bias_raw": 4.8,
+            "bias_pct": 0.1,
+            "sem": 0.41,
+            "stat_type": "cdf_support",
+            "stat": 0.2178,
+            "p": 0.60562,
+            "passes": true,
+            "cdf_rms": 0.016699,
+            "cdf_p": 0.703415,
+            "support_value": 3606,
+            "support_mass": 0.01233333,
+            "support_p": 0.421929,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1061,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 100,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 97,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 97
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            9,
+            12,
+            9,
+            7,
+            17,
+            8,
+            9,
+            7,
+            12,
+            13,
+            15,
+            13,
+            9,
+            14,
+            10,
+            8
+          ]
+        },
+        "normal_only": {
+          "deterministic": false,
+          "chanceSkills": {
+            "attacker": [],
+            "defender": [
+              "DosageBoost",
+              "NumbingSpores"
+            ]
+          },
+          "n": 1000,
+          "mean": 3622.461,
+          "sd": 13.02167589225915,
+          "min": 3582,
+          "max": 3661,
+          "central95": [
+            3598,
+            3649
+          ],
+          "comparison": {
+            "n_candidate": 1000,
+            "mu_candidate": 3622.46,
+            "sigma_candidate": 13.02,
+            "n_reference": 3,
+            "mu_reference": 3619.67,
+            "sigma_reference": 15.82,
+            "bias_raw": 2.79,
+            "bias_pct": 0.06,
+            "sem": 0.41,
+            "stat_type": "cdf_support",
+            "stat": 0.1387,
+            "p": 0.726664,
+            "passes": true,
+            "cdf_rms": 0.013997,
+            "cdf_p": 0.872206,
+            "support_value": 3637,
+            "support_mass": 0.01366667,
+            "support_p": 0.520474,
+            "flag_reason": "support"
+          },
+          "draws": 0,
+          "firstRemaining": {
+            "attacker": {
+              "infantry": 1059,
+              "lancer": 1069,
+              "marksman": 1500
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "firstRound": 27,
+          "firstWinner": "attacker",
+          "tracedRuns": 16,
+          "modifierAnnotationCounts": {
+            "NumbingSpores/1:normal:attacker.infantry->defender.infantry": 100,
+            "NumbingSpores/1:normal:attacker.lancer->defender.infantry": 97,
+            "NumbingSpores/1:normal:attacker.marksman->defender.infantry": 97,
+            "NumbingSpores/1:normal:attacker.infantry->defender.lancer": 51,
+            "NumbingSpores/1:normal:attacker.lancer->defender.lancer": 50,
+            "NumbingSpores/1:normal:attacker.marksman->defender.lancer": 47,
+            "NumbingSpores/1:normal:attacker.infantry->defender.marksman": 21,
+            "NumbingSpores/1:normal:attacker.lancer->defender.marksman": 21,
+            "NumbingSpores/1:normal:attacker.marksman->defender.marksman": 21
+          },
+          "generatedDamageJobCounts": {},
+          "activationCounts": [
+            9,
+            12,
+            9,
+            7,
+            17,
+            8,
+            9,
+            7,
+            12,
+            13,
+            15,
+            13,
+            9,
+            14,
+            10,
+            8
+          ]
+        }
+      }
+    }
+  ]
+}

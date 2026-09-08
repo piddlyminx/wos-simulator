@@ -1,0 +1,64 @@
+{
+  "verified_date": "2026-09-07",
+  "method": "wosctl read-only Chief Profile > Troops > All inventory; Squads opens a cancelable formation preview. No green training claim, training, upgrade, spending, Save or dispatch was used. Left Squads with back arrow; both instances end on Troops Preview/All.",
+  "accounts": {
+    "minxxx": {
+      "chief_id": "571970746",
+      "display_name": "[ARK]Piddlyminxxx",
+      "existing_marksmen": {
+        "marksman_t9": 78325,
+        "marksman_t6": 9216,
+        "marksman_t4": 180,
+        "marksman_t3": 5
+      },
+      "highest_observed_tier_badge": "IX",
+      "fc_emblem_present": false
+    },
+    "WIP": {
+      "chief_id": "709642553",
+      "display_name": "[BBQ]XxWIPxX",
+      "existing_marksmen": {
+        "marksman_t9": 38731,
+        "marksman_t6": 24825,
+        "marksman_t4": 2080,
+        "marksman_t3": 1
+      },
+      "highest_observed_tier_badge": "IX",
+      "fc_emblem_present": false
+    }
+  },
+  "conclusion": "Neither account currently has an observed available FC3 or FC8 Marksman formation; CrystalGunpowder and FlameCharge cannot presently be captured with these existing Marksmen. Supreme is directly observed RomanIX/T9, not inferred T10.",
+  "skill_gates": {
+    "source": "simulator/config/troop_skills.json",
+    "CrystalGunpowder": {
+      "minimum_configured_fc": 3
+    },
+    "FlameCharge": {
+      "minimum_configured_fc": 8
+    }
+  },
+  "limitations": [
+    "The inventory and formation screens expose troop badges/counts, not individual FC skill descriptions; taps on these portraits did not open a detail panel. No FC unlock tooltip was captured.",
+    "No inference was made from hero generation, battle stats or city level.",
+    "These are currently available inventory counts; completed training queues were not collected and injured troops were not healed or individually inspected.",
+    "The FC thresholds quoted here are current config definitions, not newly independently verified in-game tooltip text."
+  ],
+  "images_sha256": {
+    "minxxx/injured-header-check.png": "aee93f1d58d76df5f4ce066d115639fac23df967c30fabb97964e531d7754168",
+    "minxxx/chief-profile.png": "69bf4b815b928a14a9f023513ee2746227a560f1f42cefe782fe4142ccbb308c",
+    "minxxx/marksman-info.png": "b34c96239c3a330cc6ada944cbaabfab9e7b9d3e1f573a9480ee9428370781b8",
+    "minxxx/city-sidebar-training.png": "7d616039c230d525e59c9383bda360065329c90eb886bb1ad0442521b972a0f1",
+    "minxxx/city.png": "6a0c6fbe5a8193f87305964171a916f307fd4cbc067db9cb48152ab28c4289fd",
+    "minxxx/top-marksman-detail.png": "c5434d5202a9860ce60729b7a2c7e2209a51170177839ce0bd10d3e78fad8a51",
+    "minxxx/city-sidebar.png": "1c152af18363901d487a1140bb7d9ad36a41ab69f35174ed33a65f20efb27baf",
+    "minxxx/squads.png": "b34c96239c3a330cc6ada944cbaabfab9e7b9d3e1f573a9480ee9428370781b8",
+    "minxxx/troops-overview.png": "aee93f1d58d76df5f4ce066d115639fac23df967c30fabb97964e531d7754168",
+    "minxxx/power.png": "89d71354b40987bf5466e8e25fa815ca38e6c63d64647238f5c5f1615772e192",
+    "WIP/injured-header-check.png": "b07641fb9a1010150c73ff357458d22794e0d5b35d123f344f72fce618e913d4",
+    "WIP/chief-profile.png": "435d187feb0591ec11de3f4e7d3520fbfc87c9f87e053376dc166480889e44b5",
+    "WIP/troops-overview-bottom.png": "321e34080d7d41304869f2b9b3a1004bd854d8b64867c2f157a96ccba2f48602",
+    "WIP/city.png": "641b45b6dca9fe6ac0e40efade1aafbf7c1fc31e3129eacb067ddc45e54d2c3d",
+    "WIP/squads.png": "dc7811dd48e1a481e301ec125aa66e20f238f8e525309b57cdb78305e0d4ba6a",
+    "WIP/troops-overview.png": "b07641fb9a1010150c73ff357458d22794e0d5b35d123f344f72fce618e913d4"
+  }
+}

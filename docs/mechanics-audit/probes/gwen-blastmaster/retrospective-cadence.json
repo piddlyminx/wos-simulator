@@ -1,0 +1,652 @@
+{
+  "phase": "retrospective_diagnostic_after_observation",
+  "observed": {
+    "defender_survivors": 1397,
+    "blastmaster_activations": 4,
+    "air_dominance_activations": 3
+  },
+  "directional_prediction": "Increasing the interval from four to five attacks reduces Blastmaster damage and should increase defending survivors, provided the same lines stay alive.",
+  "source_input": "docs/mechanics-audit/probes/gwen-blastmaster/captured-input.json",
+  "results": [
+    {
+      "name": "current",
+      "first": 5,
+      "every": 4,
+      "score": -1388,
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 237,
+          "lancer": 579,
+          "marksman": 572
+        }
+      },
+      "skills": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.304352126539547,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 5,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 56.3238220662236,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmaster_jobs": [
+        {
+          "round": 5,
+          "target": "infantry",
+          "kills": 1.8941340169798755
+        },
+        {
+          "round": 5,
+          "target": "lancer",
+          "kills": 6.079199286620386
+        },
+        {
+          "round": 5,
+          "target": "marksman",
+          "kills": 8.130537982239346
+        },
+        {
+          "round": 9,
+          "target": "infantry",
+          "kills": 1.908997707529787
+        },
+        {
+          "round": 9,
+          "target": "lancer",
+          "kills": 5.327742708135367
+        },
+        {
+          "round": 9,
+          "target": "marksman",
+          "kills": 7.125513148323649
+        },
+        {
+          "round": 13,
+          "target": "infantry",
+          "kills": 1.5973863543196951
+        },
+        {
+          "round": 13,
+          "target": "lancer",
+          "kills": 4.45807947685495
+        },
+        {
+          "round": 13,
+          "target": "marksman",
+          "kills": 5.962394520308854
+        },
+        {
+          "round": 17,
+          "target": "infantry",
+          "kills": 1.0549274177901808
+        },
+        {
+          "round": 17,
+          "target": "lancer",
+          "kills": 3.3857762693538542
+        },
+        {
+          "round": 17,
+          "target": "marksman",
+          "kills": 4.5282579595527475
+        },
+        {
+          "round": 21,
+          "target": "infantry",
+          "kills": 0.6474255299704825
+        },
+        {
+          "round": 21,
+          "target": "lancer",
+          "kills": 1.8068731213010594
+        },
+        {
+          "round": 21,
+          "target": "marksman",
+          "kills": 2.4165765669433616
+        }
+      ]
+    },
+    {
+      "name": "four_normal_attacks_then_extra_cycle",
+      "first": 5,
+      "every": 5,
+      "score": -1398,
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 238,
+          "lancer": 583,
+          "marksman": 577
+        }
+      },
+      "skills": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.304352126539547,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 4,
+          "skillActivations": 4,
+          "effectActivations": 4,
+          "skillKills": 46.763071841612856,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmaster_jobs": [
+        {
+          "round": 5,
+          "target": "infantry",
+          "kills": 1.8941340169798755
+        },
+        {
+          "round": 5,
+          "target": "lancer",
+          "kills": 6.079199286620386
+        },
+        {
+          "round": 5,
+          "target": "marksman",
+          "kills": 8.130537982239346
+        },
+        {
+          "round": 10,
+          "target": "infantry",
+          "kills": 1.8333638839351047
+        },
+        {
+          "round": 10,
+          "target": "lancer",
+          "kills": 5.116659399572158
+        },
+        {
+          "round": 10,
+          "target": "marksman",
+          "kills": 6.843202801718117
+        },
+        {
+          "round": 15,
+          "target": "infantry",
+          "kills": 1.4188905306362443
+        },
+        {
+          "round": 15,
+          "target": "lancer",
+          "kills": 3.95992286864578
+        },
+        {
+          "round": 15,
+          "target": "marksman",
+          "kills": 5.296142102319798
+        },
+        {
+          "round": 20,
+          "target": "infantry",
+          "kills": 0.8228960007101459
+        },
+        {
+          "round": 20,
+          "target": "lancer",
+          "kills": 2.2965863971677014
+        },
+        {
+          "round": 20,
+          "target": "marksman",
+          "kills": 3.0715365710681977
+        }
+      ]
+    },
+    {
+      "name": "one_attack_initial_delay",
+      "first": 6,
+      "every": 4,
+      "score": -1397,
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 241,
+          "lancer": 581,
+          "marksman": 575
+        }
+      },
+      "skills": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.304352126539547,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 5,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 52.19120035218118,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmaster_jobs": [
+        {
+          "round": 6,
+          "target": "infantry",
+          "kills": 2.111696354763536
+        },
+        {
+          "round": 6,
+          "target": "lancer",
+          "kills": 5.893445975084764
+        },
+        {
+          "round": 6,
+          "target": "marksman",
+          "kills": 7.882104877226477
+        },
+        {
+          "round": 10,
+          "target": "infantry",
+          "kills": 1.8333638839351047
+        },
+        {
+          "round": 10,
+          "target": "lancer",
+          "kills": 5.116659399572158
+        },
+        {
+          "round": 10,
+          "target": "marksman",
+          "kills": 6.843202801718117
+        },
+        {
+          "round": 14,
+          "target": "infantry",
+          "kills": 1.5096511189498631
+        },
+        {
+          "round": 14,
+          "target": "lancer",
+          "kills": 4.213222838921629
+        },
+        {
+          "round": 14,
+          "target": "marksman",
+          "kills": 5.634914518246436
+        },
+        {
+          "round": 18,
+          "target": "infantry",
+          "kills": 1.0982031185947905
+        },
+        {
+          "round": 18,
+          "target": "lancer",
+          "kills": 3.064929640337778
+        },
+        {
+          "round": 18,
+          "target": "marksman",
+          "kills": 4.099146232712338
+        },
+        {
+          "round": 22,
+          "target": "infantry",
+          "kills": 0.3842198238609873
+        },
+        {
+          "round": 22,
+          "target": "lancer",
+          "kills": 1.072303207501096
+        },
+        {
+          "round": 22,
+          "target": "marksman",
+          "kills": 1.434136560756107
+        }
+      ]
+    },
+    {
+      "name": "fourth_attack",
+      "first": 4,
+      "every": 4,
+      "score": -1389,
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 241,
+          "lancer": 578,
+          "marksman": 570
+        }
+      },
+      "skills": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.310402832427123,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 5,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 60.590045938729304,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmaster_jobs": [
+        {
+          "round": 4,
+          "target": "infantry",
+          "kills": 2.24178653134639
+        },
+        {
+          "round": 4,
+          "target": "lancer",
+          "kills": 6.256509265813482
+        },
+        {
+          "round": 4,
+          "target": "marksman",
+          "kills": 8.367678673387996
+        },
+        {
+          "round": 8,
+          "target": "infantry",
+          "kills": 1.9785808252368946
+        },
+        {
+          "round": 8,
+          "target": "lancer",
+          "kills": 5.521939352013518
+        },
+        {
+          "round": 8,
+          "target": "marksman",
+          "kills": 7.38523866720074
+        },
+        {
+          "round": 12,
+          "target": "infantry",
+          "kills": 1.679070883801952
+        },
+        {
+          "round": 12,
+          "target": "lancer",
+          "kills": 4.686049450103214
+        },
+        {
+          "round": 12,
+          "target": "marksman",
+          "kills": 6.267289694642829
+        },
+        {
+          "round": 16,
+          "target": "infantry",
+          "kills": 1.3220792364350504
+        },
+        {
+          "round": 16,
+          "target": "lancer",
+          "kills": 3.689736233684874
+        },
+        {
+          "round": 16,
+          "target": "marksman",
+          "kills": 4.934784858664715
+        },
+        {
+          "round": 20,
+          "target": "infantry",
+          "kills": 0.8319720595415079
+        },
+        {
+          "round": 20,
+          "target": "lancer",
+          "kills": 2.3219163941952865
+        },
+        {
+          "round": 20,
+          "target": "marksman",
+          "kills": 3.105413812660862
+        }
+      ]
+    },
+    {
+      "name": "first_sixth_every_fifth",
+      "first": 6,
+      "every": 5,
+      "score": -1402,
+      "rounds": 22,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 239,
+          "lancer": 584,
+          "marksman": 579
+        }
+      },
+      "skills": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "EagleVision",
+          "skillName": "EagleVision",
+          "level": 3,
+          "triggersSeen": 22,
+          "skillActivations": 22,
+          "effectActivations": 22,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "AirDominance",
+          "skillName": "AirDominance",
+          "level": 1,
+          "triggersSeen": 3,
+          "skillActivations": 3,
+          "effectActivations": 6,
+          "skillKills": 10.298301420651972,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Gwen",
+          "skillId": "Blastmaster",
+          "skillName": "Blastmaster",
+          "level": 1,
+          "triggersSeen": 4,
+          "skillActivations": 4,
+          "effectActivations": 4,
+          "skillKills": 43.60821321437532,
+          "unsupportedEffects": []
+        }
+      ],
+      "blastmaster_jobs": [
+        {
+          "round": 6,
+          "target": "infantry",
+          "kills": 2.111696354763536
+        },
+        {
+          "round": 6,
+          "target": "lancer",
+          "kills": 5.893445975084764
+        },
+        {
+          "round": 6,
+          "target": "marksman",
+          "kills": 7.882104877226477
+        },
+        {
+          "round": 11,
+          "target": "infantry",
+          "kills": 1.5310916637253997
+        },
+        {
+          "round": 11,
+          "target": "lancer",
+          "kills": 4.914019423351479
+        },
+        {
+          "round": 11,
+          "target": "marksman",
+          "kills": 6.572184868976805
+        },
+        {
+          "round": 16,
+          "target": "infantry",
+          "kills": 1.3190538834912633
+        },
+        {
+          "round": 16,
+          "target": "lancer",
+          "kills": 3.681292901342345
+        },
+        {
+          "round": 16,
+          "target": "marksman",
+          "kills": 4.923492444800494
+        },
+        {
+          "round": 21,
+          "target": "infantry",
+          "kills": 0.6353241181953332
+        },
+        {
+          "round": 21,
+          "target": "lancer",
+          "kills": 1.773099791930946
+        },
+        {
+          "round": 21,
+          "target": "marksman",
+          "kills": 2.371406911486476
+        }
+      ]
+    }
+  ]
+}

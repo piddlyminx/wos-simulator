@@ -1,0 +1,1290 @@
+{
+  "generatedAt": "2026-09-07T04:08:16.043Z",
+  "phase": "prospective_pre_capture",
+  "provenance": {
+    "source": "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json",
+    "raw_capture": "docs/mechanics-audit/probes/gwen-blastmaster/report_stats.png",
+    "reported_at": "2026-09-07",
+    "verification": "Parent visually verified these exact Lancer report bonuses in the fresh Gwen capture.",
+    "assumption": "The fresh Gwen and nohero WIP Lancer bonus fields remain applicable after changing to nohero minxxx and full Hendrik3/3/3 WIP. Neither Gwen nor Hendrik is a Lancer hero. Exact Hendrik report stats must replace these estimates before interpretation; no hero-generation stats are added.",
+    "hero_kit": "WIP Hendrik3/3/3 from skill/tmp/debug/hero_skills_WIP_20260907T035709Z_00.",
+    "outcome_exposure": "No game result from this proposed Hendrik formation has been opened. Older different formations and the fresh Gwen result are known."
+  },
+  "statsFile": "/home/paul/projects_wsl/wos/simulator/tmp/mechanics-audit-2026-09-07/next-probe/stats-input.json",
+  "configSnapshotSha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "candidateDefinitions": {
+    "configured": "Hendrik S2 provides +18% Defense to all friendly troops on rounds4/5,8/9,... . Full3/3/3 kit; no Marksmen gates S3.",
+    "no_s2": "Counterfactual S2 has no effect; equivalent here to S2 affecting Marksmen only.",
+    "damage_taken_down": "Counterfactual S2 is18% Damage Taken Down with otherwise identical cadence/scope.",
+    "delayed_one_round": "Counterfactual S2 activation persists one round later, rounds5/6,9/10,... .",
+    "one_round_duration": "Counterfactual S2 lasts only the triggering round.",
+    "first_round_start": "Counterfactual S2 first activates round1 then every4, lasting2 turns.",
+    "s1_10_percent": "Diagnostic level-scaling alternative: S1 enemy Defense Down is10% rather than15%; S2 configured.",
+    "s1_20_percent": "Diagnostic level-scaling alternative: S1 enemy Defense Down is20% rather than15%; S2 configured.",
+    "s3_uses_lancer": "Diagnostic scope alternative: S3 uses the deployed Lancers as its source rather than requiring Marksmen; S2 configured."
+  },
+  "selected": {
+    "attacker": 100,
+    "defender": 150,
+    "gap": 26,
+    "diagnosticGap": 0,
+    "losses": 233,
+    "efficiency": 0.11158798283261803,
+    "results": {
+      "configured": {
+        "score": -17,
+        "rounds": 54
+      },
+      "no_s2": {
+        "score": 9,
+        "rounds": 53
+      },
+      "damage_taken_down": {
+        "score": -17,
+        "rounds": 54
+      },
+      "delayed_one_round": {
+        "score": -16,
+        "rounds": 54
+      },
+      "one_round_duration": {
+        "score": -4,
+        "rounds": 60
+      },
+      "first_round_start": {
+        "score": -20,
+        "rounds": 52
+      },
+      "s1_10_percent": {
+        "score": 1,
+        "rounds": 65
+      },
+      "s1_20_percent": {
+        "score": -27,
+        "rounds": 48
+      },
+      "s3_uses_lancer": {
+        "score": -33,
+        "rounds": 45
+      }
+    }
+  },
+  "input": {
+    "attacker": {
+      "name": "minxxx",
+      "heroes": {},
+      "joiner_heroes": {},
+      "troops": {
+        "lancer_t6": 100
+      },
+      "stats": {
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230
+        }
+      }
+    },
+    "defender": {
+      "name": "WIP",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "joiner_heroes": {},
+      "troops": {
+        "lancer_t6": 150
+      },
+      "stats": {
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        }
+      }
+    }
+  },
+  "predictions": {
+    "configured": {
+      "score": -17,
+      "rounds": 54,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 17,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -17,
+        "max": -17,
+        "samples": 272
+      }
+    },
+    "no_s2": {
+      "score": 9,
+      "rounds": 53,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 9,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 0,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 17,
+          "skillActivations": 17,
+          "effectActivations": 17,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": 9,
+        "max": 9,
+        "samples": 272
+      }
+    },
+    "damage_taken_down": {
+      "score": -17,
+      "rounds": 54,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 17,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -17,
+        "max": -17,
+        "samples": 272
+      }
+    },
+    "delayed_one_round": {
+      "score": -16,
+      "rounds": 54,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 16,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -16,
+        "max": -16,
+        "samples": 272
+      }
+    },
+    "one_round_duration": {
+      "score": -4,
+      "rounds": 60,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 4,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 15,
+          "skillActivations": 15,
+          "effectActivations": 15,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 20,
+          "skillActivations": 20,
+          "effectActivations": 20,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -4,
+        "max": -3,
+        "samples": 272
+      }
+    },
+    "first_round_start": {
+      "score": -20,
+      "rounds": 52,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 20,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 17,
+          "skillActivations": 17,
+          "effectActivations": 17,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -20,
+        "max": -19,
+        "samples": 272
+      }
+    },
+    "s1_10_percent": {
+      "score": 1,
+      "rounds": 65,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 1,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 16,
+          "skillActivations": 16,
+          "effectActivations": 16,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 21,
+          "skillActivations": 21,
+          "effectActivations": 21,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": 1,
+        "max": 1,
+        "samples": 272
+      }
+    },
+    "s1_20_percent": {
+      "score": -27,
+      "rounds": 48,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 27,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 12,
+          "skillActivations": 12,
+          "effectActivations": 12,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 16,
+          "skillActivations": 16,
+          "effectActivations": 16,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -27,
+        "max": -27,
+        "samples": 272
+      }
+    },
+    "s3_uses_lancer": {
+      "score": -33,
+      "rounds": 45,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 33,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 11,
+          "skillActivations": 11,
+          "effectActivations": 11,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 15,
+          "skillActivations": 15,
+          "effectActivations": 15,
+          "skillKills": 6.996034390197805,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {
+        "DragonsHeir/1": 14
+      },
+      "statPrecisionSampleRange": {
+        "min": -33,
+        "max": -33,
+        "samples": 272
+      }
+    }
+  },
+  "shortlist": [
+    {
+      "attacker": 100,
+      "defender": 150,
+      "gap": 26,
+      "diagnosticGap": 0,
+      "losses": 233,
+      "efficiency": 0.11158798283261803,
+      "results": {
+        "configured": {
+          "score": -17,
+          "rounds": 54
+        },
+        "no_s2": {
+          "score": 9,
+          "rounds": 53
+        },
+        "damage_taken_down": {
+          "score": -17,
+          "rounds": 54
+        },
+        "delayed_one_round": {
+          "score": -16,
+          "rounds": 54
+        },
+        "one_round_duration": {
+          "score": -4,
+          "rounds": 60
+        },
+        "first_round_start": {
+          "score": -20,
+          "rounds": 52
+        },
+        "s1_10_percent": {
+          "score": 1,
+          "rounds": 65
+        },
+        "s1_20_percent": {
+          "score": -27,
+          "rounds": 48
+        },
+        "s3_uses_lancer": {
+          "score": -33,
+          "rounds": 45
+        }
+      }
+    },
+    {
+      "attacker": 125,
+      "defender": 225,
+      "gap": 13,
+      "diagnosticGap": 0,
+      "losses": 258,
+      "efficiency": 0.050387596899224806,
+      "results": {
+        "configured": {
+          "score": -92,
+          "rounds": 40
+        },
+        "no_s2": {
+          "score": -79,
+          "rounds": 41
+        },
+        "damage_taken_down": {
+          "score": -92,
+          "rounds": 40
+        },
+        "delayed_one_round": {
+          "score": -91,
+          "rounds": 40
+        },
+        "one_round_duration": {
+          "score": -85,
+          "rounds": 41
+        },
+        "first_round_start": {
+          "score": -94,
+          "rounds": 40
+        },
+        "s1_10_percent": {
+          "score": -84,
+          "rounds": 43
+        },
+        "s1_20_percent": {
+          "score": -99,
+          "rounds": 38
+        },
+        "s3_uses_lancer": {
+          "score": -103,
+          "rounds": 36
+        }
+      }
+    },
+    {
+      "attacker": 125,
+      "defender": 200,
+      "gap": 18,
+      "diagnosticGap": 0,
+      "losses": 276,
+      "efficiency": 0.06521739130434782,
+      "results": {
+        "configured": {
+          "score": -49,
+          "rounds": 47
+        },
+        "no_s2": {
+          "score": -31,
+          "rounds": 50
+        },
+        "damage_taken_down": {
+          "score": -49,
+          "rounds": 47
+        },
+        "delayed_one_round": {
+          "score": -49,
+          "rounds": 47
+        },
+        "one_round_duration": {
+          "score": -41,
+          "rounds": 48
+        },
+        "first_round_start": {
+          "score": -52,
+          "rounds": 46
+        },
+        "s1_10_percent": {
+          "score": -38,
+          "rounds": 51
+        },
+        "s1_20_percent": {
+          "score": -58,
+          "rounds": 43
+        },
+        "s3_uses_lancer": {
+          "score": -64,
+          "rounds": 41
+        }
+      }
+    },
+    {
+      "attacker": 125,
+      "defender": 175,
+      "gap": 12,
+      "diagnosticGap": 0,
+      "losses": 282,
+      "efficiency": 0.0425531914893617,
+      "results": {
+        "configured": {
+          "score": 18,
+          "rounds": 51
+        },
+        "no_s2": {
+          "score": 30,
+          "rounds": 44
+        },
+        "damage_taken_down": {
+          "score": 18,
+          "rounds": 51
+        },
+        "delayed_one_round": {
+          "score": 18,
+          "rounds": 51
+        },
+        "one_round_duration": {
+          "score": 25,
+          "rounds": 47
+        },
+        "first_round_start": {
+          "score": 16,
+          "rounds": 52
+        },
+        "s1_10_percent": {
+          "score": 26,
+          "rounds": 48
+        },
+        "s1_20_percent": {
+          "score": 8,
+          "rounds": 55
+        },
+        "s3_uses_lancer": {
+          "score": -8,
+          "rounds": 56
+        }
+      }
+    },
+    {
+      "attacker": 150,
+      "defender": 300,
+      "gap": 14,
+      "diagnosticGap": 0,
+      "losses": 296,
+      "efficiency": 0.0472972972972973,
+      "results": {
+        "configured": {
+          "score": -154,
+          "rounds": 36
+        },
+        "no_s2": {
+          "score": -140,
+          "rounds": 37
+        },
+        "damage_taken_down": {
+          "score": -154,
+          "rounds": 36
+        },
+        "delayed_one_round": {
+          "score": -153,
+          "rounds": 36
+        },
+        "one_round_duration": {
+          "score": -148,
+          "rounds": 36
+        },
+        "first_round_start": {
+          "score": -156,
+          "rounds": 36
+        },
+        "s1_10_percent": {
+          "score": -146,
+          "rounds": 38
+        },
+        "s1_20_percent": {
+          "score": -161,
+          "rounds": 34
+        },
+        "s3_uses_lancer": {
+          "score": -166,
+          "rounds": 33
+        }
+      }
+    },
+    {
+      "attacker": 150,
+      "defender": 275,
+      "gap": 15,
+      "diagnosticGap": 0,
+      "losses": 307,
+      "efficiency": 0.048859934853420196,
+      "results": {
+        "configured": {
+          "score": -118,
+          "rounds": 39
+        },
+        "no_s2": {
+          "score": -103,
+          "rounds": 40
+        },
+        "damage_taken_down": {
+          "score": -118,
+          "rounds": 39
+        },
+        "delayed_one_round": {
+          "score": -118,
+          "rounds": 39
+        },
+        "one_round_duration": {
+          "score": -111,
+          "rounds": 40
+        },
+        "first_round_start": {
+          "score": -121,
+          "rounds": 39
+        },
+        "s1_10_percent": {
+          "score": -109,
+          "rounds": 42
+        },
+        "s1_20_percent": {
+          "score": -126,
+          "rounds": 37
+        },
+        "s3_uses_lancer": {
+          "score": -131,
+          "rounds": 36
+        }
+      }
+    },
+    {
+      "attacker": 175,
+      "defender": 450,
+      "gap": 12,
+      "diagnosticGap": 0,
+      "losses": 318,
+      "efficiency": 0.03773584905660377,
+      "results": {
+        "configured": {
+          "score": -307,
+          "rounds": 30
+        },
+        "no_s2": {
+          "score": -295,
+          "rounds": 30
+        },
+        "damage_taken_down": {
+          "score": -307,
+          "rounds": 30
+        },
+        "delayed_one_round": {
+          "score": -306,
+          "rounds": 30
+        },
+        "one_round_duration": {
+          "score": -301,
+          "rounds": 30
+        },
+        "first_round_start": {
+          "score": -309,
+          "rounds": 30
+        },
+        "s1_10_percent": {
+          "score": -300,
+          "rounds": 31
+        },
+        "s1_20_percent": {
+          "score": -314,
+          "rounds": 28
+        },
+        "s3_uses_lancer": {
+          "score": -318,
+          "rounds": 27
+        }
+      }
+    },
+    {
+      "attacker": 150,
+      "defender": 250,
+      "gap": 19,
+      "diagnosticGap": 0,
+      "losses": 322,
+      "efficiency": 0.059006211180124224,
+      "results": {
+        "configured": {
+          "score": -78,
+          "rounds": 44
+        },
+        "no_s2": {
+          "score": -59,
+          "rounds": 46
+        },
+        "damage_taken_down": {
+          "score": -78,
+          "rounds": 44
+        },
+        "delayed_one_round": {
+          "score": -77,
+          "rounds": 44
+        },
+        "one_round_duration": {
+          "score": -69,
+          "rounds": 45
+        },
+        "first_round_start": {
+          "score": -80,
+          "rounds": 44
+        },
+        "s1_10_percent": {
+          "score": -67,
+          "rounds": 47
+        },
+        "s1_20_percent": {
+          "score": -88,
+          "rounds": 41
+        },
+        "s3_uses_lancer": {
+          "score": -94,
+          "rounds": 39
+        }
+      }
+    },
+    {
+      "attacker": 175,
+      "defender": 425,
+      "gap": 12,
+      "diagnosticGap": 0,
+      "losses": 323,
+      "efficiency": 0.03715170278637771,
+      "results": {
+        "configured": {
+          "score": -277,
+          "rounds": 31
+        },
+        "no_s2": {
+          "score": -265,
+          "rounds": 31
+        },
+        "damage_taken_down": {
+          "score": -277,
+          "rounds": 31
+        },
+        "delayed_one_round": {
+          "score": -276,
+          "rounds": 31
+        },
+        "one_round_duration": {
+          "score": -271,
+          "rounds": 31
+        },
+        "first_round_start": {
+          "score": -279,
+          "rounds": 31
+        },
+        "s1_10_percent": {
+          "score": -269,
+          "rounds": 33
+        },
+        "s1_20_percent": {
+          "score": -283,
+          "rounds": 30
+        },
+        "s3_uses_lancer": {
+          "score": -288,
+          "rounds": 29
+        }
+      }
+    },
+    {
+      "attacker": 175,
+      "defender": 400,
+      "gap": 13,
+      "diagnosticGap": 0,
+      "losses": 329,
+      "efficiency": 0.03951367781155015,
+      "results": {
+        "configured": {
+          "score": -246,
+          "rounds": 32
+        },
+        "no_s2": {
+          "score": -233,
+          "rounds": 33
+        },
+        "damage_taken_down": {
+          "score": -246,
+          "rounds": 32
+        },
+        "delayed_one_round": {
+          "score": -245,
+          "rounds": 32
+        },
+        "one_round_duration": {
+          "score": -239,
+          "rounds": 33
+        },
+        "first_round_start": {
+          "score": -248,
+          "rounds": 32
+        },
+        "s1_10_percent": {
+          "score": -238,
+          "rounds": 34
+        },
+        "s1_20_percent": {
+          "score": -252,
+          "rounds": 31
+        },
+        "s3_uses_lancer": {
+          "score": -257,
+          "rounds": 30
+        }
+      }
+    }
+  ],
+  "uncertainty": "Sensitivity samples cover independent +/-0.05 percentage-point report precision only; not an exhaustive bound, nor a bound on account or equipment changes."
+}

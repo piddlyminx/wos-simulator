@@ -1,0 +1,88 @@
+{
+  "evidence_kind": "captured_game_observation",
+  "battle_number": 1,
+  "timestamp_displayed": "2026-09-07 06:43:14",
+  "coordinate": {
+    "x": 787,
+    "y": 577
+  },
+  "defender_mail_id": "2734692464123459",
+  "attacker": {
+    "initial": 350,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 123,
+    "lightly_injured": 227
+  },
+  "defender": {
+    "initial": 250,
+    "survivors": 166,
+    "losses": 0,
+    "injured": 30,
+    "lightly_injured": 54
+  },
+  "defender_rows": [
+    {
+      "troop_key": "infantry_t6",
+      "initial": 150,
+      "kills_displayed": 23,
+      "losses": 0,
+      "injured_displayed": -30,
+      "lightly_injured": 54,
+      "survivors": 66
+    },
+    {
+      "troop_key": "lancer_t6",
+      "initial": 50,
+      "kills_displayed": 43,
+      "losses": 0,
+      "injured_displayed": 0,
+      "lightly_injured": 0,
+      "survivors": 50
+    },
+    {
+      "troop_key": "marksman_t6",
+      "initial": 50,
+      "kills_displayed": 57,
+      "losses": 0,
+      "injured_displayed": 0,
+      "lightly_injured": 0,
+      "survivors": 50
+    }
+  ],
+  "skill_details": {
+    "attacker": {
+      "Reina": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_3": {
+          "triggered": 8,
+          "displayed_kills": 5
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "verification": "Manually read report_top, report_stats, bd_top and expanded defender troop rows. Exact T6 identities/counts, full Reina111 roster kit, nohero defender and all24 displayed stat fields match captured-input. Full kit levels come from freshly captured roster, not inferred from hero portrait level. Counterpart mail is this same single battle, not an additional observation. No game round total shown.",
+  "stat_delta_from_conditional": {
+    "attacker.lanc.attack": 117.7,
+    "attacker.lanc.defense": 117.6,
+    "note": "Active Lancer lethality/health and all defender stats unchanged. Absent attacker Marksman stats also differ because conditional source had Hendrik selected; fresh input stores actual report values."
+  },
+  "artifact_sha256": {
+    "defender-details-collapsed.png": "e16dcd8a93337e2961b96e6a634712778ba46b574615e4e7257914e532ee3f51",
+    "bd_bot.png": "3b15934acfa53be13c7c5ac501588078914ea2f2563a006412dd307b0f9c8186",
+    "bd_top.png": "4e3ddf63b30db1fe0fcf3100b1d6201b5bf2b55a396db4b5db8b7cd6c462020e",
+    "report_top.png": "c5dd7d8ba1e2612ee790996f5cbf52e2ae23fba39921af8d0e5ad8f5890c51c2",
+    "defender-report-bottom.png": "d5215c0bf65cb77f4fd0e6db175a2a50ed2303fdc3fd1da3c7c329bccd45c297",
+    "defender-troops.png": "d23a164721dc5769f7376a4320e7782c661943850f0baa82f0b5a46ea0356342",
+    "report_stats.png": "911d8ece8f0ed5b7dfeeedbfd9277462399e878199939babb3535f2ba4e6067a",
+    "report_bottom.png": "23b562967e8c17a306c3884911bfedf8d6e020fc8f5baf141fb585ececba483d"
+  }
+}

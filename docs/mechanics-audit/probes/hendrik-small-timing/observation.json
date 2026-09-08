@@ -1,0 +1,102 @@
+{
+  "observed": {
+    "report_timestamp_displayed": "2026-09-07 07:31:27",
+    "world_coord": {
+      "x": 787,
+      "y": 577
+    },
+    "attacker": {
+      "troops": 250,
+      "survivors": 0,
+      "losses": 0,
+      "injured": 88,
+      "lightly_injured": 162
+    },
+    "defender": {
+      "troops": 270,
+      "survivors": 68,
+      "losses": 0,
+      "injured": 72,
+      "lightly_injured": 130
+    },
+    "per_troop_survivors": {
+      "attacker": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "defender": {
+        "infantry": 16,
+        "lancer": 31,
+        "marksman": 21
+      }
+    },
+    "skill_details": {
+      "attacker": {
+        "Hendrik": {
+          "skill_1": {
+            "triggered": 1,
+            "displayed_kills": null
+          },
+          "skill_2": {
+            "triggered": 8,
+            "displayed_kills": null
+          },
+          "skill_3": {
+            "triggered": 11,
+            "displayed_kills": 27
+          }
+        }
+      }
+    },
+    "rounds": null,
+    "mail_ids": {
+      "attacker_view": "2734692464124634",
+      "defender_view": "2734692464124635"
+    },
+    "defender_troop_details_source": "docs/mechanics-audit/probes/hendrik-small-timing/defender-troops.json",
+    "transcription": "Root visually checked both report identities, exact T6 troops, all24 displayed stats, unchanged full Hendrik3/3/3 kit, both Battle Details views and defender troop rows. No observed round count. Dash is null. Counterpart report is the same battle, not another observation."
+  },
+  "input_matches_frozen_exactly": true,
+  "source_images_sha256": {
+    "report_top.png": "adcc865af21b4a6c40ec5b2c66763c96523c12063b34af4d2be4834374ee77ee",
+    "report_bottom.png": "5f30d80ac41d772776f01658e410d164137a8c382a7025ccb3821c1feabdffa3",
+    "report_stats.png": "61a08eeedb78a411432ddc7bab5ba2e995ef7ff15b693215ada881834faaabbf",
+    "bd_top.png": "60341aa9b95901e8239e91d26cf21705a1113ab40f2d8ce976e599d305e8293f",
+    "bd_bot.png": "14b82f7dfb2f3cb43360c7f359d8864a17d78a0301b60d86b759a622a7840014",
+    "defender-troops.png": "f48751dfcf90029e1888fea6eea07b21b4d6c2db8fb9bf2b3f47dca2aeb5939a",
+    "counterpart-bottom.png": "d0d25af9bbd8d520b5d8aa58029c365811cf83bef25abbbb7bdc3d791f14e3d5",
+    "counterpart-bd.png": "af09b6876e5435089dcd9dbab52a70846a7244ef813e7b0190fb58ee161a16b8"
+  },
+  "comparison": {
+    "current": {
+      "defender": 78,
+      "vector": [
+        19,
+        34,
+        25
+      ]
+    },
+    "s3_first_two": {
+      "defender": 71,
+      "vector": [
+        16,
+        32,
+        23
+      ],
+      "precision_total_range": [
+        70,
+        71
+      ]
+    },
+    "game": {
+      "defender": 68,
+      "vector": [
+        16,
+        31,
+        21
+      ]
+    }
+  },
+  "limits": "Per-line endpoint and reported skill totals do not reveal the game round sequence. S3-first2 nominal residual3 total, per-line0/1/2; its precision screen reaches70. This supports investigating earlier delivery, not an inferred exact reporting rule."
+}

@@ -1,0 +1,76 @@
+{
+  "current": {
+    "description": "Full WIP Reina1/1/1: S1 normal damage+10%; S2 incoming-normal dodge4%; S3 Lancer extra skill attack20% at25% chance, current target.",
+    "patches": []
+  },
+  "s3_fanout": {
+    "description": "Only S3 target changes from the normal target to every living enemy line.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Reina",
+          "skills",
+          "ShadowBlade",
+          "effects",
+          "ShadowBlade/1",
+          "trigger_damage_jobs",
+          0,
+          "target"
+        ],
+        "from": "effect.applies_vs",
+        "to": "enemy.living"
+      }
+    ]
+  },
+  "s3_absent": {
+    "description": "Only S3 delivered damage becomes zero. Full live kit is unchanged; this is a simulator counterfactual. Small endpoint separation cannot establish the coefficient alone.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Reina",
+          "skills",
+          "ShadowBlade",
+          "effects",
+          "ShadowBlade/1",
+          "value"
+        ],
+        "from": [
+          20,
+          40,
+          60,
+          80,
+          100
+        ],
+        "to": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  },
+  "s3_normal_kind": {
+    "description": "Only the generated S3 job becomes normal damage and can receive S1. Counter duration/cadence behavior unchanged; expected weak identifiability.",
+    "patches": [
+      {
+        "path": [
+          "heroDefinitions",
+          "Reina",
+          "skills",
+          "ShadowBlade",
+          "effects",
+          "ShadowBlade/1",
+          "trigger_damage_jobs",
+          0,
+          "damage_kind"
+        ],
+        "from": null,
+        "to": "normal"
+      }
+    ]
+  }
+}

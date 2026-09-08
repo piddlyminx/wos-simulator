@@ -1,0 +1,132 @@
+[
+  {
+    "side": "left",
+    "field": "troops",
+    "crop": "outcome_left_troops.png",
+    "box": {
+      "x1": 105,
+      "y1": 621,
+      "x2": 255,
+      "y2": 651
+    },
+    "ocr_text": "200",
+    "value": 200
+  },
+  {
+    "side": "right",
+    "field": "troops",
+    "crop": "outcome_right_troops.png",
+    "box": {
+      "x1": 476,
+      "y1": 621,
+      "x2": 615,
+      "y2": 651
+    },
+    "ocr_text": "400",
+    "value": 400
+  },
+  {
+    "side": "left",
+    "field": "losses",
+    "crop": "outcome_left_losses.png",
+    "box": {
+      "x1": 105,
+      "y1": 679,
+      "x2": 255,
+      "y2": 709
+    },
+    "ocr_text": "0",
+    "value": 0
+  },
+  {
+    "side": "right",
+    "field": "losses",
+    "crop": "outcome_right_losses.png",
+    "box": {
+      "x1": 476,
+      "y1": 679,
+      "x2": 615,
+      "y2": 709
+    },
+    "ocr_text": "0",
+    "value": 0
+  },
+  {
+    "side": "left",
+    "field": "injured",
+    "crop": "outcome_left_injured.png",
+    "box": {
+      "x1": 105,
+      "y1": 737,
+      "x2": 255,
+      "y2": 767
+    },
+    "ocr_text": "70",
+    "value": 70
+  },
+  {
+    "side": "right",
+    "field": "injured",
+    "crop": "outcome_right_injured.png",
+    "box": {
+      "x1": 476,
+      "y1": 737,
+      "x2": 615,
+      "y2": 767
+    },
+    "ocr_text": "102",
+    "value": 102
+  },
+  {
+    "side": "left",
+    "field": "lightly_injured",
+    "crop": "outcome_left_lightly_injured.png",
+    "box": {
+      "x1": 105,
+      "y1": 795,
+      "x2": 255,
+      "y2": 825
+    },
+    "ocr_text": "130",
+    "value": 130
+  },
+  {
+    "side": "right",
+    "field": "lightly_injured",
+    "crop": "outcome_right_lightly_injured.png",
+    "box": {
+      "x1": 476,
+      "y1": 795,
+      "x2": 615,
+      "y2": 825
+    },
+    "ocr_text": "189",
+    "value": 189
+  },
+  {
+    "side": "left",
+    "field": "survivors",
+    "crop": "outcome_left_survivors.png",
+    "box": {
+      "x1": 105,
+      "y1": 853,
+      "x2": 255,
+      "y2": 883
+    },
+    "ocr_text": "0",
+    "value": 0
+  },
+  {
+    "side": "right",
+    "field": "survivors",
+    "crop": "outcome_right_survivors.png",
+    "box": {
+      "x1": 476,
+      "y1": 853,
+      "x2": 615,
+      "y2": 883
+    },
+    "ocr_text": "109",
+    "value": 109
+  }
+]

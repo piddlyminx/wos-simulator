@@ -1,0 +1,32 @@
+{
+  "test_id": "hendrik_dragons_heir_250m_vs_400i_100l_100m",
+  "description": "Prospective deterministic positive S3 fanout probe: WIP full Hendrik3/3/3 with250 T6 Marksmen attacks minxxx no heroes with400 T6 Infantry+100 T6 Lancers+100 T6 Marksmen. Current all-living S3 predicts minxxx476 survivors(314/84/78); target-only predicts516(316/100/100). Both preserve every defender line. Source report stats are conditional because roles reverse; capture fresh exact report stats before interpretation. Frozen alternative outer-army-ceil arithmetic retains same nominal outcomes. Full endpoint primary; per-line survivors diagnose positive backline damage. Package docs/mechanics-audit/probes/hendrik-dragons-heir.",
+  "emulator": {
+    "attacker": {
+      "instance": "WIP"
+    },
+    "defender": {
+      "instance": "minxxx"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Hendrik": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "troops": {
+      "marksman_t6": 250
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 400,
+      "lancer_t6": 100,
+      "marksman_t6": 100
+    }
+  }
+}

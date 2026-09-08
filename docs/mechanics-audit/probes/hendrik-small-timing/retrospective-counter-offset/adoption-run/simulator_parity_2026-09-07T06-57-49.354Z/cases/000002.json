@@ -1,0 +1,2104 @@
+{
+  "reportKind": "simulator-parity-case-detail",
+  "schemaVersion": 1,
+  "createdAt": "2026-09-07T06:57:49.289Z",
+  "file": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json",
+  "testcaseId": "hendrik_dragons_heir_250m_vs_400i_100l_100m",
+  "index": 0,
+  "diagnostics": [],
+  "armies": {
+    "attacker": {
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "joinerHeroes": {},
+      "troops": {
+        "marksman_t6": 250
+      }
+    },
+    "defender": {
+      "heroes": {},
+      "joinerHeroes": {},
+      "troops": {
+        "infantry_t6": 400,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      }
+    }
+  },
+  "armiesSource": "testcase",
+  "visibility": {
+    "attacker": {
+      "heroes": [
+        "Hendrik"
+      ],
+      "troopSkillIds": [
+        "RangedStrike"
+      ],
+      "troops": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 250
+      },
+      "skillEffectActivations": 14
+    },
+    "defender": {
+      "heroes": [],
+      "troopSkillIds": [
+        "MasterBrawler",
+        "Charge",
+        "RangedStrike"
+      ],
+      "troops": {
+        "infantry": 400,
+        "lancer": 100,
+        "marksman": 100
+      },
+      "skillEffectActivations": 3
+    }
+  },
+  "result": {
+    "winner": "defender",
+    "rounds": 20,
+    "remaining": {
+      "attacker": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "defender": {
+        "infantry": 313,
+        "lancer": 82,
+        "marksman": 76
+      }
+    },
+    "attacks": [
+      {
+        "round": 1,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.310469894388204
+      },
+      {
+        "round": 1,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.988518167629815,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 1,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 6.056543042293994,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 1,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 6.222561083490383
+      },
+      {
+        "round": 2,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.2855475582961646
+      },
+      {
+        "round": 2,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.988518167629815,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 5.884516773726016,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 1.412284025694244,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 4.023457964333744,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 5.351364482997807,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 6.222561083490383
+      },
+      {
+        "round": 3,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.2562304228504777
+      },
+      {
+        "round": 3,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.887729633318705,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 5.694438940130384,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 6.065002317879241
+      },
+      {
+        "round": 4,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.7380421382254605,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.142143757049751,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 5.511121381350289,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 4,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.139832472779017,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.7200166484082815,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.142143757049751,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 5.3489939826162285,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 1.2837585558278948,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.657301570899148,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 4.864361428307525,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 5,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.139832472779017,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 6,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.179602502707331
+      },
+      {
+        "round": 6,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.8107527023490455,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 6,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 5.18179644256246,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 6,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.903239771006436
+      },
+      {
+        "round": 7,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.1579870073675234
+      },
+      {
+        "round": 7,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.8107527023490455,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 7,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 4.979642397728577,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 7,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.903239771006436
+      },
+      {
+        "round": 8,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.657815709402388,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.076909069787327,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 4.768926760431436,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 1.1445424225035443,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 3.260688531172765,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 4.336849782081835,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 8,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.002745568649523,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 9,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.635511966478256,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 9,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.010613447162677,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 9,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 4.596592982518687,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 9,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.890309962136289,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 10,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.0922340676507964
+      },
+      {
+        "round": 10,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.732523867651958,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 10,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 4.400902724785945,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 10,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.770565755320821
+      },
+      {
+        "round": 11,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.070003484138016
+      },
+      {
+        "round": 11,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.732523867651958,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 11,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 4.1785757962042585,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 11,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 1.0028581910890222,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 11,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.857044123295931,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 11,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 3.7999861271808295,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 11,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.770565755320821
+      },
+      {
+        "round": 12,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.58272097076436,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 12,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.9432033781951974,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 12,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 3.9250884985853647,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 12,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.7752277251348385,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 13,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.5674384639873997,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 13,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.9432033781951974,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 13,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 3.713801869016182,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 13,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.7752277251348385,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.0114360424332296
+      },
+      {
+        "round": 14,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.652979986270333,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 3.468659981663872,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 0.8324783955993293,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 2.3716488822164483,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 3.154390503626445,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 14,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.63476871565911
+      },
+      {
+        "round": 15,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.993184746795527
+      },
+      {
+        "round": 15,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.572052421765206,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 15,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 3.1818474130592906,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 15,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.530733268368447
+      },
+      {
+        "round": 16,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.5249346652113425,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 16,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.874620696411191,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 16,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 2.866479347839051,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 16,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.687062091837667,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.5132179678129583,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.874620696411191,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 2.569573593452572,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 0.6166976624286172,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 1.7569108453695765,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 2.3367636448666826,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 17,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.687062091837667,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 18,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.9517067406353674
+      },
+      {
+        "round": 18,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.544756342454606,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 18,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 2.2335427134374957,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 18,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.460275190600027
+      },
+      {
+        "round": 19,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.942410003399256
+      },
+      {
+        "round": 19,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 4.544756342454606,
+        "appliedEffects": [
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 19,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 1.7553529401078922,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 19,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 5.460275190600027
+      },
+      {
+        "round": 20,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "infantry",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 2.48566423666308,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "lancer",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 3.851488425808987,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          },
+          {
+            "effectId": "Charge/1",
+            "sourceSide": "defender",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "normal",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 1.0834273560978205,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          },
+          {
+            "effectId": "DragonsHeir/1",
+            "sourceSide": "attacker",
+            "bucket": "extra_skill_attack",
+            "valuePct": 24
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "infantry",
+        "kills": 0.2600225654634769,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          },
+          {
+            "effectId": "RangedStrike/1",
+            "sourceSide": "attacker",
+            "bucket": "type.single_target.damage.up",
+            "valuePct": 10
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "lancer",
+        "kills": 0.7407786556293005,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "skill",
+        "sourceEffectId": "DragonsHeir/1",
+        "dealerSide": "attacker",
+        "dealerUnit": "marksman",
+        "takerSide": "defender",
+        "takerUnit": "marksman",
+        "kills": 0.9852660628340729,
+        "appliedEffects": [
+          {
+            "effectId": "WormsRavage/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.down",
+            "valuePct": 15
+          }
+        ]
+      },
+      {
+        "round": 20,
+        "kind": "normal",
+        "dealerSide": "defender",
+        "dealerUnit": "marksman",
+        "takerSide": "attacker",
+        "takerUnit": "marksman",
+        "kills": 1.1579259417572532,
+        "appliedEffects": [
+          {
+            "effectId": "ArmorOfBarnacles/1",
+            "sourceSide": "attacker",
+            "bucket": "active.hero.defense.up",
+            "valuePct": 18
+          }
+        ]
+      }
+    ],
+    "skillReport": {
+      "attacker": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 0,
+          "skillActivations": 5,
+          "effectActivations": 5,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 0,
+          "skillActivations": 7,
+          "effectActivations": 7,
+          "skillKills": 50.04945442341824,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "marksman",
+          "skillId": "RangedStrike",
+          "skillName": "RangedStrike",
+          "level": 1,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "defender": [
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "infantry",
+          "skillId": "MasterBrawler",
+          "skillName": "MasterBrawler",
+          "level": 1,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "marksman",
+          "skillId": "RangedStrike",
+          "skillName": "RangedStrike",
+          "level": 1,
+          "triggersSeen": 0,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ]
+    },
+    "resolved": {
+      "attacker": {
+        "troops": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 250
+        },
+        "heroes": [
+          {
+            "name": "Hendrik",
+            "heroGeneration": "S8",
+            "skillIds": [
+              "WormsRavage",
+              "ArmorOfBarnacles",
+              "DragonsHeir"
+            ],
+            "instanceId": "main:hendrik:0",
+            "role": "main"
+          }
+        ],
+        "troopSkillIds": [
+          "RangedStrike"
+        ],
+        "diagnostics": []
+      },
+      "defender": {
+        "troops": {
+          "infantry": 400,
+          "lancer": 100,
+          "marksman": 100
+        },
+        "heroes": [],
+        "troopSkillIds": [
+          "MasterBrawler",
+          "Charge",
+          "RangedStrike"
+        ],
+        "diagnostics": []
+      }
+    },
+    "effectActivationCounts": {
+      "attacker": 14,
+      "defender": 3
+    },
+    "extraSkillAttackJobsByEffect": {
+      "DragonsHeir/1": 21
+    },
+    "attackControlCounts": {
+      "dodge": 0,
+      "no_attack": 0
+    },
+    "randomness": {
+      "deterministic": true,
+      "chanceSkillIds": {
+        "attacker": [],
+        "defender": []
+      }
+    }
+  },
+  "deterministic": true,
+  "sampleCount": 1,
+  "simulatorStats": {
+    "n": 1,
+    "mu": -471,
+    "sigma": 0,
+    "sem": 0
+  },
+  "comparisonSamples": [
+    -471
+  ],
+  "simulatorScoreDelta": -471,
+  "simulatorSampleOutcomes": [
+    {
+      "run": 1,
+      "attackerHeroes": [
+        "Hendrik"
+      ],
+      "defenderHeroes": [],
+      "attackerTroops": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 250
+      },
+      "defenderTroops": {
+        "infantry": 400,
+        "lancer": 100,
+        "marksman": 100
+      },
+      "attackerRemainingByType": {
+        "infantry": 0,
+        "lancer": 0,
+        "marksman": 0
+      },
+      "defenderRemainingByType": {
+        "infantry": 313,
+        "lancer": 82,
+        "marksman": 76
+      },
+      "attackerRemaining": 0,
+      "defenderRemaining": 471,
+      "scoreDelta": -471
+    }
+  ],
+  "simulatorSampleDeltas": [
+    -471
+  ],
+  "gameResult": [
+    {
+      "attacker": 0,
+      "defender": 471
+    }
+  ],
+  "detailArtifact": "simulator_parity_2026-09-07T06-57-49.354Z/cases/000002.json"
+}

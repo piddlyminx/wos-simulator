@@ -1,0 +1,16 @@
+{
+  "createdAt": "2026-09-07T09:25:06.304063+00:00",
+  "exposure": "Prospective. Previous zero-Infantry battle D11 is known. No outcome of1I+240L versus125I is known.",
+  "planned_battles": 1,
+  "reason": "Existing zero-Infantry evidence does not distinguish a battle-start requirement from a requirement for living/attacking Infantry. Adding exactly one ordinary Infantry is a targeted lifecycle discriminator, not a default control.",
+  "hypotheses": {
+    "current": "Fixed-turn protection continues when a previously present Infantry line dies; equivalent to a battle-start-only source requirement in this formation.",
+    "requires_infantry_source": "No protection can start after Infantry die. Modelled as zero S1 contribution only if prediction confirms that Infantry die before the first possible activation under both candidates. Attack-trigger alternatives with3 or4 required Infantry normal attacks also produce no S1 here."
+  },
+  "stats": "All24 forecast stats come from the clean preceding Ahmose110 report; no selected-hero estimates remain. Fresh capture must verify them again.",
+  "limits": [
+    "Actual game turn of Infantry death is not directly observed in the report. Preserve model timing separately from game evidence.",
+    "This does not identify the3-versus4 normal attack cycle or exact protection timing while Infantry remain.",
+    "All4096 corners of12 used report stats at\u00b10.05 are a sensitivity screen, not a guaranteed interior envelope."
+  ]
+}

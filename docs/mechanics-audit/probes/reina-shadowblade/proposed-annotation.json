@@ -1,0 +1,23 @@
+{
+  "hero:Reina:ShadowBlade": {
+    "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+    "status": "partially_supported",
+    "context": "Five accepted solo battles with full WIP Reina1/1/1 and350 T6 Lancers against nohero150 T6 Infantry+50 T6 Lancers+50 T6 Marksmen. Exact report-resolved stats match after one source-verified OCR correction. Defender endpoints166,163,163,157,174 (mean164.6; sampleSD6.188699) retain Infantry66,63,63,57,74 and untouched50/50 backlines, with6\u201310 displayed S3 activations per battle. This supports level1 current-target delivery relative to the specified fanout alternative. Corrected additional120% predicts162.89/SD6.53, CDF/support p=.599520; old additional20% predicts179.17/SD1.97,p=.000150. A bounded retrospective challenge tested20% normal-kind increment and two4% dodge timing alternatives; all remain incompatible with the new five outcomes. Extending reactive dodge through the round also fails six older S3-locked observations, while current dodge fits them. Thus level1 magnitude is supported conditional on this full-kit implementation; exact S2 correlation remains unresolved. The directly captured upgrade preview shows120/140/160/180/200%, but levels2\u20135 have no S3-enabled battle in the14 reviewed fixtures. The first case informed the100/120 diagnostic alternatives; full exposure history remains recorded. Inner source ceiling and fractional stored-state arithmetic were retained constraints. Exact chance, independent S1/S2 behavior, all-source exclusions, ordering, stacking, target exhaustion and rally/joiner behavior remain unreviewed. S2 displayed triggered1 in all five reports is not treated as the dodge count. On2026-09-07 Paul explicitly confirmed Reina S3 is skill damage. This is accepted user-confirmed classification evidence, separate from what the five magnitude battles independently identify; the preserved normal-kind20 diagnostic is a rejected counterfactual, not an open classification proposal.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/reina-shadowblade/README.md",
+      "docs/mechanics-audit/probes/reina-shadowblade/capture-summary.json",
+      "docs/mechanics-audit/probes/reina-shadowblade/shadow-blade-upgrade-preview.json",
+      "docs/mechanics-audit/probes/reina-shadowblade/input-correction.json",
+      "docs/mechanics-audit/reviews/reina-extra-attack-magnitude/README.md",
+      "docs/mechanics-audit/reviews/reina-extra-attack-magnitude/results.json",
+      "docs/mechanics-audit/reviews/reina-alternate-semantics/README.md",
+      "docs/mechanics-audit/reviews/reina-alternate-semantics/parity.json",
+      "docs/mechanics-audit/damage-kind-confirmation-2026-09-07.md"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "magnitude_and_level_scaling"
+    ],
+    "unresolved_dimensions": []
+  }
+}

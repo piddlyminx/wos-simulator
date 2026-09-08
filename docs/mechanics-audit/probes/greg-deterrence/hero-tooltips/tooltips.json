@@ -1,0 +1,2201 @@
+{
+  "schema_version": 1,
+  "capture_kind": "hero_expedition_tooltips",
+  "captured_at_utc": "2026-09-07T07:24:08.602638+00:00",
+  "instance_name": "minxxx",
+  "hero": "Greg",
+  "current_skill_levels": {
+    "skill_1": 1,
+    "skill_2": 1,
+    "skill_3": 0
+  },
+  "overview": {
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/hero-skills.png",
+    "sha256": "c59eba71d0eef945c6e8adb5fe4e277e13f395281e6118fafd5ffc1580f2aaaa"
+  },
+  "skills": [
+    {
+      "slot": "skill_1",
+      "current_level": 1,
+      "locked": false,
+      "selected_icon_center": [
+        585,
+        275
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/skill_1.png",
+        "sha256": "bae423e9ff1925929d7783a8973c344266df1327af237debf684c188725e860c"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/skill_1-panel.png",
+        "sha256": "6804d28aab177b71af393cdfe6d2dd2ebfa81381430a40fdb9372b18b996649c"
+      },
+      "ocr": {
+        "title": "Sword of Justice Lv.1",
+        "displayed_level": 1,
+        "description_text": "Greg transforms our troops into a relentless sword of\njustice, granting a 20% chance of increasing damage dealt by\n8% for all troops for 3 turns.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Damage Up: 8%/16%/24%/32%/40%",
+        "raw_lines": [
+          {
+            "text": "of",
+            "confidence": 0.99981,
+            "box": [
+              [
+                143.0,
+                739.0
+              ],
+              [
+                177.0,
+                739.0
+              ],
+              [
+                177.0,
+                767.0
+              ],
+              [
+                143.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Sword",
+            "confidence": 0.99991,
+            "box": [
+              [
+                50.0,
+                740.0
+              ],
+              [
+                139.0,
+                740.0
+              ],
+              [
+                139.0,
+                767.0
+              ],
+              [
+                50.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Justice",
+            "confidence": 0.99994,
+            "box": [
+              [
+                177.0,
+                740.0
+              ],
+              [
+                270.0,
+                740.0
+              ],
+              [
+                270.0,
+                767.0
+              ],
+              [
+                177.0,
+                767.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv.1",
+            "confidence": 0.99747,
+            "box": [
+              [
+                274.0,
+                739.0
+              ],
+              [
+                339.0,
+                739.0
+              ],
+              [
+                339.0,
+                769.0
+              ],
+              [
+                274.0,
+                769.0
+              ]
+            ]
+          },
+          {
+            "text": "transforms",
+            "confidence": 0.99987,
+            "box": [
+              [
+                105.0,
+                805.0
+              ],
+              [
+                219.0,
+                804.0
+              ],
+              [
+                219.0,
+                824.0
+              ],
+              [
+                105.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99985,
+            "box": [
+              [
+                569.0,
+                803.0
+              ],
+              [
+                595.0,
+                803.0
+              ],
+              [
+                595.0,
+                826.0
+              ],
+              [
+                569.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "relentless",
+            "confidence": 0.99992,
+            "box": [
+              [
+                398.0,
+                806.0
+              ],
+              [
+                493.0,
+                805.0
+              ],
+              [
+                493.0,
+                825.0
+              ],
+              [
+                398.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "sword",
+            "confidence": 0.99993,
+            "box": [
+              [
+                499.0,
+                806.0
+              ],
+              [
+                566.0,
+                806.0
+              ],
+              [
+                566.0,
+                825.0
+              ],
+              [
+                499.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "into",
+            "confidence": 0.9993,
+            "box": [
+              [
+                335.0,
+                806.0
+              ],
+              [
+                375.0,
+                806.0
+              ],
+              [
+                375.0,
+                826.0
+              ],
+              [
+                335.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "Greg",
+            "confidence": 0.97975,
+            "box": [
+              [
+                50.0,
+                804.0
+              ],
+              [
+                102.0,
+                805.0
+              ],
+              [
+                101.0,
+                831.0
+              ],
+              [
+                49.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "a",
+            "confidence": 0.99997,
+            "box": [
+              [
+                380.0,
+                810.0
+              ],
+              [
+                394.0,
+                810.0
+              ],
+              [
+                394.0,
+                825.0
+              ],
+              [
+                380.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "our",
+            "confidence": 0.99851,
+            "box": [
+              [
+                225.0,
+                811.0
+              ],
+              [
+                261.0,
+                811.0
+              ],
+              [
+                261.0,
+                825.0
+              ],
+              [
+                225.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "troops",
+            "confidence": 0.99989,
+            "box": [
+              [
+                264.0,
+                808.0
+              ],
+              [
+                332.0,
+                808.0
+              ],
+              [
+                332.0,
+                830.0
+              ],
+              [
+                264.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "chance",
+            "confidence": 0.99997,
+            "box": [
+              [
+                291.0,
+                834.0
+              ],
+              [
+                363.0,
+                833.0
+              ],
+              [
+                363.0,
+                851.0
+              ],
+              [
+                291.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "20%",
+            "confidence": 0.99977,
+            "box": [
+              [
+                238.0,
+                833.0
+              ],
+              [
+                287.0,
+                833.0
+              ],
+              [
+                287.0,
+                853.0
+              ],
+              [
+                238.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.9999,
+            "box": [
+              [
+                367.0,
+                833.0
+              ],
+              [
+                393.0,
+                833.0
+              ],
+              [
+                393.0,
+                853.0
+              ],
+              [
+                367.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "dealt",
+            "confidence": 0.99988,
+            "box": [
+              [
+                589.0,
+                833.0
+              ],
+              [
+                642.0,
+                832.0
+              ],
+              [
+                642.0,
+                853.0
+              ],
+              [
+                590.0,
+                854.0
+              ]
+            ]
+          },
+          {
+            "text": "justice,",
+            "confidence": 0.99992,
+            "box": [
+              [
+                49.0,
+                832.0
+              ],
+              [
+                124.0,
+                831.0
+              ],
+              [
+                125.0,
+                858.0
+              ],
+              [
+                49.0,
+                859.0
+              ]
+            ]
+          },
+          {
+            "text": "a",
+            "confidence": 0.99997,
+            "box": [
+              [
+                220.0,
+                838.0
+              ],
+              [
+                231.0,
+                837.0
+              ],
+              [
+                233.0,
+                852.0
+              ],
+              [
+                221.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "granting",
+            "confidence": 0.99997,
+            "box": [
+              [
+                127.0,
+                833.0
+              ],
+              [
+                215.0,
+                832.0
+              ],
+              [
+                215.0,
+                858.0
+              ],
+              [
+                128.0,
+                859.0
+              ]
+            ]
+          },
+          {
+            "text": "increasing",
+            "confidence": 0.99992,
+            "box": [
+              [
+                394.0,
+                833.0
+              ],
+              [
+                498.0,
+                833.0
+              ],
+              [
+                498.0,
+                858.0
+              ],
+              [
+                394.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                505.0,
+                833.0
+              ],
+              [
+                586.0,
+                833.0
+              ],
+              [
+                586.0,
+                858.0
+              ],
+              [
+                505.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99996,
+            "box": [
+              [
+                644.0,
+                831.0
+              ],
+              [
+                672.0,
+                834.0
+              ],
+              [
+                670.0,
+                860.0
+              ],
+              [
+                641.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99982,
+            "box": [
+              [
+                227.0,
+                859.0
+              ],
+              [
+                261.0,
+                860.0
+              ],
+              [
+                261.0,
+                881.0
+              ],
+              [
+                226.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99988,
+            "box": [
+              [
+                89.0,
+                859.0
+              ],
+              [
+                124.0,
+                861.0
+              ],
+              [
+                123.0,
+                882.0
+              ],
+              [
+                88.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "8%",
+            "confidence": 0.99973,
+            "box": [
+              [
+                50.0,
+                861.0
+              ],
+              [
+                86.0,
+                861.0
+              ],
+              [
+                86.0,
+                881.0
+              ],
+              [
+                50.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99995,
+            "box": [
+              [
+                127.0,
+                861.0
+              ],
+              [
+                153.0,
+                861.0
+              ],
+              [
+                153.0,
+                881.0
+              ],
+              [
+                127.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "3",
+            "confidence": 0.99989,
+            "box": [
+              [
+                265.0,
+                862.0
+              ],
+              [
+                280.0,
+                862.0
+              ],
+              [
+                280.0,
+                880.0
+              ],
+              [
+                265.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "turns.",
+            "confidence": 0.99993,
+            "box": [
+              [
+                283.0,
+                863.0
+              ],
+              [
+                344.0,
+                864.0
+              ],
+              [
+                343.0,
+                881.0
+              ],
+              [
+                283.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "troops",
+            "confidence": 0.99997,
+            "box": [
+              [
+                156.0,
+                862.0
+              ],
+              [
+                222.0,
+                862.0
+              ],
+              [
+                222.0,
+                886.0
+              ],
+              [
+                156.0,
+                886.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99994,
+            "box": [
+              [
+                167.0,
+                919.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                944.0
+              ],
+              [
+                167.0,
+                944.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                163.0,
+                918.0
+              ],
+              [
+                163.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "8%/16%/24%/32%/40%",
+            "confidence": 0.99973,
+            "box": [
+              [
+                180.0,
+                960.0
+              ],
+              [
+                439.0,
+                960.0
+              ],
+              [
+                439.0,
+                981.0
+              ],
+              [
+                180.0,
+                981.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99996,
+            "box": [
+              [
+                137.0,
+                959.0
+              ],
+              [
+                175.0,
+                959.0
+              ],
+              [
+                175.0,
+                986.0
+              ],
+              [
+                137.0,
+                986.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                50.0,
+                960.0
+              ],
+              [
+                136.0,
+                961.0
+              ],
+              [
+                135.0,
+                986.0
+              ],
+              [
+                50.0,
+                985.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Sword of Justice Lv.1",
+          "Greg transforms our troops into a relentless sword of",
+          "justice, granting a 20% chance of increasing damage dealt by",
+          "8% for all troops for 3 turns.",
+          "Upgrade Preview",
+          "Damage Up: 8%/16%/24%/32%/40%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_2",
+      "current_level": 1,
+      "locked": false,
+      "selected_icon_center": [
+        640,
+        435
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/skill_2.png",
+        "sha256": "c3b2ac1558e1be1fbe46aebc51fc45cb5c0adb74354422400105cf02dd550578"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/skill_2-panel.png",
+        "sha256": "65746fed03cb112f616fdc77f0cf43bbf57c8334796b94c19ecf5ad7f1892c7f"
+      },
+      "ocr": {
+        "title": "Deterrence of Law Lv. 1",
+        "displayed_level": 1,
+        "description_text": "Greg uses the authority of the law to intimidate enemies,\ngranting all troops attack a 20% chance of reducing enemy\ndamage dealt by 10% for 2 turns.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Enemy Damage Down: 10%/20%/30%/40%/50%",
+        "raw_lines": [
+          {
+            "text": "of",
+            "confidence": 0.99997,
+            "box": [
+              [
+                204.0,
+                741.0
+              ],
+              [
+                236.0,
+                741.0
+              ],
+              [
+                236.0,
+                765.0
+              ],
+              [
+                204.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "Deterrence",
+            "confidence": 0.99996,
+            "box": [
+              [
+                52.0,
+                741.0
+              ],
+              [
+                198.0,
+                742.0
+              ],
+              [
+                198.0,
+                766.0
+              ],
+              [
+                51.0,
+                765.0
+              ]
+            ]
+          },
+          {
+            "text": "Law",
+            "confidence": 0.99996,
+            "box": [
+              [
+                235.0,
+                740.0
+              ],
+              [
+                302.0,
+                741.0
+              ],
+              [
+                301.0,
+                767.0
+              ],
+              [
+                235.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Lv. 1",
+            "confidence": 0.9728,
+            "box": [
+              [
+                303.0,
+                739.0
+              ],
+              [
+                363.0,
+                741.0
+              ],
+              [
+                362.0,
+                768.0
+              ],
+              [
+                302.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "intimidate",
+            "confidence": 0.99977,
+            "box": [
+              [
+                423.0,
+                803.0
+              ],
+              [
+                525.0,
+                805.0
+              ],
+              [
+                525.0,
+                825.0
+              ],
+              [
+                422.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99976,
+            "box": [
+              [
+                288.0,
+                805.0
+              ],
+              [
+                314.0,
+                803.0
+              ],
+              [
+                315.0,
+                824.0
+              ],
+              [
+                289.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99996,
+            "box": [
+              [
+                152.0,
+                805.0
+              ],
+              [
+                187.0,
+                804.0
+              ],
+              [
+                188.0,
+                824.0
+              ],
+              [
+                153.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "the",
+            "confidence": 0.99996,
+            "box": [
+              [
+                316.0,
+                806.0
+              ],
+              [
+                350.0,
+                806.0
+              ],
+              [
+                350.0,
+                824.0
+              ],
+              [
+                316.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "law",
+            "confidence": 0.99834,
+            "box": [
+              [
+                354.0,
+                806.0
+              ],
+              [
+                393.0,
+                806.0
+              ],
+              [
+                393.0,
+                824.0
+              ],
+              [
+                354.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "to",
+            "confidence": 0.99998,
+            "box": [
+              [
+                396.0,
+                807.0
+              ],
+              [
+                418.0,
+                807.0
+              ],
+              [
+                418.0,
+                824.0
+              ],
+              [
+                396.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "enemies,",
+            "confidence": 0.99994,
+            "box": [
+              [
+                528.0,
+                805.0
+              ],
+              [
+                618.0,
+                806.0
+              ],
+              [
+                617.0,
+                829.0
+              ],
+              [
+                528.0,
+                828.0
+              ]
+            ]
+          },
+          {
+            "text": "Greg",
+            "confidence": 0.99996,
+            "box": [
+              [
+                50.0,
+                804.0
+              ],
+              [
+                101.0,
+                806.0
+              ],
+              [
+                100.0,
+                831.0
+              ],
+              [
+                49.0,
+                829.0
+              ]
+            ]
+          },
+          {
+            "text": "authority",
+            "confidence": 0.99948,
+            "box": [
+              [
+                192.0,
+                805.0
+              ],
+              [
+                285.0,
+                805.0
+              ],
+              [
+                285.0,
+                830.0
+              ],
+              [
+                192.0,
+                830.0
+              ]
+            ]
+          },
+          {
+            "text": "uses",
+            "confidence": 0.99994,
+            "box": [
+              [
+                104.0,
+                811.0
+              ],
+              [
+                150.0,
+                809.0
+              ],
+              [
+                151.0,
+                825.0
+              ],
+              [
+                105.0,
+                827.0
+              ]
+            ]
+          },
+          {
+            "text": "20%",
+            "confidence": 0.98311,
+            "box": [
+              [
+                333.0,
+                833.0
+              ],
+              [
+                382.0,
+                833.0
+              ],
+              [
+                382.0,
+                852.0
+              ],
+              [
+                333.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "of",
+            "confidence": 0.99988,
+            "box": [
+              [
+                463.0,
+                832.0
+              ],
+              [
+                489.0,
+                832.0
+              ],
+              [
+                489.0,
+                853.0
+              ],
+              [
+                463.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "attack",
+            "confidence": 0.99998,
+            "box": [
+              [
+                245.0,
+                834.0
+              ],
+              [
+                311.0,
+                833.0
+              ],
+              [
+                311.0,
+                851.0
+              ],
+              [
+                245.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "chance",
+            "confidence": 0.99999,
+            "box": [
+              [
+                388.0,
+                834.0
+              ],
+              [
+                460.0,
+                834.0
+              ],
+              [
+                460.0,
+                852.0
+              ],
+              [
+                388.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99992,
+            "box": [
+              [
+                139.0,
+                833.0
+              ],
+              [
+                165.0,
+                832.0
+              ],
+              [
+                167.0,
+                853.0
+              ],
+              [
+                140.0,
+                855.0
+              ]
+            ]
+          },
+          {
+            "text": "a",
+            "confidence": 0.99986,
+            "box": [
+              [
+                315.0,
+                837.0
+              ],
+              [
+                329.0,
+                837.0
+              ],
+              [
+                329.0,
+                852.0
+              ],
+              [
+                315.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "granting",
+            "confidence": 0.99998,
+            "box": [
+              [
+                49.0,
+                832.0
+              ],
+              [
+                135.0,
+                831.0
+              ],
+              [
+                136.0,
+                858.0
+              ],
+              [
+                50.0,
+                859.0
+              ]
+            ]
+          },
+          {
+            "text": "reducing",
+            "confidence": 0.99994,
+            "box": [
+              [
+                489.0,
+                831.0
+              ],
+              [
+                580.0,
+                833.0
+              ],
+              [
+                580.0,
+                859.0
+              ],
+              [
+                489.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "troops",
+            "confidence": 0.99995,
+            "box": [
+              [
+                169.0,
+                834.0
+              ],
+              [
+                238.0,
+                834.0
+              ],
+              [
+                238.0,
+                858.0
+              ],
+              [
+                169.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "enemy",
+            "confidence": 0.99996,
+            "box": [
+              [
+                583.0,
+                835.0
+              ],
+              [
+                652.0,
+                838.0
+              ],
+              [
+                651.0,
+                859.0
+              ],
+              [
+                582.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99987,
+            "box": [
+              [
+                268.0,
+                860.0
+              ],
+              [
+                301.0,
+                860.0
+              ],
+              [
+                301.0,
+                881.0
+              ],
+              [
+                268.0,
+                881.0
+              ]
+            ]
+          },
+          {
+            "text": "dealt",
+            "confidence": 0.99992,
+            "box": [
+              [
+                135.0,
+                861.0
+              ],
+              [
+                187.0,
+                860.0
+              ],
+              [
+                188.0,
+                881.0
+              ],
+              [
+                135.0,
+                882.0
+              ]
+            ]
+          },
+          {
+            "text": "2",
+            "confidence": 0.99997,
+            "box": [
+              [
+                305.0,
+                862.0
+              ],
+              [
+                320.0,
+                862.0
+              ],
+              [
+                320.0,
+                880.0
+              ],
+              [
+                305.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "10%",
+            "confidence": 0.99974,
+            "box": [
+              [
+                219.0,
+                861.0
+              ],
+              [
+                264.0,
+                861.0
+              ],
+              [
+                264.0,
+                882.0
+              ],
+              [
+                219.0,
+                882.0
+              ]
+            ]
+          },
+          {
+            "text": "turns.",
+            "confidence": 0.99994,
+            "box": [
+              [
+                324.0,
+                864.0
+              ],
+              [
+                384.0,
+                865.0
+              ],
+              [
+                383.0,
+                881.0
+              ],
+              [
+                323.0,
+                880.0
+              ]
+            ]
+          },
+          {
+            "text": "damage",
+            "confidence": 0.99998,
+            "box": [
+              [
+                50.0,
+                861.0
+              ],
+              [
+                131.0,
+                861.0
+              ],
+              [
+                131.0,
+                886.0
+              ],
+              [
+                50.0,
+                886.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99998,
+            "box": [
+              [
+                187.0,
+                860.0
+              ],
+              [
+                217.0,
+                860.0
+              ],
+              [
+                217.0,
+                887.0
+              ],
+              [
+                187.0,
+                887.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99996,
+            "box": [
+              [
+                166.0,
+                919.0
+              ],
+              [
+                277.0,
+                918.0
+              ],
+              [
+                277.0,
+                944.0
+              ],
+              [
+                167.0,
+                945.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Down:",
+            "confidence": 0.99995,
+            "box": [
+              [
+                213.0,
+                961.0
+              ],
+              [
+                283.0,
+                961.0
+              ],
+              [
+                283.0,
+                980.0
+              ],
+              [
+                213.0,
+                980.0
+              ]
+            ]
+          },
+          {
+            "text": "10%/20%/30%/40%/50%",
+            "confidence": 0.97836,
+            "box": [
+              [
+                284.0,
+                960.0
+              ],
+              [
+                559.0,
+                960.0
+              ],
+              [
+                559.0,
+                981.0
+              ],
+              [
+                284.0,
+                981.0
+              ]
+            ]
+          },
+          {
+            "text": "Enemy",
+            "confidence": 0.99996,
+            "box": [
+              [
+                51.0,
+                960.0
+              ],
+              [
+                119.0,
+                960.0
+              ],
+              [
+                119.0,
+                985.0
+              ],
+              [
+                51.0,
+                985.0
+              ]
+            ]
+          },
+          {
+            "text": "Damage",
+            "confidence": 0.99997,
+            "box": [
+              [
+                123.0,
+                959.0
+              ],
+              [
+                208.0,
+                961.0
+              ],
+              [
+                208.0,
+                986.0
+              ],
+              [
+                123.0,
+                984.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Deterrence of Law Lv. 1",
+          "Greg uses the authority of the law to intimidate enemies,",
+          "granting all troops attack a 20% chance of reducing enemy",
+          "damage dealt by 10% for 2 turns.",
+          "Upgrade Preview",
+          "Enemy Damage Down: 10%/20%/30%/40%/50%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    },
+    {
+      "slot": "skill_3",
+      "current_level": 0,
+      "locked": true,
+      "selected_icon_center": [
+        585,
+        610
+      ],
+      "screenshot": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/skill_3.png",
+        "sha256": "fc546a386a015351bf584dbd63eb9a62fea6b2511c63a18a6574813afaa28735"
+      },
+      "panel_crop": {
+        "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/hero-tooltips/skill_3-panel.png",
+        "sha256": "bcbc77923d4b7fda12cc1a138c21cf764ed64c9a5d845c957021b59ad5e124a2"
+      },
+      "ocr": {
+        "title": "Law and Order Lv.1",
+        "displayed_level": 1,
+        "description_text": "Greg's faith in law and order uplifts everyone, increasing\nHealth by 5% for all troops.",
+        "upgrade_preview_status": "visible_in_ocr",
+        "upgrade_preview_text": "Health Up: 5%/10%/15%/20%/25%",
+        "raw_lines": [
+          {
+            "text": "Lv.1",
+            "confidence": 0.99991,
+            "box": [
+              [
+                254.0,
+                740.0
+              ],
+              [
+                317.0,
+                738.0
+              ],
+              [
+                317.0,
+                767.0
+              ],
+              [
+                255.0,
+                768.0
+              ]
+            ]
+          },
+          {
+            "text": "and",
+            "confidence": 0.99998,
+            "box": [
+              [
+                116.0,
+                741.0
+              ],
+              [
+                168.0,
+                741.0
+              ],
+              [
+                168.0,
+                766.0
+              ],
+              [
+                116.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Order",
+            "confidence": 0.99989,
+            "box": [
+              [
+                173.0,
+                741.0
+              ],
+              [
+                253.0,
+                741.0
+              ],
+              [
+                253.0,
+                766.0
+              ],
+              [
+                173.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "Law",
+            "confidence": 0.99994,
+            "box": [
+              [
+                51.0,
+                740.0
+              ],
+              [
+                114.0,
+                742.0
+              ],
+              [
+                113.0,
+                768.0
+              ],
+              [
+                50.0,
+                766.0
+              ]
+            ]
+          },
+          {
+            "text": "faith",
+            "confidence": 0.99974,
+            "box": [
+              [
+                120.0,
+                805.0
+              ],
+              [
+                168.0,
+                805.0
+              ],
+              [
+                168.0,
+                824.0
+              ],
+              [
+                120.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "law",
+            "confidence": 0.99888,
+            "box": [
+              [
+                196.0,
+                805.0
+              ],
+              [
+                236.0,
+                805.0
+              ],
+              [
+                236.0,
+                824.0
+              ],
+              [
+                196.0,
+                824.0
+              ]
+            ]
+          },
+          {
+            "text": "in",
+            "confidence": 0.99995,
+            "box": [
+              [
+                171.0,
+                805.0
+              ],
+              [
+                193.0,
+                805.0
+              ],
+              [
+                193.0,
+                825.0
+              ],
+              [
+                171.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "and",
+            "confidence": 0.99999,
+            "box": [
+              [
+                240.0,
+                805.0
+              ],
+              [
+                280.0,
+                805.0
+              ],
+              [
+                280.0,
+                825.0
+              ],
+              [
+                240.0,
+                825.0
+              ]
+            ]
+          },
+          {
+            "text": "order",
+            "confidence": 0.99995,
+            "box": [
+              [
+                283.0,
+                805.0
+              ],
+              [
+                339.0,
+                805.0
+              ],
+              [
+                339.0,
+                826.0
+              ],
+              [
+                283.0,
+                826.0
+              ]
+            ]
+          },
+          {
+            "text": "Greg's",
+            "confidence": 0.93576,
+            "box": [
+              [
+                49.0,
+                804.0
+              ],
+              [
+                116.0,
+                802.0
+              ],
+              [
+                117.0,
+                830.0
+              ],
+              [
+                50.0,
+                832.0
+              ]
+            ]
+          },
+          {
+            "text": "uplifts everyone, increasing",
+            "confidence": 0.99612,
+            "box": [
+              [
+                343.0,
+                804.0
+              ],
+              [
+                621.0,
+                804.0
+              ],
+              [
+                621.0,
+                831.0
+              ],
+              [
+                343.0,
+                831.0
+              ]
+            ]
+          },
+          {
+            "text": "Health",
+            "confidence": 0.99992,
+            "box": [
+              [
+                50.0,
+                832.0
+              ],
+              [
+                116.0,
+                833.0
+              ],
+              [
+                116.0,
+                853.0
+              ],
+              [
+                50.0,
+                851.0
+              ]
+            ]
+          },
+          {
+            "text": "for",
+            "confidence": 0.99981,
+            "box": [
+              [
+                189.0,
+                831.0
+              ],
+              [
+                223.0,
+                833.0
+              ],
+              [
+                222.0,
+                854.0
+              ],
+              [
+                188.0,
+                852.0
+              ]
+            ]
+          },
+          {
+            "text": "5%",
+            "confidence": 0.9996,
+            "box": [
+              [
+                150.0,
+                833.0
+              ],
+              [
+                186.0,
+                833.0
+              ],
+              [
+                186.0,
+                853.0
+              ],
+              [
+                150.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "all",
+            "confidence": 0.99994,
+            "box": [
+              [
+                226.0,
+                833.0
+              ],
+              [
+                252.0,
+                833.0
+              ],
+              [
+                252.0,
+                853.0
+              ],
+              [
+                226.0,
+                853.0
+              ]
+            ]
+          },
+          {
+            "text": "by",
+            "confidence": 0.99998,
+            "box": [
+              [
+                119.0,
+                833.0
+              ],
+              [
+                147.0,
+                833.0
+              ],
+              [
+                147.0,
+                858.0
+              ],
+              [
+                119.0,
+                858.0
+              ]
+            ]
+          },
+          {
+            "text": "troops.",
+            "confidence": 0.99993,
+            "box": [
+              [
+                254.0,
+                834.0
+              ],
+              [
+                328.0,
+                836.0
+              ],
+              [
+                328.0,
+                859.0
+              ],
+              [
+                253.0,
+                857.0
+              ]
+            ]
+          },
+          {
+            "text": "Preview",
+            "confidence": 0.99993,
+            "box": [
+              [
+                167.0,
+                920.0
+              ],
+              [
+                276.0,
+                919.0
+              ],
+              [
+                276.0,
+                943.0
+              ],
+              [
+                168.0,
+                944.0
+              ]
+            ]
+          },
+          {
+            "text": "Upgrade",
+            "confidence": 0.99999,
+            "box": [
+              [
+                50.0,
+                918.0
+              ],
+              [
+                162.0,
+                918.0
+              ],
+              [
+                162.0,
+                953.0
+              ],
+              [
+                50.0,
+                953.0
+              ]
+            ]
+          },
+          {
+            "text": "Health",
+            "confidence": 0.99996,
+            "box": [
+              [
+                50.0,
+                959.0
+              ],
+              [
+                117.0,
+                960.0
+              ],
+              [
+                116.0,
+                980.0
+              ],
+              [
+                50.0,
+                979.0
+              ]
+            ]
+          },
+          {
+            "text": "5%/10%/15%/20%/25%",
+            "confidence": 0.99983,
+            "box": [
+              [
+                160.0,
+                960.0
+              ],
+              [
+                411.0,
+                959.0
+              ],
+              [
+                411.0,
+                982.0
+              ],
+              [
+                160.0,
+                983.0
+              ]
+            ]
+          },
+          {
+            "text": "Up:",
+            "confidence": 0.99997,
+            "box": [
+              [
+                118.0,
+                959.0
+              ],
+              [
+                157.0,
+                959.0
+              ],
+              [
+                157.0,
+                986.0
+              ],
+              [
+                118.0,
+                986.0
+              ]
+            ]
+          }
+        ],
+        "text_lines": [
+          "Law and Order Lv.1",
+          "Greg's faith in law and order uplifts everyone, increasing",
+          "Health by 5% for all troops.",
+          "Upgrade Preview",
+          "Health Up: 5%/10%/15%/20%/25%"
+        ],
+        "interpretation": "Unreviewed OCR; full screenshots are the primary capture artifacts."
+      },
+      "needs_manual_review": true
+    }
+  ],
+  "complete": true,
+  "notes": [
+    "Selected only Expedition skill icons; Upgrade buttons are never tapped.",
+    "Current levels are read from the hero screen, not inferred from upgrade-preview values.",
+    "Missing preview OCR does not establish that a preview is unavailable; inspect the full image.",
+    "This command does not update player_hero_skills.json or create battle observations."
+  ],
+  "finished_at_utc": "2026-09-07T07:24:34.980262+00:00"
+}

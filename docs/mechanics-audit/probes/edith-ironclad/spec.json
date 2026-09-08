@@ -1,0 +1,30 @@
+{
+  "test_id": "edith_ironclad_100i_vs_400m",
+  "description": "One prospective deterministic positive-Infantry Ironclad probe. minxxx fullEdith3/3/3 with100 T6 Infantry attacks WIP nohero400 T6 Marksmen. S1 has no recipient, S2 and S3 protect Infantry; test omission and named bucket alternatives only in frozen simulator configs. Exact fresh Edith Infantry stats unknown before battle; preserve actual full report stats, outcome, per-line table and Battle Details. See docs/mechanics-audit/probes/edith-ironclad/.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Edith": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "troops": {
+      "infantry_t6": 100
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "marksman_t6": 400
+    }
+  }
+}

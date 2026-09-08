@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-09-07T07:19:02.858Z",
+  "exposure": "No new Greg probe outcome exists or was read. Prior seven accepted Greg110 distributions were reviewed and fail to establish positive S2 contribution.",
+  "question": "Positive S2 contribution and non-Marksman source capability against one persistent enemy line.",
+  "reason": "An Infantry+Lancer army gives two eligible attacks per round. One enemy Marksman line prevents a proc landing on a quickly exhausted front line while other enemies supply most damage. No owned Marksmen means Greg-selected Marksman stats are unused.",
+  "unknowns": "Fresh Greg-selected stats will be verified from the eventual report. Used minxxx Infantry/Lancer and WIP Marksman blocks come from the fresh Edith capture; hero-specific Marksman block is absent and deliberately unused.",
+  "candidates": {
+    "current": "Full Greg110 with unchanged S1 chance and S2 rules",
+    "no_s2": "Only DeterrenceOfLaw effect value becomes0; full roster kit and S1 remain"
+  },
+  "count_grid": "Four two-line armies \u00d7 three enemy sizes, plus two one-line source diagnostics, all below1000 per side.",
+  "constraints": [
+    "No coefficient fitting",
+    "No live calls",
+    "No generation added to report stats",
+    "Five real observations only if model distributions separate usefully",
+    "Do not treat simulation round counts as game observations"
+  ],
+  "selected_formation": "minxxx fullGreg110 with200 T6 Infantry attacks WIP nohero400 T6 Marksmen",
+  "selection_reason": "Among14 input-only formations, single Infantry source has larger useful S2 omission gap and lower variance than the Lancer-only alternative, with a persistent single enemy class. No Marksmen of Greg own side are deployed, so fresh Greg class-specific stats are unused.",
+  "capture_policy": "Five independent outcomes. Capture first exactly once, verify actual fullkit/T6counts/report stats and replay before remainingfour. Preserve every outcome; stop only for input/formation errors, never because results are favorable/unfavorable. Counterpart mail never adds observation.",
+  "prediction_provenance": "The original conditional input uses minxxx nohero Infantry308.2/300.5/244.0/238.4 from first Reina report and WIP nohero Marksman217.5/210.6/181.4/177.0 from Edith report. No new Greg outcome has been seen."
+}

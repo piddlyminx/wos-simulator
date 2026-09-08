@@ -1,0 +1,897 @@
+{
+  "generatedAt": "2026-09-07T04:44:25.513Z",
+  "phase": "frozen_formation_replay",
+  "provenance": {
+    "source": "testcases/emulator_verified/hendrik_armor_lancer_scope.json",
+    "report": "2026-09-07 05:42:10",
+    "verification": "Every displayed stat and troop tier/count visually checked; Lancer inputs identical to frozen estimate. No generation bonuses added.",
+    "outcome_exposure": "This is a replay using supplied stats. It makes no claim of blindness to game outcomes; the original prospective prediction is preserved separately."
+  },
+  "statsFile": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/hendrik-armor/captured-stats.json",
+  "configSnapshotSha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
+  "candidateDefinitions": {
+    "configured": "Hendrik S2 provides +18% Defense to all friendly troops on rounds4/5,8/9,... . Full3/3/3 kit; no Marksmen gates S3.",
+    "no_s2": "Counterfactual S2 has no effect; equivalent here to S2 affecting Marksmen only.",
+    "damage_taken_down": "Counterfactual S2 is18% Damage Taken Down with otherwise identical cadence/scope.",
+    "delayed_one_round": "Counterfactual S2 activation persists one round later, rounds5/6,9/10,... .",
+    "one_round_duration": "Counterfactual S2 lasts only the triggering round.",
+    "first_round_start": "Counterfactual S2 first activates round1 then every4, lasting2 turns.",
+    "s1_10_percent": "Diagnostic level-scaling alternative: S1 enemy Defense Down is10% rather than15%; S2 configured.",
+    "s1_20_percent": "Diagnostic level-scaling alternative: S1 enemy Defense Down is20% rather than15%; S2 configured.",
+    "s3_uses_lancer": "Diagnostic scope alternative: S3 uses the deployed Lancers as its source rather than requiring Marksmen; S2 configured."
+  },
+  "selected": {
+    "attacker": 100,
+    "defender": 150,
+    "gap": 26,
+    "diagnosticGap": 0,
+    "losses": 233,
+    "efficiency": 0.11158798283261803,
+    "results": {
+      "configured": {
+        "score": -17,
+        "rounds": 54
+      },
+      "no_s2": {
+        "score": 9,
+        "rounds": 53
+      },
+      "damage_taken_down": {
+        "score": -17,
+        "rounds": 54
+      },
+      "delayed_one_round": {
+        "score": -16,
+        "rounds": 54
+      },
+      "one_round_duration": {
+        "score": -4,
+        "rounds": 60
+      },
+      "first_round_start": {
+        "score": -20,
+        "rounds": 52
+      },
+      "s1_10_percent": {
+        "score": 1,
+        "rounds": 65
+      },
+      "s1_20_percent": {
+        "score": -27,
+        "rounds": 48
+      },
+      "s3_uses_lancer": {
+        "score": -33,
+        "rounds": 45
+      }
+    }
+  },
+  "input": {
+    "attacker": {
+      "name": "minxxx",
+      "heroes": {},
+      "joiner_heroes": {},
+      "troops": {
+        "lancer_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      }
+    },
+    "defender": {
+      "name": "WIP",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "joiner_heroes": {},
+      "troops": {
+        "lancer_t6": 150
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 465.5,
+          "defense": 458.7,
+          "lethality": 244,
+          "health": 218.8
+        }
+      }
+    }
+  },
+  "predictions": {
+    "configured": {
+      "score": -17,
+      "rounds": 54,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 17,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -17,
+        "max": -17,
+        "samples": 272
+      }
+    },
+    "no_s2": {
+      "score": 9,
+      "rounds": 53,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 9,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 0,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 17,
+          "skillActivations": 17,
+          "effectActivations": 17,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": 9,
+        "max": 9,
+        "samples": 272
+      }
+    },
+    "damage_taken_down": {
+      "score": -17,
+      "rounds": 54,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 17,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -17,
+        "max": -17,
+        "samples": 272
+      }
+    },
+    "delayed_one_round": {
+      "score": -16,
+      "rounds": 54,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 16,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 18,
+          "skillActivations": 18,
+          "effectActivations": 18,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -16,
+        "max": -16,
+        "samples": 272
+      }
+    },
+    "one_round_duration": {
+      "score": -4,
+      "rounds": 60,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 4,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 15,
+          "skillActivations": 15,
+          "effectActivations": 15,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 20,
+          "skillActivations": 20,
+          "effectActivations": 20,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -4,
+        "max": -3,
+        "samples": 272
+      }
+    },
+    "first_round_start": {
+      "score": -20,
+      "rounds": 52,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 20,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 13,
+          "skillActivations": 13,
+          "effectActivations": 13,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 17,
+          "skillActivations": 17,
+          "effectActivations": 17,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -20,
+        "max": -19,
+        "samples": 272
+      }
+    },
+    "s1_10_percent": {
+      "score": 1,
+      "rounds": 65,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 1,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 16,
+          "skillActivations": 16,
+          "effectActivations": 16,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 21,
+          "skillActivations": 21,
+          "effectActivations": 21,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": 1,
+        "max": 1,
+        "samples": 272
+      }
+    },
+    "s1_20_percent": {
+      "score": -27,
+      "rounds": 48,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 27,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 12,
+          "skillActivations": 12,
+          "effectActivations": 12,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 16,
+          "skillActivations": 16,
+          "effectActivations": 16,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {},
+      "statPrecisionSampleRange": {
+        "min": -27,
+        "max": -27,
+        "samples": 272
+      }
+    },
+    "s3_uses_lancer": {
+      "score": -33,
+      "rounds": 45,
+      "remaining": {
+        "attacker": {
+          "infantry": 0,
+          "lancer": 0,
+          "marksman": 0
+        },
+        "defender": {
+          "infantry": 0,
+          "lancer": 33,
+          "marksman": 0
+        }
+      },
+      "randomness": {
+        "deterministic": true,
+        "chanceSkillIds": {
+          "attacker": [],
+          "defender": []
+        }
+      },
+      "skillReport": [
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "WormsRavage",
+          "skillName": "WormsRavage",
+          "level": 3,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "ArmorOfBarnacles",
+          "skillName": "ArmorOfBarnacles",
+          "level": 3,
+          "triggersSeen": 11,
+          "skillActivations": 11,
+          "effectActivations": 11,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "hero_skill",
+          "heroName": "Hendrik",
+          "skillId": "DragonsHeir",
+          "skillName": "DragonsHeir",
+          "level": 3,
+          "triggersSeen": 15,
+          "skillActivations": 15,
+          "effectActivations": 15,
+          "skillKills": 6.996034390197805,
+          "unsupportedEffects": []
+        },
+        {
+          "sourceKind": "troop_skill",
+          "troopType": "lancer",
+          "skillId": "Charge",
+          "skillName": "Charge",
+          "level": 1,
+          "triggersSeen": 1,
+          "skillActivations": 1,
+          "effectActivations": 1,
+          "skillKills": 0,
+          "unsupportedEffects": []
+        }
+      ],
+      "extraSkillAttackJobsByEffect": {
+        "DragonsHeir/1": 14
+      },
+      "statPrecisionSampleRange": {
+        "min": -33,
+        "max": -33,
+        "samples": 272
+      }
+    }
+  },
+  "shortlist": [
+    {
+      "attacker": 100,
+      "defender": 150,
+      "gap": 26,
+      "diagnosticGap": 0,
+      "losses": 233,
+      "efficiency": 0.11158798283261803,
+      "results": {
+        "configured": {
+          "score": -17,
+          "rounds": 54
+        },
+        "no_s2": {
+          "score": 9,
+          "rounds": 53
+        },
+        "damage_taken_down": {
+          "score": -17,
+          "rounds": 54
+        },
+        "delayed_one_round": {
+          "score": -16,
+          "rounds": 54
+        },
+        "one_round_duration": {
+          "score": -4,
+          "rounds": 60
+        },
+        "first_round_start": {
+          "score": -20,
+          "rounds": 52
+        },
+        "s1_10_percent": {
+          "score": 1,
+          "rounds": 65
+        },
+        "s1_20_percent": {
+          "score": -27,
+          "rounds": 48
+        },
+        "s3_uses_lancer": {
+          "score": -33,
+          "rounds": 45
+        }
+      }
+    }
+  ],
+  "uncertainty": "Sensitivity samples cover independent +/-0.05 percentage-point report precision only; not an exhaustive bound, nor a bound on account or equipment changes."
+}

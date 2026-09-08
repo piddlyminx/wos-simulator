@@ -1,0 +1,137 @@
+skill	fixture_key	game_scores_A_minus_D	game_n	game_mean	game_sd	candidate	deterministic	sim_n	sim_mean	sim_sd	central95_low	central95_high	p	individual_score_errors_if_deterministic	initial_attacker	initial_defender
+hero:Hector:SurvivalInstincts	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		current	False	1000	-2271.689	9.701566852802674	-2291	-2253	0.017549		11000	2500
+hero:Hector:SurvivalInstincts	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit	False	1000	-2241.257	8.31685764703962	-2258	-2225	5e-05		11000	2500
+hero:Hector:SurvivalInstincts	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		infantry_only	False	1000	-2271.689	9.701566852802674	-2291	-2253	0.017549		11000	2500
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		current	False	1000	-590.774	0.6851229038598864	-592	-590	0.724664		900	600
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		omit	False	1000	-589.894	0.6173695369429425	-591	-589	1		900	600
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		infantry_only	False	1000	-590.774	0.6851229038598864	-592	-590	0.724664		900	600
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		current	False	1000	1588.164	2.9044000309082	1583	1594	0.0074		1700	300
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		omit	False	1000	1580.015	2.9108844443310202	1575	1586	5e-05		1700	300
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		infantry_only	False	1000	1588.164	2.9044000309082	1583	1594	0.0074		1700	300
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	current	False	1000	-386.602	23.7848547465675	-410	-326	0.991		4069	600
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	omit	False	1000	-219.789	50.4299678828042	-293	-98	5e-05		4069	600
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	infantry_only	False	1000	-384.984	26.091387554219953	-410	-317	0.936653		4069	600
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	current	False	1000	-269.491	1.3674022044697582	-272	-267	0.334433		1200	300
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit	False	1000	-266.334	1.3304939737609511	-269	-264	0.00025		1200	300
+hero:Hector:SurvivalInstincts	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	infantry_only	False	1000	-269.491	1.3674022044697582	-272	-267	0.334433		1200	300
+hero:Hector:SurvivalInstincts	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		current	False	1000	-442.495	5.032623799004088	-452	-433	0.728514		12000	650
+hero:Hector:SurvivalInstincts	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		omit	False	1000	-412.415	4.1890718928329855	-420	-405	0.0012		12000	650
+hero:Hector:SurvivalInstincts	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		infantry_only	False	1000	-442.495	5.032623799004088	-452	-433	0.728514		12000	650
+hero:Hector:Rampant	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		current	False	1000	-2271.689	9.701566852802674	-2291	-2253	0.017549		11000	2500
+hero:Hector:Rampant	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit	False	1000	-2257.309	9.964075561827155	-2276	-2238	5e-05		11000	2500
+hero:Hector:Rampant	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit_infantry	False	1000	-2266.095	9.85845647980271	-2285	-2247	0.008		11000	2500
+hero:Hector:Rampant	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit_marksman	False	1000	-2262.653	9.954782201971518	-2284	-2243	0.00135		11000	2500
+hero:Hector:Rampant	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		no_decay	False	1000	-2283.35	9.514200965925614	-2303	-2265	0.226139		11000	2500
+hero:Hector:Rampant	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		current	False	1000	-590.774	0.6851229038598864	-592	-590	0.724664		900	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		omit	False	1000	-587.132	0.8180741074286952	-589	-586	0.00345		900	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		omit_infantry	False	1000	-589.073	0.8026925409615528	-591	-588	0.707665		900	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		omit_marksman	False	1000	-589.173	0.8647651813173476	-591	-588	0.740513		900	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		no_decay	False	1000	-591.998	0.7658867948871916	-593	-590	0.069047		900	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		current	False	1000	1588.164	2.9044000309082	1583	1594	0.0074		1700	300
+hero:Hector:Rampant	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		omit	False	1000	1581.599	3.034700711504924	1576	1588	5e-05		1700	300
+hero:Hector:Rampant	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		omit_infantry	False	1000	1581.599	3.034700711504924	1576	1588	5e-05		1700	300
+hero:Hector:Rampant	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		omit_marksman	False	1000	1588.164	2.9044000309082	1583	1594	0.0074		1700	300
+hero:Hector:Rampant	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		no_decay	False	1000	1593.456	2.8716389589066282	1588	1599	0.260637		1700	300
+hero:Hector:Rampant	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	current	False	1000	-386.602	23.7848547465675	-410	-326	0.991		4069	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	omit	False	1000	-291.379	44.69103542823379	-377	-198	5e-05		4069	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	omit_infantry	False	1000	-345.432	36.765569260968654	-403	-265	0.0014		4069	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	omit_marksman	False	1000	-346.654	36.51648583499976	-403	-266	0.00185		4069	600
+hero:Hector:Rampant	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	no_decay	False	1000	-412.075	5.138265930912565	-422	-402	5e-05		4069	600
+hero:Hector:Rampant	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	current	False	1000	-269.491	1.3674022044697582	-272	-267	0.334433		1200	300
+hero:Hector:Rampant	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit	False	1000	-265.559	1.5326016664051532	-269	-263	5e-05		1200	300
+hero:Hector:Rampant	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit_infantry	False	1000	-267.566	1.4573152602535173	-270	-265	0.0002		1200	300
+hero:Hector:Rampant	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit_marksman	False	1000	-267.451	1.4483427414450898	-270	-265	0.00015		1200	300
+hero:Hector:Rampant	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	no_decay	False	1000	-272.752	1.2570107700716293	-275	-270	0.00015		1200	300
+hero:Hector:Rampant	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		current	False	1000	-442.495	5.032623799004088	-452	-433	0.728514		12000	650
+hero:Hector:Rampant	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		omit	False	1000	-434.659	5.217848689349367	-445	-424	0.280386		12000	650
+hero:Hector:Rampant	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		omit_infantry	False	1000	-438.109	5.011610044210862	-448	-429	0.709965		12000	650
+hero:Hector:Rampant	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		omit_marksman	False	1000	-439.117	5.069419099858493	-449	-429	0.827009		12000	650
+hero:Hector:Rampant	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		no_decay	False	1000	-448.961	4.85912441599204	-459	-440	0.140343		12000	650
+hero:Hector:Blitz	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		current	False	1000	-2271.689	9.701566852802674	-2291	-2253	0.017549		11000	2500
+hero:Hector:Blitz	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		omit	False	1000	-2240.015	8.207809887122348	-2256	-2224	5e-05		11000	2500
+hero:Hector:Blitz	testcases/3-testcases_mixed-heroes-not-verified.json#5	-2295	1	-2295		infantry_only	False	1000	-2243.792	8.326828452182276	-2261	-2228	5e-05		11000	2500
+hero:Hector:Blitz	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		current	False	1000	-590.774	0.6851229038598864	-592	-590	0.724664		900	600
+hero:Hector:Blitz	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		omit	False	1000	-590.442	0.5243194740908573	-591	-590	1		900	600
+hero:Hector:Blitz	testcases/emulator_verified/hector_patrick_combo.json#0	-590	1	-590		infantry_only	False	1000	-590.444	0.5432855226850413	-591	-590	1		900	600
+hero:Hector:Blitz	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		current	False	1000	1588.164	2.9044000309082	1583	1594	0.0074		1700	300
+hero:Hector:Blitz	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		omit	False	1000	1579.18	2.9154931143976333	1574	1585	5e-05		1700	300
+hero:Hector:Blitz	testcases/emulator_verified/hector_renee_wayne.json#0	1597	1	1597		infantry_only	False	1000	1588.164	2.9044000309082	1583	1594	0.0074		1700	300
+hero:Hector:Blitz	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	current	False	1000	-386.602	23.7848547465675	-410	-326	0.991		4069	600
+hero:Hector:Blitz	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	omit	False	1000	-27.715	186.11588028939366	-208	490	0.00015		4069	600
+hero:Hector:Blitz	testcases/emulator_verified/hector_solo.json#0	-402,-409,-373,-403,-385	5	-394.4	14.926486525636232	infantry_only	False	1000	-165.968	85.83409851841205	-262	-53	5e-05		4069	600
+hero:Hector:Blitz	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	current	False	1000	-269.491	1.3674022044697582	-272	-267	0.334433		1200	300
+hero:Hector:Blitz	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit	False	1000	-263.828	0.9619466416290116	-266	-262	5e-05		1200	300
+hero:Hector:Blitz	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	infantry_only	False	1000	-265.188	1.2815218680530858	-267	-263	5e-05		1200	300
+hero:Hector:Blitz	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		current	False	1000	-442.495	5.032623799004088	-452	-433	0.728514		12000	650
+hero:Hector:Blitz	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		omit	False	1000	-408.112	5.985589635389588	-417	-400	0.0047		12000	650
+hero:Hector:Blitz	testcases/heroes_unittests/Hector_tc.json#0	-441	1	-441		infantry_only	False	1000	-415.741	4.247582955159408	-424	-408	5e-05		12000	650
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		current	True	1	8	0	8	8		[3]	255	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		omit	True	1	-305	0	-305	-305		[-310]	255	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		omit_boost	True	1	-269	0	-269	-269		[-274]	255	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		omit_poison	True	1	-85	0	-85	-85		[-90]	255	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		hero_bucket	True	1	-60	0	-60	-60		[-65]	255	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		current	True	1	-3	0	-3	-3		[16]	260	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		omit	True	1	-319	0	-319	-319		[-300]	260	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		omit_boost	True	1	-284	0	-284	-284		[-265]	260	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		omit_poison	True	1	-101	0	-101	-101		[-82]	260	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		hero_bucket	True	1	-80	0	-80	-80		[-61]	260	1000
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	current	False	1000	5049.677	216.5707218174898	4596	5412	0.372931		8100	2560
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit	False	1000	5781.57	52.36851689289626	5674	5879	0.0001		8100	2560
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit_boost	False	1000	5773.335	51.96652089850058	5667	5869	5e-05		8100	2560
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit_poison	False	1000	5088.997	212.83465785107148	4627	5419	0.301085		8100	2560
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	hero_bucket	False	1000	5276.531	166.0896589610981	4869	5484	0.011899		8100	2560
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		current	True	1	-1516	0	-1516	-1516		[1]	500	2990
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		omit	True	1	-1845	0	-1845	-1845		[-328]	500	2990
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		omit_boost	True	1	-1798	0	-1798	-1798		[-281]	500	2990
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		omit_poison	True	1	-1578	0	-1578	-1578		[-61]	500	2990
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		hero_bucket	True	1	-1563	0	-1563	-1563		[-46]	500	2990
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		current	True	1	-1016	0	-1016	-1016		[1]	360	2100
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		omit	True	1	-1260	0	-1260	-1260		[-243]	360	2100
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		omit_boost	True	1	-1226	0	-1226	-1226		[-209]	360	2100
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		omit_poison	True	1	-1062	0	-1062	-1062		[-45]	360	2100
+hero:Gordon:VenomInfusion	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		hero_bucket	True	1	-1052	0	-1052	-1052		[-35]	360	2100
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		current	True	1	834	0	834	834		[-17]	1250	5000
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		omit	True	1	365	0	365	365		[-486]	1250	5000
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		omit_boost	True	1	681	0	681	681		[-170]	1250	5000
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		omit_poison	True	1	684	0	684	684		[-167]	1250	5000
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		hero_bucket	True	1	802	0	802	802		[-49]	1250	5000
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		current	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		omit	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		omit_boost	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		omit_poison	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:VenomInfusion	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		hero_bucket	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		current	True	1	8	0	8	8		[3]	255	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		omit	True	1	-314	0	-314	-314		[-319]	255	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		omit_offense	True	1	-280	0	-280	-280		[-285]	255	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		omit_debuff	True	1	-84	0	-84	-84		[-89]	255	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0	5	1	5		enemy_infantry_only	True	1	-84	0	-84	-84		[-89]	255	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		current	True	1	-3	0	-3	-3		[16]	260	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		omit	True	1	-322	0	-322	-322		[-303]	260	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		omit_offense	True	1	-288	0	-288	-288		[-269]	260	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		omit_debuff	True	1	-100	0	-100	-100		[-81]	260	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0	-19	1	-19		enemy_infantry_only	True	1	-100	0	-100	-100		[-81]	260	1000
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	current	False	1000	5049.677	216.5707218174898	4596	5412	0.372931		8100	2560
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit	False	1000	5841.402	50.79807910581704	5741	5938	5e-05		8100	2560
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit_offense	False	1000	5765.06	52.10586743756816	5662	5866	0.0001		8100	2560
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit_debuff	False	1000	5309.568	149.45507751895292	4925	5497	0.00225		8100	2560
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	enemy_infantry_only	False	1000	5290.047	157.82024591610872	4908	5489	0.00585		8100	2560
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		current	True	1	-1516	0	-1516	-1516		[1]	500	2990
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		omit	True	1	-1842	0	-1842	-1842		[-325]	500	2990
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		omit_offense	True	1	-1796	0	-1796	-1796		[-279]	500	2990
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		omit_debuff	True	1	-1576	0	-1576	-1576		[-59]	500	2990
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0	-1517	1	-1517		enemy_infantry_only	True	1	-1516	0	-1516	-1516		[1]	500	2990
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		current	True	1	-1016	0	-1016	-1016		[1]	360	2100
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		omit	True	1	-1258	0	-1258	-1258		[-241]	360	2100
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		omit_offense	True	1	-1223	0	-1223	-1223		[-206]	360	2100
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		omit_debuff	True	1	-1061	0	-1061	-1061		[-44]	360	2100
+hero:Gordon:ChemicalTerror	testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0	-1017	1	-1017		enemy_infantry_only	True	1	-1016	0	-1016	-1016		[1]	360	2100
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		current	True	1	834	0	834	834		[-17]	1250	5000
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		omit	True	1	433	0	433	433		[-418]	1250	5000
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		omit_offense	True	1	697	0	697	697		[-154]	1250	5000
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		omit_debuff	True	1	694	0	694	694		[-157]	1250	5000
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0	851	1	851		enemy_infantry_only	True	1	834	0	834	834		[-17]	1250	5000
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		current	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		omit	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		omit_offense	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		omit_debuff	True	1	4996	0	4996	4996		[423]	5000	1010
+hero:Gordon:ChemicalTerror	testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0	4573	1	4573		enemy_infantry_only	True	1	4996	0	4996	4996		[423]	5000	1010

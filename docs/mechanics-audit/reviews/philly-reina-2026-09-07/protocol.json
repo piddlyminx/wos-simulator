@@ -1,0 +1,385 @@
+{
+  "writtenAt": "2026-09-07T07:31:06.819Z",
+  "phase": "Retrospective accepted-corpus structural review. Current definitions, earlier reviews and known disagreements were read before choosing these bounded alternatives. No live action, input adjustment or coefficient fit.",
+  "selections": [
+    {
+      "key": "hero:Philly:VigorTactics",
+      "hero": "Philly",
+      "id": "VigorTactics",
+      "slot": 1,
+      "coverage": {
+        "configured_fixture_count": 8,
+        "hydrated_fixture_count": 8,
+        "observation_record_count": 25,
+        "hydrated_levels": [
+          1,
+          2
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+          "testcases/emulator_verified/philly_bahiti_combo.json#0",
+          "testcases/emulator_verified/philly_bahiti_combo.json#1",
+          "testcases/emulator_verified/philly_solo.json#0",
+          "testcases/emulator_verified/philly_solo.json#1",
+          "testcases/emulator_verified/wos425_wip_philly_defense.json#0",
+          "testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0",
+          "testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Increasing Attack by X% and Defense by X% for all troops",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "VigorTactics/1": {
+            "type": "active.hero.attack.up",
+            "value": [
+              3,
+              6,
+              9,
+              12,
+              15
+            ]
+          },
+          "VigorTactics/2": {
+            "type": "active.hero.defense.up",
+            "value": [
+              2,
+              4,
+              6,
+              8,
+              10
+            ]
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Philly:NumbingSpores",
+      "hero": "Philly",
+      "id": "NumbingSpores",
+      "slot": 3,
+      "coverage": {
+        "configured_fixture_count": 4,
+        "hydrated_fixture_count": 4,
+        "observation_record_count": 10,
+        "hydrated_levels": [
+          1
+        ],
+        "levels_missing_active_fixture": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/philly_bahiti_combo.json#0",
+          "testcases/emulator_verified/philly_bahiti_combo.json#1",
+          "testcases/emulator_verified/philly_solo.json#0",
+          "testcases/emulator_verified/philly_solo.json#1"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "granting a 40% chance of reducing all troops' Damage taken by X%",
+        "trigger": {
+          "type": "turn",
+          "probability": [
+            40,
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "effects": {
+          "NumbingSpores/1": {
+            "type": "active.hero.damageTaken.down",
+            "value": [
+              10,
+              20,
+              30,
+              40,
+              50
+            ],
+            "units": {
+              "applies_to": "all"
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Reina:AssassinsInstinct",
+      "hero": "Reina",
+      "id": "AssassinsInstinct",
+      "slot": 1,
+      "coverage": {
+        "configured_fixture_count": 14,
+        "hydrated_fixture_count": 14,
+        "observation_record_count": 37,
+        "hydrated_levels": [
+          1,
+          2
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/flint_reina_zinman_combo.json#0",
+          "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+          "testcases/emulator_verified/reina_attacker_wip.json#0",
+          "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+          "testcases/emulator_verified/reina_logan_combo_simulator.json#0",
+          "testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0",
+          "testcases/emulator_verified/reina_solo_wip.json#0",
+          "testcases/emulator_verified/sergey_reina_combo_nc.json#0",
+          "testcases/emulator_verified/wayne_reina_combo.json#0",
+          "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+          "testcases/heroes_unittests/Reina_tc.json#0",
+          "testcases/heroes_unittests/Reina_tc.json#1",
+          "testcases/heroes_unittests/Reina_tc.json#2",
+          "testcases/heroes_unittests/Reina_tc.json#3"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [
+          "testcases/emulator_verified/reina_logan_combo_v2.json.stale_troops#0"
+        ],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "Increasing normal attack damage by X% for all troops",
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "AssassinsInstinct/1": {
+            "type": "type.normal.damage.up",
+            "applies_to_damage_kinds": [
+              "normal"
+            ],
+            "value": [
+              10,
+              15,
+              20,
+              25,
+              30
+            ],
+            "units": {
+              "applies_to": "all",
+              "applies_vs": "any"
+            }
+          }
+        }
+      }
+    },
+    {
+      "key": "hero:Reina:SwiftJive",
+      "hero": "Reina",
+      "id": "SwiftJive",
+      "slot": 2,
+      "coverage": {
+        "configured_fixture_count": 12,
+        "hydrated_fixture_count": 12,
+        "observation_record_count": 35,
+        "hydrated_levels": [
+          1,
+          2
+        ],
+        "levels_missing_active_fixture": [
+          3,
+          4,
+          5
+        ],
+        "side_roles": [
+          "attacker:main",
+          "defender:main"
+        ],
+        "fixture_keys": [
+          "testcases/emulator_verified/flint_reina_zinman_combo.json#0",
+          "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+          "testcases/emulator_verified/reina_attacker_wip.json#0",
+          "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+          "testcases/emulator_verified/reina_logan_combo_simulator.json#0",
+          "testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json#0",
+          "testcases/emulator_verified/reina_solo_wip.json#0",
+          "testcases/emulator_verified/sergey_reina_combo_nc.json#0",
+          "testcases/emulator_verified/wayne_reina_combo.json#0",
+          "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+          "testcases/heroes_unittests/Reina_tc.json#2",
+          "testcases/heroes_unittests/Reina_tc.json#3"
+        ],
+        "present_but_not_hydrated_fixture_keys": [],
+        "disabled_fixture_keys": [
+          "testcases/emulator_verified/reina_logan_combo_v2.json.stale_troops#0"
+        ],
+        "direct_artifact_reference_fixture_count": 0,
+        "observed_battle_details_fixture_count": 0,
+        "causal_coverage": "not_assessed",
+        "parity": "not_assessed"
+      },
+      "definition": {
+        "description": "TBD dodge semantics: Grants all troops a X% chance of dodging normal attacks",
+        "status": "tbd",
+        "notes": "Modeled as an enemy attack trigger with trigger-level probability. Exact dodge response timing remains TBD for implementation.",
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            4,
+            8,
+            12,
+            16,
+            20
+          ],
+          "source": "enemy.any",
+          "target": "self.any"
+        },
+        "effects": {
+          "SwiftJive/1": {
+            "type": "dodge",
+            "units": {
+              "applies_to": "target",
+              "applies_vs": "trigger.source"
+            },
+            "duration": {
+              "attacks": {
+                "count": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "sourceHashes": {
+    "simulator/src/battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
+    "simulator/src/config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
+    "simulator/src/config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
+    "simulator/src/config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
+    "simulator/src/config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
+    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
+    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "simulator/src/effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
+    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "simulator/src/extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
+    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "simulator/src/recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
+    "simulator/src/runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
+    "simulator/src/runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
+    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
+    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "simulator/src/tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
+    "simulator/src/tooling/exportGatotTestcases.ts": "1f88bffca8bb34a63e71df804d7cf75ce3b6a8b75cc2c912ee8fbe0323f68324",
+    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
+    "simulator/src/tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
+    "simulator/src/tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
+    "simulator/src/tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
+    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
+    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "simulator/src/types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
+    "simulator/src/webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
+    "simulator/src/workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4",
+    "simulator/config/hero_definitions/Philly.json": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+    "simulator/config/hero_definitions/Reina.json": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a"
+  },
+  "artifacts": {
+    "config.json": "fe09ca93cd70233e682b8d60914af150068e5a7891e64423d41f8a4894284eaa",
+    "cases.json": "f259b618fe1a83427488757d56f715de6aa98787b05d3fe276ad22b4cc5e867d",
+    "freeze.mts": "ca00021604cf1432aaa3bece86487ba1b0794633928ea3ce5a6dcda9f0001c44",
+    "worker.mts": "60bff03dd047789452251c0be9b3cdcb782d7ac4014ae93cb41f91a54fe3c532"
+  },
+  "variants": {
+    "VigorTactics": [
+      "current",
+      "omit",
+      "omit_attack",
+      "omit_defense",
+      "lancer_only"
+    ],
+    "NumbingSpores": [
+      "current",
+      "omit",
+      "infantry_only",
+      "normal_only"
+    ],
+    "AssassinsInstinct": [
+      "current",
+      "omit",
+      "lancer_only",
+      "all_kinds",
+      "hero_bucket"
+    ],
+    "SwiftJive": [
+      "current",
+      "omit",
+      "enemy_infantry_only",
+      "own_infantry_only"
+    ]
+  },
+  "definitions": {
+    "current": "Complete current runtime and kit. Retain corrected Reina S3 magnitude and user-confirmed skill classification of both Reina S3 and Philly S2.",
+    "omit": "Remove only selected skill effects, preserving real hero levels and companions.",
+    "omit_attack": "Remove only VigorTactics Attack component.",
+    "omit_defense": "Remove only VigorTactics Defense component.",
+    "lancer_only": "Restrict selected stat or normal-damage bonuses to own Lancers.",
+    "infantry_only": "Restrict NumbingSpores protection to own Infantry.",
+    "normal_only": "Restrict NumbingSpores protection to incoming normal damage.",
+    "all_kinds": "Allow AssassinsInstinct to affect normal and skill jobs, keeping its normal-damage bucket and value.",
+    "hero_bucket": "Move AssassinsInstinct to active.hero.damage.up, retaining normal-only eligibility and magnitude.",
+    "enemy_infantry_only": "SwiftJive triggers only on enemy Infantry attacks, protecting any own normal target.",
+    "own_infantry_only": "SwiftJive triggers only when enemy normal attacks target own Infantry."
+  },
+  "sampling": {
+    "repeat": 1000,
+    "seed": "philly-reina-review-2026-09-07:<fixture-key>:<run-index>",
+    "traceRuns": 16,
+    "score": "Attacker minus defender survivors, preserving both sides in draws.",
+    "deterministic": "One exact simulation with per-side survivors, rounds and every game record. No deterministic p-value or universal two-troop cutoff."
+  },
+  "limits": [
+    "Full-kit agreement does not identify all nested components, timing, grouping, kind, levels or probabilities.",
+    "Shared seed strings need not yield paired skill activations after RNG consumption changes.",
+    "Active-corpus coverage only; archived evidence remains accepted and is not claimed exhaustively searched by this batch.",
+    "The mixed six-hero discrepancy remains accepted evidence, not an exclusion criterion.",
+    "Earlier Reina alternate-semantics review already rejected specific shared/reactive round-dodge replacements using six S3-locked observations. Those results remain evidence, not a new independent batch."
+  ]
+}

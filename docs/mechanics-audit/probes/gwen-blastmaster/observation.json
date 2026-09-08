@@ -1,0 +1,58 @@
+{
+  "report_timestamp_displayed": "2026-09-07 05:05:04",
+  "world_coord": {
+    "x": 791,
+    "y": 577
+  },
+  "attacker": {
+    "troops": 800,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 280,
+    "lightly_injured": 520
+  },
+  "defender": {
+    "troops": 1800,
+    "survivors": 1397,
+    "losses": 0,
+    "injured": 142,
+    "lightly_injured": 261
+  },
+  "skill_details": {
+    "attacker": {
+      "Gwen": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 3,
+          "displayed_kills": 3
+        },
+        "skill_3": {
+          "triggered": 4,
+          "displayed_kills": 17
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "per_troop_survivors": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 241,
+      "lancer": 581,
+      "marksman": 575
+    }
+  },
+  "transcription": "Visually checked overview, complete stats, skill details and defender troop details. Dash preserved as null. No explicit round total shown. Counterpart inbox capture is the same battle, not an additional observation.",
+  "mail_ids": {
+    "attacker_view": "2734692464121039",
+    "defender_view": "2734692464121040"
+  },
+  "defender_troop_details_source": "docs/mechanics-audit/probes/gwen-blastmaster/defender-troops.json"
+}

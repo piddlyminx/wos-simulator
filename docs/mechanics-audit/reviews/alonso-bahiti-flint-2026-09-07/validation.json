@@ -1,0 +1,20 @@
+{
+  "primarySummary": {
+    "fixtureCount": 35,
+    "gameOutcomeCount": 119,
+    "deterministicFixtures": 9,
+    "stochasticFixtures": 26,
+    "sampleCount": 220057,
+    "sourceHashCount": 32
+  },
+  "primaryPredictionCount": 277,
+  "primaryStoredSampleCount": 220057,
+  "refinementStoredSampleCount": 10000,
+  "exactRepeatedPrefix": 1000,
+  "additionalRefinementSeeds": 9000,
+  "allSourcesAndFixturesUnchanged": true,
+  "allRefinedMarginsVerifiedAsAttackerMinusDefender": true,
+  "primaryMarginsValidatedBy": "summarize.py",
+  "allFullKitsAndIndividualRecordedOutcomesPreserved": true,
+  "annotationsCount": 8
+}

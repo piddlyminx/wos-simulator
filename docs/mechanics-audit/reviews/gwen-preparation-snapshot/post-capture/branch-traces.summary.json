@@ -1,0 +1,415 @@
+[
+  {
+    "case": "first",
+    "candidate": "production",
+    "rounds": 22,
+    "score": -1388,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 22,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 2.9977254948130856,
+        "uncappedKills": 17.899108398407257
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 15,
+      "EagleVision/1:AirDominance/1:infantry": 3,
+      "AirDominance/2:normal:infantry": 3,
+      "EagleVision/1:Blastmaster/1:infantry": 3
+    }
+  },
+  {
+    "case": "first",
+    "candidate": "first4_every5_delivery",
+    "rounds": 22,
+    "score": -1399,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 22,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 2.4921430886154994,
+        "uncappedKills": 17.961583661302658
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 14,
+      "EagleVision/1:Blastmaster/1:infantry": 4,
+      "EagleVision/1:AirDominance/1:infantry": 3,
+      "AirDominance/2:normal:infantry": 3
+    }
+  },
+  {
+    "case": "first",
+    "candidate": "first4_every5_preparation",
+    "rounds": 22,
+    "score": -1396,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 22,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 2.6622342538914125,
+        "uncappedKills": 17.930373240397252
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 14,
+      "EagleVision/1:Blastmaster/1:infantry": 4,
+      "EagleVision/1:AirDominance/1:infantry": 3,
+      "AirDominance/2:normal:infantry": 3
+    }
+  },
+  {
+    "case": "first",
+    "candidate": "first5_every5_delivery",
+    "rounds": 22,
+    "score": -1399,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 22,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 1.9252269879056456,
+        "uncappedKills": 17.977168552444095
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 15,
+      "EagleVision/1:AirDominance/1:infantry": 3,
+      "AirDominance/2:normal:infantry": 3,
+      "EagleVision/1:Blastmaster/1:infantry": 3
+    }
+  },
+  {
+    "case": "first",
+    "candidate": "first5_every5_preparation",
+    "rounds": 22,
+    "score": -1396,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 22,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 2.1385786471260637,
+        "uncappedKills": 17.961583661302658
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 15,
+      "EagleVision/1:AirDominance/1:infantry": 3,
+      "AirDominance/2:normal:infantry": 3,
+      "EagleVision/1:Blastmaster/1:infantry": 3
+    }
+  },
+  {
+    "case": "second",
+    "candidate": "production",
+    "rounds": 48,
+    "score": -534,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [
+      {
+        "round": 48,
+        "source": "defender.normal",
+        "target": "marksman"
+      }
+    ],
+    "cappedEvents": [
+      {
+        "round": 48,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 3.5151664891607233,
+        "uncappedKills": 4.448303386013858
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 32,
+      "EagleVision/1:AirDominance/1:infantry": 8,
+      "AirDominance/2:normal:infantry": 8,
+      "EagleVision/1:Blastmaster/1:infantry": 7
+    }
+  },
+  {
+    "case": "second",
+    "candidate": "first4_every5_delivery",
+    "rounds": 47,
+    "score": -572,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [
+      {
+        "round": 47,
+        "source": "defender.normal",
+        "target": "marksman"
+      },
+      {
+        "round": 47,
+        "source": "defender.normal",
+        "target": "marksman"
+      }
+    ],
+    "cappedEvents": [],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 31,
+      "EagleVision/1:Blastmaster/1:infantry": 8,
+      "EagleVision/1:AirDominance/1:infantry": 8,
+      "AirDominance/2:normal:infantry": 7
+    }
+  },
+  {
+    "case": "second",
+    "candidate": "first4_every5_preparation",
+    "rounds": 47,
+    "score": -567,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [
+      {
+        "round": 47,
+        "source": "defender.normal",
+        "target": "marksman"
+      }
+    ],
+    "cappedEvents": [
+      {
+        "round": 47,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 1.0266517922965486,
+        "uncappedKills": 4.732951890816135
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 31,
+      "EagleVision/1:Blastmaster/1:infantry": 8,
+      "EagleVision/1:AirDominance/1:infantry": 8,
+      "AirDominance/2:normal:infantry": 7
+    }
+  },
+  {
+    "case": "second",
+    "candidate": "first5_every5_delivery",
+    "rounds": 46,
+    "score": -579,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 46,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 3.360076509343216,
+        "uncappedKills": 5.291982336565254
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 31,
+      "EagleVision/1:AirDominance/1:infantry": 7,
+      "AirDominance/2:normal:infantry": 7,
+      "EagleVision/1:Blastmaster/1:infantry": 7
+    }
+  },
+  {
+    "case": "second",
+    "candidate": "first5_every5_preparation",
+    "rounds": 47,
+    "score": -573,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": null
+    },
+    "exhaustionEvents": [
+      {
+        "round": 47,
+        "source": "defender.normal",
+        "target": "marksman"
+      },
+      {
+        "round": 47,
+        "source": "defender.normal",
+        "target": "marksman"
+      }
+    ],
+    "cappedEvents": [],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 32,
+      "EagleVision/1:AirDominance/1:infantry": 8,
+      "AirDominance/2:normal:infantry": 7,
+      "EagleVision/1:Blastmaster/1:infantry": 7
+    }
+  },
+  {
+    "case": "prospective_550m_vs_810i_45l_45m",
+    "candidate": "production",
+    "rounds": 78,
+    "score": 76,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": 62,
+      "marksman": 42
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 52,
+      "EagleVision/1:AirDominance/1:infantry": 13,
+      "AirDominance/2:normal:infantry": 13,
+      "EagleVision/1:Blastmaster/1:infantry": 12
+    }
+  },
+  {
+    "case": "prospective_550m_vs_810i_45l_45m",
+    "candidate": "first4_every5_delivery",
+    "rounds": 76,
+    "score": -98,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": 55
+    },
+    "exhaustionEvents": [
+      {
+        "round": 76,
+        "source": "defender.normal",
+        "target": "marksman"
+      }
+    ],
+    "cappedEvents": [],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 50,
+      "EagleVision/1:Blastmaster/1:infantry": 13,
+      "EagleVision/1:AirDominance/1:infantry": 12,
+      "AirDominance/2:normal:infantry": 12
+    }
+  },
+  {
+    "case": "prospective_550m_vs_810i_45l_45m",
+    "candidate": "first4_every5_preparation",
+    "rounds": 79,
+    "score": -79,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": 55
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 79,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 0.042676457525083755,
+        "uncappedKills": 1.1328641099934962
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 52,
+      "EagleVision/1:Blastmaster/1:infantry": 14,
+      "EagleVision/1:AirDominance/1:infantry": 13,
+      "AirDominance/2:normal:infantry": 13
+    }
+  },
+  {
+    "case": "prospective_550m_vs_810i_45l_45m",
+    "candidate": "first5_every5_delivery",
+    "rounds": 71,
+    "score": -125,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": 61
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 71,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 0.817661094977105,
+        "uncappedKills": 1.5198966955291535
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 48,
+      "EagleVision/1:AirDominance/1:infantry": 12,
+      "AirDominance/2:normal:infantry": 11,
+      "EagleVision/1:Blastmaster/1:infantry": 11
+    }
+  },
+  {
+    "case": "prospective_550m_vs_810i_45l_45m",
+    "candidate": "first5_every5_preparation",
+    "rounds": 73,
+    "score": -114,
+    "depletionRoundStarts": {
+      "infantry": null,
+      "lancer": null,
+      "marksman": 56
+    },
+    "exhaustionEvents": [],
+    "cappedEvents": [
+      {
+        "round": 73,
+        "source": "defender.normal",
+        "target": "marksman",
+        "remaining": 1.1191027249184489,
+        "uncappedKills": 1.4329723468155866
+      }
+    ],
+    "useCounts": {
+      "EagleVision/1:normal:infantry": 49,
+      "EagleVision/1:AirDominance/1:infantry": 12,
+      "AirDominance/2:normal:infantry": 12,
+      "EagleVision/1:Blastmaster/1:infantry": 11
+    }
+  }
+]

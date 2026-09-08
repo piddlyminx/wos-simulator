@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-09-07T06:43:24.167622+00:00",
+  "exposure": "Parent supplied visually verified new defender vector16/31/21 after definitions.json was written but before any candidate replay was run. Comparisons against this vector are retrospective, not held out. Original frozen definitions remain unchanged.",
+  "game": {
+    "attacker": 0,
+    "defender": 68,
+    "remainingDefender": {
+      "infantry": 16,
+      "lancer": 31,
+      "marksman": 21
+    },
+    "reportedS2Activations": 8,
+    "reportedS3Activations": 11,
+    "reportedS3Kills": 27
+  },
+  "image": "docs/mechanics-audit/probes/hendrik-small-timing/defender-troops.png",
+  "reportMail": "2734692464124635",
+  "knownGameRounds": null
+}

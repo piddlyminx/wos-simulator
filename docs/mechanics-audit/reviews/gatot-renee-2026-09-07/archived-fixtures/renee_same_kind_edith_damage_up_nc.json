@@ -1,0 +1,79 @@
+[
+  {
+    "test_id": "renee_same_kind_edith_damage_up_nc",
+    "description": "Renee 4/4/4 + Edith 3/3/3 all-same mechanic discriminator. WIP attacks 8000 T6 Marksmen with no heroes; minxxx defends 500 T6 Lancers with Renee and Edith. Edith's verified Lancer active.hero.damage.up makes UUU predict +5136 survivors versus +4916 for every other all-same hypothesis. Deterministic.",
+    "attacker": {
+      "name": "[ARK]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 8000
+      },
+      "stats": {
+        "inf": {
+          "attack": 234.6,
+          "defense": 243.9,
+          "lethality": 157.5,
+          "health": 170.9
+        },
+        "lanc": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 167.5,
+          "health": 163.6
+        },
+        "mark": {
+          "attack": 207.8,
+          "defense": 215.1,
+          "lethality": 158.8,
+          "health": 164.7
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]Piddlyminxx",
+      "heroes": {
+        "Edith": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        },
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 500
+      },
+      "stats": {
+        "inf": {
+          "attack": 493.4,
+          "defense": 481.1,
+          "lethality": 263.9,
+          "health": 286.7
+        },
+        "lanc": {
+          "attack": 572.7,
+          "defense": 567.0,
+          "lethality": 288.6,
+          "health": 244.6
+        },
+        "mark": {
+          "attack": 270.0,
+          "defense": 265.0,
+          "lethality": 211.8,
+          "health": 206.9
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 4883,
+        "defender": 0
+      }
+    ]
+  }
+]

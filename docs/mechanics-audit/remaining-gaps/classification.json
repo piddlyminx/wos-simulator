@@ -1,0 +1,1821 @@
+{
+  "inventory_generated_at": "2026-09-07T09:50:29.845Z",
+  "sources_sha256": {
+    "inventory.json": "3aec9c8341bfd90d66d98dd75f1af1182ea327403051450b71aeb622c26e83db",
+    "player_hero_skills.json": "f0b705dcd981bf95a633f0074c06774c21e351d9a2ae7d78d75adc1338ec4c41"
+  },
+  "contract": "Zero hydrated fixture applicability is not zero causal evidence or proof of disagreement. Three-slot hero caches do not establish widget ownership/level. All ordinary hero levels come from the current live-verified roster; FC availability comes from the separate dated direct inventory inspection.",
+  "counts": {
+    "ordinary_unowned": 21,
+    "ordinary_locked": 3,
+    "widget_owned_equipment_uninspected": 24,
+    "widget_unowned": 7,
+    "troop_fc_unavailable": 2,
+    "ordinary_reachable": 0
+  },
+  "groups": {
+    "ordinary_unowned": [
+      {
+        "key": "hero:Blanchette:ArmedToTheTeeth",
+        "kind": "hero",
+        "owner": "Blanchette",
+        "source": "simulator/config/hero_definitions/Blanchette.json",
+        "source_sha256": "c618eed6d640fc36db6361b85948e4146886ce178392541b28b148468ce6f724",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Blanchette:BloodHunter",
+        "kind": "hero",
+        "owner": "Blanchette",
+        "source": "simulator/config/hero_definitions/Blanchette.json",
+        "source_sha256": "c618eed6d640fc36db6361b85948e4146886ce178392541b28b148468ce6f724",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Blanchette:CrimsonSniper",
+        "kind": "hero",
+        "owner": "Blanchette",
+        "source": "simulator/config/hero_definitions/Blanchette.json",
+        "source_sha256": "c618eed6d640fc36db6361b85948e4146886ce178392541b28b148468ce6f724",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Fred:HydraulicSuppression",
+        "kind": "hero",
+        "owner": "Fred",
+        "source": "simulator/config/hero_definitions/Fred.json",
+        "source_sha256": "87861c00c37f921b3e6879848ea320e81c7d83e29df460eb5fb24520903fde21",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Fred:Acidification",
+        "kind": "hero",
+        "owner": "Fred",
+        "source": "simulator/config/hero_definitions/Fred.json",
+        "source_sha256": "87861c00c37f921b3e6879848ea320e81c7d83e29df460eb5fb24520903fde21",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Fred:Floodbringer",
+        "kind": "hero",
+        "owner": "Fred",
+        "source": "simulator/config/hero_definitions/Fred.json",
+        "source_sha256": "87861c00c37f921b3e6879848ea320e81c7d83e29df460eb5fb24520903fde21",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Freya:FogOfWar",
+        "kind": "hero",
+        "owner": "Freya",
+        "source": "simulator/config/hero_definitions/Freya.json",
+        "source_sha256": "91181e5af8713996fe2f6940900f0cc1c261041c41ec4198b277d8396297e70d",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Freya:BloodMoonScythe",
+        "kind": "hero",
+        "owner": "Freya",
+        "source": "simulator/config/hero_definitions/Freya.json",
+        "source_sha256": "91181e5af8713996fe2f6940900f0cc1c261041c41ec4198b277d8396297e70d",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Freya:NightsVengeance",
+        "kind": "hero",
+        "owner": "Freya",
+        "source": "simulator/config/hero_definitions/Freya.json",
+        "source_sha256": "91181e5af8713996fe2f6940900f0cc1c261041c41ec4198b277d8396297e70d",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Gregory:LegionOfTheSun",
+        "kind": "hero",
+        "owner": "Gregory",
+        "source": "simulator/config/hero_definitions/Gregory.json",
+        "source_sha256": "61ea326fa2b4438f4006075af34b8c1cbf10b4a4be1150e476925735ed2b3c16",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Gregory:ChargedAssault",
+        "kind": "hero",
+        "owner": "Gregory",
+        "source": "simulator/config/hero_definitions/Gregory.json",
+        "source_sha256": "61ea326fa2b4438f4006075af34b8c1cbf10b4a4be1150e476925735ed2b3c16",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Gregory:Unbroken",
+        "kind": "hero",
+        "owner": "Gregory",
+        "source": "simulator/config/hero_definitions/Gregory.json",
+        "source_sha256": "61ea326fa2b4438f4006075af34b8c1cbf10b4a4be1150e476925735ed2b3c16",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Jeronimo:BattleManifesto",
+        "kind": "hero",
+        "owner": "Jeronimo",
+        "source": "simulator/config/hero_definitions/Jeronimo.json",
+        "source_sha256": "61c047d97a89883ec6339d45d2f9c952db6dc9e2b2577a76745b5d3240f30d2b",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Jeronimo:Swordmentor",
+        "kind": "hero",
+        "owner": "Jeronimo",
+        "source": "simulator/config/hero_definitions/Jeronimo.json",
+        "source_sha256": "61c047d97a89883ec6339d45d2f9c952db6dc9e2b2577a76745b5d3240f30d2b",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Jeronimo:EXpertSwordsmanship",
+        "kind": "hero",
+        "owner": "Jeronimo",
+        "source": "simulator/config/hero_definitions/Jeronimo.json",
+        "source_sha256": "61c047d97a89883ec6339d45d2f9c952db6dc9e2b2577a76745b5d3240f30d2b",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Magnus:Rapacious",
+        "kind": "hero",
+        "owner": "Magnus",
+        "source": "simulator/config/hero_definitions/Magnus.json",
+        "source_sha256": "ec00642fb156e331fcc17a9e3bd4215bcac83f942547b5f428f3519513b587b0",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Magnus:IronPhalanx",
+        "kind": "hero",
+        "owner": "Magnus",
+        "source": "simulator/config/hero_definitions/Magnus.json",
+        "source_sha256": "ec00642fb156e331fcc17a9e3bd4215bcac83f942547b5f428f3519513b587b0",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Magnus:Iceman",
+        "kind": "hero",
+        "owner": "Magnus",
+        "source": "simulator/config/hero_definitions/Magnus.json",
+        "source_sha256": "ec00642fb156e331fcc17a9e3bd4215bcac83f942547b5f428f3519513b587b0",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Xura:FungalFog",
+        "kind": "hero",
+        "owner": "Xura",
+        "source": "simulator/config/hero_definitions/Xura.json",
+        "source_sha256": "a986b1072852b76722630fa3a9a676b44fe77b5f944b96912755e89a9c31d40c",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 1,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Xura:PiercingArrow",
+        "kind": "hero",
+        "owner": "Xura",
+        "source": "simulator/config/hero_definitions/Xura.json",
+        "source_sha256": "a986b1072852b76722630fa3a9a676b44fe77b5f944b96912755e89a9c31d40c",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 2,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Xura:Unorthodoxy",
+        "kind": "hero",
+        "owner": "Xura",
+        "source": "simulator/config/hero_definitions/Xura.json",
+        "source_sha256": "a986b1072852b76722630fa3a9a676b44fe77b5f944b96912755e89a9c31d40c",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": null,
+          "WIP": null
+        }
+      }
+    ],
+    "ordinary_locked": [
+      {
+        "key": "hero:Greg:LawAndOrder",
+        "kind": "hero",
+        "owner": "Greg",
+        "source": "simulator/config/hero_definitions/Greg.json",
+        "source_sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "levels": {
+          "minxxx": 0,
+          "WIP": 0
+        }
+      },
+      {
+        "key": "hero:Natalia:CallOfTheWild",
+        "kind": "hero",
+        "owner": "Natalia",
+        "source": "simulator/config/hero_definitions/Natalia.json",
+        "source_sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "levels": {
+          "minxxx": 0,
+          "WIP": null
+        }
+      },
+      {
+        "key": "hero:Sonya:TorrentialImpact",
+        "kind": "hero",
+        "owner": "Sonya",
+        "source": "simulator/config/hero_definitions/Sonya.json",
+        "source_sha256": "f4c29c3680cbaa4e92d88b263f6f361d526e501681ce9bc4b7d1578fd3a0661b",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "slot": 3,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "levels": {
+          "minxxx": 0,
+          "WIP": 0
+        }
+      }
+    ],
+    "widget_owned_equipment_uninspected": [
+      {
+        "key": "hero:Ahmose:GuardiansVitality",
+        "kind": "hero",
+        "owner": "Ahmose",
+        "source": "simulator/config/hero_definitions/Ahmose.json",
+        "source_sha256": "e143491e9b102c0e5d2b05262bece0ac11e2975414722100efd1a577d974f005",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Alonso:RazorVolley",
+        "kind": "hero",
+        "owner": "Alonso",
+        "source": "simulator/config/hero_definitions/Alonso.json",
+        "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Bradley:SiegeInsight",
+        "kind": "hero",
+        "owner": "Bradley",
+        "source": "simulator/config/hero_definitions/Bradley.json",
+        "source_sha256": "b643075c35de06f25a2b89a3bbf935da37b17b76f8adb737ae1497518ff7ff33",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 5,
+              "skill_2": 4,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Edith:Fortworks",
+        "kind": "hero",
+        "owner": "Edith",
+        "source": "simulator/config/hero_definitions/Edith.json",
+        "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Flint:FortressSpear",
+        "kind": "hero",
+        "owner": "Flint",
+        "source": "simulator/config/hero_definitions/Flint.json",
+        "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Gatot:IndestructibleCity",
+        "kind": "hero",
+        "owner": "Gatot",
+        "source": "simulator/config/hero_definitions/Gatot.json",
+        "source_sha256": "e80c03947eee39234293a2a074c6d9e6ed0fe2625c6358510879edab969b2338",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Gordon:BioAssault",
+        "kind": "hero",
+        "owner": "Gordon",
+        "source": "simulator/config/hero_definitions/Gordon.json",
+        "source_sha256": "f02ece48865c5687c3a84639066ab803207df6ecacfae4d84ae5cf045f00ff56",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Greg:VitalSurge",
+        "kind": "hero",
+        "owner": "Greg",
+        "source": "simulator/config/hero_definitions/Greg.json",
+        "source_sha256": "42f6ef4277cab930cfef1889b9d77c8b0a44971a413c4a016c284bcdae572a76",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Gwen:LethalPrecision",
+        "kind": "hero",
+        "owner": "Gwen",
+        "source": "simulator/config/hero_definitions/Gwen.json",
+        "source_sha256": "0899ba35b0123d124d1932b456f82c3001b7f54b1cfbfb526f5e10f0fdc094a3",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Hector:BulwarkCommander",
+        "kind": "hero",
+        "owner": "Hector",
+        "source": "simulator/config/hero_definitions/Hector.json",
+        "source_sha256": "9f02260d12ed196f26394d0a67a49b381fcb2786e7a83a25f2fda5a97fa772c4",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Hendrik:AbyssalBlessing",
+        "kind": "hero",
+        "owner": "Hendrik",
+        "source": "simulator/config/hero_definitions/Hendrik.json",
+        "source_sha256": "fc16f4c3883a71fc6c3eb5ec3fb7bc7c2daf88cde21b35220720a34fc769e440",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Logan:IronDen",
+        "kind": "hero",
+        "owner": "Logan",
+        "source": "simulator/config/hero_definitions/Logan.json",
+        "source_sha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Lynn:SilentThreat",
+        "kind": "hero",
+        "owner": "Lynn",
+        "source": "simulator/config/hero_definitions/Lynn.json",
+        "source_sha256": "202ee57b1f6200774574aa8575a060298c3fa985c05e31c4498d603271c0f11d",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Mia:PrecisionDrive",
+        "kind": "hero",
+        "owner": "Mia",
+        "source": "simulator/config/hero_definitions/Mia.json",
+        "source_sha256": "ce5251796fbaf2ce801ae5b0db12207934fbdead4105777070b30f1366aacd25",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Molly:WinterFang",
+        "kind": "hero",
+        "owner": "Molly",
+        "source": "simulator/config/hero_definitions/Molly.json",
+        "source_sha256": "cadbc3110d5c80810ff208df97ac576086978d375838fc8f93701498eae121ec",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Natalia:GaleForce",
+        "kind": "hero",
+        "owner": "Natalia",
+        "source": "simulator/config/hero_definitions/Natalia.json",
+        "source_sha256": "58420d7a0ea18d3b859e9a6c0a0ab103aefa311753fb4c059bb3bffed9c953ab",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Norah:SteadfastGuard",
+        "kind": "hero",
+        "owner": "Norah",
+        "source": "simulator/config/hero_definitions/Norah.json",
+        "source_sha256": "4c25f3e66f7bc504e813af7889edef22ba62aba1960cb644c8d1f4cc026ece29",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Philly:GuardianBloom",
+        "kind": "hero",
+        "owner": "Philly",
+        "source": "simulator/config/hero_definitions/Philly.json",
+        "source_sha256": "64c83fc5fbd2de9e08ca9188d57ad9fd0b4068a0fd9d478487035166bafae25a",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 2
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 1
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Reina:LancersEdge",
+        "kind": "hero",
+        "owner": "Reina",
+        "source": "simulator/config/hero_definitions/Reina.json",
+        "source_sha256": "5ed5040d81ad475ce9e05b0bac02caeee53138d0b6fb7368ef9bb5567b5a2d5a",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 2,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 1
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Renee:DreamfangRally",
+        "kind": "hero",
+        "owner": "Renee",
+        "source": "simulator/config/hero_definitions/Renee.json",
+        "source_sha256": "059a5a6b6d22734ef463d6f93edb44b903d88f1bbf8df7ca3f26d26df35439d2",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Sonya:VortexTurret",
+        "kind": "hero",
+        "owner": "Sonya",
+        "source": "simulator/config/hero_definitions/Sonya.json",
+        "source_sha256": "f4c29c3680cbaa4e92d88b263f6f361d526e501681ce9bc4b7d1578fd3a0661b",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Wayne:TacticalEdge",
+        "kind": "hero",
+        "owner": "Wayne",
+        "source": "simulator/config/hero_definitions/Wayne.json",
+        "source_sha256": "f692eaf347db583e3a9f24286d386d4af849d512f54f8c83af05423396924708",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 2,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Wu Ming:IronBastion",
+        "kind": "hero",
+        "owner": "Wu Ming",
+        "source": "simulator/config/hero_definitions/WuMing.json",
+        "source_sha256": "b31c6f8e548a3503ac030f2892fce9fa18995bac3e0bcfcf061bf8c996deccf3",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 2
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Zinman:Woodpecker",
+        "kind": "hero",
+        "owner": "Zinman",
+        "source": "simulator/config/hero_definitions/Zinman.json",
+        "source_sha256": "0f72993c4f4176d24113c43a9ff4f21054a18108ff13baab6eb140aad3b51b62",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": true,
+            "ordinary_kit": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      }
+    ],
+    "widget_unowned": [
+      {
+        "key": "hero:Blanchette:LightningStrike",
+        "kind": "hero",
+        "owner": "Blanchette",
+        "source": "simulator/config/hero_definitions/Blanchette.json",
+        "source_sha256": "c618eed6d640fc36db6361b85948e4146886ce178392541b28b148468ce6f724",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Fred:CallOfTheFirefighter",
+        "kind": "hero",
+        "owner": "Fred",
+        "source": "simulator/config/hero_definitions/Fred.json",
+        "source_sha256": "87861c00c37f921b3e6879848ea320e81c7d83e29df460eb5fb24520903fde21",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Freya:DefenderOfTheWatch",
+        "kind": "hero",
+        "owner": "Freya",
+        "source": "simulator/config/hero_definitions/Freya.json",
+        "source_sha256": "91181e5af8713996fe2f6940900f0cc1c261041c41ec4198b277d8396297e70d",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Gregory:DayOfTheGuard",
+        "kind": "hero",
+        "owner": "Gregory",
+        "source": "simulator/config/hero_definitions/Gregory.json",
+        "source_sha256": "61ea326fa2b4438f4006075af34b8c1cbf10b4a4be1150e476925735ed2b3c16",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Jeronimo:BattleStance",
+        "kind": "hero",
+        "owner": "Jeronimo",
+        "source": "simulator/config/hero_definitions/Jeronimo.json",
+        "source_sha256": "61c047d97a89883ec6339d45d2f9c952db6dc9e2b2577a76745b5d3240f30d2b",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "rally"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Magnus:ValoricInspiration",
+        "kind": "hero",
+        "owner": "Magnus",
+        "source": "simulator/config/hero_definitions/Magnus.json",
+        "source_sha256": "ec00642fb156e331fcc17a9e3bd4215bcac83f942547b5f428f3519513b587b0",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      },
+      {
+        "key": "hero:Xura:GaiacHymn",
+        "kind": "hero",
+        "owner": "Xura",
+        "source": "simulator/config/hero_definitions/Xura.json",
+        "source_sha256": "a986b1072852b76722630fa3a9a676b44fe77b5f944b96912755e89a9c31d40c",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": false,
+        "audit_exclusion_reason": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md.",
+        "slot": 4,
+        "accounts": {
+          "minxxx": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          },
+          "WIP": {
+            "hero_owned_in_verified_roster": false,
+            "ordinary_kit": null
+          }
+        },
+        "requirements": [
+          {
+            "level": 1,
+            "type": "engagement_type",
+            "value": "garrison"
+          }
+        ],
+        "equipment_level": null,
+        "equipment_level_inspected": false
+      }
+    ],
+    "troop_fc_unavailable": [
+      {
+        "key": "troop:CrystalGunpowder",
+        "kind": "troop",
+        "owner": "marksman",
+        "source": "simulator/config/troop_skills.json",
+        "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "availability_evidence": "docs/mechanics-audit/reviews/marksman-fc-availability/availability.json",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 3
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 5
+          },
+          {
+            "level": 3,
+            "type": "fc",
+            "value": 8
+          },
+          {
+            "level": 4,
+            "type": "fc",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "key": "troop:FlameCharge",
+        "kind": "troop",
+        "owner": "marksman",
+        "source": "simulator/config/troop_skills.json",
+        "source_sha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+        "hydrated_fixture_count": 0,
+        "in_audit_scope": true,
+        "audit_exclusion_reason": null,
+        "availability_evidence": "docs/mechanics-audit/reviews/marksman-fc-availability/availability.json",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 8
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 10
+          }
+        ]
+      }
+    ],
+    "ordinary_reachable": []
+  },
+  "audit_scope": "Paul excludes skill_4 widgets as separately validated; see docs/mechanics-audit/README.md. Equipment availability below is descriptive, not pending audit work.",
+  "in_scope_gap_count": 26
+}

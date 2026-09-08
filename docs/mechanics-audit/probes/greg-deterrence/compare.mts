@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {existsSync,readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import {compareOutcomeDistribution} from '../../../../simulator/src/tooling/parityMetrics.ts';
+const [predictionPath,fixturePath,outputPath]=process.argv.slice(2).map(p=>resolve(p));
+assert(predictionPath&&fixturePath&&outputPath,'Usage: compare.mts PREDICTION_JSON FIXTURE_JSON NEW_OUTPUT_JSON');
+assert(!existsSync(outputPath),'Refusing to overwrite existing comparison');
+const bytes=readFileSync(predictionPath),prediction=JSON.parse(bytes.toString()),raw=JSON.parse(readFileSync(fixturePath,'utf8'));
+const entries=Array.isArray(raw)?raw:[raw];
+assert.equal(entries.length,1,'Compare different report inputs separately');
+const fixture=entries[0],results=Array.isArray(fixture.game_report_result)?fixture.game_report_result:[fixture.game_report_result];
+for(const side of ['attacker','defender'])assert.deepEqual(fixture[side],prediction.input[side],`Fresh ${side} input differs from replay`);
+const scores=results.map((r:any)=>r.attacker-r.defender),n=scores.length,mean=scores.reduce((a:number,b:number)=>a+b,0)/n;
+const comparison:any={created_at:new Date().toISOString(),prediction_path:predictionPath,prediction_sha256:createHash('sha256').update(bytes).digest('hex'),fixture_path:fixturePath,fixture_sha256:createHash('sha256').update(readFileSync(fixturePath)).digest('hex'),method:'Current repository CDF/support test on every preserved independent outcome. No input adjustment or deduplication. This does not identify all S2 timing or scope semantics.',observed:{n,signed_scores:scores,defender_survivors:results.map((r:any)=>r.defender),mean_defender_survivors:-mean,sd:n>1?Math.sqrt(scores.reduce((s:number,v:number)=>s+(v-mean)**2,0)/(n-1)):null},candidates:{}};
+for(const[name,candidate]of Object.entries(prediction.candidates) as any)comparison.candidates[name]=compareOutcomeDistribution({candidate:{samples:candidate.samples.map((r:any)=>r.score)},reference:{samples:scores},initialTroops:600,outcomeRange:{min:-400,max:200},deterministic:false});
+writeFileSync(outputPath,JSON.stringify(comparison,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify(comparison,null,2));

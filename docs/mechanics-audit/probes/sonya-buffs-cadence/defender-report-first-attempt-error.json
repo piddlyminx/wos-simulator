@@ -1,0 +1,153 @@
+{
+  "argv": [
+    "/home/paul/projects_wsl/wos/simulator/skill/scripts/wosctl",
+    "--instance",
+    "wip",
+    "report",
+    "--tab",
+    "war",
+    "--index",
+    "1",
+    "--output",
+    "docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report.json"
+  ],
+  "cwd": "/home/paul/projects_wsl/wos/simulator",
+  "error_type": "RuntimeError",
+  "error": "Battle Details button remained visible after tap",
+  "traceback": "Traceback (most recent call last):\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/wosctl\", line 855, in cmd_report\n    data = read_battle_report(emulator, tab=normalized_tab, index=index, debug=debug)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 788, in read_battle_report\n    return read_battle_report_from_open_inbox(\n        emulator,\n    ...<2 lines>...\n        tab=normalized_tab,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 774, in read_battle_report_from_open_inbox\n    return _capture_and_parse_open_report(emulator, debug_dir=debug_dir)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 432, in _capture_and_parse_open_report\n    return _capture_and_parse(tmp_path, debug=False)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py\", line 405, in _capture_and_parse\n    capture = capture_full_report(\n        emulator,\n    ...<3 lines>...\n        long_screenshot_path=long_screenshot_path,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/capture_report_top_bottom.py\", line 658, in capture_full_report\n    bd_data = capture_battle_details(\n        emulator,\n    ...<3 lines>...\n        return_frame_out=returned_frames,\n    )\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/capture_report_top_bottom.py\", line 580, in capture_battle_details\n    top_img = _wait_for_changed_stable_frame(emulator, img)\n  File \"/home/paul/projects_wsl/wos/simulator/skill/scripts/capture_report_top_bottom.py\", line 509, in _wait_for_changed_stable_frame\n    raise RuntimeError(\"Battle Details button remained visible after tap\")\nRuntimeError: Battle Details button remained visible after tap\n",
+  "frames": [
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/wosctl",
+      "line": 855,
+      "function": "cmd_report",
+      "locals": {
+        "debug": "False",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "exc": "RuntimeError('Battle Details button remained visible after tap')",
+        "index": "1",
+        "instance_name": "'wip'",
+        "normalize_mail_tab": "<function normalize_mail_tab at 0x7f7124bb1300>",
+        "normalized_tab": "'war'",
+        "output": "'docs/mechanics-audit/probes/sonya-buffs-cadence/defender-report.json'",
+        "read_battle_report": "<function read_battle_report at 0x7f7124bb2340>",
+        "tab": "'war'"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py",
+      "line": 788,
+      "function": "read_battle_report",
+      "locals": {
+        "debug": "False",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "index": "1",
+        "normalized_tab": "'war'",
+        "tab": "'war'"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py",
+      "line": 774,
+      "function": "read_battle_report_from_open_inbox",
+      "locals": {
+        "debug": "False",
+        "debug_dir": "None",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "index": "1",
+        "tab": "'war'"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py",
+      "line": 432,
+      "function": "_capture_and_parse_open_report",
+      "locals": {
+        "_capture_and_parse": "<function _capture_and_parse_open_report.<locals>._capture_and_parse at 0x7f705f05af20>",
+        "debug_dir": "None",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "long_screenshot_path": "None",
+        "parse_battle_details": "<function parse_battle_details at 0x7f705f05d6c0>",
+        "tmp_path": "PosixPath('/tmp/wos_report_ini28un0')",
+        "tmpdir": "'/tmp/wos_report_ini28un0'"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/report_reader.py",
+      "line": 405,
+      "function": "_capture_and_parse",
+      "locals": {
+        "_start_details_parse": "<function _capture_and_parse_open_report.<locals>._capture_and_parse.<locals>._start_details_parse at 0x7f705f05d760>",
+        "debug": "False",
+        "debug_dir": "None",
+        "details_future": "None",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "executor": "<concurrent.futures.thread.ThreadPoolExecutor object at 0x7f705f060d70>",
+        "long_screenshot_path": "None",
+        "outdir": "PosixPath('/tmp/wos_report_ini28un0')",
+        "parse_battle_details": "<function parse_battle_details at 0x7f705f05d6c0>"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/capture_report_top_bottom.py",
+      "line": 658,
+      "function": "capture_full_report",
+      "locals": {
+        "battle_details_ready": "<function _capture_and_parse_open_report.<locals>._capture_and_parse.<locals>._start_details_parse at 0x7f705f05d760>",
+        "debug": "False",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "long_screenshot_path": "None",
+        "outdir": "PosixPath('/tmp/wos_report_ini28un0')",
+        "report_bottom_frame": "array([[[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n     ...<truncated>",
+        "report_data": "{'report_top': '/tmp/wos_report_ini28un0/report_top.png', 'report_bottom': '/tmp/wos_report_ini28un0/report_bottom.png', 'report_bottom_reached': True}",
+        "returned_frames": "[]",
+        "started": "980662.273322672"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/capture_report_top_bottom.py",
+      "line": 580,
+      "function": "capture_battle_details",
+      "locals": {
+        "btn_match": "(197, 1012, 0.96839439868927)",
+        "bx": "197",
+        "by": "1012",
+        "current": "array([[[16, 14, 21],\n        [16, 14, 21],\n        [16, 14, 21],\n        ...,\n        [16, 14, 21],\n        [16, 14, 21],\n        [16, 14, 21]],\n\n       [[16, 14, 21],\n        [16, 14, 21],\n        [16, 14, 21],\n        ...,\n        [16, 14, 21],\n        [16, 14, 21],\n        [16, 14, 21]],\n\n       [[16, 14, 21],\n        [16, 14, 21],\n        [16, 14, 21],\n        ...,\n        [16, 14, 21],\n        [16, 14, 21],\n        [16, 14, 21]],\n\n       ...,\n\n       [[20, 16, 22],\n        [20, 16, 22],\n  ...<truncated>",
+        "debug": "False",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "img": "array([[[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n     ...<truncated>",
+        "initial_frame": "array([[[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n     ...<truncated>",
+        "open_attempt": "0",
+        "outdir": "PosixPath('/tmp/wos_report_ini28un0')",
+        "prefix": "'bd'",
+        "retry_match": "None",
+        "return_frame_out": "[]",
+        "score": "0.96839439868927",
+        "top_img": "None"
+      }
+    },
+    {
+      "file": "/home/paul/projects_wsl/wos/simulator/skill/scripts/capture_report_top_bottom.py",
+      "line": 509,
+      "function": "_wait_for_changed_stable_frame",
+      "locals": {
+        "before": "array([[[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n     ...<truncated>",
+        "changed_frame": "None",
+        "current": "array([[[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n       [[ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        ...,\n        [ 95,  61,  28],\n        [ 95,  61,  28],\n        [ 95,  61,  28]],\n\n     ...<truncated>",
+        "deadline": "980668.974751282",
+        "emulator": "WosEmulator(name='wip', idx=3, serial='127.0.0.1:16480')",
+        "timeout_sec": "2.5",
+        "unchanged_button_deadline": "980667.474752879"
+      }
+    }
+  ],
+  "saved_images": [
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/emulator_screenshot.png",
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/frame5_report_bottom_frame.png",
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/frame6_initial_frame.png",
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/frame6_img.png",
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/frame6_current.png",
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/frame7_before.png",
+    "/home/paul/projects_wsl/wos/simulator/skill/tmp/wosctl_errors/20260907T045456Z_2114313/frame7_current.png"
+  ],
+  "diagnostic_errors": []
+}

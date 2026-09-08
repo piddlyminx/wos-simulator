@@ -1,0 +1,896 @@
+[
+  {
+    "key": "testcases/emulator_verified/wayne_reina_combo.json::0",
+    "observed_scores": [
+      1613,
+      1531,
+      1542,
+      1549,
+      1568,
+      1545,
+      1543,
+      1584
+    ],
+    "observed_mean": 1559.375,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": 1551.2236328125,
+        "sd": 14.742631259025872,
+        "p025": 1526,
+        "p975": 1582,
+        "empirical_two_sided_tail": [
+          0.0,
+          0.1630859375,
+          0.533203125,
+          0.955078125,
+          0.2626953125,
+          0.7529296875,
+          0.5986328125,
+          0.0400390625
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": 1551.2236328125,
+        "sd": 14.742631259025872,
+        "p025": 1526,
+        "p975": 1582,
+        "empirical_two_sided_tail": [
+          0.0,
+          0.1630859375,
+          0.533203125,
+          0.955078125,
+          0.2626953125,
+          0.7529296875,
+          0.5986328125,
+          0.0400390625
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": 1551.2236328125,
+        "sd": 14.742631259025872,
+        "p025": 1526,
+        "p975": 1582,
+        "empirical_two_sided_tail": [
+          0.0,
+          0.1630859375,
+          0.533203125,
+          0.955078125,
+          0.2626953125,
+          0.7529296875,
+          0.5986328125,
+          0.0400390625
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": 1551.2275390625,
+        "sd": 17.105894029558957,
+        "p025": 1526,
+        "p975": 1586,
+        "empirical_two_sided_tail": [
+          0.00390625,
+          0.314453125,
+          0.556640625,
+          0.931640625,
+          0.287109375,
+          0.8740234375,
+          0.673828125,
+          0.0849609375
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": 1563.357421875,
+        "sd": 20.63195958507637,
+        "p025": 1527,
+        "p975": 1608,
+        "empirical_two_sided_tail": [
+          0.0302734375,
+          0.1103515625,
+          0.2802734375,
+          0.57421875,
+          0.7666015625,
+          0.431640625,
+          0.330078125,
+          0.3203125
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/reina_solo_wip.json::0",
+    "observed_scores": [
+      1992
+    ],
+    "observed_mean": 1992.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": 1991.6748046875,
+        "sd": 0.5311130351617349,
+        "p025": 1990,
+        "p975": 1992,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": 1991.6748046875,
+        "sd": 0.5311130351617349,
+        "p025": 1990,
+        "p975": 1992,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": 1991.6748046875,
+        "sd": 0.5311130351617349,
+        "p025": 1990,
+        "p975": 1992,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": 1991.701171875,
+        "sd": 0.5785268370373561,
+        "p025": 1990,
+        "p975": 1992,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": 1991.21337890625,
+        "sd": 1.075951407067561,
+        "p025": 1988,
+        "p975": 1992,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json::0",
+    "observed_scores": [
+      -482
+    ],
+    "observed_mean": -482.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -495.76318359375,
+        "sd": 16.08231974330281,
+        "p025": -525,
+        "p975": -461,
+        "empirical_two_sided_tail": [
+          0.4052734375
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -495.76318359375,
+        "sd": 16.08231974330281,
+        "p025": -525,
+        "p975": -461,
+        "empirical_two_sided_tail": [
+          0.4052734375
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -495.76318359375,
+        "sd": 16.08231974330281,
+        "p025": -525,
+        "p975": -461,
+        "empirical_two_sided_tail": [
+          0.4052734375
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -495.6044921875,
+        "sd": 15.451606516897881,
+        "p025": -524,
+        "p975": -464,
+        "empirical_two_sided_tail": [
+          0.392578125
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -498.88232421875,
+        "sd": 16.5665839870759,
+        "p025": -529,
+        "p975": -463,
+        "empirical_two_sided_tail": [
+          0.3203125
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/sergey_reina_combo_nc.json::0",
+    "observed_scores": [
+      -295
+    ],
+    "observed_mean": -295.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -295.7236328125,
+        "sd": 29.863421201010393,
+        "p025": -351,
+        "p975": -238,
+        "empirical_two_sided_tail": [
+          0.921875
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -295.7236328125,
+        "sd": 29.863421201010393,
+        "p025": -351,
+        "p975": -238,
+        "empirical_two_sided_tail": [
+          0.921875
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -295.7236328125,
+        "sd": 29.863421201010393,
+        "p025": -351,
+        "p975": -238,
+        "empirical_two_sided_tail": [
+          0.921875
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -295.7705078125,
+        "sd": 39.454971079425434,
+        "p025": -369,
+        "p975": -223,
+        "empirical_two_sided_tail": [
+          0.96875
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -371.0830078125,
+        "sd": 35.72007469935555,
+        "p025": -420,
+        "p975": -293,
+        "empirical_two_sided_tail": [
+          0.056640625
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/reina_shadowblade_350l_vs_150i_50l_50m.json::0",
+    "observed_scores": [
+      -166,
+      -163,
+      -163,
+      -157,
+      -174
+    ],
+    "observed_mean": -164.6,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -179.16845703125,
+        "sd": 1.966609684534208,
+        "p025": -182,
+        "p975": -175,
+        "empirical_two_sided_tail": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0283203125
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -162.88916015625,
+        "sd": 6.528425663893499,
+        "p025": -175,
+        "p975": -149,
+        "empirical_two_sided_tail": [
+          0.7236328125,
+          1,
+          1,
+          0.4052734375,
+          0.078125
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -178.83203125,
+        "sd": 2.023339482744512,
+        "p025": -182,
+        "p975": -175,
+        "empirical_two_sided_tail": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0439453125
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -179.19287109375,
+        "sd": 2.9754586430952576,
+        "p025": -183,
+        "p975": -172,
+        "empirical_two_sided_tail": [
+          0.0029296875,
+          0.0009765625,
+          0.0009765625,
+          0.0,
+          0.1533203125
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -175.384765625,
+        "sd": 4.027676884778348,
+        "p025": -182,
+        "p975": -166,
+        "empirical_two_sided_tail": [
+          0.0546875,
+          0.0126953125,
+          0.0126953125,
+          0.0009765625,
+          0.740234375
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/reina_bahiti_combo_nc.json::0",
+    "observed_scores": [
+      -502
+    ],
+    "observed_mean": -502.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -482.6103515625,
+        "sd": 16.778901606019453,
+        "p025": -513,
+        "p975": -446,
+        "empirical_two_sided_tail": [
+          0.2568359375
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -482.6103515625,
+        "sd": 16.778901606019453,
+        "p025": -513,
+        "p975": -446,
+        "empirical_two_sided_tail": [
+          0.2568359375
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -482.6103515625,
+        "sd": 16.778901606019453,
+        "p025": -513,
+        "p975": -446,
+        "empirical_two_sided_tail": [
+          0.2568359375
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -482.52587890625,
+        "sd": 16.427463814468027,
+        "p025": -512,
+        "p975": -449,
+        "empirical_two_sided_tail": [
+          0.2509765625
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -486.48681640625,
+        "sd": 17.507282929275195,
+        "p025": -518,
+        "p975": -449,
+        "empirical_two_sided_tail": [
+          0.400390625
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/wayne_reina_wuming_combo.json::0",
+    "observed_scores": [
+      1693,
+      1695,
+      1698,
+      1694,
+      1706,
+      1685,
+      1697,
+      1684
+    ],
+    "observed_mean": 1694.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": 1697.9892578125,
+        "sd": 6.65772023487615,
+        "p025": 1685,
+        "p975": 1712,
+        "empirical_two_sided_tail": [
+          0.537109375,
+          0.7900390625,
+          0.9677734375,
+          0.6611328125,
+          0.2744140625,
+          0.05859375,
+          1,
+          0.0322265625
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": 1697.9892578125,
+        "sd": 6.65772023487615,
+        "p025": 1685,
+        "p975": 1712,
+        "empirical_two_sided_tail": [
+          0.537109375,
+          0.7900390625,
+          0.9677734375,
+          0.6611328125,
+          0.2744140625,
+          0.05859375,
+          1,
+          0.0322265625
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": 1697.9892578125,
+        "sd": 6.65772023487615,
+        "p025": 1685,
+        "p975": 1712,
+        "empirical_two_sided_tail": [
+          0.537109375,
+          0.7900390625,
+          0.9677734375,
+          0.6611328125,
+          0.2744140625,
+          0.05859375,
+          1,
+          0.0322265625
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": 1698.02783203125,
+        "sd": 7.929815902731035,
+        "p025": 1684,
+        "p975": 1715,
+        "empirical_two_sided_tail": [
+          0.73046875,
+          0.9775390625,
+          0.9765625,
+          0.8955078125,
+          0.3056640625,
+          0.1044921875,
+          0.9990234375,
+          0.06640625
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": 1702.81005859375,
+        "sd": 9.108935063641303,
+        "p025": 1686,
+        "p975": 1723,
+        "empirical_two_sided_tail": [
+          0.3583984375,
+          0.4951171875,
+          0.6484375,
+          0.4443359375,
+          0.7275390625,
+          0.0419921875,
+          0.595703125,
+          0.0322265625
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/reina_logan_combo_simulator.json::0",
+    "observed_scores": [
+      -553
+    ],
+    "observed_mean": -553.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -548.775390625,
+        "sd": 2.623284531465075,
+        "p025": -554,
+        "p975": -545,
+        "empirical_two_sided_tail": [
+          0.21875
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -548.775390625,
+        "sd": 2.623284531465075,
+        "p025": -554,
+        "p975": -545,
+        "empirical_two_sided_tail": [
+          0.21875
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -548.775390625,
+        "sd": 2.623284531465075,
+        "p025": -554,
+        "p975": -545,
+        "empirical_two_sided_tail": [
+          0.21875
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -548.84716796875,
+        "sd": 3.5513652585887945,
+        "p025": -556,
+        "p975": -544,
+        "empirical_two_sided_tail": [
+          0.3798828125
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -554.212890625,
+        "sd": 4.450080258548514,
+        "p025": -562,
+        "p975": -546,
+        "empirical_two_sided_tail": [
+          0.8486328125
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/reina_attacker_wip.json::0",
+    "observed_scores": [
+      -1992
+    ],
+    "observed_mean": -1992.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -1991.6748046875,
+        "sd": 0.5311130351617349,
+        "p025": -1992,
+        "p975": -1990,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -1991.6748046875,
+        "sd": 0.5311130351617349,
+        "p025": -1992,
+        "p975": -1990,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -1991.6748046875,
+        "sd": 0.5311130351617349,
+        "p025": -1992,
+        "p975": -1990,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -1991.701171875,
+        "sd": 0.5785268370373561,
+        "p025": -1992,
+        "p975": -1990,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -1991.21337890625,
+        "sd": 1.075951407067561,
+        "p025": -1992,
+        "p975": -1988,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/emulator_verified/flint_reina_zinman_combo.json::0",
+    "observed_scores": [
+      -439
+    ],
+    "observed_mean": -439.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -444.771484375,
+        "sd": 6.687784060232285,
+        "p025": -458,
+        "p975": -431,
+        "empirical_two_sided_tail": [
+          0.4375
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -444.771484375,
+        "sd": 6.687784060232285,
+        "p025": -458,
+        "p975": -431,
+        "empirical_two_sided_tail": [
+          0.4375
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -444.771484375,
+        "sd": 6.687784060232285,
+        "p025": -458,
+        "p975": -431,
+        "empirical_two_sided_tail": [
+          0.4375
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -444.19580078125,
+        "sd": 9.333700748172356,
+        "p025": -463,
+        "p975": -427,
+        "empirical_two_sided_tail": [
+          0.630859375
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -459.767578125,
+        "sd": 10.49100778531262,
+        "p025": -481,
+        "p975": -441,
+        "empirical_two_sided_tail": [
+          0.0322265625
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/heroes_unittests/Reina_tc.json::0",
+    "observed_scores": [
+      -62
+    ],
+    "observed_mean": -62.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -62,
+        "sd": 0,
+        "p025": -62,
+        "p975": -62,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -62,
+        "sd": 0,
+        "p025": -62,
+        "p975": -62,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -62,
+        "sd": 0,
+        "p025": -62,
+        "p975": -62,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -62,
+        "sd": 0,
+        "p025": -62,
+        "p975": -62,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -62,
+        "sd": 0,
+        "p025": -62,
+        "p975": -62,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/heroes_unittests/Reina_tc.json::1",
+    "observed_scores": [
+      -40
+    ],
+    "observed_mean": -40.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -40,
+        "sd": 0,
+        "p025": -40,
+        "p975": -40,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -40,
+        "sd": 0,
+        "p025": -40,
+        "p975": -40,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -40,
+        "sd": 0,
+        "p025": -40,
+        "p975": -40,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -40,
+        "sd": 0,
+        "p025": -40,
+        "p975": -40,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -40,
+        "sd": 0,
+        "p025": -40,
+        "p975": -40,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/heroes_unittests/Reina_tc.json::2",
+    "observed_scores": [
+      1536,
+      1325,
+      1500,
+      1333,
+      1297,
+      1579
+    ],
+    "observed_mean": 1428.3333333333333,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": 1413.22119140625,
+        "sd": 119.98647293952556,
+        "p025": 1165,
+        "p975": 1595,
+        "empirical_two_sided_tail": [
+          0.24609375,
+          0.49609375,
+          0.560546875,
+          0.5390625,
+          0.3544921875,
+          0.0751953125
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": 1413.22119140625,
+        "sd": 119.98647293952556,
+        "p025": 1165,
+        "p975": 1595,
+        "empirical_two_sided_tail": [
+          0.24609375,
+          0.49609375,
+          0.560546875,
+          0.5390625,
+          0.3544921875,
+          0.0751953125
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": 1413.22119140625,
+        "sd": 119.98647293952556,
+        "p025": 1165,
+        "p975": 1595,
+        "empirical_two_sided_tail": [
+          0.24609375,
+          0.49609375,
+          0.560546875,
+          0.5390625,
+          0.3544921875,
+          0.0751953125
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": 1398.99755859375,
+        "sd": 160.17832787538416,
+        "p025": 1046,
+        "p975": 1665,
+        "empirical_two_sided_tail": [
+          0.341796875,
+          0.6162109375,
+          0.583984375,
+          0.6416015625,
+          0.4892578125,
+          0.240234375
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": 772.78271484375,
+        "sd": 397.27645596750307,
+        "p025": -60,
+        "p975": 1355,
+        "empirical_two_sided_tail": [
+          0.0029296875,
+          0.0673828125,
+          0.005859375,
+          0.0634765625,
+          0.095703125,
+          0.0009765625
+        ]
+      }
+    }
+  },
+  {
+    "key": "testcases/heroes_unittests/Reina_tc.json::3",
+    "observed_scores": [
+      -202
+    ],
+    "observed_mean": -202.0,
+    "candidates": {
+      "extra20_current_dodge": {
+        "mean": -201.7841796875,
+        "sd": 1.290415500937052,
+        "p025": -205,
+        "p975": -200,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra120_current_dodge": {
+        "mean": -201.7841796875,
+        "sd": 1.290415500937052,
+        "p025": -205,
+        "p975": -200,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_normal_kind": {
+        "mean": -201.7841796875,
+        "sd": 1.290415500937052,
+        "p025": -205,
+        "p975": -200,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_shared_round_dodge": {
+        "mean": -201.77392578125,
+        "sd": 1.4348457865657807,
+        "p025": -205,
+        "p975": -200,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      },
+      "extra20_reactive_round_dodge": {
+        "mean": -202.33984375,
+        "sd": 1.6096115723292554,
+        "p025": -206,
+        "p975": -200,
+        "empirical_two_sided_tail": [
+          1
+        ]
+      }
+    }
+  }
+]

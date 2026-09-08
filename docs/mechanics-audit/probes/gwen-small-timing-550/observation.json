@@ -1,0 +1,57 @@
+{
+  "report_timestamp_displayed": "2026-09-07 06:29:43",
+  "world_coord": {
+    "x": 791,
+    "y": 577
+  },
+  "attacker": {
+    "troops": 550,
+    "survivors": 0,
+    "losses": 0,
+    "injured": 193,
+    "lightly_injured": 357
+  },
+  "defender": {
+    "troops": 900,
+    "survivors": 24,
+    "losses": 0,
+    "injured": 308,
+    "lightly_injured": 568
+  },
+  "per_troop_survivors": {
+    "attacker": {
+      "infantry": 0,
+      "lancer": 0,
+      "marksman": 0
+    },
+    "defender": {
+      "infantry": 24,
+      "lancer": 0,
+      "marksman": 0
+    }
+  },
+  "skill_details": {
+    "attacker": {
+      "Gwen": {
+        "skill_1": {
+          "triggered": 1,
+          "displayed_kills": null
+        },
+        "skill_2": {
+          "triggered": 15,
+          "displayed_kills": 7
+        },
+        "skill_3": {
+          "triggered": 18,
+          "displayed_kills": 36
+        }
+      }
+    }
+  },
+  "rounds": null,
+  "mail_ids": {
+    "defender_view": "2734692464123174"
+  },
+  "defender_troop_details_source": "docs/mechanics-audit/probes/gwen-small-timing-550/defender-troops.json",
+  "transcription": "Visually checked both overview and counterpart report, every displayed stat, exact T6 troop counts, Gwen identity/full3/1/1 kit and Battle Details. Fresh fixture input exactly equals frozen input. Both backlines eliminated with Infantry remaining. No explicit game round count. Counterpart report is the same battle, not another observation; dash retained as null."
+}

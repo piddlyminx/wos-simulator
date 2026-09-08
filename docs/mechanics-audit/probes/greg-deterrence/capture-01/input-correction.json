@@ -1,0 +1,31 @@
+{
+  "status": "Two OCR transcription errors corrected from clean counterpart of same report; no statistic fitted to a simulator outcome.",
+  "changes": [
+    {
+      "path": "attacker.stats.inf.attack",
+      "original_ocr": 244.0,
+      "visually_confirmed": 308.2
+    },
+    {
+      "path": "defender.stats.inf.attack",
+      "original_ocr": 186.3,
+      "visually_confirmed": 248.2
+    }
+  ],
+  "original_fixture_sha256": "27287b25511291bb3da333194879ed93f56ab07ebf192464303d2b9b9e63e482",
+  "visually_verified_source": "docs/mechanics-audit/probes/greg-deterrence/capture-01/defender-raw/report_stats.png",
+  "same_battle_identity": {
+    "displayed_time": "2026-09-07 08:32:39",
+    "coordinates": {
+      "x": 791,
+      "y": 577
+    },
+    "attacker_troops": 200,
+    "defender_troops": 400,
+    "survivors": {
+      "attacker": 0,
+      "defender": 113
+    }
+  },
+  "all_24_fields_visually_checked": true
+}

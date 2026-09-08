@@ -1,0 +1,74 @@
+[
+  {
+    "test_id": "edith_ironclad_100i_vs_400m",
+    "description": "One accepted in-game battle with full minxxx Edith3/3/3 and100 T6 Infantry against WIP nohero400 T6 Marksmen. Game/current fresh-stat replay both leave102 defenders. Exact fullkit/T6counts, all24 report stats, distinct report identity, defender troop table and all three skill tooltip curves are visually verified and retained in docs/mechanics-audit/probes/edith-ironclad/. No fresh input correction was needed; hypothetical and historical design stats remain explicitly conditional in the immutable forecasts. No generation added to report stats.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Edith": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 100
+      },
+      "stats": {
+        "inf": {
+          "attack": 529.9,
+          "defense": 522.1,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 400
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249.0,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 208.5,
+          "defense": 207.4,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 102
+      }
+    ]
+  }
+]

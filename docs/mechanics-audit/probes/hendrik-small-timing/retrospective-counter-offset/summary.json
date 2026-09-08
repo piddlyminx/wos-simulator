@@ -1,0 +1,869 @@
+{
+  "interpretation": "Retrospective; totals and new per-line vector known before simulations. Prefer S3-only phase correction; additional S2 phase not independently established.",
+  "results": [
+    {
+      "key": "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 17
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": -17,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 18
+          }
+        },
+        "s2_first_three": {
+          "score": -18,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 18,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 18
+          }
+        },
+        "s3_first_two": {
+          "score": -17,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 18
+          }
+        },
+        "shared_first_n_minus_one": {
+          "score": -18,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 18,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 18
+          }
+        },
+        "s2_first_one": {
+          "score": -20,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 20,
+              "marksman": 0
+            }
+          },
+          "rounds": 53,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 14,
+            "DragonsHeir": 17
+          }
+        },
+        "s2_delay_one": {
+          "score": -17,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 18
+          }
+        },
+        "s2_duration_one": {
+          "score": -5,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 5,
+              "marksman": 0
+            }
+          },
+          "rounds": 60,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 15,
+            "DragonsHeir": 20
+          }
+        },
+        "s2_damage_taken_down": {
+          "score": -17,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 18
+          }
+        },
+        "s3_first_four": {
+          "score": -17,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 13,
+            "DragonsHeir": 17
+          }
+        },
+        "s3_first_two_s2_first_one": {
+          "score": -20,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 20,
+              "marksman": 0
+            }
+          },
+          "rounds": 53,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 14,
+            "DragonsHeir": 18
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 471
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": -476,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 6
+          }
+        },
+        "s2_first_three": {
+          "score": -475,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 313,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 6
+          }
+        },
+        "s3_first_two": {
+          "score": -471,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 313,
+              "lancer": 82,
+              "marksman": 76
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 7
+          }
+        },
+        "shared_first_n_minus_one": {
+          "score": -469,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 312,
+              "lancer": 82,
+              "marksman": 75
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 7
+          }
+        },
+        "s2_first_one": {
+          "score": -473,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 312,
+              "lancer": 83,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 6
+          }
+        },
+        "s2_delay_one": {
+          "score": -476,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 6
+          }
+        },
+        "s2_duration_one": {
+          "score": -480,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 317,
+              "lancer": 84,
+              "marksman": 79
+            }
+          },
+          "rounds": 19,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 4,
+            "DragonsHeir": 6
+          }
+        },
+        "s2_damage_taken_down": {
+          "score": -476,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 6
+          }
+        },
+        "s3_first_four": {
+          "score": -479,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 85,
+              "marksman": 80
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 6
+          }
+        },
+        "s3_first_two_s2_first_one": {
+          "score": -467,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 311,
+              "lancer": 81,
+              "marksman": 75
+            }
+          },
+          "rounds": 20,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 5,
+            "DragonsHeir": 7
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0",
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 68
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": -78,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 19,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 8,
+            "DragonsHeir": 10
+          }
+        },
+        "s2_first_three": {
+          "score": -77,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 18,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 8,
+            "DragonsHeir": 10
+          }
+        },
+        "s3_first_two": {
+          "score": -71,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 16,
+              "lancer": 32,
+              "marksman": 23
+            }
+          },
+          "rounds": 32,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 8,
+            "DragonsHeir": 11
+          }
+        },
+        "shared_first_n_minus_one": {
+          "score": -69,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 15,
+              "lancer": 32,
+              "marksman": 22
+            }
+          },
+          "rounds": 33,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 8,
+            "DragonsHeir": 11
+          }
+        },
+        "s2_first_one": {
+          "score": -75,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 16,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 8,
+            "DragonsHeir": 10
+          }
+        },
+        "s2_delay_one": {
+          "score": -79,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 20,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 31,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 7,
+            "DragonsHeir": 10
+          }
+        },
+        "s2_duration_one": {
+          "score": -86,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 24,
+              "lancer": 35,
+              "marksman": 27
+            }
+          },
+          "rounds": 30,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 7,
+            "DragonsHeir": 10
+          }
+        },
+        "s2_damage_taken_down": {
+          "score": -78,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 19,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 8,
+            "DragonsHeir": 10
+          }
+        },
+        "s3_first_four": {
+          "score": -85,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 21,
+              "lancer": 36,
+              "marksman": 28
+            }
+          },
+          "rounds": 31,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 7,
+            "DragonsHeir": 10
+          }
+        },
+        "s3_first_two_s2_first_one": {
+          "score": -66,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 13,
+              "lancer": 31,
+              "marksman": 22
+            }
+          },
+          "rounds": 33,
+          "skillActivations": {
+            "WormsRavage": 1,
+            "ArmorOfBarnacles": 9,
+            "DragonsHeir": 11
+          }
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+      "game": [
+        {
+          "attacker": 14,
+          "defender": 0
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s2_first_three": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s3_first_two": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "shared_first_n_minus_one": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s2_first_one": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s2_delay_one": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s2_duration_one": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s2_damage_taken_down": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s3_first_four": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        },
+        "s3_first_two_s2_first_one": {
+          "score": 14,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "skillActivations": {
+            "WormsRavage": 1
+          }
+        }
+      }
+    }
+  ]
+}

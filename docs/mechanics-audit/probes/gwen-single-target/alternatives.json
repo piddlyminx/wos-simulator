@@ -1,0 +1,19 @@
+{
+  "current": {
+    "first": 5,
+    "every": 4
+  },
+  "first5_every5": {
+    "first": 5,
+    "every": 5
+  },
+  "first4_every5": {
+    "first": 4,
+    "every": 5
+  },
+  "first6_every4": {
+    "first": 6,
+    "every": 4
+  },
+  "no_s3": null
+}

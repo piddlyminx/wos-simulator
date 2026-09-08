@@ -1,0 +1,37 @@
+{
+  "test_id": "hendrik_armor_lancer_scope",
+  "description": "Prospective deterministic Hendrik S2 non-Marksman recipient-scope probe. minxxx attacks with 100 no-hero T6 Lancers; WIP defends with 150 T6 Lancers and its full freshly captured 3/3/3 Hendrik kit. No Marksmen makes S3 inert under current scope; S1 remains active. S3 using Lancers and alternative S1 scaling are retained as competing diagnostic models. Frozen candidate definitions and conditional predictions in tmp/mechanics-audit-2026-09-07/next-probe/prediction.json. Recompute unchanged candidates with exact captured report stats before interpreting. Endpoint and Battle Details required; this cannot verify all S2 timing/stacking or S3 behavior.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "lancer_t6": 100
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Hendrik": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "troops": {
+      "lancer_t6": 150
+    }
+  },
+  "metadata": {
+    "fixture_type": "single_hero_full_kit",
+    "skill_isolation": false,
+    "expected_stochastic": false,
+    "stochastic_reason": [],
+    "stats_snapshot": "Fresh 2026-09-07 Gwen report Lancer fields; substitute exact Hendrik report fields after capture."
+  }
+}

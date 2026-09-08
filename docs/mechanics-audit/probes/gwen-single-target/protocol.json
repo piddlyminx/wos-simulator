@@ -1,0 +1,46 @@
+{
+  "createdAt": "2026-09-07T07:19:34.365Z",
+  "exposure": "All three prior mixed-target Gwen captures and all older accepted Gwen outcomes were known. No game outcome for any formation in this new single-target count screen has been collected or read.",
+  "purpose": "Discriminate S3 cadence with one enemy troop line, so sibling fanout consumption and backline depletion cannot affect interpretation. Retain full Gwen 3/1/1 and all current S1/S2 effects.",
+  "hypotheses": {
+    "current": {
+      "first": 5,
+      "every": 4
+    },
+    "first5_every5": {
+      "first": 5,
+      "every": 5
+    },
+    "first4_every5": {
+      "first": 4,
+      "every": 5
+    },
+    "first6_every4": {
+      "first": 6,
+      "every": 4
+    },
+    "no_s3": null
+  },
+  "directionalPrediction": "Less frequent S3 attacks should usually reduce Gwen damage and survivor advantage; feedback and S1/S2 charge consumption mean exact direction and separation must be simulated.",
+  "countScreen": {
+    "marksman_t6": [
+      150,
+      250,
+      350,
+      450,
+      550
+    ],
+    "infantry_t6": [
+      300,
+      500,
+      700,
+      900
+    ]
+  },
+  "selection": "Prefer sub-1000 armies, several S3 opportunities, and endpoint differences substantially larger than 1-2 survivors plus displayed-stat uncertainty. Do not select a coefficient or production fix from this screen.",
+  "stats": "Exact report-resolved blocks from prior verified Gwen battle. Conditional on unchanged fresh stats; no generation bonus added. Verify fresh report and replay changes using these frozen models.",
+  "interpretation": "A matching endpoint constrains cadence only under retained S1/S2 lifecycle and damage assumptions. It does not establish a universal cadence or resolve prior mixed-target contradictions.",
+  "source_input_sha256": "8c42109f0bdd6463b1ec7300a89297ab06e1805119343c9daeb5956b21b32f97",
+  "config_sha256": "fe09ca93cd70233e682b8d60914af150068e5a7891e64423d41f8a4894284eaa",
+  "script_sha256": "bf130548e06866107d1d4619cb2f5986a198f3f8a1ff1dcd56c6343fe3012b3a"
+}

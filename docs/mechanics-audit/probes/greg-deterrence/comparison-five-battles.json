@@ -1,0 +1,71 @@
+{
+  "created_at": "2026-09-07T09:07:28.692Z",
+  "prediction_path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/greg-deterrence/capture-01/captured-prediction.json",
+  "prediction_sha256": "7812c5d623f1bc2678fe9c0b010e4e842c1c9e5d5f8e4d03c9367552f891ea0b",
+  "fixture_path": "/home/paul/projects_wsl/wos/simulator/testcases/emulator_verified/greg_deterrence_200i_vs_400m.json",
+  "fixture_sha256": "7fccd61b781186615249b80925130d7c5d535bd0d1a55c37dab87abf0a7d5805",
+  "method": "Current repository CDF/support test on every preserved independent outcome. No input adjustment or deduplication. This does not identify all S2 timing or scope semantics.",
+  "observed": {
+    "n": 5,
+    "signed_scores": [
+      -113,
+      -108,
+      -109,
+      -113,
+      -110
+    ],
+    "defender_survivors": [
+      113,
+      108,
+      109,
+      113,
+      110
+    ],
+    "mean_defender_survivors": 110.6,
+    "sd": 2.3021728866442674
+  },
+  "candidates": {
+    "current": {
+      "n_candidate": 4096,
+      "mu_candidate": -111.05,
+      "sigma_candidate": 4.33,
+      "n_reference": 5,
+      "mu_reference": -110.6,
+      "sigma_reference": 2.3,
+      "bias_raw": -0.45,
+      "bias_pct": -0.07,
+      "sem": 0.07,
+      "stat_type": "cdf_support",
+      "stat": 0.0753,
+      "p": 0.840858,
+      "passes": true,
+      "cdf_rms": 0.021976,
+      "cdf_p": 0.641518,
+      "support_value": -108,
+      "support_mass": 0.06925456,
+      "support_p": 0.972051,
+      "flag_reason": "cdf"
+    },
+    "no_s2": {
+      "n_candidate": 4096,
+      "mu_candidate": -124.27,
+      "sigma_candidate": 2.83,
+      "n_reference": 5,
+      "mu_reference": -110.6,
+      "sigma_reference": 2.3,
+      "bias_raw": -13.67,
+      "bias_pct": -2.28,
+      "sem": 0.04,
+      "stat_type": "cdf_support",
+      "stat": 4,
+      "p": 0.0001,
+      "passes": false,
+      "cdf_rms": 0.13501,
+      "cdf_p": 0.00005,
+      "support_value": -108,
+      "support_mass": 0,
+      "support_p": 0.00035,
+      "flag_reason": "cdf"
+    }
+  }
+}

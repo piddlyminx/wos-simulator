@@ -1,0 +1,762 @@
+{
+  "generatedAt": "2026-09-07T06:35:42.554503+00:00",
+  "unchangedDisabledFiles": 5,
+  "changedActiveFiles": 69,
+  "preservedWinnerCount": 69,
+  "preservedKnownRoundsCount": 56,
+  "preservedDrawCount": 14,
+  "sourceChanges": [
+    "simulator/src/tooling/exportGatotTestcases.ts"
+  ],
+  "unchangedSourceAndConfigHashes": 69,
+  "scoringSourceUnchanged": true,
+  "existingTroopStatHeroAndSurvivorDataUnchanged": true,
+  "files": [
+    {
+      "file": "testcases/gatot_verified/s1-4900-vs-1000.json",
+      "before_sha256": "a7659158f90f07f8cee5db8bf01c9e63b0236208e02a9db3c3683d2634de03b2",
+      "after_sha256": "1b1859fb6c87a76ded043d7f2ece1835d80a65bdaac6e5dadc710ebeff2133d0",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s1-4950-vs-1000.json",
+      "before_sha256": "cc3ee2cf9da4e210818289f0a0488f985a2e4311c8d5f3f84026f1d0934b1d28",
+      "after_sha256": "c4fdfa0dcb7e229b3ce202d8ab16dc672481d4c78abb944990b2a3ba1282d54e",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s1-5000-vs-1000.json",
+      "before_sha256": "57cf1360126400fc4af7d4256de2d627a24d22f7b4a6b3e1316373392f874d45",
+      "after_sha256": "f2ec9eff4405105298b6f25e5fdc0348b3d38596c44bf6b71cded9bb68c68280",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s1-5050-vs-1000.json",
+      "before_sha256": "08261a26478d72b44126804af45399abec4d2d30b4239707c73a9d603ec4345e",
+      "after_sha256": "f83acf2df9d3ec1a329c03fafad0ffab003ee6929a41ff73b8e0ea358f571016",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json",
+      "before_sha256": "f0378c904fed35e5b0d33b8e936c4ab05dadb127810984fffe301636074543cd",
+      "after_sha256": "5b5d22c09c8a2c21caf0e44ccfd9f0c4c05ad6a1083316a9a9b63686186a6018",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 875
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json",
+      "before_sha256": "b22e27be2af43244c4cb0f4da269bf18558d25bb7355110be4edc49b3c0474e5",
+      "after_sha256": "f6f71b7e0d5c219cb523fd966e5a639d9b764b02cabe9072250a658bac36814c",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 366
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json",
+      "before_sha256": "370901b6a7d5ac3973a723fcb91d66fd01a13e23642d49fb552ab715f818749b",
+      "after_sha256": "7bb7ae6a4a81ae8bd3e6045b1db5d308af5cfbcbf3830090a30c7dc0e6730825",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 278
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json",
+      "before_sha256": "b2fabadc0292cc71974faee8f3882c03d292b1aef7e874f99253c5e89fa054bf",
+      "after_sha256": "4b4432c1cb769d4f72bca19d0e201150fc8fa3a7528d4f3f5c70687112bcc432",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 266
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json",
+      "before_sha256": "0e26a078fc275bf765038e58fd3c8e93e1c2c49fa927e594dabc10cc5bb1ae95",
+      "after_sha256": "0ca17a8d3d9e0d568633f68465437dd8383c277c25c581f755afac2b5f68cd1c",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 238
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json",
+      "before_sha256": "d01d593ad12ad9c85ee9cc40369df46679d35d2ea47e4d107618ed2ea621fe03",
+      "after_sha256": "c0a3b866bb734ddef0a9daa1a6bcfec9eb4398a4a2d8b74fddfa9dbd3c080e15",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 907
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json",
+      "before_sha256": "8bc58f113794983e89bc738cdee0943b896b8cd6b4f448de387a5b3ba7aef774",
+      "after_sha256": "674d15f11b5f0c286f9500b9990580dc6d0cf8c311f06400443bd4a6e8449b02",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 545
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json",
+      "before_sha256": "5f65dfe06a7fd1deb462ab3899a69103f8e0513fd20d566e39e9ef9941202e3a",
+      "after_sha256": "906222788be15087485989e89b62ff53925108069b5bce0487ed3e7ecea2aabd",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json",
+      "before_sha256": "b731930e3f1c31a4ac959ea795d393f6da248d8d12ec0d2f6302f7b042ff18f4",
+      "after_sha256": "63d25f5cbb74a319aa28b44a9a8e6a881a3ce918269da1142af408d4e33fd993",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json",
+      "before_sha256": "3accfae5dab377c883d4f16d444142635c7d30120ad0a80852b0b2191e12b464",
+      "after_sha256": "382f72dc9e81df992b860742042e6d849f8e28b2f6174fc1a320c06e4cd5a141",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json",
+      "before_sha256": "5cd112ba9fc525478bdfc13ec7e2762d85e8f0031333bcb1173fa23fa0f9f3d5",
+      "after_sha256": "e7531884f8d2672a6458b5a230a5f5492af87236eaa1786e37d4e3db1f87b007",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json",
+      "before_sha256": "96ed32640018c710941f843d491aae76068fce4e0372dc8badbdb42702d67110",
+      "after_sha256": "6f1e3b1ea588bc3a0b277b53358146e9c4709615204f894eb106b3e2a37f4af2",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json",
+      "before_sha256": "a0b875ce6e2388ccd5ae81b5c42d7dad596ea96a629d50e27a60a8b26efe05be",
+      "after_sha256": "5bf0eab58df4d1973fd08cef99b7bf5f42307187e98921048963c85925de103b",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json",
+      "before_sha256": "5fa41b723693d8116cf2aa51f077692fcdcda34d807368d570e02c321d9f7844",
+      "after_sha256": "6dae7a9b0e18f0e632641bebb01a6993d3f945d6534edfb74616fdc7b0372725",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json",
+      "before_sha256": "3e72fea6a457f48f7f640992ffba3f40710f6b2ae9365e2eb409a40131a80c52",
+      "after_sha256": "b581fee3dbdfbf1fb343b2fdc9611a8e786a366c5d36c65406be4a797a5e4e3a",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json",
+      "before_sha256": "38c2984d892d7db0f0507f149f7fc9f2c8e376bd8c507d23b5c630bb0968e2fe",
+      "after_sha256": "44ec8c3c4f75e14339eff736f33264943612711310520a1b49e39acf46a320c0",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json",
+      "before_sha256": "e5ea89fcf7b4b342a94582ce3c0961c05657813c8596a6c051af238d7adb61bd",
+      "after_sha256": "b78bc9bf070db3acc19c97c664557fabf92c15bb4640ccc303bf8ef4ca7973d1",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 109
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json",
+      "before_sha256": "8fe2219351ab68080df5420e029ffc95cb7f8bcbe9910adb0362b2f02856b18b",
+      "after_sha256": "55c9917cdf43ba6b88bd7bb7846299e450b5a734949750cc6ccff84741c84344",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 92
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json",
+      "before_sha256": "4377314e0dfee65adf7f772905978cd2b37f89b6c3c6785deda9bb30c137e183",
+      "after_sha256": "df0426f805b4569d3e6bdae048b5983241870a87225bc966723b7f834f69cc98",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 115
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json",
+      "before_sha256": "0db4384a97bfae813a1137cd72fc19d47682101a530defa66c9b55d81f9249ce",
+      "after_sha256": "94adaa5800512ffbbc5d6ea4979d617d6156f1ab87e20d5a18da74c910ec45bf",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 136
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json",
+      "before_sha256": "6dd77569760f207d451e4d8214c83e066de920f2388a6598f2d64f5ccab333f8",
+      "after_sha256": "a2d27aae959cdd88478d54c85813ddf43a6320bc69f810fa912ec7ec0b7f5604",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 241
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json",
+      "before_sha256": "2472e9cdc38bbf930cbe01db732e731f2c90c7ab8c879829fb26ffc74c1fdc70",
+      "after_sha256": "55e7f3a717ed71f633690cc615161dab994754ddbeb4b2b3a51b8e491aaeeda2",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 1151
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json",
+      "before_sha256": "896b604c0924b1c9df17f8b5b6bff3157ab69315ffceb0ff74e765869b797d4b",
+      "after_sha256": "d453cc89e620203892a934d88e974102694ef5aecbc6f07cda4e7e148d965c6b",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 148
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json",
+      "before_sha256": "43dd178fd3494f9b331b0f4f4cd77fdee51eb75c16b919230d87f75d346ca059",
+      "after_sha256": "5a1c6080aa631d298edcb8c67487f0f2eef57ad79c8acb070cbab56a9fca30f5",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json",
+      "before_sha256": "92cd7a41707194e76f3c8982e0f918fdeeaf2c07782b5d91e480023aa2c84890",
+      "after_sha256": "42ed6760ff638fa1b566e26e72a1e714608fe3876fdeae20f469e453ad9b8de3",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json",
+      "before_sha256": "f824a96ab81d5ea9fbac95a138fa6ddb515f557649beced77ffe9526d27df28e",
+      "after_sha256": "a0cd94afafca9f7237c157d660208473e8ed42e5f23f26e011d23f21c1c020a1",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 179
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json",
+      "before_sha256": "76abb439868428d76eb12c9e44d4dec73c221daa42d8636923adab53b968d867",
+      "after_sha256": "e2d57d67b6eeede10f9553f6613394ad2c1013ac66d078a7e67d318288d12967",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 167
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json",
+      "before_sha256": "9f1026d146e3fdc998066db9956f9527272e3adc99fe6a555ecbf51e998f637b",
+      "after_sha256": "9c4f4affa4ddbb5b0ca6199e6ffff1350155eb45b4786175687d3ec4f492d88e",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 36
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json",
+      "before_sha256": "ad707aa16370eb01e468c4a53fccd70ca975561617ea9139c3c44868682f3d8c",
+      "after_sha256": "ea98cca3f57d6c66a677342ab20516a12251c24c31b27f3d800185a5f2efeddf",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 125
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json",
+      "before_sha256": "4693e56aa5406f3cc5e49c25a493a9287652d950d05b529cd22edd11024cea09",
+      "after_sha256": "158557e1473e13696031d7849382c356a15150baafbfac0fb9bab2ed9e77918d",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 343
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json",
+      "before_sha256": "5677892cc5479ba2fb7e3b7ce1bc8bb7e10011c35e438228f120c59c188238bf",
+      "after_sha256": "fa2a213d1ec83999056eebf855f137e590d078ba6a842ff0de8d41e871a319d4",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender",
+        "rounds": 101
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s4-fc9-gatot-10000.json",
+      "before_sha256": "beae5d45ef71b87cfa823865ac923e1fd4471c7d5fe37987a52cd0e4568fb449",
+      "after_sha256": "75ceb6427ac7acc8d7adab83027164d54fb04a1e13b2010516a3a6c8b3dcd0f8",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 923
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s4-fc9-gatot-20000.json",
+      "before_sha256": "a542e48ccab263159336bf5af7c3f8db1858033bb9d9d287bb9379ef1d828fba",
+      "after_sha256": "f6a3dae19961de6f9321de16814beb029559bdb5d90f933f58d28b8b4515b698",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 702
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s4-fc9-gatot-40000.json",
+      "before_sha256": "3ce1b18c065647fc68d711e0314351ed4bad893405fa41d09a7a5a6fe0575a24",
+      "after_sha256": "88839c0e23dc4bd9f9944b71427250c0a931a41fada6a413f6396ec7951a89fd",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 610
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s4-fc9-gatot-90000.json",
+      "before_sha256": "618463a0f9053a2e91f8ada951a58da191ee5076202a71f414c57c9f1461fd4c",
+      "after_sha256": "e8206d064c0fdd163764936bd52b43c75059605ac9d901a885e694c42cb84d4a",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 560
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json",
+      "before_sha256": "efc899f9f4a0d3f0eb9ae16f49b8bf0399f26627d9c7461a0f459306f72fd00e",
+      "after_sha256": "b8adbd350ad32f6d6ae8857fbebfd5ff1e9f449062defb3fa0ccc04429b6644c",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 189
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json",
+      "before_sha256": "b0d935bb6e9f4154724df1fb463e8ba27ee1257e34a83d8758bb7b5bf8279a68",
+      "after_sha256": "9ec280037f8979ee6b2344cce004bcbceb606614dfdb6c0b24c339403008e7c9",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 196
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json",
+      "before_sha256": "2e1e861ec2e93882abdea5cd05fc26a5959116a82f5c575ab6b9c54f2bc27a19",
+      "after_sha256": "445d636b9370b3e1b70bed5ffd3dcafaa4e4f57204649b182f6f23a131f27a52",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json",
+      "before_sha256": "5b6b41ae2504406f31d70e1336e567f1f00b52859d5d676aa1c59cf1f4def2df",
+      "after_sha256": "315d2148daa3f1bb83a85456c97450d56762998c3d352d8eecec860b14d3c246",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json",
+      "before_sha256": "9b8d1b75aac41ed987a46c8bf32931d4734aafec25670e7daa73c3fe1b47ecda",
+      "after_sha256": "1f9eb9f5693aecff2f6a29f0ca23a34eee3a7ea21339382482a1177c0d04a4ea",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json",
+      "before_sha256": "b61922ffa45516091d6ab3f796d71bb935dfc72b76d5efd459dfd95a91a41044",
+      "after_sha256": "0dea41b4a0bc1d1d2f563ca3a8a379e9bf3eb1b8725c731b640b153d723faa12",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 705
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json",
+      "before_sha256": "3c25d6c4acf09a26e9c610ee0a39153911532d2e4872caf6c5bed68e06b1dd4e",
+      "after_sha256": "4e64e0e9d424068b6ed7c2a6aa94d2ff509084f5500ef6bf06ae45c04e80dcfc",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 598
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json",
+      "before_sha256": "ccf0e0fc2f47379b2948211eaa9fb6a2a5b76201c0eab07456ef1f5a942b9014",
+      "after_sha256": "aba8dfede15050ceb753fa11d8324126c0102f2c5659d62927e4c646ce3cc97b",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 554
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "92de703edb0b49ab06766edb8c051e6089c50f3efefddb4c7d6e5844e5f96fe3",
+      "after_sha256": "8053e51f8218979fc0f702b50873cdf581bba9838c6ee72ac283cd3517dffb82",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "229b39a3e5d4bfafcb5a0fd30a8d5e225e6a8267e324253bc6eff3676cca784b",
+      "after_sha256": "6e0c95a3a3b0e390e2a09540058fdac52203ee9834028252410405901ebdcda0",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "dfe66f034b32572731a50b2a604be9bea63e098246bca53479003c47eff5d640",
+      "after_sha256": "5f15822c0cc96690b087b5d64ec976c7a7b3ddf3e1cbe3767ae8f83f3e9ec4c2",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "draw",
+        "rounds": 1500
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "44d3fa302b9a2569d12dda0ed1f85d476b0fd71f125d3a36ef7aa5a2ff07933e",
+      "after_sha256": "c9cc916617bbbb14492cdf900be3fceb536fd403323410243288915a96f0000a",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 1300
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "214fe8c242ec34778a1e9c06158d38142be3d39fa54970d9912c49b670e0e798",
+      "after_sha256": "9446f02438998deead1b647a419575a29b6bf5907905cff5ab382ea74232cae5",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 1121
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "034b2f1ef87a26980ba54ed5512f8f0062abbfa9a8308ab2e7cdc0d026464e76",
+      "after_sha256": "5d97926b9160de729653a87beda058938c672696c87970f9c613cd698da87a0f",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 308
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "b43b900c5ea69b13c0ece0e21b3b2dd969c0864ca654a2d6f5ae25d2c97ccb30",
+      "after_sha256": "dd8af7fc0db9d5a11e2520cdc0e1d4dcab702ca84b889091457f555fdaaca7f3",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 329
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "2de7aa1b4ea206617897e8233b36b53ea71e07d2f5ff47901f02128698f0ef0c",
+      "after_sha256": "a6ed0fa5cd919c7bfa3fd22b468e3f83681a07ffc85d40a19a1456d7c1693acc",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 189
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "af0775ada066bcae7080f285c16b69c73fdd4ce52b6423d26bb7ff3a10575899",
+      "after_sha256": "a4f67f2cc20cd7fc45cbde1ee72c24af5d83de8eb0e040df21f835fb5e908482",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 123
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "d3434568d862fa698568f912abc5863a5cba3a4d29c99a9d300c4fd8a6dc133c",
+      "after_sha256": "91e9bab7a49612a0d58f4d22c1e1939dd95e45aba97b0c3e0d737f3bd2e3915b",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 216
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "85d7a9f2497b8199a1c387ae96554cf979c47f59cdc41d33d3970d88ec45128a",
+      "after_sha256": "40609fa55b471938d69e057e99c2174f6ec20452cb4c9350d68b7ecd74d7ec4f",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 139
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "27a89380df61d1669b6b905c6b911963a310041177dc0b76896cf63eed3db42f",
+      "after_sha256": "bb8ce96ceaeb782e6140e87a59acbacec37890593f63bc5ea0a4720ce7e4d9e8",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 123
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "0c5ec3c6b81d80a1c92ee53da9835624100a20c8f9c1785badaff1693f418276",
+      "after_sha256": "05e32b0c13cb420be0f3b50668f5d14126b17c6d8d2d2b12c5eec9bf2d349bd9",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 144
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "ba426a3e1e97d826aed71c44130692702156a992dbb174bc6af38706e9820995",
+      "after_sha256": "c1b1570fff7f81f0c9156cd1f627586bd4c87b9164d3a29ed811739066593e13",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 135
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "1ed1f07aa901b015eb1265fa44c17bec6f84d48be31d1bfa6215dd7a2eeb0117",
+      "after_sha256": "5205f7db4b8398c68d32775b4c6897d6567ba99d6485d43ebe5fcc1c70a76b7e",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 160
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json",
+      "before_sha256": "18ad05577716d306fdba35ad1cc8b8d1d7bc3def5d38917e0a661f698d9a6d95",
+      "after_sha256": "69ab23cb9b74b87d0541a6928e053ab64199da45686851f685919676e69c9e75",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker",
+        "rounds": 157
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json",
+      "before_sha256": "c8f5a68889ce8f341f39c667bbe85e96d12f66653fd3693512a9daf25ae66be5",
+      "after_sha256": "320d7f3b33af716aeccf7bc3b11722411f9fb97f3dee12a97c0a67722c785290",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json",
+      "before_sha256": "65facc6bee284b0d5a735283f31f66658a5be83df89ca8f2cd2fefeb8a114726",
+      "after_sha256": "750e3d8842958829a5218874fd4e1b999eee53930a67466477ae2321c1a098ae",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json",
+      "before_sha256": "7af62d095b801393d00e2fa0a6a213147dbb5cbbf053c6460ab1a96114326041",
+      "after_sha256": "4396517fe107b207c6c4678a19b5107cc4017e969b2819b7e3cb3c7a16f7671f",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json",
+      "before_sha256": "5b21bb1556ceeb287d928a9d7dcdd06e633d7392cb1d0b0e371b359fd19df4ef",
+      "after_sha256": "78eaa7219117a013df8d7c64cfec0a7fb1b025b8e46910cf8b39f17f6478c444",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "defender"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json",
+      "before_sha256": "3450e4120059c7861a2c12d9957aa005648330676adfe11e43cb75afd9af92e6",
+      "after_sha256": "a9d994555fb2f0c0a69cce7fd2c0b8d289b8348527280724a8164bd193489f9e",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    },
+    {
+      "file": "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json",
+      "before_sha256": "9ac931d92edcc8f7252b1bcd187463e14048dfbb1c9633dc1703456bff84dd21",
+      "after_sha256": "5c92cefc0b36f8ecc85340c5ffd197f420605b1cda72ec3285e049682e7e9a95",
+      "addedMetadata": {
+        "maxRounds": 1500,
+        "winner": "attacker"
+      },
+      "originalContentUnchangedAfterRemovingAddedMetadata": true
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "method": "Retrospective conditional combined test for six distinct accepted Lancer setups. Statistic is sum of signed endpoint residuals standardized by each model-specific simulator mean/SD. Null draws independently resample one predicted endpoint per setup. Assumes the six game captures have independent battle RNG conditional on their recorded inputs; does not pool them as repetitions of one setup. No correction for adaptive historical case selection.",
+  "nullDraws": 100000,
+  "nullSeed": 202609071,
+  "source": "results.json",
+  "models": {
+    "current": {
+      "observedSumStandardizedResiduals": -0.8584536264101537,
+      "lowerTailP": 0.36436635633643666,
+      "upperTailP": 0.6356436435635644,
+      "twoSidedP": 0.7287327126728733,
+      "perCase": [
+        {
+          "key": "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -85,
+          "mean": -85.16,
+          "sd": 4.201434523118511,
+          "observedZ": 0.03808223099029441
+        },
+        {
+          "key": "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -45,
+          "mean": -46.816,
+          "sd": 7.2090300397566685,
+          "observedZ": 0.2519062883612702
+        },
+        {
+          "key": "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -37,
+          "mean": -25.565,
+          "sd": 23.80282229798281,
+          "observedZ": -0.48040521652632207
+        },
+        {
+          "key": "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -20,
+          "mean": 43.381,
+          "sd": 108.36362172571354,
+          "observedZ": -0.5848918575315609
+        },
+        {
+          "key": "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": 1233,
+          "mean": 1229.136,
+          "sd": 59.493200829548144,
+          "observedZ": 0.0649485982620206
+        },
+        {
+          "key": "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": 2201,
+          "mean": 2208.814,
+          "sd": 52.7639027502082,
+          "observedZ": -0.1480936699658559
+        }
+      ]
+    },
+    "no_incandescent": {
+      "observedSumStandardizedResiduals": -8.805067552446435,
+      "lowerTailP": 0.00022999770002299976,
+      "upperTailP": 0.999780002199978,
+      "twoSidedP": 0.0004599954000459995,
+      "perCase": [
+        {
+          "key": "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -85,
+          "mean": -79.505,
+          "sd": 3.9683400462564666,
+          "observedZ": -1.3847099633469446
+        },
+        {
+          "key": "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -45,
+          "mean": -34.651,
+          "sd": 7.571560442044128,
+          "observedZ": -1.3668252507809382
+        },
+        {
+          "key": "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -37,
+          "mean": 48.199,
+          "sd": 100.3221607369724,
+          "observedZ": -0.8492540369358396
+        },
+        {
+          "key": "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": -20,
+          "mean": 278.143,
+          "sd": 150.3803870583256,
+          "observedZ": -1.9825923169380066
+        },
+        {
+          "key": "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": 1233,
+          "mean": 1311.52,
+          "sd": 49.759618362881554,
+          "observedZ": -1.5779863789826085
+        },
+        {
+          "key": "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "observed": 2201,
+          "mean": 2271.286,
+          "sd": 42.76085470023605,
+          "observedZ": -1.6436996054620971
+        }
+      ]
+    }
+  }
+}

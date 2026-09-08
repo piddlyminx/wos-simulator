@@ -1,0 +1,32 @@
+{
+  "test_id": "sonya_buffs_cadence_2200i_vs_800i_200l_800m",
+  "description": "Prospective deterministic full-kit WIP Sonya 1/1/0, 800 T6 infantry + 200 T6 lancers + 800 T6 marksmen, defending against minxxx no heroes with 2200 T6 infantry. Conditional first Gwen report stats predict WIP1095 versus S2 Lancer-only buff1081, S1 Lancer-only buff1073, faster S2 cadence1124. Timing and damage bucket alternatives nearly coincide and remain unresolved by this probe. Capture fresh report-resolved stats and rerun frozen candidates in docs/mechanics-audit/probes/sonya-buffs-cadence. No skills disabled in the live kit. Full endpoint primary; per-line survivors and Battle Details diagnostic.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 2200
+    }
+  },
+  "defender": {
+    "heroes": {
+      "Sonya": {
+        "skill_1": 1,
+        "skill_2": 1,
+        "skill_3": 0
+      }
+    },
+    "troops": {
+      "infantry_t6": 800,
+      "lancer_t6": 200,
+      "marksman_t6": 800
+    }
+  }
+}

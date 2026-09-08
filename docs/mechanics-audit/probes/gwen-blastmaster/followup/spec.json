@@ -1,0 +1,32 @@
+{
+  "test_id": "gwen_blastmaster_cadence_800m_vs_1200i_100l_100m",
+  "description": "Prospective deterministic full-kit Gwen3/1/1 follow-up. 800T6Marksmen against1200T6Infantry+100T6Lancers+100T6Marksmen. Frozen predictions from the preceding report stats: first5/every4/allliving D535; first5/every5/allliving D580; first6/every4/allliving D555; first5/every5/current-target-only D723. All target lines survive in all hypotheses. Compare full endpoint and per-line losses; BattleDetails counts diagnostic only. Exact frozen inputs, parameter-only candidates and290stat probes preserved under docs/mechanics-audit/probes/gwen-blastmaster/followup. No skills disabled in live kit. Capture fresh report stats and rerun frozen rules before interpretation.",
+  "emulator": {
+    "attacker": {
+      "instance": "minxxx"
+    },
+    "defender": {
+      "instance": "WIP"
+    }
+  },
+  "attacker": {
+    "heroes": {
+      "Gwen": {
+        "skill_1": 3,
+        "skill_2": 1,
+        "skill_3": 1
+      }
+    },
+    "troops": {
+      "marksman_t6": 800
+    }
+  },
+  "defender": {
+    "heroes": {},
+    "troops": {
+      "infantry_t6": 1200,
+      "lancer_t6": 100,
+      "marksman_t6": 100
+    }
+  }
+}

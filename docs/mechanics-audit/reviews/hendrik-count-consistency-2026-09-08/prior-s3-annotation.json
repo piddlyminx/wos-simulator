@@ -1,0 +1,29 @@
+{
+  "source_sha256": "fc16f4c3883a71fc6c3eb5ec3fb7bc7c2daf88cde21b35220720a34fc769e440",
+  "status": "partially_supported",
+  "context": "Production now uses S3 first2/every3, with S2 unchanged. All four accepted Hendrik inputs and survivor observations are preserved, and current raw outputs exactly match the frozen first2 candidate. Full333 Lancer probe remainsD17 with no Marksman damage source. First positive250M versus400I/100L/100M improves from476[314,84,78] to exact game471[313,82,76]; frozen target-only gave516 with untouched backlines, supporting multi-target delivery. A second prospectively frozen250M versus150I/60L/60M capture gives game68[16,31,21], current71[16,32,23] versus prior78[19,34,25]. Residual3 total and0/1/2 per line remains explicit; displayed-stat sensitivity70\u201371 and runner-adjusted comparison70 do not replace raw71. New reported S2/S3 counts8/11 match current, but old S3 count6 versus modeled7 remains unresolved. No blanket terminal omission rule is established; actual game rounds are unknown. These level3 contexts support the adopted phase and source/target scope, not higher-level coefficients, exact damage kind or final-attack/reporting behavior. Subsequent user clarification describes fixed every-N-turn schedules as N,2N,3N and qualifies the counter model as the best current community understanding supported by earlier deterministic fits. Captured S3 tooltip literally says every3 turns. The adopted first2/every3 remains an endpoint-supported candidate with a cadence conflict, not directly observed game timing; retain the old6-versus7 activation discrepancy and investigate rather than inferring a universal offset.",
+  "evidence_notes": [
+    "docs/mechanics-audit/probes/hendrik-armor/README.md",
+    "docs/mechanics-audit/probes/hendrik-armor/captured-prediction.json",
+    "docs/mechanics-audit/probes/hendrik-armor/observation.json",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/README.md",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/captured-prediction.json",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/observation.json",
+    "docs/mechanics-audit/probes/hendrik-dragons-heir/retrospective/diagnosis.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/README.md",
+    "docs/mechanics-audit/probes/hendrik-small-timing/observation.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.md",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/adoption.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/runner-verification.json",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/README.md",
+    "docs/mechanics-audit/probes/hendrik-small-timing/retrospective-counter-offset/results.json",
+    "docs/mechanics-audit/physical-interpretation.md"
+  ],
+  "supported_dimensions": [
+    "source_and_target_scope",
+    "trigger_chance_and_cadence"
+  ],
+  "unresolved_dimensions": [
+    "duration_delay_and_order"
+  ]
+}

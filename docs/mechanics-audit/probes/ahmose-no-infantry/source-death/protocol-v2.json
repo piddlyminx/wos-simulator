@@ -1,0 +1,17 @@
+{
+  "createdAt": "2026-09-07T09:28:01.193510+00:00",
+  "exposure": "Prospective revised design; no follow-up battle has been captured. Original1I+240L/125I predicted Infantry first absent on turn4, after3 normal attacks. That invalidates the initial assumption that after3-normal cannot prime a delayed protection effect. Original assets are preserved unmodified; the revised formation is1I+480L versus250I and requires source death before3 attacks in both traces.",
+  "planned_battles": 1,
+  "reason": "Discriminate protection after Infantry die from a battle-start-only Infantry requirement. Larger opponent is chosen to kill the one Infantry before it can prime a3-normal trigger, preserving full actual kit and known stats.",
+  "hypotheses": {
+    "current": "Fixed-turn protection continues when a previously present Infantry line dies; equivalent to a battle-start-only source requirement in this formation.",
+    "requires_infantry_source": "No protection can start after Infantry die. Modelled as zero S1 contribution only if prediction confirms that Infantry die before the first possible activation under both candidates. Attack-trigger alternatives with3 or4 required Infantry normal attacks also produce no S1 here."
+  },
+  "stats": "All24 forecast stats come from the clean preceding Ahmose110 report; no selected-hero estimates remain. Fresh capture must verify them again.",
+  "limits": [
+    "Actual game turn of Infantry death is not directly observed in the report. Preserve model timing separately from game evidence.",
+    "This does not identify the3-versus4 normal attack cycle or exact protection timing while Infantry remain.",
+    "All4096 corners of12 used report stats at\u00b10.05 are a sensitivity screen, not a guaranteed interior envelope."
+  ],
+  "supersedes": "protocol.json for the original uncaptured formation"
+}

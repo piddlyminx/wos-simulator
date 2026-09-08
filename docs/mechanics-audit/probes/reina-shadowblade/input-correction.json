@@ -1,0 +1,31 @@
+{
+  "kind": "source_verified_input_correction",
+  "battle_number": 3,
+  "unchanged_game_observation": {
+    "attacker": 0,
+    "defender": 163
+  },
+  "timestamp_displayed": "2026-09-07 07:00:42",
+  "error": "Transient troops-returned toast occluded Infantry Attack. Parser substituted the following Infantry Defense row into Attack on both sides.",
+  "changes": [
+    {
+      "path": "attacker.stats.inf.attack",
+      "parsed": 249.0,
+      "verified": 248.2
+    },
+    {
+      "path": "defender.stats.inf.attack",
+      "parsed": 300.5,
+      "verified": 308.2
+    }
+  ],
+  "sources": [
+    "capture-03/report_stats.png",
+    "capture-03/defender-report-stats.png",
+    "capture-03/defender-report-top.png",
+    "capture-03/defender-report.json"
+  ],
+  "original_fixture_sha256": "c5ad986b723efe21a7e356d6455888a439c6de4bcce8c9644ae9bf7144f2e4f2",
+  "corrected_fixture_sha256": "c89c191ecb7df14bf8ae58c50f626526852e50416b78c348a1a2986994a3d37f",
+  "preservation": "Original complete testcase snapshot and raw third OCR BattleInput preserved. After correction all actual inputs match; entries combined preserving all five individual observations in chronological order. Counterpart mail adds no observation."
+}

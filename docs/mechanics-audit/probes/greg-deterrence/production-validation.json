@@ -1,0 +1,76 @@
+{
+  "reportKind": "simulator-parity-summary",
+  "schemaVersion": 1,
+  "createdAt": "2026-09-07T09:06:23.423Z",
+  "options": {
+    "workers": 18,
+    "matching": "greg_deterrence_200i_vs_400m",
+    "repeat": 500
+  },
+  "calibrationReportPath": "/home/paul/projects_wsl/wos/simulator/simulator/testcase_results/baseline_result_2026-05-21T04-46-47Z.json",
+  "counts": {
+    "filesFound": 1,
+    "testcasesFound": 1,
+    "executed": 1,
+    "warnings": 0,
+    "errors": 0,
+    "comparedToGame": 1,
+    "comparedToBaseline": 0
+  },
+  "warnings": [],
+  "errors": [],
+  "testcases": {
+    "testcases/emulator_verified/greg_deterrence_200i_vs_400m.json#0": {
+      "file": "testcases/emulator_verified/greg_deterrence_200i_vs_400m.json",
+      "testcase_id": "greg_deterrence_200i_vs_400m",
+      "idx": 0,
+      "armies": {
+        "attacker": {
+          "heroes": {
+            "Greg": {
+              "skill_1": 1,
+              "skill_2": 1,
+              "skill_3": 0
+            }
+          },
+          "joinerHeroes": {},
+          "troops": {
+            "infantry_t6": 200
+          }
+        },
+        "defender": {
+          "heroes": {},
+          "joinerHeroes": {},
+          "troops": {
+            "marksman_t6": 400
+          }
+        }
+      },
+      "armiesSource": "testcase",
+      "deterministic": false,
+      "sampleCount": 500,
+      "game": {
+        "n_candidate": 500,
+        "mu_candidate": -111.11,
+        "sigma_candidate": 4.26,
+        "n_reference": 5,
+        "mu_reference": -110.6,
+        "sigma_reference": 2.3,
+        "bias_raw": -0.51,
+        "bias_pct": -0.09,
+        "sem": 0.19,
+        "stat_type": "cdf_support",
+        "stat": 0.0522,
+        "p": 0.886756,
+        "passes": true,
+        "cdf_rms": 0.020951,
+        "cdf_p": 0.684816,
+        "support_value": -108,
+        "support_mass": 0.07533333,
+        "support_p": 0.984501,
+        "flag_reason": "cdf"
+      },
+      "baseline": null
+    }
+  }
+}

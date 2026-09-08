@@ -1,0 +1,5962 @@
+{
+  "generatedAt": "2026-09-07T06:43:24.881Z",
+  "definitionSha256": "dfe6a0adfe2078ef12335d9f32434c077eaf5baaba26de0dedfe8e28488ef281",
+  "interpretation": "Retrospective fixed named hypotheses; all totals known. Reported activation counts are auxiliary observations, not observed round numbers. No production edits or coefficient fitting.",
+  "results": [
+    {
+      "key": "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+      "fixtureSha256": "a572612ee1bd384f2f3cc791d080bb0722cabd1d232601ef05543f89ce1a18ef",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "lancer_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "lancer_t6": 150
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 17
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": -17,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32,
+            33,
+            36,
+            37,
+            40,
+            41,
+            44,
+            45,
+            48,
+            49,
+            52,
+            53
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_first_three": {
+          "score": -18,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 18,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            3,
+            4,
+            7,
+            8,
+            11,
+            12,
+            15,
+            16,
+            19,
+            20,
+            23,
+            24,
+            27,
+            28,
+            31,
+            32,
+            35,
+            36,
+            39,
+            40,
+            43,
+            44,
+            47,
+            48,
+            51,
+            52
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s3_first_two": {
+          "score": -17,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32,
+            33,
+            36,
+            37,
+            40,
+            41,
+            44,
+            45,
+            48,
+            49,
+            52,
+            53
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "shared_first_n_minus_one": {
+          "score": -18,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 18,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            3,
+            4,
+            7,
+            8,
+            11,
+            12,
+            15,
+            16,
+            19,
+            20,
+            23,
+            24,
+            27,
+            28,
+            31,
+            32,
+            35,
+            36,
+            39,
+            40,
+            43,
+            44,
+            47,
+            48,
+            51,
+            52
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_first_one": {
+          "score": -20,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 20,
+              "marksman": 0
+            }
+          },
+          "rounds": 53,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 14,
+              "skillActivations": 14,
+              "effectActivations": 14,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 17,
+              "skillActivations": 17,
+              "effectActivations": 17,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18,
+            21,
+            22,
+            25,
+            26,
+            29,
+            30,
+            33,
+            34,
+            37,
+            38,
+            41,
+            42,
+            45,
+            46,
+            49,
+            50,
+            53
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_delay_one": {
+          "score": -17,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18,
+            21,
+            22,
+            25,
+            26,
+            29,
+            30,
+            33,
+            34,
+            37,
+            38,
+            41,
+            42,
+            45,
+            46,
+            49,
+            50,
+            53,
+            54
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_duration_one": {
+          "score": -5,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 5,
+              "marksman": 0
+            }
+          },
+          "rounds": 60,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 15,
+              "skillActivations": 15,
+              "effectActivations": 15,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 20,
+              "skillActivations": 20,
+              "effectActivations": 20,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            8,
+            12,
+            16,
+            20,
+            24,
+            28,
+            32,
+            36,
+            40,
+            44,
+            48,
+            52,
+            56,
+            60
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_damage_taken_down": {
+          "score": -17,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32,
+            33,
+            36,
+            37,
+            40,
+            41,
+            44,
+            45,
+            48,
+            49,
+            52,
+            53
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s3_first_four": {
+          "score": -17,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 17,
+              "marksman": 0
+            }
+          },
+          "rounds": 54,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 13,
+              "skillActivations": 13,
+              "effectActivations": 13,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 17,
+              "skillActivations": 17,
+              "effectActivations": 17,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32,
+            33,
+            36,
+            37,
+            40,
+            41,
+            44,
+            45,
+            48,
+            49,
+            52,
+            53
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s3_first_two_s2_first_one": {
+          "score": -20,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 20,
+              "marksman": 0
+            }
+          },
+          "rounds": 53,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 14,
+              "skillActivations": 14,
+              "effectActivations": 14,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 18,
+              "skillActivations": 18,
+              "effectActivations": 18,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18,
+            21,
+            22,
+            25,
+            26,
+            29,
+            30,
+            33,
+            34,
+            37,
+            38,
+            41,
+            42,
+            45,
+            46,
+            49,
+            50,
+            53
+          ],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_dragons_heir_250m_vs_400i_100l_100m.json#0",
+      "fixtureSha256": "bbd50aac274ac67718de234822a76aadef740d7b437ab99ff3f358fe4be1047d",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 400,
+            "lancer_t6": 100,
+            "marksman_t6": 100
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 471
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": -476,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 45.257789225339934,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3666653456312923
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8934948419855684
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.178508187940504
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2436311462149905
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5429825367262886
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.712312413597724
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0993451482973717
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.131925952567792
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.165590259553191
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9375246925562576
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.670915426640724
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.5524273095227743
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7580895353958984
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1597223528513116
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.872519508004553
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5200451309269538
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.481557311258601
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.9705321256681458
+            }
+          ],
+          "s3TotalKills": 45.257789225339934
+        },
+        "s2_first_three": {
+          "score": -475,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 313,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 45.4464184094766,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            3,
+            4,
+            7,
+            8,
+            11,
+            12,
+            15,
+            16,
+            19,
+            20
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3666653456312923
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8934948419855684
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.178508187940504
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2436311462149905
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5429825367262886
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.712312413597724
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1070061827842343
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.153751484585724
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.194619114309136
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9464964251333744
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.6964750083073996
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.5864226038054072
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7580895353958984
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1597223528513116
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.872519508004553
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5281083269743136
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.5045285619167583
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.0010848333121185
+            }
+          ],
+          "s3TotalKills": 45.4464184094766
+        },
+        "s3_first_two": {
+          "score": -471,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 313,
+              "lancer": 82,
+              "marksman": 76
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 7,
+              "skillActivations": 7,
+              "effectActivations": 7,
+              "skillKills": 50.04945442341824,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20
+          ],
+          "s3Jobs": [
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.412284025694244
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 4.023457964333744
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.351364482997807
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2837585558278948
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.657301570899148
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.864361428307525
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1445424225035443
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.260688531172765
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.336849782081835
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0028581910890222
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.857044123295931
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.7999861271808295
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8324783955993293
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.3716488822164483
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.154390503626445
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6166976624286172
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7569108453695765
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.3367636448666826
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.2600225654634769
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.7407786556293005
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 0.9852660628340729
+            }
+          ],
+          "s3TotalKills": 50.04945442341824
+        },
+        "shared_first_n_minus_one": {
+          "score": -469,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 312,
+              "lancer": 82,
+              "marksman": 75
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 7,
+              "skillActivations": 7,
+              "effectActivations": 7,
+              "skillKills": 50.560420130811515,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            3,
+            4,
+            7,
+            8,
+            11,
+            12,
+            15,
+            16,
+            19,
+            20
+          ],
+          "s3Jobs": [
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.412284025694244
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 4.023457964333744
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.351364482997807
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2903251385983594
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.6760091178695906
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.889243234780734
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1555655573642762
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.292092355715448
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.378618159626159
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0028581910890222
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.857044123295931
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.7999861271808295
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8375391011519457
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.3860663334446555
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.173566306411489
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6302530765355078
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7955288838490537
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.388127223498313
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.2907140660301117
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.8282157151340117
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.101560946210283
+            }
+          ],
+          "s3TotalKills": 50.560420130811515
+        },
+        "s2_first_one": {
+          "score": -473,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 312,
+              "lancer": 83,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 46.00550356354146,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.38203889273905
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.9372925621505064
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.236760956132588
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2504084778477644
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5622904864295437
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.737992780386051
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1070061827842343
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.153751484585724
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.194619114309136
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9597967926840479
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.7343664442910476
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.636819771249472
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7800676963904306
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.2223359668879015
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.9557981885022184
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5438762163003275
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.5494497241867182
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.0608318256846987
+            }
+          ],
+          "s3TotalKills": 46.00550356354146
+        },
+        "s2_delay_one": {
+          "score": -476,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 45.020682042242,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3666653456312923
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8934948419855684
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.178508187940504
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2368166776844733
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.523568787662369
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.686491329310668
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0916303501860956
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.1099472532839982
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.136357686037473
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9375246925562576
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.670915426640724
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.5524273095227743
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7580895353958984
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1597223528513116
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.872519508004553
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.503531532839087
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.4345116982391
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.9079595264698572
+            }
+          ],
+          "s3TotalKills": 45.020682042242
+        },
+        "s2_duration_one": {
+          "score": -480,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 317,
+              "lancer": 84,
+              "marksman": 79
+            }
+          },
+          "rounds": 19,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 4,
+              "skillActivations": 4,
+              "effectActivations": 4,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 44.21423544733645,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            8,
+            12,
+            16
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3666653456312923
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8934948419855684
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.178508187940504
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2368166776844733
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.523568787662369
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.686491329310668
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0916303501860956
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.1099472532839982
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.136357686037473
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9193185965037374
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.619048053768663
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.4834415715147196
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7238721867595915
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.062240499778976
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.742864636276698
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.45037229449714633
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.283066268712517
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.706530879801964
+            }
+          ],
+          "s3TotalKills": 44.21423544733645
+        },
+        "s2_damage_taken_down": {
+          "score": -476,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 84,
+              "marksman": 78
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 45.257789225339934,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3666653456312923
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8934948419855684
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.178508187940504
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2436311462149905
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5429825367262886
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.712312413597724
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0993451482973717
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.131925952567792
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.165590259553191
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9375246925562576
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.670915426640724
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.5524273095227743
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7580895353958984
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1597223528513116
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.872519508004553
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5200451309269538
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.481557311258601
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.9705321256681458
+            }
+          ],
+          "s3TotalKills": 45.257789225339934
+        },
+        "s3_first_four": {
+          "score": -479,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 314,
+              "lancer": 85,
+              "marksman": 80
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 6,
+              "skillActivations": 6,
+              "effectActivations": 6,
+              "skillKills": 42.14193723937984,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20
+          ],
+          "s3Jobs": [
+            {
+              "round": 4,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3226691315240688
+            },
+            {
+              "round": 4,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.768153965200375
+            },
+            {
+              "round": 4,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.011799669486488
+            },
+            {
+              "round": 7,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1951141754548587
+            },
+            {
+              "round": 7,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.404762469899262
+            },
+            {
+              "round": 7,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.528474042969136
+            },
+            {
+              "round": 10,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0522082271393136
+            },
+            {
+              "round": 10,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.997637511009919
+            },
+            {
+              "round": 10,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.986981112148086
+            },
+            {
+              "round": 13,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8817794210160459
+            },
+            {
+              "round": 13,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.512102643466916
+            },
+            {
+              "round": 13,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.3411997796576576
+            },
+            {
+              "round": 16,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6755584417457196
+            },
+            {
+              "round": 16,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.9245994030687756
+            },
+            {
+              "round": 16,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.5597963197029463
+            },
+            {
+              "round": 19,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.3900338481952153
+            },
+            {
+              "round": 19,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.1111679834439507
+            },
+            {
+              "round": 19,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.4778990942511092
+            }
+          ],
+          "s3TotalKills": 42.14193723937984
+        },
+        "s3_first_two_s2_first_one": {
+          "score": -467,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 311,
+              "lancer": 81,
+              "marksman": 75
+            }
+          },
+          "rounds": 20,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 5,
+              "skillActivations": 5,
+              "effectActivations": 5,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 7,
+              "skillActivations": 7,
+              "effectActivations": 7,
+              "skillKills": 51.20224850610765,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18
+          ],
+          "s3Jobs": [
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.4182556549750438
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 4.040470547463453
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.373991917888741
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2935959300019655
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.685327280139426
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.901636773637021
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1628562641204467
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.312862860536047
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.406243784841132
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0195736455545767
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.9046648052361896
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.8633235916828195
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8475698670882309
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.4146429967506604
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.2115744432962163
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6302530765355078
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7955288838490537
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.388127223498313
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.3314650338181815
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.9443112050767083
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.2559727201179183
+            }
+          ],
+          "s3TotalKills": 51.20224850610765
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/hendrik_small_timing_250m_vs_150i_60l_60m.json#0",
+      "fixtureSha256": "4290e81fb1e26c6b2617283d69948a466c431455a0930ca412d6ce87dff3b508",
+      "input": {
+        "attacker": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Hendrik": {
+              "skill_1": 3,
+              "skill_2": 3,
+              "skill_3": 3
+            }
+          },
+          "troops": {
+            "marksman_t6": 250
+          },
+          "stats": {
+            "inf": {
+              "attack": 248.2,
+              "defense": 249,
+              "lethality": 186.3,
+              "health": 191.8
+            },
+            "lanc": {
+              "attack": 208.5,
+              "defense": 207.4,
+              "lethality": 186.8,
+              "health": 181.9
+            },
+            "mark": {
+              "attack": 465.5,
+              "defense": 458.7,
+              "lethality": 244,
+              "health": 218.8
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "infantry_t6": 150,
+            "lancer_t6": 60,
+            "marksman_t6": 60
+          },
+          "stats": {
+            "inf": {
+              "attack": 308.2,
+              "defense": 300.5,
+              "lethality": 244,
+              "health": 238.4
+            },
+            "lanc": {
+              "attack": 294.9,
+              "defense": 293.7,
+              "lethality": 224.3,
+              "health": 230
+            },
+            "mark": {
+              "attack": 292.2,
+              "defense": 292.7,
+              "lethality": 235.8,
+              "health": 230.3
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 0,
+          "defender": 68
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": -78,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 19,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 8,
+              "skillActivations": 8,
+              "effectActivations": 8,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 71.1390787242019,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.391181476838916
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.9633388829627196
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.271403633486947
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3033590566585938
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.7131414655219293
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.938630783540662
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2091748259239647
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.444819876967808
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.581752040991689
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1108168865935095
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.164607804074015
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.209058465494289
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0154205788197688
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.892833127523656
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.847586973965822
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9147104542197085
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.605919910678363
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.4659806015520878
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8014433718154871
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.283233158930897
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.036793957192236
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6755584417457196
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.9245994030687756
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.5597963197029463
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5360502512249989
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.5271543211813283
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.0311780232006647
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.35605056141177516
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.0143529495162982
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.3491311193963103
+            }
+          ],
+          "s3TotalKills": 71.1390787242019
+        },
+        "s2_first_three": {
+          "score": -77,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 18,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 8,
+              "skillActivations": 8,
+              "effectActivations": 8,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 71.28243944279808,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            3,
+            4,
+            7,
+            8,
+            11,
+            12,
+            15,
+            16,
+            19,
+            20,
+            23,
+            24,
+            27,
+            28,
+            31,
+            32
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.391181476838916
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.9633388829627196
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.271403633486947
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3033590566585938
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.7131414655219293
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.938630783540662
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2126645152172248
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.4547616577460154
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.59497501809891
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1146145622411696
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.175427007614197
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.223448450942749
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0154205788197688
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.892833127523656
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.847586973965822
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9147104542197085
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.605919910678363
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.4659806015520878
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8066987944987603
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.2982053400688667
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.0567075735602915
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6817849184549923
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.9423380213989998
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.58338941125536
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5360502512249989
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.5271543211813283
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.0311780232006647
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.35605056141177516
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.0143529495162982
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.3491311193963103
+            }
+          ],
+          "s3TotalKills": 71.28243944279808
+        },
+        "s3_first_two": {
+          "score": -71,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 16,
+              "lancer": 32,
+              "marksman": 23
+            }
+          },
+          "rounds": 32,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 8,
+              "skillActivations": 8,
+              "effectActivations": 8,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 11,
+              "skillActivations": 11,
+              "effectActivations": 11,
+              "skillKills": 76.57052750989823,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32
+          ],
+          "s3Jobs": [
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.4242022456471006
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 4.057411798065193
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.396524477585241
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3322192131713773
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.7953612063535918
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.0479864186158006
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.240228592243073
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5332889958886677
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.699419605815769
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1482285590112529
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.2711899706989045
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.350817128329439
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0562166539486273
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.0090571238335166
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.002169666624237
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9553839104924312
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.7217945779550257
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.620098672236642
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8475698670882309
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.4146429967506604
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.2115744432962163
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.73545487720299
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.0952384430149307
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.7867532572117764
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6098069694798057
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7372799404522423
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.3106537343680587
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.45037229449714633
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.283066268712517
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.706530879801964
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.22518614724857317
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.6415331343562585
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 0.853265439900982
+            }
+          ],
+          "s3TotalKills": 76.57052750989823
+        },
+        "shared_first_n_minus_one": {
+          "score": -69,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 15,
+              "lancer": 32,
+              "marksman": 22
+            }
+          },
+          "rounds": 33,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 8,
+              "skillActivations": 8,
+              "effectActivations": 8,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 11,
+              "skillActivations": 11,
+              "effectActivations": 11,
+              "skillKills": 77.04743915879686,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            3,
+            4,
+            7,
+            8,
+            11,
+            12,
+            15,
+            16,
+            19,
+            20,
+            23,
+            24,
+            27,
+            28,
+            31,
+            32
+          ],
+          "s3Jobs": [
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.4242022456471006
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 4.057411798065193
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.396524477585241
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3385480811612689
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8133915273484273
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.071967486703035
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2436311462149905
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5429825367262886
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.712312413597724
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1482285590112529
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.2711899706989045
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.350817128329439
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0562166539486273
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.0090571238335166
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.002169666624237
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9597967926840479
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.7343664442910476
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.636819771249472
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.852540993979021
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.42880524720211
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.2304108185577527
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.73545487720299
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.0952384430149307
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.7867532572117764
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6166976624286172
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7569108453695765
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.3367636448666826
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.4687623462781288
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.335457713320362
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.7762136547613872
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.24322883819858226
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.6929349821999605
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 0.9216320104851968
+            }
+          ],
+          "s3TotalKills": 77.04743915879686
+        },
+        "s2_first_one": {
+          "score": -75,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 16,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 8,
+              "skillActivations": 8,
+              "effectActivations": 8,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 72.13668191308307,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18,
+            21,
+            22,
+            25,
+            26,
+            29,
+            30
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.4002643685947433
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.989215146171319
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.3058201272380225
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3098273795472175
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.7315690797756007
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.9631402679934995
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2161441909929112
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.4646749109998023
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.608160052425983
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.122171357680112
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.19695557286063
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.252082327685324
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0278294373810284
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.9281847422826277
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.894606074777804
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9239037551045981
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.63211071861138
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.5008154527164823
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8119202004289148
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.3130806108306197
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.076492295144328
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6940703196868693
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.9773379183971493
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.629940712987549
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5591996712219282
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.59310473665145
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.1188947867692884
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.3790447676979492
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.0798611764256558
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.4362597540022766
+            }
+          ],
+          "s3TotalKills": 72.13668191308307
+        },
+        "s2_delay_one": {
+          "score": -79,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 20,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 31,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 7,
+              "skillActivations": 7,
+              "effectActivations": 7,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 70.61228110757132,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18,
+            21,
+            22,
+            25,
+            26,
+            29,
+            30
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.391181476838916
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.9633388829627196
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.271403633486947
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3001128273173845
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.703893278146503
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.9263303141703645
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2021650577232306
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.424849738396345
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.555190935788353
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1108168865935095
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.164607804074015
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.209058465494289
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0154205788197688
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.892833127523656
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.847586973965822
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9054238131512077
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.57946318576384
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.4307920698713628
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7908277591166265
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.2529903248532985
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.9965697446907744
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6692740405806344
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.9066957636742137
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.5359837433515175
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5281083269743136
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.5045285619167583
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.0010848333121185
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.3314650338181815
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.9443112050767083
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.2559727201179183
+            }
+          ],
+          "s3TotalKills": 70.61228110757132
+        },
+        "s2_duration_one": {
+          "score": -86,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 24,
+              "lancer": 35,
+              "marksman": 27
+            }
+          },
+          "rounds": 30,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 7,
+              "skillActivations": 7,
+              "effectActivations": 7,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 68.22047746122364,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            8,
+            12,
+            16,
+            20,
+            24,
+            28
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.391181476838916
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.9633388829627196
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.271403633486947
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3001128273173845
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.703893278146503
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.9263303141703645
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2021650577232306
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.424849738396345
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.555190935788353
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0993451482973717
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.131925952567792
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.165590259553191
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9943951014545444
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.8329336152301243
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.767918160353754
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8865587482768241
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.525718475680329
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.3593093962012426
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7691571213440861
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1912528141601086
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.9144563176534075
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6235122081111937
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7763248142321084
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.3625850214949287
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.4596592982518687
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.3095240268843316
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.7417207857573598
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.2055658874762057
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.5856369484565255
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 0.7789212149555609
+            }
+          ],
+          "s3TotalKills": 68.22047746122364
+        },
+        "s2_damage_taken_down": {
+          "score": -78,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 19,
+              "lancer": 34,
+              "marksman": 25
+            }
+          },
+          "rounds": 32,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 8,
+              "skillActivations": 8,
+              "effectActivations": 8,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 71.1390787242019,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29,
+            32
+          ],
+          "s3Jobs": [
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.391181476838916
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.9633388829627196
+            },
+            {
+              "round": 3,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.271403633486947
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3033590566585938
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.7131414655219293
+            },
+            {
+              "round": 6,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.938630783540662
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2091748259239647
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.444819876967808
+            },
+            {
+              "round": 9,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.581752040991689
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1108168865935095
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.164607804074015
+            },
+            {
+              "round": 12,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.209058465494289
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0154205788197688
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.892833127523656
+            },
+            {
+              "round": 15,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.847586973965822
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9147104542197085
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.605919910678363
+            },
+            {
+              "round": 18,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.4659806015520878
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8014433718154871
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.283233158930897
+            },
+            {
+              "round": 21,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.036793957192236
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6755584417457196
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.9245994030687756
+            },
+            {
+              "round": 24,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.5597963197029463
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.5360502512249989
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.5271543211813283
+            },
+            {
+              "round": 27,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.0311780232006647
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.35605056141177516
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.0143529495162982
+            },
+            {
+              "round": 30,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.3491311193963103
+            }
+          ],
+          "s3TotalKills": 71.1390787242019
+        },
+        "s3_first_four": {
+          "score": -85,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 21,
+              "lancer": 36,
+              "marksman": 28
+            }
+          },
+          "rounds": 31,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 7,
+              "skillActivations": 7,
+              "effectActivations": 7,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 10,
+              "skillActivations": 10,
+              "effectActivations": 10,
+              "skillKills": 66.4021867010994,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            4,
+            5,
+            8,
+            9,
+            12,
+            13,
+            16,
+            17,
+            20,
+            21,
+            24,
+            25,
+            28,
+            29
+          ],
+          "s3Jobs": [
+            {
+              "round": 4,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3573576413359785
+            },
+            {
+              "round": 4,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8669781100142964
+            },
+            {
+              "round": 4,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.143239844407621
+            },
+            {
+              "round": 7,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2705235780520638
+            },
+            {
+              "round": 7,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.6195964239378124
+            },
+            {
+              "round": 7,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.814212032920834
+            },
+            {
+              "round": 10,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.177302237439166
+            },
+            {
+              "round": 10,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.3540180144174916
+            },
+            {
+              "round": 10,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.460981831249415
+            },
+            {
+              "round": 13,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.0760348294420186
+            },
+            {
+              "round": 13,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.0655171521116484
+            },
+            {
+              "round": 13,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.0772638251105375
+            },
+            {
+              "round": 16,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9685622421321913
+            },
+            {
+              "round": 16,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.759338345658948
+            },
+            {
+              "round": 16,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.67003342657723
+            },
+            {
+              "round": 19,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8623972866679772
+            },
+            {
+              "round": 19,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.4568848534262835
+            },
+            {
+              "round": 19,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.267757849091347
+            },
+            {
+              "round": 22,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7468579584092393
+            },
+            {
+              "round": 22,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1277246972403687
+            },
+            {
+              "round": 22,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.829961310729103
+            },
+            {
+              "round": 25,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6098069694798057
+            },
+            {
+              "round": 25,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7372799404522423
+            },
+            {
+              "round": 25,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.3106537343680587
+            },
+            {
+              "round": 28,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.44088971050802295
+            },
+            {
+              "round": 28,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.256051321733458
+            },
+            {
+              "round": 28,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.6705998898288288
+            },
+            {
+              "round": 31,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.1838637193007475
+            },
+            {
+              "round": 31,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.5238096107537327
+            },
+            {
+              "round": 31,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 0.6966883143029441
+            }
+          ],
+          "s3TotalKills": 66.4021867010994
+        },
+        "s3_first_two_s2_first_one": {
+          "score": -66,
+          "winner": "defender",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 13,
+              "lancer": 31,
+              "marksman": 22
+            }
+          },
+          "rounds": 33,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "ArmorOfBarnacles",
+              "skillName": "ArmorOfBarnacles",
+              "level": 3,
+              "triggersSeen": 9,
+              "skillActivations": 9,
+              "effectActivations": 9,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "DragonsHeir",
+              "skillName": "DragonsHeir",
+              "level": 3,
+              "triggersSeen": 11,
+              "skillActivations": 11,
+              "effectActivations": 11,
+              "skillKills": 77.90244558728992,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [
+            1,
+            2,
+            5,
+            6,
+            9,
+            10,
+            13,
+            14,
+            17,
+            18,
+            21,
+            22,
+            25,
+            26,
+            29,
+            30,
+            33
+          ],
+          "s3Jobs": [
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.42716624936446
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 4.0658559524604545
+            },
+            {
+              "round": 2,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.407755550040906
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.3385480811612689
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.8133915273484273
+            },
+            {
+              "round": 5,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 5.071967486703035
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.2504084778477644
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.5622904864295437
+            },
+            {
+              "round": 8,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.737992780386051
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.1628562641204467
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.312862860536047
+            },
+            {
+              "round": 11,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.406243784841132
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 1.064188213482928
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 3.031767311099621
+            },
+            {
+              "round": 14,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 4.032375149225366
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.9641894783004851
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.7468807725753885
+            },
+            {
+              "round": 17,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.6534643422883755
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.8623972866679772
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.4568848534262835
+            },
+            {
+              "round": 20,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 3.267757849091347
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.7524947022125756
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 2.1437832246582476
+            },
+            {
+              "round": 23,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.8513198123053733
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.6235122081111937
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.7763248142321084
+            },
+            {
+              "round": 26,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 2.3625850214949287
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.4776919552462156
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 1.3608972889775128
+            },
+            {
+              "round": 29,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.810049336118321
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "infantry",
+              "kills": 0.27579557895112117
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "lancer",
+              "kills": 0.785714416130599
+            },
+            {
+              "round": 32,
+              "kind": "skill",
+              "target": "marksman",
+              "kills": 1.0450324714544161
+            }
+          ],
+          "s3TotalKills": 77.90244558728992
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+      "fixtureSha256": "6075b01541af2e9d31d241b32fbb294d0701c24eed285132cb47528ae73da90a",
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {
+            "Renee": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Hendrik": {
+              "skill_1": 1,
+              "skill_2": 0,
+              "skill_3": 0
+            }
+          },
+          "troops": {
+            "lancer_t6": 120
+          },
+          "stats": {
+            "inf": {
+              "attack": 285.7,
+              "defense": 279.5,
+              "lethality": 226.3,
+              "health": 221
+            },
+            "lanc": {
+              "attack": 586.7,
+              "defense": 587,
+              "lethality": 315.1,
+              "health": 271.1
+            },
+            "mark": {
+              "attack": 382.5,
+              "defense": 384.5,
+              "lethality": 226.3,
+              "health": 221.4
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {},
+          "troops": {
+            "infantry_t9": 446
+          },
+          "stats": {
+            "inf": {
+              "attack": 230.5,
+              "defense": 230.3,
+              "lethality": 171.2,
+              "health": 181.8
+            },
+            "lanc": {
+              "attack": 203.8,
+              "defense": 201.6,
+              "lethality": 181.3,
+              "health": 181.1
+            },
+            "mark": {
+              "attack": 208,
+              "defense": 204.8,
+              "lethality": 175.7,
+              "health": 176.4
+            }
+          },
+          "joiner_heroes": {}
+        }
+      },
+      "game": [
+        {
+          "attacker": 14,
+          "defender": 0
+        }
+      ],
+      "predictions": {
+        "current": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_first_three": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s3_first_two": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "shared_first_n_minus_one": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_first_one": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_delay_one": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_duration_one": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s2_damage_taken_down": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s3_first_four": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        },
+        "s3_first_two_s2_first_one": {
+          "score": 14,
+          "winner": "attacker",
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 14,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 122,
+          "deterministic": true,
+          "hendrikReport": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Hendrik",
+              "skillId": "WormsRavage",
+              "skillName": "WormsRavage",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "s2UsedRounds": [],
+          "s3Jobs": [],
+          "s3TotalKills": 0
+        }
+      }
+    }
+  ]
+}

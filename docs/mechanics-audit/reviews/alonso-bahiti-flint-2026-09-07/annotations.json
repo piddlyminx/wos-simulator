@@ -1,0 +1,184 @@
+{
+  "hero:Alonso:Onslaught": {
+    "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+    "status": "partially_supported",
+    "context": "15 distinct full-kit inputs/86 records overlap S2; levels1/3. Repeated clean attacker110 and defender334/344 cases reject omission, Marksmen-only scope and two-turn rather than one-turn windows. No-Marksman attacker110 still needs the contribution. Mixed six-hero#2 remains a genuine conditional disagreement after10000 current simulations: gameD2823 versusD2907.58 SD26.67 p=.000750; omission is closer there, but clean cases reject omission. One insensitive mixed entry staysD3729 without S1. Context supports scope beyond Marksmen and tested window length, not exact40% chance, phase, full scaling or universal agreement.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "duration_delay_and_order"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Alonso:IronStrength": {
+    "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+    "status": "partially_supported",
+    "context": "15 inputs/86 records; levels1/2/3/4. Positive contribution in defender344 entry: currentA1457.55 SD15.94 p=.191840, omissionA1479.85 p=.000300, all-enemy recipientA1345.61 p=.000100. Bilateral110vs344 without Marksmen gives gameD737\u2013764/currentD750.58 SD13.45 p=.894505; omission p=.001050 and Marksman-source-only p=.001750 support non-Marksman triggering somewhere in the combined kit, not separate side ownership. All-enemy scope fails14/15, while omission remains plausible13/15 and immediate/delayed-one-turn alternatives remain plausible in positive cases. Exact phase/duration/chance/max stacking remain unresolved. Mixed six-hero#2 current10k p=.000750 retained without assigning its cause to this skill.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "duration_delay_and_order",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Alonso:PoisonHarpoon": {
+    "source_sha256": "30c19978502cd2122dbab071113f8e8c9e75e4f6dc44ea14ee3868811e68ef87",
+    "status": "partially_supported",
+    "context": "Nine full-kit inputs/64 records hydrate levels1/4. Omission rejected8/9; Marksman-source-only rejected5/9. Clean defender334 solo currentA1231.04 SD335.51 p=.293085 versus omissionA2391.72 p=.000050 and Marksman-source-onlyA1637.78 p=.000050; independent defender344 and attacker344 repeated input sets also separate non-Marksman contribution. Only level1 context is mixed six-hero#5 where omission and restricted-source remain plausible. No exact50% probability, coefficient curve, extra-job versus ordinary delivery, target lock after exhaustion or damage-kind interaction is established by this scope-only batch.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "damage_kind",
+      "troop_exhaustion_and_retargeting"
+    ]
+  },
+  "hero:Bahiti:SixthSense": {
+    "source_sha256": "8c011dfae7c57979ca77241daad7aa11f2c38562c1a72e471c947992694f21cd",
+    "status": "partially_supported",
+    "context": "10 defender-only full-kit inputs/14 records, levels2/5. Every current distribution plausible; omission and Marksmen-only protection each rejected5/10. Level2 solo recordsA2179/2233 match current2229.40 SD50.60 p=.840858; omission2558.20 p=.000150 and Marksmen-only2534.20 p=.000050. Repeated Philly221/Bahiti22 entry#1 also separates both alternatives. Logan/Reina combinations and Philly/Bahiti#0 are insensitive enough that omission remains plausible. Context supports protection beyond Marksmen, not exact DamageTaken grouping, complete curve or incoming-kind/mode interactions.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets",
+      "damage_kind",
+      "battle_mode_and_joiner_gates"
+    ]
+  },
+  "hero:Bahiti:Fluorescence": {
+    "source_sha256": "8c011dfae7c57979ca77241daad7aa11f2c38562c1a72e471c947992694f21cd",
+    "status": "partially_supported",
+    "context": "10 defender-only full-kit inputs/14 records, levels2/4; all current distributions plausible despite several_nc filenames. Omission rejected6/10 and Marksman-source-only4/10, including level2 solo and repeated Philly/Bahiti#1, supporting offensive contribution beyond Marksmen. One-turn versus current one-attack lifetime stays plausible10/10 and yields identical primary samples7/10; Norah/Bahiti and both Philly/Bahiti entries differ through extra-job interactions, but do not discriminate. Philly/Bahiti#1 currentD454.30 SD4.38 p=.196240 versus one-turnD455.46 SD4.50 p=.408930. Exact one-attack boundary, chance50%, lethality-versus-damage bucket, curve and kind interactions remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "duration_delay_and_order",
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets",
+      "damage_kind"
+    ]
+  },
+  "hero:Flint:Pyromaniac": {
+    "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+    "status": "partially_supported",
+    "context": "10 full-kit inputs/19 records at levels1/2/4. Deterministic Flint221 solo gameA2862/current2861 versus omission2901/all-own2139; Flint221+Zinman100 game/current1005 versus omission1078/all-ownD188 supports Infantry-scoped contribution. Lancer-only Gordon inputs leave S1 unexercised; currentD1516/1016 versus game1517/1017, all-ownD841/500 rejects broadened recipients. Bradley mixed S1 is applied but omission endpoint6151 unchanged. ArchivedFlint444 recordsD149\u2013151 versus150 andA5715\u20135756 versus5762 retain unexplained deterministic spread/residual6\u201347; no chance model fitted. Scope is partial in these contexts; grouping/scaling and historical variability unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Flint:BurningResolve": {
+    "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+    "status": "partially_supported",
+    "context": "10 full-kit inputs/19 records at levels1/2/4. Flint221 solo game2862/current2861 versus omit2972/Infantry-only2959; Zinman combo game/current1005 versus1196/1183. Lancer-only Gordon inputs gameD1517/1017/currentD1516/1016 versus omission or Infantry-only1674/1134, supporting contribution beyond Infantry. Weak Bradley endpoint shifts1\u20132 do not add strong causal proof. ArchivedFlint444 current5762 versus records5715\u20135756 retains unexplained deterministic spread and excess6\u201347; S2/S3 each20% there, with identical omission/restricted predictions, so their arithmetic groupings are not separately identified. Exact bucket/curve and historical variability remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Flint:Immolation": {
+    "source_sha256": "042ee2f15fcc6e2b93d9bb8417025e68135bdd753a88508e6674358af8efd3d3",
+    "status": "partially_supported",
+    "context": "Seven full-kit inputs/16 records at levels1/4. Flint221 solo game2862/current2861 versus omit2919/Infantry-only2913; Zinman combo game/current1005 versus1114 either alternative. Lancer-only Gordon inputs gameD1517/1017/currentD1516/1016 versus omission or Infantry-only1587/1069 support contribution beyond Infantry. ArchivedFlint444 current5762 versus records5715\u20135756 retains unexplained spread and excess6\u201347; equal20% S2/S3 yield identical omitted/restricted endpoints, so exact Lethality versus Attack grouping is not isolated. Stochastic Flint/Reina/Zinman outcome is plausible with S3 omitted and adds no positive S3 separation. Full scaling, grouping and historical variability remain unresolved.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/summary.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/definitions.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/current-inputs.csv",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/refinement-results.json",
+      "docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/validation.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "trigger_chance_and_cadence",
+      "magnitude_and_level_scaling",
+      "stacking_and_buckets"
+    ]
+  }
+}

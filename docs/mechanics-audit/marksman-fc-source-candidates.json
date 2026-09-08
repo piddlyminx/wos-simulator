@@ -1,0 +1,973 @@
+{
+  "searched_at_date": "2026-09-07",
+  "result": "No complete usable battle evidence for CrystalGunpowder or FlameCharge found in this bounded search.",
+  "candidate_count": 20,
+  "visually_confirmed_candidates": 4,
+  "candidate_discovery_source": "tests/fixtures/dashboard_report_expected.json",
+  "candidate_discovery_source_sha256": "d5a949ec68777adc22b4f5e70bdae99872fc80b24eaaf589bc3ff81e6a445d60",
+  "candidates": [
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-15 074256.png",
+      "sha256": "89f6293613226baa19ee31294a0fdc592a05000bbe90a3c8d330ad5a162ffd33",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 70124,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 54537,
+          "fire_crystal_level": 6,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": true,
+      "status": "observed_input_crop_missing_endpoint_and_complete_setup"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-15 082156.png",
+      "sha256": "3ff4bbf996c0c97b299e1095506fa8dc896b5e3bff14264aa370070074b6a57d",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 63937,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 148777,
+          "fire_crystal_level": 3,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-20 050746.png",
+      "sha256": "43ab5d606959ee8c8e46ab0c4b16dd33f1783fd20e8ca6e3e635695ad18b1b55",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "right": {
+          "count": 127047,
+          "fire_crystal_level": 8,
+          "tier": 11
+        }
+      },
+      "visually_reviewed": true,
+      "status": "observed_input_crop_missing_endpoint_and_complete_setup"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-20 050818.png",
+      "sha256": "05911f78d1d64d3ce4240f8026902d31a607d8001d509cf43c4f53ae0ef83319",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 713921,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 97162,
+          "fire_crystal_level": 8,
+          "tier": 11
+        }
+      },
+      "visually_reviewed": true,
+      "status": "observed_input_crop_missing_endpoint_and_complete_setup"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-20 081113.png",
+      "sha256": "91716b32d006d37c70320c0412d7064e4f272900ad4251bc123af00684eece05",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 92069,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 14730,
+          "fire_crystal_level": 6,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-20 213954.png",
+      "sha256": "2d30d064c74779e7c2c6869a2b64b1c41e28385c9a5dc6d214f886000890c827",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 867177,
+          "fire_crystal_level": 7,
+          "tier": 10
+        },
+        "right": {
+          "count": 433214,
+          "fire_crystal_level": 7,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-20 234516.png",
+      "sha256": "fa3e235237bd1be9ce981057276e3f32b3bf5a78433eef4002aedec33c970aec",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 56879,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 576930,
+          "fire_crystal_level": 5,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-21 070955.png",
+      "sha256": "f90d3c748f4c3179e51219a73ea90234f3875af4ef55720f7c76ccb98ae227d8",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 867177,
+          "fire_crystal_level": 7,
+          "tier": 10
+        },
+        "right": {
+          "count": 433214,
+          "fire_crystal_level": 7,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-21 081705.png",
+      "sha256": "53a48418f1592c11cc83284a4ab296ed81b3431bf067b8dad76c506c81587e4f",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 92069,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 26439,
+          "fire_crystal_level": 3,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082010.png",
+      "sha256": "08dfaf48e043d0b39d0dbc7017600e9ad0cf700f3278b33d913c3fdc0b6aec01",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 867177,
+          "fire_crystal_level": 7,
+          "tier": 10
+        },
+        "right": {
+          "count": 433214,
+          "fire_crystal_level": 7,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082023.png",
+      "sha256": "2753b5fc3ba88a2ca53c1fcc679be0aac57760219b7dd4fd755c4b24fefee4c7",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 136808,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 1081525,
+          "fire_crystal_level": 5,
+          "tier": 9
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082035.png",
+      "sha256": "4d15e57d0236f973763b481ecfc40274747bda729cd38c17b078c68446389e01",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 423437,
+          "fire_crystal_level": 6,
+          "tier": 10
+        },
+        "right": {
+          "count": 260368,
+          "fire_crystal_level": 6,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082048.png",
+      "sha256": "a0d94eb63bc980380c2dbcee94f0d8ff85bf1e362a65c71b29efc040d20a52d7",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 56879,
+          "fire_crystal_level": 8,
+          "tier": 11
+        },
+        "right": {
+          "count": 576930,
+          "fire_crystal_level": 5,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082105.png",
+      "sha256": "2015810cfbfde9da9b4232cc88b0a8d24ce066a82526764f8e7a691d28977c8b",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "right": {
+          "count": 498398,
+          "fire_crystal_level": 5,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082123.png",
+      "sha256": "97e33978fe293e8603f712ccec2ea5310b49f947f2179e115773a83755e731b9",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 481012,
+          "fire_crystal_level": 6,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082138.png",
+      "sha256": "15cded86b1fad74ede110182a2b667e716da11d76252c1d44fec7379448339f5",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 276436,
+          "fire_crystal_level": 4,
+          "tier": 10
+        },
+        "right": {
+          "count": 449362,
+          "fire_crystal_level": 4,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082153.png",
+      "sha256": "1025535995fd3322ca34bd6b85c76fd00057d91292ff32a53952117fdc30dd60",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 279204,
+          "fire_crystal_level": 4,
+          "tier": 10
+        },
+        "right": {
+          "count": 282588,
+          "fire_crystal_level": 4,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082216.png",
+      "sha256": "ac221c747f1446657c843ac718cd7448f99a9876a674f0270e792dd7a643dba7",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 309359,
+          "fire_crystal_level": 3,
+          "tier": 10
+        },
+        "right": {
+          "count": 400017,
+          "fire_crystal_level": 4,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/Screenshot 2026-04-29 082230.png",
+      "sha256": "9d8fc3c5d4c898a50b74c8a74ad2beaea330bd5d2c3d38396cf66f68ca6d1beb",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 426145,
+          "fire_crystal_level": 4,
+          "tier": 10
+        },
+        "right": {
+          "count": 371323,
+          "fire_crystal_level": 4,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": false,
+      "status": "unreviewed_candidate_from_parser_test_expectation"
+    },
+    {
+      "path": "dashboard/test_reports/t12_skills.jpg",
+      "sha256": "c105145c9f1cfe42e784760b462dcb4adae06b03010c5bded5db7adcbcb91407",
+      "candidate_marksmen_from_parser_test_expectation": {
+        "left": {
+          "count": 328080,
+          "fire_crystal_level": 7,
+          "tier": 10
+        },
+        "right": {
+          "count": 574631,
+          "fire_crystal_level": 9,
+          "tier": 10
+        }
+      },
+      "visually_reviewed": true,
+      "status": "observed_input_crop_missing_endpoint_and_complete_setup"
+    }
+  ],
+  "parsed_report_caches_without_fc": [
+    {
+      "path": "skill/tmp/20260718T023106Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "19f7a3861fb129661bd2495d2853636e9e32d438f1b867270f8757575e125a45",
+      "troops": {
+        "left": [
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 800,
+            "fire_crystal_level": 0,
+            "slot": 1,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 2,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ],
+        "right": [
+          {
+            "count": 200,
+            "fire_crystal_level": 0,
+            "slot": 4,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 201,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260718T024429Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "a88578ca3681350820f413184de7593d46750fdfe2e0a2e786c9d5712b14e269",
+      "troops": {
+        "left": [
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 800,
+            "fire_crystal_level": 0,
+            "slot": 1,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 2,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ],
+        "right": [
+          {
+            "count": 200,
+            "fire_crystal_level": 0,
+            "slot": 3,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 25,
+            "fire_crystal_level": 0,
+            "slot": 4,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 176,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260718T025416Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "1362ec20a9ab92e1d077cb29322007d5c30a30e590436f0b2ae166126c8fdcb4",
+      "troops": {
+        "left": [
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 800,
+            "fire_crystal_level": 0,
+            "slot": 1,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 2,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ],
+        "right": [
+          {
+            "count": 200,
+            "fire_crystal_level": 0,
+            "slot": 3,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 100,
+            "fire_crystal_level": 0,
+            "slot": 4,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 101,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260728T024111Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "0cb6a624a597d2a94ebfa118f13c7bf98e5f46fed3c2d14daac0aed380ba3fe4",
+      "troops": {
+        "left": [
+          {
+            "count": 2000,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 2000,
+            "fire_crystal_level": 0,
+            "slot": 1,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ],
+        "right": [
+          {
+            "count": 1000,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "infantry"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260809T200257Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "5deb93e7c1c312b55d6356edfa80356ed61e1990a8e1ce2f78a2a6a1b83d6bc7",
+      "troops": {
+        "left": [
+          {
+            "count": 120,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          }
+        ],
+        "right": [
+          {
+            "count": 446,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 9,
+            "type": "marksman"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260809T204717Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "d6090202235a15f370acfaf9bc07c494f07b0f583497a06ae216dd94903b660d",
+      "troops": {
+        "left": [
+          {
+            "count": 120,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "lancer"
+          }
+        ],
+        "right": [
+          {
+            "count": 446,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 9,
+            "type": "infantry"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260810T032129Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "f8d279b66feb482372f07e428e6ef97d1f50b6738ee4fda37f9657b1ea8191a2",
+      "troops": {
+        "left": [
+          {
+            "count": 500,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "lancer"
+          }
+        ],
+        "right": [
+          {
+            "count": 900,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "infantry"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260810T041936Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "752b21ab2b7b14e7db0614b34832a26a67212f7a5beec7bc9ad516afe6559228",
+      "troops": {
+        "left": [
+          {
+            "count": 170,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 170,
+            "fire_crystal_level": 0,
+            "slot": 1,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 170,
+            "fire_crystal_level": 0,
+            "slot": 2,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ],
+        "right": [
+          {
+            "count": 380,
+            "fire_crystal_level": 0,
+            "slot": 4,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 380,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "lancer"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260810T042446Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "56342aabee440d9311edccfe9e03b5f07278d1e42f115f4828ab3857212cb203",
+      "troops": {
+        "left": [
+          {
+            "count": 170,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 170,
+            "fire_crystal_level": 0,
+            "slot": 1,
+            "tier": 6,
+            "type": "lancer"
+          },
+          {
+            "count": 170,
+            "fire_crystal_level": 0,
+            "slot": 2,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ],
+        "right": [
+          {
+            "count": 900,
+            "fire_crystal_level": 0,
+            "slot": 4,
+            "tier": 6,
+            "type": "infantry"
+          },
+          {
+            "count": 900,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "lancer"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260810T043154Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "940165ced439d62e42d2b429237d5f5271bebc88de434142da65c67d11f64bd7",
+      "troops": {
+        "left": [
+          {
+            "count": 500,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "lancer"
+          }
+        ],
+        "right": [
+          {
+            "count": 340,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260810T043552Z_wos_report_war_1/report_stats_parser_debug.json",
+      "sha256": "dbdaa8abc8c80132a88facff0e8147ae3a87124b11e46abf283b7fe673a2f87f",
+      "troops": {
+        "left": [
+          {
+            "count": 500,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          }
+        ],
+        "right": [
+          {
+            "count": 710,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "marksman"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/20260818T132647Z_20260818T132647Z_war/report_01/report_stats_parser_debug.json",
+      "sha256": "6ee1bb0fc575a38429949e23fadbb613bc302b0269d7ccc8b38a89974868aeae",
+      "troops": {
+        "left": [
+          {
+            "count": 500,
+            "fire_crystal_level": 0,
+            "slot": 0,
+            "tier": 6,
+            "type": "infantry"
+          }
+        ],
+        "right": [
+          {
+            "count": 500,
+            "fire_crystal_level": 0,
+            "slot": 5,
+            "tier": 6,
+            "type": "infantry"
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/gatot_hypot_1500_report.json",
+      "sha256": "d22038ab2aad87548fd44cc854a9914e9b1d93ba3e9e83dc363aa7a1f30463c4",
+      "troops": {
+        "left": [
+          {
+            "type": "infantry",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 1500,
+            "slot": 0
+          },
+          {
+            "type": "marksman",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 1500,
+            "slot": 1
+          }
+        ],
+        "right": [
+          {
+            "type": "infantry",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 1000,
+            "slot": 5
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/renee_gwen_bucket_retry_report.json",
+      "sha256": "9ee478af535841d10aec4c475215f3fcac57de81287770ebdb2a808955e854b9",
+      "troops": {
+        "left": [
+          {
+            "type": "lancer",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 500,
+            "slot": 0
+          }
+        ],
+        "right": [
+          {
+            "type": "infantry",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 900,
+            "slot": 5
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/renee_hendrik_invalid_troops_report.json",
+      "sha256": "63c256c390585fc1702ca0d08442fe21a0ac1b2e11ce81cde5a3e10a727d8b89",
+      "troops": {
+        "left": [
+          {
+            "type": "lancer",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 120,
+            "slot": 0
+          }
+        ],
+        "right": [
+          {
+            "type": "infantry",
+            "tier": 9,
+            "fire_crystal_level": 0,
+            "count": 446,
+            "slot": 5
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/renee_hendrik_match_evidence.json",
+      "sha256": "c32a746bb7c179ced11076d9e6c85dcdd8fc3f1987cddd24b0f835206b20d5d7",
+      "troops": {
+        "left": [
+          {
+            "type": "infantry",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 120,
+            "slot": 0
+          }
+        ],
+        "right": [
+          {
+            "type": "marksman",
+            "tier": 9,
+            "fire_crystal_level": 0,
+            "count": 446,
+            "slot": 5
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/renee_hendrik_recaptured_full_troops.json",
+      "sha256": "a9b98f7144507059ee4d74e279d1446569ff041047531cf852c15ae3ce9aa591",
+      "troops": {
+        "left": [
+          {
+            "type": "lancer",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 120,
+            "slot": 0
+          }
+        ],
+        "right": [
+          {
+            "type": "infantry",
+            "tier": 9,
+            "fire_crystal_level": 0,
+            "count": 446,
+            "slot": 5
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    },
+    {
+      "path": "skill/tmp/retarget_lancer_screen_report.json",
+      "sha256": "28d31358bd160e7b46f573b52d2c3dffaa3745fede4391ccc724cb36529f27e1",
+      "troops": {
+        "left": [
+          {
+            "type": "lancer",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 100,
+            "slot": 0
+          },
+          {
+            "type": "marksman",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 400,
+            "slot": 1
+          }
+        ],
+        "right": [
+          {
+            "type": "lancer",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 1,
+            "slot": 4
+          },
+          {
+            "type": "marksman",
+            "tier": 6,
+            "fire_crystal_level": 0,
+            "count": 499,
+            "slot": 5
+          }
+        ]
+      },
+      "qualifying_fc_marksman": false
+    }
+  ],
+  "t11_fc0_cache": {
+    "path": "tmp/t11_fc0/report_stats_cache.json",
+    "sha256": "1fd27e7acdbfbfca81602514f1d100a3c3271874203b1a65cb58eaf5f147057b",
+    "reports": 11,
+    "troop_type_keys": [
+      "infantry_t10",
+      "infantry_t11",
+      "lancer_t10",
+      "lancer_t11",
+      "marksman_t10",
+      "marksman_t11"
+    ]
+  },
+  "limits": [
+    "Only the four named qualifying screenshots were visually reviewed; the other 16 are source leads from parser test expectations.",
+    "No simulator result was counted as a captured observation.",
+    "No emulator was accessed.",
+    "No claim is made about unindexed pixels in all 4445 skill/tmp screenshots or complete coverage of other repository directories."
+  ]
+}

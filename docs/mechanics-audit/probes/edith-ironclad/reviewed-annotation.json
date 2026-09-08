@@ -1,0 +1,60 @@
+{
+  "hero:Edith:SteelSentinel": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "Same two accepted full Edith 3/3/3 fixtures match game/current A1863 for Marksmen and A1909 for Lancers. Omitting S3 or restricting it to Infantry gives A1955/A1983, supporting level 3 contribution to each tested non-Infantry recipient. Health-to-damageTaken gives A1874/A1898; Health-to-Defense A1863/A1898. These modest scale-relative bucket differences do not settle general pool identity. Independent magnitude/scaling, other levels, skill-kind and battle-mode interactions remain unreviewed. A subsequent prospective full333 Infantry-only capture gives game/currentD102 against400 T6 Marksmen; omitting only S3 givesD155 (precision corners155\u2013156), adding positive level3 Infantry recipient evidence. All24 fresh stats are source-verified without correction. S2 remains active, and changing S2 to a Defense factor remains equivalent, so this does not identify all pools. Direct UI shows15% Health atLv3 and5/10/15/20/25 curve; other levels are UI-only here.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json",
+      "docs/mechanics-audit/probes/edith-ironclad/README.md",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/observation.json",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/replay.json",
+      "docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/reviewed-transcription.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Edith:Ironclad": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "One prospective small deterministic capture with full minxxx Edith3/3/3 and100 T6 Infantry versus WIP nohero400 T6 Marksmen. All24 fresh report stats are visually verified without correction. Game and frozen fresh-stat current leaveD102; omitting only Ironclad givesD146 (precision corners146\u2013147), while current all256 corners remainD102. This positively supports the level3 Infantry protection contribution conditional on S3 and the fullkit. Direct UI shows12% atLv3 and4/8/12/16/20 curve; other levels remain battle-unverified. S1 has no deployed recipient. Ironclad into Health givesD108\u2013109 while Defense remainsD102, so general bucket identity is not uniquely established. Current traces apply Ironclad to143 incoming normal jobs;143 is simulated, not a game round count. Skill-kind incoming damage, non-Infantry exclusions, independent level scaling, other stacking and mode interactions remain unreviewed. Battle Details triggered1/killsdash is retained as diagnostic, not independent evidence. Historical and hypothetical pre-capture stat scenarios are preserved as conditional; only the fresh report input determines agreement.",
+    "evidence_notes": [
+      "docs/mechanics-audit/probes/edith-ironclad/README.md",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/observation.json",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/replay.json",
+      "docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/reviewed-transcription.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope",
+      "magnitude_and_level_scaling"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  },
+  "hero:Edith:StrategicBalance": {
+    "source_sha256": "b3eb8c21128eb806ebacd1445d99560b7cc26e77f3967f470aa25b7832b5e70c",
+    "status": "partially_supported",
+    "context": "Two accepted T6 single-type fixtures preserve full Edith 3/3/3. Marksmen with Zinman 1/0/0 give game/current A1863; omit only S1 protection A1942, broaden Lancer offense to Marksmen A1772. Lancers with Patrick 3/2 + Jasser 4/4 give game/current A1909; omit only S1 offense A1978, broaden Marksman protection to Lancers A1829. Each nested effect is exercised in its own recipient fixture; these support the tested Marksman/Lancer distinction. Infantry scope, precise coefficients/scaling and skill-kind remain unreviewed. Health/Attack bucket substitutions differ only 6\u201313 at these larger endpoints, so general pool identity remains unresolved. Edith S2 has no Infantry to protect in either case and is not incidentally verified. The subsequent full333 Infantry-only100I versus400M capture also matches game/currentD102. Neither S1 branch has a deployed recipient and no S1 effect enters its simulated jobs, despite Battle Details displaying triggered1; this is only a negative-recipient context, not additional positive S1 contribution evidence. Direct UI confirms both currentLv3 values12% and both4/8/12/16/20 curves.",
+    "evidence_notes": [
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/README.md",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/replay.json",
+      "docs/mechanics-audit/reviews/bradley-edith-2026-09-07/summary.json",
+      "docs/mechanics-audit/probes/edith-ironclad/README.md",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/observation.json",
+      "docs/mechanics-audit/probes/edith-ironclad/capture-01/replay.json",
+      "docs/mechanics-audit/probes/edith-ironclad/hero-tooltips/reviewed-transcription.json"
+    ],
+    "supported_dimensions": [
+      "source_and_target_scope"
+    ],
+    "unresolved_dimensions": [
+      "stacking_and_buckets"
+    ]
+  }
+}

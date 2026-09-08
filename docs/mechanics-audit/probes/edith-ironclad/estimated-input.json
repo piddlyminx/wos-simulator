@@ -1,0 +1,64 @@
+{
+  "attacker": {
+    "name": "minxxx",
+    "heroes": {
+      "Edith": {
+        "skill_1": 3,
+        "skill_2": 3,
+        "skill_3": 3
+      }
+    },
+    "joiner_heroes": {},
+    "troops": {
+      "infantry_t6": 100
+    },
+    "stats": {
+      "inf": {
+        "attack": 308.2,
+        "defense": 300.5,
+        "lethality": 244.0,
+        "health": 238.4
+      },
+      "lanc": {
+        "attack": 294.9,
+        "defense": 293.7,
+        "lethality": 224.3,
+        "health": 230.0
+      },
+      "mark": {
+        "attack": 292.2,
+        "defense": 292.7,
+        "lethality": 235.8,
+        "health": 230.3
+      }
+    }
+  },
+  "defender": {
+    "name": "WIP",
+    "heroes": {},
+    "joiner_heroes": {},
+    "troops": {
+      "marksman_t6": 400
+    },
+    "stats": {
+      "inf": {
+        "attack": 248.2,
+        "defense": 249.0,
+        "lethality": 186.3,
+        "health": 191.8
+      },
+      "lanc": {
+        "attack": 326.2,
+        "defense": 325.0,
+        "lethality": 186.8,
+        "health": 181.9
+      },
+      "mark": {
+        "attack": 217.5,
+        "defense": 210.6,
+        "lethality": 181.4,
+        "health": 177.0
+      }
+    }
+  }
+}

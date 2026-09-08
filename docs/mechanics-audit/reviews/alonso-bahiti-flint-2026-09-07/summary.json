@@ -1,0 +1,2227 @@
+{
+  "fixtureCount": 35,
+  "gameOutcomeCount": 119,
+  "deterministicFixtures": 9,
+  "stochasticFixtures": 26,
+  "sampleCount": 220057,
+  "sourceHashCount": 32,
+  "results": [
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+      "game": [
+        -3729
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -3729.47,
+          "sigma_candidate": 0.5,
+          "p": 0.469527,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -3729.37,
+          "sigma_candidate": 0.48,
+          "p": 1,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -3729,
+          "sigma_candidate": 0,
+          "p": 1,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+      "game": [
+        -2823
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -2907.78,
+          "sigma_candidate": 26.6,
+          "p": 0.00475,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -2867.07,
+          "sigma_candidate": 25.84,
+          "p": 0.090145,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -2888.54,
+          "sigma_candidate": 25.63,
+          "p": 0.013049,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -2945.42,
+          "sigma_candidate": 28.35,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -2886.11,
+          "sigma_candidate": 26.41,
+          "p": 0.0078,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -2896.13,
+          "sigma_candidate": 26.68,
+          "p": 0.0049,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -3020.01,
+          "sigma_candidate": 29.19,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -2905.58,
+          "sigma_candidate": 26.6,
+          "p": 0.00425,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -2901.28,
+          "sigma_candidate": 26.58,
+          "p": 0.0049,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+      "game": [
+        -519
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -516.66,
+          "sigma_candidate": 7.01,
+          "p": 0.882156,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": -98.58,
+          "sigma_candidate": 206.92,
+          "p": 0.050997,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": -161.41,
+          "sigma_candidate": 72.28,
+          "p": 0.00655,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": 736,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": -435.61,
+          "sigma_candidate": 28.67,
+          "p": 0.00085,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": -516.66,
+          "sigma_candidate": 7.01,
+          "p": 0.882156,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+      "game": [
+        9282
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 9334.3,
+          "sigma_candidate": 42.37,
+          "p": 0.263537,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": 9721.01,
+          "sigma_candidate": 32.05,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": 9710.45,
+          "sigma_candidate": 32.19,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": 9802,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": 9529.92,
+          "sigma_candidate": 30.69,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": 9334.3,
+          "sigma_candidate": 42.37,
+          "p": 0.263537,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+      "game": [
+        -2295
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -2271.85,
+          "sigma_candidate": 9.4,
+          "p": 0.015999,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -2280.7,
+          "sigma_candidate": 8.84,
+          "p": 0.114494,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -2274.89,
+          "sigma_candidate": 9.18,
+          "p": 0.026749,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -2263.14,
+          "sigma_candidate": 10.42,
+          "p": 0.0015,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -2273.74,
+          "sigma_candidate": 9.33,
+          "p": 0.026349,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -2272.64,
+          "sigma_candidate": 9.89,
+          "p": 0.034448,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -2258.18,
+          "sigma_candidate": 9.92,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -2272.17,
+          "sigma_candidate": 9.42,
+          "p": 0.019249,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -2272.38,
+          "sigma_candidate": 9.42,
+          "p": 0.021099,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": -2282.92,
+          "sigma_candidate": 8.93,
+          "p": 0.19134,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": -2275.44,
+          "sigma_candidate": 9.81,
+          "p": 0.049448,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_attacker_600_all.json#0",
+      "game": [
+        -269,
+        -245,
+        -243,
+        -246,
+        -270,
+        -245
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -256.37,
+          "sigma_candidate": 10.33,
+          "p": 0.438028,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -290.99,
+          "sigma_candidate": 1.01,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -266.74,
+          "sigma_candidate": 2.56,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -222.91,
+          "sigma_candidate": 15.39,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -258.58,
+          "sigma_candidate": 10.33,
+          "p": 0.238338,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -256.61,
+          "sigma_candidate": 10.38,
+          "p": 0.435628,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -194.59,
+          "sigma_candidate": 24.79,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -256.78,
+          "sigma_candidate": 10.41,
+          "p": 0.40633,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -256.86,
+          "sigma_candidate": 10.38,
+          "p": 0.415779,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#0",
+      "game": [
+        -465,
+        -464,
+        -465,
+        -464
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -463.36,
+          "sigma_candidate": 1,
+          "p": 0.045348,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -469,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -469,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -458.07,
+          "sigma_candidate": 2.01,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -463.52,
+          "sigma_candidate": 1,
+          "p": 0.087196,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -463.54,
+          "sigma_candidate": 1.03,
+          "p": 0.101345,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -455.75,
+          "sigma_candidate": 1.87,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -463.39,
+          "sigma_candidate": 0.99,
+          "p": 0.041698,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -463.42,
+          "sigma_candidate": 0.99,
+          "p": 0.041948,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#1",
+      "game": [
+        -461,
+        -459
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -459.6,
+          "sigma_candidate": 1.03,
+          "p": 0.896205,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -465,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -465,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -454.22,
+          "sigma_candidate": 2,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -459.89,
+          "sigma_candidate": 1.04,
+          "p": 0.902505,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -459.84,
+          "sigma_candidate": 1.08,
+          "p": 0.908955,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -451.86,
+          "sigma_candidate": 1.92,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -459.68,
+          "sigma_candidate": 1.03,
+          "p": 0.894155,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -459.7,
+          "sigma_candidate": 1.03,
+          "p": 0.894105,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_minxxx_defender.json#0",
+      "game": [
+        1454,
+        1435,
+        1486,
+        1429,
+        1453,
+        1472,
+        1419,
+        1455
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 1457.55,
+          "sigma_candidate": 15.94,
+          "p": 0.19184,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": 1517.45,
+          "sigma_candidate": 10.11,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": 1475.94,
+          "sigma_candidate": 13.89,
+          "p": 0.00035,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": 1399.68,
+          "sigma_candidate": 25.05,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": 1479.85,
+          "sigma_candidate": 15.18,
+          "p": 0.0003,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": 1467.06,
+          "sigma_candidate": 18.93,
+          "p": 0.042748,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": 1345.61,
+          "sigma_candidate": 26.11,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": 1461.46,
+          "sigma_candidate": 16.95,
+          "p": 0.041648,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": 1461.46,
+          "sigma_candidate": 16.95,
+          "p": 0.041648,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": 1550.04,
+          "sigma_candidate": 9.95,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": 1486.92,
+          "sigma_candidate": 15.19,
+          "p": 5e-05,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_norah_combo.json#0",
+      "game": [
+        -394,
+        -392
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -392.89,
+          "sigma_candidate": 2.91,
+          "p": 0.923904,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -386.95,
+          "sigma_candidate": 2.12,
+          "p": 0.0005,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -390.52,
+          "sigma_candidate": 2.47,
+          "p": 0.19889,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -397.45,
+          "sigma_candidate": 3.66,
+          "p": 0.124344,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -391.5,
+          "sigma_candidate": 2.96,
+          "p": 0.721414,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -392.2,
+          "sigma_candidate": 2.96,
+          "p": 0.879356,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -402.63,
+          "sigma_candidate": 3.36,
+          "p": 0.0002,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -393.06,
+          "sigma_candidate": 2.96,
+          "p": 0.955452,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -392.56,
+          "sigma_candidate": 2.92,
+          "p": 0.922004,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": -383.31,
+          "sigma_candidate": 2.81,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": -389.48,
+          "sigma_candidate": 2.84,
+          "p": 0.111394,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_norah_combo.json#2",
+      "game": [
+        -389,
+        -391
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -392.98,
+          "sigma_candidate": 2.8,
+          "p": 0.20424,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -386.99,
+          "sigma_candidate": 2.18,
+          "p": 0.069497,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -390.69,
+          "sigma_candidate": 2.36,
+          "p": 0.872206,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -397.77,
+          "sigma_candidate": 3.66,
+          "p": 0.00125,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -391.63,
+          "sigma_candidate": 2.86,
+          "p": 0.733113,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -392.18,
+          "sigma_candidate": 3,
+          "p": 0.482376,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -402.84,
+          "sigma_candidate": 3.29,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -393.17,
+          "sigma_candidate": 2.86,
+          "p": 0.172991,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -392.67,
+          "sigma_candidate": 2.84,
+          "p": 0.310734,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": -383.32,
+          "sigma_candidate": 2.78,
+          "p": 0.00065,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": -389.53,
+          "sigma_candidate": 2.89,
+          "p": 0.935803,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_solo.json#0",
+      "game": [
+        1491,
+        1535,
+        1280,
+        744,
+        964,
+        1451,
+        1550,
+        897,
+        854,
+        282
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 1231.04,
+          "sigma_candidate": 335.51,
+          "p": 0.293085,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": 2050.33,
+          "sigma_candidate": 110.94,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": 1513.65,
+          "sigma_candidate": 215.21,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": 65.5,
+          "sigma_candidate": 336.96,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": 1298.94,
+          "sigma_candidate": 294.22,
+          "p": 0.074696,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": 1250.53,
+          "sigma_candidate": 332.84,
+          "p": 0.224289,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -132.6,
+          "sigma_candidate": 81.11,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": 1261.35,
+          "sigma_candidate": 316.19,
+          "p": 0.166942,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": 1261.35,
+          "sigma_candidate": 316.19,
+          "p": 0.166942,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": 2391.72,
+          "sigma_candidate": 94.93,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": 1637.78,
+          "sigma_candidate": 209.63,
+          "p": 5e-05,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_solo_v2.json#0",
+      "game": [
+        -498,
+        -539,
+        -555,
+        -509,
+        -495,
+        -486
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -487.4,
+          "sigma_candidate": 51.13,
+          "p": 0.302535,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -627.94,
+          "sigma_candidate": 25.96,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -532.84,
+          "sigma_candidate": 41.73,
+          "p": 0.346083,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -281.12,
+          "sigma_candidate": 139.13,
+          "p": 0.0002,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -521.93,
+          "sigma_candidate": 40.25,
+          "p": 0.718914,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -515.53,
+          "sigma_candidate": 42.47,
+          "p": 0.902605,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -59.33,
+          "sigma_candidate": 128.83,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -502.38,
+          "sigma_candidate": 50.56,
+          "p": 0.715264,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -515.43,
+          "sigma_candidate": 43.61,
+          "p": 0.855707,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": -675.66,
+          "sigma_candidate": 11.99,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": -556.75,
+          "sigma_candidate": 43.42,
+          "p": 0.010299,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_solo_v2.json#1",
+      "game": [
+        61,
+        28,
+        46,
+        71,
+        -97,
+        21,
+        -95,
+        66,
+        -8,
+        61,
+        37,
+        -39,
+        -115,
+        44,
+        1,
+        30,
+        28,
+        56,
+        6
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -18.01,
+          "sigma_candidate": 87.78,
+          "p": 0.39158,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -371.97,
+          "sigma_candidate": 45.86,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -115.83,
+          "sigma_candidate": 108.8,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": 89.71,
+          "sigma_candidate": 27.07,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -54.54,
+          "sigma_candidate": 107.94,
+          "p": 0.012499,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -23.31,
+          "sigma_candidate": 91.42,
+          "p": 0.171541,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": 137.05,
+          "sigma_candidate": 21.49,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -17.82,
+          "sigma_candidate": 88.65,
+          "p": 0.441978,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -29.74,
+          "sigma_candidate": 92.6,
+          "p": 0.090545,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": -474.57,
+          "sigma_candidate": 31.21,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": -189.65,
+          "sigma_candidate": 114.01,
+          "p": 5e-05,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_vs_alonso.json#0",
+      "game": [
+        1561,
+        1541,
+        1557,
+        1553,
+        1564,
+        1559,
+        1558,
+        1544
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 1553.6,
+          "sigma_candidate": 15.41,
+          "p": 0.669267,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": 1586.92,
+          "sigma_candidate": 10.27,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": 1559.66,
+          "sigma_candidate": 11.9,
+          "p": 0.39128,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": 1525.99,
+          "sigma_candidate": 25.41,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": 1559.03,
+          "sigma_candidate": 14.83,
+          "p": 0.429779,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": 1557.62,
+          "sigma_candidate": 14.73,
+          "p": 0.577371,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": 1492.73,
+          "sigma_candidate": 23.1,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": 1558.07,
+          "sigma_candidate": 15.18,
+          "p": 0.500125,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": 1556.52,
+          "sigma_candidate": 15.21,
+          "p": 0.59667,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": 1629.38,
+          "sigma_candidate": 10.2,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": 1576.3,
+          "sigma_candidate": 14.54,
+          "p": 0.00045,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_vs_alonso_inf_lancer.json#0",
+      "game": [
+        -752,
+        -744,
+        -737,
+        -741,
+        -753,
+        -764,
+        -745,
+        -756
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength",
+        "hero:Alonso:PoisonHarpoon"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -750.58,
+          "sigma_candidate": 13.45,
+          "p": 0.894505,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": -700.55,
+          "sigma_candidate": 10.24,
+          "p": 0.0002,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": -700.55,
+          "sigma_candidate": 10.24,
+          "p": 0.0002,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": -789.78,
+          "sigma_candidate": 18.92,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": -733.66,
+          "sigma_candidate": 13.12,
+          "p": 0.00105,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": -733.92,
+          "sigma_candidate": 13.34,
+          "p": 0.00175,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": -814.58,
+          "sigma_candidate": 17.58,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": -743.7,
+          "sigma_candidate": 13.22,
+          "p": 0.490425,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": -744.29,
+          "sigma_candidate": 13.02,
+          "p": 0.59372,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.omit": {
+          "mu_candidate": -616.22,
+          "sigma_candidate": 11.27,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Alonso.PoisonHarpoon.marksman_source_only": {
+          "mu_candidate": -616.76,
+          "sigma_candidate": 12.06,
+          "p": 0.0001,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/alonso_wip_attacker.json#0",
+      "game": [
+        1770,
+        1766,
+        1770,
+        1766,
+        1778,
+        1770,
+        1766,
+        1765
+      ],
+      "skills": [
+        "hero:Alonso:Onslaught",
+        "hero:Alonso:IronStrength"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 1769.36,
+          "sigma_candidate": 3.56,
+          "p": 0.810959,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.omit": {
+          "mu_candidate": 1757.84,
+          "sigma_candidate": 0.47,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.marksmen_only": {
+          "mu_candidate": 1765.42,
+          "sigma_candidate": 1.09,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.Onslaught.duration_two": {
+          "mu_candidate": 1778.64,
+          "sigma_candidate": 4.33,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.omit": {
+          "mu_candidate": 1767.08,
+          "sigma_candidate": 3.5,
+          "p": 0.056997,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.marksman_source_only": {
+          "mu_candidate": 1768.03,
+          "sigma_candidate": 3.36,
+          "p": 0.323734,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.all_enemy_targets": {
+          "mu_candidate": 1782.04,
+          "sigma_candidate": 3.88,
+          "p": 0.0001,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.immediate": {
+          "mu_candidate": 1769.48,
+          "sigma_candidate": 3.59,
+          "p": 0.823259,
+          "sampleCount": 1000
+        },
+        "Alonso.IronStrength.duration_one": {
+          "mu_candidate": 1768.74,
+          "sigma_candidate": 3.57,
+          "p": 0.59567,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+      "game": [
+        269
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 196.25,
+          "sigma_candidate": 139.23,
+          "p": 0.681716,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": 665.99,
+          "sigma_candidate": 73.71,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": 645.25,
+          "sigma_candidate": 76.33,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": 688.72,
+          "sigma_candidate": 40.4,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": 436.84,
+          "sigma_candidate": 114.02,
+          "p": 0.066047,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": 167.4,
+          "sigma_candidate": 147.54,
+          "p": 0.637318,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/bahiti_solo.json#0",
+      "game": [
+        2179,
+        2233
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 2229.4,
+          "sigma_candidate": 50.6,
+          "p": 0.840858,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": 2558.2,
+          "sigma_candidate": 27.96,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": 2534.2,
+          "sigma_candidate": 35.58,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": 2594,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": 2362.86,
+          "sigma_candidate": 44.11,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": 2229.4,
+          "sigma_candidate": 50.6,
+          "p": 0.840858,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/bahiti_solo_nc.json#0",
+      "game": [
+        3675
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": 3677.31,
+          "sigma_candidate": 5.54,
+          "p": 0.729014,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": 3698.68,
+          "sigma_candidate": 5.34,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": 3696.73,
+          "sigma_candidate": 5.4,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": 3713,
+          "sigma_candidate": 0,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": 3688.3,
+          "sigma_candidate": 5.02,
+          "p": 0.00935,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": 3677.31,
+          "sigma_candidate": 5.54,
+          "p": 0.729014,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/flint_reina_zinman_combo.json#0",
+      "game": [
+        -439
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -444.72,
+          "sigma_candidate": 6.33,
+          "p": 0.410729,
+          "sampleCount": 1000
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": -438.85,
+          "sigma_candidate": 6.68,
+          "p": 0.986001,
+          "sampleCount": 1000
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": -482.76,
+          "sigma_candidate": 4.92,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": -424.58,
+          "sigma_candidate": 5.94,
+          "p": 0.020049,
+          "sampleCount": 1000
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": -429.86,
+          "sigma_candidate": 5.86,
+          "p": 0.136893,
+          "sampleCount": 1000
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": -434.63,
+          "sigma_candidate": 6.52,
+          "p": 0.40678,
+          "sampleCount": 1000
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": -439.26,
+          "sigma_candidate": 5.83,
+          "p": 1,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/flint_solo_nc.json#0",
+      "game": [
+        2862
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": 2861,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": 2901,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": 2139,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": 2972,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": 2959,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": 2919,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": 2913,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/flint_zinman_combo_nc.json#0",
+      "game": [
+        1005
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": 1005,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": 1078,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": -188,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": 1196,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": 1183,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": 1114,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": 1114,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/logan_bahiti_combo_nc.json#0",
+      "game": [
+        -517
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -509.22,
+          "sigma_candidate": 13.03,
+          "p": 0.669417,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": -502.4,
+          "sigma_candidate": 13.9,
+          "p": 0.307235,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": -505.76,
+          "sigma_candidate": 12.82,
+          "p": 0.375781,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": -499.94,
+          "sigma_candidate": 13.67,
+          "p": 0.275586,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": -505.92,
+          "sigma_candidate": 13.22,
+          "p": 0.475576,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": -509.22,
+          "sigma_candidate": 13.03,
+          "p": 0.669417,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+      "game": [
+        -482
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -495.28,
+          "sigma_candidate": 16.17,
+          "p": 0.359482,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": -487.49,
+          "sigma_candidate": 17.27,
+          "p": 0.825259,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": -491.17,
+          "sigma_candidate": 16.08,
+          "p": 0.513624,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": -484.32,
+          "sigma_candidate": 17.24,
+          "p": 0.945653,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": -490.96,
+          "sigma_candidate": 16.59,
+          "p": 0.427079,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": -495.28,
+          "sigma_candidate": 16.17,
+          "p": 0.359482,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/philly_bahiti_combo.json#0",
+      "game": [
+        -556
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -558.4,
+          "sigma_candidate": 1.89,
+          "p": 0.453327,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": -555.13,
+          "sigma_candidate": 2.05,
+          "p": 0.824859,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": -555.13,
+          "sigma_candidate": 2.05,
+          "p": 0.824859,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": -554.76,
+          "sigma_candidate": 1.95,
+          "p": 0.867007,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": -556.82,
+          "sigma_candidate": 1.65,
+          "p": 0.816809,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": -558.65,
+          "sigma_candidate": 1.89,
+          "p": 0.249038,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/philly_bahiti_combo.json#1",
+      "game": [
+        -463,
+        -456,
+        -455,
+        -459
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -454.3,
+          "sigma_candidate": 4.38,
+          "p": 0.19624,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": -442.73,
+          "sigma_candidate": 4.78,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": -442.73,
+          "sigma_candidate": 4.78,
+          "p": 5e-05,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": -441.48,
+          "sigma_candidate": 3.67,
+          "p": 0.00015,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": -448.61,
+          "sigma_candidate": 4.12,
+          "p": 0.00025,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": -455.46,
+          "sigma_candidate": 4.5,
+          "p": 0.40893,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+      "game": [
+        -502
+      ],
+      "skills": [
+        "hero:Bahiti:SixthSense",
+        "hero:Bahiti:Fluorescence"
+      ],
+      "deterministic": false,
+      "predictions": {
+        "current": {
+          "mu_candidate": -483.28,
+          "sigma_candidate": 16.85,
+          "p": 0.297735,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.omit": {
+          "mu_candidate": -473.08,
+          "sigma_candidate": 18.53,
+          "p": 0.137493,
+          "sampleCount": 1000
+        },
+        "Bahiti.SixthSense.marksmen_only": {
+          "mu_candidate": -477.57,
+          "sigma_candidate": 16.57,
+          "p": 0.177191,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.omit": {
+          "mu_candidate": -470.78,
+          "sigma_candidate": 18.33,
+          "p": 0.102895,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.marksman_source_only": {
+          "mu_candidate": -477.32,
+          "sigma_candidate": 17.66,
+          "p": 0.20694,
+          "sampleCount": 1000
+        },
+        "Bahiti.Fluorescence.one_turn_lifetime": {
+          "mu_candidate": -483.28,
+          "sigma_candidate": 16.85,
+          "p": 0.297735,
+          "sampleCount": 1000
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_bucket.json#0",
+      "game": [
+        2736
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": 2736,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": 2736,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": 2742,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": 2735,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": 2735,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_bucket.json#0",
+      "game": [
+        2746
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": 2746,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": 2746,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": 2754,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": 2744,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": 2744,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_bucket.json#0",
+      "game": [
+        6151
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": 6151,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": 6151,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": 6158,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": 6150,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": 6150,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0",
+      "game": [
+        -1517
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": -1516,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": -1516,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": -841,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": -1674,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": -1674,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": -1587,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": -1587,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0",
+      "game": [
+        -1017
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": -1016,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": -1016,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": -500,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": -1134,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": -1134,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": -1069,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": -1069,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/heroes_unittests/Flint_tc.json#0",
+      "game": [
+        -150,
+        -151,
+        -149,
+        -149,
+        -150
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": -150,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": -143,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": -168,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": -141,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": -144,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": -141,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": -144,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    },
+    {
+      "key": "testcases/heroes_unittests/Flint_tc.json#1",
+      "game": [
+        5720,
+        5756,
+        5736,
+        5715,
+        5733,
+        5736
+      ],
+      "skills": [
+        "hero:Flint:Pyromaniac",
+        "hero:Flint:BurningResolve",
+        "hero:Flint:Immolation"
+      ],
+      "deterministic": true,
+      "predictions": {
+        "current": {
+          "mu_candidate": 5762,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.omit": {
+          "mu_candidate": 5889,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Pyromaniac.all_own_types": {
+          "mu_candidate": 4995,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.omit": {
+          "mu_candidate": 5969,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.BurningResolve.infantry_only": {
+          "mu_candidate": 5921,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.omit": {
+          "mu_candidate": 5969,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        },
+        "Flint.Immolation.infantry_only": {
+          "mu_candidate": 5921,
+          "sigma_candidate": 0,
+          "p": null,
+          "sampleCount": 1
+        }
+      }
+    }
+  ]
+}

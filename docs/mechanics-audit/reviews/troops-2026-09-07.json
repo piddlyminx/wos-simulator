@@ -1,0 +1,2810 @@
+{
+  "generatedAt": "2026-09-07T04:45:01.508075+00:00",
+  "inventoryGeneratedAt": "2026-09-07T04:59:10.171Z",
+  "inventorySha256": "8d3128b4720134df833571fb4f6ee1f7848366e566035987a87b112aeb09e643",
+  "scope": "All recorded game outcomes are accepted evidence by user instruction, regardless of folder, unless explicitly invalid/obsolete. Nine disabled/stale records remain excluded. No active explicit invalid/obsolete flags were found; age, missing images, and simulator disagreement are not exclusion reasons.",
+  "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+  "gateCaveat": "Current T6 troop lines hydrate baseline class passives. BandsOfSteel/Ambusher/Volley start at tier7. FC requirements depend on FC independent of tier; there is no T11 gate. Hydration alone is not observed effect use.",
+  "replay": "docs/mechanics-audit/reviews/troops-2026-09-07-replay.json",
+  "replaySha256": "1db2c25757e2e37a4cdf5b022784a8f9b155cadfeb25f0d01ffd24ed7aa916e0",
+  "rows": [
+    {
+      "key": "troop:MasterBrawler",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Increase Attack Damage to Lancers by 10%",
+        "troop_type": "infantry",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "tier",
+            "value": 0
+          }
+        ],
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "MasterBrawler/1": {
+            "type": "type.single_target.damage.up",
+            "value": [
+              10
+            ],
+            "units": {
+              "applies_to": [
+                "infantry"
+              ],
+              "applies_vs": [
+                "lancer"
+              ]
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 267,
+      "acceptedHydratedFixtureCount": 267,
+      "hydratedLevels": [
+        1
+      ],
+      "status": "partially_supported",
+      "context": "Accepted no-hero T6 Infantry-versus-Lancer fixtures support the current normal-damage class-counter contribution: norah_s2_splash_C_nc game1153/1153/1153 versus current1152 and omitted1114; opposite attacking side type_triangle_B_nc game/current -929 versus omitted -922. This is positive contextual support at10%, not proof of all target exclusions, tiers, skill-kind effects, or bucket interactions.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/emulator_verified/norah_s2_splash_C_nc.json#0",
+          "fixtureSha256": "28760bd762906e91cef5700520be31923bbb6e25e57bc7ae4dd06f52accb2e38",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t6": 1500,
+              "lancer_t6": 0,
+              "marksman_t6": 0
+            },
+            "defender": {
+              "infantry_t6": 0,
+              "lancer_t6": 200,
+              "marksman_t6": 0
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            1153,
+            1153,
+            1153
+          ],
+          "gameSampleVariance": 0,
+          "baselineRawMetrics": {
+            "n_candidate": 1,
+            "mu_candidate": 1152,
+            "sigma_candidate": 0,
+            "n_reference": 3,
+            "mu_reference": 1153,
+            "sigma_reference": 0,
+            "bias_raw": -1,
+            "bias_pct": -0.06,
+            "sem": 0,
+            "stat_type": "deterministic",
+            "stat": null,
+            "p": null,
+            "passes": true
+          }
+        },
+        {
+          "fixtureKey": "testcases/emulator_verified/type_triangle_B_nc.json#0",
+          "fixtureSha256": "9e3e0f26e84b2db067c8fd88ec56d590b78cdffc07741a53e4f5ffe309653e70",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t6": 0,
+              "lancer_t6": 1000,
+              "marksman_t6": 0
+            },
+            "defender": {
+              "infantry_t6": 1000,
+              "lancer_t6": 0,
+              "marksman_t6": 0
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -929
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1,
+            "mu_candidate": -929,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": -929,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "deterministic",
+            "stat": null,
+            "p": null,
+            "passes": true
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#0",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#1",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#2",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#8",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#9",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#10",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#11",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#12",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#13",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#14",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#15",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#0",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#1",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#2",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#3",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#4",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#5",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#0",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/emulator_verified/ahmose_solo_nc.json#0",
+        "testcases/emulator_verified/alonso_attacker_600_all.json#0",
+        "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#0",
+        "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#1",
+        "testcases/emulator_verified/alonso_minxxx_defender.json#0",
+        "testcases/emulator_verified/alonso_norah_combo.json#0",
+        "testcases/emulator_verified/alonso_norah_combo.json#1",
+        "testcases/emulator_verified/alonso_norah_combo.json#2",
+        "testcases/emulator_verified/alonso_solo.json#0",
+        "testcases/emulator_verified/alonso_solo_v2.json#0",
+        "testcases/emulator_verified/alonso_solo_v2.json#1",
+        "testcases/emulator_verified/alonso_vs_alonso.json#0",
+        "testcases/emulator_verified/alonso_vs_alonso_inf_lancer.json#0",
+        "testcases/emulator_verified/alonso_wip_attacker.json#0",
+        "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+        "testcases/emulator_verified/army_term_precision_002i_003l.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_minxxx_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_swap_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_wip_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_wip_attacks_nc.json#1",
+        "testcases/emulator_verified/attdef_test_minxxx_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_test_wip_attacks_nc.json#0",
+        "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+        "testcases/emulator_verified/bahiti_solo.json#0",
+        "testcases/emulator_verified/bahiti_solo_nc.json#0",
+        "testcases/emulator_verified/damage_precision_325l_008i_325m.json#0",
+        "testcases/emulator_verified/damage_precision_325l_009i_325m.json#0",
+        "testcases/emulator_verified/damage_precision_875i_026i_875m.json#0",
+        "testcases/emulator_verified/determinism_test_normal_nc.json#0",
+        "testcases/emulator_verified/determinism_test_swapped_nc.json#0",
+        "testcases/emulator_verified/flint_reina_zinman_combo.json#0",
+        "testcases/emulator_verified/flint_solo_nc.json#0",
+        "testcases/emulator_verified/flint_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/greg_mia_defender_current.json#0",
+        "testcases/emulator_verified/greg_mia_nohero_control_current.json#0",
+        "testcases/emulator_verified/greg_mia_nohero_control_current.json#1",
+        "testcases/emulator_verified/greg_only_defender_current.json#0",
+        "testcases/emulator_verified/greg_only_defender_current.json#1",
+        "testcases/emulator_verified/greg_only_defender_current.json#2",
+        "testcases/emulator_verified/greg_solo.json#0",
+        "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+        "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+        "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+        "testcases/emulator_verified/gwen_solo_nc.json#0",
+        "testcases/emulator_verified/hector_patrick_combo.json#0",
+        "testcases/emulator_verified/hector_renee_wayne.json#0",
+        "testcases/emulator_verified/hector_solo.json#0",
+        "testcases/emulator_verified/jasser_solo_nc.json#0",
+        "testcases/emulator_verified/jessie_solo_nc.json#0",
+        "testcases/emulator_verified/ling_xue_solo_nc.json#0",
+        "testcases/emulator_verified/ling_xue_solo_nc.json#1",
+        "testcases/emulator_verified/logan_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#1",
+        "testcases/emulator_verified/logan_lynn_combo.json#2",
+        "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_solo_minxxx_nc.json#0",
+        "testcases/emulator_verified/logan_solo_v2_nc.json#0",
+        "testcases/emulator_verified/lumak_bokan_solo_nc.json#0",
+        "testcases/emulator_verified/lumak_bokan_solo_nc.json#1",
+        "testcases/emulator_verified/lynn_solo.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#1",
+        "testcases/emulator_verified/mia_solo.json#0",
+        "testcases/emulator_verified/mia_solo.json#1",
+        "testcases/emulator_verified/mia_solo.json#2",
+        "testcases/emulator_verified/mia_solo.json#3",
+        "testcases/emulator_verified/mia_solo.json#4",
+        "testcases/emulator_verified/molly_lynn_combo.json#0",
+        "testcases/emulator_verified/molly_solo.json#0",
+        "testcases/emulator_verified/natalia_solo.json#0",
+        "testcases/emulator_verified/norah_greg_combo.json#0",
+        "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+        "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+        "testcases/emulator_verified/norah_s2_inf_only_B_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_A.json#0",
+        "testcases/emulator_verified/norah_s2_splash_B_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_C_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_D.json#0",
+        "testcases/emulator_verified/norah_solo.json#0",
+        "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/patrick_solo_nc.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#1",
+        "testcases/emulator_verified/philly_solo.json#0",
+        "testcases/emulator_verified/philly_solo.json#1",
+        "testcases/emulator_verified/plateau_boundary_700m_006i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_007i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_008i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_009i_700l.json#0",
+        "testcases/emulator_verified/reina_attacker_wip.json#0",
+        "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/reina_logan_combo_simulator.json#0",
+        "testcases/emulator_verified/reina_solo_wip.json#0",
+        "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+        "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+        "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_solo_nc.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0",
+        "testcases/emulator_verified/seo_yoon_solo_nc.json#0",
+        "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/sergey_reina_combo_nc.json#0",
+        "testcases/emulator_verified/sergey_solo_nc.json#0",
+        "testcases/emulator_verified/sonya_buffs_cadence_2200i_vs_800i_200l_800m.json#0",
+        "testcases/emulator_verified/troop_check_nc.json#0",
+        "testcases/emulator_verified/type_triangle_A_nc.json#0",
+        "testcases/emulator_verified/type_triangle_B_nc.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#1",
+        "testcases/emulator_verified/wayne_reina_combo.json#0",
+        "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+        "testcases/emulator_verified/wayne_s1_solo.json#0",
+        "testcases/emulator_verified/wos425_wip_nohero_control_nc.json#0",
+        "testcases/emulator_verified/wos425_wip_patrick_health_nc.json#0",
+        "testcases/emulator_verified/wos425_wip_philly_defense.json#0",
+        "testcases/emulator_verified/wos425_wip_sergey_damage_taken_nc.json#0",
+        "testcases/emulator_verified/wos425_wip_sergey_patrick_combo_nc.json#0",
+        "testcases/emulator_verified/wos425_wip_sergey_philly_combo.json#0",
+        "testcases/emulator_verified/wos427_wip_sergey_philly_840.json#0",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#0",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#1",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_hero_nc.json#0",
+        "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json#0",
+        "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_hero_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#1",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+        "testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json#0",
+        "testcases/emulator_verified/wu_ming_bradley_current_nc.json#0",
+        "testcases/emulator_verified/wu_ming_marksman_vs_infantry_nc.json#0",
+        "testcases/emulator_verified/wu_ming_rounding_followup_nc.json#0",
+        "testcases/emulator_verified/wu_ming_s1_isolation_nc.json#0",
+        "testcases/emulator_verified/wu_ming_solo_current_nc.json#0",
+        "testcases/emulator_verified/wu_ming_solo_nc.json#0",
+        "testcases/emulator_verified/zinman_solo_nc.json#0",
+        "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+        "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+        "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+        "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#1",
+        "testcases/heroes_unittests/Hector_tc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#1",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#2",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#3",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#4",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#5",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#6",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#7",
+        "testcases/heroes_unittests/Mia_tc.json#0",
+        "testcases/heroes_unittests/Mia_tc.json#1",
+        "testcases/heroes_unittests/Mia_tc.json#2",
+        "testcases/heroes_unittests/Mia_tc.json#3",
+        "testcases/heroes_unittests/Mia_tc.json#4",
+        "testcases/heroes_unittests/Molly_tc.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#1",
+        "testcases/heroes_unittests/Molly_tc.json#2",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4",
+        "testcases/heroes_unittests/Reina_tc.json#0",
+        "testcases/heroes_unittests/Reina_tc.json#1",
+        "testcases/heroes_unittests/Reina_tc.json#2",
+        "testcases/heroes_unittests/Reina_tc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#0",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#1",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#2",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#4",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#5",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#6",
+        "testcases/heroes_unittests/Zinman_tc.json#0",
+        "testcases/heroes_unittests/Zinman_tc.json#1",
+        "testcases/heroes_unittests/Zinman_tc.json#2"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#0",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#1",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#2",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#8",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#9",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#10",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#11",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#12",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#13",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#14",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#15",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#0",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#1",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#2",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#3",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#4",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#5",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#0",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s1-4900-vs-1000.json#0",
+        "testcases/gatot_verified/s1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s16-7500-inf-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s2-health-1.1-4950-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5000-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5050-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5100-vs-1000.json#0",
+        "testcases/gatot_verified/s2-health-1.1-5150-vs-1000.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
+        "testcases/gatot_verified/s43-current-reciprocal-shield-cap-450-inf-vs-200-inf.json#0",
+        "testcases/gatot_verified/s44-current-reciprocal-shield-cap-2500-inf-vs-500-inf.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#1",
+        "testcases/heroes_unittests/Hector_tc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#1",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#2",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#3",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#4",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#5",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#6",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#7",
+        "testcases/heroes_unittests/Mia_tc.json#0",
+        "testcases/heroes_unittests/Mia_tc.json#1",
+        "testcases/heroes_unittests/Mia_tc.json#2",
+        "testcases/heroes_unittests/Mia_tc.json#3",
+        "testcases/heroes_unittests/Mia_tc.json#4",
+        "testcases/heroes_unittests/Molly_tc.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#1",
+        "testcases/heroes_unittests/Molly_tc.json#2",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4",
+        "testcases/heroes_unittests/Reina_tc.json#0",
+        "testcases/heroes_unittests/Reina_tc.json#1",
+        "testcases/heroes_unittests/Reina_tc.json#2",
+        "testcases/heroes_unittests/Reina_tc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#0",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#1",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#2",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#4",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#5",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#6",
+        "testcases/heroes_unittests/Zinman_tc.json#0",
+        "testcases/heroes_unittests/Zinman_tc.json#1",
+        "testcases/heroes_unittests/Zinman_tc.json#2"
+      ]
+    },
+    {
+      "key": "troop:BandsOfSteel",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Increase Defense against Lancers by 10%",
+        "troop_type": "infantry",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "tier",
+            "value": 7
+          }
+        ],
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "BandsOfSteel/1": {
+            "type": "active.troop.defense.up",
+            "value": [
+              10
+            ],
+            "units": {
+              "applies_to": [
+                "infantry"
+              ],
+              "applies_vs": [
+                "lancer"
+              ]
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 14,
+      "acceptedHydratedFixtureCount": 14,
+      "hydratedLevels": [
+        1
+      ],
+      "status": "partially_supported",
+      "context": "Accepted renee_hendrik_defense_bucket_nc has minxxx full Renee4/4/4 and Hendrik1/0/0 with120 T6 Lancers versus446 T9 Infantry. Game/current+14 versus omission+30 supports the current defender Infantry protection from Lancer normal attacks in this combined kit. No-hero isolation, other targets, skill-kind protection, precise T7 threshold and mixed-tier inheritance remain unreviewed.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+          "fixtureSha256": "6075b01541af2e9d31d241b32fbb294d0701c24eed285132cb47528ae73da90a",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t6": 120
+            },
+            "defender": {
+              "infantry_t9": 446
+            }
+          },
+          "heroes": {
+            "attacker": {
+              "Renee": {
+                "skill_1": 4,
+                "skill_2": 4,
+                "skill_3": 4
+              },
+              "Hendrik": {
+                "skill_1": 1,
+                "skill_2": 0,
+                "skill_3": 0
+              }
+            },
+            "defender": {}
+          },
+          "gameScores": [
+            14
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1,
+            "mu_candidate": 14,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 14,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "deterministic",
+            "stat": null,
+            "p": null,
+            "passes": true
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+        "testcases/emulator_verified/logan_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ]
+    },
+    {
+      "key": "troop:CrystalShield",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "The fire crystal energy attached to the surface makes the shield impregnable and grants it X% chance of offsetting 36 damage",
+        "troop_type": "infantry",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 3
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 5
+          }
+        ],
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            25,
+            37.5
+          ],
+          "source": "enemy.any",
+          "target": "self.infantry"
+        },
+        "effects": {
+          "CrystalShield/1": {
+            "type": "active.troop.damageTaken.down",
+            "value": [
+              36,
+              36
+            ],
+            "units": {
+              "applies_to": "trigger.target",
+              "applies_vs": "trigger.source"
+            },
+            "duration": {
+              "attacks": {
+                "count": 1
+              }
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 24,
+      "acceptedHydratedFixtureCount": 24,
+      "hydratedLevels": [
+        2
+      ],
+      "status": "partially_supported",
+      "context": "Accepted FC5 no-hero mixed fixture has 13 observations: current p=0.522674; omit CrystalShield p=0.000100; change level 2 proc from 37.5% to 25% or change the 36 denominator reduction to raw shield 36 each p=0.000050, with 1000 samples per candidate. Supports positive Infantry protection in this normal-attack mixed troop kit and the current probability model over that alternative. Does not uniquely identify exact probability, all denominator grouping, incoming skill-kind behavior, consumption, FC3 level 1 or full gate/target exclusions.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+          "fixtureSha256": "3ee322e77de363c28c5a962441a61913a3f9912caf698e0b5ce4d1618390fdf4",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t10_fc5": 50000
+            },
+            "defender": {
+              "infantry_t10": 6450,
+              "lancer_t10": 7525,
+              "lancer_t9": 30105,
+              "marksman_t10": 7525,
+              "marksman_t9": 30105
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -45772,
+            -42784,
+            -44207,
+            -47019,
+            -46631,
+            -44760,
+            -47180,
+            -44639,
+            -46574,
+            -45094,
+            -45641,
+            -45844,
+            -42118
+          ],
+          "gameSampleVariance": 2409064.3333333335,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": -45065.99,
+            "sigma_candidate": 1481.45,
+            "n_reference": 13,
+            "mu_reference": -45251,
+            "sigma_reference": 1552.12,
+            "bias_raw": 185.01,
+            "bias_pct": 0.14,
+            "sem": 46.85,
+            "stat_type": "cdf_support",
+            "stat": 0.2049,
+            "p": 0.623869,
+            "passes": true,
+            "cdf_rms": 0.01722,
+            "cdf_p": 0.619169,
+            "support_value": -42784,
+            "support_mass": 0,
+            "support_p": 0.99915,
+            "flag_reason": "cdf"
+          }
+        },
+        {
+          "fixtureKey": "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+          "fixtureSha256": "618463a0f9053a2e91f8ada951a58da191ee5076202a71f414c57c9f1461fd4c",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t11_fc9": 90000
+            },
+            "defender": {
+              "infantry_t10_fc9": 90000
+            }
+          },
+          "heroes": {
+            "attacker": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            },
+            "defender": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            }
+          },
+          "gameScores": [
+            83565
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 83397.55,
+            "sigma_candidate": 211.06,
+            "n_reference": 1,
+            "mu_reference": 83565,
+            "sigma_reference": 0,
+            "bias_raw": -167.45,
+            "bias_pct": -0.09,
+            "sem": 6.67,
+            "stat_type": "cdf_support",
+            "stat": 0.2822,
+            "p": 0.522124,
+            "passes": true,
+            "cdf_rms": 0.02358,
+            "cdf_p": 0.427329,
+            "support_value": 83565,
+            "support_mass": 0.002,
+            "support_p": 0.79636,
+            "flag_reason": "cdf"
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "followupEvidence": [
+        "docs/mechanics-audit/reviews/fc-troops/README.md",
+        "docs/mechanics-audit/reviews/fc-troops/results.json",
+        "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+      ],
+      "followupFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ]
+    },
+    {
+      "key": "troop:BodyOfLight",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Increase Infantry Defense by X%, and reduce an extra Y% damage while Crystal Shield is active.",
+        "troop_type": "infantry",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 8
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 10
+          }
+        ],
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "BodyOfLight/1": {
+            "type": "active.troop.defense.up",
+            "value": [
+              4,
+              6
+            ],
+            "units": {
+              "applies_to": [
+                "infantry"
+              ],
+              "applies_vs": "any"
+            }
+          },
+          "BodyOfLight/2": {
+            "type": "active.troop.damageTaken.down",
+            "value": [
+              10,
+              15
+            ],
+            "requires_effect": "CrystalShield/1",
+            "units": {
+              "applies_to": [
+                "infantry"
+              ],
+              "applies_vs": "any"
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 23,
+      "acceptedHydratedFixtureCount": 23,
+      "hydratedLevels": [
+        1,
+        2
+      ],
+      "status": "partially_supported",
+      "context": "Accepted FC9 Infantry/Gatot s4/s5 fixtures support aggregate BodyOfLight contribution. Independent 10000-sample s4 confirmation gives current mean 83394.94 SD 218.27 p=0.274036 versus omit only +4 Defense mean 82857.93 SD 227.13 p=0.001550. This supports the Defense effect in the recorded full-kit normal-attack context. Removing only the conditional CrystalShield reduction remains plausible in both cases, so that branch is not positively established. Level2 +6/+15, precise FC8 boundary, skill-kind protection and bucket identities remain unreviewed.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+          "fixtureSha256": "618463a0f9053a2e91f8ada951a58da191ee5076202a71f414c57c9f1461fd4c",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t11_fc9": 90000
+            },
+            "defender": {
+              "infantry_t10_fc9": 90000
+            }
+          },
+          "heroes": {
+            "attacker": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            },
+            "defender": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            }
+          },
+          "gameScores": [
+            83565
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 83397.55,
+            "sigma_candidate": 211.06,
+            "n_reference": 1,
+            "mu_reference": 83565,
+            "sigma_reference": 0,
+            "bias_raw": -167.45,
+            "bias_pct": -0.09,
+            "sem": 6.67,
+            "stat_type": "cdf_support",
+            "stat": 0.2822,
+            "p": 0.522124,
+            "passes": true,
+            "cdf_rms": 0.02358,
+            "cdf_p": 0.427329,
+            "support_value": 83565,
+            "support_mass": 0.002,
+            "support_p": 0.79636,
+            "flag_reason": "cdf"
+          }
+        },
+        {
+          "fixtureKey": "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "fixtureSha256": "92de703edb0b49ab06766edb8c051e6089c50f3efefddb4c7d6e5844e5f96fe3",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "marksman_t6": 10000
+            },
+            "defender": {
+              "infantry_t1_fc10": 1
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            }
+          },
+          "gameScores": [
+            9539
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 9539,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 9539,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0,
+            "cdf_p": 1,
+            "support_value": 9539,
+            "support_mass": 0.33333333,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/gatot_verified/s4-fc9-gatot-10000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-20000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-40000.json#0",
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-20000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-40000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ],
+      "followupEvidence": [
+        "docs/mechanics-audit/reviews/fc-troops/README.md",
+        "docs/mechanics-audit/reviews/fc-troops/results.json",
+        "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+      ],
+      "followupFixtureKeys": [
+        "testcases/gatot_verified/s4-fc9-gatot-90000.json#0",
+        "testcases/gatot_verified/s5-fc9-gatot-lumak-90000.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ]
+    },
+    {
+      "key": "troop:Charge",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Increase Attack Damage to Marksmen by 10%",
+        "troop_type": "lancer",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "tier",
+            "value": 0
+          }
+        ],
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "Charge/1": {
+            "type": "type.single_target.damage.up",
+            "value": [
+              10
+            ],
+            "units": {
+              "applies_to": [
+                "lancer"
+              ],
+              "applies_vs": [
+                "marksman"
+              ]
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 206,
+      "acceptedHydratedFixtureCount": 206,
+      "hydratedLevels": [
+        1
+      ],
+      "status": "partially_supported",
+      "context": "Accepted no-hero T6 Marksman-versus-Lancer fixture gives game/current +1504 versus omitCharge +1642, supporting defender Lancer normal-damage contribution against Marksmen. Renee full3/3/3 with T6 Lancers versus Marksmen corroborates game/current +50 versus omission -185. Exact bucket equivalence, skill-kind behavior, other tiers and full target exclusions remain unreviewed.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_control.json#0",
+          "fixtureSha256": "701455f3475cdf7ba53e6a049e10bab88b6c55630e3863ddfdc94a9458dd3045",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "marksman_t6": 2800
+            },
+            "defender": {
+              "lancer_t6": 1040
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            1504
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1,
+            "mu_candidate": 1504,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 1504,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "deterministic",
+            "stat": null,
+            "p": null,
+            "passes": true
+          }
+        },
+        {
+          "fixtureKey": "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+          "fixtureSha256": "42897391239f038a0b9746a750f8f24ea333998b9581d4979f980b32f4910216",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t6": 500
+            },
+            "defender": {
+              "marksman_t6": 1490
+            }
+          },
+          "heroes": {
+            "attacker": {
+              "Renee": {
+                "skill_1": 3,
+                "skill_2": 3,
+                "skill_3": 3
+              }
+            },
+            "defender": {}
+          },
+          "gameScores": [
+            50
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1,
+            "mu_candidate": 50,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 50,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "deterministic",
+            "stat": null,
+            "p": null,
+            "passes": true
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#3",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#4",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#8",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#9",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#10",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#11",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#16",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#17",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#0",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#1",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#2",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#3",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#4",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#5",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#0",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/emulator_verified/ahmose_solo_nc.json#0",
+        "testcases/emulator_verified/alonso_attacker_600_all.json#0",
+        "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#0",
+        "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#1",
+        "testcases/emulator_verified/alonso_minxxx_defender.json#0",
+        "testcases/emulator_verified/alonso_norah_combo.json#0",
+        "testcases/emulator_verified/alonso_norah_combo.json#1",
+        "testcases/emulator_verified/alonso_norah_combo.json#2",
+        "testcases/emulator_verified/alonso_solo.json#0",
+        "testcases/emulator_verified/alonso_solo_v2.json#0",
+        "testcases/emulator_verified/alonso_solo_v2.json#1",
+        "testcases/emulator_verified/alonso_vs_alonso.json#0",
+        "testcases/emulator_verified/alonso_vs_alonso_inf_lancer.json#0",
+        "testcases/emulator_verified/alonso_wip_attacker.json#0",
+        "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+        "testcases/emulator_verified/army_term_precision_002i_003l.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_minxxx_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_swap_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_wip_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_wip_attacks_nc.json#1",
+        "testcases/emulator_verified/attdef_test_minxxx_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_test_wip_attacks_nc.json#0",
+        "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+        "testcases/emulator_verified/bahiti_solo.json#0",
+        "testcases/emulator_verified/bahiti_solo_nc.json#0",
+        "testcases/emulator_verified/damage_precision_325l_008i_325m.json#0",
+        "testcases/emulator_verified/damage_precision_325l_009i_325m.json#0",
+        "testcases/emulator_verified/flint_reina_zinman_combo.json#0",
+        "testcases/emulator_verified/flint_solo_nc.json#0",
+        "testcases/emulator_verified/flint_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_lvl2.json#0",
+        "testcases/emulator_verified/gordon_wayne_s1_extra_overlap_nc.json#0",
+        "testcases/emulator_verified/greg_mia_defender_current.json#0",
+        "testcases/emulator_verified/greg_mia_nohero_control_current.json#0",
+        "testcases/emulator_verified/greg_mia_nohero_control_current.json#1",
+        "testcases/emulator_verified/greg_only_defender_current.json#0",
+        "testcases/emulator_verified/greg_only_defender_current.json#1",
+        "testcases/emulator_verified/greg_only_defender_current.json#2",
+        "testcases/emulator_verified/greg_solo.json#0",
+        "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+        "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+        "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+        "testcases/emulator_verified/gwen_solo_nc.json#0",
+        "testcases/emulator_verified/hector_patrick_combo.json#0",
+        "testcases/emulator_verified/hector_solo.json#0",
+        "testcases/emulator_verified/hendrik_armor_lancer_scope.json#0",
+        "testcases/emulator_verified/jasser_solo_nc.json#0",
+        "testcases/emulator_verified/jessie_solo_nc.json#0",
+        "testcases/emulator_verified/ling_xue_solo_nc.json#0",
+        "testcases/emulator_verified/ling_xue_solo_nc.json#1",
+        "testcases/emulator_verified/logan_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#1",
+        "testcases/emulator_verified/logan_lynn_combo.json#2",
+        "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_solo_minxxx_nc.json#0",
+        "testcases/emulator_verified/logan_solo_v2_nc.json#0",
+        "testcases/emulator_verified/lumak_bokan_solo_nc.json#0",
+        "testcases/emulator_verified/lumak_bokan_solo_nc.json#1",
+        "testcases/emulator_verified/lynn_solo.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#1",
+        "testcases/emulator_verified/mia_solo.json#0",
+        "testcases/emulator_verified/mia_solo.json#1",
+        "testcases/emulator_verified/mia_solo.json#2",
+        "testcases/emulator_verified/mia_solo.json#3",
+        "testcases/emulator_verified/mia_solo.json#4",
+        "testcases/emulator_verified/molly_lynn_combo.json#0",
+        "testcases/emulator_verified/molly_solo.json#0",
+        "testcases/emulator_verified/natalia_solo.json#0",
+        "testcases/emulator_verified/norah_greg_combo.json#0",
+        "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+        "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+        "testcases/emulator_verified/norah_s2_inf_only_B_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_A.json#0",
+        "testcases/emulator_verified/norah_s2_splash_B_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_C_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_D.json#0",
+        "testcases/emulator_verified/norah_solo.json#0",
+        "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/patrick_solo_nc.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#1",
+        "testcases/emulator_verified/philly_solo.json#0",
+        "testcases/emulator_verified/philly_solo.json#1",
+        "testcases/emulator_verified/plateau_boundary_700m_006i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_007i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_008i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_009i_700l.json#0",
+        "testcases/emulator_verified/reina_attacker_wip.json#0",
+        "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/reina_logan_combo_simulator.json#0",
+        "testcases/emulator_verified/reina_solo_wip.json#0",
+        "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+        "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_gwen_bucket_retry_nc.json#0",
+        "testcases/emulator_verified/renee_hendrik_defense_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_solo_nc.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/renee_wu_ming_s1_damage_kind_nc.json#0",
+        "testcases/emulator_verified/retarget_lancer_screen_nc.json#0",
+        "testcases/emulator_verified/seo_yoon_solo_nc.json#0",
+        "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/sergey_reina_combo_nc.json#0",
+        "testcases/emulator_verified/sergey_solo_nc.json#0",
+        "testcases/emulator_verified/simple_001_nc.json#0",
+        "testcases/emulator_verified/sonya_buffs_cadence_2200i_vs_800i_200l_800m.json#0",
+        "testcases/emulator_verified/troop_check_nc.json#0",
+        "testcases/emulator_verified/type_triangle_A_nc.json#0",
+        "testcases/emulator_verified/type_triangle_B_nc.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#1",
+        "testcases/emulator_verified/wayne_reina_combo.json#0",
+        "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+        "testcases/emulator_verified/wayne_s2_solo.json#0",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#0",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#1",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_hero_nc.json#0",
+        "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_control_nc.json#0",
+        "testcases/emulator_verified/wos444_edith_s12_lancer_damage_dealt_hero_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#1",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+        "testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_gordon_s11_lancer_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_gordon_s21_lancer_damage_up_control.json#0",
+        "testcases/emulator_verified/wu_ming_bradley_current_nc.json#0",
+        "testcases/emulator_verified/wu_ming_rounding_followup_nc.json#0",
+        "testcases/emulator_verified/wu_ming_s2_isolation_nc.json#0",
+        "testcases/emulator_verified/wu_ming_solo_current_nc.json#0",
+        "testcases/emulator_verified/wu_ming_solo_nc.json#0",
+        "testcases/emulator_verified/zinman_solo_nc.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#1",
+        "testcases/heroes_unittests/Hector_tc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#1",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#5",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#6",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#7",
+        "testcases/heroes_unittests/Mia_tc.json#0",
+        "testcases/heroes_unittests/Mia_tc.json#1",
+        "testcases/heroes_unittests/Mia_tc.json#2",
+        "testcases/heroes_unittests/Mia_tc.json#3",
+        "testcases/heroes_unittests/Mia_tc.json#4",
+        "testcases/heroes_unittests/Molly_tc.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#1",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4",
+        "testcases/heroes_unittests/Reina_tc.json#0",
+        "testcases/heroes_unittests/Reina_tc.json#1",
+        "testcases/heroes_unittests/Reina_tc.json#2",
+        "testcases/heroes_unittests/Reina_tc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#0",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#1",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#4",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#5",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#6",
+        "testcases/heroes_unittests/Zinman_tc.json#0",
+        "testcases/heroes_unittests/Zinman_tc.json#1",
+        "testcases/heroes_unittests/Zinman_tc.json#2"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#3",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#4",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#8",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#9",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#10",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#11",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#16",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#17",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#0",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#1",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#2",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#3",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#4",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#5",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#0",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-1000-lancer-0-marksman.json#0",
+        "testcases/gatot_verified/s3-5000-inf-vs-1000-inf-10-lancer.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#1",
+        "testcases/heroes_unittests/Hector_tc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#1",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#5",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#6",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#7",
+        "testcases/heroes_unittests/Mia_tc.json#0",
+        "testcases/heroes_unittests/Mia_tc.json#1",
+        "testcases/heroes_unittests/Mia_tc.json#2",
+        "testcases/heroes_unittests/Mia_tc.json#3",
+        "testcases/heroes_unittests/Mia_tc.json#4",
+        "testcases/heroes_unittests/Molly_tc.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#1",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4",
+        "testcases/heroes_unittests/Reina_tc.json#0",
+        "testcases/heroes_unittests/Reina_tc.json#1",
+        "testcases/heroes_unittests/Reina_tc.json#2",
+        "testcases/heroes_unittests/Reina_tc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#0",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#1",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#4",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#5",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#6",
+        "testcases/heroes_unittests/Zinman_tc.json#0",
+        "testcases/heroes_unittests/Zinman_tc.json#1",
+        "testcases/heroes_unittests/Zinman_tc.json#2"
+      ]
+    },
+    {
+      "key": "troop:Ambusher",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Lancer attacks have a chance to strike Marksmen behind Infantry.",
+        "troop_type": "lancer",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "tier",
+            "value": 7
+          }
+        ],
+        "trigger": {
+          "type": "turn",
+          "probability": [
+            20
+          ]
+        },
+        "effects": {
+          "Ambusher/1": {
+            "type": "attack_order",
+            "value": [
+              "marksman",
+              "infantry",
+              "lancer"
+            ],
+            "units": {
+              "applies_to": [
+                "lancer"
+              ],
+              "applies_vs": [
+                "marksman"
+              ]
+            },
+            "duration": {
+              "turns": {
+                "count": 1
+              }
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 13,
+      "acceptedHydratedFixtureCount": 13,
+      "hydratedLevels": [
+        1
+      ],
+      "status": "partially_supported",
+      "context": "Accepted T9 mixed-line fixture has10 game outcomes, mean+179.30 SD2006.64. Current20% with2000 simulator samples predicts -807.72 SD1886.84, combined p0.143893;10% and30% each fail p0.00005; omission is deterministic -5725. This supports the current probabilistic Lancer-to-Marksman targeting behavior over those alternatives, not a precise20% estimate or every gate/retarget interaction. Trial2 has conflicting overall versus per-line counts; retained as recorded, with exclusion sensitivity leaving conclusions unchanged. Lancer-only simple_001_nc is non-discriminating despite exact endpoint and does not add positive Ambusher evidence.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+          "fixtureSha256": "1550fde3c198ad670402b3bcd5d47b808e909df17fe423b3c2060c70804b2c10",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t9": 6000,
+              "lancer_t9": 1500
+            },
+            "defender": {
+              "infantry_t6": 5000,
+              "marksman_t6": 5000
+            }
+          },
+          "heroes": {
+            "attacker": {
+              "Logan": {
+                "skill_1": 1,
+                "skill_2": 0,
+                "skill_3": 0
+              },
+              "Renee": {
+                "skill_1": 1,
+                "skill_2": 0,
+                "skill_3": 0
+              }
+            },
+            "defender": {
+              "Logan": {
+                "skill_1": 1,
+                "skill_2": 1,
+                "skill_3": 0
+              },
+              "Patrick": {
+                "skill_1": 1,
+                "skill_2": 1
+              }
+            }
+          },
+          "gameScores": [
+            2057,
+            572,
+            -2668,
+            1547,
+            2428,
+            2199,
+            -1731,
+            1178,
+            -1580,
+            -2209
+          ],
+          "gameSampleVariance": 4026588.011111111,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": -778.39,
+            "sigma_candidate": 1930.34,
+            "n_reference": 10,
+            "mu_reference": 179.3,
+            "sigma_reference": 2006.64,
+            "bias_raw": -957.69,
+            "bias_pct": -5.47,
+            "sem": 61.04,
+            "stat_type": "cdf_support",
+            "stat": 0.7351,
+            "p": 0.184041,
+            "passes": true,
+            "cdf_rms": 0.098928,
+            "cdf_p": 0.174441,
+            "support_value": 572,
+            "support_mass": 0,
+            "support_p": 0.99725,
+            "flag_reason": "cdf"
+          }
+        },
+        {
+          "fixtureKey": "testcases/emulator_verified/simple_001_nc.json#0",
+          "fixtureSha256": "d16d6714237e1b7fbb36ea1070f1504391f9f01e3ac6ec669dd845ee93b906c3",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t8": 200
+            },
+            "defender": {
+              "lancer_t9": 200
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -186
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": -186,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": -186,
+            "sigma_reference": 0,
+            "bias_raw": 0,
+            "bias_pct": 0,
+            "sem": 0,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0,
+            "cdf_p": 1,
+            "support_value": -186,
+            "support_mass": 0.33333333,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+        "testcases/emulator_verified/logan_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/simple_001_nc.json#0",
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ]
+    },
+    {
+      "key": "troop:CrystalLance",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Lancers have a chance to make an extra skill attack for 100% damage.",
+        "troop_type": "lancer",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 3
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 5
+          }
+        ],
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            10,
+            15
+          ],
+          "source": "lancer"
+        },
+        "effects": {
+          "CrystalLance/1": {
+            "type": "extra_skill_attack",
+            "value": [
+              100,
+              100
+            ],
+            "units": {
+              "applies_to": [
+                "lancer"
+              ],
+              "applies_vs": "trigger.target"
+            },
+            "trigger_damage_jobs": [
+              {
+                "source": "use.source",
+                "target": "effect.applies_vs"
+              }
+            ]
+          }
+        }
+      },
+      "hydratedFixtureCount": 6,
+      "acceptedHydratedFixtureCount": 6,
+      "hydratedLevels": [
+        2
+      ],
+      "status": "partially_supported",
+      "context": "Six accepted s9 fixtures preserve exact T9 versus T1 FC10 Lancer inputs, with IncandescentField and full recorded kits retained. Current level 2 model is plausible in all six (p=0.417979–0.939603); omission fails in each (p=0.000050;1000 samples/candidate). Supports positive outgoing Lancer contribution in this context. Does not uniquely identify the separate skill-job delivery,100% coefficient,15% proc rate, level 1, precise FC boundary or excluded targets.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "fixtureSha256": "c8f5a68889ce8f341f39c667bbe85e96d12f66653fd3693512a9daf25ae66be5",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t9": 1500
+            },
+            "defender": {
+              "lancer_t1_fc10": 146
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -85
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": -85.4,
+            "sigma_candidate": 4.15,
+            "n_reference": 1,
+            "mu_reference": -85,
+            "sigma_reference": 0,
+            "bias_raw": -0.4,
+            "bias_pct": -0.02,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0.024386,
+            "cdf_p": 1,
+            "support_value": -85,
+            "support_mass": 0.09088889,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          }
+        },
+        {
+          "fixtureKey": "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "fixtureSha256": "5b21bb1556ceeb287d928a9d7dcdd06e633d7392cb1d0b0e371b359fd19df4ef",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t9": 2200
+            },
+            "defender": {
+              "lancer_t1_fc10": 146
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -20
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 40.57,
+            "sigma_candidate": 107.89,
+            "n_reference": 1,
+            "mu_reference": -20,
+            "sigma_reference": 0,
+            "bias_raw": 60.57,
+            "bias_pct": 2.58,
+            "sem": 3.41,
+            "stat_type": "cdf_support",
+            "stat": 0.1478,
+            "p": 0.711614,
+            "passes": true,
+            "cdf_rms": 0.080339,
+            "cdf_p": 0.60882,
+            "support_value": -20,
+            "support_mass": 0.03266667,
+            "support_p": 0.898505,
+            "flag_reason": "cdf"
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0"
+      ],
+      "followupEvidence": [
+        "docs/mechanics-audit/reviews/fc-troops/README.md",
+        "docs/mechanics-audit/reviews/fc-troops/results.json",
+        "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+      ],
+      "followupFixtureKeys": [
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0"
+      ]
+    },
+    {
+      "key": "troop:IncandescentField",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Lancers have a chance to take half damage when under attack.",
+        "troop_type": "lancer",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 8
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 10
+          }
+        ],
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            10,
+            15
+          ],
+          "source": "enemy.any",
+          "target": "self.lancer"
+        },
+        "effects": {
+          "IncandescentField/1": {
+            "type": "active.troop.defense.up",
+            "value": [
+              100,
+              100
+            ],
+            "units": {
+              "applies_to": "trigger.target",
+              "applies_vs": "trigger.source"
+            },
+            "duration": {
+              "attacks": {
+                "count": 1
+              }
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 6,
+      "acceptedHydratedFixtureCount": 6,
+      "hydratedLevels": [
+        2
+      ],
+      "status": "partially_supported",
+      "context": "Six accepted distinct s9 T9 versus T1 FC10 Lancer setups support a joint conditional defensive contribution with CrystalLance retained: independent cross-setup endpoint-residual resampling gives current p=0.728733 versus omission p=0.000460. Each individual n=1 case alone remains compatible with omission. This retrospective inference assumes independent battle RNG conditional on recorded inputs and does not pool different setups as repetitions; no adaptive historical selection adjustment is made. Exact +100% Defense versus another half-damage bucket,15% proc, consumption, level 1/FC8 boundary and skill-kind behavior remain unreviewed.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "fixtureSha256": "c8f5a68889ce8f341f39c667bbe85e96d12f66653fd3693512a9daf25ae66be5",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t9": 1500
+            },
+            "defender": {
+              "lancer_t1_fc10": 146
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -85
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": -85.4,
+            "sigma_candidate": 4.15,
+            "n_reference": 1,
+            "mu_reference": -85,
+            "sigma_reference": 0,
+            "bias_raw": -0.4,
+            "bias_pct": -0.02,
+            "sem": 0.13,
+            "stat_type": "cdf_support",
+            "stat": 0,
+            "p": 1,
+            "passes": true,
+            "cdf_rms": 0.024386,
+            "cdf_p": 1,
+            "support_value": -85,
+            "support_mass": 0.09088889,
+            "support_p": 1,
+            "flag_reason": "cdf+support"
+          }
+        },
+        {
+          "fixtureKey": "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+          "fixtureSha256": "5b21bb1556ceeb287d928a9d7dcdd06e633d7392cb1d0b0e371b359fd19df4ef",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "lancer_t9": 2200
+            },
+            "defender": {
+              "lancer_t1_fc10": 146
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -20
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 40.57,
+            "sigma_candidate": 107.89,
+            "n_reference": 1,
+            "mu_reference": -20,
+            "sigma_reference": 0,
+            "bias_raw": 60.57,
+            "bias_pct": 2.58,
+            "sem": 3.41,
+            "stat_type": "cdf_support",
+            "stat": 0.1478,
+            "p": 0.711614,
+            "passes": true,
+            "cdf_rms": 0.080339,
+            "cdf_p": 0.60882,
+            "support_value": -20,
+            "support_mass": 0.03266667,
+            "support_p": 0.898505,
+            "flag_reason": "cdf"
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0"
+      ],
+      "followupEvidence": [
+        "docs/mechanics-audit/reviews/fc-troops/README.md",
+        "docs/mechanics-audit/reviews/fc-troops/results.json",
+        "docs/mechanics-audit/reviews/fc-troops/confirmation.json",
+        "docs/mechanics-audit/reviews/fc-troops/incandescent-combined.json"
+      ],
+      "followupFixtureKeys": [
+        "testcases/gatot_verified/s9-1500-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-1950-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2100-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2200-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-2201-t9-lancers-vs-146-t1-fc10-lancers.json#0",
+        "testcases/gatot_verified/s9-3000-t9-lancers-vs-146-t1-fc10-lancers.json#0"
+      ]
+    },
+    {
+      "key": "troop:RangedStrike",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Increase Attack Damage to Infantry by 10%",
+        "troop_type": "marksman",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "tier",
+            "value": 0
+          }
+        ],
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "RangedStrike/1": {
+            "type": "type.single_target.damage.up",
+            "value": [
+              10
+            ],
+            "units": {
+              "applies_to": [
+                "marksman"
+              ],
+              "applies_vs": [
+                "infantry"
+              ]
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 219,
+      "acceptedHydratedFixtureCount": 219,
+      "hydratedLevels": [
+        1
+      ],
+      "status": "partially_supported",
+      "context": "Accepted no-hero T6 Marksman-versus-Infantry fixture gives game+1623/current+1622 versus omission+1483, supporting its current normal-damage class-counter contribution within the requested1–2 survivor tolerance. This does not establish skill-kind amplification, all target exclusions, other tiers, or bucket interactions.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_control.json#0",
+          "fixtureSha256": "55e71163e29d10f140e41e1b5a87d941785e6a918f70c17da28c54ec1bc70d0a",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "marksman_t6": 2800
+            },
+            "defender": {
+              "infantry_t6": 1040
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            1623
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1,
+            "mu_candidate": 1622,
+            "sigma_candidate": 0,
+            "n_reference": 1,
+            "mu_reference": 1623,
+            "sigma_reference": 0,
+            "bias_raw": -1,
+            "bias_pct": -0.03,
+            "sem": 0,
+            "stat_type": "deterministic",
+            "stat": null,
+            "p": null,
+            "passes": true
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#5",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#6",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#7",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#12",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#13",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#14",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#15",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#16",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#17",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#0",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#1",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#2",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#3",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#4",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#5",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#0",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/emulator_verified/ahmose_solo_nc.json#0",
+        "testcases/emulator_verified/alonso_attacker_600_all.json#0",
+        "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#0",
+        "testcases/emulator_verified/alonso_attacker_900_inf_lancer.json#1",
+        "testcases/emulator_verified/alonso_minxxx_defender.json#0",
+        "testcases/emulator_verified/alonso_norah_combo.json#0",
+        "testcases/emulator_verified/alonso_norah_combo.json#1",
+        "testcases/emulator_verified/alonso_norah_combo.json#2",
+        "testcases/emulator_verified/alonso_solo.json#0",
+        "testcases/emulator_verified/alonso_solo_v2.json#0",
+        "testcases/emulator_verified/alonso_solo_v2.json#1",
+        "testcases/emulator_verified/alonso_vs_alonso.json#0",
+        "testcases/emulator_verified/alonso_wip_attacker.json#0",
+        "testcases/emulator_verified/ambusher_logan_renee_vs_logan_patrick_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_minxxx_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_swap_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_wip_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_jasser_patrick_wip_attacks_nc.json#1",
+        "testcases/emulator_verified/attdef_test_minxxx_attacks_nc.json#0",
+        "testcases/emulator_verified/attdef_test_wip_attacks_nc.json#0",
+        "testcases/emulator_verified/bahiti_norah_combo_nc.json#0",
+        "testcases/emulator_verified/bahiti_solo.json#0",
+        "testcases/emulator_verified/bahiti_solo_nc.json#0",
+        "testcases/emulator_verified/damage_precision_325l_008i_325m.json#0",
+        "testcases/emulator_verified/damage_precision_325l_009i_325m.json#0",
+        "testcases/emulator_verified/damage_precision_875i_026i_875m.json#0",
+        "testcases/emulator_verified/flint_reina_zinman_combo.json#0",
+        "testcases/emulator_verified/flint_solo_nc.json#0",
+        "testcases/emulator_verified/flint_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/greg_mia_defender_current.json#0",
+        "testcases/emulator_verified/greg_mia_nohero_control_current.json#0",
+        "testcases/emulator_verified/greg_mia_nohero_control_current.json#1",
+        "testcases/emulator_verified/greg_only_defender_current.json#0",
+        "testcases/emulator_verified/greg_only_defender_current.json#1",
+        "testcases/emulator_verified/greg_only_defender_current.json#2",
+        "testcases/emulator_verified/greg_solo.json#0",
+        "testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json#0",
+        "testcases/emulator_verified/gwen_blastmaster_fanout_800m_vs_600_each.json#0",
+        "testcases/emulator_verified/gwen_norah_combo_nc.json#0",
+        "testcases/emulator_verified/gwen_solo_nc.json#0",
+        "testcases/emulator_verified/hector_patrick_combo.json#0",
+        "testcases/emulator_verified/hector_solo.json#0",
+        "testcases/emulator_verified/jasser_solo_nc.json#0",
+        "testcases/emulator_verified/jessie_solo_nc.json#0",
+        "testcases/emulator_verified/ling_xue_solo_nc.json#0",
+        "testcases/emulator_verified/ling_xue_solo_nc.json#1",
+        "testcases/emulator_verified/logan_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#0",
+        "testcases/emulator_verified/logan_lynn_combo.json#1",
+        "testcases/emulator_verified/logan_lynn_combo.json#2",
+        "testcases/emulator_verified/logan_reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/logan_solo_minxxx_nc.json#0",
+        "testcases/emulator_verified/logan_solo_v2_nc.json#0",
+        "testcases/emulator_verified/lumak_bokan_solo_nc.json#0",
+        "testcases/emulator_verified/lumak_bokan_solo_nc.json#1",
+        "testcases/emulator_verified/lynn_solo.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#0",
+        "testcases/emulator_verified/mia_only_defender_current.json#1",
+        "testcases/emulator_verified/mia_solo.json#0",
+        "testcases/emulator_verified/mia_solo.json#1",
+        "testcases/emulator_verified/mia_solo.json#2",
+        "testcases/emulator_verified/mia_solo.json#3",
+        "testcases/emulator_verified/mia_solo.json#4",
+        "testcases/emulator_verified/molly_lynn_combo.json#0",
+        "testcases/emulator_verified/molly_solo.json#0",
+        "testcases/emulator_verified/natalia_solo.json#0",
+        "testcases/emulator_verified/norah_greg_combo.json#0",
+        "testcases/emulator_verified/norah_hector_zinman_combo.json#0",
+        "testcases/emulator_verified/norah_s2_inf_only_A.json#0",
+        "testcases/emulator_verified/norah_s2_inf_only_B_nc.json#0",
+        "testcases/emulator_verified/norah_s2_splash_A.json#0",
+        "testcases/emulator_verified/norah_s2_splash_B_nc.json#0",
+        "testcases/emulator_verified/norah_solo.json#0",
+        "testcases/emulator_verified/norah_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/patrick_solo_nc.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#0",
+        "testcases/emulator_verified/philly_bahiti_combo.json#1",
+        "testcases/emulator_verified/philly_solo.json#0",
+        "testcases/emulator_verified/philly_solo.json#1",
+        "testcases/emulator_verified/plateau_boundary_700m_006i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_007i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_008i_700l.json#0",
+        "testcases/emulator_verified/plateau_boundary_700m_009i_700l.json#0",
+        "testcases/emulator_verified/reina_attacker_wip.json#0",
+        "testcases/emulator_verified/reina_bahiti_combo_nc.json#0",
+        "testcases/emulator_verified/reina_logan_combo_simulator.json#0",
+        "testcases/emulator_verified/reina_solo_wip.json#0",
+        "testcases/emulator_verified/renee_charge_single_target_bucket_nc.json#0",
+        "testcases/emulator_verified/renee_solo_nc.json#0",
+        "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
+        "testcases/emulator_verified/retarget_lancer_screen_nc.json#0",
+        "testcases/emulator_verified/seo_yoon_solo_nc.json#0",
+        "testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0",
+        "testcases/emulator_verified/sergey_reina_combo_nc.json#0",
+        "testcases/emulator_verified/sergey_solo_nc.json#0",
+        "testcases/emulator_verified/sonya_buffs_cadence_2200i_vs_800i_200l_800m.json#0",
+        "testcases/emulator_verified/troop_check_nc.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#0",
+        "testcases/emulator_verified/wayne_mixed_solo.json#1",
+        "testcases/emulator_verified/wayne_reina_combo.json#0",
+        "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
+        "testcases/emulator_verified/wayne_s2_solo.json#0",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#0",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_control_nc.json#1",
+        "testcases/emulator_verified/wos444_bradley_s3_all_troops_damage_hero_nc.json#0",
+        "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json#0",
+        "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_control_nc.json#1",
+        "testcases/emulator_verified/wos444_edith_s11_mark_damage_taken_hero_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#0",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_control_nc.json#1",
+        "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
+        "testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s21_lancer_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s22_infantry_damage_up_control.json#0",
+        "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_bucket.json#0",
+        "testcases/emulator_verified/wos451_bradley_s3_all_damage_up_control.json#0",
+        "testcases/emulator_verified/wu_ming_bradley_current_nc.json#0",
+        "testcases/emulator_verified/wu_ming_marksman_vs_infantry_nc.json#0",
+        "testcases/emulator_verified/wu_ming_rounding_followup_nc.json#0",
+        "testcases/emulator_verified/wu_ming_s1_isolation_nc.json#0",
+        "testcases/emulator_verified/wu_ming_s2_isolation_nc.json#0",
+        "testcases/emulator_verified/wu_ming_solo_current_nc.json#0",
+        "testcases/emulator_verified/wu_ming_solo_nc.json#0",
+        "testcases/emulator_verified/zinman_solo_nc.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#1",
+        "testcases/heroes_unittests/Hector_tc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#1",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#5",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#6",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#7",
+        "testcases/heroes_unittests/Mia_tc.json#0",
+        "testcases/heroes_unittests/Mia_tc.json#1",
+        "testcases/heroes_unittests/Mia_tc.json#2",
+        "testcases/heroes_unittests/Mia_tc.json#3",
+        "testcases/heroes_unittests/Mia_tc.json#4",
+        "testcases/heroes_unittests/Molly_tc.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#1",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4",
+        "testcases/heroes_unittests/Reina_tc.json#0",
+        "testcases/heroes_unittests/Reina_tc.json#1",
+        "testcases/heroes_unittests/Reina_tc.json#2",
+        "testcases/heroes_unittests/Reina_tc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#0",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#1",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#4",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#5",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#6",
+        "testcases/heroes_unittests/Zinman_tc.json#0",
+        "testcases/heroes_unittests/Zinman_tc.json#1",
+        "testcases/heroes_unittests/Zinman_tc.json#2"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#5",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#6",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#7",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#12",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#13",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#14",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#15",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#16",
+        "testcases/1-testcases_no-heroes_t6_single-type_nc.json#17",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#0",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#1",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#2",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#3",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#4",
+        "testcases/2-testcases_no-heroes_t6_mixed_nc.json#5",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#0",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#1",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#2",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#3",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#4",
+        "testcases/3-testcases_mixed-heroes-not-verified.json#5",
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s10-bradley-1000-inf-125-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s15.2-secondary-heroes-1000-inf-125-lancer-125-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-1000-inf-1000-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s15.3-2000-inf-0-lancer-1000-marksman.json#0",
+        "testcases/gatot_verified/s16-1500-inf-1500-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-1000-inf.json#0",
+        "testcases/gatot_verified/s16-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-1000-inf-3000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-2000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s25-2000-inf-2000-marksman-vs-4000-inf.json#0",
+        "testcases/gatot_verified/s25-3000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s31-current-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s32-current-750-marksman-wayne-vs-3000-inf.json#0",
+        "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
+        "testcases/gatot_verified/s34-current-2100-lancer-2100-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s35-current-3000-lancer-1000-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s36-current-600-lancer-600-marksman-vs-1100-gatot3-inf.json#0",
+        "testcases/gatot_verified/s37-current-bilateral-gatot-2000-inf-2000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s38-current-bilateral-gatot-800-inf-800-marksman-vs-1100-inf.json#0",
+        "testcases/gatot_verified/s39-1000-lancer-400-marksman-vs-500-gatot3-inf.json#0",
+        "testcases/gatot_verified/s40-2000-inf-1000-marksman-vs-5000-inf.json#0",
+        "testcases/gatot_verified/s41-300-inf-200-lancer-600-marksman-vs-500-inf.json#0",
+        "testcases/gatot_verified/s7-10000-t6-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#0",
+        "testcases/heroes_unittests/Flint_tc.json#1",
+        "testcases/heroes_unittests/Hector_tc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#0",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#1",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#5",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#6",
+        "testcases/heroes_unittests/Jessie_tc_nc.json#7",
+        "testcases/heroes_unittests/Mia_tc.json#0",
+        "testcases/heroes_unittests/Mia_tc.json#1",
+        "testcases/heroes_unittests/Mia_tc.json#2",
+        "testcases/heroes_unittests/Mia_tc.json#3",
+        "testcases/heroes_unittests/Mia_tc.json#4",
+        "testcases/heroes_unittests/Molly_tc.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#1",
+        "testcases/heroes_unittests/Molly_tc.json#3",
+        "testcases/heroes_unittests/Molly_tc.json#4",
+        "testcases/heroes_unittests/Reina_tc.json#0",
+        "testcases/heroes_unittests/Reina_tc.json#1",
+        "testcases/heroes_unittests/Reina_tc.json#2",
+        "testcases/heroes_unittests/Reina_tc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#0",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#1",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#3",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#4",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#5",
+        "testcases/heroes_unittests/Seo-yoon_tc_nc.json#6",
+        "testcases/heroes_unittests/Zinman_tc.json#0",
+        "testcases/heroes_unittests/Zinman_tc.json#1",
+        "testcases/heroes_unittests/Zinman_tc.json#2"
+      ]
+    },
+    {
+      "key": "troop:Volley",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Marksman attacks have a chance to make an extra skill attack for 100% damage.",
+        "troop_type": "marksman",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "tier",
+            "value": 7
+          }
+        ],
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            10
+          ],
+          "source": "marksman"
+        },
+        "effects": {
+          "Volley/1": {
+            "type": "active.troop.damage.up",
+            "value": [
+              100
+            ],
+            "units": {
+              "applies_to": "trigger.source",
+              "applies_vs": "trigger.target"
+            },
+            "duration": {
+              "attacks": {
+                "count": 1
+              }
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 17,
+      "acceptedHydratedFixtureCount": 17,
+      "hydratedLevels": [
+        1
+      ],
+      "status": "unresolved",
+      "context": "Accepted s8 T9 Marksman/Gatot fixtures include unresolved 11548 and 25000 tail disagreements. Independent 10000-sample25000 confirmation gives current mean 24962.99 SD 9.40 versus game24929, p=0.001350; replacing normal-job 100% troop damage with a separate 100% skill job worsens p to 0.000050. The 33452 case agrees but cannot distinguish delivery. Omission leaves the one Infantry alive at the 1500-round cap in all 1000 screen samples per setup; score 0 is a draw, not zero survivors. Current/alternative11548 screen each contain one zero-score sample, retained in the raw distribution. This suggests an offensive contribution is needed within the combined model but does not causally isolate Volley or establish its delivery, chance, exact tier7 gate or FC interactions.",
+      "selectedReferences": [
+        {
+          "fixtureKey": "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "fixtureSha256": "dfe66f034b32572731a50b2a604be9bea63e098246bca53479003c47eff5d640",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "marksman_t9": 11548
+            },
+            "defender": {
+              "infantry_t1_fc10": 1
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            }
+          },
+          "gameScores": [
+            11267
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 11353.07,
+            "sigma_candidate": 24.52,
+            "n_reference": 1,
+            "mu_reference": 11267,
+            "sigma_reference": 0,
+            "bias_raw": 86.07,
+            "bias_pct": 0.75,
+            "sem": 0.78,
+            "stat_type": "cdf_support",
+            "stat": 4.3011,
+            "p": 5e-05,
+            "passes": false,
+            "cdf_rms": 0.079084,
+            "cdf_p": 5e-05,
+            "support_value": 11267,
+            "support_mass": 0,
+            "support_p": 0.0011,
+            "flag_reason": "cdf"
+          }
+        },
+        {
+          "fixtureKey": "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+          "fixtureSha256": "b43b900c5ea69b13c0ece0e21b3b2dd969c0864ca654a2d6f5ae25d2c97ccb30",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "marksman_t9": 25000
+            },
+            "defender": {
+              "infantry_t1_fc10": 1
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {
+              "Gatot": {
+                "skill_1": 5,
+                "skill_2": 5,
+                "skill_3": 5
+              }
+            }
+          },
+          "gameScores": [
+            24929
+          ],
+          "gameSampleVariance": null,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": 24963.83,
+            "sigma_candidate": 9.27,
+            "n_reference": 1,
+            "mu_reference": 24929,
+            "sigma_reference": 0,
+            "bias_raw": 34.83,
+            "bias_pct": 0.14,
+            "sem": 0.29,
+            "stat_type": "cdf_support",
+            "stat": 2.9586,
+            "p": 0.0011,
+            "passes": false,
+            "cdf_rms": 0.034434,
+            "cdf_p": 0.0021,
+            "support_value": 24929,
+            "support_mass": 0.00011111,
+            "support_p": 0.00255,
+            "flag_reason": "cdf"
+          }
+        },
+        {
+          "fixtureKey": "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+          "fixtureSha256": "3ee322e77de363c28c5a962441a61913a3f9912caf698e0b5ce4d1618390fdf4",
+          "provenance": "accepted_game_evidence",
+          "troops": {
+            "attacker": {
+              "infantry_t10_fc5": 50000
+            },
+            "defender": {
+              "infantry_t10": 6450,
+              "lancer_t10": 7525,
+              "lancer_t9": 30105,
+              "marksman_t10": 7525,
+              "marksman_t9": 30105
+            }
+          },
+          "heroes": {
+            "attacker": {},
+            "defender": {}
+          },
+          "gameScores": [
+            -45772,
+            -42784,
+            -44207,
+            -47019,
+            -46631,
+            -44760,
+            -47180,
+            -44639,
+            -46574,
+            -45094,
+            -45641,
+            -45844,
+            -42118
+          ],
+          "gameSampleVariance": 2409064.3333333335,
+          "baselineRawMetrics": {
+            "n_candidate": 1000,
+            "mu_candidate": -45065.99,
+            "sigma_candidate": 1481.45,
+            "n_reference": 13,
+            "mu_reference": -45251,
+            "sigma_reference": 1552.12,
+            "bias_raw": 185.01,
+            "bias_pct": 0.14,
+            "sem": 46.85,
+            "stat_type": "cdf_support",
+            "stat": 0.2049,
+            "p": 0.623869,
+            "passes": true,
+            "cdf_rms": 0.01722,
+            "cdf_p": 0.619169,
+            "support_value": -42784,
+            "support_mass": 0,
+            "support_p": 0.99915,
+            "flag_reason": "cdf"
+          }
+        }
+      ],
+      "acceptedFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ],
+      "nonEmulatorFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-11791-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-12000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-20000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30116-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30139-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30179-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30205-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-30228-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33427-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33481-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33510-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/heroes_unittests/Molly_tc.json#4"
+      ],
+      "followupEvidence": [
+        "docs/mechanics-audit/reviews/fc-troops/README.md",
+        "docs/mechanics-audit/reviews/fc-troops/results.json",
+        "docs/mechanics-audit/reviews/fc-troops/confirmation.json"
+      ],
+      "followupFixtureKeys": [
+        "testcases/4-testcases_no-heroes_infantry_fc5.json#0",
+        "testcases/gatot_verified/s8-11548-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-25000-t9-marksmen-vs-one-t1-fc10-infantry.json#0",
+        "testcases/gatot_verified/s8-33452-t9-marksmen-vs-one-t1-fc10-infantry.json#0"
+      ]
+    },
+    {
+      "key": "troop:CrystalGunpowder",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Marksmen have a chance to make an extra skill attack for 50% damage, increased to 75% at FC8 and 87.5% at FC10.",
+        "troop_type": "marksman",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 3
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 5
+          },
+          {
+            "level": 3,
+            "type": "fc",
+            "value": 8
+          },
+          {
+            "level": 4,
+            "type": "fc",
+            "value": 10
+          }
+        ],
+        "trigger": {
+          "type": "attack",
+          "probability": [
+            20,
+            30,
+            30,
+            30
+          ],
+          "source": "marksman"
+        },
+        "effects": {
+          "CrystalGunpowder/1": {
+            "type": "extra_skill_attack",
+            "value": [
+              50,
+              50,
+              75,
+              87.5
+            ],
+            "units": {
+              "applies_to": [
+                "marksman"
+              ],
+              "applies_vs": "trigger.target"
+            },
+            "trigger_damage_jobs": [
+              {
+                "source": "use.source",
+                "target": "effect.applies_vs"
+              }
+            ]
+          }
+        }
+      },
+      "hydratedFixtureCount": 0,
+      "acceptedHydratedFixtureCount": 0,
+      "hydratedLevels": [],
+      "status": "unreviewed",
+      "context": "No active fixture hydrates this skill at any level. Input-only high-FC marksman screenshots found earlier lack a usable complete battle endpoint/setup and are not mechanic evidence. All positive behavior and FC gates remain unreviewed.",
+      "selectedReferences": [],
+      "acceptedFixtureKeys": [],
+      "nonEmulatorFixtureKeys": []
+    },
+    {
+      "key": "troop:FlameCharge",
+      "sourceSha256": "c777e710ab1e7e58b64d23e6545e2eb76ef12fa9afb83dd45a88c59ef191e8ba",
+      "currentDefinition": {
+        "description": "Increase Marksmen's basic Attack by 4% at FC8 and 6% at FC10; also increases Crystal Gunpowder's extra attack damage.",
+        "troop_type": "marksman",
+        "requirements": [
+          {
+            "level": 1,
+            "type": "fc",
+            "value": 8
+          },
+          {
+            "level": 2,
+            "type": "fc",
+            "value": 10
+          }
+        ],
+        "trigger": {
+          "type": "battle_start"
+        },
+        "effects": {
+          "FlameCharge/1": {
+            "type": "active.troop.attack.up",
+            "value": [
+              4,
+              6
+            ],
+            "units": {
+              "applies_to": [
+                "marksman"
+              ],
+              "applies_vs": "any"
+            }
+          }
+        }
+      },
+      "hydratedFixtureCount": 0,
+      "acceptedHydratedFixtureCount": 0,
+      "hydratedLevels": [],
+      "status": "unreviewed",
+      "context": "No active fixture hydrates this skill at either level. No positive all-troop or Marksman contribution may be inferred from FC0 fixtures. Current Attack effect and linked CrystalGunpowder coefficient scaling remain unreviewed.",
+      "selectedReferences": [],
+      "acceptedFixtureKeys": [],
+      "nonEmulatorFixtureKeys": []
+    }
+  ],
+  "acceptanceUpdatedAt": "2026-09-07T05:03:07.253374+00:00",
+  "sourceInventory": "tmp/mechanics-audit-2026-09-07/all-evidence-inventory/inventory.json",
+  "fcFollowup": {
+    "source": "docs/mechanics-audit/reviews/fc-troops/results.json",
+    "sha256": "d950181a498d3e496d05348e024ae7ab9bfe88149348a885a0953d9844eddb2e",
+    "confirmation": "docs/mechanics-audit/reviews/fc-troops/confirmation.json",
+    "notes": "docs/mechanics-audit/reviews/fc-troops/README.md",
+    "engine": "After adopted fractional outer army-term correction; initial replay and baseline metrics are preserved with their original source hashes."
+  }
+}

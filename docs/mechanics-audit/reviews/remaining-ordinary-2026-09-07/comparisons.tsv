@@ -1,0 +1,269 @@
+skill	fixture_key	game_scores_A_minus_D	game_n	game_mean	game_sd	candidate	deterministic	sim_n	sim_mean	sim_sd	central95_low	central95_high	p	individual_score_errors_if_deterministic	initial_attacker	initial_defender
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		current	False	1000	-550.973	1.748521755177303	-555	-547	0.249938		1800	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		omit	False	1000	-546	0	-546	-546	5e-05		1800	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		marksman_only	False	1000	-549.876	1.7150992873782982	-552	-547	0.00195		1800	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		hero_damage_bucket	False	1000	-550.973	1.748521755177303	-555	-547	0.249938		1800	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	current	False	1000	550.946	1.8128348988174225	547	555	0.861557		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	omit	False	1000	546	0	546	546	5e-05		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	marksman_only	False	1000	549.898	1.7368398350488876	547	552	0.914554		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	hero_damage_bucket	False	1000	550.946	1.8128348988174225	547	555	0.861557		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	current	False	1000	550.982	1.7913360614035936	547	555	0.957002		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	omit	False	1000	546	0	546	546	5e-05		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	marksman_only	False	1000	549.894	1.6405655901107539	547	552	0.869557		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	hero_damage_bucket	False	1000	550.982	1.7913360614035936	547	555	0.957002		600	1800
+hero:Lynn:SongOfLion	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	current	False	1000	-185.632	20.046157348091022	-222	-142	0.291085		4500	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	omit	False	1000	-99	0	-99	-99	5e-05		4500	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	marksman_only	False	1000	-162.511	15.350163077521563	-194	-134	0.0088		4500	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	hero_damage_bucket	False	1000	-185.632	20.046157348091022	-222	-142	0.291085		4500	600
+hero:Lynn:SongOfLion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	current	False	1000	-402.802	2.2891124996461083	-408	-399	0.39143		1200	450
+hero:Lynn:SongOfLion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	omit	False	1000	-397.549	1.212051182115694	-400	-395	5e-05		1200	450
+hero:Lynn:SongOfLion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	marksman_only	False	1000	-401.25	2.076490262874308	-405	-397	0.038948		1200	450
+hero:Lynn:SongOfLion	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	hero_damage_bucket	False	1000	-402.974	2.344102988099895	-408	-399	0.538673		1200	450
+hero:Lynn:SongOfLion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	current	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Lynn:SongOfLion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit	False	1000	5605	0	5605	5605	5e-05		8100	2560
+hero:Lynn:SongOfLion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	marksman_only	False	1000	5605	0	5605	5605	5e-05		8100	2560
+hero:Lynn:SongOfLion	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	hero_damage_bucket	False	1000	5207.01	162.42452902079643	4842	5433	0.110894		8100	2560
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		current	False	1000	-550.973	1.748521755177303	-555	-547	0.249938		1800	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		omit	False	1000	-544.94	1.9530013349238207	-549	-541	5e-05		1800	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		enemy_infantry_only	False	1000	-545.194	1.9698335574977581	-549	-541	5e-05		1800	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		normal_only	False	1000	-550.973	1.748521755177303	-555	-547	0.249938		1800	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	current	False	1000	550.946	1.8128348988174225	547	555	0.861557		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	omit	False	1000	544.922	1.982383879536432	541	549	0.00045		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	enemy_infantry_only	False	1000	545.193	1.990908012620045	541	549	0.00035		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	normal_only	False	1000	550.946	1.8128348988174225	547	555	0.861557		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	current	False	1000	550.982	1.7913360614035936	547	555	0.957002		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	omit	False	1000	544.928	1.9856381238178238	541	549	5e-05		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	enemy_infantry_only	False	1000	545.207	1.9809278318694752	541	549	0.0001		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	normal_only	False	1000	550.982	1.7913360614035936	547	555	0.957002		600	1800
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	current	False	1000	-185.632	20.046157348091022	-222	-142	0.291085		4500	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	omit	False	1000	-62.499	49.045054963945326	-118	-10	0.00025		4500	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	enemy_infantry_only	False	1000	-103.374	28.65832206224614	-135	-53	0.0002		4500	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	normal_only	False	1000	-185.632	20.046157348091022	-222	-142	0.291085		4500	600
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	current	False	1000	-402.802	2.2891124996461083	-408	-399	0.39143		1200	450
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	omit	False	1000	-397.035	2.5507413199462814	-402	-393	0.00015		1200	450
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	enemy_infantry_only	False	1000	-397.331	2.5545968302190087	-403	-393	0.0001		1200	450
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	normal_only	False	1000	-402.802	2.2891124996461083	-408	-399	0.39143		1200	450
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	current	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit	False	1000	5589.437	61.48351204390695	5465	5699	0.0001		8100	2560
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	enemy_infantry_only	False	1000	5559.351	62.108318623532554	5436	5670	5e-05		8100	2560
+hero:Lynn:MelancholicBallad	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	normal_only	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		current	False	1000	-550.973	1.748521755177303	-555	-547	0.249938		1800	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		omit	False	1000	-548.791	1.6643584617170273	-552	-546	0.012349		1800	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		max_stack	False	1000	-549.03	1.7011742985343967	-552	-546	0.023099		1800	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#0	-553	1	-553		all_own	False	1000	-552.418	1.6643455308456923	-555	-549	0.664017		1800	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	current	False	1000	550.946	1.8128348988174225	547	555	0.861557		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	omit	False	1000	548.789	1.766805195996589	546	552	0.40478		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	max_stack	False	1000	549.069	1.8438109009978976	546	552	0.543773		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#1	552,549	2	550.5	2.1213203435596424	all_own	False	1000	552.456	1.6723817927915887	549	555	0.260087		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	current	False	1000	550.982	1.7913360614035936	547	555	0.957002		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	omit	False	1000	548.785	1.6496958800022816	546	552	0.165592		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	max_stack	False	1000	549.08	1.764288160339105	546	552	0.247038		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/logan_lynn_combo.json#2	552,550	2	551	1.4142135623730951	all_own	False	1000	552.432	1.6715771505288437	549	555	0.418329		600	1800
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	current	False	1000	-185.632	20.046157348091022	-222	-142	0.291085		4500	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	omit	False	1000	42.59	245.5229957487516	-95	811	0.013549		4500	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	max_stack	False	1000	-59.973	98.48548960462477	-137	245	0.0017		4500	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/lynn_solo.json#0	-167,-200,-191,-199,-149	5	-181.2	22.387496510329154	all_own	False	1000	-213.4	18.67679905184027	-246	-172	0.0006		4500	600
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	current	False	1000	-402.802	2.2891124996461083	-408	-399	0.39143		1200	450
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	omit	False	1000	-400.914	2.346083568014606	-406	-396	0.119944		1200	450
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	max_stack	False	1000	-401.731	2.303898206724199	-407	-397	0.20704		1200	450
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	all_own	False	1000	-403.535	2.3004493185173733	-408	-400	0.545773		1200	450
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	current	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	omit	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	max_stack	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Lynn:OonaiCadenza	testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0	5274,4736,5021,5290,5006	5	5065.4	228.01491179306674	all_own	False	1000	5040.138	219.08047656331945	4596	5407	0.376931		8100	2560
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	current	False	1000	-392.955	2.926694473384687	-399	-387	0.926254		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	omit	False	1000	-390.184	2.944624732425985	-396	-384	0.231638		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	omit_offense	False	1000	-391.973	2.8590987120848927	-398	-386	0.828909		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	omit_protection	False	1000	-391.214	3.0194902419649243	-397	-385	0.563022		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	infantry_only	False	1000	-392.104	2.8954390975407476	-398	-386	0.944653		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	all_own	False	1000	-393.541	2.982148925223582	-399	-387	0.897605		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		current	False	1000	-353.342	2.7663493432118513	-357	-348	0.309935		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		omit	False	1000	-347.652	2.0550228999013895	-354	-343	0.658117		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		omit_offense	False	1000	-350.659	1.9976760772732134	-357	-346	0.442728		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		omit_protection	False	1000	-350.395	2.8832773519535624	-354	-345	0.19939		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		infantry_only	False	1000	-350.995	2.4406826774351287	-357	-346	0.465277		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		all_own	False	1000	-354.615	1.4102353575782047	-357	-352	0.0003		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	current	False	1000	-393.047	2.916727326696556	-399	-387	0.19194		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	omit	False	1000	-390.254	2.983015652386427	-396	-385	0.9902		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	omit_offense	False	1000	-392.053	2.903898005031103	-398	-387	0.445578		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	omit_protection	False	1000	-391.301	3.0105584967680787	-397	-385	0.834358		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	infantry_only	False	1000	-392.153	2.889626436226829	-398	-387	0.431228		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	all_own	False	1000	-393.615	2.919468838384535	-399	-387	0.116194		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		current	False	1000	199.795	136.60894912113187	-78	398	0.750962		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit	False	1000	525.196	106.16905128827072	301	667	0.015149		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit_offense	False	1000	345.447	123.34481397340599	98	572	0.424929		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit_protection	False	1000	416.809	125.87284254950112	140	615	0.291035		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		infantry_only	False	1000	352.095	118.75056071728964	117	578	0.40458		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		all_own	False	1000	70.692	149.9616071520294	-87	342	0.19714		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		current	False	1000	2691.9	57.18074533999742	2581	2795	0.737763		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		omit	False	1000	2750.333	45.35885290146273	2652	2824	0.064247		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		omit_offense	False	1000	2718.486	57.363859845868255	2607	2820	0.346833		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		omit_protection	False	1000	2725.711	45.40606997076702	2628	2800	0.223689		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		infantry_only	False	1000	2719.491	56.626924051439744	2609	2821	0.376181		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		all_own	False	1000	2651.775	60.198324006679826	2536	2781	0.59957		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	current	False	1000	-366.422	2.4086755110885743	-372	-362	0.933603		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	omit	False	1000	-362.659	2.594889680208476	-367	-356	0.00885		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	omit_offense	False	1000	-365.257	2.499039054556001	-369	-359	0.834008		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	omit_protection	False	1000	-363.887	2.477573282340879	-370	-360	0.058747		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	infantry_only	False	1000	-365.378	2.5392053015783524	-370	-359	0.852807		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	all_own	False	1000	-367.298	2.597295120301505	-373	-363	0.566272		1200	450
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	current	False	1000	-269.546	1.4352504812554256	-272	-267	0.469127		1200	300
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit	False	1000	-268.11	1.509363501009	-271	-265	0.00185		1200	300
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit_offense	False	1000	-269.007	1.4611933773755292	-272	-266	0.082596		1200	300
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit_protection	False	1000	-268.661	1.480632051277861	-272	-266	0.021499		1200	300
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	infantry_only	False	1000	-269.148	1.4374150973751985	-272	-266	0.140893		1200	300
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	all_own	False	1000	-269.867	1.4245491709099882	-273	-267	0.889306		1200	300
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	current	False	1000	643.944	2.8476258484873043	639	650	0.925004		1000	150
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit	False	1000	674.323	2.3892215006941764	669	679	0.0001		1000	150
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit_offense	False	1000	657.365	2.467359492020331	652	662	0.00015		1000	150
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit_protection	False	1000	661.012	4.66257392387461	653	667	0.0001		1000	150
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	infantry_only	False	1000	657.39	2.5982014261120328	652	662	5e-05		1000	150
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	all_own	False	1000	629.684	3.317400962975253	624	636	0.0001		1000	150
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		current	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		omit	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		omit_offense	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		omit_protection	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		infantry_only	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		all_own	False	1000	1769.338	16.21569316140092	1736	1799	0.543573		2000	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	current	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	omit	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	omit_offense	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	omit_protection	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	infantry_only	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	all_own	False	1000	780.731	5.95803131387686	769	793	0.00015		1500	200
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	current	False	1000	2740.246	53.09716369819383	2627	2835	0.879856		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	omit	False	1000	2799.151	52.043027157109876	2693	2892	0.017999		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	omit_offense	False	1000	2762.066	53.21723139846455	2649	2856	0.952152		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	omit_protection	False	1000	2778.047	52.135274794306774	2672	2871	0.375931		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	infantry_only	False	1000	2761.647	52.99665117756055	2648	2856	0.959752		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	all_own	False	1000	2705.863	60.21887198830231	2581	2817	0.051097		4069	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		current	False	1000	677.536	73.56079046539601	581	854	0.757062		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		omit	False	1000	817.634	62.75222614286988	713	923	0.00315		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		omit_offense	False	1000	739.458	64.70524712111839	649	916	0.263187		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		omit_protection	False	1000	774.573	72.1772001342475	651	869	0.106295		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		infantry_only	False	1000	741.913	63.99486521412296	600	919	0.20444		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		all_own	False	1000	638.317	62.55694911744717	429	751	0.317084		1800	600
+hero:Norah:CombinedArms	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		current	False	1000	1343.979	58.10420516328967	1217	1421	0.866757		2400	600
+hero:Norah:CombinedArms	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit	False	1000	1456.435	54.82625003310631	1287	1539	0.026299		2400	600
+hero:Norah:CombinedArms	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit_offense	False	1000	1395.01	54.41855638731402	1259	1477	0.611919		2400	600
+hero:Norah:CombinedArms	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit_protection	False	1000	1408.176	57.23723547766022	1242	1501	0.417179		2400	600
+hero:Norah:CombinedArms	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		infantry_only	False	1000	1393.004	54.521689249312544	1263	1480	0.460377		2400	600
+hero:Norah:CombinedArms	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		all_own	False	1000	1278.158	61.77119649737017	1162	1389	0.090745		2400	600
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	current	False	1000	-392.955	2.926694473384687	-399	-387	0.926254		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	omit	False	1000	-391.166	2.741525115690159	-397	-386	0.416579		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	primary_target_only	False	1000	-391.683	2.75465044953062	-397	-386	0.699265		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	normal_kind	False	1000	-392.955	2.926694473384687	-399	-387	0.926254		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#0	-394,-392	2	-393	1.4142135623730951	all_sources	False	1000	-396.856	3.463995274717236	-404	-391	0.177291		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		current	False	1000	-353.342	2.7663493432118513	-357	-348	0.309935		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		omit	False	1000	-345	0	-345	-345	5e-05		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		primary_target_only	False	1000	-349.47	1.9501033057001886	-352	-345	0.683266		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		normal_kind	False	1000	-353.342	2.7663493432118513	-357	-348	0.309935		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#1	-349	1	-349		all_sources	False	1000	-359.135	2.8497185643315484	-364	-355	0.00295		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	current	False	1000	-393.047	2.916727326696556	-399	-387	0.19194		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	omit	False	1000	-391.095	2.745817640433264	-397	-386	0.856207		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	primary_target_only	False	1000	-391.69	2.7798610806347246	-397	-386	0.649918		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	normal_kind	False	1000	-393.047	2.916727326696556	-399	-387	0.19194		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/alonso_norah_combo.json#2	-389,-391	2	-390	1.4142135623730951	all_sources	False	1000	-396.812	3.315667300808339	-402	-391	0.0047		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		current	False	1000	199.795	136.60894912113187	-78	398	0.750962		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit	False	1000	500.288	67.34435624696631	370	611	0.018649		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		primary_target_only	False	1000	416.708	107.22201871489506	218	583	0.053697		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		normal_kind	False	1000	199.795	136.60894912113187	-78	398	0.750962		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		all_sources	False	1000	-113.383	71.7457438651434	-220	97	5e-05		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		current	False	1000	2691.9	57.18074533999742	2581	2795	0.737763		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		omit	False	1000	2848	0	2848	2848	5e-05		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		primary_target_only	False	1000	2838.094	3.604741066728434	2830	2844	5e-05		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		normal_kind	False	1000	2691.9	57.18074533999742	2581	2795	0.737763		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/gwen_norah_combo_nc.json#0	2668	1	2668		all_sources	False	1000	2397.82	95.98194691781437	2203	2586	0.00365		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	current	False	1000	-366.422	2.4086755110885743	-372	-362	0.933603		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	omit	False	1000	-361.837	1.2255337339024788	-364	-358	0.0002		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	primary_target_only	False	1000	-362.967	1.7649436325350638	-368	-361	0.00055		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	normal_kind	False	1000	-366.422	2.4086755110885743	-372	-362	0.933603		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_greg_combo.json#0	-363,-366,-369,-366,-366	5	-366	2.1213203435596424	all_sources	False	1000	-372.125	3.3883411658001403	-379	-367	0.00015		1200	450
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	current	False	1000	-269.546	1.4352504812554256	-272	-267	0.469127		1200	300
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	omit	False	1000	-268.363	1.3539069628538236	-271	-266	0.00215		1200	300
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	primary_target_only	False	1000	-268.732	1.3601566181973341	-271	-266	0.013299		1200	300
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	normal_kind	False	1000	-269.546	1.4352504812554256	-272	-267	0.469127		1200	300
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_hector_zinman_combo.json#0	-270,-271,-269,-270,-272	5	-270.4	1.140175425099138	all_sources	False	1000	-270.888	1.4770367759936232	-274	-268	0.870656		1200	300
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	current	False	1000	643.944	2.8476258484873043	639	650	0.925004		1000	150
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit	False	1000	657	0	657	657	5e-05		1000	150
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	primary_target_only	False	1000	643.944	2.8476258484873043	639	650	0.925004		1000	150
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	normal_kind	False	1000	643.944	2.8476258484873043	639	650	0.925004		1000	150
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	all_sources	False	1000	626.34	4.1997664266049375	617	634	5e-05		1000	150
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		current	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		omit	False	1000	1826	0	1826	1826	5e-05		2000	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		primary_target_only	False	1000	1818.841	2.4387838499274057	1814	1823	5e-05		2000	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		normal_kind	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_A.json#0	1780	1	1780		all_sources	False	1000	1782.706	15.353543411711039	1751	1811	0.977551		2000	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	current	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	omit	False	1000	860	0	860	860	5e-05		1500	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	primary_target_only	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	normal_kind	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_s2_splash_D.json#0	821,827,834	3	827.3333333333334	6.506407098647712	all_sources	False	1000	829.412	5.429340082711129	818	840	0.544323		1500	200
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	current	False	1000	2740.246	53.09716369819383	2627	2835	0.879856		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	omit	False	1000	2898	0	2898	2898	5e-05		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	primary_target_only	False	1000	2880.242	5.969344107108313	2867	2891	0.00015		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	normal_kind	False	1000	2740.246	53.09716369819383	2627	2835	0.879856		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_solo.json#0	2731,2750,2703,2787,2704,2833,2764	7	2753.1428571428573	46.67414906001169	all_sources	False	1000	2489.321	95.27451491449429	2303	2667	5e-05		4069	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		current	False	1000	677.536	73.56079046539601	581	854	0.757062		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		omit	False	1000	898	0	898	898	5e-05		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		primary_target_only	False	1000	874.43	26.61885917284329	838	897	5e-05		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		normal_kind	False	1000	677.536	73.56079046539601	581	854	0.757062		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/norah_zinman_combo_nc.json#0	670	1	670		all_sources	False	1000	366.88	175.24987908731953	-63	590	0.045948		1800	600
+hero:Norah:SneakStrike	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		current	False	1000	1343.979	58.10420516328967	1217	1421	0.866757		2400	600
+hero:Norah:SneakStrike	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit	False	1000	1496	0	1496	1496	5e-05		2400	600
+hero:Norah:SneakStrike	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		primary_target_only	False	1000	1462.092	14.857061225836908	1438	1496	5e-05		2400	600
+hero:Norah:SneakStrike	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		normal_kind	False	1000	1343.979	58.10420516328967	1217	1421	0.866757		2400	600
+hero:Norah:SneakStrike	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		all_sources	False	1000	1023.309	108.127716715568	789	1231	0.00115		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		current	False	1000	199.795	136.60894912113187	-78	398	0.750962		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit	False	1000	441.487	167.7650170087077	104	648	0.094595		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit_offense	False	1000	321.076	122.16685706428302	65	554	0.40283		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		omit_protection	False	1000	334.551	201.53125873483557	-40	612	0.226639		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		immediate	False	1000	204.198	135.09800245105862	-77	418	0.726114		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		one_turn	False	1000	290.306	144.88523767484426	-20	592	0.520074		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/bahiti_norah_combo_nc.json#0	269	1	269		all_enemy	False	1000	196.477	136.63151042362327	-80	393	0.734663		1800	600
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	current	False	1000	643.944	2.8476258484873043	639	650	0.925004		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit	False	1000	669.172	2.3537111029087456	664	673	5e-05		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit_offense	False	1000	658.09	2.3625159219529976	653	662	0.00015		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	omit_protection	False	1000	656.867	3.046734907010054	650	661	5e-05		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	immediate	False	1000	651.031	2.4429504716647434	646	655	5e-05		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	one_turn	False	1000	656.8	2.392430505516039	652	661	0.0001		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/norah_s2_inf_only_A.json#0	643,643,646,645	4	644.25	1.5	all_enemy	False	1000	643.944	2.8476258484873043	639	650	0.925004		1000	150
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		current	False	1000	1343.979	58.10420516328967	1217	1421	0.866757		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit	False	1000	1425.943	67.90791733101696	1288	1537	0.717064		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit_offense	False	1000	1392.988	54.51876880627589	1254	1475	0.696015		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		omit_protection	False	1000	1376.94	69.65571274718477	1257	1499	0.937303		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		immediate	False	1000	1347.36	54.037528204521514	1220	1449	0.839158		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		one_turn	False	1000	1375.459	53.43918099171306	1257	1480	0.021749		2400	600
+hero:Norah:Momentum	testcases/emulator_verified/sergey_norah_zinman_combo_nc.json#0	1372	1	1372		all_enemy	False	1000	1341.177	59.691379040291324	1212	1420	0.843508		2400	600
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	current	False	1000	-402.802	2.2891124996461083	-408	-399	0.39143		1200	450
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	omit	False	1000	-400.762	2.452217235354431	-406	-396	0.064047		1200	450
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	marksman_only	False	1000	-402.227	2.3295703247375683	-407	-397	0.310084		1200	450
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_lynn_combo.json#0	-399,-404,-402,-401,-408	5	-402.8	3.420526275297414	hero_damage_bucket	False	1000	-402.974	2.344102988099895	-408	-399	0.538673		1200	450
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	current	False	1000	243.907	1.174619398243851	241	246	0.077146		300	840
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	omit	False	1000	241.172	1.2328568189112288	239	244	5e-05		300	840
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	marksman_only	False	1000	242.559	1.6040860613109575	240	245	0.00025		300	840
+hero:Molly:YouthfulRage	testcases/emulator_verified/molly_solo.json#0	245,245,244,245,245	5	244.8	0.4472135954999579	hero_damage_bucket	False	1000	243.907	1.174619398243851	241	246	0.077146		300	840
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		current	False	1000	1070.986	2.2989321627853916	1066	1075	0.733063		1200	160
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		omit	False	1000	1077.159	2.1891805570833083	1073	1081	0.0028		1200	160
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		marksman_only	False	1000	1074.018	2.2509426342629677	1069	1078	0.133243		1200	160
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#3	1070	1	1070		hero_damage_bucket	False	1000	1070.986	2.2989321627853916	1066	1075	0.733063		1200	160
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		current	False	1000	-190.448	1.5905426199337835	-193	-188	1		1800	200
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		omit	False	1000	-188.114	1.805065722421834	-192	-185	0.476476		1800	200
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		marksman_only	False	1000	-188.93	1.624111368637548	-192	-186	0.667167		1800	200
+hero:Molly:YouthfulRage	testcases/heroes_unittests/Molly_tc.json#4	-190	1	-190		hero_damage_bucket	False	1000	-190.448	1.5905426199337835	-193	-188	1		1800	200
+hero:Natalia:WildlingRoar	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		current	False	1000	-2907.495	26.089013235682394	-2957	-2857	0.0012		17500	4000
+hero:Natalia:WildlingRoar	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		omit	False	1000	-2827.68	22.43695650076046	-2871	-2779	0.823359		17500	4000
+hero:Natalia:WildlingRoar	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		infantry_only	False	1000	-2907.495	26.089013235682394	-2957	-2857	0.0012		17500	4000
+hero:Natalia:WildlingRoar	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		normal_only	False	1000	-2900.272	25.701061467584584	-2949	-2851	0.0014		17500	4000
+hero:Natalia:WildlingRoar	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		current	False	1000	2617.141	20.34180198281135	2573	2658	0.032898		4069	600
+hero:Natalia:WildlingRoar	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		omit	False	1000	2706	0	2706	2706	5e-05		4069	600
+hero:Natalia:WildlingRoar	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		infantry_only	False	1000	2647.094	19.194624184849157	2603	2672	0.0002		4069	600
+hero:Natalia:WildlingRoar	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		normal_only	False	1000	2617.141	20.34180198281135	2573	2658	0.032898		4069	600
+hero:Natalia:QueenOfTheWild	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		current	False	1000	-2907.495	26.089013235682394	-2957	-2857	0.0012		17500	4000
+hero:Natalia:QueenOfTheWild	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		omit	False	1000	-2808.573	28.471060259011637	-2866	-2752	0.651817		17500	4000
+hero:Natalia:QueenOfTheWild	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		infantry_only	False	1000	-2823.654	28.87975630652595	-2876	-2767	0.9985		17500	4000
+hero:Natalia:QueenOfTheWild	testcases/3-testcases_mixed-heroes-not-verified.json#2	-2823	1	-2823		hero_damage_bucket	False	1000	-2911.652	25.627400563842986	-2959	-2862	5e-05		17500	4000
+hero:Natalia:QueenOfTheWild	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		current	False	1000	2617.141	20.34180198281135	2573	2658	0.032898		4069	600
+hero:Natalia:QueenOfTheWild	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		omit	False	1000	2752.379	19.650228764329686	2712	2793	5e-05		4069	600
+hero:Natalia:QueenOfTheWild	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		infantry_only	False	1000	2741.862	18.32432090792826	2702	2778	5e-05		4069	600
+hero:Natalia:QueenOfTheWild	testcases/emulator_verified/natalia_solo.json#0	2664	1	2664		hero_damage_bucket	False	1000	2617.141	20.34180198281135	2573	2658	0.032898		4069	600
