@@ -34,6 +34,7 @@ export interface SimulateSidePayload {
   stat_profile_name?: string | null;
   stat_modifiers?: SimulateStatModifiersPayload;
   pet_modifiers?: SimulatePetModifiersPayload;
+  gareth?: number;
   stats: {
     inf: [number, number, number, number];
     lanc: [number, number, number, number];

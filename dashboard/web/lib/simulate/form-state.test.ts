@@ -9,6 +9,7 @@ import { toBattleInput } from "@/lib/simulator/adapters";
 import {
   applyStatBonusGroups,
   defaultSide,
+  effectiveStatBonusGroups,
   sideFromPayload,
   toApiPayload,
   type SideState,
@@ -94,6 +95,10 @@ const sideStateFieldContract = {
       assert.equal(payload.pet_modifiers?.enemy_health, -5);
     },
   },
+  gareth: {
+    mutate: (side) => ({ ...side, gareth: 2.75 }),
+    assertMapped: (payload) => assert.equal(payload.gareth, 2.75),
+  },
 } satisfies Record<
   keyof SideState,
   {
@@ -110,6 +115,26 @@ test("every editable dashboard side field is mapped into the request payload", (
     const payload = toApiPayload(attacker, defaultSide(), 1, true);
     contract.assertMapped(payload.attacker);
   }
+});
+
+test("Gareth defaults to zero and survives saved-run conversion independently of pets", () => {
+  const attacker = defaultSide();
+  const defender = defaultSide();
+  assert.equal(attacker.gareth, 0);
+
+  attacker.gareth = 2.75;
+  attacker.petModifiers.enemy_lethality = 4;
+  defender.gareth = 5;
+  const payload = toApiPayload(attacker, defender, 1, false);
+
+  assert.equal(payload.attacker.gareth, 2.75);
+  assert.equal(payload.attacker.pet_modifiers?.enemy_lethality, -4);
+  assert.deepEqual(sideFromPayload(payload.attacker), attacker);
+  assert.deepEqual(sideFromPayload(payload.defender), defender);
+  assert.equal(sideFromPayload({ ...payload.attacker, gareth: undefined }).gareth, 0);
+  assert.deepEqual(effectiveStatBonusGroups(attacker, defender, "attacker", "lethality", false), { up: 0, down: 5 });
+  assert.deepEqual(effectiveStatBonusGroups(defender, attacker, "defender", "lethality", false), { up: 0, down: 6.75 });
+  assert.deepEqual(effectiveStatBonusGroups(defender, attacker, "defender", "attack", false), { up: 0, down: 0 });
 });
 
 test("two 15% attack widgets survive dashboard mapping as a 30% simulator factor", () => {
