@@ -22,10 +22,13 @@ function runnableTestcase(
     attacker: input.attacker,
     defender: input.defender,
     ...(input.engagement_type !== undefined ? { engagement_type: input.engagement_type } : {}),
+    ...(input.maxRounds !== undefined ? { maxRounds: input.maxRounds } : {}),
     game_report_result: [
       {
         attacker: observation.game.survivors.attacker,
-        defender: observation.game.survivors.defender
+        defender: observation.game.survivors.defender,
+        winner: observation.game.winner,
+        ...(observation.game.rounds !== undefined ? { rounds: observation.game.rounds } : {})
       }
     ]
   };

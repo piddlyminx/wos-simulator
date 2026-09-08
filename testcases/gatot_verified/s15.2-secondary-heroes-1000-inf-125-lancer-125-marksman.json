@@ -75,10 +75,13 @@
         }
       }
     },
+    "maxRounds": 1500,
     "game_report_result": [
       {
         "attacker": 851,
-        "defender": 0
+        "defender": 0,
+        "winner": "attacker",
+        "rounds": 366
       }
     ]
   }
