@@ -53,6 +53,7 @@ This skill lives inside the simulator repository at `skill/`. Agents should stil
 - `create-testcase <spec.json> [--report <parsed.json> | --images <directory> | --tab <tab> --index <1-5>]` — validate saved JSON, parse saved screenshots, or capture a selected inbox report, then append one `game_report_result` observation
 - `run-testcase <spec.json> [--repeat N]` — end-to-end battle capture: deploy → fight → capture report → append testcase JSON with hero skill levels and one `game_report_result` observation per successful run. It does not run the simulator and must not write `sim_result`.
 - `capture-hero-skills` — navigate to Heroes screen, read skill levels for all heroes, save to `data/player_hero_skills.json`
+- `capture-hero-skill-details <hero> --output-dir <directory>` — capture one hero's Expedition skill details pane, current levels, visible upgrade previews, and unreviewed OCR; never upgrades or changes the saved hero roster
 - `ensure-alliance <tag>` — idempotent alliance switch
 - `recall-camp` — recall all encamped troops from the world map
 - `heal` — heal all wounded troops (switches to the instance's configured heal alliance, returns after)

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import sys
+import types
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 
@@ -18,6 +19,22 @@ import capture_hero_skills
 
 
 class CaptureHeroSkillsTests(unittest.TestCase):
+    def test_targeted_capture_stops_on_requested_hero_before_next_arrow(self) -> None:
+        image = np.zeros((1280, 720, 3), dtype=np.uint8)
+        skills = {"skill_1": 3, "skill_2": 1, "skill_3": 1}
+        emulator = MagicMock()
+        emulator.screencap_bgr.return_value = image
+        navigation = types.ModuleType("navigation")
+        navigation.goto_city = MagicMock()
+        with patch.dict(sys.modules, {"navigation": navigation}), \
+                patch.object(capture_hero_skills, "_match_template", side_effect=[(True, (100, 1200)), (True, (570, 1230))]) as match, \
+                patch.object(capture_hero_skills, "_read_hero_frame", return_value=("Gwen", skills)), \
+                patch.object(capture_hero_skills.time, "sleep"):
+            result = capture_hero_skills.capture_hero_skills(emulator, "minxxx", target_hero="Gwen")
+        self.assertEqual(result, {"Gwen": skills})
+        self.assertEqual(match.call_count, 2)
+        self.assertEqual([call.args for call in emulator.tap.call_args_list], [(100, 1200), (100, 200), (570, 1230)])
+
     def test_canonical_hero_names_include_gen8_without_model_sidecars(self) -> None:
         names = capture_hero_skills._load_hero_names()
 
