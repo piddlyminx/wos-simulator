@@ -30,10 +30,12 @@
       },
       "heroes": {}
     },
+    "maxRounds": 1500,
     "game_report_result": [
       {
         "attacker": 0,
-        "defender": 37
+        "defender": 37,
+        "winner": "defender"
       }
     ]
   }

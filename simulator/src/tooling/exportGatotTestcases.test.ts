@@ -4,6 +4,32 @@ import { resolve } from "node:path";
 import { test } from "node:test";
 
 import { gatotTestcaseArtifacts } from "./exportGatotTestcases";
+import { adaptTestcaseEntry, battleScoreDelta } from "./testcases";
+
+test("exported Gatot draw preserves both survivors, observed rounds and input cap", () => {
+  const testcase = gatotTestcaseArtifacts().find((artifact) =>
+    artifact.filename === "s8-10000-t9-marksmen-vs-one-t1-fc10-infantry.json"
+  )?.testcase[0];
+  assert.ok(testcase);
+
+  assert.deepEqual(testcase.game_report_result, [
+    { attacker: 9720, defender: 1, winner: "draw", rounds: 1500 }
+  ]);
+  assert.equal(adaptTestcaseEntry(testcase).maxRounds, 1500);
+  assert.equal(battleScoreDelta(testcase.game_report_result), 9719);
+});
+
+test("exported Gatot victory does not replace the input cap with observed rounds", () => {
+  const testcase = gatotTestcaseArtifacts().find((artifact) =>
+    artifact.filename === "s4-fc9-gatot-10000.json"
+  )?.testcase[0];
+  assert.ok(testcase);
+
+  assert.deepEqual(testcase.game_report_result, [
+    { attacker: 9992, defender: 0, winner: "attacker", rounds: 923 }
+  ]);
+  assert.equal(adaptTestcaseEntry(testcase).maxRounds, 1500);
+});
 
 test("generated Gatot testcase files stay in sync with the evidence inventory", () => {
   const directory = resolve(import.meta.dirname, "../../../testcases/gatot_verified");
