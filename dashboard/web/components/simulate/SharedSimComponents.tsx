@@ -372,6 +372,7 @@ function ModifierSetupPreview({ state }: { state: SideState }) {
   return (
     <p className="sim-summary-line" aria-hidden="true">
       City {cityActive} active · Pets {petActive} active
+      {state.gareth > 0 ? ` · Gareth ${state.gareth}%` : ""}
     </p>
   );
 }
@@ -573,7 +574,7 @@ function DashboardSidePanel({
                   const modifierSummary = [
                     bonusGroups.up !== 0 ? signedPercent(bonusGroups.up) : null,
                     bonusGroups.down !== 0
-                      ? `-${bonusGroups.down.toFixed(1)}%`
+                      ? `-${Number(bonusGroups.down.toFixed(2))}%`
                       : null,
                   ]
                     .filter(Boolean)
@@ -593,6 +594,9 @@ function DashboardSidePanel({
                       : null,
                     petGroups.down !== 0
                       ? `pet -${petGroups.down.toFixed(1)}%`
+                      : null,
+                    stat === "lethality" && opponent.gareth > 0
+                      ? `Gareth -${opponent.gareth}%`
                       : null,
                   ]
                     .filter(Boolean)
@@ -695,7 +699,7 @@ function DashboardSidePanel({
         <RoleSection
           id="buffs"
           title="Buffs and debuffs"
-          summary={`City ${cityActive} active · Pets ${petActive} active`}
+          summary={`City ${cityActive} active · Pets ${petActive} active${state.gareth > 0 ? ` · Gareth ${state.gareth}%` : ""}`}
           preview={<ModifierSetupPreview state={state} />}
           activeSection={activeSection}
           onActivate={setActiveSection}
@@ -705,6 +709,8 @@ function DashboardSidePanel({
             which={which}
             modifiers={state.statModifiers}
             petModifiers={state.petModifiers}
+            gareth={state.gareth}
+            onGarethChange={(gareth) => setState((prev) => ({ ...prev, gareth }))}
             onChange={(name, value) => {
               setState((prev) => ({
                 ...prev,
@@ -1591,7 +1597,7 @@ function DeployArmyPanel({
     setState((previous) => ({ ...previous, troops: updater(previous.troops) }));
   };
   const percentages = CATEGORIES.map((category) => total > 0 ? Math.round((state.troops[category] / total) * 100) : 0);
-  const activeBuffs = STAT_MODIFIER_NAMES.filter((name) => state.statModifiers[name] !== 0).length + PET_MODIFIER_NAMES.filter((name) => state.petModifiers[name] !== 0).length;
+  const activeBuffs = STAT_MODIFIER_NAMES.filter((name) => state.statModifiers[name] !== 0).length + PET_MODIFIER_NAMES.filter((name) => state.petModifiers[name] !== 0).length + Number(state.gareth > 0);
   const activeJoiners = state.joiners.filter((slot) => slot.name).length;
 
   return (
@@ -1696,6 +1702,8 @@ function DeployArmyPanel({
                 which={which}
                 modifiers={state.statModifiers}
                 petModifiers={state.petModifiers}
+                gareth={state.gareth}
+                onGarethChange={(gareth) => setState((previous) => ({ ...previous, gareth }))}
                 onChange={(name, value) => setState((previous) => ({ ...previous, statModifiers: { ...previous.statModifiers, [name]: value } }))}
                 onPetChange={(name, value) => setState((previous) => ({ ...previous, petModifiers: { ...previous.petModifiers, [name]: value } }))}
                 onCityPreset={(value) => setState((previous) => ({ ...previous, statModifiers: STAT_MODIFIER_NAMES.reduce((next, name) => ({ ...next, [name]: value }), {} as StatModifierState) }))}
@@ -1722,6 +1730,8 @@ function StatModifierControls({
   which,
   modifiers,
   petModifiers,
+  gareth,
+  onGarethChange,
   onChange,
   onPetChange,
   onCityPreset,
@@ -1731,6 +1741,8 @@ function StatModifierControls({
   which: Side;
   modifiers: StatModifierState;
   petModifiers: PetModifierState;
+  gareth: number;
+  onGarethChange: (value: number) => void;
   onChange: (name: StatModifierName, value: number) => void;
   onPetChange: (name: PetModifierName, value: number) => void;
   onCityPreset: (value: 0 | 10 | 20) => void;
@@ -1850,9 +1862,64 @@ function StatModifierControls({
                   onChange={onPetChange}
                 />
               ))}
+              <GarethModifierInput which={which} value={gareth} onChange={onGarethChange} />
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function GarethModifierInput({
+  which,
+  value,
+  onChange,
+}: {
+  which: Side;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="grid grid-cols-[minmax(0,1fr)_9.75rem] items-center gap-2 text-[10px]">
+      <label htmlFor={`gareth-${which}`} className="min-w-0">
+        <span className="opacity-70">Gareth</span>
+        <span id={`gareth-description-${which}`} className="block text-[9px] opacity-70">
+          Enemy lethality −{value}%
+        </span>
+      </label>
+      <div className="grid grid-cols-[1.875rem_minmax(0,1fr)_1.875rem] gap-1">
+        <button
+          type="button"
+          className="sim-input min-w-0 font-bold disabled:opacity-40"
+          aria-label={`${which} decrease Gareth`}
+          disabled={value <= 0}
+          onClick={() => onChange(Math.max(0, value - 0.25))}
+        >
+          −
+        </button>
+        <EditableNumberInput
+          id={`gareth-${which}`}
+          name={`${which}.gareth`}
+          min={0}
+          max={5}
+          step={0.25}
+          value={value}
+          onValueChange={(next) => onChange(Math.max(0, Math.min(5, Math.round(next * 4) / 4)))}
+          className="sim-input min-h-[30px] px-2 text-right text-[10px] tabular-nums"
+          aria-label={`${which} Gareth`}
+          aria-describedby={`gareth-description-${which}`}
+          data-testid={`gareth-modifier-${which}`}
+        />
+        <button
+          type="button"
+          className="sim-input min-w-0 font-bold disabled:opacity-40"
+          aria-label={`${which} increase Gareth`}
+          disabled={value >= 5}
+          onClick={() => onChange(Math.min(5, value + 0.25))}
+        >
+          +
+        </button>
       </div>
     </div>
   );

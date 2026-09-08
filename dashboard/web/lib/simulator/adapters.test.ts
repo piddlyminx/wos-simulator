@@ -85,6 +85,29 @@ test("toBattleInput preserves duplicate rally joiner heroes", () => {
   ]);
 });
 
+test("Gareth adds to the opponent's pet lethality debuff on either side", () => {
+  const base = blankRequest();
+  const input = toBattleInput({
+    ...base,
+    attacker: {
+      ...base.attacker,
+      gareth: 2.75,
+      pet_modifiers: { ...base.attacker.pet_modifiers!, enemy_lethality: -4 },
+    },
+    defender: {
+      ...base.defender,
+      gareth: 5,
+      pet_modifiers: { ...base.defender.pet_modifiers!, enemy_lethality: -1.25 },
+    },
+  }, "gareth-debuffs");
+
+  assert.deepEqual(input.attacker.passive, { lethality: { down: 6.25 } });
+  assert.deepEqual(input.defender.passive, { lethality: { down: 6.75 } });
+  assert.deepEqual(input.attacker.stats, input.defender.stats);
+  assert.equal(toBattleInput(base, "no-gareth").attacker.passive, undefined);
+  assert.equal(toBattleInput(base, "no-gareth").defender.passive, undefined);
+});
+
 const sideFieldContract = {
   troops: {
     metadataOnly: false,
@@ -122,6 +145,14 @@ const sideFieldContract = {
     metadataOnly: false,
     mutate: (side) => ({ ...side, pet_modifiers: { ...side.pet_modifiers!, health: 7 } }),
     assertMapped: (before, after) => assert.notDeepEqual(after.attacker.passive, before.attacker.passive),
+  },
+  gareth: {
+    metadataOnly: false,
+    mutate: (side) => ({ ...side, gareth: 2.75 }),
+    assertMapped: (before, after) => {
+      assert.deepEqual(after.attacker, before.attacker);
+      assert.deepEqual(after.defender.passive, { lethality: { down: 2.75 } });
+    },
   },
   stats: {
     metadataOnly: false,

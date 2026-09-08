@@ -90,6 +90,7 @@ function toPassiveEffects(side: SimulateSidePayload, opponent: SimulateSidePaylo
   addPassiveStat(passive, "defense", "down", Math.abs(Math.min(0, opp.enemy_defense ?? 0)));
   addPassiveStat(passive, "defense", "down", Math.abs(Math.min(0, oppPet.enemy_defense ?? 0)));
   addPassiveStat(passive, "lethality", "down", Math.abs(Math.min(0, oppPet.enemy_lethality ?? 0)));
+  addPassiveStat(passive, "lethality", "down", opponent.gareth);
   addPassiveStat(passive, "health", "down", Math.abs(Math.min(0, oppPet.enemy_health ?? 0)));
 
   return Object.keys(passive).length > 0 ? passive : undefined;

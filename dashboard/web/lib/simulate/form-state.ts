@@ -105,6 +105,7 @@ export interface SideState {
   stats: Record<TroopCategory, Record<string, number>>;
   statModifiers: StatModifierState;
   petModifiers: PetModifierState;
+  gareth: number;
 }
 
 export function defaultSide(): SideState {
@@ -124,6 +125,7 @@ export function defaultSide(): SideState {
     },
     statModifiers: defaultStatModifiers(),
     petModifiers: defaultPetModifiers(),
+    gareth: 0,
   };
 }
 
@@ -214,6 +216,7 @@ export function toApiPayload(
     stat_profile_name: statProfileNames?.[side] ?? null,
     stat_modifiers: toStatModifiersPayload(s.statModifiers),
     pet_modifiers: toPetModifiersPayload(s.petModifiers),
+    gareth: s.gareth,
     stats: {
       inf: [
         s.stats.infantry.attack,
@@ -379,6 +382,7 @@ export function sideFromPayload(side: SimulateSidePayload): SideState {
     },
     statModifiers: parseStatModifiers(side.stat_modifiers),
     petModifiers: parsePetModifiers(side.pet_modifiers),
+    gareth: clampValue(side.gareth ?? 0, 0),
   };
 }
 
@@ -627,7 +631,8 @@ export function effectiveStatBonusGroups(
   const skill4Up = sideSkill4BonusPercent(side, which, stat as Skill4Stat, rallyMode);
   const manual = manualStatModifierGroups(side.statModifiers, opponent.statModifiers, stat);
   const pet = petStatModifierGroups(side.petModifiers, opponent.petModifiers, stat);
-  return { up: skill4Up + manual.up + pet.up, down: manual.down + pet.down };
+  const garethDown = stat === "lethality" ? Math.max(0, opponent.gareth) : 0;
+  return { up: skill4Up + manual.up + pet.up, down: manual.down + pet.down + garethDown };
 }
 
 export function statModifierDescription(name: StatModifierName, value: number): string {
