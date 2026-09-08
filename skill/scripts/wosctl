@@ -34,6 +34,7 @@ Commands:
   reports             Capture and parse multiple consecutive battle reports
   screencap           Save one screenshot, or a full scrolling screenshot
   capture-hero-skills  Capture and save all hero skill levels
+  capture-hero-skill-details Capture one hero's Expedition skill details pane
   ensure-alliance <tag> Ensure the player is in the specified alliance
   recall-camp          Recall all encamped troops from the world map
   heal                 Heal all wounded troops using the configured heal alliance
@@ -1052,6 +1053,17 @@ def cmd_capture_hero_skills(instance_name: str, debug: bool = False) -> int:
         return _fail(f"capture-hero-skills failed: {exc}", command="capture-hero-skills", instance_name=instance_name, cause=exc)
 
 
+def cmd_capture_hero_skill_details(instance_name: str, hero: str, output_dir: str, debug: bool = False) -> int:
+    from capture_hero_skill_details import canonical_hero_name, capture_hero_skill_details
+    try:
+        hero = canonical_hero_name(hero)
+        emulator = _resolve_emulator(instance_name)
+        result = capture_hero_skill_details(emulator, instance_name, hero, output_dir, debug=debug)
+        return _success(command="capture-hero-skill-details", instance_name=instance_name, **result)
+    except Exception as exc:
+        return _fail(f"capture-hero-skill-details failed: {exc}", command="capture-hero-skill-details", instance_name=instance_name, cause=exc)
+
+
 def cmd_recall_camp(instance_name: str) -> int:
     """Recall all encamped troops from the world map."""
     try:
@@ -1479,6 +1491,11 @@ def build_parser() -> argparse.ArgumentParser:
     hero_skills_p = sub.add_parser("capture-hero-skills", help="Capture hero skill levels and save to data/player_hero_skills.json")
     hero_skills_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
+    hero_skill_details_p = sub.add_parser("capture-hero-skill-details", help="Capture one hero's Expedition skill details pane and visible upgrade previews without upgrading")
+    hero_skill_details_p.add_argument("hero", help="Hero name, e.g. Gwen")
+    hero_skill_details_p.add_argument("--output-dir", required=True, help="New or empty directory for screenshots and skill-details.json")
+    hero_skill_details_p.add_argument("--debug", action="store_true", default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+
     ea_p = sub.add_parser("ensure-alliance", help="Ensure the player is in the specified alliance")
     ea_p.add_argument("tag", help="Alliance tag, e.g. [ABC] -> ABC")
 
@@ -1568,6 +1585,9 @@ def main() -> int:
 
             if args.command == "capture-hero-skills":
                 return cmd_capture_hero_skills(instance_name, debug=args.debug)
+
+            if args.command == "capture-hero-skill-details":
+                return cmd_capture_hero_skill_details(instance_name, args.hero, args.output_dir, debug=args.debug)
 
             if args.command == "ensure-alliance":
                 return cmd_ensure_alliance(instance_name, args.tag)

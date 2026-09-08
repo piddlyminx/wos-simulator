@@ -533,10 +533,17 @@ def _wait_for_readable_next_frame(
     return last_img, None
 
 
-def capture_hero_skills(emulator, instance_name: str, debug_dir: str | None = None) -> dict:
+def capture_hero_skills(
+    emulator,
+    instance_name: str,
+    debug_dir: str | None = None,
+    *,
+    target_hero: str | None = None,
+) -> dict:
     """
     Navigate to Heroes screen, capture skill levels for all heroes,
     return dict {hero_name: {skill_1, skill_2, skill_3}}.
+    With target_hero, stop on that hero's Skills screen and return only its entry.
     """
     from navigation import goto_city
 
@@ -624,6 +631,11 @@ def capture_hero_skills(emulator, instance_name: str, debug_dir: str | None = No
 
         seen_names.add(name)
 
+        if name == target_hero:
+            if entry is None:
+                raise RuntimeError(f"{name}'s Expedition skills are locked")
+            return {name: entry}
+
         # Skip heroes where skill_1 is locked (level 0)
         if entry is None:
             logger.info("Skipping %s — skill_1 is locked", name)
@@ -650,6 +662,8 @@ def capture_hero_skills(emulator, instance_name: str, debug_dir: str | None = No
                 debug_idx=i + 1,
             )
 
+    if target_hero is not None:
+        raise RuntimeError(f"Hero {target_hero!r} was not found in the readable roster")
     return results
 
 

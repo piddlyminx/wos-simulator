@@ -127,6 +127,14 @@ class WosctlErrorHandlingTests(unittest.TestCase):
         else:
             os.environ["WOSCTL_UV_BOOTSTRAPPED"] = cls._old_bootstrap
 
+    def test_targeted_hero_skill_details_cli_routes_under_instance_lock(self) -> None:
+        with patch.object(sys, "argv", [str(WOSCTL), "--instance", "minxxx", "capture-hero-skill-details", "Gwen", "--output-dir", "/tmp/gwen-skill-details", "--debug"]), \
+                patch.object(self.wosctl, "lock_instances", return_value=contextlib.nullcontext()) as lock, \
+                patch.object(self.wosctl, "cmd_capture_hero_skill_details", return_value=0) as capture:
+            self.assertEqual(self.wosctl.main(), 0)
+        self.assertEqual(lock.call_args.args[0], ["minxxx"])
+        capture.assert_called_once_with("minxxx", "Gwen", "/tmp/gwen-skill-details", debug=True)
+
     def test_cli_main_returns_json_for_unhandled_exception(self) -> None:
         stdout = io.StringIO()
         with patch.object(self.wosctl, "main", side_effect=RuntimeError("boom")), \
