@@ -154,7 +154,21 @@ test("damage calculator does not over-count a whole-number army term", () => {
   );
 
   assert.equal(Math.sqrt(200) * Math.sqrt(200), 200.00000000000003);
-  assert.equal(outcome.trace?.armyTerm, 200);
+  assert.ok(Math.abs((outcome.trace?.armyTerm ?? 0) - 200) < 1e-12);
+});
+
+test("damage calculator preserves the fractional square-root army term", () => {
+  const outcome = calculateIndexedDamageJob(
+    { ...job, roundStartTroops: {
+      attacker: { infantry: 1.5, lancer: 0, marksman: 0 },
+      defender: { infantry: 0, lancer: 1000, marksman: 0 }
+    } },
+    simpleFighters(),
+    [],
+    { trace: true, minInitialArmy: 3, capToTakerTroops: false }
+  );
+
+  assert.ok(Math.abs((outcome.trace?.armyTerm ?? 0) - Math.sqrt(6)) < 1e-12);
 });
 
 test("damage calculator preserves full positive damage precision", () => {

@@ -131,7 +131,7 @@ export function calculateDamageJob(
   );
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
   const initialArmy = options.minInitialArmy ?? minInitialArmy(fighters);
-  const armyTerm = ceilIgnoringFloatResidue(Math.sqrt(dealerTroops) * Math.sqrt(initialArmy));
+  const armyTerm = Math.sqrt(dealerTroops) * Math.sqrt(initialArmy);
   const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
   applyDynamicDamageBucketValue(buckets, "source.multiplier", job.sourceMultiplier ?? 1);
