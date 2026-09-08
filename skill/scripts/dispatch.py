@@ -110,13 +110,11 @@ _TROOP_TYPES = ("Infantry", "Lancer", "Marksman")
 
 # ─── Hero scroll constants ─────────────────────────────────────────────────────
 # Hero list (scrollable grid) occupies roughly y=590–900 on the popup.
-# Use 240px swipes within that range (640–880) to move ~1.6 hero rows per scroll.
-# 100px swipes (the old default) only moved ~0.6 rows — too little to reach
-# low-power heroes (e.g. Zinman) after 2 higher-power heroes are already assigned.
-_SCROLL_UP_FROM_Y   = 640   # drag start (scroll UP to see earlier heroes)
-_SCROLL_UP_TO_Y     = 880
-_SCROLL_DOWN_FROM_Y = 880   # drag start (scroll DOWN to see later heroes)
-_SCROLL_DOWN_TO_Y   = 640
+# Short drags retain row overlap despite picker momentum.
+_SCROLL_UP_FROM_Y   = 700   # drag down to see earlier heroes
+_SCROLL_UP_TO_Y     = 820
+_SCROLL_DOWN_FROM_Y = 820
+_SCROLL_DOWN_TO_Y   = 700
 _SCROLL_X           = 360
 _HERO_SWIPE_DUR_MS  = 750   # slower = less momentum/overshoot
 _HERO_PICKER_AREA   = (0, 560, 720, 380)  # x, y, w, h: scrollable hero-grid area
