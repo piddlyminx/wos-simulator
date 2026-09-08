@@ -75,6 +75,7 @@ body {
   --sim-blue: var(--sidebar-active);
   --sim-green: #a6e3a1;
   --sim-yellow: #f9e2af;
+  --sim-error: #f38ba8;
 }
 
 .simulate-workspace {
@@ -1839,7 +1840,8 @@ body {
   font-size: 0.62rem;
 }
 
-.deploy-workspace .simulate-workspace {
+.deploy-workspace .simulate-workspace,
+.deploy-workspace .sim-modal-scope {
   --sim-page: #0a3155;
   --sim-panel: #d7eaf3;
   --sim-panel-2: #b7daeb;
@@ -1852,6 +1854,7 @@ body {
   --sim-blue: #1676ad;
   --sim-green: #20bd5b;
   --sim-yellow: #b97706;
+  --sim-error: #a52342;
   font-family: "Trebuchet MS", "Avenir Next Rounded", "Arial Rounded MT Bold", sans-serif;
 }
 
@@ -2225,6 +2228,16 @@ body {
 .deploy-workspace .sim-modal {
   border-width: 0;
   background: #e5f4fc;
+}
+
+.deploy-workspace .sim-modal-scope {
+  --sim-blue: #12618e;
+  --sim-yellow: #805400;
+}
+
+.deploy-workspace .sim-modal .sim-segmented button[data-active="true"] {
+  background: #123f60;
+  box-shadow: inset 0 -3px 0 #91d5fb;
 }
 
 .deploy-workspace .sim-modal-header,

@@ -1882,12 +1882,9 @@ function GarethModifierInput({
 }) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)_9.75rem] items-center gap-2 text-[10px]">
-      <label htmlFor={`gareth-${which}`} className="min-w-0">
-        <span className="opacity-70">Gareth</span>
-        <span id={`gareth-description-${which}`} className="block text-[9px] opacity-70">
-          Enemy lethality −{value}%
-        </span>
-      </label>
+      <span className="min-w-0 truncate opacity-70">
+        <label htmlFor={`gareth-${which}`} title="Enemy lethality down">Gareth</label>
+      </span>
       <div className="grid grid-cols-[1.875rem_minmax(0,1fr)_1.875rem] gap-1">
         <button
           type="button"
@@ -1908,7 +1905,7 @@ function GarethModifierInput({
           onValueChange={(next) => onChange(Math.max(0, Math.min(5, Math.round(next * 4) / 4)))}
           className="sim-input min-h-[30px] px-2 text-right text-[10px] tabular-nums"
           aria-label={`${which} Gareth`}
-          aria-describedby={`gareth-description-${which}`}
+          aria-description="Enemy lethality down (%)"
           data-testid={`gareth-modifier-${which}`}
         />
         <button

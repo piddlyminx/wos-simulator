@@ -157,7 +157,7 @@ export function RecentRunsModal({
           {actionError ? (
             <p
               className="px-1 pb-2 text-xs"
-              style={{ color: "#f38ba8" }}
+              style={{ color: "var(--sim-error)" }}
               aria-live="polite"
             >
               {actionError}
@@ -169,14 +169,14 @@ export function RecentRunsModal({
               aria-hidden={changingScope}
             >
               {error ? (
-                <p className="px-1 py-4 text-xs" style={{ color: "#f38ba8" }}>
+                <p className="px-1 py-4 text-xs" style={{ color: "var(--sim-error)" }}>
                   {error}
                 </p>
               ) : null}
               {loading && runs.length === 0 ? (
-                <p className="px-1 py-4 text-xs opacity-60">Loading recent runs…</p>
+                <p className="px-1 py-4 text-xs text-[var(--sim-muted)]">Loading recent runs…</p>
               ) : !error && runs.length === 0 ? (
-                <p className="px-1 py-4 text-xs opacity-60">
+                <p className="px-1 py-4 text-xs text-[var(--sim-muted)]">
                   {scope === "mine"
                     ? "No runs saved by this browser yet."
                     : scope === "starred"
@@ -198,7 +198,7 @@ export function RecentRunsModal({
                         <span className="block truncate text-xs font-bold">
                           {run.title}
                         </span>
-                        <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] opacity-55">
+                        <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] text-[var(--sim-muted)]">
                           <span>{savedRunKindLabel(run.kind)}</span>
                           <span>{formatSavedRunTimestamp(run.created_at)}</span>
                           <span className="truncate">{run.id}</span>
@@ -214,7 +214,7 @@ export function RecentRunsModal({
                           title={run.kept ? "Unstar run" : "Star run"}
                           className="sim-edit-chip flex min-h-[32px] min-w-[32px] shrink-0 items-center justify-center p-1.5"
                           style={{
-                            color: run.kept ? "#f9e2af" : undefined,
+                            color: run.kept ? "var(--sim-yellow)" : undefined,
                             opacity: busyRunId === run.id ? 0.6 : 1,
                           }}
                         >
@@ -249,7 +249,7 @@ export function RecentRunsModal({
             </div>
             {changingScope ? (
               <p
-                className="absolute inset-0 flex items-start justify-center px-1 py-4 text-xs opacity-60"
+                className="absolute inset-0 flex items-start justify-center px-1 py-4 text-xs text-[var(--sim-muted)]"
                 aria-live="polite"
               >
                 {error ?? `Loading ${SAVED_RUN_SCOPE_LABELS[scope].toLowerCase()}…`}
