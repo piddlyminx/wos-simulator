@@ -1,0 +1,92 @@
+[
+  {
+    "test_id": "reina_shadowblade_350l_vs_150i_50l_50m",
+    "description": "Five independent in-game battles: WIP full Reina1/1/1 with350 T6 Lancers attacks minxxx nohero150 T6 Infantry+50 T6 Lancers+50 T6 Marksmen. Exact report stats, distinct timestamps, all outcomes, Battle Details and per-line evidence are preserved in docs/mechanics-audit/probes/reina-shadowblade/. The third report Infantry Attack OCR fields were corrected from its clean counterpart capture; all five actual inputs match. No generation bonus is added to report stats.",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Reina": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "lancer_t6": 350
+      },
+      "stats": {
+        "inf": {
+          "attack": 248.2,
+          "defense": 249.0,
+          "lethality": 186.3,
+          "health": 191.8
+        },
+        "lanc": {
+          "attack": 326.2,
+          "defense": 325.0,
+          "lethality": 186.8,
+          "health": 181.9
+        },
+        "mark": {
+          "attack": 217.5,
+          "defense": 210.6,
+          "lethality": 181.4,
+          "health": 177.0
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 150,
+        "lancer_t6": 50,
+        "marksman_t6": 50
+      },
+      "stats": {
+        "inf": {
+          "attack": 308.2,
+          "defense": 300.5,
+          "lethality": 244.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 294.9,
+          "defense": 293.7,
+          "lethality": 224.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 292.2,
+          "defense": 292.7,
+          "lethality": 235.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 166
+      },
+      {
+        "attacker": 0,
+        "defender": 163
+      },
+      {
+        "attacker": 0,
+        "defender": 163
+      },
+      {
+        "attacker": 0,
+        "defender": 157
+      },
+      {
+        "attacker": 0,
+        "defender": 174
+      }
+    ]
+  }
+]
