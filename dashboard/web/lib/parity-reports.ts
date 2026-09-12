@@ -202,6 +202,47 @@ export interface RunReportLookup {
   report_path?: string | null;
 }
 
+interface CachedReportMetadata {
+  mtimeMs: number;
+  ctimeMs: number;
+  size: number;
+  ino: number;
+  isReport: boolean;
+  createdAt?: string;
+}
+
+const reportMetadata = new Map<string, CachedReportMetadata>();
+
+function readReportData(filePath: string, stat: fs.Stats): ParityReportJson | undefined {
+  const text = fs.readFileSync(filePath, "utf8");
+  let data: ParityReportJson | undefined;
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (isParityReportJson(parsed)) data = parsed;
+  } catch {
+    // A report may still be being written; its next stat change invalidates this entry.
+  }
+  reportMetadata.set(path.resolve(filePath), {
+    mtimeMs: stat.mtimeMs,
+    ctimeMs: stat.ctimeMs,
+    size: stat.size,
+    ino: stat.ino,
+    isReport: data !== undefined,
+    createdAt: data?.createdAt,
+  });
+  return data;
+}
+
+function describeReport(filePath: string, stat: fs.Stats): ParityReportDescriptor {
+  const fileName = path.basename(filePath);
+  return {
+    id: encodeURIComponent(fileName),
+    fileName,
+    path: filePath,
+    mtimeMs: stat.mtimeMs,
+  };
+}
+
 export function defaultParityReportDir(): string {
   return process.env.SIMULATOR_PARITY_REPORT_DIR
     ? path.resolve(process.env.SIMULATOR_PARITY_REPORT_DIR)
@@ -212,49 +253,67 @@ export function findParityReports(
   dir = defaultParityReportDir(),
 ): ParityReportDescriptor[] {
   if (!fs.existsSync(dir)) return [];
-  return fs
-    .readdirSync(dir)
-    .filter((name) => name.endsWith(".json"))
-    .map((name) => {
-      const fullPath = path.join(dir, name);
-      const stat = fs.statSync(fullPath);
-      return {
-        id: encodeURIComponent(name),
-        fileName: name,
-        path: fullPath,
-        mtimeMs: stat.mtimeMs,
-      };
-    })
-    .filter((entry) => {
-      try {
-        return isParityReportJson(
-          JSON.parse(fs.readFileSync(entry.path, "utf8")),
-        );
-      } catch {
-        return false;
-      }
-    })
-    .sort((a, b) => b.mtimeMs - a.mtimeMs || b.fileName.localeCompare(a.fileName));
+  const reports: ParityReportDescriptor[] = [];
+  const files = new Set(fs.readdirSync(dir).filter((name) => name.endsWith(".json")));
+  const reportRoot = path.resolve(dir);
+  for (const cachedPath of reportMetadata.keys()) {
+    if (path.dirname(cachedPath) === reportRoot && !files.has(path.basename(cachedPath))) {
+      reportMetadata.delete(cachedPath);
+    }
+  }
+  for (const fileName of files) {
+    const filePath = path.join(dir, fileName);
+    try {
+      const stat = fs.statSync(filePath);
+      if (!stat.isFile()) continue;
+      const cached = reportMetadata.get(path.resolve(filePath));
+      const unchanged = cached && cached.mtimeMs === stat.mtimeMs &&
+        cached.ctimeMs === stat.ctimeMs && cached.size === stat.size && cached.ino === stat.ino;
+      const isReport = unchanged ? cached.isReport : readReportData(filePath, stat) !== undefined;
+      if (isReport) reports.push(describeReport(filePath, stat));
+    } catch {
+      // Ignore files removed or made unreadable while the directory is being listed.
+    }
+  }
+  return reports.sort((a, b) => b.mtimeMs - a.mtimeMs || b.fileName.localeCompare(a.fileName));
 }
 
 export function getParityReport(
   reportId?: string,
   dir = defaultParityReportDir(),
 ): LoadedParityReport | undefined {
-  const reports = findParityReports(dir);
-  const descriptor = reportId
-    ? reports.find((entry) => entry.id === reportId || entry.fileName === reportId)
-    : reports[0];
-  if (!descriptor) return undefined;
-  const data = JSON.parse(fs.readFileSync(descriptor.path, "utf8")) as ParityReportJson;
-  const rows = rowsFromReport(data);
-  return {
-    ...descriptor,
-    data,
-    rows,
-    cases: [],
-    summary: summarizeParityReport(data),
-  };
+  const fileNames = new Set<string>();
+  if (reportId) {
+    fileNames.add(reportId);
+    try {
+      fileNames.add(decodeURIComponent(reportId));
+    } catch {
+      // A literal filename can contain a percent sign without being a URI.
+    }
+  } else {
+    const latest = findParityReports(dir)[0];
+    if (latest) fileNames.add(latest.fileName);
+  }
+  for (const fileName of fileNames) {
+    if (path.basename(fileName) !== fileName || !fileName.endsWith(".json")) continue;
+    const filePath = path.join(dir, fileName);
+    try {
+      const stat = fs.statSync(filePath);
+      if (!stat.isFile()) continue;
+      const data = readReportData(filePath, stat);
+      if (!data) continue;
+      return {
+        ...describeReport(filePath, stat),
+        data,
+        rows: rowsFromReport(data),
+        cases: [],
+        summary: summarizeParityReport(data),
+      };
+    } catch {
+      // Missing, unreadable, and incomplete reports are not available yet.
+    }
+  }
+  return undefined;
 }
 
 export function getParityReportDistributionCases(
@@ -308,13 +367,11 @@ export function findRunReportForRun(
   );
   if (runTimes.size === 0) return undefined;
 
-  for (const descriptor of findParityReports(dir)) {
-    const report = getParityReport(descriptor.id, dir);
-    if (report && report.data.createdAt && runTimes.has(report.data.createdAt)) {
-      return report;
-    }
-  }
-  return undefined;
+  const descriptor = findParityReports(dir).find((entry) => {
+    const createdAt = reportMetadata.get(path.resolve(entry.path))?.createdAt;
+    return createdAt !== undefined && runTimes.has(createdAt);
+  });
+  return descriptor ? getParityReport(descriptor.id, dir) : undefined;
 }
 
 export function getParityReportCase(
