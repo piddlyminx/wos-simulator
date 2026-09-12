@@ -710,6 +710,7 @@ export function mergeSideFromOcr(
     activeByStat[stat].up += manual.up + pet.up;
     activeByStat[stat].down += manual.down + pet.down;
   }
+  activeByStat.lethality.down += opponentActiveModifiers.gareth;
 
   for (const cat of CATEGORIES) {
     const troop = ocrSide.troops?.[cat];
@@ -773,5 +774,6 @@ export function mergeSideFromOcr(
     stats: nextStats,
     statModifiers: { ...ownActiveModifiers.statModifiers },
     petModifiers: { ...ownActiveModifiers.petModifiers },
+    gareth: ownActiveModifiers.gareth,
   };
 }

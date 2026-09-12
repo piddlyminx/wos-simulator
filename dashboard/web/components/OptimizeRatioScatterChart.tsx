@@ -160,7 +160,7 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
       >
         <svg
           viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-          className="h-[380px] w-full"
+          className="sim-optimize-scatter h-[380px] w-full"
           role="img"
           aria-label="3D optimizer sampled points"
         >
@@ -233,6 +233,7 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
           })}
 
           <text
+            data-axis="infantry"
             x={projectBase(100, 0).x + 12}
             y={projectBase(100, 0).y + 4}
             fill="rgba(255,255,255,0.72)"
@@ -242,6 +243,7 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
             Infantry %
           </text>
           <text
+            data-axis="lancer"
             x={projectBase(0, 100).x - 12}
             y={projectBase(0, 100).y + 4}
             textAnchor="end"
@@ -252,6 +254,7 @@ export default function OptimizeRatioScatterChart({ points }: Props) {
             Lancer %
           </text>
           <text
+            data-axis="win-rate"
             x={projectBase(0, 0).x - 14}
             y={projectBase(0, 0).y - 100 * Z_SCALE - 10}
             textAnchor="end"

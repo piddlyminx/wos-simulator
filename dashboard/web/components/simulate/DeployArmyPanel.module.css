@@ -25,7 +25,7 @@
 .setupModal button,
 .setupModal input,
 .setupModal select {
-  font: inherit;
+  font-family: inherit;
 }
 
 .armyHeader,
@@ -40,10 +40,10 @@
   background: #4b80bd;
   color: white;
   padding: 9px 14px;
-  text-shadow: 0 2px 0 #315479;
+  text-shadow: 0 1px 0 #315479;
 }
 
-.armyHeader > div {
+.armyHeader h2 {
   min-width: 0;
 }
 
@@ -52,16 +52,6 @@
   margin: 0;
   font-size: clamp(1.05rem, 2.1vw, 1.35rem);
   font-weight: 950;
-}
-
-.armyHeader small {
-  display: block;
-  margin-bottom: 1px;
-  color: #d5eeff;
-  font-size: 0.62rem;
-  font-weight: 850;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .snowCap {
@@ -91,7 +81,7 @@
   padding: 4px 8px;
   text-align: left;
   box-shadow: inset 0 2px 0 #b9edff, 0 3px 0 #0c5a98;
-  text-shadow: 0 2px 0 #17608d;
+  text-shadow: 0 1px 0 #17608d;
 }
 
 .profileButton > span:first-child {
@@ -112,8 +102,8 @@
   white-space: nowrap;
 }
 
-.profileButton strong { font-size: 0.72rem; }
-.profileButton small { color: #e8f8ff; font-size: 0.57rem; }
+.profileButton strong { font-size: 0.875rem; }
+.profileButton small { color: #e8f8ff; font-size: 0.75rem; }
 
 .capacityBar {
   display: grid;
@@ -121,7 +111,7 @@
   align-items: stretch;
   background: #145889;
   color: white;
-  font-size: 0.76rem;
+  font-size: 0.875rem;
   font-weight: 900;
 }
 
@@ -151,12 +141,17 @@
   text-align: left;
 }
 
+.capacityBar button > span {
+  grid-column: 2;
+}
+
 .capacityBar button strong {
   color: #bce9ff;
-  font-size: 0.64rem;
+  font-size: 0.875rem;
 }
 
 .capacityBar button b {
+  grid-column: -2 / -1;
   display: grid;
   width: 24px;
   height: 24px;
@@ -249,8 +244,8 @@
   color: rgb(255 255 255 / 88%);
   font-size: clamp(1.25rem, 4vw, 2.35rem);
   font-weight: 950;
-  letter-spacing: -0.08em;
-  text-shadow: 0 3px 0 rgb(20 55 84 / 55%);
+  letter-spacing: 0;
+  text-shadow: 0 1px 0 rgb(20 55 84 / 55%);
 }
 
 .typeCrest {
@@ -263,9 +258,9 @@
   clip-path: polygon(50% 0, 92% 17%, 84% 76%, 50% 100%, 16% 76%, 8% 17%);
   background: #39a6dc;
   color: white;
-  font-size: 0.74rem;
+  font-size: 0.875rem;
   font-weight: 950;
-  text-shadow: 0 2px 0 #1d5b7e;
+  text-shadow: 0 1px 0 #1d5b7e;
 }
 
 .typeIcon {
@@ -297,9 +292,9 @@
   top: 8px;
   right: 8px;
   color: #ffec83;
-  font-size: clamp(0.62rem, 1.8vw, 0.82rem);
+  font-size: 0.75rem;
   font-weight: 950;
-  text-shadow: 0 2px 0 #665322;
+  text-shadow: 0 1px 0 #665322;
 }
 
 .heroSlot > strong,
@@ -311,12 +306,12 @@
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
-  text-shadow: 0 2px 0 #543d31;
+  text-shadow: 0 1px 0 #543d31;
   white-space: nowrap;
 }
 
-.heroSlot > strong { bottom: 25px; font-size: clamp(0.65rem, 1.8vw, 0.82rem); }
-.heroSlot > small { bottom: 8px; color: #ffe9c9; font-size: 0.55rem; }
+.heroSlot > strong { bottom: 25px; font-size: 0.875rem; }
+.heroSlot > small { bottom: 8px; color: #ffe9c9; font-size: 0.75rem; }
 .heroSlot[data-empty="true"] > strong { bottom: 16px; }
 
 .addHero {
@@ -327,7 +322,7 @@
   font-size: clamp(2.35rem, 7vw, 4rem);
   font-weight: 950;
   line-height: 1;
-  text-shadow: 0 2px 0 #092f50, 0 0 5px rgb(224 247 255 / 28%);
+  text-shadow: 0 1px 0 #092f50, 0 0 5px rgb(224 247 255 / 28%);
   transform: translate(-50%, -52%);
 }
 
@@ -341,7 +336,7 @@
 .troopRow {
   --row-color: #20bedc;
   display: grid;
-  grid-template-columns: minmax(228px, 1.05fr) minmax(174px, 0.95fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(174px, 1fr);
   gap: 8px 12px;
   align-items: center;
   min-width: 0;
@@ -368,45 +363,81 @@
   display: grid;
   min-width: 0;
   flex: 1;
-  grid-template-columns: minmax(0, 1fr) minmax(96px, 104px);
+  grid-template-columns: minmax(0, 1fr) 112px;
   align-items: center;
   gap: 7px;
 }
-.troopIdentity strong { overflow: hidden; color: #176a97; font-size: 0.76rem; text-overflow: ellipsis; white-space: nowrap; }
+.troopIdentity strong { overflow: hidden; color: #176a97; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
 .troopIdentity select,
 .troopIdentity input {
   width: 100%;
-  max-width: 104px;
-  min-height: 42px;
+  max-width: 112px;
+  min-height: 38px;
   margin: 0;
   border: 2px solid #6ca8c9;
   border-radius: 9px;
   background: #f8fcfe;
   color: #174f70;
-  padding: 4px 6px;
-  font-size: 0.66rem;
+  padding: 2px 6px;
+  font-size: 1rem;
   font-weight: 850;
 }
 
 .troopAmount {
   display: grid;
-  grid-template-columns: 40px minmax(80px, 1fr) 40px;
+  grid-template-columns: 28px minmax(80px, 1fr) 28px;
   align-items: center;
   gap: 7px;
 }
 
-.troopAmount > button {
-  min-height: 42px;
-  border: 3px solid #247fc2;
-  border-radius: 11px;
+.troopAmount > .stepButton,
+.garethModifier > .stepButton {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  justify-self: start;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: 2px solid #247fc2;
+  border-radius: 7px;
   background: #349ce9;
   color: white;
   font-size: 1.55rem;
   font-weight: 950;
   line-height: 1;
-  box-shadow: inset 0 2px 0 #b9edff, 0 3px 0 #0c5a98;
-  text-shadow: 0 2px 0 #17608d;
+  box-shadow: inset 0 1px 0 #b9edff, 0 2px 0 #0c5a98;
+  text-shadow: 0 1px 0 #17608d;
 }
+
+.troopAmount > .stepButton > span,
+.garethModifier > .stepButton > span,
+.modifierSheet .stepButton > span,
+.balanceRow > button > span { display: inline-block; transform: translateY(-1.5px); }
+
+.stepButton:disabled { opacity: 0.4; }
+
+.petModifierGroup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 28px 5rem minmax(28px, max-content);
+  column-gap: 8px;
+}
+
+.petModifierHeader,
+.petModifierFields,
+.petModifier,
+.garethModifier {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+}
+
+.petModifierHeader > :last-child { grid-column: 2 / -1; min-width: 0; }
+.petModifierFields { row-gap: 8px; }
+.petModifier > span:first-child { grid-column: span 2; }
+.garethModifier > .stepButton:last-child { justify-self: end; }
 
 .troopAmount label {
   display: grid;
@@ -421,21 +452,21 @@
 .troopAmount input {
   width: 100%;
   min-width: 0;
-  min-height: 38px;
+  min-height: 34px;
   border: 0;
   background: transparent;
   color: #315c78;
-  padding: 5px;
-  font-size: 0.78rem;
+  padding: 3px 5px;
+  font-size: 1rem;
   font-weight: 900;
   text-align: right;
 }
 
 .troopAmount small {
   min-width: 38px;
-  color: #56809a;
+  color: #426781;
   padding-right: 6px;
-  font-size: 0.61rem;
+  font-size: 0.75rem;
   text-align: right;
 }
 
@@ -479,7 +510,7 @@
   background: #062f54;
   color: white;
   padding: 10px 14px;
-  font-size: 0.68rem;
+  font-size: 0.875rem;
   font-weight: 900;
 }
 
@@ -488,9 +519,9 @@
 .quickActions button,
 .setupDock button,
 .pickerToolbar {
-  text-shadow: 0 2px 0 rgb(5 45 76 / 72%);
+  text-shadow: 0 1px 0 rgb(5 45 76 / 72%);
 }
-.ratioStrip .typeCrest { width: 22px; height: 25px; font-size: 0.56rem; }
+.ratioStrip .typeCrest { width: 22px; height: 25px; font-size: 0.75rem; }
 
 .quickActions,
 .setupDock {
@@ -517,12 +548,12 @@
   background: transparent;
   color: white;
   padding: 6px;
-  text-shadow: 0 2px 0 #28557d;
+  text-shadow: 0 1px 0 #28557d;
 }
 
 .quickActions button:disabled { opacity: 0.46; }
 .quickActions button span { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; background: #55a7dc; font-size: 1.05rem; box-shadow: inset 0 1px 0 #a8ddf9, 0 2px 0 #1d5885; }
-.quickActions button strong { overflow: hidden; font-size: 0.67rem; text-overflow: ellipsis; white-space: nowrap; }
+.quickActions button strong { overflow: hidden; font-size: 0.875rem; text-overflow: ellipsis; white-space: nowrap; }
 
 .inlineStats {
   border-top: 0;
@@ -538,22 +569,10 @@
   padding: 0 2px 10px;
 }
 
-.inlineStatsHeader > div > strong,
-.inlineStatsHeader > div > small {
-  display: block;
-}
-
-.inlineStatsHeader > div > strong {
+.inlineStatsHeader > strong {
   color: #285f83;
-  font-size: 0.78rem;
+  font-size: 1.125rem;
   font-weight: 950;
-}
-
-.inlineStatsHeader > div > small {
-  margin-top: 2px;
-  color: #61849c;
-  font-size: 0.57rem;
-  font-weight: 800;
 }
 
 .inlineStats .profileButton {
@@ -568,11 +587,11 @@
 
 .inlineStats .reportHead,
 .inlineStats .reportRow {
-  grid-template-columns: minmax(78px, 1.1fr) repeat(4, minmax(58px, 1fr));
+  grid-template-columns: minmax(124px, 1.2fr) repeat(4, minmax(58px, 1fr));
   min-width: 0;
 }
 
-.inlineStats .reportHead { background: #6f9fc4; }
+.inlineStats .reportHead { background: #426f90; }
 .inlineStats .reportRow:nth-child(odd) { background: #edf8fd; }
 .inlineStats .reportRow input { border-color: #9bbfd5; background: white; color: #315c78; }
 
@@ -589,8 +608,8 @@
 }
 
 .setupDock button > span { display: grid; width: 27px; height: 27px; place-items: center; border: 2px solid #8dcdf1; border-radius: 8px; background: #347fba; font-weight: 950; box-shadow: 0 2px 0 #0a3b63; }
-.setupDock button strong { font-size: 0.67rem; }
-.setupDock button small { max-width: 100%; overflow: hidden; color: #bfe3f7; font-size: 0.54rem; text-overflow: ellipsis; white-space: nowrap; }
+.setupDock button strong { font-size: 0.875rem; }
+.setupDock button small { max-width: 100%; overflow: hidden; color: #bfe3f7; font-size: 0.75rem; text-overflow: ellipsis; white-space: nowrap; }
 
 .backdrop {
   position: fixed;
@@ -657,14 +676,14 @@
   background: #246f9f;
   color: white;
   padding: 9px 12px;
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   font-weight: 900;
 }
 
 .pickerToolbar > span { display: flex; align-items: center; gap: 7px; }
 .pickerToolbar label { display: flex; align-items: center; gap: 7px; }
 .pickerToolbar select,
-.pickerToolbar input { min-height: 36px; border: 2px solid #a4c9e2; border-radius: 9px; background: #edf8ff; color: #315d79; padding: 4px 8px; font-size: 0.7rem; font-weight: 850; }
+.pickerToolbar input { min-height: 32px; border: 2px solid #a4c9e2; border-radius: 9px; background: #edf8ff; color: #315d79; padding: 2px 8px; font-size: 1rem; font-weight: 850; }
 .heroSearch { min-width: 0; }
 .heroSearch input { width: 100%; min-width: 0; }
 
@@ -719,12 +738,12 @@
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
-  text-shadow: 0 2px 0 #584038;
+  text-shadow: 0 1px 0 #584038;
   white-space: nowrap;
 }
 
-.heroGridCard > strong { bottom: 23px; font-size: 0.67rem; }
-.heroGridCard > small { bottom: 7px; color: #ffe8bd; font-size: 0.57rem; }
+.heroGridCard > strong { bottom: 23px; font-size: 0.875rem; }
+.heroGridCard > small { bottom: 7px; color: #ffe8bd; font-size: 0.75rem; }
 
 .assignedBadge {
   position: absolute;
@@ -735,7 +754,7 @@
   background: #2dac63;
   color: white;
   padding: 3px 6px;
-  font-size: 0.48rem;
+  font-size: 0.75rem;
   font-weight: 950;
   box-shadow: 0 2px 0 #16733e;
   text-shadow: 0 1px 0 #17613a;
@@ -749,7 +768,7 @@
   background: #eef8fd;
   padding: 24px;
   color: #55758a;
-  font-size: 0.72rem;
+  font-size: 0.875rem;
   text-align: center;
 }
 
@@ -768,7 +787,7 @@
   min-height: 46px;
   border-radius: 12px;
   padding: 8px 14px;
-  font-size: 0.76rem;
+  font-size: 0.875rem;
   font-weight: 950;
 }
 
@@ -777,14 +796,16 @@
   background: #3195ed;
   color: white;
   box-shadow: inset 0 2px 0 #c1efff, 0 3px 0 #0c5794;
-  text-shadow: 0 2px 0 #1b638e;
+  text-shadow: 0 1px 0 #1b638e;
 }
 
 .gameButton:disabled { filter: grayscale(0.6); opacity: 0.55; }
 .secondaryButton { border: 2px solid #8eaec4; background: #f0f8fd; color: #375f78; box-shadow: 0 3px 0 #829fb2; }
 
-.setupModal { width: min(100%, 840px); }
-.setupModalBody { max-height: min(680px, calc(100dvh - 170px)); overflow-y: auto; padding: 14px; }
+.setupModal { display: flex; flex-direction: column; width: min(100%, 840px); }
+.setupModal > .modalHeader,
+.setupModal > .modalFooter { flex: 0 0 auto; }
+.setupModalBody { flex: 1 1 auto; min-height: 0; max-height: min(680px, calc(100dvh - 170px)); overflow-y: auto; padding: 14px; }
 
 .modifierSheet :global(.sim-modifier-editor) { margin-top: 0; }
 
@@ -802,15 +823,15 @@
 
 .modifierSheet :global(.sim-modifier-title) {
   color: #2f6c93;
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   font-weight: 950;
 }
 
-.modifierSheet :global(.sim-modifier-fields) { gap: 9px; }
+.modifierSheet :global(.sim-modifier-fields) { row-gap: 9px; }
 
 .modifierSheet :global(.sim-modifier-fields > div > span),
 .modifierSheet :global(.sim-modifier-fields > label > span:first-child) {
-  font-size: 0.69rem;
+  font-size: 0.875rem;
   font-weight: 800;
   opacity: 1;
 }
@@ -819,8 +840,10 @@
 .modifierSheet :global(.sim-compact-toggle),
 .modifierSheet :global(.sim-modifier-fields input) {
   min-height: 40px;
-  font-size: 0.68rem;
+  font-size: 1rem;
 }
+
+.modifierSheet :global(.sim-modifier-fields input) { min-height: 36px; }
 
 .balancePopover { width: min(100%, 610px); }
 
@@ -860,7 +883,7 @@
 .balanceRow[data-category="lancer"] { --row-color: #30d194; }
 .balanceRow[data-category="marksman"] { --row-color: #9c7ee8; }
 .balanceRow > .typeCrest { width: 48px; height: 54px; font-size: 1.05rem; }
-.balanceRow > strong { color: #2f6e98; font-size: 0.76rem; }
+.balanceRow > strong { color: #2f6e98; font-size: 0.875rem; }
 
 .balanceRow > button {
   min-height: 42px;
@@ -872,7 +895,7 @@
   font-weight: 950;
   line-height: 1;
   box-shadow: inset 0 2px 0 #b9edff, 0 3px 0 #0c5a98;
-  text-shadow: 0 2px 0 #17608d;
+  text-shadow: 0 1px 0 #17608d;
 }
 
 .balanceRow > button:disabled { opacity: 0.45; }
@@ -911,19 +934,19 @@
   align-items: center;
   gap: 4px;
   color: #4d7590;
-  font-size: 0.76rem;
+  font-size: 0.875rem;
   font-weight: 900;
 }
 
 .balanceRow > label input {
   width: 58px;
-  min-height: 40px;
+  min-height: 36px;
   border: 2px solid #91b9d1;
   border-radius: 9px;
   background: #f3fbff;
   color: #315c78;
-  padding: 4px;
-  font-size: 0.78rem;
+  padding: 2px 4px;
+  font-size: 1rem;
   font-weight: 900;
   text-align: right;
 }
@@ -943,14 +966,14 @@
   min-width: 470px;
 }
 
-.reportHead { background: #6e9eb9; color: white; font-size: 0.62rem; font-weight: 950; text-align: center; text-shadow: 0 1px 0 #375f78; }
+.reportHead { background: #426f90; color: white; font-size: 0.875rem; font-weight: 950; text-align: center; text-shadow: 0 1px 0 #375f78; }
 .reportHead span { padding: 8px 5px; }
 .reportRow:nth-child(odd) { background: #eef6fa; }
-.reportRow > strong { display: flex; align-items: center; gap: 6px; padding: 8px; font-size: 0.68rem; }
+.reportRow > strong { display: flex; align-items: center; gap: 6px; padding: 8px; font-size: 1rem; }
 .reportRow > strong .typeCrest { width: 24px; height: 27px; }
 .reportRow label { min-width: 0; padding: 6px 4px; text-align: center; }
-.reportRow input { width: 100%; min-height: 38px; border: 1px solid #c6a993; border-radius: 8px; background: #fffdfb; color: #5e4c40; padding: 5px; font-size: 0.7rem; font-weight: 850; text-align: center; }
-.reportRow small { display: block; min-height: 1em; margin-top: 2px; color: #279b4f; font-size: 0.52rem; }
+.reportRow input { width: 100%; height: auto; min-height: 34px; border: 1px solid #c6a993; border-radius: 8px; background: #fffdfb; color: #5e4c40; padding: 3px 5px; font-size: 1rem; font-weight: 850; text-align: center; }
+.reportRow small { display: block; min-height: 1em; margin-top: 2px; color: #279b4f; font-size: 0.75rem; }
 
 .skillRows { display: grid; gap: 10px; }
 .skillHeroRow { display: grid; grid-template-columns: minmax(145px, 0.7fr) minmax(230px, 1.3fr); gap: 12px; align-items: center; border: 0; border-radius: 13px; background: #eff8fd; padding: 9px; }
@@ -958,23 +981,23 @@
 .skillHeroRow .heroPortrait { position: relative; width: 54px; height: 60px; flex: 0 0 auto; border: 0; border-radius: 10px; }
 .skillHeroRow strong,
 .skillHeroRow small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.skillHeroRow strong { font-size: 0.72rem; }
-.skillHeroRow small { color: #69889d; font-size: 0.58rem; }
+.skillHeroRow strong { font-size: 0.875rem; }
+.skillHeroRow small { color: #69889d; font-size: 0.75rem; }
 .skillHeroRow > div:last-child { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-.skillHeroRow label span { display: block; color: #55768c; font-size: 0.56rem; font-weight: 900; text-align: center; }
-.skillHeroRow select { width: 100%; min-height: 40px; border: 2px solid #8cb8d3; border-radius: 8px; background: white; color: #305c78; padding: 4px; font-size: 0.7rem; font-weight: 900; text-align: center; }
+.skillHeroRow label span { display: block; color: #55768c; font-size: 0.75rem; font-weight: 900; text-align: center; }
+.skillHeroRow select { width: 100%; min-height: 36px; border: 2px solid #8cb8d3; border-radius: 8px; background: white; color: #305c78; padding: 2px 4px; font-size: 1rem; font-weight: 900; text-align: center; }
 .skillHeroRow select:disabled { opacity: 0.4; }
-.emptySheetRow { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; border: 0; border-radius: 10px; background: #eff8fd; padding: 10px; font-size: 0.68rem; }
+.emptySheetRow { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; border: 0; border-radius: 10px; background: #eff8fd; padding: 10px; font-size: 0.875rem; }
 
 .joinerRows { display: grid; gap: 9px; }
-.joinerRows label { display: grid; grid-template-columns: minmax(120px, 0.65fr) minmax(180px, 1.35fr); align-items: center; gap: 10px; border: 0; border-radius: 12px; background: #eff8fd; padding: 9px; font-size: 0.7rem; font-weight: 850; }
+.joinerRows label { display: grid; grid-template-columns: minmax(120px, 0.65fr) minmax(180px, 1.35fr); align-items: center; gap: 10px; border: 0; border-radius: 12px; background: #eff8fd; padding: 9px; font-size: 0.875rem; font-weight: 850; }
 .joinerRows label b { display: inline-grid; width: 26px; height: 26px; place-items: center; margin-right: 7px; border-radius: 8px; background: #4a93c7; color: white; }
-.joinerRows select { min-height: 42px; border: 2px solid #8cb8d3; border-radius: 9px; background: white; color: #305c78; padding: 5px 8px; font-size: 0.7rem; font-weight: 800; }
+.joinerRows select { min-height: 38px; border: 2px solid #8cb8d3; border-radius: 9px; background: white; color: #305c78; padding: 3px 8px; font-size: 1rem; font-weight: 800; }
 
 @media (max-width: 639px) {
   .armyPanel { border-width: 2px; border-radius: 16px; }
   .armyHeader { min-height: 58px; padding: 10px 12px; }
-  .armyHeader h2 { font-size: 1rem; }
+  .armyHeader h2 { font-size: 1.25rem; }
   .profileButton { grid-template-columns: 28px minmax(0, 1fr); min-width: 100px; min-height: 42px; padding: 3px 6px; }
   .profileButton > span:first-child { width: 26px; height: 28px; }
   .capacityBar { grid-template-columns: 1fr; }
@@ -984,46 +1007,45 @@
   .heroSlot { border-width: 2px; border-radius: 11px; }
   .heroSlot { aspect-ratio: 1; }
   .heroSlot > .typeCrest { top: 5px; left: 5px; width: 22px; height: 26px; }
-  .heroGeneration { top: 6px; right: 5px; font-size: 0.55rem; }
-  .heroSlot > strong { bottom: 21px; font-size: 0.6rem; }
-  .heroSlot > small { bottom: 6px; font-size: 0.49rem; }
+  .heroGeneration { top: 6px; right: 5px; font-size: 0.75rem; }
+  .heroSlot > strong { bottom: 25px; font-size: 0.875rem; }
+  .heroSlot > small { bottom: 6px; font-size: 0.75rem; }
   .troopList { gap: 10px; padding: 10px 8px; }
   .troopRow { grid-template-columns: minmax(0, 1fr); gap: 8px; min-height: 122px; border-width: 2px; border-radius: 13px; padding: 10px; }
   .troopIdentity { gap: 7px; padding-right: 43px; }
-  .troopIdentity .typeCrest { width: 36px; height: 41px; font-size: 0.78rem; }
+  .troopIdentity .typeCrest { width: 36px; height: 41px; font-size: 0.875rem; }
   .troopIdentity > span:not(.typeCrest) { grid-template-columns: max-content minmax(0, 1fr); gap: 8px; }
-  .troopIdentity strong { font-size: 0.68rem; }
   .troopIdentity select,
-  .troopIdentity input { max-width: none; min-height: 40px; height: 40px; padding-inline: 7px; font-size: 0.62rem; }
-  .troopAmount { grid-template-columns: 38px minmax(65px, 1fr) 38px; gap: 5px; }
-  .troopAmount > button { min-height: 40px; border-width: 2px; font-size: 1.3rem; }
-  .troopAmount input { min-height: 36px; font-size: 0.68rem; }
-  .troopAmount small { min-width: 34px; padding-right: 5px; font-size: 0.55rem; }
+  .troopIdentity input { max-width: none; min-height: 36px; height: 36px; padding-inline: 7px; font-size: 1rem; }
+  .troopAmount { grid-template-columns: 28px minmax(65px, 1fr) 28px; gap: 5px; }
+  .troopAmount > .stepButton,
+  .garethModifier > .stepButton { font-size: 1.3rem; }
+  .troopAmount input { min-height: 32px; font-size: 1rem; }
+  .troopAmount small { min-width: 34px; padding-right: 5px; font-size: 0.75rem; }
   .troopSlider { margin-block: 10px 9px; }
-  .ratioStrip { grid-template-columns: 1fr repeat(3, auto); gap: 5px; padding: 9px 12px; font-size: 0.58rem; }
+  .ratioStrip { grid-template-columns: 1fr repeat(3, auto); gap: 5px; padding: 9px 12px; font-size: 0.75rem; }
   .ratioStrip > span:first-child { font-size: 0; }
-  .ratioStrip > span:first-child::after { content: "Ratio"; font-size: 0.58rem; }
+  .ratioStrip > span:first-child::after { content: "Ratio"; font-size: 0.75rem; }
   .ratioStrip .typeCrest { display: inline-flex; width: 18px; height: 21px; }
   .quickActions button { min-height: 50px; flex-direction: column; gap: 2px; }
   .quickActions button span { width: 24px; height: 24px; font-size: 0.85rem; }
-  .quickActions button strong { font-size: 0.56rem; }
+  .quickActions button strong { font-size: 0.75rem; }
   .inlineStats { padding: 10px 8px; }
   .inlineStatsHeader { padding: 0 2px 10px; }
-  .inlineStatsHeader > div > strong { font-size: 0.69rem; }
   .inlineStats .profileButton { min-width: 0; max-width: 58%; }
   .inlineStats .reportHead,
   .inlineStats .reportRow {
-    grid-template-columns: minmax(70px, 1.1fr) repeat(4, minmax(48px, 1fr));
+    grid-template-columns: minmax(82px, 1.1fr) repeat(4, minmax(58px, 1fr));
     min-width: 0;
   }
   .inlineStats .reportHead span { padding: 6px 2px; }
-  .inlineStats .reportRow > strong { gap: 3px; padding: 5px 3px; font-size: 0.56rem; }
-  .inlineStats .reportRow > strong .typeCrest { width: 19px; height: 22px; font-size: 0.48rem; }
+  .inlineStats .reportRow > strong { gap: 3px; padding: 5px 3px; font-size: 0.875rem; }
+  .inlineStats .reportRow > strong .typeCrest { display: none; }
   .inlineStats .reportRow label { padding: 4px 2px; }
-  .inlineStats .reportRow input { min-height: 35px; padding: 3px 1px; font-size: 0.61rem; }
-  .inlineStats .reportRow small { font-size: 0.46rem; }
+  .inlineStats .reportRow input { min-height: 31px; padding: 1px 1px; font-size: 1rem; }
+  .inlineStats .reportRow small { font-size: 0.75rem; }
   .setupDock button { min-height: 60px; }
-  .setupDock button strong { font-size: 0.59rem; }
+  .setupDock button strong { font-size: 0.75rem; }
   .setupDock button small { display: none; }
   .backdrop { align-items: end; padding: 0; }
   .picker,
@@ -1047,10 +1069,10 @@
     padding: 10px;
   }
   .balanceRow > .typeCrest { width: 36px; height: 41px; font-size: 0.82rem; }
-  .balanceRow > strong { font-size: 0.62rem; }
+  .balanceRow > strong { font-size: 0.875rem; }
   .balanceRow > button { min-height: 38px; border-width: 2px; font-size: 1.1rem; }
-  .balanceRow > label { gap: 2px; font-size: 0.62rem; }
-  .balanceRow > label input { width: 46px; min-height: 36px; padding: 2px; font-size: 0.67rem; }
+  .balanceRow > label { gap: 2px; font-size: 0.875rem; }
+  .balanceRow > label input { width: 46px; min-height: 32px; padding: 0px 2px; font-size: 1rem; }
   .skillHeroRow { grid-template-columns: 1fr; gap: 8px; }
 
   .joinerRows label { grid-template-columns: 1fr; gap: 5px; }
@@ -1063,4 +1085,11 @@
   .armyPanel { border-radius: 19px; }
   .heroSlots { padding-inline: 24px; }
   .heroSlot { max-height: 238px; }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .troopIdentity > span:not(.typeCrest) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
 }

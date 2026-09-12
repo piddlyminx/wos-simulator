@@ -67,7 +67,7 @@ export function StatSyncToastBanner({
       className="fixed inset-x-3 z-50 rounded px-3 py-2 text-xs shadow-lg sm:left-auto sm:right-5 sm:w-[min(34rem,calc(100vw-2.5rem))]"
       style={{
         border: "1px solid var(--sim-blue)",
-        backgroundColor: "rgba(137, 180, 250, 0.12)",
+        backgroundColor: "var(--sim-toast-bg, rgba(137, 180, 250, 0.12))",
         color: "var(--sim-text)",
         bottom: "calc(11.5rem + env(safe-area-inset-bottom, 0px))",
       }}

@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { EditableNumberInput } from "@/components/EditableNumberInput";
+import { GarethModifierInput } from "./GarethModifierInput";
 import { ExperimentalBadge } from "@/components/ExperimentalBadge";
 import { TroopRatioInput } from "@/components/simulate/TroopRatioInput";
 import {
@@ -1281,22 +1282,24 @@ function DeployTroopRow({
         </span>
       </div>
       <div className={deployStyles.troopAmount}>
-        <button type="button" aria-label={`Remove ${category} troops`} onClick={() => setCount(count - step)}>−</button>
+        <button type="button" className={deployStyles.stepButton} aria-label={`Remove ${category} troops`} onClick={() => setCount(count - step)}><span aria-hidden="true">−</span></button>
         <label>
           <span className="sr-only">{category} troop count</span>
           <EditableNumberInput
             name={`${which}.troops.${category}.count`}
             min={0}
-            max={maxCount}
             inputMode="numeric"
             parse="int"
             value={count}
-            onValueChange={setCount}
+            onValueChange={(nextCount) => setTroops((troops) => ({
+              ...troops,
+              [category]: Math.max(0, nextCount),
+            }))}
             aria-label={`${category} troop count`}
           />
           <small>{percent}%</small>
         </label>
-        <button type="button" aria-label={`Add ${category} troops`} onClick={() => setCount(count + step)}>+</button>
+        <button type="button" className={deployStyles.stepButton} aria-label={`Add ${category} troops`} onClick={() => setCount(count + step)}><span aria-hidden="true">+</span></button>
       </div>
       <input
         className={deployStyles.troopSlider}
@@ -1506,7 +1509,7 @@ function DeployBalancePopover({
                   disabled={ratios[category] === 0}
                   onClick={() => setRatio(category, ratios[category] - 1)}
                 >
-                  −
+                  <span aria-hidden="true">−</span>
                 </button>
                 <input
                   className={deployStyles.balanceSlider}
@@ -1525,7 +1528,7 @@ function DeployBalancePopover({
                   disabled={ratios[category] === maxRatio}
                   onClick={() => setRatio(category, ratios[category] + 1)}
                 >
-                  +
+                  <span aria-hidden="true">+</span>
                 </button>
                 <label>
                   <input
@@ -1586,6 +1589,7 @@ function DeployArmyPanel({
   useEffect(() => {
     if (localTroopUpdateRef.current) {
       localTroopUpdateRef.current = false;
+      setCapacity((previous) => Math.max(previous, total));
       return;
     }
     setCapacity(total);
@@ -1604,12 +1608,12 @@ function DeployArmyPanel({
     <section className={deployStyles.armyPanel} data-tour={`side-panel-${which}`} data-side={which}>
       <header className={deployStyles.armyHeader}>
         <span className={deployStyles.snowCap} aria-hidden="true" />
-        <div><small>{title === "Player army" ? "Rally march" : which === "attacker" ? "Offensive march" : "Defensive march"}</small><h2>{title}</h2></div>
+        <h2>{title}</h2>
       </header>
 
       <div className={deployStyles.capacityBar}>
         <span><b aria-hidden="true">♟</b> {total.toLocaleString()} / {capacity.toLocaleString()} troops</span>
-        <button type="button" onClick={() => setSetupSheet("buffs")}><span>Battle Buffs</span><strong>{activeBuffs > 0 ? `${activeBuffs} active` : "Add buffs"}</strong><b aria-hidden="true">+</b></button>
+        <button type="button" onClick={() => setSetupSheet("buffs")}>{activeBuffs > 0 && <strong>{activeBuffs} active</strong>}<span>Battle buffs</span><b aria-hidden="true">+</b></button>
       </div>
 
       <DeployHeroSlots which={which} state={state} onChoose={setHeroPicker} />
@@ -1637,7 +1641,7 @@ function DeployArmyPanel({
         data-testid={`side-section-${which}-stats`}
       >
         <header className={deployStyles.inlineStatsHeader}>
-          <div><strong>Stat bonuses</strong><small>Base + effective</small></div>
+          <strong>Stat bonuses</strong>
           <button
             type="button"
             className={deployStyles.profileButton}
@@ -1816,8 +1820,8 @@ function StatModifierControls({
           )}
         </div>
 
-        <div className="sim-modifier-group">
-          <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
+        <div className={`${deployStyles.petModifierGroup} sim-modifier-group`}>
+          <div className={deployStyles.petModifierHeader}>
             {expanded ? (
               <strong className="sim-modifier-title">Pets</strong>
             ) : (
@@ -1851,7 +1855,7 @@ function StatModifierControls({
           {showPetDetails && (
             <div
               id={`pet-modifier-fields-${which}`}
-              className="sim-modifier-fields mt-2 grid grid-cols-1 gap-2"
+              className={`${deployStyles.petModifierFields} sim-modifier-fields mt-2`}
             >
               {PET_MODIFIER_NAMES.map((name) => (
                 <PetModifierInput
@@ -1866,57 +1870,6 @@ function StatModifierControls({
             </div>
           )}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function GarethModifierInput({
-  which,
-  value,
-  onChange,
-}: {
-  which: Side;
-  value: number;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <div className="grid grid-cols-[minmax(0,1fr)_9.75rem] items-center gap-2 text-[10px]">
-      <span className="min-w-0 truncate opacity-70">
-        <label htmlFor={`gareth-${which}`} title="Enemy lethality down">Gareth</label>
-      </span>
-      <div className="grid grid-cols-[1.875rem_minmax(0,1fr)_1.875rem] gap-1">
-        <button
-          type="button"
-          className="sim-input min-w-0 font-bold disabled:opacity-40"
-          aria-label={`${which} decrease Gareth`}
-          disabled={value <= 0}
-          onClick={() => onChange(Math.max(0, value - 0.25))}
-        >
-          −
-        </button>
-        <EditableNumberInput
-          id={`gareth-${which}`}
-          name={`${which}.gareth`}
-          min={0}
-          max={5}
-          step={0.25}
-          value={value}
-          onValueChange={(next) => onChange(Math.max(0, Math.min(5, Math.round(next * 4) / 4)))}
-          className="sim-input min-h-[30px] px-2 text-right text-[10px] tabular-nums"
-          aria-label={`${which} Gareth`}
-          aria-description="Enemy lethality down (%)"
-          data-testid={`gareth-modifier-${which}`}
-        />
-        <button
-          type="button"
-          className="sim-input min-w-0 font-bold disabled:opacity-40"
-          aria-label={`${which} increase Gareth`}
-          disabled={value >= 5}
-          onClick={() => onChange(Math.min(5, value + 0.25))}
-        >
-          +
-        </button>
       </div>
     </div>
   );
@@ -1976,7 +1929,7 @@ function PetModifierInput({
   const max = petModifierMax(name);
   const display = isDebuff && value > 0 ? `-${value.toFixed(1)}%` : `+${value.toFixed(1)}%`;
   return (
-    <label className="grid grid-cols-[minmax(0,1fr)_5rem_3.25rem] items-center gap-2 text-[10px]">
+    <label className={`${deployStyles.petModifier} text-[10px]`}>
       <span className="min-w-0 truncate opacity-70">
         {PET_MODIFIER_LABELS[name]}
       </span>
@@ -1996,7 +1949,7 @@ function PetModifierInput({
       />
       <span
         className="text-right font-mono tabular-nums"
-        style={{ color: isDebuff && value > 0 ? "#f38ba8" : "#a6e3a1" }}
+        style={{ color: isDebuff && value > 0 ? "var(--sim-error)" : "var(--sim-green)" }}
       >
         {value === 0 ? "Off" : display}
       </span>

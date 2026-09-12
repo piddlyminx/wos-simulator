@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Somatic Rounded";
+  src: url("/fonts/Somatic-Rounded.otf") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 :root {
   --sidebar-bg: #1e1e2e;
   --sidebar-text: #cdd6f4;
@@ -1700,7 +1708,11 @@ body {
   margin: -0.5rem auto 0;
   width: min(100%, 1500px);
   color: var(--deploy-ink);
-  font-family: "Trebuchet MS", "Avenir Next Rounded", "Arial Rounded MT Bold", sans-serif;
+  font-family: "Somatic Rounded", "Trebuchet MS", "Avenir Next Rounded", "Arial Rounded MT Bold", sans-serif;
+  /* Somatic's rounded strokes are already bold; avoid browser-added weight. */
+  font-synthesis: none;
+  font-size: 1rem;
+  line-height: 1.45;
 }
 
 .deploy-simulator-skin::before {
@@ -1725,7 +1737,7 @@ body {
   color: white;
   padding: 1.25rem clamp(1rem, 3vw, 2rem);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
-  text-shadow: 0 2px 0 rgba(4, 34, 59, 0.78);
+  text-shadow: 0 1px 0 rgba(4, 34, 59, 0.78);
 }
 
 .deploy-back-button {
@@ -1830,14 +1842,14 @@ body {
 }
 
 .deploy-mode-tabs strong {
-  font-size: 0.78rem;
+  font-size: 1rem;
   font-weight: 950;
 }
 
 .deploy-mode-tabs small {
   margin-top: 0.1rem;
   color: #c4e8fb;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
 }
 
 .deploy-workspace .simulate-workspace,
@@ -1852,10 +1864,39 @@ body {
   --sim-text: #123f60;
   --sim-muted: #456c85;
   --sim-blue: #1676ad;
-  --sim-green: #20bd5b;
+  --sim-green: #247444;
   --sim-yellow: #b97706;
   --sim-error: #a52342;
-  font-family: "Trebuchet MS", "Avenir Next Rounded", "Arial Rounded MT Bold", sans-serif;
+  --sim-toast-bg: #e8f5fb;
+  font-family: "Somatic Rounded", "Trebuchet MS", "Avenir Next Rounded", "Arial Rounded MT Bold", sans-serif;
+  font-synthesis: none;
+}
+
+.deploy-workspace :is(.text-xs, .text-\[9px\], .text-\[10px\], .text-\[11px\], .text-\[12px\]) {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.deploy-workspace :is(.sim-field-label, .sim-replicates-inline .sim-field-label, .sim-mode-status-detail, .sim-mode-option-copy, .sim-modal-copy, .sim-help-tooltip) {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.deploy-workspace :is(.sim-mode-tab, .sim-options-toggle, .sim-options-close, .sim-mode-secondary-button, .sim-mode-options-header h3, .sim-modal-section-title, .sim-mode-status-label, .sim-tab, .sim-segmented button) {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.deploy-workspace :is(.sim-input, .sim-modal input, .sim-modal select, .sim-run-button, .sim-optimize-run-button, .sim-modal-title) {
+  font-size: 1rem;
+}
+
+:where(.deploy-workspace) .sim-input {
+  min-height: 30px;
+}
+
+.deploy-client-workspace .sim-mode-option-row .sim-input {
+  min-height: 30px;
 }
 
 .deploy-workspace .sim-start-card,
@@ -1884,11 +1925,21 @@ body {
   align-items: stretch;
 }
 
+.deploy-client-workspace .sim-start-file-actions {
+  padding-right: 2.5rem;
+}
+
+.deploy-client-workspace .sim-replicates-inline .sim-field-label {
+  color: #d9f2fd;
+  text-transform: none;
+}
+
 .deploy-client-workspace {
   --sim-action-dock-height: 6rem;
 }
 
 .deploy-client-workspace .sim-mode-inline-status {
+  --sim-muted: #d4effb;
   overflow: hidden;
   color: #d4effb;
   text-overflow: ellipsis;
@@ -1934,7 +1985,7 @@ body {
   color: white !important;
   font-size: 0.92rem;
   font-weight: 950;
-  text-shadow: 0 2px 0 #16466c;
+  text-shadow: 0 1px 0 #16466c;
 }
 
 .deploy-workspace .sim-role-header p {
@@ -2102,6 +2153,16 @@ body {
   box-shadow: 0 -10px 24px rgb(3 24 42 / 42%);
 }
 
+.deploy-client-workspace .sim-mode-option-row {
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+}
+
+@media (min-width: 641px) {
+  .deploy-client-workspace .sim-mode-option-row:has(select) {
+    grid-column: span 2;
+  }
+}
+
 .deploy-client-workspace .sim-mode-options-header h3,
 .deploy-client-workspace .sim-mode-option-copy,
 .deploy-client-workspace .sim-mode-options .sim-field-label,
@@ -2128,7 +2189,7 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.46),
     0 3px 0 #0a4776;
   font-weight: 950;
-  text-shadow: 0 2px 0 #1d5a86;
+  text-shadow: 0 1px 0 #1d5a86;
 }
 
 .deploy-workspace .sim-tool-panel {
@@ -2190,7 +2251,7 @@ body {
   padding: 8px 12px;
   opacity: 1;
   text-align: center;
-  text-shadow: 0 2px 0 #083b61;
+  text-shadow: 0 1px 0 #083b61;
 }
 
 .deploy-client-workspace .sim-panel-results-shell .sim-tool-panel {
@@ -2207,6 +2268,36 @@ body {
 .deploy-client-workspace .sim-panel-results-shell table {
   color: inherit;
   text-shadow: none;
+}
+
+.deploy-client-workspace .recharts-text {
+  font-size: 0.75rem;
+}
+
+.deploy-client-workspace .recharts-cartesian-axis-tick-value {
+  opacity: 1;
+}
+
+.deploy-client-workspace .recharts-reference-line .recharts-label {
+  transform: translateY(14px);
+}
+
+.deploy-client-workspace .sim-optimize-scatter text {
+  fill: #d4effb;
+  font-family: inherit;
+  font-size: 20px;
+}
+
+.deploy-client-workspace .sim-optimize-scatter [data-axis="infantry"] {
+  text-anchor: end;
+}
+
+.deploy-client-workspace .sim-optimize-scatter [data-axis="lancer"] {
+  text-anchor: start;
+}
+
+.deploy-client-workspace .sim-optimize-scatter [data-axis="win-rate"] {
+  transform: translateY(-30px);
 }
 
 .deploy-client-workspace .sim-panel-results-shell :is(.opacity-50, .opacity-60, .opacity-70) {
@@ -2245,13 +2336,23 @@ body {
   background: #cce7f7;
 }
 
+.deploy-workspace .sim-tour-primary {
+  color: white;
+}
+
 @media (max-width: 767px) {
+  .deploy-client-workspace .sim-optimize-scatter text {
+    /* Counter the SVG viewBox shrinking its labels on narrow screens. */
+    font-size: clamp(20px, calc(48px - 4vw), 32px);
+  }
+
   .deploy-simulator-skin {
     margin-top: -0.25rem;
   }
 
   .deploy-hero {
-    grid-template-columns: 2.65rem minmax(4.2rem, 1fr) minmax(8.8rem, auto);
+    grid-template-columns: 2.65rem minmax(4.2rem, 1fr) minmax(0, 1.8fr);
+    align-items: center;
     gap: 0.4rem;
     min-height: 60px;
     border-radius: 14px;
@@ -2259,7 +2360,7 @@ body {
   }
 
   .deploy-hero h1 {
-    font-size: 1.05rem;
+    font-size: 1.25rem;
   }
 
   .deploy-back-button {
@@ -2270,6 +2371,7 @@ body {
   }
 
   .deploy-mode-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-column: 3;
     grid-row: 1;
     width: 100%;
@@ -2293,7 +2395,7 @@ body {
   }
 
   .deploy-mode-tabs strong {
-    font-size: 0.64rem;
+    font-size: 0.875rem;
   }
 
   .deploy-mode-tabs small {
@@ -2321,7 +2423,13 @@ body {
   .deploy-client-workspace .sim-mode-tab {
     min-height: 36px;
     padding-inline: 4px;
-    font-size: 9px;
+    font-size: 0.8125rem;
+  }
+
+  .deploy-client-workspace .sim-replicates-inline {
+    grid-template-columns: minmax(0, 1fr) 4rem;
+    padding-inline: 4px;
+    gap: 4px;
   }
 
   .deploy-workspace .sim-role-panel {
@@ -2330,9 +2438,16 @@ body {
   }
 
   .deploy-workspace .sim-input,
-  .deploy-workspace button,
   .deploy-workspace select {
+    min-height: 40px;
+  }
+
+  .deploy-workspace button {
     min-height: 44px;
+  }
+
+  .deploy-client-workspace .sim-mode-option-row .sim-input {
+    min-height: 40px;
   }
 
   .deploy-workspace .sim-unit-name::before {
@@ -2451,7 +2566,7 @@ body {
     grid-column: 1;
     grid-row: 3;
     min-height: 0;
-    font-size: 9px;
+    font-size: 0.75rem;
   }
 
   .deploy-client-workspace .sim-mode-command-main > [role="progressbar"] {
@@ -2466,6 +2581,16 @@ body {
 
   .deploy-client-workspace .sim-replicates-inline {
     min-width: 9.4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .deploy-client-workspace .sim-start-file-actions {
+    padding-right: 0;
+  }
+
+  .deploy-client-workspace .sim-start-toggles {
+    padding-right: 2.5rem;
   }
 }
 

@@ -570,7 +570,7 @@ test.describe("Dashboard smoke tests", () => {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByRole("heading", { name: "Upload bear stats" })).toBeVisible();
     await expect(dialog.getByAltText(/Example Stat Bonuses report/i)).toBeVisible();
-    await expect(dialog).toContainText(/absolute numbers, not percentages/i);
+    await expect(dialog).toContainText(/percentage ratio and raw numbers/i);
     await expect(dialog).toContainText(/paste into this area/i);
     await expect(dialog.getByLabel("Rally mode")).toHaveCount(0);
 
@@ -1549,13 +1549,20 @@ test.describe("Dashboard smoke tests", () => {
     const dialog = page.getByRole("dialog", { name: "Upload battle report" });
     await expect(dialog).toBeVisible();
     await expect(dialog.getByAltText(/Example Stat Bonuses report/i)).toBeVisible();
-    await expect(dialog).toContainText(/absolute numbers, not percentages/i);
-    await expect(dialog).toContainText(/troop avatars, troop counts, and every stat row/i);
+    await expect(dialog).toContainText(/percentage ratio and raw numbers/i);
+    await expect(dialog).toContainText(/troop avatars, counts, and every stat row/i);
 
     await dialog.locator('[data-testid="upload-city-modifier-details-attacker"]').click();
     await dialog.locator('[data-testid="upload-stat-modifier-attacker-attack-10"]').click();
     await dialog.locator('[data-testid="upload-city-modifier-details-defender"]').click();
     await dialog.locator('[data-testid="upload-stat-modifier-defender-enemy_defense-10"]').click();
+    await dialog.getByTestId("upload-pet-modifier-details-attacker").click();
+    await expect(dialog.getByTestId("upload-gareth-modifier-attacker")).toHaveValue("0");
+    await dialog.getByRole("button", { name: "attacker upload increase Gareth" }).click();
+    await expect(dialog.getByTestId("upload-gareth-modifier-attacker")).toHaveValue("0.25");
+    await dialog.getByTestId("upload-gareth-modifier-attacker").fill("1.25");
+    await dialog.getByTestId("upload-pet-modifier-details-defender").click();
+    await dialog.getByTestId("upload-gareth-modifier-defender").fill("2.75");
 
     await dialog.locator('input[type="file"]').setInputFiles({
       name: "report.png",
@@ -1572,9 +1579,12 @@ test.describe("Dashboard smoke tests", () => {
     await openSimRoleSection(page, "attacker", "stats");
     await expect(page.getByLabel("Infantry Attack").first()).toHaveValue("1000");
     await expect(page.getByLabel("Infantry Defense").first()).toHaveValue("1000");
+    await expect(page.getByLabel("Infantry Lethality").first()).toHaveValue("105.5");
 
     await openSimRoleSection(page, "attacker", "buffs");
     const attackerBuffs = simBuffSection(page, "attacker");
+    await attackerBuffs.getByTestId("pet-modifier-details-attacker").click();
+    await expect(attackerBuffs.getByTestId("gareth-modifier-attacker")).toHaveValue("1.25");
     await expect(attackerBuffs.getByTestId("city-modifier-details-attacker")).toBeVisible();
     await expect(attackerBuffs.getByTestId("city-modifier-attacker-10")).not.toHaveAttribute(
       "aria-pressed",
@@ -1586,6 +1596,8 @@ test.describe("Dashboard smoke tests", () => {
     ).toHaveAttribute("aria-pressed", "true");
     await openSimRoleSection(page, "defender", "buffs");
     const defenderBuffs = simBuffSection(page, "defender");
+    await defenderBuffs.getByTestId("pet-modifier-details-defender").click();
+    await expect(defenderBuffs.getByTestId("gareth-modifier-defender")).toHaveValue("2.75");
     await defenderBuffs.getByTestId("city-modifier-details-defender").click();
     await expect(
       defenderBuffs.getByTestId("stat-modifier-defender-enemy_defense-10"),

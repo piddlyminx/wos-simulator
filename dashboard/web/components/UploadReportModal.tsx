@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EditableNumberInput } from "@/components/EditableNumberInput";
+import { GarethModifierInput } from "@/components/simulate/GarethModifierInput";
+import deployStyles from "@/components/simulate/DeployArmyPanel.module.css";
 import {
   TroopCategory,
   heroesForCategory,
@@ -62,6 +64,7 @@ export type UploadPetModifierState = Record<PetModifierName, number>;
 export interface UploadActiveModifiers {
   statModifiers: UploadStatModifierState;
   petModifiers: UploadPetModifierState;
+  gareth: number;
 }
 
 export type HeroSelection = Record<TroopCategory, string | null>;
@@ -146,6 +149,7 @@ const defaultPetModifiers = (): UploadPetModifierState => ({
 const defaultActiveModifiers = (): UploadActiveModifiers => ({
   statModifiers: defaultStatModifiers(),
   petModifiers: defaultPetModifiers(),
+  gareth: 0,
 });
 
 export default function UploadReportModal({
@@ -813,8 +817,8 @@ function HeroPickerPanel({
               </div>
             )}
           </div>
-          <div className="sim-modifier-group">
-            <div className="grid grid-cols-[minmax(0,1fr)_minmax(9.75rem,auto)] items-center gap-2">
+          <div className={`${deployStyles.petModifierGroup} sim-modifier-group`}>
+            <div className={deployStyles.petModifierHeader}>
               <button
                 type="button"
                 aria-expanded={petDetailsOpen}
@@ -859,7 +863,7 @@ function HeroPickerPanel({
             {petDetailsOpen && (
               <div
                 id={`upload-pet-modifier-fields-${which}`}
-                className="mt-2 grid grid-cols-1 gap-2"
+                className={`${deployStyles.petModifierFields} mt-2`}
               >
                 {PET_MODIFIER_NAMES.map((name) => (
                   <UploadPetModifier
@@ -870,6 +874,12 @@ function HeroPickerPanel({
                     onChange={updatePetModifier}
                   />
                 ))}
+                <GarethModifierInput
+                  which={which}
+                  idPrefix="upload"
+                  value={activeModifiers.gareth}
+                  onChange={(gareth) => onActiveModifiersChange({ ...activeModifiers, gareth })}
+                />
               </div>
             )}
           </div>
@@ -883,6 +893,7 @@ function cloneActiveModifiers(value: UploadActiveModifiers): UploadActiveModifie
   return {
     statModifiers: { ...value.statModifiers },
     petModifiers: { ...value.petModifiers },
+    gareth: value.gareth,
   };
 }
 
@@ -952,8 +963,8 @@ function UploadPetModifier({
   const max = petModifierMax(name);
   const display = isDebuff && value > 0 ? `-${value.toFixed(1)}%` : `+${value.toFixed(1)}%`;
   return (
-    <label className="grid grid-cols-[minmax(0,1fr)_5rem_3.25rem] items-center gap-2 text-[10px]">
-      <span className="min-w-0 truncate opacity-60">
+    <label className={`${deployStyles.petModifier} text-[10px]`}>
+      <span className="min-w-0 truncate opacity-70">
         {PET_MODIFIER_LABELS[name]}
       </span>
       <EditableNumberInput
