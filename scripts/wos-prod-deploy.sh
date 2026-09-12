@@ -26,7 +26,7 @@ echo "Building production image before touching the routed container..."
 docker compose -f "$COMPOSE_FILE" build "$SERVICE"
 
 echo "Starting/replacing $SERVICE with the prebuilt image..."
-docker compose -f "$COMPOSE_FILE" up -d --no-build --no-deps "$SERVICE"
+docker compose -f "$COMPOSE_FILE" up -d --no-build --no-deps --force-recreate "$SERVICE"
 
 container_id="$(docker compose -f "$COMPOSE_FILE" ps -q "$SERVICE")"
 if [[ -z "$container_id" ]]; then
@@ -46,12 +46,12 @@ done
 
 if [[ "${status:-unknown}" != "healthy" && "${status:-unknown}" != "running" ]]; then
   echo "Container did not become healthy. Current status: ${status:-unknown}" >&2
-  docker compose -f "$COMPOSE_FILE" logs --tail=80 "$SERVICE" >&2
+  docker compose -f "$COMPOSE_FILE" logs --timestamps --tail=80 "$SERVICE" >&2
   exit 1
 fi
 
 echo "Health endpoint:"
 docker compose -f "$COMPOSE_FILE" exec -T "$SERVICE" \
-  node -e "fetch('http://127.0.0.1:3000/healthz').then(async r=>{console.log(r.status, await r.text()); process.exit(r.ok?0:1)}).catch(e=>{console.error(e); process.exit(1)})"
+  node -e "fetch('http://127.0.0.1:3000/healthz', {signal: AbortSignal.timeout(3000)}).then(async r=>{console.log(r.status, await r.text()); process.exit(r.ok?0:1)}).catch(e=>{console.error(e); process.exit(1)})"
 
 echo "Deployment complete. Verify the public route at https://${WOS_SIM_HOST:-wos-sim.ratme.org}/healthz."
