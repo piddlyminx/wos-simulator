@@ -1,0 +1,411 @@
+{
+  "_note": "Locked heroes: Edith/Sonya/Greg, Gatot/Mia/Bradley, Wu Ming/Philly/Wayne. Each army has 250000 T11 FC10 troops; gear stays with its army. Infantry input stats compensate for Edith generation A/D=85% and L/H=30% before the standard full generation addition. Troop optimization is enabled; hero optimization is absent. Changing heroes requires recomputing the generation compensation.",
+  "input_stats_include_hero_generation": {
+    "attacker": false,
+    "defender": true
+  },
+  "attacker": {
+    "passive": {
+      "own": {},
+      "enemy": {}
+    },
+    "armies": [
+      {
+        "name": "Attack army 1",
+        "fighter": {
+          "troops": {
+            "infantry_t11_fc10": 157499,
+            "lancer_t11_fc10": 92500,
+            "marksman_t11_fc10": 1
+          },
+          "stats": {
+            "infantry": {
+              "attack": 1022.0319999999999,
+              "defense": 940.432,
+              "lethality": 946.85,
+              "health": 912.0500000000001
+            },
+            "lancer": {
+              "attack": 1092.11,
+              "defense": 982.21,
+              "lethality": 1119.7,
+              "health": 1065.7
+            },
+            "marksman": {
+              "attack": 1146.97,
+              "defense": 1053.07,
+              "lethality": 863.7,
+              "health": 843.5
+            }
+          },
+          "heroes": {
+            "Edith": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            },
+            "Sonya": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            },
+            "Greg": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            }
+          }
+        }
+      },
+      {
+        "name": "Attack army 2",
+        "fighter": {
+          "troops": {
+            "infantry_t11_fc10": 132500,
+            "lancer_t11_fc10": 2500,
+            "marksman_t11_fc10": 115000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 1219.61,
+              "defense": 1238.01,
+              "lethality": 1309.2,
+              "health": 1264.4
+            },
+            "lancer": {
+              "attack": 1002.11,
+              "defense": 942.21,
+              "lethality": 739.7,
+              "health": 715.7
+            },
+            "marksman": {
+              "attack": 1346.97,
+              "defense": 1203.07,
+              "lethality": 1393.7,
+              "health": 1273.5
+            }
+          },
+          "heroes": {
+            "Gatot": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            },
+            "Mia": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            },
+            "Bradley": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            }
+          }
+        }
+      },
+      {
+        "name": "Attack army 3",
+        "fighter": {
+          "troops": {
+            "infantry_t11_fc10": 127500,
+            "lancer_t11_fc10": 5000,
+            "marksman_t11_fc10": 117500
+          },
+          "stats": {
+            "infantry": {
+              "attack": 1119.61,
+              "defense": 1038.01,
+              "lethality": 869.2,
+              "health": 834.4
+            },
+            "lancer": {
+              "attack": 1002.11,
+              "defense": 942.21,
+              "lethality": 739.7,
+              "health": 715.7
+            },
+            "marksman": {
+              "attack": 1146.97,
+              "defense": 1053.07,
+              "lethality": 1053.7,
+              "health": 1033.5
+            }
+          },
+          "heroes": {
+            "Wu Ming": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            },
+            "Philly": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            },
+            "Wayne": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5,
+              "skill_4": 0
+            }
+          }
+        }
+      }
+    ]
+  },
+  "defender": {
+    "armies": [
+      {
+        "name": "Defender 1: Flint, Philly, Lynn",
+        "fighter": {
+          "troops": {
+            "infantry_t11_fc10": 104000,
+            "lancer_t11_fc10": 52000,
+            "marksman_t11_fc10": 39000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            },
+            "lancer": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            },
+            "marksman": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            }
+          },
+          "heroes": {
+            "Flint": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Philly": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Lynn": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            }
+          }
+        }
+      },
+      {
+        "name": "Defender 2: Jeronimo, Molly, Greg",
+        "fighter": {
+          "troops": {
+            "infantry_t11_fc10": 104000,
+            "lancer_t11_fc10": 52000,
+            "marksman_t11_fc10": 39000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            },
+            "lancer": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            },
+            "marksman": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            }
+          },
+          "heroes": {
+            "Jeronimo": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Molly": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Greg": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            }
+          }
+        }
+      },
+      {
+        "name": "Defender 3: Natalia, Mia, Alonso",
+        "fighter": {
+          "troops": {
+            "infantry_t11_fc10": 104000,
+            "lancer_t11_fc10": 52000,
+            "marksman_t11_fc10": 39000
+          },
+          "stats": {
+            "infantry": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            },
+            "lancer": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            },
+            "marksman": {
+              "attack": 2198.96,
+              "defense": 2198.96,
+              "lethality": 1310.51,
+              "health": 1310.51
+            }
+          },
+          "heroes": {
+            "Natalia": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Mia": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            },
+            "Alonso": {
+              "skill_1": 5,
+              "skill_2": 5,
+              "skill_3": 5
+            }
+          }
+        }
+      }
+    ],
+    "passive": {
+      "own": {},
+      "enemy": {}
+    }
+  },
+  "max_rounds": 1500,
+  "ordering": "sequential",
+  "_hero_generation_fractions": {
+    "Edith": {
+      "attack": 0.85,
+      "defense": 0.85,
+      "lethality": 0.3,
+      "health": 0.3
+    },
+    "Hector": {
+      "attack": 1,
+      "defense": 1,
+      "lethality": 0.5,
+      "health": 0.5
+    }
+  },
+  "troop_optimization": {
+    "side": "attacker",
+    "coarse_step_percent": 5,
+    "fine_step_percent": 1,
+    "fine_radius_percent": 3,
+    "passes": 2
+  },
+  "_troop_optimization_result": {
+    "source": "tmp/four-infantry-generation-6y547l7a/candidate-50-1-49-0.json",
+    "source_sha256": "67550dd8910d730fc0907c9327381953369c7067c6a5f5ef191946059b609f93",
+    "evidence": "tmp/locked-heroes-troop-optimization-k8yjoh8q/summary.json",
+    "search_reps": 100,
+    "search_seed": 2026093001,
+    "evaluated_candidates": 3691,
+    "validation": [
+      {
+        "name": "baseline-calibrated",
+        "reps": 500,
+        "seed": 2026093002,
+        "scenarios": 18000,
+        "attackerWins": 5612,
+        "defenderWins": 12374,
+        "draws": 14,
+        "attackerWinRate": 0.31177777777777776,
+        "defenderWinRate": 0.6874444444444444,
+        "averageAttackerRemaining": 24389.741777777777,
+        "averageDefenderRemaining": 66677.08055555556,
+        "averageAttackerMargin": -42287.338777777775,
+        "attackerMarginStd": 93760.52376047835,
+        "averageBattles": 4.713611111111111
+      },
+      {
+        "name": "optimized-calibrated",
+        "reps": 500,
+        "seed": 2026093002,
+        "scenarios": 18000,
+        "attackerWins": 6164,
+        "defenderWins": 11811,
+        "draws": 25,
+        "attackerWinRate": 0.34244444444444444,
+        "defenderWinRate": 0.6561666666666667,
+        "averageAttackerRemaining": 25957.295555555556,
+        "averageDefenderRemaining": 63892.22422222222,
+        "averageAttackerMargin": -37934.92866666667,
+        "attackerMarginStd": 95102.71035718404,
+        "averageBattles": 4.710944444444444
+      },
+      {
+        "name": "baseline-rival",
+        "reps": 200,
+        "seed": 2026093003,
+        "scenarios": 7200,
+        "attackerWins": 4089,
+        "defenderWins": 3093,
+        "draws": 18,
+        "attackerWinRate": 0.5679166666666666,
+        "defenderWinRate": 0.4295833333333333,
+        "averageAttackerRemaining": 60178.27166666667,
+        "averageDefenderRemaining": 58768.891805555555,
+        "averageAttackerMargin": 1409.379861111111,
+        "attackerMarginStd": 137706.04135383602,
+        "averageBattles": 4.685138888888889
+      },
+      {
+        "name": "optimized-rival",
+        "reps": 200,
+        "seed": 2026093003,
+        "scenarios": 7200,
+        "attackerWins": 4066,
+        "defenderWins": 3121,
+        "draws": 13,
+        "attackerWinRate": 0.5647222222222222,
+        "defenderWinRate": 0.4334722222222222,
+        "averageAttackerRemaining": 58241.32555555556,
+        "averageDefenderRemaining": 63580.489166666666,
+        "averageAttackerMargin": -5339.163611111111,
+        "attackerMarginStd": 142196.2677876887,
+        "averageBattles": 4.658611111111111
+      }
+    ]
+  }
+}
