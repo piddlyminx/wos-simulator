@@ -1,8 +1,9 @@
 {
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
   "generatedAt": "2026-09-07T04:35:35.414Z",
   "phase": "frozen_candidate_replay",
   "inputPath": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/gwen-blastmaster/followup/captured-input.json",
-  "inputSha256": "ff868968a12735ac4d9455be19888ba48e4ba265e5565afd247b077e6572031b",
   "input": {
     "attacker": {
       "name": "[ARK]Piddlyminxxx",
@@ -69,8 +70,6 @@
       "joiner_heroes": {}
     }
   },
-  "configSnapshot": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/probes/gwen-blastmaster/config-snapshot.json",
-  "configSnapshotSha256": "bcb0d3068845ca143802c6e59cd7a530a8440606133b770613c418bed425b17c",
   "candidateDefinitions": {
     "unchanged": {
       "first": 5,
@@ -214,40 +213,25 @@
       },
       "heroReport": [
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "EagleVision",
-          "skillName": "EagleVision",
           "level": 3,
-          "triggersSeen": 48,
           "skillActivations": 48,
-          "effectActivations": 48,
-          "skillKills": 0,
-          "unsupportedEffects": []
+          "skillKills": 0
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "AirDominance",
-          "skillName": "AirDominance",
           "level": 1,
-          "triggersSeen": 8,
           "skillActivations": 8,
-          "effectActivations": 16,
-          "skillKills": 23.66431072630427,
-          "unsupportedEffects": []
+          "skillKills": 23.66431072630427
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "Blastmaster",
-          "skillName": "Blastmaster",
           "level": 1,
-          "triggersSeen": 11,
           "skillActivations": 11,
-          "effectActivations": 11,
-          "skillKills": 126.86569158357126,
-          "unsupportedEffects": []
+          "skillKills": 126.86569158357126
         }
       ],
       "blastmasterJobs": [
@@ -448,40 +432,25 @@
       },
       "heroReport": [
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "EagleVision",
-          "skillName": "EagleVision",
           "level": 3,
-          "triggersSeen": 46,
           "skillActivations": 46,
-          "effectActivations": 46,
-          "skillKills": 0,
-          "unsupportedEffects": []
+          "skillKills": 0
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "AirDominance",
-          "skillName": "AirDominance",
           "level": 1,
-          "triggersSeen": 7,
           "skillActivations": 7,
-          "effectActivations": 14,
-          "skillKills": 22.59938649009114,
-          "unsupportedEffects": []
+          "skillKills": 22.59938649009114
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "Blastmaster",
-          "skillName": "Blastmaster",
           "level": 1,
-          "triggersSeen": 9,
           "skillActivations": 9,
-          "effectActivations": 9,
-          "skillKills": 101.70313999233763,
-          "unsupportedEffects": []
+          "skillKills": 101.70313999233763
         }
       ],
       "blastmasterJobs": [
@@ -652,40 +621,25 @@
       },
       "heroReport": [
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "EagleVision",
-          "skillName": "EagleVision",
           "level": 3,
-          "triggersSeen": 47,
           "skillActivations": 47,
-          "effectActivations": 47,
-          "skillKills": 0,
-          "unsupportedEffects": []
+          "skillKills": 0
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "AirDominance",
-          "skillName": "AirDominance",
           "level": 1,
-          "triggersSeen": 8,
           "skillActivations": 8,
-          "effectActivations": 16,
-          "skillKills": 23.343623314262818,
-          "unsupportedEffects": []
+          "skillKills": 23.343623314262818
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "Blastmaster",
-          "skillName": "Blastmaster",
           "level": 1,
-          "triggersSeen": 11,
           "skillActivations": 11,
-          "effectActivations": 11,
-          "skillKills": 122.70508552054461,
-          "unsupportedEffects": []
+          "skillKills": 122.70508552054461
         }
       ],
       "blastmasterJobs": [
@@ -886,40 +840,25 @@
       },
       "heroReport": [
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "EagleVision",
-          "skillName": "EagleVision",
           "level": 3,
-          "triggersSeen": 42,
           "skillActivations": 42,
-          "effectActivations": 42,
-          "skillKills": 0,
-          "unsupportedEffects": []
+          "skillKills": 0
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "AirDominance",
-          "skillName": "AirDominance",
           "level": 1,
-          "triggersSeen": 7,
           "skillActivations": 7,
-          "effectActivations": 14,
-          "skillKills": 21.177470606511104,
-          "unsupportedEffects": []
+          "skillKills": 21.177470606511104
         },
         {
-          "sourceKind": "hero_skill",
           "heroName": "Gwen",
           "skillId": "Blastmaster",
-          "skillName": "Blastmaster",
           "level": 1,
-          "triggersSeen": 8,
           "skillActivations": 8,
-          "effectActivations": 8,
-          "skillKills": 12.021963376103658,
-          "unsupportedEffects": []
+          "skillKills": 12.021963376103658
         }
       ],
       "blastmasterJobs": [

@@ -1,4 +1,6 @@
 {
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
   "generatedAt": "2026-09-07T08:44:26.765Z",
   "selection": {
     "key": "hero:Lynn:SongOfLion",
@@ -69,298 +71,19 @@
       }
     }
   },
-  "protocolSha256": "1b32dac510aa7ad7e4311f6089eafda6a14c12b61eb1866ee5ae8d03e74a48d2",
   "repeat": 1000,
   "seed": "remaining-ordinary-review-2026-09-07:<fixture-key>:<run-index>",
   "rawSamples": {
-    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial-samples.json",
-    "sha256": "fda06e879162fe30fbf64612c21f48b49832b814d665832f0c4d08b815bdefb8"
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/remaining-ordinary-2026-09-07/SongOfLion-initial-samples.json"
   },
   "results": [
     {
       "key": "testcases/emulator_verified/logan_lynn_combo.json#0",
       "path": "testcases/emulator_verified/logan_lynn_combo.json",
-      "fixtureSha256": "147c25a5be371f97eab222e7c252a0c2733918d25fbae8dc2851b90ed4832d27",
-      "entry": {
-        "test_id": "logan_lynn_combo",
-        "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). WIP attacks (no hero, t6 inf+lanc+mark), minxxx defends with Logan+Lynn. Run 5 battles.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {
-            "Logan": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 313.2,
-              "defense": 298,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 195,
-              "defense": 190.8,
-              "lethality": 121.2,
-              "health": 122.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 0,
-            "defender": 553
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {
-            "Logan": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 313.2,
-              "defense": 298,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 195,
-              "defense": 190.8,
-              "lethality": 121.2,
-              "health": 122.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 0,
           "defender": 553
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LionStrike",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LionStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LionIntimidation",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LionIntimidation/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LeaderInspiration",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LeaderInspiration/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:SongOfLion",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "SongOfLion/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:MelancholicBallad",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "MelancholicBallad/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:OonaiCadenza",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "OonaiCadenza/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -485,13 +208,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.053995,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": -553,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -700,165 +423,6 @@
     {
       "key": "testcases/emulator_verified/logan_lynn_combo.json#1",
       "path": "testcases/emulator_verified/logan_lynn_combo.json",
-      "fixtureSha256": "147c25a5be371f97eab222e7c252a0c2733918d25fbae8dc2851b90ed4832d27",
-      "entry": {
-        "test_id": "logan_lynn_combo",
-        "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). minxxx attacks with Logan+Lynn (600 troops), WIP defends (no hero, 1800 troops). 3:1 troop disadvantage for hero side. Placed as attackers so widget defense bonuses (S4) do not fire, making the fight competitive. Run 5 battles.",
-        "attacker": {
-          "name": "[ARK]Piddlyminxxx",
-          "heroes": {
-            "Logan": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 313.2,
-              "defense": 298,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 195,
-              "defense": 190.8,
-              "lethality": 121.2,
-              "health": 122.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 552,
-            "defender": 0
-          },
-          {
-            "attacker": 549,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[ARK]Piddlyminxxx",
-          "heroes": {
-            "Logan": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 313.2,
-              "defense": 298,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 195,
-              "defense": 190.8,
-              "lethality": 121.2,
-              "health": 122.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 552,
@@ -867,128 +431,6 @@
         {
           "attacker": 549,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Logan:LionStrike",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LionStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LionIntimidation",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LionIntimidation/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LeaderInspiration",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LeaderInspiration/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:SongOfLion",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "SongOfLion/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:MelancholicBallad",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "MelancholicBallad/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:OonaiCadenza",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "OonaiCadenza/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -1114,13 +556,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.03952,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 552,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -1329,165 +771,6 @@
     {
       "key": "testcases/emulator_verified/logan_lynn_combo.json#2",
       "path": "testcases/emulator_verified/logan_lynn_combo.json",
-      "fixtureSha256": "147c25a5be371f97eab222e7c252a0c2733918d25fbae8dc2851b90ed4832d27",
-      "entry": {
-        "test_id": "logan_lynn_combo",
-        "description": "Logan+Lynn 2-hero combo — Inf+Lanc class heroes. Lynn S1 has 40% chance (RNG). minxxx attacks with Logan+Lynn (600 troops), WIP defends (no hero, 1800 troops). 3:1 troop disadvantage for hero side. Placed as attackers so widget defense bonuses (S4) do not fire, making the fight competitive. Run 5 battles.",
-        "attacker": {
-          "name": "[ARK]Piddlyminxxx",
-          "heroes": {
-            "Logan": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 313.2,
-              "defense": 298,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 195,
-              "defense": 190.8,
-              "lethality": 121.2,
-              "health": 122.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 552,
-            "defender": 0
-          },
-          {
-            "attacker": 550,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[ARK]Piddlyminxxx",
-          "heroes": {
-            "Logan": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 313.2,
-              "defense": 298,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 195,
-              "defense": 190.8,
-              "lethality": 121.2,
-              "health": 122.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 552,
@@ -1496,128 +779,6 @@
         {
           "attacker": 550,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Logan:LionStrike",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LionStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LionIntimidation",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LionIntimidation/1"
-          ]
-        },
-        {
-          "key": "hero:Logan:LeaderInspiration",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:logan:0",
-          "effect_ids": [
-            "LeaderInspiration/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:SongOfLion",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "SongOfLion/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:MelancholicBallad",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "MelancholicBallad/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:OonaiCadenza",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "OonaiCadenza/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -1743,13 +904,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.043292,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 552,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -1958,167 +1119,6 @@
     {
       "key": "testcases/emulator_verified/lynn_solo.json#0",
       "path": "testcases/emulator_verified/lynn_solo.json",
-      "fixtureSha256": "fc2bf9ff30d528800dcd504ce0aa69a5c80bdd2db2ed9b552674e7da6ec60f44",
-      "entry": {
-        "test_id": "lynn_solo",
-        "description": "Lynn solo defender test. WIP attacking no heroes 1500/1500/1500, minxxx defending with Lynn (3/3/3). Balanced around 0 outcome.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 1500,
-            "lancer_t6": 1500,
-            "marksman_t6": 1500
-          },
-          "stats": {
-            "inf": {
-              "attack": 68.3,
-              "defense": 66.1,
-              "lethality": 23.3,
-              "health": 26.4
-            },
-            "lanc": {
-              "attack": 70.8,
-              "defense": 67.3,
-              "lethality": 26.3,
-              "health": 21.1
-            },
-            "mark": {
-              "attack": 71.3,
-              "defense": 63.6,
-              "lethality": 25.8,
-              "health": 21.5
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddlyminxxx",
-          "heroes": {
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 214.7,
-              "defense": 197.3,
-              "lethality": 118,
-              "health": 131.1
-            },
-            "lanc": {
-              "attack": 188.7,
-              "defense": 182.3,
-              "lethality": 120.2,
-              "health": 121
-            },
-            "mark": {
-              "attack": 381.3,
-              "defense": 373.9,
-              "lethality": 169.7,
-              "health": 155.3
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 0,
-            "defender": 167
-          },
-          {
-            "attacker": 0,
-            "defender": 200
-          },
-          {
-            "attacker": 0,
-            "defender": 191
-          },
-          {
-            "attacker": 0,
-            "defender": 199
-          },
-          {
-            "attacker": 0,
-            "defender": 149
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 1500,
-            "lancer_t6": 1500,
-            "marksman_t6": 1500
-          },
-          "stats": {
-            "inf": {
-              "attack": 68.3,
-              "defense": 66.1,
-              "lethality": 23.3,
-              "health": 26.4
-            },
-            "lanc": {
-              "attack": 70.8,
-              "defense": 67.3,
-              "lethality": 26.3,
-              "health": 21.1
-            },
-            "mark": {
-              "attack": 71.3,
-              "defense": 63.6,
-              "lethality": 25.8,
-              "health": 21.5
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddlyminxxx",
-          "heroes": {
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 214.7,
-              "defense": 197.3,
-              "lethality": 118,
-              "health": 131.1
-            },
-            "lanc": {
-              "attack": 188.7,
-              "defense": 182.3,
-              "lethality": 120.2,
-              "health": 121
-            },
-            "mark": {
-              "attack": 381.3,
-              "defense": 373.9,
-              "lethality": 169.7,
-              "health": 155.3
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 0,
@@ -2139,98 +1139,6 @@
         {
           "attacker": 0,
           "defender": 149
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:SongOfLion",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "SongOfLion/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:MelancholicBallad",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "MelancholicBallad/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:OonaiCadenza",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "OonaiCadenza/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -2358,13 +1266,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.118376,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": -167,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -2572,177 +1480,6 @@
     {
       "key": "testcases/emulator_verified/molly_lynn_combo.json#0",
       "path": "testcases/emulator_verified/molly_lynn_combo.json",
-      "fixtureSha256": "39f57ea17d26d9cebc5e14515340c84137a24913864196a317056a1d65512c89",
-      "entry": {
-        "test_id": "molly_lynn_combo",
-        "description": "Molly+Lynn 2-hero combo — Lanc+Mark class heroes. Lynn S1 has 40% chance. RNG test, run 5 battles. WIP attacks (no hero, t6 troops), minxxx defends with Molly+Lynn.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 400,
-            "lancer_t6": 400,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {
-            "Molly": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 1
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 150,
-            "lancer_t6": 150,
-            "marksman_t6": 150
-          },
-          "stats": {
-            "inf": {
-              "attack": 221,
-              "defense": 205.8,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 263.2,
-              "defense": 259,
-              "lethality": 126.2,
-              "health": 127.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 0,
-            "defender": 399
-          },
-          {
-            "attacker": 0,
-            "defender": 404
-          },
-          {
-            "attacker": 0,
-            "defender": 402
-          },
-          {
-            "attacker": 0,
-            "defender": 401
-          },
-          {
-            "attacker": 0,
-            "defender": 408
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 400,
-            "lancer_t6": 400,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 79.3,
-              "defense": 81.9,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 84.3,
-              "defense": 79.1,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 88.8,
-              "defense": 75.4,
-              "lethality": 37.6,
-              "health": 31.9
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {
-            "Molly": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 1
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 150,
-            "lancer_t6": 150,
-            "marksman_t6": 150
-          },
-          "stats": {
-            "inf": {
-              "attack": 221,
-              "defense": 205.8,
-              "lethality": 119.1,
-              "health": 132.4
-            },
-            "lanc": {
-              "attack": 263.2,
-              "defense": 259,
-              "lethality": 126.2,
-              "health": 127.4
-            },
-            "mark": {
-              "attack": 387.6,
-              "defense": 382.4,
-              "lethality": 188.4,
-              "health": 157.2
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 0,
@@ -2763,128 +1500,6 @@
         {
           "attacker": 0,
           "defender": 408
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Molly:CallingOfTheStorm",
-          "side": "defender",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:molly:0",
-          "effect_ids": [
-            "CallingOfTheStorm/1"
-          ]
-        },
-        {
-          "key": "hero:Molly:IceDominion",
-          "side": "defender",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:molly:0",
-          "effect_ids": [
-            "IceDominion/1"
-          ]
-        },
-        {
-          "key": "hero:Molly:YouthfulRage",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:molly:0",
-          "effect_ids": [
-            "YouthfulRage/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:SongOfLion",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "SongOfLion/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:MelancholicBallad",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "MelancholicBallad/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:OonaiCadenza",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "OonaiCadenza/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -3026,10 +1641,10 @@
             "sem": 0.04,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.04218,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": -408,
             "support_mass": 0,
             "support_p": 0.00035,
@@ -3257,181 +1872,6 @@
     {
       "key": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json#0",
       "path": "testcases/emulator_verified/wos444_gordon_s22_all_enemy_damage_dealt_hero_nc.json",
-      "fixtureSha256": "5cb91e84cc74ed87b29f2e20475a2752af27c98fc01ff9bec3bc90542abf4d4f",
-      "entry": {
-        "test_id": "wos444_gordon_s22_all_enemy_damage_dealt_hero_nc",
-        "description": "WOS-444 Gordon S2/2 all-enemy damage-dealt-down bucket probe. WIP attacks 2700 each T6 mixed; minxxx defends Gordon+Sergey+Lynn with 2560 T6 lancer. Candidate signed remaining scores: damage.down +558, attack.down +593, lethality.down -143.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 2700,
-            "lancer_t6": 2700,
-            "marksman_t6": 2700
-          },
-          "stats": {
-            "inf": {
-              "attack": 221.4,
-              "defense": 221.7,
-              "lethality": 147.3,
-              "health": 155.7
-            },
-            "lanc": {
-              "attack": 194.7,
-              "defense": 193,
-              "lethality": 157.3,
-              "health": 148.4
-            },
-            "mark": {
-              "attack": 194.7,
-              "defense": 192,
-              "lethality": 148.6,
-              "health": 149.5
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddlyminxx",
-          "heroes": {
-            "Sergey": {
-              "skill_1": 4,
-              "skill_2": 4
-            },
-            "Gordon": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 1
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "lancer_t6": 2560
-          },
-          "stats": {
-            "inf": {
-              "attack": 389.8,
-              "defense": 378.5,
-              "lethality": 215.3,
-              "health": 216.5
-            },
-            "lanc": {
-              "attack": 485.5,
-              "defense": 480.8,
-              "lethality": 199.7,
-              "health": 201
-            },
-            "mark": {
-              "attack": 460.2,
-              "defense": 457.2,
-              "lethality": 275.7,
-              "health": 266.5
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 5274,
-            "defender": 0
-          },
-          {
-            "attacker": 4736,
-            "defender": 0
-          },
-          {
-            "attacker": 5021,
-            "defender": 0
-          },
-          {
-            "attacker": 5290,
-            "defender": 0
-          },
-          {
-            "attacker": 5006,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 2700,
-            "lancer_t6": 2700,
-            "marksman_t6": 2700
-          },
-          "stats": {
-            "inf": {
-              "attack": 221.4,
-              "defense": 221.7,
-              "lethality": 147.3,
-              "health": 155.7
-            },
-            "lanc": {
-              "attack": 194.7,
-              "defense": 193,
-              "lethality": 157.3,
-              "health": 148.4
-            },
-            "mark": {
-              "attack": 194.7,
-              "defense": 192,
-              "lethality": 148.6,
-              "health": 149.5
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddlyminxx",
-          "heroes": {
-            "Sergey": {
-              "skill_1": 4,
-              "skill_2": 4
-            },
-            "Gordon": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 1
-            },
-            "Lynn": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "lancer_t6": 2560
-          },
-          "stats": {
-            "inf": {
-              "attack": 389.8,
-              "defense": 378.5,
-              "lethality": 215.3,
-              "health": 216.5
-            },
-            "lanc": {
-              "attack": 485.5,
-              "defense": 480.8,
-              "lethality": 199.7,
-              "health": 201
-            },
-            "mark": {
-              "attack": 460.2,
-              "defense": 457.2,
-              "lethality": 275.7,
-              "health": 266.5
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 5274,
@@ -3452,131 +1892,6 @@
         {
           "attacker": 5006,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Sergey:DefendersEdge",
-          "side": "defender",
-          "level": 4,
-          "role": "main",
-          "instance_id": "main:sergey:0",
-          "effect_ids": [
-            "DefendersEdge/1"
-          ]
-        },
-        {
-          "key": "hero:Sergey:Weaken",
-          "side": "defender",
-          "level": 4,
-          "role": "main",
-          "instance_id": "main:sergey:0",
-          "effect_ids": [
-            "Weaken/1"
-          ]
-        },
-        {
-          "key": "hero:Gordon:VenomInfusion",
-          "side": "defender",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:gordon:0",
-          "effect_ids": [
-            "VenomInfusion/1",
-            "VenomInfusion/2"
-          ]
-        },
-        {
-          "key": "hero:Gordon:ChemicalTerror",
-          "side": "defender",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:gordon:0",
-          "effect_ids": [
-            "ChemicalTerror/1",
-            "ChemicalTerror/2"
-          ]
-        },
-        {
-          "key": "hero:Gordon:ToxicRelease",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gordon:0",
-          "effect_ids": [
-            "ToxicRelease/1",
-            "ToxicRelease/2"
-          ]
-        },
-        {
-          "key": "hero:Lynn:SongOfLion",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "SongOfLion/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:MelancholicBallad",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "MelancholicBallad/1"
-          ]
-        },
-        {
-          "key": "hero:Lynn:OonaiCadenza",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:lynn:0",
-          "effect_ids": [
-            "OonaiCadenza/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
         }
       ],
       "initial": {
@@ -3698,13 +2013,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.200721,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 5274,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -3773,13 +2088,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.200721,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 5274,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,

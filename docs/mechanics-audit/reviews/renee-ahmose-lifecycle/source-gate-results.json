@@ -1,4 +1,6 @@
 {
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
   "activeCount": 300,
   "archivedCount": 2,
   "results": [
@@ -29,10 +31,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -59,10 +57,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -100,10 +94,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -130,10 +120,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -171,10 +157,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -201,10 +183,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -242,10 +220,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -272,10 +246,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -313,10 +283,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -343,10 +309,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -384,10 +346,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -414,10 +372,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -455,10 +409,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -485,10 +435,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -526,10 +472,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -556,10 +498,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -597,10 +535,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -627,10 +561,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -668,10 +598,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -698,10 +624,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -739,10 +661,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -769,10 +687,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -810,10 +724,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -840,10 +750,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -881,10 +787,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -911,10 +813,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -952,10 +850,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -982,10 +876,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -1023,10 +913,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1053,10 +939,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -1094,10 +976,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1124,10 +1002,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -1165,10 +1039,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1195,10 +1065,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -1236,10 +1102,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1266,10 +1128,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -1307,10 +1165,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1337,10 +1191,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1378,10 +1228,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1408,10 +1254,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1449,10 +1291,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1479,10 +1317,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1520,10 +1354,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1550,10 +1380,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1591,10 +1417,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1621,10 +1443,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1662,10 +1480,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1692,10 +1506,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1733,10 +1543,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -1763,10 +1569,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -1804,10 +1606,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 7
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -1837,10 +1635,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 7
         },
         "randomness": {
           "deterministic": false,
@@ -1881,10 +1675,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 76,
-          "defender": 67
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -1918,10 +1708,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 76,
-          "defender": 67
         },
         "randomness": {
           "deterministic": false,
@@ -1966,10 +1752,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 8,
-          "defender": 149
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -1998,10 +1780,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 8,
-          "defender": 149
         },
         "randomness": {
           "deterministic": false,
@@ -2041,10 +1819,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 8,
-          "defender": 126
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2073,10 +1847,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 8,
-          "defender": 126
         },
         "randomness": {
           "deterministic": false,
@@ -2116,10 +1886,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 126,
-          "defender": 90
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2157,10 +1923,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 126,
-          "defender": 90
         },
         "randomness": {
           "deterministic": false,
@@ -2259,10 +2021,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 79,
-          "defender": 32
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2294,10 +2052,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 79,
-          "defender": 32
         },
         "randomness": {
           "deterministic": false,
@@ -2342,10 +2096,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 43
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -2372,10 +2122,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 31
         },
         "randomness": {
           "deterministic": true,
@@ -2435,10 +2181,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 47,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2468,10 +2210,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 47,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -2526,10 +2264,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2559,10 +2293,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -2609,10 +2339,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 43,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2642,10 +2368,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 43,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -2716,10 +2438,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 101
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2750,10 +2468,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 101
         },
         "randomness": {
           "deterministic": false,
@@ -2801,10 +2515,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 53
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2836,10 +2546,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 53
         },
         "randomness": {
           "deterministic": false,
@@ -2884,10 +2590,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 13
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -2916,10 +2618,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 13
         },
         "randomness": {
           "deterministic": false,
@@ -2965,10 +2663,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 52
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3000,10 +2694,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 52
         },
         "randomness": {
           "deterministic": false,
@@ -3084,10 +2774,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 103
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3118,10 +2804,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 103
         },
         "randomness": {
           "deterministic": false,
@@ -3185,10 +2867,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 83,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3219,10 +2897,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 83,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -3338,10 +3012,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 102,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3372,10 +3042,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 102,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -3447,10 +3113,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 36,
-          "defender": 77
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3484,10 +3146,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 36,
-          "defender": 77
         },
         "randomness": {
           "deterministic": false,
@@ -3562,10 +3220,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 86,
-          "defender": 174
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3599,10 +3253,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 86,
-          "defender": 174
         },
         "randomness": {
           "deterministic": false,
@@ -3677,10 +3327,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 37,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3710,10 +3356,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 37,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -3792,10 +3434,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 135,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -3824,10 +3462,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 135,
-          "defender": 6
         },
         "randomness": {
           "deterministic": false,
@@ -3869,10 +3503,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -3899,10 +3529,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -3950,10 +3576,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -3980,10 +3602,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -4031,10 +3649,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4061,10 +3675,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -4112,10 +3722,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4142,10 +3748,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -4185,10 +3787,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 6,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4215,10 +3813,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 6,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -4262,10 +3856,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 6,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4292,10 +3882,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 6,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -4335,10 +3921,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4365,10 +3947,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -4413,10 +3991,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4443,10 +4017,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -4486,10 +4056,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 83
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -4519,10 +4085,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 83
         },
         "randomness": {
           "deterministic": false,
@@ -4569,10 +4131,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 64
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -4601,10 +4159,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 64
         },
         "randomness": {
           "deterministic": false,
@@ -4646,10 +4200,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 32
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -4678,10 +4228,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 32
         },
         "randomness": {
           "deterministic": false,
@@ -4723,10 +4269,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4753,10 +4295,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -4796,10 +4334,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4826,10 +4360,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -4869,10 +4399,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4899,10 +4425,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -4954,10 +4476,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -4984,10 +4502,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -5027,10 +4541,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5057,10 +4567,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -5100,10 +4606,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5130,10 +4632,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -5173,10 +4671,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 18
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -5205,10 +4699,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 18
         },
         "randomness": {
           "deterministic": false,
@@ -5250,10 +4740,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5280,10 +4766,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -5323,10 +4805,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 8
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5353,10 +4831,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 8
         },
         "randomness": {
           "deterministic": true,
@@ -5396,10 +4870,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 164,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5426,10 +4896,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 164,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -5469,10 +4935,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 177,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5499,10 +4961,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 177,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -5558,10 +5016,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 42,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -5591,10 +5045,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 42,
-          "defender": 1
         },
         "randomness": {
           "deterministic": false,
@@ -5705,10 +5155,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 102
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -5741,10 +5187,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 102
         },
         "randomness": {
           "deterministic": false,
@@ -5798,10 +5240,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5828,10 +5266,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -5879,10 +5313,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -5909,10 +5339,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -5972,10 +5398,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 22
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6005,10 +5427,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 22
         },
         "randomness": {
           "deterministic": false,
@@ -6055,10 +5473,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 22
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6088,10 +5502,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 22
         },
         "randomness": {
           "deterministic": false,
@@ -6210,10 +5620,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 15
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6243,10 +5649,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 15
         },
         "randomness": {
           "deterministic": false,
@@ -6289,10 +5691,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 26
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6322,10 +5720,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 26
         },
         "randomness": {
           "deterministic": false,
@@ -6368,10 +5762,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 76,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -6398,10 +5788,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 76,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -6441,10 +5827,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 34,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -6471,10 +5853,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 34,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -6514,10 +5892,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 124,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -6544,10 +5918,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 124,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -6587,10 +5957,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 142
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6619,10 +5985,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 142
         },
         "randomness": {
           "deterministic": false,
@@ -6680,10 +6042,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 126
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -6710,10 +6068,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 126
         },
         "randomness": {
           "deterministic": true,
@@ -6753,10 +6107,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 15
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6786,10 +6136,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 15
         },
         "randomness": {
           "deterministic": false,
@@ -6832,10 +6178,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 348,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6866,10 +6208,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 348,
-          "defender": 1
         },
         "randomness": {
           "deterministic": false,
@@ -6929,10 +6267,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 77
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -6962,10 +6296,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 77
         },
         "randomness": {
           "deterministic": false,
@@ -7008,10 +6338,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 33
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7038,10 +6364,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 33
         },
         "randomness": {
           "deterministic": true,
@@ -7081,10 +6403,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 14,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7111,10 +6429,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 14,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -7154,10 +6468,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 21,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7184,10 +6494,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 21,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -7227,10 +6533,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7257,10 +6559,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -7308,10 +6606,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7338,10 +6632,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -7381,10 +6671,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7411,10 +6697,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -7454,10 +6736,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7484,10 +6762,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -7527,10 +6801,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 10,
-          "defender": 58
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -7561,10 +6831,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 10,
-          "defender": 58
         },
         "randomness": {
           "deterministic": false,
@@ -7608,10 +6874,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 209
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -7638,10 +6900,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 209
         },
         "randomness": {
           "deterministic": true,
@@ -7681,10 +6939,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 23
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -7713,10 +6967,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 23
         },
         "randomness": {
           "deterministic": false,
@@ -7762,10 +7012,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -7794,10 +7040,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -7843,10 +7085,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 24,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -7875,10 +7113,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 24,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -7920,10 +7154,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 77
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -7955,10 +7185,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 77
         },
         "randomness": {
           "deterministic": false,
@@ -8003,10 +7229,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -8033,10 +7255,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -8076,10 +7294,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -8106,10 +7320,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -8149,10 +7359,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -8179,10 +7385,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -8222,10 +7424,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -8252,10 +7450,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -8311,10 +7505,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 40
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8343,10 +7533,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 40
         },
         "randomness": {
           "deterministic": false,
@@ -8424,10 +7610,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 78
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8458,10 +7640,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 78
         },
         "randomness": {
           "deterministic": false,
@@ -8581,10 +7759,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 75
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8615,10 +7789,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 75
         },
         "randomness": {
           "deterministic": false,
@@ -8662,10 +7832,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 132
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8696,10 +7862,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 132
         },
         "randomness": {
           "deterministic": false,
@@ -8743,10 +7905,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 139
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8777,10 +7935,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 139
         },
         "randomness": {
           "deterministic": false,
@@ -8824,10 +7978,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 133
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8858,10 +8008,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 133
         },
         "randomness": {
           "deterministic": false,
@@ -8905,10 +8051,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 140
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -8939,10 +8081,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 140
         },
         "randomness": {
           "deterministic": false,
@@ -8986,10 +8124,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 117
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9020,10 +8154,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 117
         },
         "randomness": {
           "deterministic": false,
@@ -9083,10 +8213,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 52
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9117,10 +8243,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 52
         },
         "randomness": {
           "deterministic": false,
@@ -9180,10 +8302,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 54,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9213,10 +8331,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 54,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -9259,10 +8373,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 29
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9291,10 +8401,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 29
         },
         "randomness": {
           "deterministic": false,
@@ -9352,10 +8458,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 27
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9386,10 +8488,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 27
         },
         "randomness": {
           "deterministic": false,
@@ -9449,10 +8547,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 46
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9483,10 +8577,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 46
         },
         "randomness": {
           "deterministic": false,
@@ -9542,10 +8632,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 61
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9574,10 +8660,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 61
         },
         "randomness": {
           "deterministic": false,
@@ -9627,10 +8709,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -9657,10 +8735,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -9700,10 +8774,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 13
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9732,10 +8802,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 13
         },
         "randomness": {
           "deterministic": false,
@@ -9785,10 +8851,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -9815,10 +8877,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -9866,10 +8924,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -9896,10 +8950,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -9947,10 +8997,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 31
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -9979,10 +9025,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 31
         },
         "randomness": {
           "deterministic": false,
@@ -10048,10 +9090,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 11
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10080,10 +9118,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 11
         },
         "randomness": {
           "deterministic": false,
@@ -10125,10 +9159,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 16
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10157,10 +9187,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 16
         },
         "randomness": {
           "deterministic": false,
@@ -10202,10 +9228,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -10232,10 +9254,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -10275,10 +9293,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 42
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10309,10 +9323,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 42
         },
         "randomness": {
           "deterministic": false,
@@ -10368,10 +9378,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 75
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10402,10 +9408,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 75
         },
         "randomness": {
           "deterministic": false,
@@ -10453,10 +9455,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 56
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10486,10 +9484,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 56
         },
         "randomness": {
           "deterministic": false,
@@ -10540,10 +9534,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 34
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10573,10 +9563,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 34
         },
         "randomness": {
           "deterministic": false,
@@ -10619,10 +9605,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -10649,10 +9631,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -10692,10 +9670,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -10722,10 +9696,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -10765,10 +9735,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -10795,10 +9761,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -10838,10 +9800,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -10868,10 +9826,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -10911,10 +9865,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -10943,10 +9893,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -10988,10 +9934,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 7,
-          "defender": 48
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -11023,10 +9965,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 7,
-          "defender": 48
         },
         "randomness": {
           "deterministic": false,
@@ -11071,10 +10009,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 12
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -11103,10 +10037,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 12
         },
         "randomness": {
           "deterministic": false,
@@ -11164,10 +10094,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 6,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -11197,10 +10123,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 6,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -11243,10 +10165,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -11275,10 +10193,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": false,
@@ -11320,10 +10234,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 404,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11350,10 +10260,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 404,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -11393,10 +10299,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 91,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11423,10 +10325,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 91,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -11466,10 +10364,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 236,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11496,10 +10390,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 236,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -11539,10 +10429,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 368,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11569,10 +10455,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 368,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -11628,10 +10510,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 33
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11658,10 +10536,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 33
         },
         "randomness": {
           "deterministic": true,
@@ -11701,10 +10575,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 193,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -11733,10 +10603,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 193,
-          "defender": 1
         },
         "randomness": {
           "deterministic": false,
@@ -11778,10 +10644,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 307,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11808,10 +10670,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 307,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -11851,10 +10709,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11881,10 +10735,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -11932,10 +10782,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -11962,10 +10808,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -12005,10 +10847,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 37
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12037,10 +10875,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 37
         },
         "randomness": {
           "deterministic": false,
@@ -12082,10 +10916,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 10
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12114,10 +10944,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 10
         },
         "randomness": {
           "deterministic": false,
@@ -12163,10 +10989,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -12193,10 +11015,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -12236,10 +11054,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12270,10 +11084,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
         },
         "randomness": {
           "deterministic": false,
@@ -12317,10 +11127,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 106
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -12347,10 +11153,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 106
         },
         "randomness": {
           "deterministic": true,
@@ -12390,10 +11192,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -12420,10 +11218,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -12463,10 +11257,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -12493,10 +11283,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -12536,10 +11322,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -12566,10 +11348,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -12621,10 +11399,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 56,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12653,10 +11427,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 56,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -12722,10 +11492,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 52,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12754,10 +11520,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 52,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -12827,10 +11589,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 27,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12860,10 +11618,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 27,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -12934,10 +11688,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 30,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -12967,10 +11717,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 30,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -13029,10 +11775,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 142,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -13061,10 +11803,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 142,
-          "defender": 1
         },
         "randomness": {
           "deterministic": false,
@@ -13110,10 +11848,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 15,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -13142,10 +11876,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 15,
-          "defender": 1
         },
         "randomness": {
           "deterministic": false,
@@ -13187,10 +11917,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13217,10 +11943,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -13260,10 +11982,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13290,10 +12008,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -13349,10 +12063,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 36
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -13381,10 +12091,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 36
         },
         "randomness": {
           "deterministic": false,
@@ -13426,10 +12132,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13456,10 +12158,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -13499,10 +12197,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13529,10 +12223,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -13588,10 +12278,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 55
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -13620,10 +12306,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 55
         },
         "randomness": {
           "deterministic": false,
@@ -13677,10 +12359,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 154
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -13709,10 +12387,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 154
         },
         "randomness": {
           "deterministic": false,
@@ -13754,10 +12428,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13784,10 +12454,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -13827,10 +12493,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13857,10 +12519,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -13900,10 +12558,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 8,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -13930,10 +12584,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 8,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -13977,10 +12627,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14007,10 +12653,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14050,10 +12692,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14080,10 +12718,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14123,10 +12757,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 7
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14153,10 +12783,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 7
         },
         "randomness": {
           "deterministic": true,
@@ -14196,10 +12822,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14226,10 +12848,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14269,10 +12887,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 8
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14299,10 +12913,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 8
         },
         "randomness": {
           "deterministic": true,
@@ -14342,10 +12952,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14372,10 +12978,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14419,10 +13021,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14449,10 +13047,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14508,10 +13102,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 126
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -14540,10 +13130,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 126
         },
         "randomness": {
           "deterministic": false,
@@ -14585,10 +13171,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14615,10 +13197,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14658,10 +13236,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14688,10 +13262,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14731,10 +13301,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 11,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14761,10 +13327,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 11,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14804,10 +13366,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14834,10 +13392,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -14877,10 +13431,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 12,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14907,10 +13457,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 12,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -14950,10 +13496,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -14980,10 +13522,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -15023,10 +13561,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 233,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15053,10 +13587,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 233,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15096,10 +13626,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15126,10 +13652,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15169,10 +13691,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 239,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15199,10 +13717,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 239,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15242,10 +13756,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15272,10 +13782,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15315,10 +13821,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15345,10 +13847,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -15388,10 +13886,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15418,10 +13912,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15461,10 +13951,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 7,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15491,10 +13977,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 7,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -15534,10 +14016,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15564,10 +14042,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15607,10 +14081,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15637,10 +14107,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -15680,10 +14146,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 7,
-          "defender": 2
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15710,10 +14172,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 7,
-          "defender": 2
         },
         "randomness": {
           "deterministic": true,
@@ -15753,10 +14211,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15783,10 +14237,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -15826,10 +14276,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15856,10 +14302,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -15901,10 +14343,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -15931,10 +14369,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -15976,10 +14410,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16006,10 +14436,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -16051,10 +14477,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16081,10 +14503,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -16126,10 +14544,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16156,10 +14570,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -16201,10 +14611,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1101,
-          "defender": 884
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16231,10 +14637,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1101,
-          "defender": 884
         },
         "randomness": {
           "deterministic": true,
@@ -16276,10 +14678,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1292,
-          "defender": 477
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16306,10 +14704,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1292,
-          "defender": 477
         },
         "randomness": {
           "deterministic": true,
@@ -16351,10 +14745,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 268,
-          "defender": 281
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16381,10 +14771,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 268,
-          "defender": 281
         },
         "randomness": {
           "deterministic": true,
@@ -16426,10 +14812,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 254,
-          "defender": 269
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16456,10 +14838,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 254,
-          "defender": 269
         },
         "randomness": {
           "deterministic": true,
@@ -16501,10 +14879,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 213,
-          "defender": 242
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16531,10 +14905,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 213,
-          "defender": 242
         },
         "randomness": {
           "deterministic": true,
@@ -16576,10 +14946,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 902,
-          "defender": 901
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16606,10 +14972,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 902,
-          "defender": 901
         },
         "randomness": {
           "deterministic": true,
@@ -16651,10 +15013,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 536,
-          "defender": 549
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16681,10 +15039,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 536,
-          "defender": 549
         },
         "randomness": {
           "deterministic": true,
@@ -16725,10 +15079,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 77
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16755,10 +15105,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 77
         },
         "randomness": {
           "deterministic": true,
@@ -16799,10 +15145,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 66
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16829,10 +15171,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 66
         },
         "randomness": {
           "deterministic": true,
@@ -16873,10 +15211,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 199
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16903,10 +15237,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 199
         },
         "randomness": {
           "deterministic": true,
@@ -16947,10 +15277,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 409
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -16977,10 +15303,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 409
         },
         "randomness": {
           "deterministic": true,
@@ -17022,10 +15344,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17052,10 +15370,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -17097,10 +15411,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17127,10 +15437,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -17172,10 +15478,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17202,10 +15504,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -17247,10 +15545,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17277,10 +15571,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -17321,10 +15611,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1417,
-          "defender": 1417
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17351,10 +15637,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1417,
-          "defender": 1417
         },
         "randomness": {
           "deterministic": true,
@@ -17396,10 +15678,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 112
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17426,10 +15704,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 112
         },
         "randomness": {
           "deterministic": true,
@@ -17471,10 +15745,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 95
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17501,10 +15771,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 95
         },
         "randomness": {
           "deterministic": true,
@@ -17546,10 +15812,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 118
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17576,10 +15838,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 118
         },
         "randomness": {
           "deterministic": true,
@@ -17621,10 +15879,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 139
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17651,10 +15905,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 139
         },
         "randomness": {
           "deterministic": true,
@@ -17696,10 +15946,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 244
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17726,10 +15972,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 244
         },
         "randomness": {
           "deterministic": true,
@@ -17771,10 +16013,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1040,
-          "defender": 3284
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17801,10 +16039,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1040,
-          "defender": 3284
         },
         "randomness": {
           "deterministic": true,
@@ -17846,10 +16080,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 151
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17876,10 +16106,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 151
         },
         "randomness": {
           "deterministic": true,
@@ -17920,10 +16146,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 11,
-          "defender": 46
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -17950,10 +16172,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 11,
-          "defender": 46
         },
         "randomness": {
           "deterministic": true,
@@ -17994,10 +16212,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 24,
-          "defender": 19
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -18026,10 +16240,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 24,
-          "defender": 19
         },
         "randomness": {
           "deterministic": false,
@@ -18073,10 +16283,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 182
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18103,10 +16309,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 182
         },
         "randomness": {
           "deterministic": true,
@@ -18148,10 +16350,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 170
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18178,10 +16376,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 170
         },
         "randomness": {
           "deterministic": true,
@@ -18223,10 +16417,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 39
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18253,10 +16443,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 39
         },
         "randomness": {
           "deterministic": true,
@@ -18298,10 +16484,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 129,
-          "defender": 128
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18328,10 +16510,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 129,
-          "defender": 128
         },
         "randomness": {
           "deterministic": true,
@@ -18373,10 +16551,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 301,
-          "defender": 346
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18403,10 +16577,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 301,
-          "defender": 346
         },
         "randomness": {
           "deterministic": true,
@@ -18448,10 +16618,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 104
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18478,10 +16644,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 104
         },
         "randomness": {
           "deterministic": true,
@@ -18523,10 +16685,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1328,
-          "defender": 1317
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -18557,10 +16715,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1328,
-          "defender": 1317
         },
         "randomness": {
           "deterministic": false,
@@ -18606,10 +16760,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 978,
-          "defender": 962
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -18640,10 +16790,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 978,
-          "defender": 962
         },
         "randomness": {
           "deterministic": false,
@@ -18689,10 +16835,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 849,
-          "defender": 820
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -18723,10 +16865,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 849,
-          "defender": 820
         },
         "randomness": {
           "deterministic": false,
@@ -18772,10 +16910,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 766,
-          "defender": 762
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -18806,10 +16940,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 766,
-          "defender": 762
         },
         "randomness": {
           "deterministic": false,
@@ -18855,10 +16985,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 193,
-          "defender": 192
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18885,10 +17011,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 193,
-          "defender": 192
         },
         "randomness": {
           "deterministic": true,
@@ -18930,10 +17052,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 201,
-          "defender": 199
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -18960,10 +17078,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 201,
-          "defender": 199
         },
         "randomness": {
           "deterministic": true,
@@ -19005,10 +17119,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 2109
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19037,10 +17147,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 2109
         },
         "randomness": {
           "deterministic": false,
@@ -19084,10 +17190,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -19114,10 +17216,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -19159,10 +17257,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -19189,10 +17283,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1503,
-          "defender": 1503
         },
         "randomness": {
           "deterministic": true,
@@ -19234,10 +17324,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 992,
-          "defender": 983
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19268,10 +17354,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 992,
-          "defender": 983
         },
         "randomness": {
           "deterministic": false,
@@ -19317,10 +17399,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 847,
-          "defender": 819
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19351,10 +17429,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 847,
-          "defender": 819
         },
         "randomness": {
           "deterministic": false,
@@ -19400,10 +17474,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 758,
-          "defender": 785
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19434,10 +17504,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 758,
-          "defender": 785
         },
         "randomness": {
           "deterministic": false,
@@ -19483,10 +17549,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2044
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19515,10 +17577,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 2044
         },
         "randomness": {
           "deterministic": false,
@@ -19562,10 +17620,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 159,
-          "defender": 2057
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19596,10 +17650,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 159,
-          "defender": 2057
         },
         "randomness": {
           "deterministic": false,
@@ -19645,10 +17695,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 109,
-          "defender": 1594
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19679,10 +17725,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 109,
-          "defender": 1594
         },
         "randomness": {
           "deterministic": false,
@@ -19728,10 +17770,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 97,
-          "defender": 1240
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19762,10 +17800,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 97,
-          "defender": 1240
         },
         "randomness": {
           "deterministic": false,
@@ -19811,10 +17845,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 87,
-          "defender": 1249
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19845,10 +17875,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 87,
-          "defender": 1249
         },
         "randomness": {
           "deterministic": false,
@@ -19894,10 +17920,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 30,
-          "defender": 330
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -19928,10 +17950,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 30,
-          "defender": 330
         },
         "randomness": {
           "deterministic": false,
@@ -19977,10 +17995,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 18,
-          "defender": 192
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20011,10 +18025,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 18,
-          "defender": 192
         },
         "randomness": {
           "deterministic": false,
@@ -20060,10 +18070,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 16,
-          "defender": 216
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20094,10 +18100,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 16,
-          "defender": 216
         },
         "randomness": {
           "deterministic": false,
@@ -20143,10 +18145,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 17,
-          "defender": 232
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20177,10 +18175,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 17,
-          "defender": 232
         },
         "randomness": {
           "deterministic": false,
@@ -20226,10 +18220,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 17,
-          "defender": 260
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20260,10 +18250,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 17,
-          "defender": 260
         },
         "randomness": {
           "deterministic": false,
@@ -20309,10 +18295,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 17,
-          "defender": 154
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20343,10 +18325,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 17,
-          "defender": 154
         },
         "randomness": {
           "deterministic": false,
@@ -20392,10 +18370,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 16,
-          "defender": 295
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20426,10 +18400,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 16,
-          "defender": 295
         },
         "randomness": {
           "deterministic": false,
@@ -20475,10 +18445,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 15,
-          "defender": 150
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20509,10 +18475,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 15,
-          "defender": 150
         },
         "randomness": {
           "deterministic": false,
@@ -20558,10 +18520,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 16,
-          "defender": 252
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20592,10 +18550,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 16,
-          "defender": 252
         },
         "randomness": {
           "deterministic": false,
@@ -20641,10 +18595,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 12,
-          "defender": 235
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20675,10 +18625,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 12,
-          "defender": 235
         },
         "randomness": {
           "deterministic": false,
@@ -20724,10 +18670,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 12,
-          "defender": 169
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20758,10 +18700,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 12,
-          "defender": 169
         },
         "randomness": {
           "deterministic": false,
@@ -20806,10 +18744,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 14,
-          "defender": 16
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20841,10 +18775,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 14,
-          "defender": 16
         },
         "randomness": {
           "deterministic": false,
@@ -20890,10 +18820,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 18
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -20925,10 +18851,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 18
         },
         "randomness": {
           "deterministic": false,
@@ -20974,10 +18896,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 27
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -21009,10 +18927,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 9,
-          "defender": 27
         },
         "randomness": {
           "deterministic": false,
@@ -21058,10 +18972,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 27
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -21093,10 +19003,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 23,
-          "defender": 27
         },
         "randomness": {
           "deterministic": false,
@@ -21142,10 +19048,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 10,
-          "defender": 13
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -21177,10 +19079,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 10,
-          "defender": 13
         },
         "randomness": {
           "deterministic": false,
@@ -21226,10 +19124,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 11,
-          "defender": 17
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -21261,10 +19155,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 11,
-          "defender": 17
         },
         "randomness": {
           "deterministic": false,
@@ -21325,10 +19215,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21355,10 +19241,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -21418,10 +19300,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21448,10 +19326,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -21491,10 +19365,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 115
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -21524,10 +19394,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 115
         },
         "randomness": {
           "deterministic": false,
@@ -21568,10 +19434,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21598,10 +19460,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -21639,10 +19497,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21669,10 +19523,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -21710,10 +19560,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21740,10 +19586,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -21781,10 +19623,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21811,10 +19649,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -21852,10 +19686,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21882,10 +19712,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -21923,10 +19749,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -21953,10 +19775,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -21994,10 +19812,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -22024,10 +19838,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -22065,10 +19875,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -22095,10 +19901,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 5,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -22136,10 +19938,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 195
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22169,10 +19967,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 195
         },
         "randomness": {
           "deterministic": false,
@@ -22239,10 +20033,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 188
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22272,10 +20062,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 188
         },
         "randomness": {
           "deterministic": false,
@@ -22338,10 +20124,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 106,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22370,10 +20152,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 106,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -22413,10 +20191,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 102,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22445,10 +20219,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 102,
-          "defender": 3
         },
         "randomness": {
           "deterministic": false,
@@ -22502,10 +20272,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 88,
-          "defender": 157
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22537,10 +20303,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 88,
-          "defender": 157
         },
         "randomness": {
           "deterministic": false,
@@ -22583,10 +20345,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -22613,10 +20371,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -22654,10 +20408,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -22684,10 +20434,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -22725,10 +20471,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -22755,10 +20497,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -22796,10 +20534,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 88
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22829,10 +20563,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 88
         },
         "randomness": {
           "deterministic": false,
@@ -22873,10 +20603,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 54
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -22908,10 +20634,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 54
         },
         "randomness": {
           "deterministic": false,
@@ -22954,10 +20676,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -22984,10 +20702,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -23025,10 +20739,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23055,10 +20765,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 5
         },
         "randomness": {
           "deterministic": true,
@@ -23118,10 +20824,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 15
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -23150,10 +20852,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 15
         },
         "randomness": {
           "deterministic": false,
@@ -23193,10 +20891,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": false,
           "chanceSkillIds": {
@@ -23225,10 +20919,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 4
         },
         "randomness": {
           "deterministic": false,
@@ -23268,10 +20958,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23298,10 +20984,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -23339,10 +21021,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23369,10 +21047,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -23410,10 +21084,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23440,10 +21110,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -23481,10 +21147,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 3
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23511,10 +21173,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 3
         },
         "randomness": {
           "deterministic": true,
@@ -23552,10 +21210,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23582,10 +21236,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -23623,10 +21273,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 4
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23653,10 +21299,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 4
         },
         "randomness": {
           "deterministic": true,
@@ -23694,10 +21336,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23724,10 +21362,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 4,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -23765,10 +21399,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23795,10 +21425,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -23836,10 +21462,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23866,10 +21488,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 6
         },
         "randomness": {
           "deterministic": true,
@@ -23907,10 +21525,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 8
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -23937,10 +21551,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 8
         },
         "randomness": {
           "deterministic": true,
@@ -23980,10 +21590,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 137,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -24010,10 +21616,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 2,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,
@@ -24053,10 +21655,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 168
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -24083,10 +21681,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 147
         },
         "randomness": {
           "deterministic": true,
@@ -24126,10 +21720,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 209
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -24156,10 +21746,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 1,
-          "defender": 203
         },
         "randomness": {
           "deterministic": true,
@@ -24194,10 +21780,6 @@
           "attacker": [],
           "defender": []
         },
-        "effectActivationCounts": {
-          "attacker": 129,
-          "defender": 1
-        },
         "randomness": {
           "deterministic": true,
           "chanceSkillIds": {
@@ -24224,10 +21806,6 @@
         "skillReport": {
           "attacker": [],
           "defender": []
-        },
-        "effectActivationCounts": {
-          "attacker": 3,
-          "defender": 1
         },
         "randomness": {
           "deterministic": true,

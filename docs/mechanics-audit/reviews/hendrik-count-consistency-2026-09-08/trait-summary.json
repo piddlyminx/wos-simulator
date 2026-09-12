@@ -1,6 +1,6 @@
 {
-  "full_result_gzip": "trait-followup.json.gz",
-  "uncompressed_sha256": "44a6dc8a9a12253d50ebb8d87b203fb89132e853355218e81774e47d61d27a20",
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
   "summaries": [
     {
       "key": "testcases/emulator_verified/alonso_norah_combo.json#1",

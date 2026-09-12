@@ -1,0 +1,1734 @@
+{
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
+  "results": [
+    {
+      "label": "strong",
+      "key": "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_strong_nc.json#0",
+      "game": [
+        {
+          "attacker": 2810,
+          "defender": 0
+        }
+      ],
+      "candidates": {
+        "current": {
+          "totals": {
+            "attacker": 2574,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 38,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 2574
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 9,
+                  "skillActivations": 9,
+                  "effectActivations": 27,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 12,
+                  "skillActivations": 12,
+                  "effectActivations": 24,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 19,
+                  "skillActivations": 19,
+                  "effectActivations": 38,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 19,
+                  "skillActivations": 19,
+                  "effectActivations": 38,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 19,
+                  "skillActivations": 19,
+                  "effectActivations": 38,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_three_normals": {
+          "totals": {
+            "attacker": 2709,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 37,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 2709
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 4,
+                  "skillActivations": 4,
+                  "effectActivations": 12,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 12,
+                  "skillActivations": 12,
+                  "effectActivations": 24,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 18,
+                  "skillActivations": 18,
+                  "effectActivations": 36,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 18,
+                  "skillActivations": 18,
+                  "effectActivations": 36,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 18,
+                  "skillActivations": 18,
+                  "effectActivations": 36,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_four_normals": {
+          "totals": {
+            "attacker": 2820,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 36,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 2820
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 3,
+                  "skillActivations": 3,
+                  "effectActivations": 9,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 13,
+                  "skillActivations": 13,
+                  "effectActivations": 26,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 18,
+                  "skillActivations": 18,
+                  "effectActivations": 36,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 18,
+                  "skillActivations": 18,
+                  "effectActivations": 36,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 18,
+                  "skillActivations": 18,
+                  "effectActivations": 36,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "weaker",
+      "key": "archive:testcases/emulator_verified/renee_same_kind_ahmose_damage_taken_up_nc.json#0",
+      "game": [
+        {
+          "attacker": 1631,
+          "defender": 0
+        }
+      ],
+      "candidates": {
+        "current": {
+          "totals": {
+            "attacker": 1622,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 42,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 1622
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 10,
+                  "skillActivations": 10,
+                  "effectActivations": 30,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 25,
+                  "skillActivations": 25,
+                  "effectActivations": 50,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_three_normals": {
+          "totals": {
+            "attacker": 1633,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 42,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 1633
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 8,
+                  "skillActivations": 8,
+                  "effectActivations": 24,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 25,
+                  "skillActivations": 25,
+                  "effectActivations": 50,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_four_normals": {
+          "totals": {
+            "attacker": 1645,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 42,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 1645
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 6,
+                  "skillActivations": 6,
+                  "effectActivations": 18,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 27,
+                  "skillActivations": 27,
+                  "effectActivations": 54,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 21,
+                  "skillActivations": 21,
+                  "effectActivations": 42,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "attacker",
+      "key": "testcases/emulator_verified/renee_ahmose_damage_taken_overlap_attacker_nc.json#0",
+      "game": [
+        {
+          "attacker": 3777,
+          "defender": 0
+        }
+      ],
+      "candidates": {
+        "current": {
+          "totals": {
+            "attacker": 3778,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 77,
+            "remaining": {
+              "attacker": {
+                "infantry": 3278,
+                "lancer": 500,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 19,
+                  "skillActivations": 19,
+                  "effectActivations": 57,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 58,
+                  "skillActivations": 58,
+                  "effectActivations": 116,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_three_normals": {
+          "totals": {
+            "attacker": 3778,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 77,
+            "remaining": {
+              "attacker": {
+                "infantry": 3278,
+                "lancer": 500,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 19,
+                  "skillActivations": 19,
+                  "effectActivations": 57,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 58,
+                  "skillActivations": 58,
+                  "effectActivations": 116,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_four_normals": {
+          "totals": {
+            "attacker": 3769,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 77,
+            "remaining": {
+              "attacker": {
+                "infantry": 3269,
+                "lancer": 500,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 15,
+                  "skillActivations": 15,
+                  "effectActivations": 45,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "BladeOfLight",
+                  "skillName": "BladeOfLight",
+                  "level": 3,
+                  "triggersSeen": 62,
+                  "skillActivations": 62,
+                  "effectActivations": 124,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "NightmareTrace",
+                  "skillName": "NightmareTrace",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamcatcher",
+                  "skillName": "Dreamcatcher",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Renee",
+                  "skillId": "Dreamslice",
+                  "skillName": "Dreamslice",
+                  "level": 4,
+                  "triggersSeen": 38,
+                  "skillActivations": 38,
+                  "effectActivations": 76,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "label": "solo",
+      "key": "testcases/emulator_verified/ahmose_solo_nc.json#0",
+      "game": [
+        {
+          "attacker": 2633,
+          "defender": 0
+        }
+      ],
+      "candidates": {
+        "current": {
+          "totals": {
+            "attacker": 2615,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 55,
+            "remaining": {
+              "attacker": {
+                "infantry": 46,
+                "lancer": 1069,
+                "marksman": 1500
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 13,
+                  "skillActivations": 13,
+                  "effectActivations": 39,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_three_normals": {
+          "totals": {
+            "attacker": 2640,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 54,
+            "remaining": {
+              "attacker": {
+                "infantry": 71,
+                "lancer": 1069,
+                "marksman": 1500
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 9,
+                  "skillActivations": 9,
+                  "effectActivations": 27,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        },
+        "after_four_normals": {
+          "totals": {
+            "attacker": 2633,
+            "defender": 0
+          },
+          "result": {
+            "winner": "attacker",
+            "rounds": 54,
+            "remaining": {
+              "attacker": {
+                "infantry": 64,
+                "lancer": 1069,
+                "marksman": 1500
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "skillReport": {
+              "attacker": [
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ],
+              "defender": [
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "ViperFormation",
+                  "skillName": "ViperFormation",
+                  "level": 1,
+                  "triggersSeen": 7,
+                  "skillActivations": 7,
+                  "effectActivations": 21,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "hero_skill",
+                  "heroName": "Ahmose",
+                  "skillId": "PrayerOfFlame",
+                  "skillName": "PrayerOfFlame",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "infantry",
+                  "skillId": "MasterBrawler",
+                  "skillName": "MasterBrawler",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "lancer",
+                  "skillId": "Charge",
+                  "skillName": "Charge",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                },
+                {
+                  "sourceKind": "troop_skill",
+                  "troopType": "marksman",
+                  "skillId": "RangedStrike",
+                  "skillName": "RangedStrike",
+                  "level": 1,
+                  "triggersSeen": 1,
+                  "skillActivations": 1,
+                  "effectActivations": 1,
+                  "skillKills": 0,
+                  "unsupportedEffects": []
+                }
+              ]
+            },
+            "randomness": {
+              "deterministic": true,
+              "chanceSkillIds": {
+                "attacker": [],
+                "defender": []
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,49 +1,14 @@
 {
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
   "generatedAt": "2026-09-07T06:27:58.161Z",
   "phase": "retrospective_existing_accepted_game_evidence_review",
   "exposure": "Existing corpus outcomes were available before review. All counterfactuals are post hoc simulator diagnostics, not new game observations or live-disabled skills.",
   "contract": "Preserve exact recorded full kits, troop tiers, stats, engagement type and round limits. No fitted stats or magnitude tuning. Only deterministic full-kit cases reviewed; stochastic fixtures explicitly listed as skipped even where historical filenames/descriptions say no chance. Score is surviving attacker minus defender including draws; preserve winner and both sides. Repeated fixture entries or stored copies are not automatically independent observations.",
-  "inventorySha256": "2b68720b0292cb2238944d850c79704d8fb3b73e17bd9fe3646fbefee20d3d45",
-  "sourceHashes": {
-    "simulator/src/battleInputBuilder.ts": "33807cda4136fc58d3c6e97085a5b27a4afddbc306919d40d62cc26eb20bf1d5",
-    "simulator/src/config-default.ts": "fa1e6bd7ed6a0eb70584075a4199a5915685f9bb467aba813a8afa87e032ecc8",
-    "simulator/src/config-node.ts": "32d4fc2ccf33d47071656f035d03d8c9cc178fa918b30b45b2b8074429daaf6f",
-    "simulator/src/config-webpack.ts": "83722bc4bf7be3dbf6a7eebc25bb9ff13391a9d40416ca5bb41a83d23d9e7662",
-    "simulator/src/config.ts": "b6b4915d4743617671add8026e46b3ccb700608a72481921472e1f08102710c8",
-    "simulator/src/damage.ts": "3265256260394c708116b727f677eff90c2ef2080558c6552f0e80b3447a4d84",
-    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
-    "simulator/src/effectIndex.ts": "cb225adf53e9b293b5e68a6011398781707ce780000a9fc52eddff8045d182ff",
-    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
-    "simulator/src/extraAttacks.ts": "8cdcb42505c99266117186a2dca3c51f13b752d97e6f1d6ff66024f694164e87",
-    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
-    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
-    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
-    "simulator/src/recorder.ts": "ed3ec06e3efb408350b40a3c9cd4e55c14c203dcfc3a1207b12ec4e4b5c89917",
-    "simulator/src/runtime.ts": "b44568be40a814142bafd113d9067fd5a02382d14e7461f5e5832ac37bf5f394",
-    "simulator/src/runtimeSkills.ts": "f0b5af8e23fb5d995dac2b3dc53a0d8b3928627c990422b0f1a985d41c6a6b42",
-    "simulator/src/simulator.ts": "b25c9e7fb6623ed40128cbd44cf57e92a53fdab42cd2f9fea69b791df091b743",
-    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
-    "simulator/src/tooling/calibration.ts": "4e6ee2f661ec9a41c7aa1cbfc2af9ad2f10b1e8d8fd43d8e618893058c5a2a8a",
-    "simulator/src/tooling/exportGatotTestcases.ts": "9532d34f2821aa3fe0c7bb91a0faf7af3f1012f6320751d523dadf52938895ef",
-    "simulator/src/tooling/gatotEvidence.ts": "7b1dc4b38d9401d1d100e6e0c0809f7a01031da40b87d1d0e5181e3f0c4fb1ba",
-    "simulator/src/tooling/histogram.ts": "da34bd3f15140091ff837f6551eeaab7c5b41c60b4574172f8d44afa60cc67ef",
-    "simulator/src/tooling/index.ts": "aaeb5139070939cac16373540e85b05b1baf5e653121759914363b2967219a54",
-    "simulator/src/tooling/parityMetrics.ts": "d34c7d2ffd4277f7793f03914073fa1aab90bc6aac483138dafe14d41d5cb579",
-    "simulator/src/tooling/testcases.ts": "e2ecca63984d92d58e3815ca237fb2212d547b88cef06b7ddff9f3e8968ac682",
-    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
-    "simulator/src/types.ts": "ad155c6478bd8a76ce545cd2936352c529a9864751d31913299c2f86def29a17",
-    "simulator/src/webpack-context.d.ts": "756c62f5275a386dc4e23e2e275c5103cfa9bb49d3fdc8b76c477146ccad5281",
-    "simulator/src/workerPool.ts": "e60d54786a21f28668f8a2bfd23d479c0169b89ba5310b0c58f79bda38b5f2f4",
-    "simulator/config/hero_definitions/Logan.json": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
-    "simulator/config/hero_definitions/Ling.json": "9e6fea7158f274e41993a30bdc3249bd18f8b566160aaeac428a8e6649181755",
-    "simulator/config/hero_definitions/Lumak.json": "80c77f1631649f803dc5408a744c6b7ac6aa765450b730cd9ab1296caf87472e"
-  },
-  "configSha256": "a8f0d2ad15ba77f4dbd02e1a73fd20be68b82a0547a2b4aa3a9e6613d3962c50",
   "results": [
     {
       "key": "hero:Logan:LionStrike",
       "definitionSource": "simulator/config/hero_definitions/Logan.json",
-      "definitionSha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
       "definition": {
         "description": "Reducing all enemy Troops' Attack by X%",
         "trigger": {
@@ -75,81 +40,6 @@
         {
           "key": "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
           "testId": "logan_gwen_combo_nc",
-          "fixtureSha256": "41c3733ca275e95e782769ac7dfbce3fde86fd689ecdd168fda373923ea5027d",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 600,
-                "lancer_t6": 600,
-                "marksman_t6": 600
-              },
-              "stats": {
-                "inf": {
-                  "attack": 164.2,
-                  "defense": 169,
-                  "lethality": 124.2,
-                  "health": 136.6
-                },
-                "lanc": {
-                  "attack": 149.7,
-                  "defense": 152,
-                  "lethality": 121.2,
-                  "health": 109.8
-                },
-                "mark": {
-                  "attack": 162.2,
-                  "defense": 156.5,
-                  "lethality": 126.5,
-                  "health": 123.4
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 3,
-                  "skill_2": 3,
-                  "skill_3": 3
-                },
-                "Gwen": {
-                  "skill_1": 1,
-                  "skill_2": 1,
-                  "skill_3": 0
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 342.3,
-                  "defense": 333.1,
-                  "lethality": 186.8,
-                  "health": 236.5
-                },
-                "lanc": {
-                  "attack": 238.9,
-                  "defense": 229.7,
-                  "lethality": 172,
-                  "health": 173
-                },
-                "mark": {
-                  "attack": 360.5,
-                  "defense": 343.3,
-                  "lethality": 182.4,
-                  "health": 177.4
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "d25717a82a205b5cae6bd705a5ede0def451316f1854e51d0989031318acf6c7",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -388,76 +278,6 @@
         {
           "key": "testcases/emulator_verified/logan_solo_minxxx_nc.json#0",
           "testId": "logan_solo_minxxx",
-          "fixtureSha256": "d3645f5c696b80e9f72873ff03ad57deefb79f0a9420aec754654b94bc4b0aa9",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 100,
-                "lancer_t6": 60,
-                "marksman_t6": 60
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 66.1,
-                  "defense": 61.9,
-                  "lethality": 23.3,
-                  "health": 26.4
-                },
-                "lanc": {
-                  "attack": 68.6,
-                  "defense": 63.1,
-                  "lethality": 26.3,
-                  "health": 21.1
-                },
-                "mark": {
-                  "attack": 69.1,
-                  "defense": 59.4,
-                  "lethality": 25.8,
-                  "health": 21.5
-                }
-              }
-            },
-            "defender": {
-              "name": "[pii]Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 1,
-                  "skill_2": 0,
-                  "skill_3": 0
-                }
-              },
-              "troops": {
-                "infantry_t6": 1000,
-                "lancer_t6": 500,
-                "marksman_t6": 500
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 235.1,
-                  "defense": 216.7,
-                  "lethality": 102,
-                  "health": 115.1
-                },
-                "lanc": {
-                  "attack": 165.7,
-                  "defense": 158.3,
-                  "lethality": 110.2,
-                  "health": 111
-                },
-                "mark": {
-                  "attack": 182.7,
-                  "defense": 174.3,
-                  "lethality": 112.9,
-                  "health": 113.9
-                }
-              }
-            }
-          },
-          "inputSha256": "3a3d13b50af1b63ba255c55b26e9cc1b4e25f11fcd13f3376b635b1ca96d985f",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -696,76 +516,6 @@
         {
           "key": "testcases/emulator_verified/logan_solo_v2_nc.json#0",
           "testId": "logan_solo_v2",
-          "fixtureSha256": "1a4cb8ba510efd3c7f4e2e83e39e66229cf4f2e88ceb409c354b31de13a2e2c4",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 600,
-                "lancer_t6": 600,
-                "marksman_t6": 600
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 66.1,
-                  "defense": 61.9,
-                  "lethality": 23.3,
-                  "health": 26.4
-                },
-                "lanc": {
-                  "attack": 68.6,
-                  "defense": 63.1,
-                  "lethality": 26.3,
-                  "health": 21.1
-                },
-                "mark": {
-                  "attack": 69.1,
-                  "defense": 59.4,
-                  "lethality": 25.8,
-                  "health": 21.5
-                }
-              }
-            },
-            "defender": {
-              "name": " Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 3,
-                  "skill_2": 3,
-                  "skill_3": 3
-                }
-              },
-              "troops": {
-                "infantry_t6": 400,
-                "lancer_t6": 400,
-                "marksman_t6": 400
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 283.9,
-                  "defense": 265.5,
-                  "lethality": 102,
-                  "health": 115.1
-                },
-                "lanc": {
-                  "attack": 165.7,
-                  "defense": 158.3,
-                  "lethality": 110.2,
-                  "health": 111
-                },
-                "mark": {
-                  "attack": 182.7,
-                  "defense": 174.3,
-                  "lethality": 112.9,
-                  "health": 113.9
-                }
-              }
-            }
-          },
-          "inputSha256": "fbe005d066074481dfce682b90d545f5fe66097f5c659159e1e3511844a52e01",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -1040,7 +790,6 @@
     {
       "key": "hero:Logan:LionIntimidation",
       "definitionSource": "simulator/config/hero_definitions/Logan.json",
-      "definitionSha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
       "definition": {
         "description": "Reducing damage taken by X% for all troops",
         "trigger": {
@@ -1069,81 +818,6 @@
         {
           "key": "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
           "testId": "logan_gwen_combo_nc",
-          "fixtureSha256": "41c3733ca275e95e782769ac7dfbce3fde86fd689ecdd168fda373923ea5027d",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 600,
-                "lancer_t6": 600,
-                "marksman_t6": 600
-              },
-              "stats": {
-                "inf": {
-                  "attack": 164.2,
-                  "defense": 169,
-                  "lethality": 124.2,
-                  "health": 136.6
-                },
-                "lanc": {
-                  "attack": 149.7,
-                  "defense": 152,
-                  "lethality": 121.2,
-                  "health": 109.8
-                },
-                "mark": {
-                  "attack": 162.2,
-                  "defense": 156.5,
-                  "lethality": 126.5,
-                  "health": 123.4
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 3,
-                  "skill_2": 3,
-                  "skill_3": 3
-                },
-                "Gwen": {
-                  "skill_1": 1,
-                  "skill_2": 1,
-                  "skill_3": 0
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 342.3,
-                  "defense": 333.1,
-                  "lethality": 186.8,
-                  "health": 236.5
-                },
-                "lanc": {
-                  "attack": 238.9,
-                  "defense": 229.7,
-                  "lethality": 172,
-                  "health": 173
-                },
-                "mark": {
-                  "attack": 360.5,
-                  "defense": 343.3,
-                  "lethality": 182.4,
-                  "health": 177.4
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "d25717a82a205b5cae6bd705a5ede0def451316f1854e51d0989031318acf6c7",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -1384,76 +1058,6 @@
         {
           "key": "testcases/emulator_verified/logan_solo_v2_nc.json#0",
           "testId": "logan_solo_v2",
-          "fixtureSha256": "1a4cb8ba510efd3c7f4e2e83e39e66229cf4f2e88ceb409c354b31de13a2e2c4",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 600,
-                "lancer_t6": 600,
-                "marksman_t6": 600
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 66.1,
-                  "defense": 61.9,
-                  "lethality": 23.3,
-                  "health": 26.4
-                },
-                "lanc": {
-                  "attack": 68.6,
-                  "defense": 63.1,
-                  "lethality": 26.3,
-                  "health": 21.1
-                },
-                "mark": {
-                  "attack": 69.1,
-                  "defense": 59.4,
-                  "lethality": 25.8,
-                  "health": 21.5
-                }
-              }
-            },
-            "defender": {
-              "name": " Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 3,
-                  "skill_2": 3,
-                  "skill_3": 3
-                }
-              },
-              "troops": {
-                "infantry_t6": 400,
-                "lancer_t6": 400,
-                "marksman_t6": 400
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 283.9,
-                  "defense": 265.5,
-                  "lethality": 102,
-                  "health": 115.1
-                },
-                "lanc": {
-                  "attack": 165.7,
-                  "defense": 158.3,
-                  "lethality": 110.2,
-                  "health": 111
-                },
-                "mark": {
-                  "attack": 182.7,
-                  "defense": 174.3,
-                  "lethality": 112.9,
-                  "health": 113.9
-                }
-              }
-            }
-          },
-          "inputSha256": "fbe005d066074481dfce682b90d545f5fe66097f5c659159e1e3511844a52e01",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -1730,7 +1334,6 @@
     {
       "key": "hero:Logan:LeaderInspiration",
       "definitionSource": "simulator/config/hero_definitions/Logan.json",
-      "definitionSha256": "d768fca318d7562403eeac06052bf3de678fd6e7fb4a14d50cbb9c05258a32e4",
       "definition": {
         "description": "Increasing Health by X% for all troops",
         "trigger": {
@@ -1759,81 +1362,6 @@
         {
           "key": "testcases/emulator_verified/logan_gwen_combo_nc.json#0",
           "testId": "logan_gwen_combo_nc",
-          "fixtureSha256": "41c3733ca275e95e782769ac7dfbce3fde86fd689ecdd168fda373923ea5027d",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 600,
-                "lancer_t6": 600,
-                "marksman_t6": 600
-              },
-              "stats": {
-                "inf": {
-                  "attack": 164.2,
-                  "defense": 169,
-                  "lethality": 124.2,
-                  "health": 136.6
-                },
-                "lanc": {
-                  "attack": 149.7,
-                  "defense": 152,
-                  "lethality": 121.2,
-                  "health": 109.8
-                },
-                "mark": {
-                  "attack": 162.2,
-                  "defense": 156.5,
-                  "lethality": 126.5,
-                  "health": 123.4
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 3,
-                  "skill_2": 3,
-                  "skill_3": 3
-                },
-                "Gwen": {
-                  "skill_1": 1,
-                  "skill_2": 1,
-                  "skill_3": 0
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 342.3,
-                  "defense": 333.1,
-                  "lethality": 186.8,
-                  "health": 236.5
-                },
-                "lanc": {
-                  "attack": 238.9,
-                  "defense": 229.7,
-                  "lethality": 172,
-                  "health": 173
-                },
-                "mark": {
-                  "attack": 360.5,
-                  "defense": 343.3,
-                  "lethality": 182.4,
-                  "health": 177.4
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "d25717a82a205b5cae6bd705a5ede0def451316f1854e51d0989031318acf6c7",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -2074,76 +1602,6 @@
         {
           "key": "testcases/emulator_verified/logan_solo_v2_nc.json#0",
           "testId": "logan_solo_v2",
-          "fixtureSha256": "1a4cb8ba510efd3c7f4e2e83e39e66229cf4f2e88ceb409c354b31de13a2e2c4",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 600,
-                "lancer_t6": 600,
-                "marksman_t6": 600
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 66.1,
-                  "defense": 61.9,
-                  "lethality": 23.3,
-                  "health": 26.4
-                },
-                "lanc": {
-                  "attack": 68.6,
-                  "defense": 63.1,
-                  "lethality": 26.3,
-                  "health": 21.1
-                },
-                "mark": {
-                  "attack": 69.1,
-                  "defense": 59.4,
-                  "lethality": 25.8,
-                  "health": 21.5
-                }
-              }
-            },
-            "defender": {
-              "name": " Piddlyminxxx",
-              "heroes": {
-                "Logan": {
-                  "skill_1": 3,
-                  "skill_2": 3,
-                  "skill_3": 3
-                }
-              },
-              "troops": {
-                "infantry_t6": 400,
-                "lancer_t6": 400,
-                "marksman_t6": 400
-              },
-              "joiner_heroes": {},
-              "stats": {
-                "inf": {
-                  "attack": 283.9,
-                  "defense": 265.5,
-                  "lethality": 102,
-                  "health": 115.1
-                },
-                "lanc": {
-                  "attack": 165.7,
-                  "defense": 158.3,
-                  "lethality": 110.2,
-                  "health": 111
-                },
-                "mark": {
-                  "attack": 182.7,
-                  "defense": 174.3,
-                  "lethality": 112.9,
-                  "health": 113.9
-                }
-              }
-            }
-          },
-          "inputSha256": "fbe005d066074481dfce682b90d545f5fe66097f5c659159e1e3511844a52e01",
           "acceptedGameOutcomes": [
             {
               "attacker": 0,
@@ -2412,7 +1870,6 @@
     {
       "key": "hero:Ling:FearsomeAura",
       "definitionSource": "simulator/config/hero_definitions/Ling.json",
-      "definitionSha256": "9e6fea7158f274e41993a30bdc3249bd18f8b566160aaeac428a8e6649181755",
       "definition": {
         "description": "Reducing all enemy Troops' Attack by X%",
         "trigger": {
@@ -2444,75 +1901,6 @@
         {
           "key": "testcases/emulator_verified/ling_xue_solo_nc.json#0",
           "testId": "ling_xue_solo",
-          "fixtureSha256": "de04d3435f83a8acb49cabac8ebd7f0a6481276876f20e0b45505d279cf3d84d",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 1500,
-                "lancer_t6": 1069,
-                "marksman_t6": 1500
-              },
-              "stats": {
-                "inf": {
-                  "attack": 66.1,
-                  "defense": 63.9,
-                  "lethality": 23.3,
-                  "health": 26.4
-                },
-                "lanc": {
-                  "attack": 68.6,
-                  "defense": 65.1,
-                  "lethality": 26.3,
-                  "health": 21.1
-                },
-                "mark": {
-                  "attack": 69.1,
-                  "defense": 61.4,
-                  "lethality": 25.8,
-                  "health": 21.5
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddlyminxxx",
-              "heroes": {
-                "Ling": {
-                  "skill_1": 1,
-                  "skill_2": 1
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 214.7,
-                  "defense": 196.3,
-                  "lethality": 118,
-                  "health": 131.1
-                },
-                "lanc": {
-                  "attack": 233.2,
-                  "defense": 225.8,
-                  "lethality": 120.2,
-                  "health": 121
-                },
-                "mark": {
-                  "attack": 205.7,
-                  "defense": 197.3,
-                  "lethality": 122.9,
-                  "health": 123.9
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "851a6f6d727cf2d9487c47148cfa703f00f2069bab5b7045b9d8dd1459a21b79",
           "acceptedGameOutcomes": [
             {
               "attacker": 2822,
@@ -2771,75 +2159,6 @@
         {
           "key": "testcases/emulator_verified/ling_xue_solo_nc.json#1",
           "testId": "ling_xue_solo",
-          "fixtureSha256": "de04d3435f83a8acb49cabac8ebd7f0a6481276876f20e0b45505d279cf3d84d",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 1500,
-                "lancer_t6": 1069,
-                "marksman_t6": 1500
-              },
-              "stats": {
-                "inf": {
-                  "attack": 74.9,
-                  "defense": 77.4,
-                  "lethality": 31.1,
-                  "health": 38.1
-                },
-                "lanc": {
-                  "attack": 79.9,
-                  "defense": 74.7,
-                  "lethality": 38.1,
-                  "health": 31.3
-                },
-                "mark": {
-                  "attack": 84.4,
-                  "defense": 70.9,
-                  "lethality": 37.6,
-                  "health": 31.9
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddilyminxxx",
-              "heroes": {
-                "Ling Xue": {
-                  "skill_1": 1,
-                  "skill_2": 1
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 207,
-                  "defense": 189.3,
-                  "lethality": 118.7,
-                  "health": 131.8
-                },
-                "lanc": {
-                  "attack": 232,
-                  "defense": 225.3,
-                  "lethality": 120.9,
-                  "health": 121.7
-                },
-                "mark": {
-                  "attack": 198,
-                  "defense": 190.3,
-                  "lethality": 123.6,
-                  "health": 124.6
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "41cae708168a93b9d0c6461e1428d5fba34a62b0bb9962c418e24f819c4fd017",
           "acceptedGameOutcomes": [
             {
               "attacker": 3215,
@@ -3101,7 +2420,6 @@
     {
       "key": "hero:Lumak:TacticalDeception",
       "definitionSource": "simulator/config/hero_definitions/Lumak.json",
-      "definitionSha256": "80c77f1631649f803dc5408a744c6b7ac6aa765450b730cd9ab1296caf87472e",
       "definition": {
         "description": "All enemy troops' damage dealt is reduced by X%",
         "trigger": {
@@ -3133,75 +2451,6 @@
         {
           "key": "testcases/emulator_verified/lumak_bokan_solo_nc.json#0",
           "testId": "lumak_bokan_solo",
-          "fixtureSha256": "bd0b67005494b89986b64c1eff9b3b6bd926b11a798de09ebedb47e952502273",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 1500,
-                "lancer_t6": 1069,
-                "marksman_t6": 1500
-              },
-              "stats": {
-                "inf": {
-                  "attack": 66.1,
-                  "defense": 63.9,
-                  "lethality": 23.3,
-                  "health": 26.4
-                },
-                "lanc": {
-                  "attack": 68.6,
-                  "defense": 65.1,
-                  "lethality": 26.3,
-                  "health": 21.1
-                },
-                "mark": {
-                  "attack": 69.1,
-                  "defense": 61.4,
-                  "lethality": 25.8,
-                  "health": 21.5
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddlyminxxx",
-              "heroes": {
-                "Lumak": {
-                  "skill_1": 1,
-                  "skill_2": 1
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 214.7,
-                  "defense": 196.3,
-                  "lethality": 118,
-                  "health": 131.1
-                },
-                "lanc": {
-                  "attack": 249.3,
-                  "defense": 241.9,
-                  "lethality": 120.2,
-                  "health": 121
-                },
-                "mark": {
-                  "attack": 205.7,
-                  "defense": 197.3,
-                  "lethality": 122.9,
-                  "health": 123.9
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "efa050150d008638fecca0ee72fd3b46b47a921de6e3d0d5e9c1b09cb9800432",
           "acceptedGameOutcomes": [
             {
               "attacker": 2797,
@@ -3460,75 +2709,6 @@
         {
           "key": "testcases/emulator_verified/lumak_bokan_solo_nc.json#1",
           "testId": "lumak_bokan_solo",
-          "fixtureSha256": "bd0b67005494b89986b64c1eff9b3b6bd926b11a798de09ebedb47e952502273",
-          "input": {
-            "attacker": {
-              "name": "[BBQ]XxWIPxX",
-              "heroes": {},
-              "troops": {
-                "infantry_t6": 1500,
-                "lancer_t6": 1069,
-                "marksman_t6": 1500
-              },
-              "stats": {
-                "inf": {
-                  "attack": 74.9,
-                  "defense": 77.4,
-                  "lethality": 31.1,
-                  "health": 38.1
-                },
-                "lanc": {
-                  "attack": 79.9,
-                  "defense": 74.7,
-                  "lethality": 38.1,
-                  "health": 31.3
-                },
-                "mark": {
-                  "attack": 84.4,
-                  "defense": 70.9,
-                  "lethality": 37.6,
-                  "health": 31.9
-                }
-              },
-              "joiner_heroes": {}
-            },
-            "defender": {
-              "name": "[ARK]Piddilyminxxx",
-              "heroes": {
-                "Lumak Bokan": {
-                  "skill_1": 3,
-                  "skill_2": 3
-                }
-              },
-              "troops": {
-                "infantry_t6": 200,
-                "lancer_t6": 200,
-                "marksman_t6": 200
-              },
-              "stats": {
-                "inf": {
-                  "attack": 207,
-                  "defense": 189.3,
-                  "lethality": 118.7,
-                  "health": 131.8
-                },
-                "lanc": {
-                  "attack": 241.6,
-                  "defense": 234.9,
-                  "lethality": 120.9,
-                  "health": 121.7
-                },
-                "mark": {
-                  "attack": 198,
-                  "defense": 190.3,
-                  "lethality": 123.6,
-                  "health": 124.6
-                }
-              },
-              "joiner_heroes": {}
-            }
-          },
-          "inputSha256": "edde1f18ab3b6cf4d31df15b496d2c94d2f1f9c3dc66eb80f002bb9e9fba27cf",
           "acceptedGameOutcomes": [
             {
               "attacker": 3127,

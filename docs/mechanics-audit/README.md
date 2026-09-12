@@ -39,7 +39,9 @@ No adjustment or sample-count threshold alone establishes mechanic agreement. Se
 
 ## Working files
 
-Two large generated JSON traces are stored as gzip archives. See [archive restoration instructions](archives.md) before opening their original JSON paths or rerunning the associated reviews; extraction preserves the recorded bytes and hashes.
+Keep records focused on understanding decisions: exact game inputs/outcomes, game screenshots, and concise candidate comparisons. For simulator output larger than a few kilobytes, retain only the relevant summary figures. Full traces are regenerable temporary diagnostics; retain an excerpt only when it explains a finding. See the [retention policy](retention-review.md).
+
+Generated JSON marked `comparison_summary` has been condensed. Historical full-trace, raw-sample and hash/replay references in the dated experiment notes refer to the original artifacts in Git, not the current summaries. See [regeneration instructions](archives.md) before rerunning those historical helpers. Game reports provide final totals and skill activations, not per-round traces or observed round counts.
 
 - [Skill inventory](skills.csv): every defined skill, fixture presence, levels and initial review status.
 - [Full inventory](inventory.json): definitions, nested effects, exact fixture keys, hashes and accepted-evidence status.

@@ -1,24 +1,15 @@
-# Compressed generated traces
+# Regenerating simulator diagnostics
 
-These two generated JSON traces are stored as deterministic gzip files. Their original JSON files remain available in the working tree and are ignored by Git. All original bytes and filenames are preserved when restored; existing evidence links and replay scripts use those filenames.
+Full simulator output is temporary. The retained JSON records are comparison summaries; original traces, individual simulated samples and their old schemas can be recovered or regenerated when needed.
 
-| Original path | Original bytes | SHA256 |
-| --- | ---: | --- |
-| [reviews/alonso-bahiti-flint-2026-09-07/results.json](reviews/alonso-bahiti-flint-2026-09-07/results.json.gz) | 107754823 | `f3b6076310de2a0b6c405bfd8dc25887d8510a74082f3589772745c2f7df3437` |
-| [reviews/renee-ahmose-lifecycle/viper-cadence-results.json](reviews/renee-ahmose-lifecycle/viper-cadence-results.json.gz) | 93347999 | `564f22552608925a21622fa3aeee7e88c017cc2d15401e9344f2777c00fa0a31` |
+Revision `fadcab736804e84d8cae6db4b24c769c86e15be6` contains the audit immediately before the output cleanup, including original experiment scripts, inputs, candidate configurations and historical runtime snapshots. It is the recovery revision, not a claim that every experiment used the production configuration at that revision. Follow the individual experiment's notes for its tested variants and original runtime.
 
-Restore from the repository root before following the original JSON links or replaying scripts that read these files. The commands skip an existing original and never overwrite it.
+To inspect or rerun an old experiment without changing the active checkout:
 
 ```sh
-test -e 'docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json' || gzip -dc 'docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json.gz' > 'docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json'
-test -e 'docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-results.json' || gzip -dc 'docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-results.json.gz' > 'docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-results.json'
+git worktree add --detach /tmp/wos-audit-replay fadcab736804e84d8cae6db4b24c769c86e15be6
 ```
 
-Verify the restored or existing files from the repository root:
+Use that checkout's package instructions and dependencies. Old helper scripts and checksum checks expect the original artifacts, not the condensed JSON in the current tree. Write any regenerated output outside the main checkout. No permanent trace archive is required for a new investigation: retain the relevant comparison and the source revision instead.
 
-```sh
-sha256sum -c <<'SHA256'
-f3b6076310de2a0b6c405bfd8dc25887d8510a74082f3589772745c2f7df3437  docs/mechanics-audit/reviews/alonso-bahiti-flint-2026-09-07/results.json
-564f22552608925a21622fa3aeee7e88c017cc2d15401e9344f2777c00fa0a31  docs/mechanics-audit/reviews/renee-ahmose-lifecycle/viper-cadence-results.json
-SHA256
-```
+The former compressed Alonso/Bahiti/Flint and Ahmose Viper dumps are replaced by their `results.json` summaries. The Hendrik trait follow-up is summarized in [trait-summary.json](reviews/hendrik-count-consistency-2026-09-08/trait-summary.json). Their complete archived versions remain in the recovery revision if necessary.

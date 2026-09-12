@@ -1,4 +1,6 @@
 {
+  "artifact_format": "comparison_summary",
+  "original_artifact_revision": "fadcab736804e84d8cae6db4b24c769c86e15be6",
   "generatedAt": "2026-09-07T07:25:59.211Z",
   "selection": {
     "key": "hero:Wayne:Fleet",
@@ -77,303 +79,19 @@
       }
     }
   },
-  "protocolSha256": "6a23156b47627e67b8825a54c18c06e8a926cbece4dfbab3dd14b5805b78e244",
   "repeat": 1000,
   "seed": "wayne-gordon-s3-review-2026-09-07:<fixture-key>:<run-index>",
   "rawSamples": {
-    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial-samples.json",
-    "sha256": "8cd166ea82cf0e9a570a11b61e664d8112312b1123c75963c933f5e04b20130e"
+    "path": "/home/paul/projects_wsl/wos/simulator/docs/mechanics-audit/reviews/wayne-gordon-s3-2026-09-07/Fleet-initial-samples.json"
   },
   "results": [
     {
       "key": "testcases/emulator_verified/hector_renee_wayne.json#0",
       "path": "testcases/emulator_verified/hector_renee_wayne.json",
-      "fixtureSha256": "799c40b24f3de8774a71d2e9c66070a759d8c552f694931ecb40b20ce1671f36",
-      "entry": {
-        "test_id": "hector_renee_wayne",
-        "description": "WIP attacks minxxx with attacker heroes Hector 2/3/2, Renee 3/3/3, and Wayne 2/2/2. Attacker fields 1700 infantry_t6 only; defender has no heroes and fields 300 infantry_t6 only. Game report result: attacker 1597 survivors, defender wiped.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Hector": {
-              "skill_1": 2,
-              "skill_2": 3,
-              "skill_3": 2
-            },
-            "Renee": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 2
-            }
-          },
-          "troops": {
-            "infantry_t6": 1700,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 215,
-              "defense": 217.6,
-              "lethality": 50.6,
-              "health": 66.6
-            },
-            "lanc": {
-              "attack": 335.1,
-              "defense": 327.4,
-              "lethality": 69.8,
-              "health": 53.2
-            },
-            "mark": {
-              "attack": 255.1,
-              "defense": 241.6,
-              "lethality": 78.3,
-              "health": 56.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 300,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 214.9,
-              "defense": 202.2,
-              "lethality": 118.6,
-              "health": 131.7
-            },
-            "lanc": {
-              "attack": 188.9,
-              "defense": 187.2,
-              "lethality": 120.8,
-              "health": 121.6
-            },
-            "mark": {
-              "attack": 205.9,
-              "defense": 203.2,
-              "lethality": 123.5,
-              "health": 124.5
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 1597,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Hector": {
-              "skill_1": 2,
-              "skill_2": 3,
-              "skill_3": 2
-            },
-            "Renee": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 2
-            }
-          },
-          "troops": {
-            "infantry_t6": 1700,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 215,
-              "defense": 217.6,
-              "lethality": 50.6,
-              "health": 66.6
-            },
-            "lanc": {
-              "attack": 335.1,
-              "defense": 327.4,
-              "lethality": 69.8,
-              "health": 53.2
-            },
-            "mark": {
-              "attack": 255.1,
-              "defense": 241.6,
-              "lethality": 78.3,
-              "health": 56.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 300,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 214.9,
-              "defense": 202.2,
-              "lethality": 118.6,
-              "health": 131.7
-            },
-            "lanc": {
-              "attack": 188.9,
-              "defense": 187.2,
-              "lethality": 120.8,
-              "health": 121.6
-            },
-            "mark": {
-              "attack": 205.9,
-              "defense": 203.2,
-              "lethality": 123.5,
-              "health": 124.5
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 1597,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Hector:SurvivalInstincts",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:hector:0",
-          "effect_ids": [
-            "SurvivalInstincts/1"
-          ]
-        },
-        {
-          "key": "hero:Hector:Rampant",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:hector:0",
-          "effect_ids": [
-            "Rampant/1",
-            "Rampant/2"
-          ]
-        },
-        {
-          "key": "hero:Hector:Blitz",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:hector:0",
-          "effect_ids": [
-            "Blitz/1"
-          ]
-        },
-        {
-          "key": "hero:Renee:NightmareTrace",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:renee:0",
-          "effect_ids": [
-            "NightmareTrace/mark",
-            "NightmareTrace/1"
-          ]
-        },
-        {
-          "key": "hero:Renee:Dreamcatcher",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:renee:0",
-          "effect_ids": [
-            "Dreamcatcher/mark",
-            "Dreamcatcher/1"
-          ]
-        },
-        {
-          "key": "hero:Renee:Dreamslice",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:renee:0",
-          "effect_ids": [
-            "Dreamslice/mark",
-            "Dreamslice/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
         }
       ],
       "initial": {
@@ -496,10 +214,10 @@
             "sem": 0.06,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.093299,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 1597,
             "support_mass": 0,
             "support_p": 0.0001,
@@ -573,10 +291,10 @@
             "sem": 0.06,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.093429,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 1597,
             "support_mass": 0,
             "support_p": 0.00035,
@@ -705,271 +423,10 @@
     {
       "key": "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json#0",
       "path": "testcases/emulator_verified/renee_wayne_mixed_510_vs_888.json",
-      "fixtureSha256": "829abf834ea7122083aa05a85868838422b7d08fd13b35c25b911dccc4f875ef",
-      "entry": {
-        "test_id": "renee_wayne_mixed_510_vs_888",
-        "description": "XxWIPxX attacks Piddilyminxxx with Renee 3/3/3 and Wayne 3/3/3. Attacker fields 170 infantry_t6, 150 lancer_t6, and 190 marksman_t6; defender has no heroes and fields 888 infantry_t6. Game report result: attacker 427 survivors, defender wiped. Skill details report Renee triggers 20/1/1 with no listed kills, and Wayne triggers 30/20/19 with 23/-/33 listed kills.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Renee": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Wayne": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 170,
-            "lancer_t6": 150,
-            "marksman_t6": 190
-          },
-          "stats": {
-            "inf": {
-              "attack": 230.5,
-              "defense": 230.3,
-              "lethality": 171.2,
-              "health": 181.8
-            },
-            "lanc": {
-              "attack": 460.1,
-              "defense": 457.9,
-              "lethality": 243.2,
-              "health": 228.3
-            },
-            "mark": {
-              "attack": 379.7,
-              "defense": 376.5,
-              "lethality": 236.5,
-              "health": 212.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 888,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 285.7,
-              "defense": 279.5,
-              "lethality": 226.3,
-              "health": 221
-            },
-            "lanc": {
-              "attack": 278.2,
-              "defense": 278.5,
-              "lethality": 216.2,
-              "health": 217.5
-            },
-            "mark": {
-              "attack": 284,
-              "defense": 286,
-              "lethality": 226.3,
-              "health": 221.4
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 427,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Renee": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            },
-            "Wayne": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 170,
-            "lancer_t6": 150,
-            "marksman_t6": 190
-          },
-          "stats": {
-            "inf": {
-              "attack": 230.5,
-              "defense": 230.3,
-              "lethality": 171.2,
-              "health": 181.8
-            },
-            "lanc": {
-              "attack": 460.1,
-              "defense": 457.9,
-              "lethality": 243.2,
-              "health": 228.3
-            },
-            "mark": {
-              "attack": 379.7,
-              "defense": 376.5,
-              "lethality": 236.5,
-              "health": 212.2
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 888,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 285.7,
-              "defense": 279.5,
-              "lethality": 226.3,
-              "health": 221
-            },
-            "lanc": {
-              "attack": 278.2,
-              "defense": 278.5,
-              "lethality": 216.2,
-              "health": 217.5
-            },
-            "mark": {
-              "attack": 284,
-              "defense": 286,
-              "lethality": 226.3,
-              "health": 221.4
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 427,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Renee:NightmareTrace",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:renee:0",
-          "effect_ids": [
-            "NightmareTrace/mark",
-            "NightmareTrace/1"
-          ]
-        },
-        {
-          "key": "hero:Renee:Dreamcatcher",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:renee:0",
-          "effect_ids": [
-            "Dreamcatcher/mark",
-            "Dreamcatcher/1"
-          ]
-        },
-        {
-          "key": "hero:Renee:Dreamslice",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:renee:0",
-          "effect_ids": [
-            "Dreamslice/mark",
-            "Dreamslice/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
         }
       ],
       "initial": {
@@ -1092,13 +549,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.088672,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 427,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -1167,10 +624,10 @@
             "sem": 0.05,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.065157,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 427,
             "support_mass": 0.00044444,
             "support_p": 0.00055,
@@ -1305,163 +762,6 @@
     {
       "key": "testcases/emulator_verified/wayne_mixed_solo.json#0",
       "path": "testcases/emulator_verified/wayne_mixed_solo.json",
-      "fixtureSha256": "afd30d8f1c326430ce7ecfd87ad6e8020202b49c850329a0516853c151ae029e",
-      "entry": {
-        "test_id": "wayne_mixed_solo",
-        "description": "WOS-111: Wayne mixed troops test. WIP 400/400/400 t6 attacking with Wayne (S1=2, S2=2, S3=3), minxxx 200/200/200 t6 defending no heroes. Tests all Wayne skills with mixed troop composition. S3 Fleet at level 3 = 15% crit chance for all troops. S2 Roundabout Hit fires every 2 attacks for marksmen vs lancers/marksmen. S1 Thunder Strike fires every 4 turns.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 400,
-            "lancer_t6": 400,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 74.9,
-              "defense": 77.4,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 79.9,
-              "defense": 74.7,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 256.2,
-              "defense": 242.6,
-              "lethality": 86,
-              "health": 59.3
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 215,
-              "defense": 202.3,
-              "lethality": 118.7,
-              "health": 131.8
-            },
-            "lanc": {
-              "attack": 189,
-              "defense": 187.3,
-              "lethality": 120.9,
-              "health": 121.7
-            },
-            "mark": {
-              "attack": 206,
-              "defense": 203.3,
-              "lethality": 123.6,
-              "health": 124.6
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 110,
-            "defender": 0
-          },
-          {
-            "attacker": 216,
-            "defender": 0
-          },
-          {
-            "attacker": 308,
-            "defender": 0
-          },
-          {
-            "attacker": 314,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 400,
-            "lancer_t6": 400,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 74.9,
-              "defense": 77.4,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 79.9,
-              "defense": 74.7,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 256.2,
-              "defense": 242.6,
-              "lethality": 86,
-              "health": 59.3
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 215,
-              "defense": 202.3,
-              "lethality": 118.7,
-              "health": 131.8
-            },
-            "lanc": {
-              "attack": 189,
-              "defense": 187.3,
-              "lethality": 120.9,
-              "health": 121.7
-            },
-            "mark": {
-              "attack": 206,
-              "defense": 203.3,
-              "lethality": 123.6,
-              "health": 124.6
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 110,
@@ -1478,99 +778,6 @@
         {
           "attacker": 314,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -1702,13 +909,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.351881,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 110,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -1925,175 +1132,6 @@
     {
       "key": "testcases/emulator_verified/wayne_mixed_solo.json#1",
       "path": "testcases/emulator_verified/wayne_mixed_solo.json",
-      "fixtureSha256": "afd30d8f1c326430ce7ecfd87ad6e8020202b49c850329a0516853c151ae029e",
-      "entry": {
-        "test_id": "wayne_mixed_solo",
-        "description": "WOS-113: Wayne mixed troops test (second OCR capture). Same battle as entry 0 with minor OCR stat noise. Merged entries from multiple captures. Removed 1 corrupt entry (defender inf lethality OCR'd as 7.0).",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 400,
-            "lancer_t6": 400,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 75,
-              "defense": 79.1,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 80,
-              "defense": 76.3,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 256.2,
-              "defense": 244.3,
-              "lethality": 90.4,
-              "health": 59.3
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 211,
-              "defense": 202.8,
-              "lethality": 118.7,
-              "health": 131.8
-            },
-            "lanc": {
-              "attack": 185,
-              "defense": 187.8,
-              "lethality": 120.9,
-              "health": 121.7
-            },
-            "mark": {
-              "attack": 202,
-              "defense": 203.8,
-              "lethality": 123.6,
-              "health": 124.6
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 394,
-            "defender": 0
-          },
-          {
-            "attacker": 352,
-            "defender": 0
-          },
-          {
-            "attacker": 382,
-            "defender": 0
-          },
-          {
-            "attacker": 284,
-            "defender": 0
-          },
-          {
-            "attacker": 322,
-            "defender": 0
-          },
-          {
-            "attacker": 328,
-            "defender": 0
-          },
-          {
-            "attacker": 364,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 400,
-            "lancer_t6": 400,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 75,
-              "defense": 79.1,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 80,
-              "defense": 76.3,
-              "lethality": 38.1,
-              "health": 31.3
-            },
-            "mark": {
-              "attack": 256.2,
-              "defense": 244.3,
-              "lethality": 90.4,
-              "health": 59.3
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 211,
-              "defense": 202.8,
-              "lethality": 118.7,
-              "health": 131.8
-            },
-            "lanc": {
-              "attack": 185,
-              "defense": 187.8,
-              "lethality": 120.9,
-              "health": 121.7
-            },
-            "mark": {
-              "attack": 202,
-              "defense": 203.8,
-              "lethality": 123.6,
-              "health": 124.6
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 394,
@@ -2122,99 +1160,6 @@
         {
           "attacker": 364,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -2349,13 +1294,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.303354,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 394,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -2572,189 +1517,6 @@
     {
       "key": "testcases/emulator_verified/wayne_reina_combo.json#0",
       "path": "testcases/emulator_verified/wayne_reina_combo.json",
-      "fixtureSha256": "f1e90cea5e28d207daa248eae5ca83d6929a27d01460addcd07867ddcac1ba30",
-      "entry": {
-        "test_id": "wayne_reina_combo",
-        "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) combo. WIP attacking minxxx. Exercises multi-hero extra-attack stacking for WOS-227 formula audit. Active skills: Wayne S1=2 Thunder Strike (extra, op=1010, every 4 turns), Wayne S2=2 Roundabout Hit (extra, op=1011 vs lancers / op=1012 vs marksmen, every 2 attacks), Wayne S3=3 Fleet (15% crit chance, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10% DamageUp, permanent), Reina S2=1 Swift Jive (4% dodge normal attacks). NOTE: Reina S3=0 — Shadow Blade (extra_attack=true, op=101) is INACTIVE. This combo therefore tests the normal_only + extra layer additive formula (Reina S1 + Wayne S1) but cannot discriminate multiplicative-vs-additive within the extra layer alone (requires Reina S3 unlocked). Run at least 8 battles due to Wayne S3 chance + Reina S2 dodge variance.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Reina": {
-              "skill_1": 1,
-              "skill_2": 1,
-              "skill_3": 0
-            },
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 116,
-              "defense": 121.3,
-              "lethality": 100.5,
-              "health": 97.4
-            },
-            "lanc": {
-              "attack": 196.8,
-              "defense": 194.8,
-              "lethality": 108.1,
-              "health": 90.2
-            },
-            "mark": {
-              "attack": 296.7,
-              "defense": 286.5,
-              "lethality": 143.7,
-              "health": 116.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 240,
-              "defense": 224.1,
-              "lethality": 157.9,
-              "health": 160.6
-            },
-            "lanc": {
-              "attack": 226.8,
-              "defense": 217.8,
-              "lethality": 161.2,
-              "health": 146.6
-            },
-            "mark": {
-              "attack": 236.3,
-              "defense": 225.3,
-              "lethality": 175.1,
-              "health": 156.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 1613,
-            "defender": 0
-          },
-          {
-            "attacker": 1531,
-            "defender": 0
-          },
-          {
-            "attacker": 1542,
-            "defender": 0
-          },
-          {
-            "attacker": 1549,
-            "defender": 0
-          },
-          {
-            "attacker": 1568,
-            "defender": 0
-          },
-          {
-            "attacker": 1545,
-            "defender": 0
-          },
-          {
-            "attacker": 1543,
-            "defender": 0
-          },
-          {
-            "attacker": 1584,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Reina": {
-              "skill_1": 1,
-              "skill_2": 1,
-              "skill_3": 0
-            },
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 116,
-              "defense": 121.3,
-              "lethality": 100.5,
-              "health": 97.4
-            },
-            "lanc": {
-              "attack": 196.8,
-              "defense": 194.8,
-              "lethality": 108.1,
-              "health": 90.2
-            },
-            "mark": {
-              "attack": 296.7,
-              "defense": 286.5,
-              "lethality": 143.7,
-              "health": 116.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 240,
-              "defense": 224.1,
-              "lethality": 157.9,
-              "health": 160.6
-            },
-            "lanc": {
-              "attack": 226.8,
-              "defense": 217.8,
-              "lethality": 161.2,
-              "health": 146.6
-            },
-            "mark": {
-              "attack": 236.3,
-              "defense": 225.3,
-              "lethality": 175.1,
-              "health": 156.8
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 1613,
@@ -2787,119 +1549,6 @@
         {
           "attacker": 1584,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Reina:AssassinsInstinct",
-          "side": "attacker",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:reina:0",
-          "effect_ids": [
-            "AssassinsInstinct/1"
-          ]
-        },
-        {
-          "key": "hero:Reina:SwiftJive",
-          "side": "attacker",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:reina:0",
-          "effect_ids": [
-            "SwiftJive/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -3046,7 +1695,7 @@
             "p": 0.0001,
             "passes": false,
             "cdf_rms": 0.11911,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 1613,
             "support_mass": 0,
             "support_p": 0.00075,
@@ -3274,199 +1923,6 @@
     {
       "key": "testcases/emulator_verified/wayne_reina_wuming_combo.json#0",
       "path": "testcases/emulator_verified/wayne_reina_wuming_combo.json",
-      "fixtureSha256": "09c0114cdffdd125ab0a44ee5f02a51ac2d881b6d66a7c7af702cfe555a5558e",
-      "entry": {
-        "test_id": "wayne_reina_wuming_combo",
-        "description": "WOS-229: Wayne (Marksman) + Reina (Lancer) + Wu Ming (Infantry) full-class combo. WIP attacking minxxx. Extends wayne_reina_combo with Wu Ming adding base-layer DamageUp (S2=2 Crescent Uplift, op=101, all troops) and defensive normal+extra layer DefenseUp (S1=2 Shadow's Evasion, op=111, infantry-only). Active skills: Wayne S1=2 Thunder Strike (extra, op=1010), Wayne S2=2 Roundabout Hit (extra, op=1011/op=1012), Wayne S3=3 Fleet (15% crit, NOT extra), Reina S1=1 Assassin's Instinct (benefit_on=normal, +10%), Reina S2=1 Swift Jive (4% dodge), Wu Ming S1=2 Shadow's Evasion (DefenseUp benefit_on=normal+extra for infantry), Wu Ming S2=2 Crescent Uplift (+8% DamageUp base, all troops). NOTE: Reina S3=0 (Shadow Blade inactive), Wu Ming S3=0 (Elemental Resonance inactive). Wu Ming S1 exercises the defensive side of the normal/extra layer split on infantry. Run at least 8 battles due to Wayne S3 + Reina S2 variance.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wu Ming": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 0
-            },
-            "Reina": {
-              "skill_1": 1,
-              "skill_2": 1,
-              "skill_3": 0
-            },
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 245.1,
-              "defense": 250.4,
-              "lethality": 128.6,
-              "health": 148
-            },
-            "lanc": {
-              "attack": 196.8,
-              "defense": 194.8,
-              "lethality": 108.1,
-              "health": 90.2
-            },
-            "mark": {
-              "attack": 296.7,
-              "defense": 286.5,
-              "lethality": 143.7,
-              "health": 116.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 240,
-              "defense": 224.1,
-              "lethality": 157.9,
-              "health": 160.6
-            },
-            "lanc": {
-              "attack": 226.8,
-              "defense": 217.8,
-              "lethality": 161.2,
-              "health": 146.6
-            },
-            "mark": {
-              "attack": 236.3,
-              "defense": 225.3,
-              "lethality": 175.1,
-              "health": 156.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 1693,
-            "defender": 0
-          },
-          {
-            "attacker": 1695,
-            "defender": 0
-          },
-          {
-            "attacker": 1698,
-            "defender": 0
-          },
-          {
-            "attacker": 1694,
-            "defender": 0
-          },
-          {
-            "attacker": 1706,
-            "defender": 0
-          },
-          {
-            "attacker": 1685,
-            "defender": 0
-          },
-          {
-            "attacker": 1697,
-            "defender": 0
-          },
-          {
-            "attacker": 1684,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wu Ming": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 0
-            },
-            "Reina": {
-              "skill_1": 1,
-              "skill_2": 1,
-              "skill_3": 0
-            },
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 3
-            }
-          },
-          "troops": {
-            "infantry_t6": 600,
-            "lancer_t6": 600,
-            "marksman_t6": 600
-          },
-          "stats": {
-            "inf": {
-              "attack": 245.1,
-              "defense": 250.4,
-              "lethality": 128.6,
-              "health": 148
-            },
-            "lanc": {
-              "attack": 196.8,
-              "defense": 194.8,
-              "lethality": 108.1,
-              "health": 90.2
-            },
-            "mark": {
-              "attack": 296.7,
-              "defense": 286.5,
-              "lethality": 143.7,
-              "health": 116.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 200,
-            "lancer_t6": 200,
-            "marksman_t6": 200
-          },
-          "stats": {
-            "inf": {
-              "attack": 240,
-              "defense": 224.1,
-              "lethality": 157.9,
-              "health": 160.6
-            },
-            "lanc": {
-              "attack": 226.8,
-              "defense": 217.8,
-              "lethality": 161.2,
-              "health": 146.6
-            },
-            "mark": {
-              "attack": 236.3,
-              "defense": 225.3,
-              "lethality": 175.1,
-              "health": 156.8
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 1693,
@@ -3499,140 +1955,6 @@
         {
           "attacker": 1684,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Wu Ming:ShadowsEvasion",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wuming:0",
-          "effect_ids": [
-            "ShadowsEvasion/1",
-            "ShadowsEvasion/2"
-          ]
-        },
-        {
-          "key": "hero:Wu Ming:CrescentUplift",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wuming:0",
-          "effect_ids": [
-            "CrescentUplift/1"
-          ]
-        },
-        {
-          "key": "hero:Reina:AssassinsInstinct",
-          "side": "attacker",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:reina:0",
-          "effect_ids": [
-            "AssassinsInstinct/1"
-          ]
-        },
-        {
-          "key": "hero:Reina:SwiftJive",
-          "side": "attacker",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:reina:0",
-          "effect_ids": [
-            "SwiftJive/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
         }
       ],
       "initial": {
@@ -4007,167 +2329,6 @@
     {
       "key": "testcases/emulator_verified/wayne_s1_solo.json#0",
       "path": "testcases/emulator_verified/wayne_s1_solo.json",
-      "fixtureSha256": "df7d6db899ab81d8d4cd1efe39df4e8b48e2bf6401bdbd2da541f3abb72bbd34",
-      "entry": {
-        "test_id": "wayne_s1_solo",
-        "description": "WOS-38: Wayne S1 isolation test. WIP infantry-only 500 t6 attacking with Wayne (S1=2, S3=2), minxxx infantry-only 100 t6 defending no heroes. S2 cannot trigger (no marksmen). Tests Thunder Strike: extra attack every 4 turns at 40% damage (S1=2), plus Fleet: 10% crit rate (S3=2) for all troops. WIP expected to win with ~50% casualties. Note: S3 Fleet variance explains game result variance (247-256).",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 2
-            }
-          },
-          "troops": {
-            "infantry_t6": 500,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 73.8,
-              "defense": 76.4,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 78.8,
-              "defense": 71.2,
-              "lethality": 38.1,
-              "health": 28.8
-            },
-            "mark": {
-              "attack": 255.1,
-              "defense": 241.6,
-              "lethality": 78.3,
-              "health": 56.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 100,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 209.9,
-              "defense": 202.2,
-              "lethality": 118.1,
-              "health": 131.2
-            },
-            "lanc": {
-              "attack": 183.9,
-              "defense": 187.2,
-              "lethality": 120.3,
-              "health": 121.1
-            },
-            "mark": {
-              "attack": 200.9,
-              "defense": 203.2,
-              "lethality": 123,
-              "health": 124
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 251,
-            "defender": 0
-          },
-          {
-            "attacker": 255,
-            "defender": 0
-          },
-          {
-            "attacker": 247,
-            "defender": 0
-          },
-          {
-            "attacker": 256,
-            "defender": 0
-          },
-          {
-            "attacker": 250,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 2
-            }
-          },
-          "troops": {
-            "infantry_t6": 500,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 73.8,
-              "defense": 76.4,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 78.8,
-              "defense": 71.2,
-              "lethality": 38.1,
-              "health": 28.8
-            },
-            "mark": {
-              "attack": 255.1,
-              "defense": 241.6,
-              "lethality": 78.3,
-              "health": 56.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 100,
-            "lancer_t6": 0,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 209.9,
-              "defense": 202.2,
-              "lethality": 118.1,
-              "health": 131.2
-            },
-            "lanc": {
-              "attack": 183.9,
-              "defense": 187.2,
-              "lethality": 120.3,
-              "health": 121.1
-            },
-            "mark": {
-              "attack": 200.9,
-              "defense": 203.2,
-              "lethality": 123,
-              "health": 124
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 251,
@@ -4188,59 +2349,6 @@
         {
           "attacker": 250,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
         }
       ],
       "initial": {
@@ -4363,13 +2471,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.199667,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 251,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -4438,13 +2546,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.199667,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 251,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -4568,155 +2676,6 @@
     {
       "key": "testcases/emulator_verified/wayne_s2_solo.json#0",
       "path": "testcases/emulator_verified/wayne_s2_solo.json",
-      "fixtureSha256": "b903ddc607d24ae8ab4712eb666abf2af6453d7173f982dc67be860167b97adc",
-      "entry": {
-        "test_id": "wayne_s2_solo",
-        "description": "WOS-38: Wayne S2 isolation test. WIP marksman-only 400 t6 attacking with Wayne (S1=2, S2=2, S3=2), minxxx lancer-only 100 t6 defending no heroes. Tests Roundabout Hit: marksmen extra attack every 2 attacks vs lancers at 16% damage (S2=2). S1 also fires every 4 turns. S3 Fleet fires for marksmen at 10% chance. minxxx expected to win with ~50% casualties.",
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 2
-            }
-          },
-          "troops": {
-            "infantry_t6": 0,
-            "lancer_t6": 0,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 73.8,
-              "defense": 76.4,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 78.8,
-              "defense": 71.2,
-              "lethality": 38.1,
-              "health": 28.8
-            },
-            "mark": {
-              "attack": 255.1,
-              "defense": 241.6,
-              "lethality": 78.3,
-              "health": 56.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 0,
-            "lancer_t6": 100,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 209.9,
-              "defense": 202.2,
-              "lethality": 118.1,
-              "health": 131.2
-            },
-            "lanc": {
-              "attack": 183.9,
-              "defense": 187.2,
-              "lethality": 120.3,
-              "health": 121.1
-            },
-            "mark": {
-              "attack": 200.9,
-              "defense": 203.2,
-              "lethality": 123,
-              "health": 124
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "game_report_result": [
-          {
-            "attacker": 359,
-            "defender": 0
-          },
-          {
-            "attacker": 364,
-            "defender": 0
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "name": "[BBQ]XxWIPxX",
-          "heroes": {
-            "Wayne": {
-              "skill_1": 2,
-              "skill_2": 2,
-              "skill_3": 2
-            }
-          },
-          "troops": {
-            "infantry_t6": 0,
-            "lancer_t6": 0,
-            "marksman_t6": 400
-          },
-          "stats": {
-            "inf": {
-              "attack": 73.8,
-              "defense": 76.4,
-              "lethality": 31.1,
-              "health": 38.1
-            },
-            "lanc": {
-              "attack": 78.8,
-              "defense": 71.2,
-              "lethality": 38.1,
-              "health": 28.8
-            },
-            "mark": {
-              "attack": 255.1,
-              "defense": 241.6,
-              "lethality": 78.3,
-              "health": 56.8
-            }
-          },
-          "joiner_heroes": {}
-        },
-        "defender": {
-          "name": "[ARK]Piddilyminxxx",
-          "heroes": {},
-          "troops": {
-            "infantry_t6": 0,
-            "lancer_t6": 100,
-            "marksman_t6": 0
-          },
-          "stats": {
-            "inf": {
-              "attack": 209.9,
-              "defense": 202.2,
-              "lethality": 118.1,
-              "health": 131.2
-            },
-            "lanc": {
-              "attack": 183.9,
-              "defense": 187.2,
-              "lethality": 120.3,
-              "health": 121.1
-            },
-            "mark": {
-              "attack": 200.9,
-              "defense": 203.2,
-              "lethality": 123,
-              "health": 124
-            }
-          },
-          "joiner_heroes": {}
-        }
-      },
       "game": [
         {
           "attacker": 359,
@@ -4725,59 +2684,6 @@
         {
           "attacker": 364,
           "defender": 0
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 2,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "troop:Charge",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "Charge/1"
-          ]
         }
       ],
       "initial": {
@@ -4897,13 +2803,13 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.04995,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": 364,
             "support_mass": 0,
-            "support_p": 0.00005,
+            "support_p": 5e-05,
             "flag_reason": "cdf+support"
           },
           "draws": 0,
@@ -5106,190 +3012,11 @@
     {
       "key": "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json#0",
       "path": "testcases/gatot_verified/s33-current-500-marksman-wayne3-vs-5000-gatot3-inf.json",
-      "fixtureSha256": "42ed6760ff638fa1b566e26e72a1e714608fe3876fdeae20f469e453ad9b8de3",
-      "entry": {
-        "test_id": "s33-current-500-marksman-wayne3-vs-5000-gatot3-inf",
-        "description": "Gatot evidence section 33: 500 T6 marksmen with Wayne 3/3/3 vs 5,000 T6 infantry; current displayed stats; defender Gatot S2 level 3",
-        "attacker": {
-          "troops": {
-            "marksman_t6": 500
-          },
-          "stats": {
-            "marksman": {
-              "attack": 369.6,
-              "defense": 365.9,
-              "lethality": 202.3,
-              "health": 183.7
-            }
-          },
-          "heroes": {
-            "Wayne": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          }
-        },
-        "defender": {
-          "troops": {
-            "infantry_t6": 5000
-          },
-          "stats": {
-            "infantry": {
-              "attack": 533.8,
-              "defense": 527.5,
-              "lethality": 218.4,
-              "health": 219.6
-            }
-          },
-          "heroes": {
-            "Gatot": {
-              "skill_1": 1,
-              "skill_2": 3,
-              "skill_3": 1
-            }
-          }
-        },
-        "maxRounds": 1500,
-        "game_report_result": [
-          {
-            "attacker": 0,
-            "defender": 4977,
-            "winner": "defender"
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "troops": {
-            "marksman_t6": 500
-          },
-          "stats": {
-            "marksman": {
-              "attack": 369.6,
-              "defense": 365.9,
-              "lethality": 202.3,
-              "health": 183.7
-            }
-          },
-          "heroes": {
-            "Wayne": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          }
-        },
-        "defender": {
-          "troops": {
-            "infantry_t6": 5000
-          },
-          "stats": {
-            "infantry": {
-              "attack": 533.8,
-              "defense": 527.5,
-              "lethality": 218.4,
-              "health": 219.6
-            }
-          },
-          "heroes": {
-            "Gatot": {
-              "skill_1": 1,
-              "skill_2": 3,
-              "skill_3": 1
-            }
-          }
-        },
-        "maxRounds": 1500
-      },
       "game": [
         {
           "attacker": 0,
           "defender": 4977,
           "winner": "defender"
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:RangedStrike",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "RangedStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:GoldenGuard",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "GoldenGuard/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:KingsBestowal",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "KingsBestowal/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:RoyalLegion",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "RoyalLegion/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
         }
       ],
       "initial": {
@@ -5408,10 +3135,10 @@
             "sem": 0,
             "stat_type": "cdf_support",
             "stat": 4.3011,
-            "p": 0.00005,
+            "p": 5e-05,
             "passes": false,
             "cdf_rms": 0.019068,
-            "cdf_p": 0.00005,
+            "cdf_p": 5e-05,
             "support_value": -4977,
             "support_mass": 0.11111111,
             "support_p": 0.222839,
@@ -5617,232 +3344,12 @@
     {
       "key": "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json#0",
       "path": "testcases/gatot_verified/s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf.json",
-      "fixtureSha256": "445d636b9370b3e1b70bed5ffd3dcafaa4e4f57204649b182f6f23a131f27a52",
-      "entry": {
-        "test_id": "s42-current-wayne-skill-shield-scope-200-inf-vs-450-inf",
-        "description": "Gatot evidence section 42: 200 T6 infantry with Gatot S2 level 3 vs 450 T6 infantry with Gatot S2 level 1 and Wayne 3/3/3; extra-skill shield scope",
-        "attacker": {
-          "troops": {
-            "infantry_t6": 200
-          },
-          "stats": {
-            "infantry": {
-              "attack": 530.8,
-              "defense": 527.5,
-              "lethality": 218.4,
-              "health": 219.6
-            }
-          },
-          "heroes": {
-            "Gatot": {
-              "skill_1": 1,
-              "skill_2": 3,
-              "skill_3": 1
-            }
-          }
-        },
-        "defender": {
-          "troops": {
-            "infantry_t6": 450
-          },
-          "stats": {
-            "infantry": {
-              "attack": 472.6,
-              "defense": 471.9,
-              "lethality": 147.5,
-              "health": 160.9
-            }
-          },
-          "heroes": {
-            "Gatot": {
-              "skill_1": 1,
-              "skill_2": 1,
-              "skill_3": 1
-            },
-            "Wayne": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          }
-        },
-        "maxRounds": 1500,
-        "game_report_result": [
-          {
-            "attacker": 200,
-            "defender": 168,
-            "winner": "draw",
-            "rounds": 1500
-          }
-        ]
-      },
-      "input": {
-        "attacker": {
-          "troops": {
-            "infantry_t6": 200
-          },
-          "stats": {
-            "infantry": {
-              "attack": 530.8,
-              "defense": 527.5,
-              "lethality": 218.4,
-              "health": 219.6
-            }
-          },
-          "heroes": {
-            "Gatot": {
-              "skill_1": 1,
-              "skill_2": 3,
-              "skill_3": 1
-            }
-          }
-        },
-        "defender": {
-          "troops": {
-            "infantry_t6": 450
-          },
-          "stats": {
-            "infantry": {
-              "attack": 472.6,
-              "defense": 471.9,
-              "lethality": 147.5,
-              "health": 160.9
-            }
-          },
-          "heroes": {
-            "Gatot": {
-              "skill_1": 1,
-              "skill_2": 1,
-              "skill_3": 1
-            },
-            "Wayne": {
-              "skill_1": 3,
-              "skill_2": 3,
-              "skill_3": 3
-            }
-          }
-        },
-        "maxRounds": 1500
-      },
       "game": [
         {
           "attacker": 200,
           "defender": 168,
           "winner": "draw",
           "rounds": 1500
-        }
-      ],
-      "hydratedSkills": [
-        {
-          "key": "hero:Gatot:GoldenGuard",
-          "side": "attacker",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "GoldenGuard/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:KingsBestowal",
-          "side": "attacker",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "KingsBestowal/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:RoyalLegion",
-          "side": "attacker",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "RoyalLegion/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "attacker",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:GoldenGuard",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "GoldenGuard/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:KingsBestowal",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "KingsBestowal/1"
-          ]
-        },
-        {
-          "key": "hero:Gatot:RoyalLegion",
-          "side": "defender",
-          "level": 1,
-          "role": "main",
-          "instance_id": "main:gatot:0",
-          "effect_ids": [
-            "RoyalLegion/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:ThunderStrike",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "ThunderStrike/1"
-          ]
-        },
-        {
-          "key": "hero:Wayne:RoundaboutHit",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "RoundaboutHit/1",
-            "RoundaboutHit/2"
-          ]
-        },
-        {
-          "key": "hero:Wayne:Fleet",
-          "side": "defender",
-          "level": 3,
-          "role": "main",
-          "instance_id": "main:wayne:0",
-          "effect_ids": [
-            "Fleet/1"
-          ]
-        },
-        {
-          "key": "troop:MasterBrawler",
-          "side": "defender",
-          "level": 1,
-          "role": null,
-          "instance_id": null,
-          "effect_ids": [
-            "MasterBrawler/1"
-          ]
         }
       ],
       "initial": {

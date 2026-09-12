@@ -1,3 +1,1 @@
-# Large generated traces are preserved losslessly as gzip; see archives.md.
-/reviews/alonso-bahiti-flint-2026-09-07/results.json
-/reviews/renee-ahmose-lifecycle/viper-cadence-results.json
+# Full simulator traces belong outside this directory. Retain comparison summaries.
