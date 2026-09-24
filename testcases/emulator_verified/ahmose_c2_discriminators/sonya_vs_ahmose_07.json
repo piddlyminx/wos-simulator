@@ -1,0 +1,164 @@
+[
+  {
+    "test_id": "sonya_vs_ahmose_07",
+    "description": "Battle report 2734693171178496",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 550,
+        "lancer_t6": 250,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 369.5,
+          "defense": 368.8,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 950
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T13:02:11.000Z",
+        "randomseed": 1790082132,
+        "attacker": 0,
+        "defender": 133,
+        "metadata": {
+          "report_reference": "2734693171178496",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 900,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 316,
+            "lightly_injured": 584,
+            "kills": 286
+          },
+          "defender": {
+            "troops": 950,
+            "survivors": 133,
+            "losses": 0,
+            "injured": 286,
+            "lightly_injured": 531,
+            "kills": 316
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 550,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 193,
+                "lightly_injured": 357,
+                "kills": 30
+              },
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 88,
+                "lightly_injured": 162,
+                "kills": 152
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 104
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 950,
+                "survivors": 133,
+                "losses": 0,
+                "injured": 286,
+                "lightly_injured": 531,
+                "kills": 316
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 58,
+                  "displayed_kills": 12
+                }
+              }
+            },
+            "defender": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 25,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

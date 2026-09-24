@@ -1,0 +1,833 @@
+[
+  {
+    "test_id": "skill_fleet_captain",
+    "description": "Battle report 2734693171244469",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Wayne": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 600
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 482.4,
+          "defense": 481.7,
+          "lethality": 252.8,
+          "health": 239.41
+        },
+        "marksman": {
+          "attack": 402.68,
+          "defense": 391.48,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 4,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t9": 800
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 359.37,
+          "defense": 360.37,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T23:13:42.000Z",
+        "randomseed": 1790118823,
+        "attacker": 0,
+        "defender": 142,
+        "metadata": {
+          "report_reference": "2734693171244469",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 231
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 142,
+            "losses": 0,
+            "injured": 231,
+            "lightly_injured": 427,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 231
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 142,
+                "losses": 0,
+                "injured": 231,
+                "lightly_injured": 427,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 8,
+                  "displayed_kills": 16
+                },
+                "Thunder Strike": {
+                  "triggered": 20,
+                  "displayed_kills": 12
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 41,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:14:52.000Z",
+        "randomseed": 1790118893,
+        "attacker": 0,
+        "defender": 114,
+        "metadata": {
+          "report_reference": "2734693171244510",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 241
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 114,
+            "losses": 0,
+            "injured": 241,
+            "lightly_injured": 445,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 241
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 114,
+                "losses": 0,
+                "injured": 241,
+                "lightly_injured": 445,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 11,
+                  "displayed_kills": 20
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 13
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 42,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:16:02.000Z",
+        "randomseed": 1790118963,
+        "attacker": 0,
+        "defender": 115,
+        "metadata": {
+          "report_reference": "2734693171244602",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 240
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 115,
+            "losses": 0,
+            "injured": 240,
+            "lightly_injured": 445,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 240
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 115,
+                "losses": 0,
+                "injured": 240,
+                "lightly_injured": 445,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 14,
+                  "displayed_kills": 23
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 12
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 42,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:17:12.000Z",
+        "randomseed": 1790119033,
+        "attacker": 0,
+        "defender": 107,
+        "metadata": {
+          "report_reference": "2734693171244680",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 243
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 107,
+            "losses": 0,
+            "injured": 243,
+            "lightly_injured": 450,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 243
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 107,
+                "losses": 0,
+                "injured": 243,
+                "lightly_injured": 450,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 14,
+                  "displayed_kills": 24
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 12
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 42,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:18:22.000Z",
+        "randomseed": 1790119103,
+        "attacker": 0,
+        "defender": 117,
+        "metadata": {
+          "report_reference": "2734693171244831",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 240
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 117,
+            "losses": 0,
+            "injured": 240,
+            "lightly_injured": 443,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 240
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 117,
+                "losses": 0,
+                "injured": 240,
+                "lightly_injured": 443,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 11,
+                  "displayed_kills": 20
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 14
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 42,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:26:02.000Z",
+        "randomseed": 1790119563,
+        "attacker": 0,
+        "defender": 136,
+        "metadata": {
+          "report_reference": "2734693171245332",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 233
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 136,
+            "losses": 0,
+            "injured": 233,
+            "lightly_injured": 431,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 233
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 136,
+                "losses": 0,
+                "injured": 233,
+                "lightly_injured": 431,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 11,
+                  "displayed_kills": 15
+                },
+                "Thunder Strike": {
+                  "triggered": 20,
+                  "displayed_kills": 13
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 41,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:27:12.000Z",
+        "randomseed": 1790119633,
+        "attacker": 0,
+        "defender": 96,
+        "metadata": {
+          "report_reference": "2734693171245405",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 247
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 96,
+            "losses": 0,
+            "injured": 247,
+            "lightly_injured": 457,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 247
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 96,
+                "losses": 0,
+                "injured": 247,
+                "lightly_injured": 457,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 17,
+                  "displayed_kills": 24
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 13
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 43,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:28:22.000Z",
+        "randomseed": 1790119703,
+        "attacker": 0,
+        "defender": 189,
+        "metadata": {
+          "report_reference": "2734693171245491",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 214
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 189,
+            "losses": 0,
+            "injured": 214,
+            "lightly_injured": 397,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 214
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 189,
+                "losses": 0,
+                "injured": 214,
+                "lightly_injured": 397,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 3,
+                  "displayed_kills": 5
+                },
+                "Thunder Strike": {
+                  "triggered": 19,
+                  "displayed_kills": 12
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 39,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:29:32.000Z",
+        "randomseed": 1790119773,
+        "attacker": 0,
+        "defender": 121,
+        "metadata": {
+          "report_reference": "2734693171245535",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 238
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 121,
+            "losses": 0,
+            "injured": 238,
+            "lightly_injured": 441,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 238
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 121,
+                "losses": 0,
+                "injured": 238,
+                "lightly_injured": 441,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 12,
+                  "displayed_kills": 21
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 12
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 42,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T23:30:42.000Z",
+        "randomseed": 1790119843,
+        "attacker": 0,
+        "defender": 120,
+        "metadata": {
+          "report_reference": "2734693171245600",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 238
+          },
+          "defender": {
+            "troops": 800,
+            "survivors": 120,
+            "losses": 0,
+            "injured": 238,
+            "lightly_injured": 442,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 238
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 800,
+                "survivors": 120,
+                "losses": 0,
+                "injured": 238,
+                "lightly_injured": 442,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 11,
+                  "displayed_kills": 19
+                },
+                "Thunder Strike": {
+                  "triggered": 21,
+                  "displayed_kills": 12
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 42,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

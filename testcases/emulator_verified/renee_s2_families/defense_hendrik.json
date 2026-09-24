@@ -1,0 +1,151 @@
+[
+  {
+    "test_id": "defense_hendrik",
+    "description": "Battle report 2734693171245400",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 1500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 612.83,
+          "defense": 612.08,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "marksman_t6": 3750
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 479,
+          "defense": 467.8,
+          "lethality": 244.2,
+          "health": 221.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T23:27:03.000Z",
+        "randomseed": 1790119624,
+        "attacker": 0,
+        "defender": 1266,
+        "metadata": {
+          "report_reference": "2734693171245400",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 1500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 525,
+            "lightly_injured": 975,
+            "kills": 870
+          },
+          "defender": {
+            "troops": 3750,
+            "survivors": 1266,
+            "losses": 0,
+            "injured": 870,
+            "lightly_injured": 1614,
+            "kills": 525
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 1500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 525,
+                "lightly_injured": 975,
+                "kills": 870
+              }
+            },
+            "defender": {
+              "marksman_t6": {
+                "troops": 3750,
+                "survivors": 1266,
+                "losses": 0,
+                "injured": 870,
+                "lightly_injured": 1614,
+                "kills": 525
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 10,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Hendrik": {
+                "Dagon's Heir": {
+                  "triggered": 6,
+                  "displayed_kills": 36
+                },
+                "Armor of Barnacles": {
+                  "triggered": 5,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

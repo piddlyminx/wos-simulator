@@ -1,0 +1,168 @@
+[
+  {
+    "test_id": "sonya_vs_ahmose_03",
+    "description": "Battle report 2734693171177838",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 30,
+        "lancer_t6": 150,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 529.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 950
+      },
+      "stats": {
+        "infantry": {
+          "attack": 345.57,
+          "defense": 338.12,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T12:54:10.000Z",
+        "randomseed": 1790081651,
+        "attacker": 265,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171177838",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 480,
+            "survivors": 265,
+            "losses": 0,
+            "injured": 77,
+            "lightly_injured": 138,
+            "kills": 333
+          },
+          "defender": {
+            "troops": 950,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 333,
+            "lightly_injured": 617,
+            "kills": 77
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 30,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 11,
+                "lightly_injured": 19,
+                "kills": 1
+              },
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 53,
+                "lightly_injured": 97,
+                "kills": 131
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 265,
+                "losses": 0,
+                "injured": 13,
+                "lightly_injured": 22,
+                "kills": 201
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 950,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 333,
+                "lightly_injured": 617,
+                "kills": 77
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 41,
+                  "displayed_kills": 6
+                },
+                "Torrential Impact": {
+                  "triggered": 16,
+                  "displayed_kills": 10
+                }
+              }
+            },
+            "defender": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 20,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

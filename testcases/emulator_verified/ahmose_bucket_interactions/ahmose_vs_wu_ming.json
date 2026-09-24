@@ -1,0 +1,158 @@
+[
+  {
+    "test_id": "ahmose_vs_wu_ming",
+    "description": "Battle report 2734693171220225",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 800,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 600,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 453.71,
+          "defense": 446.26,
+          "lethality": 223.57,
+          "health": 274.97
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T18:36:21.000Z",
+        "randomseed": 1790102182,
+        "attacker": 0,
+        "defender": 72,
+        "metadata": {
+          "report_reference": "2734693171220225",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 900,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 315,
+            "lightly_injured": 585,
+            "kills": 290
+          },
+          "defender": {
+            "troops": 900,
+            "survivors": 72,
+            "losses": 0,
+            "injured": 290,
+            "lightly_injured": 538,
+            "kills": 315
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 800,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 280,
+                "lightly_injured": 520,
+                "kills": 96
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 194
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 78
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 72,
+                "losses": 0,
+                "injured": 80,
+                "lightly_injured": 148,
+                "kills": 237
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 26,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

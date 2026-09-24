@@ -1,0 +1,162 @@
+[
+  {
+    "test_id": "wuming_renee_vs_jasser",
+    "description": "Battle report 2734693171229643",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 150
+      },
+      "stats": {
+        "infantry": {
+          "attack": 508.98,
+          "defense": 501.98,
+          "lethality": 250.71,
+          "health": 274.79
+        },
+        "lancer": {
+          "attack": 607.83,
+          "defense": 612.08,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 297.4,
+          "defense": 286.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T19:52:37.000Z",
+        "randomseed": 1790106758,
+        "attacker": 176,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171229643",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 350,
+            "survivors": 176,
+            "losses": 0,
+            "injured": 61,
+            "lightly_injured": 113,
+            "kills": 455
+          },
+          "defender": {
+            "troops": 1300,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 455,
+            "lightly_injured": 845,
+            "kills": 61
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 26,
+                "losses": 0,
+                "injured": 61,
+                "lightly_injured": 113,
+                "kills": 64
+              },
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 150,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 391
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 13
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 48
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 32,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

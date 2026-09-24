@@ -1,0 +1,196 @@
+[
+  {
+    "test_id": "gwen_vs_wu_ming_sonya_jasser",
+    "description": "Battle report 2734693171109640",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 255,
+        "lancer_t6": 293,
+        "marksman_t6": 345
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 344.4,
+          "defense": 333.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        },
+        "Jasser": {
+          "skill_1": 4,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 210,
+        "lancer_t6": 290,
+        "marksman_t6": 384
+      },
+      "stats": {
+        "infantry": {
+          "attack": 508.98,
+          "defense": 501.98,
+          "lethality": 250.71,
+          "health": 274.79
+        },
+        "lancer": {
+          "attack": 529.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 354.37,
+          "defense": 360.37,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-21T22:28:59.000Z",
+        "randomseed": 1790029740,
+        "attacker": 0,
+        "defender": 822,
+        "metadata": {
+          "report_reference": "2734693171109640",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 893,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 314,
+            "lightly_injured": 579,
+            "kills": 22
+          },
+          "defender": {
+            "troops": 884,
+            "survivors": 822,
+            "losses": 0,
+            "injured": 22,
+            "lightly_injured": 40,
+            "kills": 314
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 255,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 90,
+                "lightly_injured": 165,
+                "kills": 0
+              },
+              "lancer_t6": {
+                "troops": 293,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 103,
+                "lightly_injured": 190,
+                "kills": 5
+              },
+              "marksman_t6": {
+                "troops": 345,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 121,
+                "lightly_injured": 224,
+                "kills": 17
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 210,
+                "survivors": 148,
+                "losses": 0,
+                "injured": 22,
+                "lightly_injured": 40,
+                "kills": 33
+              },
+              "lancer_t6": {
+                "troops": 290,
+                "survivors": 290,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 165
+              },
+              "marksman_t6": {
+                "troops": 384,
+                "survivors": 384,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 116
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 2,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 5,
+                  "displayed_kills": 11
+                },
+                "Torrential Impact": {
+                  "triggered": 2,
+                  "displayed_kills": 17
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

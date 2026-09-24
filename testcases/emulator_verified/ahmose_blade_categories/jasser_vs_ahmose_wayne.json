@@ -1,0 +1,189 @@
+[
+  {
+    "test_id": "jasser_vs_ahmose_wayne",
+    "description": "Battle report 2734693171197304",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 950,
+        "lancer_t6": 150,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 297.4,
+          "defense": 286.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 100,
+        "marksman_t6": 250
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 421.39,
+          "defense": 427.39,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T15:11:07.000Z",
+        "randomseed": 1790089868,
+        "attacker": 278,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171197304",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1400,
+            "survivors": 278,
+            "losses": 0,
+            "injured": 394,
+            "lightly_injured": 728,
+            "kills": 228
+          },
+          "defender": {
+            "troops": 650,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 228,
+            "lightly_injured": 422,
+            "kills": 394
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 950,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 333,
+                "lightly_injured": 617,
+                "kills": 24
+              },
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 20,
+                "losses": 0,
+                "injured": 46,
+                "lightly_injured": 84,
+                "kills": 56
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 258,
+                "losses": 0,
+                "injured": 15,
+                "lightly_injured": 27,
+                "kills": 148
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 40
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 62
+              },
+              "marksman_t6": {
+                "troops": 250,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 88,
+                "lightly_injured": 162,
+                "kills": 292
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {},
+            "defender": {
+              "Wayne": {
+                "Roundabout Hit": {
+                  "triggered": 30,
+                  "displayed_kills": 41
+                },
+                "Thunder Strike": {
+                  "triggered": 37,
+                  "displayed_kills": 29
+                }
+              },
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 8,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

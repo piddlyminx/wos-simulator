@@ -1,0 +1,158 @@
+[
+  {
+    "test_id": "gordon_bradley_pure_lancers",
+    "description": "Battle report 2734693171240660",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gordon": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Bradley": {
+          "skill_1": 5,
+          "skill_2": 4,
+          "skill_3": 3,
+          "skill_4": 1
+        }
+      },
+      "troops": {
+        "lancer_t6": 350
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 493.62,
+          "defense": 492.87,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 739.42,
+          "defense": 740.42,
+          "lethality": 375.19,
+          "health": 331.96
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "lancer_t6": 1800
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 297.4,
+          "defense": 286.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T22:18:13.000Z",
+        "randomseed": 1790115494,
+        "attacker": 0,
+        "defender": 241,
+        "metadata": {
+          "report_reference": "2734693171240660",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 350,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 123,
+            "lightly_injured": 227,
+            "kills": 546
+          },
+          "defender": {
+            "troops": 1800,
+            "survivors": 241,
+            "losses": 0,
+            "injured": 546,
+            "lightly_injured": 1013,
+            "kills": 123
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 350,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 123,
+                "lightly_injured": 227,
+                "kills": 546
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 1800,
+                "survivors": 241,
+                "losses": 0,
+                "injured": 546,
+                "lightly_injured": 1013,
+                "kills": 123
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gordon": {
+                "Toxic Release": {
+                  "triggered": 12,
+                  "displayed_kills": null
+                },
+                "Venom Infusion": {
+                  "triggered": 24,
+                  "displayed_kills": null
+                },
+                "Chemical Terror": {
+                  "triggered": 16,
+                  "displayed_kills": null
+                }
+              },
+              "Bradley": {
+                "Tactical Assistance": {
+                  "triggered": 12,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

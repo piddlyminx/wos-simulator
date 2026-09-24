@@ -1,0 +1,98 @@
+[
+  {
+    "test_id": "gwen_blastmaster_replay_550m_vs_810i_45l_45m",
+    "description": "Fresh full-kit Gwen 3/1/1 replay investigating the deterministic Blastmaster cadence discrepancy; both participants and current report stats verified during capture.",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1
+        }
+      },
+      "troops": {
+        "marksman_t6": 550
+      },
+      "stats": {
+        "inf": {
+          "attack": 305.0,
+          "defense": 288.0,
+          "lethality": 254.0,
+          "health": 238.4
+        },
+        "lanc": {
+          "attack": 286.9,
+          "defense": 281.2,
+          "lethality": 234.3,
+          "health": 230.0
+        },
+        "mark": {
+          "attack": 439.8,
+          "defense": 435.8,
+          "lethality": 245.8,
+          "health": 230.3
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 810,
+        "lancer_t6": 45,
+        "marksman_t6": 45
+      },
+      "stats": {
+        "inf": {
+          "attack": 257.1,
+          "defense": 249.7,
+          "lethality": 196.5,
+          "health": 192.0
+        },
+        "lanc": {
+          "attack": 208.7,
+          "defense": 208.0,
+          "lethality": 197.0,
+          "health": 186.1
+        },
+        "mark": {
+          "attack": 231.0,
+          "defense": 219.8,
+          "lethality": 191.5,
+          "health": 177.2
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "game_report_result": [
+      {
+        "attacker": 0,
+        "defender": 172,
+        "metadata": {
+          "source": "emulator",
+          "report_timestamp_displayed": "2026-09-21 10:36:45",
+          "world_coord": { "x": 791, "y": 577 },
+          "winner": "defender",
+          "stat_units": "percentage_points",
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Eagle Vision": { "triggered": 1, "displayed_kills": null },
+                "Air Dominance": { "triggered": 10, "displayed_kills": 7 },
+                "Blastmaster": { "triggered": 13, "displayed_kills": 32 }
+              }
+            }
+          },
+          "evidence": {
+            "overview": "../../docs/mechanics-audit/reviews/attack-target-2026-09-21/gwen-overview.png",
+            "stats": "../../docs/mechanics-audit/reviews/attack-target-2026-09-21/gwen-stats.png",
+            "skill_counters": "../../docs/mechanics-audit/reviews/attack-target-2026-09-21/gwen-skill-counters.png",
+            "parsed_report": "../../docs/mechanics-audit/reviews/attack-target-2026-09-21/gwen-report.json"
+          }
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,156 @@
+[
+  {
+    "test_id": "ahmose_vs_gatot",
+    "description": "Battle report 2734693171218916",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 50,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 627.31,
+          "defense": 619.86,
+          "lethality": 230.66,
+          "health": 281.02
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T18:24:10.000Z",
+        "randomseed": 1790101451,
+        "attacker": 698,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171218916",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1000,
+            "survivors": 698,
+            "losses": 0,
+            "injured": 106,
+            "lightly_injured": 196,
+            "kills": 123
+          },
+          "defender": {
+            "troops": 350,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 123,
+            "lightly_injured": 227,
+            "kills": 106
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 1000,
+                "survivors": 698,
+                "losses": 0,
+                "injured": 106,
+                "lightly_injured": 196,
+                "kills": 123
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 50,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 18,
+                "lightly_injured": 32,
+                "kills": 16
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 90
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 22,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 93,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

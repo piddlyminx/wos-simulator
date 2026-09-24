@@ -1,0 +1,187 @@
+[
+  {
+    "test_id": "gwen_vs_gatot",
+    "description": "Battle report 2734693171109689",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 388,
+        "lancer_t6": 225,
+        "marksman_t6": 277
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 434.82,
+          "defense": 440.82,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 343,
+        "lancer_t6": 222,
+        "marksman_t6": 316
+      },
+      "stats": {
+        "infantry": {
+          "attack": 627.31,
+          "defense": 619.86,
+          "lethality": 230.66,
+          "health": 281.02
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-21T22:32:40.000Z",
+        "randomseed": 1790029961,
+        "attacker": 0,
+        "defender": 660,
+        "metadata": {
+          "report_reference": "2734693171109689",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 890,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 312,
+            "lightly_injured": 578,
+            "kills": 78
+          },
+          "defender": {
+            "troops": 881,
+            "survivors": 660,
+            "losses": 0,
+            "injured": 78,
+            "lightly_injured": 143,
+            "kills": 312
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 388,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 136,
+                "lightly_injured": 252,
+                "kills": 1
+              },
+              "lancer_t6": {
+                "troops": 225,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 79,
+                "lightly_injured": 146,
+                "kills": 0
+              },
+              "marksman_t6": {
+                "troops": 277,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 97,
+                "lightly_injured": 180,
+                "kills": 77
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 343,
+                "survivors": 201,
+                "losses": 0,
+                "injured": 50,
+                "lightly_injured": 92,
+                "kills": 84
+              },
+              "lancer_t6": {
+                "troops": 222,
+                "survivors": 188,
+                "losses": 0,
+                "injured": 12,
+                "lightly_injured": 22,
+                "kills": 85
+              },
+              "marksman_t6": {
+                "troops": 316,
+                "survivors": 271,
+                "losses": 0,
+                "injured": 16,
+                "lightly_injured": 29,
+                "kills": 143
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 20,
+                  "displayed_kills": 2
+                },
+                "Blastmaster": {
+                  "triggered": 10,
+                  "displayed_kills": 28
+                }
+              }
+            },
+            "defender": {
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 52,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

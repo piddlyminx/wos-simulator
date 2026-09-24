@@ -1,0 +1,173 @@
+[
+  {
+    "test_id": "ahmose_gordon_wayne_pure_lancers_vs_jasser",
+    "description": "Battle report 2734693171229777",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Gordon": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 488.62,
+          "defense": 492.87,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 421.39,
+          "defense": 427.39,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 900
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 297.4,
+          "defense": 286.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T19:56:25.000Z",
+        "randomseed": 1790106986,
+        "attacker": 0,
+        "defender": 21,
+        "metadata": {
+          "report_reference": "2734693171229777",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 300,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 105,
+            "lightly_injured": 195,
+            "kills": 308
+          },
+          "defender": {
+            "troops": 900,
+            "survivors": 21,
+            "losses": 0,
+            "injured": 308,
+            "lightly_injured": 571,
+            "kills": 105
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 308
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 900,
+                "survivors": 21,
+                "losses": 0,
+                "injured": 308,
+                "lightly_injured": 571,
+                "kills": 105
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                },
+                "Thunder Strike": {
+                  "triggered": 43,
+                  "displayed_kills": 22
+                }
+              },
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Gordon": {
+                "Venom Infusion": {
+                  "triggered": 86,
+                  "displayed_kills": null
+                },
+                "Chemical Terror": {
+                  "triggered": 57,
+                  "displayed_kills": null
+                },
+                "Toxic Release": {
+                  "triggered": 43,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

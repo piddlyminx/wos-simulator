@@ -1,0 +1,387 @@
+[
+  {
+    "test_id": "ahmose_reina_vs_jasser",
+    "description": "Battle report 2734693171219563",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Reina": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 250
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 364.28,
+          "defense": 368.53,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 600
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 297.4,
+          "defense": 286.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T18:28:49.000Z",
+        "randomseed": 1790101730,
+        "attacker": 92,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171219563",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 250,
+            "survivors": 92,
+            "losses": 0,
+            "injured": 56,
+            "lightly_injured": 102,
+            "kills": 210
+          },
+          "defender": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 56
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 250,
+                "survivors": 92,
+                "losses": 0,
+                "injured": 56,
+                "lightly_injured": 102,
+                "kills": 210
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 56
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 66,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T18:29:34.000Z",
+        "randomseed": 1790101775,
+        "attacker": 101,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171219676",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 250,
+            "survivors": 101,
+            "losses": 0,
+            "injured": 53,
+            "lightly_injured": 96,
+            "kills": 210
+          },
+          "defender": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 53
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 250,
+                "survivors": 101,
+                "losses": 0,
+                "injured": 53,
+                "lightly_injured": 96,
+                "kills": 210
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 53
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 65,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T18:30:19.000Z",
+        "randomseed": 1790101820,
+        "attacker": 95,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171219858",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 250,
+            "survivors": 95,
+            "losses": 0,
+            "injured": 55,
+            "lightly_injured": 100,
+            "kills": 210
+          },
+          "defender": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 55
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 250,
+                "survivors": 95,
+                "losses": 0,
+                "injured": 55,
+                "lightly_injured": 100,
+                "kills": 210
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 55
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 66,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T18:31:04.000Z",
+        "randomseed": 1790101865,
+        "attacker": 99,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171219894",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 250,
+            "survivors": 99,
+            "losses": 0,
+            "injured": 53,
+            "lightly_injured": 98,
+            "kills": 210
+          },
+          "defender": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 53
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 250,
+                "survivors": 99,
+                "losses": 0,
+                "injured": 53,
+                "lightly_injured": 98,
+                "kills": 210
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 53
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 65,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-22T18:31:49.000Z",
+        "randomseed": 1790101910,
+        "attacker": 89,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171219929",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 250,
+            "survivors": 89,
+            "losses": 0,
+            "injured": 57,
+            "lightly_injured": 104,
+            "kills": 210
+          },
+          "defender": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 57
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 250,
+                "survivors": 89,
+                "losses": 0,
+                "injured": 57,
+                "lightly_injured": 104,
+                "kills": 210
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 57
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 67,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

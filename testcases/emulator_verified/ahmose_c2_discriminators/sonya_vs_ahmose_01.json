@@ -1,0 +1,186 @@
+[
+  {
+    "test_id": "sonya_vs_ahmose_01",
+    "description": "Battle report 2734693171177424",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 80,
+        "lancer_t6": 400,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 529.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 400,
+        "lancer_t6": 650,
+        "marksman_t6": 200
+      },
+      "stats": {
+        "infantry": {
+          "attack": 345.57,
+          "defense": 338.12,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T12:49:41.000Z",
+        "randomseed": 1790081382,
+        "attacker": 0,
+        "defender": 125,
+        "metadata": {
+          "report_reference": "2734693171177424",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 580,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 203,
+            "lightly_injured": 377,
+            "kills": 395
+          },
+          "defender": {
+            "troops": 1250,
+            "survivors": 125,
+            "losses": 0,
+            "injured": 395,
+            "lightly_injured": 730,
+            "kills": 203
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 80,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 28,
+                "lightly_injured": 52,
+                "kills": 2
+              },
+              "lancer_t6": {
+                "troops": 400,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 140,
+                "lightly_injured": 260,
+                "kills": 237
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 156
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 400,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 140,
+                "lightly_injured": 260,
+                "kills": 12
+              },
+              "lancer_t6": {
+                "troops": 650,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 228,
+                "lightly_injured": 422,
+                "kills": 80
+              },
+              "marksman_t6": {
+                "troops": 200,
+                "survivors": 125,
+                "losses": 0,
+                "injured": 27,
+                "lightly_injured": 48,
+                "kills": 111
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 22,
+                  "displayed_kills": 14
+                },
+                "Torrential Impact": {
+                  "triggered": 9,
+                  "displayed_kills": 20
+                }
+              }
+            },
+            "defender": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 5,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

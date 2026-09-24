@@ -1,0 +1,237 @@
+[
+  {
+    "test_id": "c2_2734693170978104",
+    "description": "Battle report 2734693170978104",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        },
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        },
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 300,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 623.17,
+          "defense": 619.79,
+          "lethality": 228.98,
+          "health": 279.34
+        },
+        "lancer": {
+          "attack": 369.36,
+          "defense": 368.73,
+          "lethality": 186.82,
+          "health": 181.88
+        },
+        "marksman": {
+          "attack": 478.86,
+          "defense": 467.73,
+          "lethality": 244.02,
+          "health": 220.98
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        },
+        "Hendrik": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 300,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 665.38,
+          "defense": 662.63,
+          "lethality": 316.11,
+          "health": 338.06
+        },
+        "lancer": {
+          "attack": 529.96,
+          "defense": 533.71,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 439.96,
+          "defense": 445.46,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-18T05:10:41.000Z",
+        "randomseed": 1789708242,
+        "attacker": 0,
+        "defender": 367,
+        "metadata": {
+          "report_reference": "2734693170978104",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 900,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 315,
+            "lightly_injured": 585,
+            "kills": 188
+          },
+          "defender": {
+            "troops": 900,
+            "survivors": 367,
+            "losses": 0,
+            "injured": 188,
+            "lightly_injured": 345,
+            "kills": 315
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 1
+              },
+              "lancer_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 21
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 166
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 300,
+                "survivors": 5,
+                "losses": 0,
+                "injured": 104,
+                "lightly_injured": 191,
+                "kills": 18
+              },
+              "lancer_t6": {
+                "troops": 300,
+                "survivors": 215,
+                "losses": 0,
+                "injured": 30,
+                "lightly_injured": 55,
+                "kills": 176
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 147,
+                "losses": 0,
+                "injured": 54,
+                "lightly_injured": 99,
+                "kills": 121
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 25,
+                  "displayed_kills": 2
+                }
+              },
+              "Hendrik": {
+                "Dagon's Heir": {
+                  "triggered": 19,
+                  "displayed_kills": 89
+                },
+                "Armor of Barnacles": {
+                  "triggered": 14,
+                  "displayed_kills": null
+                }
+              },
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 37,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 29,
+                  "displayed_kills": 11
+                },
+                "Torrential Impact": {
+                  "triggered": 11,
+                  "displayed_kills": 14
+                }
+              },
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 58,
+                  "displayed_kills": null
+                }
+              },
+              "Hendrik": {
+                "Armor of Barnacles": {
+                  "triggered": 14,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

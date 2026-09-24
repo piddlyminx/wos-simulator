@@ -1,0 +1,223 @@
+[
+  {
+    "test_id": "ahmose_renee_gwen_vs_sergey_patrick_hendrik",
+    "description": "Battle report 2734693171109795",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        },
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 221,
+        "lancer_t6": 259,
+        "marksman_t6": 311
+      },
+      "stats": {
+        "infantry": {
+          "attack": 417.61,
+          "defense": 410.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 607.83,
+          "defense": 612.08,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 434.82,
+          "defense": 440.82,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Sergey": {
+          "skill_1": 2,
+          "skill_2": 2
+        },
+        "Patrick": {
+          "skill_1": 4,
+          "skill_2": 4
+        },
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 377,
+        "lancer_t6": 256,
+        "marksman_t6": 350
+      },
+      "stats": {
+        "infantry": {
+          "attack": 346.14,
+          "defense": 338.69,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 293.2,
+          "defense": 292.5,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 479,
+          "defense": 467.8,
+          "lethality": 244.2,
+          "health": 221.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-21T22:46:34.000Z",
+        "randomseed": 1790030795,
+        "attacker": 0,
+        "defender": 252,
+        "metadata": {
+          "report_reference": "2734693171109795",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 791,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 278,
+            "lightly_injured": 513,
+            "kills": 257
+          },
+          "defender": {
+            "troops": 983,
+            "survivors": 252,
+            "losses": 0,
+            "injured": 257,
+            "lightly_injured": 474,
+            "kills": 278
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 221,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 78,
+                "lightly_injured": 143,
+                "kills": 8
+              },
+              "lancer_t6": {
+                "troops": 259,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 91,
+                "lightly_injured": 168,
+                "kills": 99
+              },
+              "marksman_t6": {
+                "troops": 311,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 109,
+                "lightly_injured": 202,
+                "kills": 150
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 377,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 132,
+                "lightly_injured": 245,
+                "kills": 7
+              },
+              "lancer_t6": {
+                "troops": 256,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 90,
+                "lightly_injured": 166,
+                "kills": 33
+              },
+              "marksman_t6": {
+                "troops": 350,
+                "survivors": 252,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 63,
+                "kills": 238
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 8,
+                  "displayed_kills": 5
+                },
+                "Blastmaster": {
+                  "triggered": 5,
+                  "displayed_kills": 5
+                }
+              },
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 2,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 13,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Hendrik": {
+                "Dagon's Heir": {
+                  "triggered": 9,
+                  "displayed_kills": 46
+                },
+                "Armor of Barnacles": {
+                  "triggered": 6,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

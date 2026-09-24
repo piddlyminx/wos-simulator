@@ -1,0 +1,140 @@
+[
+  {
+    "test_id": "defense_wuming",
+    "description": "Battle report 2734693171252668",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 2000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 612.83,
+          "defense": 612.08,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t9": 2000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 453.71,
+          "defense": 446.26,
+          "lethality": 223.57,
+          "health": 274.97
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-23T01:21:30.000Z",
+        "randomseed": 1790126491,
+        "attacker": 0,
+        "defender": 329,
+        "metadata": {
+          "report_reference": "2734693171252668",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 2000,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 700,
+            "lightly_injured": 1300,
+            "kills": 585
+          },
+          "defender": {
+            "troops": 2000,
+            "survivors": 329,
+            "losses": 0,
+            "injured": 585,
+            "lightly_injured": 1086,
+            "kills": 700
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 2000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 700,
+                "lightly_injured": 1300,
+                "kills": 585
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 2000,
+                "survivors": 329,
+                "losses": 0,
+                "injured": 585,
+                "lightly_injured": 1086,
+                "kills": 700
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 48,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

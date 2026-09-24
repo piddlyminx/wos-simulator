@@ -1,0 +1,164 @@
+[
+  {
+    "test_id": "ahmose_vs_jasser_02",
+    "description": "Battle report 2734693171177957",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 320,
+        "lancer_t6": 350,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 345.57,
+          "defense": 338.12,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Jasser": {
+          "skill_1": 4,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 300,
+        "lancer_t6": 600
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 354.37,
+          "defense": 360.37,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-22T12:55:54.000Z",
+        "randomseed": 1790081755,
+        "attacker": 0,
+        "defender": 54,
+        "metadata": {
+          "report_reference": "2734693171177957",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 970,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 340,
+            "lightly_injured": 630,
+            "kills": 297
+          },
+          "defender": {
+            "troops": 900,
+            "survivors": 54,
+            "losses": 0,
+            "injured": 297,
+            "lightly_injured": 549,
+            "kills": 340
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 320,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 112,
+                "lightly_injured": 208,
+                "kills": 15
+              },
+              "lancer_t6": {
+                "troops": 350,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 123,
+                "lightly_injured": 227,
+                "kills": 90
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 192
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 15
+              },
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 54,
+                "losses": 0,
+                "injured": 192,
+                "lightly_injured": 354,
+                "kills": 325
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 7,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

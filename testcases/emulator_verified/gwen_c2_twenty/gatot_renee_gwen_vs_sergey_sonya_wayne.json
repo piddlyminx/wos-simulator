@@ -1,0 +1,229 @@
+[
+  {
+    "test_id": "gatot_renee_gwen_vs_sergey_sonya_wayne",
+    "description": "Battle report 2734693171109665",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        },
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Gwen": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 349,
+        "lancer_t6": 387,
+        "marksman_t6": 238
+      },
+      "stats": {
+        "infantry": {
+          "attack": 627.31,
+          "defense": 619.86,
+          "lethality": 230.66,
+          "health": 281.02
+        },
+        "lancer": {
+          "attack": 482.4,
+          "defense": 481.7,
+          "lethality": 252.8,
+          "health": 239.41
+        },
+        "marksman": {
+          "attack": 344.4,
+          "defense": 333.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sergey": {
+          "skill_1": 4,
+          "skill_2": 4
+        },
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 304,
+        "lancer_t6": 384,
+        "marksman_t6": 277
+      },
+      "stats": {
+        "infantry": {
+          "attack": 409.72,
+          "defense": 402.72,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 529.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 421.39,
+          "defense": 427.39,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-21T22:31:00.000Z",
+        "randomseed": 1790029861,
+        "attacker": 744,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171109665",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 974,
+            "survivors": 744,
+            "losses": 0,
+            "injured": 81,
+            "lightly_injured": 149,
+            "kills": 339
+          },
+          "defender": {
+            "troops": 965,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 339,
+            "lightly_injured": 626,
+            "kills": 81
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 349,
+                "survivors": 161,
+                "losses": 0,
+                "injured": 66,
+                "lightly_injured": 122,
+                "kills": 40
+              },
+              "lancer_t6": {
+                "troops": 387,
+                "survivors": 367,
+                "losses": 0,
+                "injured": 7,
+                "lightly_injured": 13,
+                "kills": 207
+              },
+              "marksman_t6": {
+                "troops": 238,
+                "survivors": 216,
+                "losses": 0,
+                "injured": 8,
+                "lightly_injured": 14,
+                "kills": 92
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 304,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 107,
+                "lightly_injured": 197,
+                "kills": 0
+              },
+              "lancer_t6": {
+                "troops": 384,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 135,
+                "lightly_injured": 249,
+                "kills": 29
+              },
+              "marksman_t6": {
+                "troops": 277,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 97,
+                "lightly_injured": 180,
+                "kills": 52
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 13,
+                  "displayed_kills": 7
+                }
+              },
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 26,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 15,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 13,
+                  "displayed_kills": 2
+                },
+                "Torrential Impact": {
+                  "triggered": 5,
+                  "displayed_kills": 3
+                }
+              },
+              "Wayne": {
+                "Thunder Strike": {
+                  "triggered": 17,
+                  "displayed_kills": 5
+                },
+                "Roundabout Hit": {
+                  "triggered": 15,
+                  "displayed_kills": 14
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]
