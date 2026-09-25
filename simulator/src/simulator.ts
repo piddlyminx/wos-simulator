@@ -15,7 +15,7 @@ import type {
   UnitType
 } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import { calculateDamageJob, ceilIgnoringFloatResidue, minInitialArmy, type DamageResult } from "./damage";
+import { generateDamageJob, deliverDamageJob, ceilIgnoringFloatResidue, minInitialArmy, type DamageResult } from "./damage";
 import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
@@ -26,7 +26,7 @@ import {
   oppositeSide,
   type Rng
 } from "./effects";
-import { damageJobShapeSlot, damageJobSlot, type EffectIndex } from "./effectIndex";
+import { damageJobShapeSlot, damageJobSlot, shieldEffectApplies, type EffectIndex } from "./effectIndex";
 import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
 import { activatePreBattleEffects, buildResolved, prepareBattle, type CompiledBattle } from "./prepare";
 import {
@@ -263,7 +263,7 @@ function runLoop(
     for (const dealerUnit of UNIT_TYPES) {
       for (const side of ["attacker", "defender"] as SideId[]) {
         const takerSide = oppositeSide(side);
-        if ((roundStartTroops[side][dealerUnit] ?? 0) <= 0) continue;
+        if (ceilIgnoringFloatResidue(roundStartTroops[side][dealerUnit] ?? 0) <= 0) continue;
         const ordered = orderFromEffects(dealerUnit, side, runtime.effectIndex, true);
         const takerUnit = firstLivingUnit(ordered?.order ?? UNIT_TYPES, takerSide, roundStartTroops);
         if (!takerUnit) continue;
@@ -315,7 +315,8 @@ function runLoop(
           if (useEffectsOnCancel.dodge) chargeCancelledAttack(job, dodge.effect, dodge.attackDurationEffects, runtime);
         } else {
           recorder.recordScheduledDamageJob(job);
-          const normalResult = calculateDamageJob(job, fighters, damageJobOptions);
+          const generated = generateDamageJob(job, fighters, damageJobOptions);
+          const normalResult = deliverDamageJob(job, generated, damageJobOptions);
           if (loopOptions.capRoundKills) capJobToRemainingTarget(normalResult, job, roundStartTroops, roundTargetDamage, recorder);
           normalKills = normalResult.kills;
           if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
@@ -446,7 +447,7 @@ function makeNormalIntent(
 }
 
 function firstLivingUnit(order: readonly UnitType[], side: SideId, roundStartTroops: DamageJob["roundStartTroops"]): UnitType | undefined {
-  return order.find((unit) => (roundStartTroops[side][unit] ?? 0) > 0);
+  return order.find((unit) => ceilIgnoringFloatResidue(roundStartTroops[side][unit] ?? 0) > 0);
 }
 
 function orderFromEffects(
@@ -557,7 +558,8 @@ function commitRound(results: DamageJobResult[], runtime: Runtime): void {
   }
   for (const side of ["attacker", "defender"] as SideId[]) {
     for (const unit of UNIT_TYPES) {
-      runtime.troops[side][unit] = Math.max(0, runtime.troops[side][unit] - losses[side][unit]);
+      const remaining = Math.max(0, runtime.troops[side][unit] - losses[side][unit]);
+      runtime.troops[side][unit] = ceilIgnoringFloatResidue(remaining) === 0 ? 0 : remaining;
     }
   }
 }
@@ -575,14 +577,18 @@ function chargeCancelledAttack(
       if (hasAttackDurationConstraint(effect)) used.push(effect);
     }
   }
+  for (const effect of runtime.effectIndex.shields) {
+    if (!shieldEffectApplies(effect, job) || !advanceEffectAttackDelay(effect)) continue;
+    if (hasAttackDurationConstraint(effect)) used.push(effect);
+  }
   for (const effect of controlEffects) used.push(effect);
   if (!controlEffects.includes(winningControl)) used.push(winningControl);
   chargeUsedEffects(runtime);
 }
 
 function winnerFor(troops: Record<SideId, Record<UnitType, number>>): SideId | "draw" | undefined {
-  const attackerAlive = total(troops.attacker) > 0;
-  const defenderAlive = total(troops.defender) > 0;
+  const attackerAlive = UNIT_TYPES.some((unit) => ceilIgnoringFloatResidue(troops.attacker[unit]) > 0);
+  const defenderAlive = UNIT_TYPES.some((unit) => ceilIgnoringFloatResidue(troops.defender[unit]) > 0);
   if (attackerAlive && !defenderAlive) return "attacker";
   if (defenderAlive && !attackerAlive) return "defender";
   if (!attackerAlive && !defenderAlive) return "draw";

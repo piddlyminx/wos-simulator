@@ -1,5 +1,5 @@
 import type { ActiveEffect, ActiveEffectGroup, DamageJob, DamageKind, SideId, UnitType } from "./types";
-import { unitsFromMask } from "./types";
+import { unitMaskHas, unitsFromMask } from "./types";
 import { DYNAMIC_BUCKET_INDEX, dynamicBucketDefinition, type DynamicDamageBucket } from "./damageBuckets";
 
 /**
@@ -19,7 +19,7 @@ import { DYNAMIC_BUCKET_INDEX, dynamicBucketDefinition, type DynamicDamageBucket
  *   group's live effects, and preparation asserts that a max-stacking definition's
  *   differently-scoped groups never overlap on a slot.
  *
- * Control, extra-attack, and battle-order effects are rare and cheap; they stay in flat
+ * Shield, control, extra-attack, and battle-order effects are rare and cheap; they stay in flat
  * lists matched per use. This split was benchmarked, not assumed — the group index beat a
  * per-job classifier scan by ~3x on long battles while staying byte-identical on parity.
  *
@@ -32,6 +32,7 @@ export interface EffectIndex {
   effectGroups: ActiveEffectGroup[];
   // This run's live activations, parallel to effectGroups (indexed by group.ordinal).
   liveEffectsByGroup: ActiveEffect[][];
+  shields: ActiveEffect[];
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
   battleOrder: ActiveEffect[];
@@ -49,6 +50,7 @@ export function createEffectIndex(
     damageGroupsByJobShape,
     effectGroups,
     liveEffectsByGroup: effectGroups.map(() => []),
+    shields: [],
     controls: [],
     extraAttacks: [],
     battleOrder: [],
@@ -81,6 +83,16 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
   effect.effectGroupPosition = live.length;
   live.push(effect);
   effect.bucketIndex = group.bucketIndex;
+  if (effect.kind === "shield") {
+    // Keep prepared group order; liveEffectsByGroup retains stacking/dependency identity.
+    let position = index.shields.length;
+    index.shields.push(effect);
+    while (position > 0 && index.shields[position - 1].effectGroup!.ordinal > group.ordinal) {
+      index.shields[position] = index.shields[position - 1];
+      position -= 1;
+    }
+    index.shields[position] = effect;
+  }
 }
 
 export function isRuntimeIndexableEffect(effect: ActiveEffect): boolean {
@@ -94,7 +106,16 @@ export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): voi
   else if (effect.kind === "extra_attack") removeStable(index.extraAttacks, effect);
   else if (effect.kind === "battle_order") removeStable(index.battleOrder, effect);
   else if (effect.kind === "carrier") removeStable(index.carriers, effect);
+  else if (effect.kind === "shield") removeStable(index.shields, effect);
   removeEffectGroupEntry(index, effect);
+}
+
+export function shieldEffectApplies(effect: ActiveEffect, job: DamageJob): boolean {
+  return effect.appliesTo.side === job.takerSide &&
+    unitMaskHas(effect.appliesTo.units, job.takerUnit) &&
+    effect.appliesVs.side === job.dealerSide &&
+    unitMaskHas(effect.appliesVs.units, job.dealerUnit) &&
+    (effect.intent.applies_to_damage_kinds === undefined || effect.intent.applies_to_damage_kinds.includes(job.kind));
 }
 
 export function damageJobSlot(job: DamageJob): number {

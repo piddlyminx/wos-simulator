@@ -52,7 +52,7 @@ test("static-profile bucket effects are not prepared into the runtime effect ind
   assert.deepEqual(index.damageGroupsByJobShape[damageJobSlot(job())].flatMap((group) => index.liveEffectsByGroup[group.ordinal]), [active]);
 });
 
-test("expiring a modifier swap-removes it once from its shared job-shape group", () => {
+test("expiring a modifier preserves the remaining candidates in its shared group", () => {
   const first = effect("active.hero.lethality.up");
   const second = effect("active.hero.lethality.up");
   second.intent = first.intent;
@@ -65,8 +65,28 @@ test("expiring a modifier swap-removes it once from its shared job-shape group",
   expireEffectIndex(index, first);
 
   assert.deepEqual(index.liveEffectsByGroup[group.ordinal], [second]);
-  assert.equal(second.effectGroupPosition, 0);
-  assert.equal(first.effectGroup, undefined);
+  expireEffectIndex(index, first);
+  assert.deepEqual(index.liveEffectsByGroup[group.ordinal], [second]);
+});
+
+test("expiring shields preserves other live shields and their dependency candidates", () => {
+  const first: ActiveEffect = { ...effect("active.hero.shield"), kind: "shield" };
+  const second: ActiveEffect = { ...effect("active.hero.shield"), kind: "shield" };
+  const index = preparedIndex([first, second]);
+  const group = first.effectGroup!;
+  indexEffect(index, first);
+  indexEffect(index, second);
+  assert.deepEqual(index.shields, [first, second]);
+  assert.deepEqual(index.liveEffectsByGroup[group.ordinal], [first, second]);
+
+  expireEffectIndex(index, first);
+  expireEffectIndex(index, first);
+  assert.deepEqual(index.shields, [second]);
+  assert.deepEqual(index.liveEffectsByGroup[group.ordinal], [second]);
+
+  expireEffectIndex(index, second);
+  assert.deepEqual(index.shields, []);
+  assert.deepEqual(index.liveEffectsByGroup[group.ordinal], []);
 });
 
 function effect(type: string): ActiveEffect {
@@ -106,7 +126,9 @@ function preparedIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectI
       };
       byResolvedGroup.set(key, group);
       groups.push(group);
-      for (const slot of slots) byShape[slot].push(group);
+      if (effect.kind !== "shield") {
+        for (const slot of slots) byShape[slot].push(group);
+      }
     }
     effect.effectGroup = group;
   }

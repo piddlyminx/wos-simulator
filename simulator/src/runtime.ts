@@ -17,7 +17,7 @@ import {
   type Rng
 } from "./effects";
 import { createEffectIndex, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
-import { createDamageScratch, type DamageResult, type DamageScratch, type StaticDamageProfile } from "./damage";
+import { ceilIgnoringFloatResidue, createDamageScratch, type DamageResult, type DamageScratch, type StaticDamageProfile } from "./damage";
 import type { DeferredEffectPlan, PreparedAttackSkill, RuntimeSkills } from "./runtimeSkills";
 import type { BattleRecorder } from "./recorder";
 import { emptyTroops } from "./fighterResolution";
@@ -239,7 +239,7 @@ export function targetExhausted(
   roundTargetDamage: Record<SideId, Record<UnitType, number>>
 ): boolean {
   const available = Math.max(0, roundStartTroops[job.takerSide][job.takerUnit] ?? 0);
-  return available <= 0 || roundTargetDamage[job.takerSide][job.takerUnit] >= available;
+  return ceilIgnoringFloatResidue(Math.max(0, available - roundTargetDamage[job.takerSide][job.takerUnit])) === 0;
 }
 
 export function capJobToRemainingTarget(

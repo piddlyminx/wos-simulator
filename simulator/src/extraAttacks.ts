@@ -9,7 +9,7 @@ import type {
 } from "./types";
 import { UNIT_TYPES, unitMaskHas, unitsFromMask } from "./types";
 import { advanceEffectAttackDelay } from "./effects";
-import { calculateDamageJob, type DamageJobOptions } from "./damage";
+import { generateDamageJob, deliverDamageJob, retainGeneratedDamage, ceilIgnoringFloatResidue, type DamageJobOptions } from "./damage";
 import { normalizeUnitType } from "./normalize";
 import {
   capJobToRemainingTarget,
@@ -26,7 +26,7 @@ import {
 // Spawn, calculate, and charge extra attacks riding on one normal attack.
 // Returns the finalized kills from every generated job in this normal attack's
 // cluster. A triggered child can instead carry damage captured in an earlier round;
-// that fixed result is emitted only when the child's locked normal attack matches.
+// shields are settled only when the child's locked normal attack matches.
 // The effect is charged one use only when at least one of its own jobs actually ran.
 // Spawning reads only round-start state and the effect's own gates, so running earlier
 // effects' jobs first cannot change what later effects spawn.
@@ -58,23 +58,26 @@ export function processExtraAttacks(
         const deliveryJob: DamageJob = {
           ...pending.job,
           round,
-          calculationRound: pending.job.round
+          calculationRound: pending.job.round,
+          roundStartTroops
         };
         if (loopOptions.capRoundKills && targetExhausted(deliveryJob, roundStartTroops, roundTargetDamage)) continue;
         recorder.recordScheduledDamageJob(deliveryJob);
+        const result = deliverDamageJob(deliveryJob, pending.generated, damageJobOptions);
         if (loopOptions.capRoundKills) {
-          capJobToRemainingTarget(pending.result, deliveryJob, roundStartTroops, roundTargetDamage, recorder);
+          capJobToRemainingTarget(result, deliveryJob, roundStartTroops, roundTargetDamage, recorder);
         } else if (loopOptions.capJobKills) {
-          pending.result.kills = Math.min(
-            pending.result.kills,
+          result.kills = Math.min(
+            result.kills,
             Math.max(0, roundStartTroops[deliveryJob.takerSide][deliveryJob.takerUnit] ?? 0)
           );
-          recorder.recordFinalKills(pending.result);
+          recorder.recordFinalKills(result);
         }
-        results.push({ job: deliveryJob, result: pending.result, intent });
-        totalKills += pending.result.kills;
+        results.push({ job: deliveryJob, result, intent });
+        totalKills += result.kills;
         processedJobCount += 1;
         firstProcessedJob ??= deliveryJob;
+        chargeUsedEffectsForJob(runtime, deliveryJob, recorder);
       }
     } else {
       for (const definition of effect.triggerDamageJobs ?? []) {
@@ -83,9 +86,9 @@ export function processExtraAttacks(
         const multiplier = effect.getCurrentValue(round) / 100;
         if (multiplier <= 0) continue;
         for (const source of sources) {
-          if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
+          if (ceilIgnoringFloatResidue(roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
           for (const target of targets) {
-            if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
+            if (ceilIgnoringFloatResidue(roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
             const job: DamageJob = {
               round,
               kind: definition.damage_kind ?? "skill",
@@ -99,7 +102,8 @@ export function processExtraAttacks(
             };
             if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
             recorder.recordScheduledDamageJob(job);
-            const result = calculateDamageJob(job, fighters, damageJobOptions);
+            const generated = generateDamageJob(job, fighters, damageJobOptions);
+            const result = deliverDamageJob(job, generated, damageJobOptions);
             if (job.kind === "skill") recorder.recordSkillDamageJob(job, effect);
             if (loopOptions.capRoundKills) {
               capJobToRemainingTarget(result, job, roundStartTroops, roundTargetDamage, recorder);
@@ -143,9 +147,9 @@ export function captureTriggeredExtraDamage(
       const sources = resolveTriggerJobSelector(definition.source, "source", effect, normalAttack, roundStartTroops);
       const targets = resolveTriggerJobSelector(definition.target, "target", effect, normalAttack, roundStartTroops);
       for (const source of sources) {
-        if ((roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
+        if (ceilIgnoringFloatResidue(roundStartTroops[source.side][source.unit] ?? 0) <= 0) continue;
         for (const target of targets) {
-          if ((roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
+          if (ceilIgnoringFloatResidue(roundStartTroops[target.side][target.unit] ?? 0) <= 0) continue;
           const job: DamageJob = {
             round,
             kind: definition.damage_kind ?? "skill",
@@ -157,8 +161,8 @@ export function captureTriggeredExtraDamage(
             sourceEffectId: effect.source.effectId ?? effect.intent.id,
             sourceMultiplier: multiplier
           };
-          const result = calculateDamageJob(job, fighters, { ...damageJobOptions, capToTakerTroops: false });
-          pending.push({ job, result });
+          const generated = retainGeneratedDamage(generateDamageJob(job, fighters, damageJobOptions));
+          pending.push({ job, generated });
           chargeUsedEffectsForJob(runtime, job, damageJobOptions.recorder);
         }
       }
@@ -203,7 +207,7 @@ function resolveTriggerJobSelector(
 }
 
 function livingUnits(side: SideId, roundStartTroops: DamageJob["roundStartTroops"]): TriggerJobUnit[] {
-  return UNIT_TYPES.filter((unit) => (roundStartTroops[side][unit] ?? 0) > 0).map((unit) => ({ side, unit }));
+  return UNIT_TYPES.filter((unit) => ceilIgnoringFloatResidue(roundStartTroops[side][unit] ?? 0) > 0).map((unit) => ({ side, unit }));
 }
 
 function unitListFromSelector(selector: TriggerDamageJobSelector): UnitType[] | undefined {

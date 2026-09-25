@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { test } from "node:test";
@@ -24,6 +24,44 @@ test("discoverTestcaseFiles includes disabled and stale testcase files when requ
 
   assert.ok(files.some((file) => file.endsWith("emulator_verified/jasser_solo.json.disabled")));
   assert.ok(files.some((file) => file.endsWith("emulator_verified/reina_logan_combo_v2.json.stale_troops")));
+});
+
+test("discoverTestcaseFiles matches filenames or heroes on either side, including joiners", (t) => {
+  const testcaseRoot = tempDir("simulator-hero-matching");
+  t.after(() => rmSync(testcaseRoot, { recursive: true, force: true }));
+  const fixtures = {
+    "attacker.json": { attacker: { heroes: { Gwen: {} } } },
+    "defender.json": [{}, { defender: { heroes: { Gwen: {} } } }],
+    "attacker-joiner.json": { attacker: { joiner_heroes: { Gwen: {} } } },
+    "defender-joiner.json": { defender: { joiner_heroes: { Gwen: {} } } },
+    "unrelated.json": { description: "Gwen", attacker: { heroes: { Sergey: {} } } },
+    "disabled.json.disabled": { attacker: { heroes: { Gwen: {} } } },
+    "stale.json.stale_troops": { defender: { heroes: { Gwen: {} } } },
+  };
+  for (const [file, entry] of Object.entries(fixtures)) {
+    writeFileSync(resolve(testcaseRoot, file), JSON.stringify(entry));
+  }
+  writeFileSync(resolve(testcaseRoot, "Gwen-invalid.json"), "{");
+  writeFileSync(resolve(testcaseRoot, "invalid.json"), "{");
+
+  const expected = [
+    "Gwen-invalid.json", "attacker-joiner.json", "attacker.json",
+    "defender-joiner.json", "defender.json",
+  ];
+  assert.deepEqual(
+    discoverTestcaseFiles({ testcaseRoot, matching: "Gwe" }),
+    expected.map((file) => resolve(testcaseRoot, file)).sort(),
+  );
+  assert.deepEqual(
+    discoverTestcaseFiles({ testcaseRoot, matching: "Gwe", includeDisabled: true }),
+    [...expected, "disabled.json.disabled", "stale.json.stale_troops"]
+      .map((file) => resolve(testcaseRoot, file)).sort(),
+  );
+  assert.deepEqual(
+    discoverTestcaseFiles({ testcaseRoot, matching: "unrelated" }),
+    [resolve(testcaseRoot, "unrelated.json")],
+  );
+  assert.deepEqual(discoverTestcaseFiles({ testcaseRoot, matching: "missing" }), []);
 });
 
 test("runTestcases returns compact summary entries and full detail entries separately", () => {
@@ -259,6 +297,71 @@ test("runTestcases retains the adjusted comparison samples when requested", () =
   assert.ok(adjustment && adjustment.value > 0 && adjustment.value <= 0.05);
   assert.notEqual(adjustment.unadjusted.mu_candidate, summary?.game?.mu_candidate);
   assert.deepEqual(detail?.comparisonSamples, [summary?.game?.mu_candidate]);
+});
+
+test("exact comparisons reject off-by-one and equal-mean outcomes but allow stat rounding correction", (t) => {
+  const testcaseRoot = tempDir("simulator-exact");
+  t.after(() => rmSync(testcaseRoot, { recursive: true, force: true }));
+  const file = resolve(testcaseRoot, "exact.json");
+  const entry = {
+    attacker: { troops: { infantry_t1: 1000 }, stats: { infantry: { attack: 100.001 } } },
+    defender: { troops: { infantry_t1: 900 } }
+  };
+  const config = testcaseFixtureConfig();
+  writeFileSync(file, JSON.stringify(entry));
+  const score = battleScoreDelta(runTestcases({ testcaseRoot }, config).details[0]!.result)!;
+  const outcome = (value: number) => ({ attacker: Math.max(0, value), defender: Math.max(0, -value) });
+  writeFileSync(file, JSON.stringify([
+    { ...entry, test_id: "same", game_report_result: outcome(score) },
+    { ...entry, test_id: "off_by_one", game_report_result: outcome(score + 1) },
+    { ...entry, test_id: "same_mean", game_report_result: [outcome(score - 1), outcome(score + 1)] }
+  ]));
+  const normal = runTestcases({ testcaseRoot }, config);
+  assert.ok(Object.values(normal.testcases).every((summary) => summary.game?.passes));
+  const exact = runTestcases({ testcaseRoot, exact: true }, config);
+  assert.deepEqual(Object.values(exact.testcases).map((summary) => summary.game?.passes), [true, false, false]);
+
+  const adjusted = runTestcases({ matching: "determinism_test_normal", exact: true }, loadSimulatorConfig());
+  const summary = Object.values(adjusted.testcases)[0]!;
+  assert.equal(summary.game?.passes, true);
+  assert.equal(summary.game?.bias_raw, 0);
+  assert.equal(summary.gameStatAdjustment?.mode, "deterministic_exact");
+});
+
+for (const preciseSide of ["attacker", "defender"] as const) {
+  test(`three-decimal ${preciseSide} stats keep game comparisons unadjusted`, (t) => {
+    const testcaseRoot = tempDir(`simulator-precise-stats-${preciseSide}`);
+    t.after(() => rmSync(testcaseRoot, { recursive: true, force: true }));
+    writeFileSync(resolve(testcaseRoot, "precise.json"), JSON.stringify({
+      attacker: {
+        troops: { infantry_t1: 1000 },
+        stats: { infantry: { attack: preciseSide === "attacker" ? 100.001 : 100.1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 900 },
+        stats: { infantry: { health: preciseSide === "defender" ? 100.001 : 100.1 } }
+      },
+      game_report_result: { attacker: 264, defender: 0 }
+    }));
+    const report = runTestcases({ testcaseRoot, includeSamples: true }, testcaseFixtureConfig());
+    const summary = Object.values(report.testcases)[0]!;
+    const detail = report.details[0]!;
+
+    assert.notEqual(summary.game?.bias_raw, 0);
+    assert.equal(summary.gameStatAdjustment, undefined);
+    assert.equal(summary.game?.mu_candidate, battleScoreDelta(detail.result));
+    assert.deepEqual(detail.comparisonSamples, [battleScoreDelta(detail.result)]);
+  });
+}
+
+test("two-decimal rounding corrections recover exact no-hero outcomes within 0.005", () => {
+  const report = runTestcases({ matching: "1-testcases_no-heroes_t6_single-type", deterministic: true, exact: true }, loadSimulatorConfig());
+  const summaries = Object.values(report.testcases);
+  assert.equal(summaries.length, 18);
+  assert.ok(summaries.every((entry) => entry.game?.passes));
+  const corrected = summaries.filter((entry) => entry.gameStatAdjustment);
+  assert.equal(corrected.length, 11);
+  assert.ok(corrected.every((entry) => Math.abs(entry.gameStatAdjustment!.value) <= 0.005));
 });
 
 test("deterministic testcase tolerance increases by 0.1 percent every ten rounds and caps at 0.7 percent", () => {

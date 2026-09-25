@@ -21,6 +21,38 @@ function runOnce(input: BattleInput, config: SimulatorConfig, options: Simulatio
   return runPrepared(prepareBattle(input, config), undefined, options);
 }
 
+test("delayed damage settles shields on arrival in recorded Gatot battles", () => {
+  const config = loadSimulatorConfig();
+  for (const [path, survivors] of [
+    ["renee_s2_bucket_confirmations/gatot_shield_500_150.json", 157],
+    ["renee_s2_families/defense_gatot.json", 339]
+  ] as const) {
+    const [input] = JSON.parse(readFileSync(new URL(`../../testcases/emulator_verified/${path}`, import.meta.url), "utf8"));
+    assert.equal(signedRemainingScore(runOnce(input, config)), survivors, path);
+  }
+});
+
+test("exhausted infantry cannot shield marksmen through floating-point residue", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/gwen_s2_source_binding/gwen_s2_source_5.json", import.meta.url), "utf8"));
+  const config = loadSimulatorConfig();
+  delete config.heroDefinitions.Gwen.skills.AirDominance.effects["AirDominance/1"].trigger_effects!["AirDominance/2"].units!.applies_vs;
+  const result = runOnce(input, config, { mode: "standard" });
+  const incoming = result.attacks.filter(attack => attack.round === 15 && attack.dealerSide === "defender");
+  assert.deepEqual(incoming.map(attack => attack.takerUnit), ["marksman", "marksman"]);
+  assert.equal(signedRemainingScore(result), 383);
+});
+
+test("same-turn exhausted targets cannot receive phantom extra skill hits", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/alonso_norah_combo.json", import.meta.url), "utf8"));
+  const seed = "simulator-default:testcases/emulator_verified/alonso_norah_combo.json:alonso_norah_combo:0:264";
+  const result = runPrepared(prepareBattle(input, loadSimulatorConfig()), seed, { mode: "standard" });
+  const phantomHits = result.attacks.filter(attack =>
+    attack.round === 10 && attack.kind === "skill" && attack.dealerSide === "defender" &&
+    attack.dealerUnit === "marksman" && attack.takerUnit === "infantry"
+  );
+  assert.deepEqual(phantomHits, []);
+});
+
 test("runPrepared reuses the compiled input seed when no override is supplied", () => {
   const config = loadSimulatorConfig();
   const stats = {
@@ -83,6 +115,42 @@ test("runPrepared terminates immediately when either or both armies start empty"
   assert.equal(bothEmpty.winner, "draw");
   assert.equal(bothEmpty.rounds, 0);
   assert.equal(bothEmpty.attacks.length, 0);
+});
+
+test("Gwen preparation cycles match recorded survivors and skill counts", () => {
+  const path = fileURLToPath(new URL("../testcases/emulator_verified/gwen_blastmaster_cadence_800m_vs_1200i_100l_100m.json", import.meta.url));
+  const [input] = JSON.parse(readFileSync(path, "utf8")) as BattleInput[];
+  const result = runOnce(input, loadSimulatorConfig());
+
+  assert.deepEqual(result.remaining, {
+    attacker: { infantry: 0, lancer: 0, marksman: 0 },
+    defender: { infantry: 461, lancer: 58, marksman: 44 }
+  });
+  assert.equal(result.skillReport.attacker.find((skill) => skill.skillId === "AirDominance")?.skillActivations, 7);
+  assert.equal(result.skillReport.attacker.find((skill) => skill.skillId === "Blastmaster")?.skillActivations, 9);
+});
+
+test("Ahmose counts four Infantry attacks without counting pauses or stuns", () => {
+  const result = runOnce(
+    {
+      maxRounds: 12,
+      attacker: { troops: { infantry_t6: 1000, lancer_t6: 1000 }, heroes: { Ahmose: { skill_1: 1 } } },
+      defender: { troops: { lancer_t6: 1000 }, heroes: { Sonya: { skill_3: 1 } } }
+    },
+    loadSimulatorConfig()
+  );
+  const infantry = result.attacks.filter(
+    (attack) => attack.dealerSide === "attacker" && attack.dealerUnit === "infantry" && attack.kind === "normal"
+  );
+
+  assert.deepEqual(
+    infantry.filter((attack) => !attack.cancelReason).map((attack) => attack.round),
+    [1, 2, 3, 4, 7, 8, 9, 10, 12]
+  );
+  assert.deepEqual(
+    infantry.filter((attack) => attack.cancelReason === "no_attack").map((attack) => attack.round),
+    [5, 6, 11]
+  );
 });
 
 test("runPrepared returns structured result for a no-hero battle", () => {
@@ -660,14 +728,13 @@ for (const fixture of [
   { id: "ahmose_no_infantry_240l_vs_125i", attacker: { infantry: 0, lancer: 0, marksman: 0 }, defender: { infantry: 11, lancer: 0, marksman: 0 } },
   { id: "ahmose_source_dies_001i_480l_vs_250i", attacker: { infantry: 0, lancer: 3, marksman: 0 }, defender: { infantry: 0, lancer: 0, marksman: 0 } }
 ]) {
-  test(`Ahmose Viper schedules unused pauses without protection: ${fixture.id}`, () => {
+  test(`Ahmose earns no protection without four Infantry attacks: ${fixture.id}`, () => {
     const path = new URL(`../testcases/emulator_verified/${fixture.id}.json`, import.meta.url);
     const [input] = JSON.parse(readFileSync(path, "utf8")) as BattleInput[];
     const result = runOnce(input, loadSimulatorConfig());
 
     assert.equal(result.randomness.deterministic, true);
     assert.deepEqual(result.remaining, { attacker: fixture.attacker, defender: fixture.defender });
-    assert.equal(result.skillReport.attacker.find(entry => entry.skillId === "ViperFormation")!.skillActivations, Math.floor(result.rounds / 4));
     assert.equal(result.attackControlCounts.no_attack, 0);
   });
 }
@@ -1752,6 +1819,52 @@ test("attack-duration effects charged on a cancelled attack unless useEffectsOnN
   const charged = roundTwoKills({});
   const uncharged = roundTwoKills({ useEffectsOnNoAttack: false });
   assert.ok(uncharged > charged, `expected uncharged buff to boost round 2 (${uncharged} > ${charged})`);
+});
+
+test("cancelled incoming attacks charge attack-limited shields only when cancellation charging is enabled", () => {
+  const input: BattleInput = {
+    maxRounds: 2,
+    seed: "cancel-shield-charge",
+    attacker: { troops: { infantry_t1: 1000 }, heroes: {} },
+    defender: { troops: { infantry_t1: 1000 }, heroes: { ShieldAndPause: { skill_1: 1 } } }
+  };
+  const config = minimalConfig({
+    ShieldAndPause: {
+      name: "ShieldAndPause",
+      skills: {
+        OpeningProtection: {
+          trigger: { type: "battle_start" },
+          effects: {
+            pause: {
+              type: "no_attack",
+              value: 100,
+              units: { applies_to: "enemy.infantry", applies_vs: "self.infantry" },
+              duration: { turns: { count: 1, delay: 1 } }
+            },
+            shield: {
+              type: "active.hero.shield",
+              value: 100,
+              units: { applies_to: "self.infantry", applies_vs: "enemy.infantry" },
+              duration: { attacks: { count: 1 } }
+            }
+          }
+        }
+      }
+    }
+  });
+  const [charged, preserved] = [{}, { useEffectsOnNoAttack: false }].map((options) =>
+    runOnce(input, config, { ...options, mode: "trace" }).attacks.filter(
+      (attack) => attack.dealerSide === "attacker" && attack.kind === "normal"
+    )
+  );
+  assert.equal(charged[0].cancelReason, "no_attack");
+  assert.equal(preserved[0].cancelReason, "no_attack");
+  assert.equal(charged[1].round, 2);
+  assert.equal(preserved[1].round, 2);
+  assert.ok(charged[1].kills > 0);
+  assert.equal(preserved[1].kills, 0);
+  assert.equal((charged[1].appliedEffects ?? []).some((applied) => hasEffectKind(applied, "shield")), false);
+  assert.equal(preserved[1].appliedEffects?.some((applied) => hasEffectKind(applied, "shield")), true);
 });
 
 test("no_attack does not advance normal attack cadence counters", () => {
@@ -2929,6 +3042,69 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
   );
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitAgain: 1 });
 });
+
+for (const delayed of [false, true]) {
+  test(`extra hits apply target modifiers to each actual recipient (${delayed ? "captured" : "immediate"})`, () => {
+    const splash: Omit<EffectIntentDefinition, "id"> = {
+      type: "extra_skill_attack",
+      value: 100,
+      units: {
+        applies_to: delayed ? "parent.use.source" : "self.marksman",
+        applies_vs: delayed ? "parent.use.target" : "enemy.any"
+      },
+      trigger_damage_jobs: [{ source: "use.source", target: "enemy.living" }],
+      duration: { turns: { delay: delayed ? 1 : 0, count: 1 }, attacks: { count: 1 } }
+    };
+    const result = runOnce(
+      {
+        maxRounds: delayed ? 2 : 1,
+        attacker: { troops: { marksman_t1: 1000000 }, heroes: { MultiTarget: { skill_1: 1, skill_2: 1 } } },
+        defender: { troops: { infantry_t1: 1000000, lancer_t1: 1000000, marksman_t1: 1000000 }, heroes: {} }
+      },
+      minimalConfig({
+        MultiTarget: {
+          name: "MultiTarget",
+          troop_type: "marksman",
+          skills: {
+            TargetModifiers: {
+              trigger: { type: "battle_start" },
+              effects: {
+                infantryBonus: { type: "type.single_target.damage.up", value: 25, units: { applies_vs: "enemy.infantry" } },
+                lancerBonus: { type: "type.single_target.damage.up", value: 40, units: { applies_vs: "enemy.lancer" } },
+                marksmanPenalty: { type: "type.single_target.damage.down", value: 100, units: { applies_vs: "enemy.marksman" } }
+              }
+            },
+            Splash: {
+              trigger: { type: "turn", first: 1, every: 10 },
+              effects: delayed ? {
+                carrier: {
+                  units: { applies_to: "self.marksman", applies_vs: "enemy.any" },
+                  duration: { turns: { count: 1 }, attacks: { count: 1 } },
+                  trigger_effects: { splash }
+                }
+              } : { splash }
+            }
+          }
+        }
+      })
+    );
+    const parent = result.attacks.find(attack =>
+      attack.round === 1 && attack.dealerSide === "attacker" && attack.kind === "normal"
+    );
+    assert.ok(parent);
+    assert.equal(parent.takerUnit, "infantry");
+    const hits = result.attacks.filter(attack => attack.sourceEffectId === "splash");
+    assert.deepEqual(hits.map(hit => hit.takerUnit), UNIT_TYPES);
+    const factors = { infantry: 1.25, lancer: 1.4, marksman: 0.5 };
+    for (const hit of hits) {
+      assert.equal(hit.round, delayed ? 2 : 1);
+      assert.ok(
+        Math.abs(hit.kills - parent.kills * factors[hit.takerUnit] / 1.25) < 1e-9,
+        `${hit.takerUnit} casualties must use that recipient's modifiers`
+      );
+    }
+  });
+}
 
 test("extra skill trigger damage jobs can resolve to multiple living enemy targets without recursive attack triggers", () => {
   const result = runOnce(

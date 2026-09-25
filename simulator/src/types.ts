@@ -1,3 +1,5 @@
+import type { GeneratedDamage } from "./damage";
+
 export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
 export type DamageKind = "normal" | "skill";
@@ -326,7 +328,7 @@ export interface ActiveEffect {
   uses: number;
   sameEffectStacking: SameEffectStacking;
   triggerEffects?: ResolvedEffectIntentDefinition[];
-  /** Completed damage captured when this runtime effect was materialized and emitted on its later matching attack. */
+  /** Generation-time damage awaiting shield settlement on its later matching attack. */
   pendingDamageJobs?: PendingDamageJob[];
   effectGroup?: ActiveEffectGroup;
   effectGroupPosition?: number;
@@ -376,7 +378,7 @@ export interface DamageResult {
 
 export interface PendingDamageJob {
   job: DamageJob;
-  result: DamageResult;
+  generated: GeneratedDamage;
 }
 
 export interface CounterDelta {

@@ -161,6 +161,15 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
     }
   }
   linkRequiredEffectGroups(effectGroups, damageGroupsByJobShape, groupMetadata);
+  // Dependencies retain group identity, but shield delivery uses the small live list.
+  const heroShield = damageBucketIndex("active.hero.shield");
+  const troopShield = damageBucketIndex("active.troop.shield");
+  for (const groups of damageGroupsByJobShape) {
+    for (let i = groups.length - 1; i >= 0; i -= 1) {
+      const bucket = groups[i].bucketIndex;
+      if (bucket === heroShield || bucket === troopShield) groups.splice(i, 1);
+    }
+  }
   return {
     preBattle,
     battleStart,

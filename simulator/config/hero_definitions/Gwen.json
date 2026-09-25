@@ -20,7 +20,7 @@
             25
           ],
           "units": {
-            "applies_to": "enemy.any"
+            "applies_to": "trigger.target"
           },
           "duration": {
             "attacks": {
@@ -35,7 +35,6 @@
       "description": "Grants all troops' attack X% extra damage after every 5 attacks and causes the target to receive X% extra damage for its next attack received",
       "trigger": {
         "type": "attack",
-        "first": 5,
         "every": 6,
         "source": "self.any"
       },
@@ -58,28 +57,26 @@
               "source": "use.source",
               "target": "use.target"
             }
-          ]
-        },
-        "AirDominance/2": {
-          "type": "active.hero.damageTaken.up",
-          "value": [
-            5,
-            7.5,
-            10,
-            12.5,
-            15
           ],
-          "units": {
-            "applies_to": "trigger.target"
-          },
-          "same_effect_stacking": "max",
-          "duration": {
-            "turns": {
-              "count": 1,
-              "delay": 1
-            },
-            "attacks": {
-              "count": 1
+          "trigger_effects": {
+            "AirDominance/2": {
+              "type": "active.hero.damageTaken.up",
+              "value": [
+                5,
+                7.5,
+                10,
+                12.5,
+                15
+              ],
+              "units": {
+                "applies_to": "parent.use.target"
+              },
+              "same_effect_stacking": "max",
+              "duration": {
+                "attacks": {
+                  "count": 1
+                }
+              }
             }
           }
         }
@@ -89,8 +86,7 @@
       "description": "Gwen equips her Marksmen with grenades, dealing X% extra damage to all enemies on the next attack of every 4 attacks",
       "trigger": {
         "type": "attack",
-        "first": 5,
-        "every": 4,
+        "every": 5,
         "source": "marksman"
       },
       "effects": {

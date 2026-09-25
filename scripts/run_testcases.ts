@@ -117,6 +117,8 @@ function parseArgs(args: string[]): CliOptions {
     else if (arg === "--testcase-root") testcaseOptions.testcaseRoot = readOptionValue(args, ++index, arg);
     else if (arg === "--calibration-report") testcaseOptions.calibrationReportPath = readOptionValue(args, ++index, arg);
     else if (arg === "--include-disabled") testcaseOptions.includeDisabled = true;
+    else if (arg === "--deterministic") testcaseOptions.deterministic = true;
+    else if (arg === "--exact") testcaseOptions.exact = true;
     else if (arg === "--seed") testcaseOptions.seed = readOptionValue(args, ++index, arg);
     else if (arg === "--workers") testcaseOptions.workers = readPositiveIntegerOption(args, ++index, arg);
     else if (arg === "--output-dir") options.outputDir = resolve(readOptionValue(args, ++index, arg));
@@ -247,7 +249,9 @@ export function formatHumanSummary(report: TestcaseRunReport): string {
     "Testcase summary",
     `Created: ${report.createdAt}`,
     `Files: ${report.counts.filesFound}  Cases: ${report.counts.testcasesFound}  Executed: ${report.counts.executed}  Errors: ${report.counts.errors}  Warnings: ${headlineWarningCount(report)}`,
-    `Stochastic failures: raw p < ${formatProbability(DEFAULT_STOCHASTIC_P_THRESHOLD)} (less than 1 in 250; no multiple-testing adjustment)`,
+    report.options.exact
+      ? "Exact integer matching; stat rounding allowed: +/-0.05 pp (1dp), +/-0.005 pp (2dp)"
+      : `Stochastic failures: raw p < ${formatProbability(DEFAULT_STOCHASTIC_P_THRESHOLD)} (less than 1 in 250; no multiple-testing adjustment)`,
     ""
   ];
 
@@ -290,7 +294,9 @@ function humanRow(entry: TestcaseSummaryEntry, detail: TestcaseCaseReport | unde
     gameN: formatNumber(entry.game?.n_reference),
     mode: entry.deterministic ? "det" : entry.sampleCount > 1 ? "stoch" : "single",
     statType: entry.game?.stat_type === "cdf_support" ? "cdf_sup" : entry.game?.stat_type === "deterministic" ? "det" : "-",
-    statAdjustment: formatSignedPct(entry.gameStatAdjustment?.value),
+    statAdjustment: entry.gameStatAdjustment
+      ? `${entry.gameStatAdjustment.value >= 0 ? "+" : ""}${entry.gameStatAdjustment.value}%`
+      : "-",
     gameMu: formatNumber(entry.game?.mu_reference),
     simMu: formatNumber(entry.game?.mu_candidate),
     gameSd: formatNumber(entry.game?.sigma_reference),

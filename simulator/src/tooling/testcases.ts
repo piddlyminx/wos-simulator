@@ -25,6 +25,8 @@ export interface TestcaseRunOptions {
   calibrationReportPath?: string;
   matching?: string;
   includeDisabled?: boolean;
+  deterministic?: boolean;
+  exact?: boolean;
   repeat?: number;
   seed?: string | number;
   workers?: number;
@@ -151,11 +153,13 @@ export interface TestcaseExecutionJob {
   seed?: string | number;
   includeSamples?: boolean;
   simulationMode?: SimulationMode;
+  deterministic?: boolean;
 }
 
 export interface TestcaseExecutionResult {
   testcaseId: string;
   index: number;
+  skipped?: boolean;
   result?: BattleResult;
   deterministic?: boolean;
   sampleCount?: number;
@@ -199,8 +203,27 @@ export function discoverTestcaseFiles(options: Pick<TestcaseRunOptions, "testcas
   return files
     .filter((file) => isDiscoverableTestcaseFile(file, options.includeDisabled))
     .filter((file) => options.includeDisabled || (!file.endsWith(".disabled") && !file.endsWith(".stale_troops")))
-    .filter((file) => !options.matching || file.includes(options.matching))
+    .filter((file) => !options.matching || file.includes(options.matching) || fileHeroesMatch(file, options.matching))
     .sort();
+}
+
+function fileHeroesMatch(file: string, matching: string): boolean {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(readFileSync(file, "utf8"));
+  } catch {
+    return false;
+  }
+  const entries = Array.isArray(parsed) ? parsed : [parsed];
+  return entries.some((entry) => {
+    const testcase = asObject(entry);
+    return [testcase.attacker, testcase.defender].some((side) => {
+      const army = asObject(side);
+      return [army.heroes, army.joiner_heroes].some((heroes) =>
+        Object.keys(asObject(heroes)).some((name) => name.includes(matching)),
+      );
+    });
+  });
 }
 
 export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfig): TestcaseRunReport {
@@ -271,7 +294,8 @@ export function runPreparedTestcases(
       continue;
     }
     try {
-      const execution = execute({ file, reportFile, testcaseId, index, input: preparedCase.input, repeat, seed: options.seed }, config);
+      const execution = execute({ file, reportFile, testcaseId, index, input: preparedCase.input, repeat, seed: options.seed, deterministic: options.deterministic }, config);
+      if (execution.skipped) continue;
       applyExecutionResult(report, comparison, preparedCase, execution, config);
     } catch (error) {
       detail.error = errorMessage(error);
@@ -317,7 +341,8 @@ export async function runPreparedTestcasesAsync(
         index: preparedCase.index,
         input: preparedCase.input,
         repeat,
-        seed: options.seed
+        seed: options.seed,
+        deterministic: options.deterministic
       });
       return { preparedCase, execution };
     } catch (error) {
@@ -327,6 +352,7 @@ export async function runPreparedTestcasesAsync(
 
   for (const { preparedCase, execution, error } of await Promise.all(jobs)) {
     const { reportFile, testcaseId, index, detail } = preparedCase;
+    if (execution?.skipped) continue;
     if (!preparedCase.input || !preparedCase.key) {
       if (preparedCase.adaptError) report.errors.push(preparedCase.adaptError);
       report.details.push(detail);
@@ -389,8 +415,7 @@ function applyExecutionResult(
       })
     : null;
   if (game) {
-    const unroundedBiasRaw = stats.mu - mean(gameSamples);
-    game = adjustedForRoundingRules(game, result.randomness.deterministic, initialTroops, result.rounds, unroundedBiasRaw);
+    game = adjustedForRoundingRules(game, result.randomness.deterministic, initialTroops, result.rounds, simulatorSamples, gameSamples, report.options.exact);
   }
   const gameStatAdjustment = game && preparedCase.input
     ? findGameStatAdjustment({
@@ -402,6 +427,7 @@ function applyExecutionResult(
         initialTroops,
         averageRounds: result.rounds,
         deterministic: result.randomness.deterministic,
+        exact: report.options.exact,
         thresholds: comparison.thresholds
       })
     : undefined;
@@ -457,13 +483,25 @@ function findGameStatAdjustment(options: {
   averageRounds: number;
   deterministic: boolean;
   thresholds?: Record<string, number>;
+  exact?: boolean;
 }): InternalStatAdjustment | undefined {
+  let maxAdjustment = STAT_ROUNDING_MAX_ADJUSTMENT;
+  for (const fighter of [options.input.attacker, options.input.defender]) {
+    for (const stats of Object.values(fighter.stats ?? {}) as Array<Partial<StatBlock>>) {
+      for (const key of ["attack", "defense", "lethality", "health"] as const) {
+        const value = stats[key];
+        if (value === undefined) continue;
+        if (Math.abs(value * 100 - Math.round(value * 100)) > 1e-9) return undefined;
+        if (Math.abs(value * 10 - Math.round(value * 10)) > 1e-9) maxAdjustment = 0.005;
+      }
+    }
+  }
   // Deterministic cases correct any nonzero bias; stochastic cases correct only outright misses.
   // Either way a nonzero bias is needed to pick a search direction.
   const shouldCorrect = options.deterministic ? options.game.bias_raw !== 0 : !options.game.passes;
   if (!shouldCorrect || options.game.bias_raw === 0) return undefined;
   const direction = -Math.sign(options.game.bias_raw);
-  const maxCandidate = evaluateStatAdjustment(options, direction * STAT_ROUNDING_MAX_ADJUSTMENT);
+  const maxCandidate = evaluateStatAdjustment(options, direction * maxAdjustment);
   let best = maxCandidate;
   if (maxCandidate.mode === "deterministic_exact") return maxCandidate;
 
@@ -501,6 +539,7 @@ function evaluateStatAdjustment(options: {
   averageRounds: number;
   deterministic: boolean;
   thresholds?: Record<string, number>;
+  exact?: boolean;
 }, value: number): InternalStatAdjustment {
   const adjustedInput = inputWithStatAdjustment(options.input, value);
   const candidateSamples = simulateAdjustedOutcomes(adjustedInput, options.job, options.config);
@@ -524,7 +563,9 @@ function evaluateStatAdjustment(options: {
       options.deterministic,
       options.initialTroops,
       options.averageRounds,
-      mean(candidateSamples) - mean(options.reference)
+      candidateSamples,
+      options.reference,
+      options.exact
     ),
     samples: candidateSamples
   };
@@ -586,10 +627,21 @@ function adjustedForRoundingRules(
   deterministic: boolean,
   initialTroops: number,
   averageRounds: number,
-  unroundedBiasRaw: number
+  candidate: readonly number[],
+  reference: readonly number[],
+  exact = false
 ): ParityComparisonMetrics {
+  if (exact) {
+    const expected = reference[0];
+    return {
+      ...metric,
+      passes: Number.isInteger(expected)
+        && reference.every((value) => value === expected)
+        && candidate.every((value) => value === expected)
+    };
+  }
   if (!deterministic) return metric;
-  const unroundedBiasPct = Math.abs(unroundedBiasRaw / (initialTroops || 1)) * 100;
+  const unroundedBiasPct = Math.abs((mean(candidate) - mean(reference)) / (initialTroops || 1)) * 100;
   return { ...metric, passes: unroundedBiasPct <= deterministicRoundTolerancePct(averageRounds) };
 }
 
@@ -614,7 +666,7 @@ function statAdjustmentForReport(adjustment: InternalStatAdjustment): TestcaseSt
 }
 
 function roundStatAdjustment(value: number): number {
-  return Number(value.toFixed(3));
+  return Number(value.toFixed(4));
 }
 
 function finalizeReport(report: TestcaseRunReport): void {
@@ -635,6 +687,9 @@ export function executeTestcaseCase(job: TestcaseExecutionJob, config: Simulator
     const sampleDeltas: number[] = [];
     // Resolve the battle once and reuse it across every seeded sample of this case.
     const compiled = prepareBattle(job.input, config);
+    if (job.deterministic && !compiled.runtimeSkills.randomness.deterministic) {
+      return { testcaseId: job.testcaseId, index: job.index, skipped: true, diagnostics: [] };
+    }
     const baseSeed = job.seed ?? job.input.seed;
     const sample = (iteration: number) => runPrepared(
       compiled,

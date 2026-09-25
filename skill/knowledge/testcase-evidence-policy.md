@@ -43,6 +43,8 @@ When input uncertainty is a plausible explanation, identify the uncertain input 
 
 Checking only interval corners does not establish the complete envelope when a battle is non-monotonic. Establish a valid dominance argument or inspect relevant interior combinations. A state discontinuity found only outside a plausible input interval does not explain the recorded battle. Do not silently adjust stats or replace observations with fitted values.
 
+The testcase runner must not apply stat adjustments when any recorded troop stat on either side has precision beyond one decimal place. Compare those cases at their recorded values; the one-decimal rounding allowance does not apply.
+
 | Comparison | Interpretation |
 |---|---|
 | Exact endpoint, or roughly 1–2 survivors for a sub-1,000 army | Practical deterministic agreement in the exercised context |

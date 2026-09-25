@@ -56,6 +56,7 @@ export interface DamageRecordingResult {
 
 /** Per-damage-job observation sink selected by the enclosing battle recorder. */
 export interface DamageJobRecorder {
+  readonly needsFactors: boolean;
   recordEffect(effect: ActiveEffect, value: number): void;
   recordRejected(effect: ActiveEffect, reason: RejectedEffectReason): void;
   finish(result: DamageRecordingResult): DamageResult;
@@ -122,6 +123,7 @@ const NO_APPLIED_EFFECTS: AppliedEffect[] = [];
 const EMPTY_SKILL_REPORT: Record<SideId, SkillReportEntry[]> = { attacker: [], defender: [] };
 
 const NULL_DAMAGE_JOB_RECORDER: DamageJobRecorder = {
+  needsFactors: false,
   recordEffect() {},
   recordRejected() {},
   finish({ kills }) {
@@ -391,6 +393,7 @@ export class FullTraceRecorder extends BasicInfoRecorder {
 }
 
 class BasicDamageJobRecorder implements DamageJobRecorder {
+  readonly needsFactors = false;
   private readonly appliedEffects: AppliedEffect[] = [];
 
   constructor(private readonly staticApplied?: StaticAppliedIndex) {}
@@ -410,6 +413,7 @@ class BasicDamageJobRecorder implements DamageJobRecorder {
 }
 
 class FullDamageJobRecorder implements DamageJobRecorder {
+  readonly needsFactors = true;
   private readonly appliedEffects: DamageEquationTrace["appliedEffects"] = [];
   private readonly contributors: DamageBucketTrace["contributors"][] = Array.from(
     { length: DYNAMIC_BUCKETS.length },

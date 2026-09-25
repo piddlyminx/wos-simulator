@@ -348,6 +348,8 @@ For example, an attack-triggered effect created during round 3 with `{ "turns": 
 
 An attack-triggered effect with `{ "turns": { "count": 1 } }` is available for later jobs in the same round, but expires before the next round begins. It does not mean “the next full turn.”
 
+The native troop skills MasterBrawler, Charge, and RangedStrike use source/target matchup conditions on their attack triggers, apply their buffs to `trigger.source`, and use `{ "turns": { "count": 1 } }`. They omit effect-level `applies_vs`: the matchup controls activation, not subsequent recipients. The buff applies to the triggering attack and later attacks by that troop type in the same round, including extra attacks against other troop types. Extra attacks do not activate these skills again.
+
 **Battle-start delay gotcha.** Battle-start effects are created at setup round 0, while the earliest active round is clamped to 1. Consequently, both `turns.delay: 0` and `turns.delay: 1` start in round 1. A battle-start effect needs `delay: 2` to begin in round 2. No current hero definition combines `battle_start` with a turn delay, but the distinction matters when authoring one.
 
 ### `attacks`
@@ -453,9 +455,13 @@ If selectors produce multiple sources and targets, the simulator considers their
 
 The job selector determines the actual side as well as the unit. The runtime does not enforce that a generated source and target are opponents, so scopes misconfigured onto the same side can generate friendly-fire or same-side jobs.
 
+Target-specific modifiers are selected against each generated job's actual recipient. They do not inherit the initiating normal attack's target or its matchup bonuses.
+
 The extra-attack effect is charged once for the parent normal attack if at least one of its jobs runs. If its `value` is non-positive, every job lacks living source/target troops, or every job is skipped because its target is already exhausted, the effect is not charged and can remain available.
 
-When an `extra_skill_attack` is materialized as a carrier's `trigger_effects` child, its completed damage result is captured in the carrier-use round and stored on that child ActiveEffect. The child can deliver that fixed result only when a later normal attack matches its resolved source and target scope. Delivery does not run the damage equation again; if the matching attack never occurs during the child's duration, the pending damage expires with the effect.
+Immediate and delayed hits share the same generation and delivery routines. Generation uses reusable scratch and the prepared modifier-group index to calculate non-shield damage. Delivery selects applicable shields from a small live list, consumes protection, and applies the current target-troop cap. Shield activation and expiry use the ordinary effect scheduler; shields retain group identity for stacking and dependencies but are excluded from the modifier job-shape lists.
+
+When an `extra_skill_attack` is materialized as a carrier's `trigger_effects` child, its generated damage is retained on that child ActiveEffect. Fast and standard modes retain scalar calculation state and the recording context; only trace mode copies the full bucket factors. Shields are not selected, advanced, or consumed during generation. The child can deliver its damage only when a later normal attack matches its resolved source and target scope, after that normal hit has resolved. Delivery uses the generation-time health conversion factor for shield-budget conversion without recalculating the damage. If the matching attack never occurs during the child's duration, the pending damage expires without consuming shields.
 
 Renee's Nightmare Trace uses this form with a one-turn delay: the even-round Lancer attack locks the target and calculates the damage, then the following odd-round Lancer attack delivers it. The precise capture ordering and treatment of defensive state are provisional reverse-engineering assumptions, not confirmed game mechanics.
 

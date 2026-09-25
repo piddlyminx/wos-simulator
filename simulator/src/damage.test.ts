@@ -2,17 +2,20 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
-  calculateDamageJob,
+  generateDamageJob,
+  deliverDamageJob,
+  retainGeneratedDamage,
+  type DamageJobOptions,
   ceilIgnoringFloatResidue,
   createDamageScratch,
   evaluateDamageExpression
 } from "./damage";
 import { DYNAMIC_BUCKETS, STATIC_BUCKETS, type BucketJobSide, type BucketPlacement } from "./damageBuckets";
-import { createEffectIndex, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, indexEffect } from "./effectIndex";
+import { createEffectIndex, damageShapeSlotsForEffect, DAMAGE_JOB_SHAPE_SLOTS, expireEffectIndex, indexEffect } from "./effectIndex";
 import { activateEffect, evolvingActiveEffectValue, resolvedEffectScopeKey } from "./effects";
 import { buildStaticDamageBucketFactors, buildStaticDamageProfile } from "./staticDamageProfile";
-import { createRecorder, type BattleRecorder } from "./recorder";
-import type { ActiveEffect, DamageJob, ResolvedFighter } from "./types";
+import { createRecorder } from "./recorder";
+import type { ActiveEffect, DamageJob, EvolvingActiveEffect, ResolvedFighter } from "./types";
 import { ALL_UNIT_MASK, unitMask } from "./types";
 
 const job: DamageJob = {
@@ -62,8 +65,19 @@ function calculateIndexedDamageJob(
   damageJob: DamageJob,
   fighters: Record<"attacker" | "defender", ResolvedFighter>,
   effects: ActiveEffect[],
-  options: Omit<Partial<Parameters<typeof calculateDamageJob>[2]>, "recorder"> & { recorder?: BattleRecorder; trace?: boolean } = {}
+  options: Partial<DamageJobOptions> & { trace?: boolean } = {}
 ) {
+  const preparedOptions = damageJobOptions(fighters, effects, options);
+  const generated = generateDamageJob(damageJob, fighters, preparedOptions);
+  const result = deliverDamageJob(damageJob, generated, preparedOptions);
+  return { ...result, usedEffectIds: preparedOptions.usedEffects!.map((usedEffect) => usedEffect.intent.id) };
+}
+
+function damageJobOptions(
+  fighters: Record<"attacker" | "defender", ResolvedFighter>,
+  effects: ActiveEffect[],
+  options: Partial<DamageJobOptions> & { trace?: boolean } = {}
+): DamageJobOptions {
   const effectIndex = options.effectIndex ?? preparedEffectIndex(effects);
   if (!options.effectIndex) {
     for (const activeEffect of effects) {
@@ -77,8 +91,7 @@ function calculateIndexedDamageJob(
   });
   recorder.recordStaticProfile(fighters, effects);
   const { trace: _trace, ...damageOptions } = options;
-  const result = calculateDamageJob(damageJob, fighters, { ...damageOptions, recorder, effectIndex, staticDamageProfile, usedEffects });
-  return { ...result, usedEffectIds: [...usedEffects].map((usedEffect) => usedEffect.intent.id) };
+  return { ...damageOptions, recorder, effectIndex, staticDamageProfile, usedEffects };
 }
 
 function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectIndex> {
@@ -98,7 +111,9 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
       };
       byResolvedGroup.set(key, group);
       groups.push(group);
-      for (const slot of slots) byShape[slot].push(group);
+      if (activeEffect.kind !== "shield") {
+        for (const slot of slots) byShape[slot].push(group);
+      }
     }
     activeEffect.effectGroup = group;
   }
@@ -106,7 +121,7 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
 }
 
 test("damage calculator requires indexed effect candidates", () => {
-  assert.throws(() => calculateDamageJob(job, simpleFighters(), { trace: true } as never), /effectIndex/i);
+  assert.throws(() => generateDamageJob(job, simpleFighters(), { trace: true } as never), /effectIndex/i);
 });
 
 test("damage calculator counts every positive fractional remainder as one living troop", () => {
@@ -473,6 +488,169 @@ test("damage-taken buckets use the expected damage direction", () => {
   assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
 });
 
+test("retained damage preserves generation modifiers and health conversion across scratch reuse", () => {
+  for (const mode of ["fast", "trace"] as const) {
+    const fighters = simpleFighters();
+    const health = effect("active.hero.health.up", "defender", 100);
+    const shield: ActiveEffect = {
+      ...effect("active.hero.shield", "defender", 8),
+      kind: "shield",
+      duration: { turns: { count: 2 } },
+      intent: {
+        id: "source-shield",
+        type: "active.hero.shield",
+        value: 8,
+        value_formula: { type: "percent_of", source: "trigger.source_attack" }
+      }
+    };
+    const index = preparedEffectIndex([health, shield]);
+    indexEffect(index, health);
+    const options = damageJobOptions(fighters, [], {
+      effectIndex: index,
+      scratch: createDamageScratch(),
+      recorder: createRecorder(mode, [], () => { throw new Error("damage-only recorder"); })
+    });
+    const expected = calculateIndexedDamageJob(job, fighters, [effect("active.hero.health.up", "defender", 100)]);
+    const retained = retainGeneratedDamage(generateDamageJob(job, fighters, options));
+    expireEffectIndex(index, health);
+    const interveningJob = { ...job, sourceMultiplier: 3 };
+    const intervening = deliverDamageJob(interveningJob, generateDamageJob(interveningJob, fighters, options), options);
+    assert.ok(intervening.kills > expected.kills);
+    indexEffect(index, shield);
+    const delivered = deliverDamageJob({ ...job, round: 2 }, retained, options);
+    assert.ok(Math.abs(delivered.kills - Math.max(0, expected.kills - 4)) < 1e-12, mode);
+    if (mode === "trace") {
+      assert.equal(delivered.trace?.atomicBuckets["active.hero.health.up"].totalPct, 100);
+      assert.equal(delivered.trace?.damageBeforeOffsets, expected.kills);
+      assert.equal(delivered.trace?.offsetDamage, 4);
+    }
+  }
+});
+
+test("damage generation leaves shield delay and protection untouched until delivery", () => {
+  const fighters = simpleFighters();
+  const shield: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", 4),
+    kind: "shield",
+    duration: { turns: { count: 2 } },
+    remainingAttackDelay: 1
+  };
+  const options = damageJobOptions(fighters, [shield], { trace: true, scratch: createDamageScratch() });
+  const baseline = calculateIndexedDamageJob(job, fighters, []).kills;
+  const first = retainGeneratedDamage(generateDamageJob(job, fighters, options));
+  const second = retainGeneratedDamage(generateDamageJob(job, fighters, options));
+  const firstArrival = deliverDamageJob(job, first, options);
+  const secondArrival = deliverDamageJob(job, second, options);
+  assert.equal(firstArrival.kills, baseline);
+  assert.equal(secondArrival.kills, Math.max(0, baseline - 4));
+  assert.equal(firstArrival.trace?.offsetDamage, 0);
+  assert.equal(secondArrival.trace?.offsetDamage, 4);
+});
+
+test("delayed damage ignores shields that expire or deplete before arrival", () => {
+  const fighters = simpleFighters();
+  const expired: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", 100),
+    kind: "shield",
+    duration: { turns: { count: 1 } }
+  };
+  const depleted: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", 3),
+    kind: "shield",
+    duration: { turns: { count: 2 } }
+  };
+  const options = damageJobOptions(fighters, [expired, depleted], { trace: true, scratch: createDamageScratch() });
+  const baseline = calculateIndexedDamageJob(job, fighters, []).kills;
+  const retained = retainGeneratedDamage(generateDamageJob(job, fighters, options));
+  expireEffectIndex(options.effectIndex, expired);
+  const preceding = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
+  assert.equal(preceding.kills, Math.max(0, baseline - 3));
+  const arrival = deliverDamageJob({ ...job, round: 2 }, retained, options);
+  assert.equal(arrival.kills, baseline);
+  assert.equal(arrival.trace?.offsetDamage, 0);
+  assert.equal(arrival.appliedEffects?.some((applied) => "kind" in applied && applied.kind === "shield"), false);
+});
+
+test("additive turn shields conserve same-group and independent budgets across successive hits", () => {
+  const fighters = simpleFighters();
+  const baseline = calculateIndexedDamageJob(job, fighters, []).kills;
+  const first: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", baseline * 0.5),
+    kind: "shield",
+    duration: { turns: { count: 2 } }
+  };
+  const second: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", baseline * 0.5),
+    kind: "shield",
+    duration: { turns: { count: 2 } }
+  };
+  const troop: ActiveEffect = {
+    ...effect("active.troop.shield", "defender", baseline * 0.5, "troop_skill"),
+    kind: "shield",
+    duration: { turns: { count: 2 } }
+  };
+  const options = damageJobOptions(fighters, [first, second, troop], { trace: true });
+  const outcomes = Array.from({ length: 3 }, () => deliverDamageJob(job, generateDamageJob(job, fighters, options), options));
+  assert.equal(outcomes[0].kills, 0);
+  assert.ok(Math.abs(outcomes[1].kills - baseline * 0.5) < 1e-12);
+  assert.equal(outcomes[2].kills, baseline);
+  assert.ok(Math.abs(outcomes.reduce((total, outcome) => total + outcome.trace!.offsetDamage, 0) - baseline * 1.5) < 1e-12);
+});
+
+test("max-stacked turn shields drain suppressed siblings without adding their protection", () => {
+  const fighters = simpleFighters();
+  const baseline = calculateIndexedDamageJob(job, fighters, []).kills;
+  const weaker: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", baseline * 1.25),
+    intent: { id: "weaker", type: "active.hero.shield", value: baseline * 1.25 },
+    kind: "shield",
+    duration: { turns: { count: 2 } },
+    sameEffectStacking: "max"
+  };
+  const stronger: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", baseline * 1.5),
+    intent: { id: "stronger", type: "active.hero.shield", value: baseline * 1.5 },
+    kind: "shield",
+    duration: { turns: { count: 2 } },
+    sameEffectStacking: "max"
+  };
+  const options = damageJobOptions(fighters, [weaker, stronger], { trace: true });
+  const first = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
+  assert.equal(first.kills, 0);
+  assert.deepEqual(options.usedEffects!.map((active) => active.intent.id).sort(), ["stronger", "weaker"]);
+  assert.deepEqual(first.appliedEffects?.filter((applied) => "kind" in applied && applied.kind === "shield").map((applied) => "value" in applied ? applied.value : undefined), [baseline]);
+  const second = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
+  const third = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
+  assert.ok(Math.abs(second.kills - baseline * 0.5) < 1e-12);
+  assert.equal(third.kills, baseline);
+});
+
+test("only shield-eligible damage kinds and source-target scopes advance attack delay", () => {
+  const fighters = simpleFighters();
+  const shield: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", 4),
+    kind: "shield",
+    intent: { id: "scoped-shield", type: "active.hero.shield", value: 4, applies_to_damage_kinds: ["normal"] },
+    appliesTo: { side: "defender", units: unitMask("lancer") },
+    appliesVs: { side: "attacker", units: unitMask("infantry") },
+    remainingAttackDelay: 1
+  };
+  const options = damageJobOptions(fighters, [shield], { trace: true });
+  const reverse: DamageJob = {
+    ...job, dealerSide: "defender", dealerUnit: "lancer", takerSide: "attacker", takerUnit: "infantry"
+  };
+  for (const ineligible of [{ ...job, kind: "skill" as const }, reverse]) {
+    const outcome = deliverDamageJob(ineligible, generateDamageJob(ineligible, fighters, options), options);
+    assert.equal(outcome.kills, calculateIndexedDamageJob(ineligible, fighters, []).kills);
+    assert.equal(outcome.trace?.offsetDamage, 0);
+  }
+  const firstEligible = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
+  const secondEligible = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
+  assert.equal(firstEligible.trace?.offsetDamage, 0);
+  assert.equal(secondEligible.trace?.offsetDamage, 4);
+  assert.equal(secondEligible.kills, Math.max(0, firstEligible.kills - 4));
+});
+
 test("a durationless shield subtracts its full raw value from normal and skill damage jobs", () => {
   const fighters = simpleFighters();
   const shield = {
@@ -549,6 +727,56 @@ test("a turn-duration shield carries unused protection to the next damage job", 
     ? lancer.appliedEffects[0].value
     : 0;
   assert.equal(infantryApplied + lancerApplied, Math.min(shieldValue, infantryBaseline.kills + lancerBaseline.kills));
+});
+
+test("source-attack shields conserve their budget when health modifiers change", () => {
+  const fighters = simpleFighters();
+  const incoming = { ...job, sourceMultiplier: 0.3 };
+  const health = effect("active.hero.health.up", "defender", 100);
+  const shield: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", 4),
+    kind: "shield",
+    duration: { turns: { count: 1 } },
+    intent: {
+      id: "source-shield",
+      type: "active.hero.shield",
+      value: 4,
+      value_formula: { type: "percent_of", source: "trigger.source_attack" }
+    }
+  };
+
+  const first = calculateIndexedDamageJob(incoming, fighters, [health, shield]);
+  const afterHealthExpires = calculateIndexedDamageJob(incoming, fighters, [shield]);
+  const afterShieldExhaustion = calculateIndexedDamageJob(incoming, fighters, [health, shield]);
+
+  assert.equal(first.kills, 0);
+  assert.ok(Math.abs(afterHealthExpires.kills - 2) < 1e-12);
+  assert.ok(Math.abs(afterShieldExhaustion.kills - 1.5) < 1e-12);
+});
+
+test("kill-derived shield budgets are not converted twice by health modifiers", () => {
+  const fighters = simpleFighters();
+  const incoming = { ...job, sourceMultiplier: 0.3 };
+  const health = effect("active.hero.health.up", "defender", 100);
+  const shield: ActiveEffect = {
+    ...effect("active.hero.shield", "defender", 4),
+    kind: "shield",
+    duration: { turns: { count: 1 } },
+    intent: {
+      id: "kill-shield",
+      type: "active.hero.shield",
+      value: 4,
+      value_formula: { type: "percent_of", source: "trigger.total_kills" }
+    }
+  };
+
+  const first = calculateIndexedDamageJob(incoming, fighters, [health, shield]);
+  const second = calculateIndexedDamageJob(incoming, fighters, [health, shield]);
+  const third = calculateIndexedDamageJob(incoming, fighters, [health, shield]);
+
+  assert.equal(first.kills, 0);
+  assert.equal(second.kills, 0);
+  assert.ok(Math.abs(third.kills - 0.5) < 1e-12);
 });
 
 test("an attack-duration shield keeps its full value in a mixed-formation army", () => {

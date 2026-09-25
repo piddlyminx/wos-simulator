@@ -12,7 +12,9 @@
         }
       ],
       "trigger": {
-        "type": "battle_start"
+        "type": "attack",
+        "source": "infantry",
+        "target": "lancer"
       },
       "effects": {
         "MasterBrawler/1": {
@@ -21,12 +23,10 @@
             10
           ],
           "units": {
-            "applies_to": [
-              "infantry"
-            ],
-            "applies_vs": [
-              "lancer"
-            ]
+            "applies_to": "trigger.source"
+          },
+          "duration": {
+            "turns": { "count": 1 }
           }
         }
       }
@@ -163,7 +163,9 @@
         }
       ],
       "trigger": {
-        "type": "battle_start"
+        "type": "attack",
+        "source": "lancer",
+        "target": "marksman"
       },
       "effects": {
         "Charge/1": {
@@ -172,12 +174,10 @@
             10
           ],
           "units": {
-            "applies_to": [
-              "lancer"
-            ],
-            "applies_vs": [
-              "marksman"
-            ]
+            "applies_to": "trigger.source"
+          },
+          "duration": {
+            "turns": { "count": 1 }
           }
         }
       }
@@ -321,7 +321,9 @@
         }
       ],
       "trigger": {
-        "type": "battle_start"
+        "type": "attack",
+        "source": "marksman",
+        "target": "infantry"
       },
       "effects": {
         "RangedStrike/1": {
@@ -330,12 +332,10 @@
             10
           ],
           "units": {
-            "applies_to": [
-              "marksman"
-            ],
-            "applies_vs": [
-              "infantry"
-            ]
+            "applies_to": "trigger.source"
+          },
+          "duration": {
+            "turns": { "count": 1 }
           }
         }
       }
