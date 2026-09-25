@@ -1,0 +1,145 @@
+[
+  {
+    "test_id": "ahmose_bradley_1000i_vs_3700i",
+    "description": "Battle report 2734693171341989",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Ahmose": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Bradley": {
+          "skill_1": 5,
+          "skill_2": 4,
+          "skill_3": 3,
+          "skill_4": 1
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 422.61,
+          "defense": 405.61,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 281.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 739.42,
+          "defense": 735.42,
+          "lethality": 375.19,
+          "health": 331.96
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 3700
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-25T05:34:09.000Z",
+        "randomseed": 1790314450,
+        "attacker": 0,
+        "defender": 77,
+        "metadata": {
+          "report_reference": "2734693171341989",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 1000,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 350,
+            "lightly_injured": 650,
+            "kills": 1269
+          },
+          "defender": {
+            "troops": 3700,
+            "survivors": 77,
+            "losses": 0,
+            "injured": 1269,
+            "lightly_injured": 2354,
+            "kills": 350
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 1269
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 3700,
+                "survivors": 77,
+                "losses": 0,
+                "injured": 1269,
+                "lightly_injured": 2354,
+                "kills": 350
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Ahmose": {
+                "Viper Formation": {
+                  "triggered": 97,
+                  "displayed_kills": null
+                }
+              },
+              "Bradley": {
+                "Tactical Assistance": {
+                  "triggered": 121,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

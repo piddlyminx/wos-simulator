@@ -1,0 +1,153 @@
+[
+  {
+    "test_id": "wip_renee_gwen_1000l_300m_vs_4500l",
+    "description": "Battle report 2734693171348058",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Gwen": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 1000,
+        "marksman_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 482.4,
+          "defense": 481.7,
+          "lethality": 252.8,
+          "health": 239.41
+        },
+        "marksman": {
+          "attack": 344.4,
+          "defense": 333.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "lancer_t6": 4500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 287.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 281.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 284.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-25T11:33:30.000Z",
+        "randomseed": 1790336011,
+        "attacker": 0,
+        "defender": 1046,
+        "metadata": {
+          "report_reference": "2734693171348058",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 1300,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 455,
+            "lightly_injured": 845,
+            "kills": 1209
+          },
+          "defender": {
+            "troops": 4500,
+            "survivors": 1046,
+            "losses": 0,
+            "injured": 1209,
+            "lightly_injured": 2245,
+            "kills": 455
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 741
+              },
+              "marksman_t6": {
+                "troops": 300,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 105,
+                "lightly_injured": 195,
+                "kills": 468
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 4500,
+                "survivors": 1046,
+                "losses": 0,
+                "injured": 1209,
+                "lightly_injured": 2245,
+                "kills": 455
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 9,
+                  "displayed_kills": 21
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 17,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

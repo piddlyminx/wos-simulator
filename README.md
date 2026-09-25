@@ -36,6 +36,9 @@ adjustments allow ±0.05 percentage points for 1-decimal inputs and ±0.005 for
 2-decimal inputs. Mixed-precision cases use the tighter bound; inputs with more
 than two decimals are not adjusted.
 
+`run_testcases.ts --matching TEXT` selects files whose filename contains `TEXT`
+(case-sensitive). Directory names and testcase contents are not matched.
+
 Simulator-backed operational scripts live at the repo root:
 
 ```bash

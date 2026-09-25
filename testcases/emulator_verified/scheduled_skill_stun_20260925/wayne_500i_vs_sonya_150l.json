@@ -1,0 +1,479 @@
+[
+  {
+    "test_id": "wayne_500i_vs_sonya_150l",
+    "description": "Battle report 2734693171359275",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Wayne": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 402.68,
+          "defense": 391.48,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 150
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 534.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-25T16:26:01.000Z",
+        "randomseed": 1790353562,
+        "attacker": 0,
+        "defender": 35,
+        "metadata": {
+          "report_reference": "2734693171359275",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 175,
+            "lightly_injured": 325,
+            "kills": 41
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 35,
+            "losses": 0,
+            "injured": 41,
+            "lightly_injured": 74,
+            "kills": 175
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 175,
+                "lightly_injured": 325,
+                "kills": 41
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 35,
+                "losses": 0,
+                "injured": 41,
+                "lightly_injured": 74,
+                "kills": 175
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 15,
+                  "displayed_kills": 3
+                },
+                "Thunder Strike": {
+                  "triggered": 29,
+                  "displayed_kills": 4
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 72,
+                  "displayed_kills": 9
+                },
+                "Torrential Impact": {
+                  "triggered": 28,
+                  "displayed_kills": 15
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-25T16:27:05.000Z",
+        "randomseed": 1790353626,
+        "attacker": 0,
+        "defender": 37,
+        "metadata": {
+          "report_reference": "2734693171359302",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 175,
+            "lightly_injured": 325,
+            "kills": 40
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 37,
+            "losses": 0,
+            "injured": 40,
+            "lightly_injured": 73,
+            "kills": 175
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 175,
+                "lightly_injured": 325,
+                "kills": 40
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 37,
+                "losses": 0,
+                "injured": 40,
+                "lightly_injured": 73,
+                "kills": 175
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 13,
+                  "displayed_kills": 4
+                },
+                "Thunder Strike": {
+                  "triggered": 28,
+                  "displayed_kills": 3
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 71,
+                  "displayed_kills": 12
+                },
+                "Torrential Impact": {
+                  "triggered": 28,
+                  "displayed_kills": 13
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-25T16:28:09.000Z",
+        "randomseed": 1790353690,
+        "attacker": 0,
+        "defender": 26,
+        "metadata": {
+          "report_reference": "2734693171359420",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 175,
+            "lightly_injured": 325,
+            "kills": 44
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 26,
+            "losses": 0,
+            "injured": 44,
+            "lightly_injured": 80,
+            "kills": 175
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 175,
+                "lightly_injured": 325,
+                "kills": 44
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 26,
+                "losses": 0,
+                "injured": 44,
+                "lightly_injured": 80,
+                "kills": 175
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 23,
+                  "displayed_kills": 5
+                },
+                "Thunder Strike": {
+                  "triggered": 30,
+                  "displayed_kills": 4
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 75,
+                  "displayed_kills": 10
+                },
+                "Torrential Impact": {
+                  "triggered": 30,
+                  "displayed_kills": 14
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-25T16:29:13.000Z",
+        "randomseed": 1790353754,
+        "attacker": 0,
+        "defender": 30,
+        "metadata": {
+          "report_reference": "2734693171359563",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 175,
+            "lightly_injured": 325,
+            "kills": 42
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 30,
+            "losses": 0,
+            "injured": 42,
+            "lightly_injured": 78,
+            "kills": 175
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 175,
+                "lightly_injured": 325,
+                "kills": 42
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 30,
+                "losses": 0,
+                "injured": 42,
+                "lightly_injured": 78,
+                "kills": 175
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 19,
+                  "displayed_kills": 4
+                },
+                "Thunder Strike": {
+                  "triggered": 29,
+                  "displayed_kills": 4
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 73,
+                  "displayed_kills": 13
+                },
+                "Torrential Impact": {
+                  "triggered": 29,
+                  "displayed_kills": 14
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-25T16:30:17.000Z",
+        "randomseed": 1790353818,
+        "attacker": 0,
+        "defender": 43,
+        "metadata": {
+          "report_reference": "2734693171359749",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 175,
+            "lightly_injured": 325,
+            "kills": 38
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 43,
+            "losses": 0,
+            "injured": 38,
+            "lightly_injured": 69,
+            "kills": 175
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 175,
+                "lightly_injured": 325,
+                "kills": 38
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 43,
+                "losses": 0,
+                "injured": 38,
+                "lightly_injured": 69,
+                "kills": 175
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Fleet": {
+                  "triggered": 11,
+                  "displayed_kills": 2
+                },
+                "Thunder Strike": {
+                  "triggered": 27,
+                  "displayed_kills": 4
+                },
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 68,
+                  "displayed_kills": 12
+                },
+                "Torrential Impact": {
+                  "triggered": 27,
+                  "displayed_kills": 14
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

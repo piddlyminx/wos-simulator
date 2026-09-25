@@ -102,7 +102,7 @@
       },
       "effects": {
         "BladeOfLight/1": {
-          "type": "active.hero.damage.up",
+          "type": "extra_skill_attack",
           "value": [
             12,
             24,
@@ -115,11 +115,12 @@
               "infantry"
             ]
           },
-          "duration": {
-            "attacks": {
-              "count": 1
+          "trigger_damage_jobs": [
+            {
+              "source": "use.source",
+              "target": "use.target"
             }
-          }
+          ]
         },
         "BladeOfLight/2": {
           "type": "active.hero.damageTaken.up",

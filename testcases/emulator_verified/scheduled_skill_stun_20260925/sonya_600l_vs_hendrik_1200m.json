@@ -1,0 +1,155 @@
+[
+  {
+    "test_id": "sonya_600l_vs_hendrik_1200m",
+    "description": "Battle report 2734693171358881",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 600
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 534.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "marksman_t6": 1200
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 479,
+          "defense": 467.8,
+          "lethality": 244.2,
+          "health": 221.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-25T16:21:53.000Z",
+        "randomseed": 1790353314,
+        "attacker": 0,
+        "defender": 422,
+        "metadata": {
+          "report_reference": "2734693171358881",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 600,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 210,
+            "lightly_injured": 390,
+            "kills": 273
+          },
+          "defender": {
+            "troops": 1200,
+            "survivors": 422,
+            "losses": 0,
+            "injured": 273,
+            "lightly_injured": 505,
+            "kills": 210
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 600,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 210,
+                "lightly_injured": 390,
+                "kills": 273
+              }
+            },
+            "defender": {
+              "marksman_t6": {
+                "troops": 1200,
+                "survivors": 422,
+                "losses": 0,
+                "injured": 273,
+                "lightly_injured": 505,
+                "kills": 210
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 14,
+                  "displayed_kills": 16
+                },
+                "Torrential Impact": {
+                  "triggered": 5,
+                  "displayed_kills": 19
+                }
+              }
+            },
+            "defender": {
+              "Hendrik": {
+                "Dagon's Heir": {
+                  "triggered": 7,
+                  "displayed_kills": 14
+                },
+                "Armor of Barnacles": {
+                  "triggered": 7,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

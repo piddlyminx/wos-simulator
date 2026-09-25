@@ -26,8 +26,8 @@ test("discoverTestcaseFiles includes disabled and stale testcase files when requ
   assert.ok(files.some((file) => file.endsWith("emulator_verified/reina_logan_combo_v2.json.stale_troops")));
 });
 
-test("discoverTestcaseFiles matches filenames or heroes on either side, including joiners", (t) => {
-  const testcaseRoot = tempDir("simulator-hero-matching");
+test("discoverTestcaseFiles matches filenames only, not directories or heroes", (t) => {
+  const testcaseRoot = tempDir("simulator-directory-matching");
   t.after(() => rmSync(testcaseRoot, { recursive: true, force: true }));
   const fixtures = {
     "attacker.json": { attacker: { heroes: { Gwen: {} } } },
@@ -35,8 +35,8 @@ test("discoverTestcaseFiles matches filenames or heroes on either side, includin
     "attacker-joiner.json": { attacker: { joiner_heroes: { Gwen: {} } } },
     "defender-joiner.json": { defender: { joiner_heroes: { Gwen: {} } } },
     "unrelated.json": { description: "Gwen", attacker: { heroes: { Sergey: {} } } },
-    "disabled.json.disabled": { attacker: { heroes: { Gwen: {} } } },
-    "stale.json.stale_troops": { defender: { heroes: { Gwen: {} } } },
+    "Gwen-disabled.json.disabled": { attacker: { heroes: { Gwen: {} } } },
+    "Gwen-stale.json.stale_troops": { defender: { heroes: { Gwen: {} } } },
   };
   for (const [file, entry] of Object.entries(fixtures)) {
     writeFileSync(resolve(testcaseRoot, file), JSON.stringify(entry));
@@ -44,17 +44,18 @@ test("discoverTestcaseFiles matches filenames or heroes on either side, includin
   writeFileSync(resolve(testcaseRoot, "Gwen-invalid.json"), "{");
   writeFileSync(resolve(testcaseRoot, "invalid.json"), "{");
 
-  const expected = [
-    "Gwen-invalid.json", "attacker-joiner.json", "attacker.json",
-    "defender-joiner.json", "defender.json",
-  ];
+  mkdirSync(resolve(testcaseRoot, "Gwen"));
+  writeFileSync(resolve(testcaseRoot, "Gwen", "other.json"), "{}");
+  writeFileSync(resolve(testcaseRoot, "Gwen", "Gwen-nested.json"), "{}");
+
+  const expected = ["Gwen-invalid.json", "Gwen/Gwen-nested.json"];
   assert.deepEqual(
     discoverTestcaseFiles({ testcaseRoot, matching: "Gwe" }),
     expected.map((file) => resolve(testcaseRoot, file)).sort(),
   );
   assert.deepEqual(
     discoverTestcaseFiles({ testcaseRoot, matching: "Gwe", includeDisabled: true }),
-    [...expected, "disabled.json.disabled", "stale.json.stale_troops"]
+    [...expected, "Gwen-disabled.json.disabled", "Gwen-stale.json.stale_troops"]
       .map((file) => resolve(testcaseRoot, file)).sort(),
   );
   assert.deepEqual(
@@ -62,6 +63,7 @@ test("discoverTestcaseFiles matches filenames or heroes on either side, includin
     [resolve(testcaseRoot, "unrelated.json")],
   );
   assert.deepEqual(discoverTestcaseFiles({ testcaseRoot, matching: "missing" }), []);
+  assert.deepEqual(discoverTestcaseFiles({ testcaseRoot, matching: "simulator-directory-matching" }), []);
 });
 
 test("runTestcases returns compact summary entries and full detail entries separately", () => {

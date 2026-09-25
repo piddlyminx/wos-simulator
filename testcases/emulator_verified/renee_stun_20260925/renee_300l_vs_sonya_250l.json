@@ -1,0 +1,151 @@
+[
+  {
+    "test_id": "renee_300l_vs_sonya_250l",
+    "description": "Battle report 2734693171360925",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 482.4,
+          "defense": 481.7,
+          "lethality": 252.8,
+          "health": 239.41
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 250
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 534.96,
+          "defense": 534.21,
+          "lethality": 323.16,
+          "health": 285.53
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-25T17:08:58.000Z",
+        "randomseed": 1790356139,
+        "attacker": 61,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171360925",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 300,
+            "survivors": 61,
+            "losses": 0,
+            "injured": 84,
+            "lightly_injured": 155,
+            "kills": 88
+          },
+          "defender": {
+            "troops": 250,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 88,
+            "lightly_injured": 162,
+            "kills": 84
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 300,
+                "survivors": 61,
+                "losses": 0,
+                "injured": 84,
+                "lightly_injured": 155,
+                "kills": 88
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 88,
+                "lightly_injured": 162,
+                "kills": 84
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 15,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 15,
+                  "displayed_kills": 4
+                },
+                "Torrential Impact": {
+                  "triggered": 6,
+                  "displayed_kills": 6
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

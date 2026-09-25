@@ -107,6 +107,9 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
       group = {
         ordinal: groups.length,
         bucketIndex: DYNAMIC_BUCKETS.findIndex((definition) => definition.name === activeEffect.intent.type),
+        attackLimitedTakerModifier: activeEffect.kind === "modifier" &&
+          activeEffect.duration.attacks !== undefined &&
+          DYNAMIC_BUCKETS.find(definition => definition.name === activeEffect.intent.type)?.jobSide === "taker",
         sameEffectStacking: activeEffect.sameEffectStacking
       };
       byResolvedGroup.set(key, group);

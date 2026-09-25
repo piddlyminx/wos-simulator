@@ -122,6 +122,7 @@ function preparedIndex(effects: ActiveEffect[]): ReturnType<typeof createEffectI
       group = {
         ordinal: groups.length,
         bucketIndex: 0,
+        attackLimitedTakerModifier: false,
         sameEffectStacking: effect.sameEffectStacking
       };
       byResolvedGroup.set(key, group);

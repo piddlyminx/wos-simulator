@@ -79,6 +79,7 @@ interface Control {
   effect: ActiveEffect;
   reason: "dodge" | "no_attack";
   attackDurationEffects: ActiveEffect[];
+  blocksTurnAttacks: boolean;
 }
 
 function bearFighterInput(): FighterInput {
@@ -287,6 +288,14 @@ function runLoop(
         const job = normalJob(intent, roundStartTroops);
         if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
 
+        // Captured damage is already in flight; control can prevent placement, not delivery.
+        if (runtime.effectIndex.pendingDamageEffects > 0) {
+          const pendingAttacks = processExtraAttacks("pending", job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+          if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
+            score += pendingAttacks.totalKills;
+          }
+        }
+
         // A pre-existing no_attack prevents the attack from being declared at all.
         // Reactive dodge skills instead roll on this declaration and can dodge this job.
         const noAttack = applicableControl(job, runtime, "no_attack");
@@ -296,6 +305,12 @@ function runLoop(
           materializeTriggeredEffects(control.effect, round, intent, runtime, recorder);
           if (useEffectsOnCancel.no_attack) chargeCancelledAttack(job, control.effect, control.attackDurationEffects, runtime);
           cancelled.push({ intent, control });
+          if (!control.blocksTurnAttacks) {
+            const extraAttacks = processExtraAttacks("cancelled", job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+            if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
+              score += extraAttacks.totalKills;
+            }
+          }
           continue;
         }
 
@@ -328,7 +343,7 @@ function runLoop(
 
         captureTriggeredExtraDamage(triggeredChildren, job, fighters, damageJobOptions, runtime);
         advanceNormalAttackCounters(intent, runtime);
-        const extraAttacks = processExtraAttacks(job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
+        const extraAttacks = processExtraAttacks("immediate", job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
         if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
           score += extraAttacks.totalKills;
         }
@@ -473,15 +488,18 @@ function applicableControl(
 ): Control | undefined {
   const attackDurationEffects: ActiveEffect[] = [];
   let selected: Control | undefined;
+  let blocksTurnAttacks = false;
   for (const effect of runtime.effectIndex.controls) {
     if (controlType(effect) !== reason) continue;
     if (!controlEffectApplies(effect, job, reason)) continue;
     if (!advanceEffectAttackDelay(effect)) continue;
     if (hasAttackDurationConstraint(effect)) attackDurationEffects.push(effect);
+    blocksTurnAttacks ||= reason === "no_attack" && effect.ownerSide !== job.dealerSide;
     selected = {
       effect,
       reason,
-      attackDurationEffects
+      attackDurationEffects,
+      blocksTurnAttacks
     };
   }
   return selected;

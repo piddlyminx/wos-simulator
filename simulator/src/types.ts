@@ -290,6 +290,8 @@ export interface ActiveEffectGroup {
   ordinal: number;
   bucketIndex: number;
   sameEffectStacking: SameEffectStacking;
+  /** Taker-side attack budgets are sampled when captured damage lands, not when it is generated. */
+  attackLimitedTakerModifier: boolean;
   // Prepared dependency lookup indexed by damage-job shape. An empty slot means the
   // required effect cannot apply to that job, so this group must not contribute.
   requiredGroupOrdinalsByJobShape?: Array<number[] | undefined>;

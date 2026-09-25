@@ -22,8 +22,8 @@
             100
           ],
           "units": {
-          "applies_to": "trigger.source",
-          "applies_vs": "trigger.target"
+            "applies_to": "trigger.source",
+            "applies_vs": "trigger.target"
           },
           "duration": {
             "attacks": {
@@ -61,6 +61,7 @@
       "effects": {
         "ChemicalTerror/1": {
           "type": "active.hero.damage.up",
+          "applies_to_damage_kinds": ["normal"],
           "value": [
             30,
             60,
@@ -75,7 +76,8 @@
           },
           "duration": {
             "turns": {
-              "count": 1
+              "count": 1,
+              "delay": 1
             }
           },
           "same_effect_stacking": "max"
@@ -92,6 +94,28 @@
           "units": {
             "applies_to": "enemy.any",
             "applies_vs": "self.any"
+          },
+          "duration": {
+            "turns": {
+              "count": 1
+            }
+          },
+          "same_effect_stacking": "max"
+        },
+        "ChemicalTerror/3": {
+          "type": "active.hero.damage.up",
+          "applies_to_damage_kinds": ["skill"],
+          "value": [
+            30,
+            60,
+            90,
+            120,
+            150
+          ],
+          "units": {
+            "applies_to": [
+              "lancer"
+            ]
           },
           "duration": {
             "turns": {

@@ -142,7 +142,9 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
         const group: ActiveEffectGroup = {
           ordinal: effectGroups.length,
           bucketIndex: damageBucketIndex(definition.name),
-          sameEffectStacking: effect.sameEffectStacking
+          sameEffectStacking: effect.sameEffectStacking,
+          attackLimitedTakerModifier: effect.kind === "modifier" &&
+            effect.duration.attacks !== undefined && definition.jobSide === "taker"
         };
         groupMetadata.set(group, {
           ownerSide: skill.side,

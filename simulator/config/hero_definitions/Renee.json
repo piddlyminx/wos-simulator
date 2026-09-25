@@ -24,7 +24,7 @@
               "type": "extra_skill_attack",
               "value": [40, 80, 120, 160, 200],
               "units": {
-                "applies_to": "parent.use.source",
+                "applies_to": "self.any",
                 "applies_vs": "parent.use.target"
               },
               "trigger_damage_jobs": [
@@ -96,7 +96,6 @@
           "trigger_effects": {
             "Dreamslice/1": {
               "type": "active.hero.damageTaken.up",
-              "applies_to_damage_kinds": ["normal"],
               "value": [15, 30, 45, 60, 75],
               "units": {
                 "applies_to": "parent.use.target",

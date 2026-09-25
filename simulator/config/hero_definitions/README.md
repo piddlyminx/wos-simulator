@@ -195,7 +195,9 @@ For an `attack` trigger, `source` and `target` are matched directly against each
 
 `turn` triggers reject `source` and `target`. They have no attack-shaped source or target; use concrete effect scopes. A broad turn-scoped effect can participate in every matching normal attack during its active window. For example, an `extra_skill_attack` applying to `self.any` with `turns.count: 1` can emit one extra job for each eligible troop attack that turn without matching the generated skill jobs.
 
-Ahmose's Viper Formation creates a one-turn Infantry `no_attack` effect on each scheduled turn, even without Infantry. Only using that effect to pause an attack creates its two `trigger_effects` for damage reduction. Those children start next turn and last two complete turns; an unused pause expires without granting protection. The configuration's `reason` records why activation and actual use are separate.
+Turn-triggered extra attacks run during self-applied `no_attack` pauses, but enemy-applied `no_attack` controls suppress them. Both prevent attack triggers, attack-triggered follow-ups, and normal cadence advancement. Ahmose/Wayne captures verify the self-pause behavior; Sonya/Hendrik and Sonya/Wayne captures verify stun suppression. Other control/skill combinations remain predictions unless separately verified.
+
+Ahmose's Viper Formation counts four actual Infantry attacks, then schedules an Infantry pause for the following turn and damage reduction for that turn and the next. Without Infantry attacks it earns neither pause nor protection.
 
 `pre_battle` and `battle_start` never have an attack-shaped intent. Its `source` and `target` fields are compiled but never used for matching; use effect scopes, not trigger selectors, to scope a battle-start effect.
 
@@ -459,11 +461,15 @@ Target-specific modifiers are selected against each generated job's actual recip
 
 The extra-attack effect is charged once for the parent normal attack if at least one of its jobs runs. If its `value` is non-positive, every job lacks living source/target troops, or every job is skipped because its target is already exhausted, the effect is not charged and can remain available.
 
-Immediate and delayed hits share the same generation and delivery routines. Generation uses reusable scratch and the prepared modifier-group index to calculate non-shield damage. Delivery selects applicable shields from a small live list, consumes protection, and applies the current target-troop cap. Shield activation and expiry use the ordinary effect scheduler; shields retain group identity for stacking and dependencies but are excluded from the modifier job-shape lists.
+Immediate and delayed hits share bucket evaluation, shield settlement, and target caps. Immediate hits calculate and consume their modifiers together. Delayed hits instead separate captured contributions from attack-limited target modifiers.
 
-When an `extra_skill_attack` is materialized as a carrier's `trigger_effects` child, its generated damage is retained on that child ActiveEffect. Fast and standard modes retain scalar calculation state and the recording context; only trace mode copies the full bucket factors. Shields are not selected, advanced, or consumed during generation. The child can deliver its damage only when a later normal attack matches its resolved source and target scope, after that normal hit has resolved. Delivery uses the generation-time health conversion factor for shield-budget conversion without recalculating the damage. If the matching attack never occurs during the child's duration, the pending damage expires without consuming shields.
+When an `extra_skill_attack` is materialized as a carrier's `trigger_effects` child, its generated damage is retained on that child ActiveEffect. Jobs whose prepared shape can receive attack-limited target modifiers retain owned dynamic factors and captured static terms, allowing delivery to combine modifiers without recalculating the source's troop strength. Other jobs retain scalar damage and health-conversion state; only trace mode also needs their bucket factors. Attack-limited target modifiers and shields are not selected, advanced, or consumed during capture. When a later normal attack matches the child's source and target scope, pending damage lands before that attack is declared and before it creates new effects. Delivery applies the currently eligible attack-limited target modifiers to the captured buckets, consumes their uses, and settles live shields and the current target-troop cap. If no matching attack occurs during the child's duration, the pending damage expires without consuming those modifiers or shields.
 
-Renee's Nightmare Trace uses this form with a one-turn delay: the even-round Lancer attack locks the target and calculates the damage, then the following odd-round Lancer attack delivers it. The precise capture ordering and treatment of defensive state are provisional reverse-engineering assumptions, not confirmed game mechanics.
+Renee's Nightmare Trace uses this form with a one-turn delay: the even-round Lancer attack locks the target and calculates the damage, then a matching allied attack on the following odd round delivers it. Its child uses `self.any` for delivery eligibility; the retained job still uses the original Lancer source and locked target, allowing delivery after the Lancers die. The precise capture ordering and treatment of defensive state remain provisional reverse-engineering assumptions.
+
+Pending captured hits land before the matching normal attack's control check, even if that attack will be stunned or paused. New mark placement still requires an unblocked Lancer attack. Pure-Lancer Renee/Sonya captures verify both boundaries: a turn-6 stun prevents placement, while a mark placed on turn 10 still lands during the turn-11 stun. This does not make fresh scheduled strikes stun-immune.
+
+Renee's Dreamslice mark increases both normal and skill damage taken by the marked target. Dreamcatcher's Lancer-specific increase remains restricted to normal damage.
 
 All jobs emitted by one use read the parent extra-attack effect's same current `value`; its use/evolution is charged only after those jobs finish. Other attack-limited **modifier** effects are different: each generated skill job is a separate modifier use, and modifiers are charged after each job, so a one-job modifier can expire before the second target in the same extra attack is calculated.
 
@@ -485,11 +491,11 @@ Cancels a normal attack based on the **dealer**:
 - chance belongs on the skill's `trigger.probability` when needed; it decides whether the control effect is created;
 - `value` is ignored.
 
-Attack-triggered controls are activated during the all-triggers phase and can cancel the same normal intent that triggered them. All matching attack skills have already attempted before the cancellation is applied.
+Pre-existing `no_attack` controls are checked before attack triggers. An attack-triggered control cannot cancel the normal attack that created it; it applies on a later eligible attack.
 
-If both a no-attack and dodge control apply to the same normal attack, no-attack wins. If several live controls of the same type match, the last one encountered is reported as the winning control; matching attack-limited controls can still be charged together. `same_effect_stacking` does not select among controls.
+If both a no-attack and dodge control apply to the same normal attack, no-attack wins. If several live controls of the same type match, the last one encountered is reported as the winning control; matching attack-limited controls can still be charged together. Any matching enemy-applied `no_attack` suppresses turn-triggered extras, even if a self-pause is the last reported control. `same_effect_stacking` does not select among controls.
 
-Controls are checked from the live index for each attack in procedural order. A one-use broad control expires after its first actual use and cannot be pre-attached to later attacks. `no_attack` emits no normal or extra job and advances no cadence counter. Dodge emits a zero-kill normal outcome with `dodged: true`, advances normal cadence, and allows attack triggers and extra jobs to continue.
+Controls are checked from the live index for each attack in procedural order. A one-use broad control expires after its first actual use and cannot be pre-attached to later attacks. `no_attack` emits no normal job and advances no cadence counter. Fresh turn-triggered extra jobs run only if every applicable `no_attack` is owned by the attacking side; attack-triggered follow-ups and new mark placement do not run. Previously captured hits land before the control check. Dodge emits a zero-kill normal outcome with `dodged: true`, advances normal cadence, and allows attack triggers and extra jobs to continue.
 
 ### `attack_order`
 

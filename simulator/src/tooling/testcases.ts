@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, relative, resolve } from "node:path";
+import { basename, dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -203,27 +203,8 @@ export function discoverTestcaseFiles(options: Pick<TestcaseRunOptions, "testcas
   return files
     .filter((file) => isDiscoverableTestcaseFile(file, options.includeDisabled))
     .filter((file) => options.includeDisabled || (!file.endsWith(".disabled") && !file.endsWith(".stale_troops")))
-    .filter((file) => !options.matching || file.includes(options.matching) || fileHeroesMatch(file, options.matching))
+    .filter((file) => !options.matching || basename(file).includes(options.matching))
     .sort();
-}
-
-function fileHeroesMatch(file: string, matching: string): boolean {
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(readFileSync(file, "utf8"));
-  } catch {
-    return false;
-  }
-  const entries = Array.isArray(parsed) ? parsed : [parsed];
-  return entries.some((entry) => {
-    const testcase = asObject(entry);
-    return [testcase.attacker, testcase.defender].some((side) => {
-      const army = asObject(side);
-      return [army.heroes, army.joiner_heroes].some((heroes) =>
-        Object.keys(asObject(heroes)).some((name) => name.includes(matching)),
-      );
-    });
-  });
 }
 
 export function runTestcases(options: TestcaseRunOptions, config: SimulatorConfig): TestcaseRunReport {

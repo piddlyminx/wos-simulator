@@ -1,5 +1,139 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-25 — Existing Dream Marks land through stun
+
+- Deliver pending captured damage before checking the matching normal attack's
+  controls. Stun still prevents new mark placement and fresh scheduled strikes.
+- The existing mixed Renee/Sonya case matches 744 survivors under either model:
+  Sonya stuns Infantry while other allied troop lines can deliver the mark.
+- Added two pure-Lancer captures under `testcases/emulator_verified/renee_stun_20260925/`.
+  The game returns 61 attackers and 106 defenders, exactly matching independent
+  delivery. Blocking delivery predicts 39 attackers and 125 defenders; allowing
+  both placement and delivery through stun predicts 99 attackers and 38 defenders.
+- The regression failed before the correction and now passes. All 252 tests
+  and typechecking pass; exact deterministic passes improve from 283/312 to
+  285/312 on the same expanded cohort. Only the two new capture results change.
+- Comparison evidence:
+  `tmp/renee-stun-evidence-20260925.json`.
+
+## 2026-09-25 — Enemy stuns suppress scheduled extra attacks
+
+- Narrowed the preceding pause change: self-applied pauses permit scheduled
+  extra attacks, but enemy-applied controls suppress them. An overlapping
+  self-pause cannot override an enemy stun.
+- Captured two deterministic Sonya/Hendrik battles: the corrected model
+  matches 422 defenders and 12 attackers exactly; the broad pause model
+  predicted 443 defenders and 4 attackers at the captured stats.
+- Captured five full-kit Wayne/Sonya battles. Defender survivors were
+  35, 37, 26, 30, 43. Across 10,000 simulations per model, suppression predicts
+  a mean of 31.21 defenders versus 26.15 when scheduled strikes ignore stun.
+  All five observed Thunder/Bounty/Torrential counter combinations fit the
+  suppressed schedule and contradict the always-allowed schedule.
+- Preserved seven unique reports under
+  `testcases/emulator_verified/scheduled_skill_stun_20260925/`.
+- All 251 simulator tests and typechecking pass. Same-cohort deterministic
+  exact passes improve from 281/310 to 283/310; only the two new deterministic
+  captures change. The Ahmose/Wayne self-pause matches remain intact.
+
+## 2026-09-25 — Thunder Strike survives Ahmose's pause
+
+- A cancelled normal attack now still delivers active turn-triggered extra
+  attacks. Attack-triggered follow-ups and normal cadence counters remain blocked.
+- Ahmose/Wayne pure-Infantry captures now match 141 defenders against Jasser and
+  50 against Wu Ming at recorded stats, including Viper/Thunder activation counts.
+- Deterministic exact Ahmose passes improve from 47/52 to 49/52; the full
+  deterministic cohort improves from 277/305 to 279/305, with no lost passes.
+  Three Ahmose-matching residuals remain: Gordon/Wu Ming (+49 survivors),
+  Gordon/Wayne/Jasser (-7), and Gordon/Gwen/Gatot/Patrick/Hendrik (-1), using
+  the runner's existing stat-rounding allowance.
+- Added a regression that failed before the fix and passes afterward.
+  All 249 simulator tests and TypeScript typechecking pass.
+
+## 2026-09-25 — Recover delayed-hit fast-mode performance
+
+- Skip the pre-declaration pending-hit pass when the effect index has no active captured damage.
+- Keep captured damage scalar unless its prepared job shape can receive attack-limited target modifiers or trace output requires retained bucket factors.
+- The initial timing change cost 6.4% across six representative fast-mode fixtures. After optimization, a CPU-pinned Node v24.16.0 ABBA comparison measured 0.9% more runtime overall: five fixtures within 1.5%, with the Renee source-death fixture 3.8% slower. This is not a strict per-fixture 1% guarantee.
+- Verification: 128,928 timed battles with fixed seeds and warmup; all 36 complete fast/standard/trace result snapshots unchanged by optimization; 248 tests and TypeScript typechecking pass. Benchmark report: `tmp/renee-timing-performance-20260925.json`; frozen replay bundle: `tmp/renee-timing-benchmark-20260925.tar.gz`.
+
+## 2026-09-25 — Delayed hits consume next-hit modifiers on landing
+
+- Captured damage no longer applies or consumes attack-limited target modifiers.
+  Delivery combines the currently eligible modifiers with the stored damage
+  factors, then consumes them and settles shields. This is generic modifier
+  handling, not a Gwen-specific exception; other heroes' interactions remain
+  predictions unless independently verified.
+- Pending hits land before the following ordinary attack is declared, so they
+  cannot consume a new vulnerability created by that subsequent attack.
+- Fast, standard, and trace modes agree on all six Renee/Gwen probes and the
+  source-death capture. The six Gwen probes now differ from game by 0–3 troops
+  at recorded stats. Exact Renee-matching passes improve from 35/45 to 36/45;
+  five Renee/Gwen residuals and four unrelated path-matched failures remain.
+- Added a mixed Lancer/Marksman regression for capture, delivery ordering, and
+  next-hit consumption. All 248 tests and TypeScript typechecking pass.
+
+## 2026-09-25 — Renee Dream Marks
+
+- Dreamslice now amplifies both normal and skill damage against marked targets.
+  This fixes five recorded Ahmose/Renee interactions exactly without changing
+  the shared damage-taken bucket.
+- Nightmare Trace's captured hit can be delivered by another allied troop type
+  attacking the marked target after the original Lancers die. The captured
+  damage source, target, and calculation remain unchanged.
+- Added a prospective source-death capture: the game reports 184 survivors;
+  the previous model predicts 27 at the captured stats, and the corrected model
+  matches 184. Added regressions for Dreamslice skill damage and source death.
+- Original Renee-matching deterministic exact passes improve from 28/43 to
+  34/43, with no lost passes. Including two new captures under
+  `testcases/emulator_verified/renee_isolation_20260925/`, 35/45 pass.
+- Renee/Gwen timing remains unresolved. A new mixed capture reports 187
+  defenders versus 105 predicted at recorded stats (157 with the runner's
+  allowed stat adjustment). Delivery-time modifier experiments substantially
+  reduce the discrepancy but still miss exact endpoints; they are not applied.
+
+## 2026-09-25 — Gordon skill-damage timing
+
+- Restricted Chemical Terror's following-turn bonus to normal damage. Its
+  skill-damage bonus now applies on the triggering turn, as does suppression.
+  Venom Infusion and Toxic Release are unchanged.
+- Added two Gordon/Wayne captures and a Wayne-only control under
+  `testcases/emulator_verified/gordon_interactions_20260925/`. The larger
+  overlap capture matches 313 defenders at recorded stats. The prospective
+  follow-up predicts 206 versus 207 observed, matching exactly within the
+  existing 0.005 percentage-point stat-rounding allowance. The Wayne-only
+  control matches 21 defenders without adjustment.
+- Added an endpoint regression for the skill-damage overlap. On the same
+  expanded Gordon-matching cohort, exact passes improve from 16/32 to 21/32,
+  with no lost passes. Six actual Gordon cases still fail: four by one
+  survivor, plus the Ahmose/Gordon and Ahmose/Gordon/Wayne mixed formations.
+
+## 2026-09-25 — Ahmose Blade of Light
+
+- Blade of Light now deals a separate skill-damage hit instead of adding its
+  damage percentage to the normal attack's hero-damage bucket. Prayer of Flame,
+  Viper Formation, and Blade's next-turn target debuff are unchanged.
+- Added two live isolation captures under
+  `testcases/emulator_verified/ahmose_isolation_20260925/` and an endpoint
+  regression covering Bradley stacking and Wu Ming's skill-damage reduction.
+  Both captures match at recorded stats: 77 and 82 defenders remaining.
+- Original Ahmose-matching deterministic exact parity improves from 20/51 to
+  39/51; including the new captures, 41/53 pass. Mixed-hero failures remain,
+  including an Ahmose/Renee/Gwen case that regresses from 252 to 274 defenders
+  remaining against the recorded 252.
+
+## 2026-09-25 — Gordon timing
+
+- Chemical Terror's normal Lancer damage bonus now starts on the following turn;
+  its enemy damage reduction remains on the triggering turn. Venom Infusion
+  is unchanged.
+- Added three Gordon-only captures and a no-hero control under
+  `testcases/emulator_verified/gordon_isolation_20260925/`. Two prospective
+  timing probes distinguish the delayed bonus from delayed Venom or delayed
+  suppression; all four captures pass exact comparison with the existing
+  report-stat rounding allowance. Mixed-hero discrepancies remain.
+- Added a regression for Chemical Terror's distinct offensive and defensive
+  phases.
+
 ## Monorepo Reorganization
 
 - **Promoted the TypeScript simulator to the primary source of truth.** `v3/`

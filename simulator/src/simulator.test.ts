@@ -21,6 +21,142 @@ function runOnce(input: BattleInput, config: SimulatorConfig, options: Simulatio
   return runPrepared(prepareBattle(input, config), undefined, options);
 }
 
+test("Gordon suppresses on third turns and boosts normal Lancer damage on the following turns", () => {
+  const result = runOnce({
+    maxRounds: 7,
+    attacker: {
+      troops: { lancer_t6: 1000 },
+      heroes: { Gordon: { skill_1: 2, skill_2: 2, skill_3: 2 } }
+    },
+    defender: { troops: { lancer_t6: 1000 } }
+  }, loadSimulatorConfig(), { mode: "standard" });
+
+  assert.deepEqual(result.attacks
+    .filter((attack) => attack.appliedEffects?.some((effect) => effect.effectId === "ChemicalTerror/1"))
+    .map((attack) => attack.round), [4, 7]);
+  assert.deepEqual(result.attacks
+    .filter((attack) => attack.appliedEffects?.some((effect) => effect.effectId === "ChemicalTerror/2"))
+    .map((attack) => attack.round), [3, 6]);
+});
+
+test("Gordon boosts Wayne skill damage on Chemical Terror's triggering turn", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/gordon_interactions_20260925/gordon_wayne_1200l_vs_4800l.json", import.meta.url), "utf8"));
+  assert.equal(signedRemainingScore(runOnce(input, loadSimulatorConfig())), -313);
+});
+
+test("Ahmose Blade of Light deals separate skill damage with Bradley and against Wu Ming", () => {
+  const config = loadSimulatorConfig();
+  for (const [path, survivors] of [
+    ["ahmose_bradley_1000i_vs_3700i", -77],
+    ["ahmose_1000i_vs_wuming_1000i", -82]
+  ] as const) {
+    const [input] = JSON.parse(readFileSync(new URL(`../../testcases/emulator_verified/ahmose_isolation_20260925/${path}.json`, import.meta.url), "utf8"));
+    assert.equal(signedRemainingScore(runOnce(input, config)), survivors, path);
+  }
+});
+
+test("turn-scheduled Thunder Strike survives Ahmose's Infantry pause", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/ahmose_gordon_renee/ahmose_wayne_vs_jasser.json", import.meta.url), "utf8"));
+  const result = runOnce(input, loadSimulatorConfig());
+  assert.equal(signedRemainingScore(result), -141);
+  assert.equal(result.skillReport.attacker.find(skill => skill.skillId === "ViperFormation")?.skillActivations, 92);
+  assert.equal(result.skillReport.attacker.find(skill => skill.skillId === "ThunderStrike")?.skillActivations, 115);
+  const pausedRound = result.attacks.filter(attack => attack.round === 20 && attack.dealerSide === "attacker");
+  assert.equal(pausedRound.find(attack => attack.kind === "normal")?.cancelReason, "no_attack");
+  assert.deepEqual(pausedRound.filter(attack => attack.kind === "skill").map(attack => attack.sourceEffectId), ["ThunderStrike/1"]);
+});
+
+test("Sonya's stun suppresses Hendrik's scheduled strike", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/scheduled_skill_stun_20260925/sonya_600l_vs_hendrik_1200m.json", import.meta.url), "utf8"));
+  const result = runOnce(input, loadSimulatorConfig());
+  assert.equal(signedRemainingScore(result), -422);
+  assert.equal(result.extraSkillAttackJobsByEffect["DragonsHeir/1"], 7);
+  assert.equal(result.attacks.some(attack => attack.round === 6 && attack.dealerSide === "defender" && attack.kind === "skill"), false);
+});
+
+test("an overlapping self-pause cannot override an enemy stun", () => {
+  const result = runOnce({
+    maxRounds: 1,
+    attacker: { troops: { infantry_t1: 1000 }, heroes: { Stop: { skill_1: 1 } } },
+    defender: { troops: { infantry_t1: 1000 }, heroes: { Pause: { skill_1: 1, skill_2: 1 } } }
+  }, minimalConfig({
+    Stop: {
+      name: "Stop",
+      skills: {
+        Stun: {
+          trigger: { type: "battle_start" },
+          effects: { stun: { type: "no_attack", units: { applies_to: "enemy.infantry" }, duration: { turns: { count: 1 } } } }
+        }
+      }
+    },
+    Pause: {
+      name: "Pause",
+      skills: {
+        Rest: {
+          trigger: { type: "battle_start" },
+          effects: { rest: { type: "no_attack", units: { applies_to: "self.infantry" }, duration: { turns: { count: 1 } } } }
+        },
+        Volley: {
+          trigger: { type: "turn" },
+          effects: {
+            volley: {
+              type: "extra_skill_attack", value: 100,
+              units: { applies_to: "self.infantry" },
+              trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+            }
+          }
+        }
+      }
+    }
+  }));
+  assert.equal(result.attacks.find(attack => attack.dealerSide === "defender")?.cancelReason, "no_attack");
+  assert.equal(result.attacks.some(attack => attack.dealerSide === "defender" && attack.kind === "skill"), false);
+  assert.equal(result.remaining.attacker.infantry, 1000);
+});
+
+test("Renee Dreamslice amplifies allied skill damage against the marked target", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/ahmose_gordon_renee/ahmose_renee_vs_jasser_mark_kind.json", import.meta.url), "utf8"));
+  assert.equal(signedRemainingScore(runOnce(input, loadSimulatorConfig())), 937);
+});
+
+test("Renee's captured Dream Mark survives the loss of its Lancer source", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/renee_isolation_20260925/renee_mark_source_death.json", import.meta.url), "utf8"));
+  assert.equal(signedRemainingScore(runOnce(input, loadSimulatorConfig())), 184);
+});
+
+test("stun prevents Dream Mark placement but not delivery of an existing mark", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/renee_stun_20260925/renee_300l_vs_sonya_250l.json", import.meta.url), "utf8"));
+  const result = runOnce(input, loadSimulatorConfig());
+  assert.equal(signedRemainingScore(result), 61);
+  const marks = result.attacks.filter(attack => attack.sourceEffectId === "NightmareTrace/1");
+  assert.equal(marks.some(attack => attack.round === 7), false);
+  assert.ok(marks.some(attack => attack.round === 11 && attack.kills > 0));
+  assert.equal(result.attacks.find(attack =>
+    attack.round === 11 && attack.dealerSide === "attacker" && !attack.sourceEffectId
+  )?.cancelReason, "no_attack");
+});
+
+test("Dream Mark capture leaves next-hit vulnerability for Marksmen and delivery precedes the next ordinary attack", () => {
+  const input: BattleInput = {
+    maxRounds: 3,
+    attacker: {
+      troops: { lancer_t6: 100000, marksman_t6: 100000 },
+      heroes: { Renee: { skill_1: 4 }, Gwen: { skill_1: 3 } }
+    },
+    defender: { troops: { infantry_t6: 1000000 }, heroes: {} }
+  };
+  const result = runOnce(input, loadSimulatorConfig(), { mode: "trace" });
+  const marksmanHit = result.attacks.find(attack =>
+    attack.round === 2 && attack.dealerSide === "attacker" && attack.dealerUnit === "marksman"
+  )!;
+  assert.ok(marksmanHit.appliedEffects?.some(effect => effect.effectId === "EagleVision/1"));
+  const nextTurn = result.attacks.filter(attack => attack.round === 3 && attack.dealerSide === "attacker");
+  assert.equal(nextTurn[0].sourceEffectId, "NightmareTrace/1");
+  assert.ok(nextTurn[0].appliedEffects?.some(effect => effect.effectId === "EagleVision/1"));
+  assert.equal(nextTurn[1].sourceEffectId, undefined);
+  assert.equal(nextTurn[1].appliedEffects?.some(effect => effect.effectId === "EagleVision/1"), false);
+});
+
 test("delayed damage settles shields on arrival in recorded Gatot battles", () => {
   const config = loadSimulatorConfig();
   for (const [path, survivors] of [
