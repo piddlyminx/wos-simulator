@@ -26,7 +26,7 @@ test("discoverTestcaseFiles includes disabled and stale testcase files when requ
   assert.ok(files.some((file) => file.endsWith("emulator_verified/reina_logan_combo_v2.json.stale_troops")));
 });
 
-test("discoverTestcaseFiles matches filenames only, not directories or heroes", (t) => {
+test("discoverTestcaseFiles matches filenames and participating heroes, but not directories or descriptions", (t) => {
   const testcaseRoot = tempDir("simulator-directory-matching");
   t.after(() => rmSync(testcaseRoot, { recursive: true, force: true }));
   const fixtures = {
@@ -34,6 +34,8 @@ test("discoverTestcaseFiles matches filenames only, not directories or heroes", 
     "defender.json": [{}, { defender: { heroes: { Gwen: {} } } }],
     "attacker-joiner.json": { attacker: { joiner_heroes: { Gwen: {} } } },
     "defender-joiner.json": { defender: { joiner_heroes: { Gwen: {} } } },
+    "array-heroes.json": { attacker: { heroes: [{ name: "Gwen" }] } },
+    "array-joiners.json": { defender: { joiner_heroes: [{ name: "Gwen" }] } },
     "unrelated.json": { description: "Gwen", attacker: { heroes: { Sergey: {} } } },
     "Gwen-disabled.json.disabled": { attacker: { heroes: { Gwen: {} } } },
     "Gwen-stale.json.stale_troops": { defender: { heroes: { Gwen: {} } } },
@@ -48,9 +50,10 @@ test("discoverTestcaseFiles matches filenames only, not directories or heroes", 
   writeFileSync(resolve(testcaseRoot, "Gwen", "other.json"), "{}");
   writeFileSync(resolve(testcaseRoot, "Gwen", "Gwen-nested.json"), "{}");
 
-  const expected = ["Gwen-invalid.json", "Gwen/Gwen-nested.json"];
+  const expected = ["Gwen-invalid.json", "Gwen/Gwen-nested.json", "attacker.json", "defender.json",
+    "attacker-joiner.json", "defender-joiner.json", "array-heroes.json", "array-joiners.json"];
   assert.deepEqual(
-    discoverTestcaseFiles({ testcaseRoot, matching: "Gwe" }),
+    discoverTestcaseFiles({ testcaseRoot, matching: "gwe" }),
     expected.map((file) => resolve(testcaseRoot, file)).sort(),
   );
   assert.deepEqual(

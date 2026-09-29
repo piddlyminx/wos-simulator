@@ -200,10 +200,33 @@ export function discoverTestcaseFiles(options: Pick<TestcaseRunOptions, "testcas
   const root = resolve(options.testcaseRoot ?? defaultTestcaseRoot());
   const files: string[] = [];
   walk(root, files);
+  const matching = options.matching?.toLowerCase();
   return files
     .filter((file) => isDiscoverableTestcaseFile(file, options.includeDisabled))
     .filter((file) => options.includeDisabled || (!file.endsWith(".disabled") && !file.endsWith(".stale_troops")))
-    .filter((file) => !options.matching || basename(file).includes(options.matching))
+    .filter((file) => {
+      if (!matching || basename(file).toLowerCase().includes(matching)) return true;
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(readFileSync(file, "utf8"));
+      } catch {
+        return false;
+      }
+      const entries = Array.isArray(parsed) ? parsed : [parsed];
+      return entries.some((entry) => {
+        const testcase = asObject(entry);
+        for (const side of ["attacker", "defender"]) {
+          const fighter = asObject(testcase[side]);
+          for (const collection of [fighter.heroes, fighter.joiner_heroes]) {
+            const names = Array.isArray(collection)
+              ? collection.map((hero) => asObject(hero).name)
+              : Object.keys(asObject(collection));
+            if (names.some((name) => typeof name === "string" && name.toLowerCase().includes(matching))) return true;
+          }
+        }
+        return false;
+      });
+    })
     .sort();
 }
 

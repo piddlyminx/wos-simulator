@@ -1,5 +1,12 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-25 — Match parity cases by participating heroes
+
+- `--matching` now checks hero and joiner names on both sides as well as filenames,
+  using case-insensitive substring matching. Directory names and descriptions
+  remain excluded.
+- Corrected the filename-only regression test; all 32 testcase-tooling tests pass.
+
 ## 2026-09-25 — Retire pre-rework Flint parity fixtures
 
 - Preserve the two July 2025 reports in `testcases/heroes_unittests/Flint_tc.json.disabled`,

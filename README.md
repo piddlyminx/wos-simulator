@@ -36,8 +36,10 @@ adjustments allow ±0.05 percentage points for 1-decimal inputs and ±0.005 for
 2-decimal inputs. Mixed-precision cases use the tighter bound; inputs with more
 than two decimals are not adjusted.
 
-`run_testcases.ts --matching TEXT` selects files whose filename contains `TEXT`
-(case-sensitive). Directory names and testcase contents are not matched.
+`run_testcases.ts --matching TEXT` selects files whose filename or participating
+hero name contains `TEXT` (case-insensitive). Heroes and joiners on either side
+are matched; directory names and descriptions are not. A matching file runs all
+its testcases, subject to other filters such as `--deterministic`.
 
 Simulator-backed operational scripts live at the repo root:
 
