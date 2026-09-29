@@ -1,5 +1,16 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-26 — Queue dashboard saved-run writes
+
+- Queue saved-run store mutations within the server process, sharing the queue
+  across Next route bundles and development reloads. A slow save, index rebuild,
+  or cleanup no longer makes other local requests exhaust filesystem lock retries.
+- Preserve the cross-process filesystem lock and its existing retry policy.
+  No battle mechanics or saved-run format changes.
+- Reproduced the previous `ELOCKED` failure with a long-held local lock; the
+  regression and all 10 focused lock/store tests pass. Six concurrent saves
+  through the running dashboard and shared SSHFS store all returned HTTP 200.
+
 ## 2026-09-25 — Match parity cases by participating heroes
 
 - `--matching` now checks hero and joiner names on both sides as well as filenames,

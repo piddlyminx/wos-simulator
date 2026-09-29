@@ -141,9 +141,17 @@ either limit, or set it to `0` to disable that limit:
 SIM_RUNS_RETENTION_DAYS=60 SIM_RUNS_MAX_STORAGE_MB=1000 npm run dev
 ```
 
-The saved-run directory is protected with `proper-lockfile`, so it can also be
-pointed at a shared filesystem mount when another trusted app instance writes
-the same store.
+Saved-run mutations queue per directory within each server process, including
+across development module reloads. Only the head of that queue acquires the
+`proper-lockfile` shared-filesystem lock; local requests do not consume lock
+retries while an earlier save, index rebuild, or cleanup is running. Other app
+instances still use the filesystem lock and its bounded retries.
+
+Saving is separate from browser simulation compute. Each save updates the
+shared `.runs-index.json` under the lock, so an SSHFS-backed store adds network
+latency and queued saves wait for earlier writes. Use a local `SIM_RUNS_DIR`
+when cross-instance share links are not needed. Do not delete an active
+`.wos-store.lock` directory to bypass contention.
 
 Saved player stat presets are private browser data. The `/simulate` page stores
 them in `localStorage` under `wos-simulator.player-stat-presets.v1`; there is no
