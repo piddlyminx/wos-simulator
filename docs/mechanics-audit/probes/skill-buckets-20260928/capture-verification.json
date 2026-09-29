@@ -1,0 +1,668 @@
+[
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/control_gatot.json",
+    "report": "2734693171494510",
+    "score": -455,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1000
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50034
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 316,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 576
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/control_none.json",
+    "report": "2734693171494513",
+    "score": 19,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1000
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "attackerRecallSlot": 281,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 792,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/control_edith.json",
+    "report": "2734693171494518",
+    "score": -253,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1000
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50032
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 317,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/control_lumak.json",
+    "report": "2734693171494627",
+    "score": -333,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1000
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50029
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 319,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 576
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/control_ling.json",
+    "report": "2734693171494630",
+    "score": -155,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1000
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50037
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 318,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 792,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/control_jessie.json",
+    "report": "2734693171494632",
+    "score": -276,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1000
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50007
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 320,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/edith_lumak.json",
+    "report": "2734693171494648",
+    "score": -25,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1130
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50032
+            },
+            {
+              "slot": 2,
+              "id": 50029
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 322,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 576
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/gatot_ling.json",
+    "report": "2734693171494651",
+    "score": -16,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1150
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50034
+            },
+            {
+              "slot": 2,
+              "id": 50037
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 321,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 792,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/edith_jessie.json",
+    "report": "2734693171494661",
+    "score": -17,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1110
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50032
+            },
+            {
+              "slot": 2,
+              "id": 50007
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 324,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 576
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/gatot_lumak.json",
+    "report": "2734693171494663",
+    "score": -44,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1210
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50034
+            },
+            {
+              "slot": 2,
+              "id": 50029
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 323,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 792,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/edith_ling.json",
+    "report": "2734693171494667",
+    "score": -66,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1070
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50032
+            },
+            {
+              "slot": 2,
+              "id": 50037
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 326,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 791,
+          "y": 576
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  },
+  {
+    "file": "testcases/emulator_verified/skill_buckets_20260928/gatot_jessie.json",
+    "report": "2734693171494670",
+    "score": -42,
+    "requested": {
+      "attacker": {
+        "account": "minxxx",
+        "formation": {
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1190
+            }
+          ]
+        }
+      },
+      "defender": {
+        "account": "WIP",
+        "formation": {
+          "heroes": [
+            {
+              "slot": 1,
+              "id": 50034
+            },
+            {
+              "slot": 2,
+              "id": 50007
+            }
+          ],
+          "troops": [
+            {
+              "id": 30600,
+              "count": 1600
+            }
+          ]
+        }
+      }
+    },
+    "cleanup": {
+      "defenderRecallSlot": 325,
+      "defenderReturned": true,
+      "attackerReturned": true,
+      "siteClaim": {
+        "kingdomId": 2487,
+        "world": {
+          "x": 792,
+          "y": 577
+        },
+        "retained": false
+      }
+    },
+    "remainingReservations": {
+      "defender": [],
+      "attacker": []
+    },
+    "statsIdenticalToControl": true,
+    "ok": true
+  }
+]

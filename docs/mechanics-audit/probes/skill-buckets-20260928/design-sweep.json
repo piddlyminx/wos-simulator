@@ -1,0 +1,777 @@
+{
+  "createdAt": "2026-09-28T11:56:08.459Z",
+  "kind": "prospective_simulator_forecasts_not_game",
+  "rows": [
+    {
+      "anchor": "Gatot",
+      "hero": "Ling",
+      "a": 1150,
+      "d": 1600,
+      "gap": 37,
+      "p": {
+        "attack": {
+          "score": -16,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 16
+            }
+          },
+          "rounds": 40,
+          "deterministic": true
+        },
+        "damage": {
+          "score": -53,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 53
+            }
+          },
+          "rounds": 38,
+          "deterministic": true
+        },
+        "damageTaken": {
+          "score": -53,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 53
+            }
+          },
+          "rounds": 38,
+          "deterministic": true
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1150
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Gatot": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Ling": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 257.13,
+              "defense": 249.68,
+              "lethality": 188,
+              "health": 193.5
+            },
+            "lancer": {
+              "attack": 208.71,
+              "defense": 208.01,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      }
+    },
+    {
+      "anchor": "Gatot",
+      "hero": "Lumak",
+      "a": 1210,
+      "d": 1600,
+      "gap": 98,
+      "p": {
+        "attack": {
+          "score": 54,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 54
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 38,
+          "deterministic": true
+        },
+        "damage": {
+          "score": -44,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 44
+            }
+          },
+          "rounds": 39,
+          "deterministic": true
+        },
+        "damageTaken": {
+          "score": -44,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 44
+            }
+          },
+          "rounds": 39,
+          "deterministic": true
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1210
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Gatot": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Lumak": {
+              "skill_1": 3,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 257.13,
+              "defense": 249.68,
+              "lethality": 188,
+              "health": 193.5
+            },
+            "lancer": {
+              "attack": 208.71,
+              "defense": 208.01,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      }
+    },
+    {
+      "anchor": "Gatot",
+      "hero": "Jessie",
+      "a": 1190,
+      "d": 1600,
+      "gap": 49,
+      "p": {
+        "attack": {
+          "score": 7,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 7
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 39,
+          "deterministic": true
+        },
+        "damage": {
+          "score": -42,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 42
+            }
+          },
+          "rounds": 37,
+          "deterministic": true
+        },
+        "damageTaken": {
+          "score": -42,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 42
+            }
+          },
+          "rounds": 37,
+          "deterministic": true
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1190
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Gatot": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4
+            },
+            "Jessie": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 257.13,
+              "defense": 249.68,
+              "lethality": 188,
+              "health": 193.5
+            },
+            "lancer": {
+              "attack": 208.71,
+              "defense": 208.01,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      }
+    },
+    {
+      "anchor": "Edith",
+      "hero": "Ling",
+      "a": 1070,
+      "d": 1600,
+      "gap": 13,
+      "p": {
+        "attack": {
+          "score": -66,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 66
+            }
+          },
+          "rounds": 36,
+          "deterministic": true
+        },
+        "damage": {
+          "score": -66,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 66
+            }
+          },
+          "rounds": 36,
+          "deterministic": true
+        },
+        "damageTaken": {
+          "score": -53,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 53
+            }
+          },
+          "rounds": 37,
+          "deterministic": true
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1070
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Edith": {
+              "skill_1": 2,
+              "skill_2": 1
+            },
+            "Ling": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 257.13,
+              "defense": 249.68,
+              "lethality": 188,
+              "health": 193.5
+            },
+            "lancer": {
+              "attack": 208.71,
+              "defense": 208.01,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      }
+    },
+    {
+      "anchor": "Edith",
+      "hero": "Lumak",
+      "a": 1130,
+      "d": 1600,
+      "gap": 51,
+      "p": {
+        "attack": {
+          "score": -25,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 25
+            }
+          },
+          "rounds": 39,
+          "deterministic": true
+        },
+        "damage": {
+          "score": -25,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 25
+            }
+          },
+          "rounds": 39,
+          "deterministic": true
+        },
+        "damageTaken": {
+          "score": 26,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 26
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            }
+          },
+          "rounds": 38,
+          "deterministic": true
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1130
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Edith": {
+              "skill_1": 2,
+              "skill_2": 1
+            },
+            "Lumak": {
+              "skill_1": 3,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 257.13,
+              "defense": 249.68,
+              "lethality": 188,
+              "health": 193.5
+            },
+            "lancer": {
+              "attack": 208.71,
+              "defense": 208.01,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      }
+    },
+    {
+      "anchor": "Edith",
+      "hero": "Jessie",
+      "a": 1110,
+      "d": 1600,
+      "gap": 17,
+      "p": {
+        "attack": {
+          "score": -34,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 34
+            }
+          },
+          "rounds": 36,
+          "deterministic": true
+        },
+        "damage": {
+          "score": -34,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 34
+            }
+          },
+          "rounds": 36,
+          "deterministic": true
+        },
+        "damageTaken": {
+          "score": -17,
+          "remaining": {
+            "attacker": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 0
+            },
+            "defender": {
+              "infantry": 0,
+              "lancer": 0,
+              "marksman": 17
+            }
+          },
+          "rounds": 37,
+          "deterministic": true
+        }
+      },
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1110
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Edith": {
+              "skill_1": 2,
+              "skill_2": 1
+            },
+            "Jessie": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 257.13,
+              "defense": 249.68,
+              "lethality": 188,
+              "health": 193.5
+            },
+            "lancer": {
+              "attack": 208.71,
+              "defense": 208.01,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      }
+    }
+  ]
+}

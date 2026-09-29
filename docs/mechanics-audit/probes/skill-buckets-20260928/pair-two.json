@@ -1,0 +1,4490 @@
+{
+  "createdAt": "2026-09-28T12:01:38.890Z",
+  "kind": "simulator_hypotheses_compared_with_unmodified_game_reports",
+  "sourceHashes": {
+    "simulator/src/config.ts": "142c60ea81e8ef7b9c7baa12342a7fa219cff330872d818835249b33432a9a21",
+    "simulator/src/damage.ts": "6961612baf30fd5f672fcb5b3302e8b70bf26381cbee52b1a86ba03575ee28f6",
+    "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+    "simulator/src/effectIndex.ts": "6ba9c943d58ff666528afdfd6fdb613357a6b8d01bef6b7c97c5e7baf55a23d8",
+    "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+    "simulator/src/extraAttacks.ts": "163870e243a815f813709b3c6b1cc2eef080c5f17661ca6621172f3b3bb81153",
+    "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+    "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+    "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+    "simulator/src/recorder.ts": "3a07bd680d690f08623b57f76f029a1fc86e87012085d720342fea7ae00390b1",
+    "simulator/src/runtime.ts": "b83fd9033f6f67b1bf8377bb5897a2230670a04395de68da74c26ae5b2dbe805",
+    "simulator/src/runtimeSkills.ts": "6a6c4cef809000af22fdfb377e9942772c8a4d38efbe1c2f115c45dc78ea734a",
+    "simulator/src/simulator.ts": "145bd67fd328cae8b967db35f7a66c803ad23d36191d3ae4be270913908a1fb8",
+    "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+    "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+    "simulator/src/types.ts": "10c26f5129cb3b6cdfe6816dc90f9d79bae414b6683294bed79a869caae1ff2b",
+    "simulator/src/tooling/testcases.ts": "6c4c828a5b9a5dd9206119ead50994fa0165ed8aa3b7dedb25284aecc77d816a"
+  },
+  "rows": [
+    {
+      "path": "testcases/emulator_verified/skill_buckets_20260928/gatot_lumak.json",
+      "index": 0,
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1210
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Gatot": {
+              "skill_1": 4,
+              "skill_2": 4,
+              "skill_3": 4,
+              "skill_4": 0
+            },
+            "Lumak Bokan": {
+              "skill_1": 3,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 627.31,
+              "defense": 619.86,
+              "lethality": 230.66,
+              "health": 281.02
+            },
+            "lancer": {
+              "attack": 266.12,
+              "defense": 265.42,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      },
+      "game": [
+        {
+          "timestamp": "2026-09-28T12:01:08.000Z",
+          "randomseed": 1790596869,
+          "attacker": 0,
+          "defender": 44,
+          "metadata": {
+            "report_reference": "2734693171494663",
+            "battle_type": "atk_camp",
+            "stat_units": "percentage_points",
+            "winner": "defender",
+            "attacker": {
+              "troops": 1210,
+              "survivors": 0,
+              "losses": 0,
+              "injured": 424,
+              "lightly_injured": 786,
+              "kills": 545
+            },
+            "defender": {
+              "troops": 1600,
+              "survivors": 44,
+              "losses": 0,
+              "injured": 545,
+              "lightly_injured": 1011,
+              "kills": 424
+            },
+            "troop_details": {
+              "attacker": {
+                "marksman_t6": {
+                  "troops": 1210,
+                  "survivors": 0,
+                  "losses": 0,
+                  "injured": 424,
+                  "lightly_injured": 786,
+                  "kills": 545
+                }
+              },
+              "defender": {
+                "marksman_t6": {
+                  "troops": 1600,
+                  "survivors": 44,
+                  "losses": 0,
+                  "injured": 545,
+                  "lightly_injured": 1011,
+                  "kills": 424
+                }
+              }
+            },
+            "skill_details": {
+              "attacker": {},
+              "defender": {
+                "Gatot": {
+                  "King's Bestowal": {
+                    "triggered": null,
+                    "displayed_kills": null
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "current": {
+        "score": -44,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 44
+          }
+        },
+        "rounds": 39,
+        "deterministic": true,
+        "firstRound": [
+          {
+            "round": 1,
+            "kind": "normal",
+            "dealerSide": "attacker",
+            "dealerUnit": "marksman",
+            "takerSide": "defender",
+            "takerUnit": "marksman",
+            "kills": 70.51310207335064,
+            "counterDeltas": [
+              {
+                "side": "attacker",
+                "unit": "marksman",
+                "counter": "attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              },
+              {
+                "side": "defender",
+                "unit": "marksman",
+                "counter": "received_attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              }
+            ],
+            "appliedEffects": [
+              {
+                "kind": "modifier",
+                "effectId": "RoyalLegion/1",
+                "source": "Gatot/RoyalLegion/RoyalLegion/1",
+                "sourceSide": "defender",
+                "bucket": "active.hero.attack.down",
+                "sameEffectStacking": "add",
+                "valuePct": 20
+              },
+              {
+                "kind": "modifier",
+                "effectId": "TacticalDeception/1",
+                "source": "Lumak/TacticalDeception/TacticalDeception/1",
+                "sourceSide": "defender",
+                "bucket": "active.hero.damage.down",
+                "sameEffectStacking": "add",
+                "valuePct": 12
+              }
+            ],
+            "trace": {
+              "roundStartTroops": {
+                "attacker": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1210
+                },
+                "defender": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1600
+                }
+              },
+              "armyTerm": 1210.0000000000002,
+              "atomicBuckets": {
+                "active.hero.attack.down": {
+                  "totalPct": 20,
+                  "factor": 1.2,
+                  "contributors": [
+                    {
+                      "effectId": "RoyalLegion/1",
+                      "source": "Gatot/RoyalLegion/RoyalLegion/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.attack.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 20
+                    }
+                  ]
+                },
+                "active.hero.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "totalPct": 12,
+                  "factor": 1.12,
+                  "contributors": [
+                    {
+                      "effectId": "TacticalDeception/1",
+                      "source": "Lumak/TacticalDeception/TacticalDeception/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.damage.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 12
+                    }
+                  ]
+                },
+                "active.hero.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "raw": 1,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "raw": 1210.0000000000002,
+                  "factor": 1210.0000000000002,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseAttack": {
+                  "raw": 974,
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.attack": {
+                  "totalPct": 288.42,
+                  "factor": 3.8842000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 288.42,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.lethality": {
+                  "totalPct": 235.76,
+                  "factor": 3.3575999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 235.76,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "troops.baseHealth": {
+                  "raw": 183,
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.health": {
+                  "totalPct": 177.16,
+                  "factor": 2.7716000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 177.16,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.defense": {
+                  "totalPct": 219.76,
+                  "factor": 3.1976,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 219.76,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                }
+              },
+              "aggregationGroups": {
+                "troops.baseAttack": {
+                  "id": "troops.baseAttack",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseAttack"
+                  ],
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "id": "troops.baseLethality",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseLethality"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.dealer.attack": {
+                  "id": "player.dealer.attack",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.attack"
+                  ],
+                  "totalPct": 288.42,
+                  "factor": 3.8842000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 288.42,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.dealer.lethality": {
+                  "id": "player.dealer.lethality",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.lethality"
+                  ],
+                  "totalPct": 235.76,
+                  "factor": 3.3575999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 235.76,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.up": {
+                  "id": "passive.dealer.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.up": {
+                  "id": "passive.dealer.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.down": {
+                  "id": "passive.taker.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.down": {
+                  "id": "passive.taker.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseHealth": {
+                  "id": "troops.baseHealth",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseHealth"
+                  ],
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "id": "troops.baseDefense",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseDefense"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.taker.health": {
+                  "id": "player.taker.health",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.health"
+                  ],
+                  "totalPct": 177.16,
+                  "factor": 2.7716000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 177.16,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.taker.defense": {
+                  "id": "player.taker.defense",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.defense"
+                  ],
+                  "totalPct": 219.76,
+                  "factor": 3.1976,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 219.76,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.down": {
+                  "id": "passive.dealer.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.down": {
+                  "id": "passive.dealer.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.up": {
+                  "id": "passive.taker.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.up": {
+                  "id": "passive.taker.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "id": "active.hero.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "id": "active.hero.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "id": "active.hero.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "id": "active.hero.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "id": "active.hero.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "id": "active.hero.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "id": "active.troop.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "id": "active.troop.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "id": "active.troop.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "id": "active.troop.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "id": "active.troop.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "id": "source.multiplier",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "source.multiplier"
+                  ],
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "id": "troops.count",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.count"
+                  ],
+                  "factor": 1210.0000000000002,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "id": "type.all.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.all.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "id": "type.single_target.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.single_target.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "id": "type.normal.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "id": "type.normal.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "id": "type.skill.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "id": "type.skill.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.down": {
+                  "id": "active.hero.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.attack.down"
+                  ],
+                  "totalPct": 20,
+                  "factor": 1.2,
+                  "contributors": [
+                    {
+                      "effectId": "RoyalLegion/1",
+                      "source": "Gatot/RoyalLegion/RoyalLegion/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.attack.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 20
+                    }
+                  ]
+                },
+                "active.hero.damage.down": {
+                  "id": "active.hero.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damage.down"
+                  ],
+                  "totalPct": 12,
+                  "factor": 1.12,
+                  "contributors": [
+                    {
+                      "effectId": "TacticalDeception/1",
+                      "source": "Lumak/TacticalDeception/TacticalDeception/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.damage.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 12
+                    }
+                  ]
+                },
+                "active.hero.damageTaken.down": {
+                  "id": "active.hero.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "id": "active.hero.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "id": "active.hero.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "id": "active.hero.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "id": "active.troop.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "id": "active.troop.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "id": "active.troop.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "id": "active.troop.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "id": "active.troop.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "id": "type.all.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.all.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "id": "type.single_target.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.single_target.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "id": "type.normal.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "id": "type.normal.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "id": "type.skill.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "id": "type.skill.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "id": "active.hero.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.hero.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "id": "active.troop.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.troop.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                }
+              },
+              "appliedEffects": [
+                {
+                  "kind": "modifier",
+                  "effectId": "RoyalLegion/1",
+                  "source": "Gatot/RoyalLegion/RoyalLegion/1",
+                  "sourceSide": "defender",
+                  "bucket": "active.hero.attack.down",
+                  "sameEffectStacking": "add",
+                  "valuePct": 20
+                },
+                {
+                  "kind": "modifier",
+                  "effectId": "TacticalDeception/1",
+                  "source": "Lumak/TacticalDeception/TacticalDeception/1",
+                  "sourceSide": "defender",
+                  "bucket": "active.hero.damage.down",
+                  "sameEffectStacking": "add",
+                  "valuePct": 12
+                }
+              ],
+              "rejectedEffects": [],
+              "damageBeforeOffsets": 70.51310207335064,
+              "offsetDamage": 0,
+              "rawDamage": 70.51310207335064,
+              "finalKills": 70.51310207335064
+            }
+          },
+          {
+            "round": 1,
+            "kind": "normal",
+            "dealerSide": "defender",
+            "dealerUnit": "marksman",
+            "takerSide": "attacker",
+            "takerUnit": "marksman",
+            "kills": 53.652072508085375,
+            "counterDeltas": [
+              {
+                "side": "defender",
+                "unit": "marksman",
+                "counter": "attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              },
+              {
+                "side": "attacker",
+                "unit": "marksman",
+                "counter": "received_attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              }
+            ],
+            "trace": {
+              "roundStartTroops": {
+                "attacker": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1210
+                },
+                "defender": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1600
+                }
+              },
+              "armyTerm": 1391.402170474087,
+              "atomicBuckets": {
+                "active.hero.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "raw": 1,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "raw": 1391.402170474087,
+                  "factor": 1391.402170474087,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseAttack": {
+                  "raw": 974,
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.attack": {
+                  "totalPct": 230.96,
+                  "factor": 3.3096,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 230.96,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.lethality": {
+                  "totalPct": 181.53,
+                  "factor": 2.8152999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 181.53,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "troops.baseHealth": {
+                  "raw": 183,
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.health": {
+                  "totalPct": 230.26,
+                  "factor": 3.3026,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 230.26,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.defense": {
+                  "totalPct": 289.42,
+                  "factor": 3.8942,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 289.42,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                }
+              },
+              "aggregationGroups": {
+                "troops.baseAttack": {
+                  "id": "troops.baseAttack",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseAttack"
+                  ],
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "id": "troops.baseLethality",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseLethality"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.dealer.attack": {
+                  "id": "player.dealer.attack",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.attack"
+                  ],
+                  "totalPct": 230.96,
+                  "factor": 3.3096,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 230.96,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.dealer.lethality": {
+                  "id": "player.dealer.lethality",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.lethality"
+                  ],
+                  "totalPct": 181.53,
+                  "factor": 2.8152999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 181.53,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.up": {
+                  "id": "passive.dealer.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.up": {
+                  "id": "passive.dealer.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.down": {
+                  "id": "passive.taker.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.down": {
+                  "id": "passive.taker.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseHealth": {
+                  "id": "troops.baseHealth",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseHealth"
+                  ],
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "id": "troops.baseDefense",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseDefense"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.taker.health": {
+                  "id": "player.taker.health",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.health"
+                  ],
+                  "totalPct": 230.26,
+                  "factor": 3.3026,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 230.26,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.taker.defense": {
+                  "id": "player.taker.defense",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.defense"
+                  ],
+                  "totalPct": 289.42,
+                  "factor": 3.8942,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 289.42,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.down": {
+                  "id": "passive.dealer.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.down": {
+                  "id": "passive.dealer.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.up": {
+                  "id": "passive.taker.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.up": {
+                  "id": "passive.taker.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "id": "active.hero.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "id": "active.hero.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "id": "active.hero.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "id": "active.hero.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "id": "active.hero.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "id": "active.hero.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "id": "active.troop.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "id": "active.troop.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "id": "active.troop.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "id": "active.troop.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "id": "active.troop.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "id": "source.multiplier",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "source.multiplier"
+                  ],
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "id": "troops.count",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.count"
+                  ],
+                  "factor": 1391.402170474087,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "id": "type.all.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.all.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "id": "type.single_target.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.single_target.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "id": "type.normal.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "id": "type.normal.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "id": "type.skill.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "id": "type.skill.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.down": {
+                  "id": "active.hero.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "id": "active.hero.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "id": "active.hero.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "id": "active.hero.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "id": "active.hero.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "id": "active.hero.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "id": "active.troop.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "id": "active.troop.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "id": "active.troop.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "id": "active.troop.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "id": "active.troop.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "id": "type.all.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.all.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "id": "type.single_target.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.single_target.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "id": "type.normal.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "id": "type.normal.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "id": "type.skill.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "id": "type.skill.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "id": "active.hero.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.hero.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "id": "active.troop.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.troop.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                }
+              },
+              "appliedEffects": [],
+              "rejectedEffects": [],
+              "damageBeforeOffsets": 53.652072508085375,
+              "offsetDamage": 0,
+              "rawDamage": 53.652072508085375,
+              "finalKills": 53.652072508085375
+            }
+          }
+        ],
+        "skillReport": {
+          "attacker": [
+            {
+              "sourceKind": "troop_skill",
+              "troopType": "marksman",
+              "skillId": "RangedStrike",
+              "skillName": "RangedStrike",
+              "level": 1,
+              "triggersSeen": 0,
+              "skillActivations": 0,
+              "effectActivations": 0,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "defender": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Gatot",
+              "skillId": "GoldenGuard",
+              "skillName": "GoldenGuard",
+              "level": 4,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Gatot",
+              "skillId": "KingsBestowal",
+              "skillName": "KingsBestowal",
+              "level": 4,
+              "triggersSeen": 0,
+              "skillActivations": 0,
+              "effectActivations": 0,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Gatot",
+              "skillId": "RoyalLegion",
+              "skillName": "RoyalLegion",
+              "level": 4,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Lumak",
+              "skillId": "TacticalDeception",
+              "skillName": "TacticalDeception",
+              "level": 3,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Lumak",
+              "skillId": "NonCombatPlaceholder",
+              "skillName": "NonCombatPlaceholder",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 0,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "troop_skill",
+              "troopType": "marksman",
+              "skillId": "RangedStrike",
+              "skillName": "RangedStrike",
+              "level": 1,
+              "triggersSeen": 0,
+              "skillActivations": 0,
+              "effectActivations": 0,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ]
+        }
+      },
+      "alternatives": {
+        "Lumak": {
+          "attack": {
+            "score": 54,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 54
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              }
+            },
+            "rounds": 38,
+            "deterministic": true
+          },
+          "damage": {
+            "score": -44,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 44
+              }
+            },
+            "rounds": 39,
+            "deterministic": true
+          },
+          "damageTaken": {
+            "score": -44,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 44
+              }
+            },
+            "rounds": 39,
+            "deterministic": true
+          }
+        }
+      }
+    },
+    {
+      "path": "testcases/emulator_verified/skill_buckets_20260928/edith_jessie.json",
+      "index": 0,
+      "input": {
+        "attacker": {
+          "name": "[ARK]Piddlyminxxx",
+          "heroes": {},
+          "troops": {
+            "marksman_t6": 1110
+          },
+          "stats": {
+            "infantry": {
+              "attack": 304.95,
+              "defense": 292.95,
+              "lethality": 244.04,
+              "health": 238.39
+            },
+            "lancer": {
+              "attack": 286.92,
+              "defense": 286.17,
+              "lethality": 224.32,
+              "health": 229.95
+            },
+            "marksman": {
+              "attack": 288.42,
+              "defense": 289.42,
+              "lethality": 235.76,
+              "health": 230.26
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "defender": {
+          "name": "[BBQ]XxWIPxX",
+          "heroes": {
+            "Edith": {
+              "skill_1": 2,
+              "skill_2": 1,
+              "skill_4": 0
+            },
+            "Jessie": {
+              "skill_1": 1,
+              "skill_2": 1
+            }
+          },
+          "troops": {
+            "marksman_t6": 1600
+          },
+          "stats": {
+            "infantry": {
+              "attack": 401.82,
+              "defense": 394.37,
+              "lethality": 193.33,
+              "health": 198.83
+            },
+            "lancer": {
+              "attack": 297.72,
+              "defense": 297.02,
+              "lethality": 187,
+              "health": 186.06
+            },
+            "marksman": {
+              "attack": 230.96,
+              "defense": 219.76,
+              "lethality": 181.53,
+              "health": 177.16
+            }
+          },
+          "joiner_heroes": {}
+        },
+        "engagement_type": "solo"
+      },
+      "game": [
+        {
+          "timestamp": "2026-09-28T12:01:05.000Z",
+          "randomseed": 1790596866,
+          "attacker": 0,
+          "defender": 17,
+          "metadata": {
+            "report_reference": "2734693171494661",
+            "battle_type": "atk_camp",
+            "stat_units": "percentage_points",
+            "winner": "defender",
+            "attacker": {
+              "troops": 1110,
+              "survivors": 0,
+              "losses": 0,
+              "injured": 389,
+              "lightly_injured": 721,
+              "kills": 555
+            },
+            "defender": {
+              "troops": 1600,
+              "survivors": 17,
+              "losses": 0,
+              "injured": 555,
+              "lightly_injured": 1028,
+              "kills": 389
+            },
+            "troop_details": {
+              "attacker": {
+                "marksman_t6": {
+                  "troops": 1110,
+                  "survivors": 0,
+                  "losses": 0,
+                  "injured": 389,
+                  "lightly_injured": 721,
+                  "kills": 555
+                }
+              },
+              "defender": {
+                "marksman_t6": {
+                  "troops": 1600,
+                  "survivors": 17,
+                  "losses": 0,
+                  "injured": 555,
+                  "lightly_injured": 1028,
+                  "kills": 389
+                }
+              }
+            },
+            "skill_details": {
+              "attacker": {},
+              "defender": {}
+            }
+          }
+        }
+      ],
+      "current": {
+        "score": -17,
+        "remaining": {
+          "attacker": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 0
+          },
+          "defender": {
+            "infantry": 0,
+            "lancer": 0,
+            "marksman": 17
+          }
+        },
+        "rounds": 37,
+        "deterministic": true,
+        "firstRound": [
+          {
+            "round": 1,
+            "kind": "normal",
+            "dealerSide": "attacker",
+            "dealerUnit": "marksman",
+            "takerSide": "defender",
+            "takerUnit": "marksman",
+            "kills": 77.62268757165542,
+            "counterDeltas": [
+              {
+                "side": "attacker",
+                "unit": "marksman",
+                "counter": "attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              },
+              {
+                "side": "defender",
+                "unit": "marksman",
+                "counter": "received_attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              }
+            ],
+            "appliedEffects": [
+              {
+                "kind": "modifier",
+                "effectId": "StrategicBalance/1",
+                "source": "Edith/StrategicBalance/StrategicBalance/1",
+                "sourceSide": "defender",
+                "bucket": "active.hero.damageTaken.down",
+                "sameEffectStacking": "add",
+                "valuePct": 8
+              },
+              {
+                "kind": "modifier",
+                "effectId": "Bulwarks/1",
+                "source": "Jessie/Bulwarks/Bulwarks/1",
+                "sourceSide": "defender",
+                "bucket": "active.hero.damageTaken.down",
+                "sameEffectStacking": "add",
+                "valuePct": 4
+              }
+            ],
+            "trace": {
+              "roundStartTroops": {
+                "attacker": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1110
+                },
+                "defender": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1600
+                }
+              },
+              "armyTerm": 1110.0000000000002,
+              "atomicBuckets": {
+                "active.hero.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "totalPct": 12,
+                  "factor": 1.12,
+                  "contributors": [
+                    {
+                      "effectId": "StrategicBalance/1",
+                      "source": "Edith/StrategicBalance/StrategicBalance/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.damageTaken.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 8
+                    },
+                    {
+                      "effectId": "Bulwarks/1",
+                      "source": "Jessie/Bulwarks/Bulwarks/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.damageTaken.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 4
+                    }
+                  ]
+                },
+                "active.hero.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "raw": 1,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "raw": 1110.0000000000002,
+                  "factor": 1110.0000000000002,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseAttack": {
+                  "raw": 974,
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.attack": {
+                  "totalPct": 288.42,
+                  "factor": 3.8842000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 288.42,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.lethality": {
+                  "totalPct": 235.76,
+                  "factor": 3.3575999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 235.76,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "troops.baseHealth": {
+                  "raw": 183,
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.health": {
+                  "totalPct": 177.16,
+                  "factor": 2.7716000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 177.16,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.defense": {
+                  "totalPct": 219.76,
+                  "factor": 3.1976,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 219.76,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                }
+              },
+              "aggregationGroups": {
+                "troops.baseAttack": {
+                  "id": "troops.baseAttack",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseAttack"
+                  ],
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "id": "troops.baseLethality",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseLethality"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.dealer.attack": {
+                  "id": "player.dealer.attack",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.attack"
+                  ],
+                  "totalPct": 288.42,
+                  "factor": 3.8842000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 288.42,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.dealer.lethality": {
+                  "id": "player.dealer.lethality",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.lethality"
+                  ],
+                  "totalPct": 235.76,
+                  "factor": 3.3575999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 235.76,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.up": {
+                  "id": "passive.dealer.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.up": {
+                  "id": "passive.dealer.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.down": {
+                  "id": "passive.taker.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.down": {
+                  "id": "passive.taker.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseHealth": {
+                  "id": "troops.baseHealth",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseHealth"
+                  ],
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "id": "troops.baseDefense",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseDefense"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.taker.health": {
+                  "id": "player.taker.health",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.health"
+                  ],
+                  "totalPct": 177.16,
+                  "factor": 2.7716000000000003,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 177.16,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.taker.defense": {
+                  "id": "player.taker.defense",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.defense"
+                  ],
+                  "totalPct": 219.76,
+                  "factor": 3.1976,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 219.76,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.down": {
+                  "id": "passive.dealer.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.down": {
+                  "id": "passive.dealer.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.up": {
+                  "id": "passive.taker.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.up": {
+                  "id": "passive.taker.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "id": "active.hero.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "id": "active.hero.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "id": "active.hero.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "id": "active.hero.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "id": "active.hero.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "id": "active.hero.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "id": "active.troop.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "id": "active.troop.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "id": "active.troop.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "id": "active.troop.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "id": "active.troop.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "id": "source.multiplier",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "source.multiplier"
+                  ],
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "id": "troops.count",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.count"
+                  ],
+                  "factor": 1110.0000000000002,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "id": "type.all.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.all.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "id": "type.single_target.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.single_target.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "id": "type.normal.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "id": "type.normal.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "id": "type.skill.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "id": "type.skill.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.down": {
+                  "id": "active.hero.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "id": "active.hero.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "id": "active.hero.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.down"
+                  ],
+                  "totalPct": 12,
+                  "factor": 1.12,
+                  "contributors": [
+                    {
+                      "effectId": "StrategicBalance/1",
+                      "source": "Edith/StrategicBalance/StrategicBalance/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.damageTaken.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 8
+                    },
+                    {
+                      "effectId": "Bulwarks/1",
+                      "source": "Jessie/Bulwarks/Bulwarks/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.damageTaken.down",
+                      "sameEffectStacking": "add",
+                      "valuePct": 4
+                    }
+                  ]
+                },
+                "active.hero.defense.up": {
+                  "id": "active.hero.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "id": "active.hero.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "id": "active.hero.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "id": "active.troop.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "id": "active.troop.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "id": "active.troop.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "id": "active.troop.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "id": "active.troop.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "id": "type.all.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.all.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "id": "type.single_target.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.single_target.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "id": "type.normal.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "id": "type.normal.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "id": "type.skill.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "id": "type.skill.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "id": "active.hero.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.hero.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "id": "active.troop.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.troop.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                }
+              },
+              "appliedEffects": [
+                {
+                  "kind": "modifier",
+                  "effectId": "StrategicBalance/1",
+                  "source": "Edith/StrategicBalance/StrategicBalance/1",
+                  "sourceSide": "defender",
+                  "bucket": "active.hero.damageTaken.down",
+                  "sameEffectStacking": "add",
+                  "valuePct": 8
+                },
+                {
+                  "kind": "modifier",
+                  "effectId": "Bulwarks/1",
+                  "source": "Jessie/Bulwarks/Bulwarks/1",
+                  "sourceSide": "defender",
+                  "bucket": "active.hero.damageTaken.down",
+                  "sameEffectStacking": "add",
+                  "valuePct": 4
+                }
+              ],
+              "rejectedEffects": [],
+              "damageBeforeOffsets": 77.62268757165542,
+              "offsetDamage": 0,
+              "rawDamage": 77.62268757165542,
+              "finalKills": 77.62268757165542
+            }
+          },
+          {
+            "round": 1,
+            "kind": "normal",
+            "dealerSide": "defender",
+            "dealerUnit": "marksman",
+            "takerSide": "attacker",
+            "takerUnit": "marksman",
+            "kills": 53.956603820140344,
+            "counterDeltas": [
+              {
+                "side": "defender",
+                "unit": "marksman",
+                "counter": "attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              },
+              {
+                "side": "attacker",
+                "unit": "marksman",
+                "counter": "received_attacks",
+                "by": 1,
+                "cause": "normal_attack"
+              }
+            ],
+            "appliedEffects": [
+              {
+                "kind": "modifier",
+                "effectId": "StandOfArms/1",
+                "source": "Jessie/StandOfArms/StandOfArms/1",
+                "sourceSide": "defender",
+                "bucket": "active.hero.lethality.up",
+                "sameEffectStacking": "add",
+                "valuePct": 5
+              }
+            ],
+            "trace": {
+              "roundStartTroops": {
+                "attacker": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1110
+                },
+                "defender": {
+                  "infantry": 0,
+                  "lancer": 0,
+                  "marksman": 1600
+                }
+              },
+              "armyTerm": 1332.6664999166146,
+              "atomicBuckets": {
+                "active.hero.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "totalPct": 5,
+                  "factor": 1.05,
+                  "contributors": [
+                    {
+                      "effectId": "StandOfArms/1",
+                      "source": "Jessie/StandOfArms/StandOfArms/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.lethality.up",
+                      "sameEffectStacking": "add",
+                      "valuePct": 5
+                    }
+                  ]
+                },
+                "active.hero.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "raw": 1,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "raw": 1332.6664999166146,
+                  "factor": 1332.6664999166146,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseAttack": {
+                  "raw": 974,
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.attack": {
+                  "totalPct": 230.96,
+                  "factor": 3.3096,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 230.96,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.lethality": {
+                  "totalPct": 181.53,
+                  "factor": 2.8152999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 181.53,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "troops.baseHealth": {
+                  "raw": 183,
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "raw": 10,
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.health": {
+                  "totalPct": 230.26,
+                  "factor": 3.3026,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 230.26,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.defense": {
+                  "totalPct": 289.42,
+                  "factor": 3.8942,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 289.42,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                }
+              },
+              "aggregationGroups": {
+                "troops.baseAttack": {
+                  "id": "troops.baseAttack",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseAttack"
+                  ],
+                  "factor": 974,
+                  "contributors": []
+                },
+                "troops.baseLethality": {
+                  "id": "troops.baseLethality",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.baseLethality"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.dealer.attack": {
+                  "id": "player.dealer.attack",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.attack"
+                  ],
+                  "totalPct": 230.96,
+                  "factor": 3.3096,
+                  "contributors": [
+                    {
+                      "effectId": "input:attack",
+                      "source": "input_stats",
+                      "valuePct": 230.96,
+                      "bucket": "player.attack"
+                    }
+                  ]
+                },
+                "player.dealer.lethality": {
+                  "id": "player.dealer.lethality",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "player.lethality"
+                  ],
+                  "totalPct": 181.53,
+                  "factor": 2.8152999999999997,
+                  "contributors": [
+                    {
+                      "effectId": "input:lethality",
+                      "source": "input_stats",
+                      "valuePct": 181.53,
+                      "bucket": "player.lethality"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.up": {
+                  "id": "passive.dealer.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.up": {
+                  "id": "passive.dealer.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.lethality.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.down": {
+                  "id": "passive.taker.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.down": {
+                  "id": "passive.taker.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "passive.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.baseHealth": {
+                  "id": "troops.baseHealth",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseHealth"
+                  ],
+                  "factor": 183,
+                  "contributors": []
+                },
+                "troops.baseDefense": {
+                  "id": "troops.baseDefense",
+                  "mode": "raw",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "troops.baseDefense"
+                  ],
+                  "factor": 10,
+                  "contributors": []
+                },
+                "player.taker.health": {
+                  "id": "player.taker.health",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.health"
+                  ],
+                  "totalPct": 230.26,
+                  "factor": 3.3026,
+                  "contributors": [
+                    {
+                      "effectId": "input:health",
+                      "source": "input_stats",
+                      "valuePct": 230.26,
+                      "bucket": "player.health"
+                    }
+                  ]
+                },
+                "player.taker.defense": {
+                  "id": "player.taker.defense",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "player.defense"
+                  ],
+                  "totalPct": 289.42,
+                  "factor": 3.8942,
+                  "contributors": [
+                    {
+                      "effectId": "input:defense",
+                      "source": "input_stats",
+                      "valuePct": 289.42,
+                      "bucket": "player.defense"
+                    }
+                  ]
+                },
+                "passive.dealer.attack.down": {
+                  "id": "passive.dealer.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.dealer.lethality.down": {
+                  "id": "passive.dealer.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.health.up": {
+                  "id": "passive.taker.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "passive.taker.defense.up": {
+                  "id": "passive.taker.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "passive.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.up": {
+                  "id": "active.hero.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.up": {
+                  "id": "active.hero.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.up": {
+                  "id": "active.hero.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.down": {
+                  "id": "active.hero.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.down": {
+                  "id": "active.hero.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.up": {
+                  "id": "active.hero.lethality.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.hero.lethality.up"
+                  ],
+                  "totalPct": 5,
+                  "factor": 1.05,
+                  "contributors": [
+                    {
+                      "effectId": "StandOfArms/1",
+                      "source": "Jessie/StandOfArms/StandOfArms/1",
+                      "sourceSide": "defender",
+                      "bucket": "active.hero.lethality.up",
+                      "sameEffectStacking": "add",
+                      "valuePct": 5
+                    }
+                  ]
+                },
+                "active.troop.attack.up": {
+                  "id": "active.troop.attack.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.attack.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.up": {
+                  "id": "active.troop.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.up": {
+                  "id": "active.troop.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.down": {
+                  "id": "active.troop.defense.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.defense.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.down": {
+                  "id": "active.troop.health.down",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "active.troop.health.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "source.multiplier": {
+                  "id": "source.multiplier",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "source.multiplier"
+                  ],
+                  "factor": 1,
+                  "contributors": []
+                },
+                "troops.count": {
+                  "id": "troops.count",
+                  "mode": "raw",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "troops.count"
+                  ],
+                  "factor": 1332.6664999166146,
+                  "contributors": []
+                },
+                "type.all.damage.up": {
+                  "id": "type.all.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.all.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.up": {
+                  "id": "type.single_target.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.single_target.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.up": {
+                  "id": "type.normal.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.up": {
+                  "id": "type.normal.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.up": {
+                  "id": "type.skill.damage.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damage.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.up": {
+                  "id": "type.skill.damageTaken.up",
+                  "mode": "sum_pct",
+                  "placement": "numerator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.attack.down": {
+                  "id": "active.hero.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damage.down": {
+                  "id": "active.hero.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.damageTaken.down": {
+                  "id": "active.hero.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.defense.up": {
+                  "id": "active.hero.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.health.up": {
+                  "id": "active.hero.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.lethality.down": {
+                  "id": "active.hero.lethality.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.hero.lethality.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.attack.down": {
+                  "id": "active.troop.attack.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.attack.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damage.down": {
+                  "id": "active.troop.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.damageTaken.down": {
+                  "id": "active.troop.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.defense.up": {
+                  "id": "active.troop.defense.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.defense.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.health.up": {
+                  "id": "active.troop.health.up",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "active.troop.health.up"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.all.damage.down": {
+                  "id": "type.all.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.all.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.single_target.damage.down": {
+                  "id": "type.single_target.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.single_target.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damage.down": {
+                  "id": "type.normal.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.normal.damageTaken.down": {
+                  "id": "type.normal.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.normal.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damage.down": {
+                  "id": "type.skill.damage.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damage.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "type.skill.damageTaken.down": {
+                  "id": "type.skill.damageTaken.down",
+                  "mode": "sum_pct",
+                  "placement": "denominator",
+                  "inputBuckets": [
+                    "type.skill.damageTaken.down"
+                  ],
+                  "totalPct": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.hero.shield": {
+                  "id": "active.hero.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.hero.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                },
+                "active.troop.shield": {
+                  "id": "active.troop.shield",
+                  "mode": "sum_raw",
+                  "placement": "post_subtract",
+                  "inputBuckets": [
+                    "active.troop.shield"
+                  ],
+                  "raw": 0,
+                  "factor": 1,
+                  "contributors": []
+                }
+              },
+              "appliedEffects": [
+                {
+                  "kind": "modifier",
+                  "effectId": "StandOfArms/1",
+                  "source": "Jessie/StandOfArms/StandOfArms/1",
+                  "sourceSide": "defender",
+                  "bucket": "active.hero.lethality.up",
+                  "sameEffectStacking": "add",
+                  "valuePct": 5
+                }
+              ],
+              "rejectedEffects": [],
+              "damageBeforeOffsets": 53.956603820140344,
+              "offsetDamage": 0,
+              "rawDamage": 53.956603820140344,
+              "finalKills": 53.956603820140344
+            }
+          }
+        ],
+        "skillReport": {
+          "attacker": [
+            {
+              "sourceKind": "troop_skill",
+              "troopType": "marksman",
+              "skillId": "RangedStrike",
+              "skillName": "RangedStrike",
+              "level": 1,
+              "triggersSeen": 0,
+              "skillActivations": 0,
+              "effectActivations": 0,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ],
+          "defender": [
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Edith",
+              "skillId": "StrategicBalance",
+              "skillName": "StrategicBalance",
+              "level": 2,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 2,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Edith",
+              "skillId": "Ironclad",
+              "skillName": "Ironclad",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Jessie",
+              "skillId": "StandOfArms",
+              "skillName": "StandOfArms",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "hero_skill",
+              "heroName": "Jessie",
+              "skillId": "Bulwarks",
+              "skillName": "Bulwarks",
+              "level": 1,
+              "triggersSeen": 1,
+              "skillActivations": 1,
+              "effectActivations": 1,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            },
+            {
+              "sourceKind": "troop_skill",
+              "troopType": "marksman",
+              "skillId": "RangedStrike",
+              "skillName": "RangedStrike",
+              "level": 1,
+              "triggersSeen": 0,
+              "skillActivations": 0,
+              "effectActivations": 0,
+              "skillKills": 0,
+              "unsupportedEffects": []
+            }
+          ]
+        }
+      },
+      "alternatives": {
+        "Jessie": {
+          "attack": {
+            "score": -34,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 34
+              }
+            },
+            "rounds": 36,
+            "deterministic": true
+          },
+          "damage": {
+            "score": -34,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 34
+              }
+            },
+            "rounds": 36,
+            "deterministic": true
+          },
+          "damageTaken": {
+            "score": -17,
+            "remaining": {
+              "attacker": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 0
+              },
+              "defender": {
+                "infantry": 0,
+                "lancer": 0,
+                "marksman": 17
+              }
+            },
+            "rounds": 37,
+            "deterministic": true
+          }
+        }
+      }
+    }
+  ]
+}

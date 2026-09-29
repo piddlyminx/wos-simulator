@@ -1,0 +1,5512 @@
+{
+  "WIP": {
+    "account": "WIP",
+    "userId": 177360524,
+    "kingdomId": 2487,
+    "fetchedAt": "2026-09-28T11:52:20.981Z",
+    "observedAt": "2026-09-28T11:52:20.974Z",
+    "heroes": [
+      {
+        "id": 50022,
+        "name": "Lynn",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500220,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500221,
+            "name": "Hymn of Sidrak",
+            "level": 3
+          },
+          {
+            "id": 500222,
+            "name": "Lethal Finale",
+            "level": 3
+          },
+          {
+            "id": 500223,
+            "name": "Discordant Tune",
+            "level": 3
+          },
+          {
+            "id": 500224,
+            "name": "Song of Lion",
+            "level": 3
+          },
+          {
+            "id": 500225,
+            "name": "Melancholic Ballad",
+            "level": 2
+          },
+          {
+            "id": 500226,
+            "name": "Oonai Cadenza",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500224,
+            "name": "Song of Lion",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Lynn uplifts our troops with an enthusiastic rhythm, granting a 40% chance of increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500225,
+            "name": "Melancholic Ballad",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Lynn demoralizes the enemies with a somber tune, reducing damage dealt by <color=#00f183>%{n1}%</color> for all enemy troops."
+          },
+          {
+            "slot": 6,
+            "id": 500226,
+            "name": "Oonai Cadenza",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Lynn harnesses the power of music to elevate troop morale, increasing her Marksmen's attack by <color=#00f183>%{n1}%</color> for every 3 attacks. Stackable and lasts until the end of the battle."
+          }
+        ],
+        "widget": {
+          "id": 1050022,
+          "name": "Ella's Tear",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500228,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Iranon's Determination",
+          "descriptionTemplate": "Lynn stirs the defenders with a nostalgic poem, increasing Defender Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50023,
+        "name": "Ahmose",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 8,
+        "skills": [
+          {
+            "id": 500234,
+            "name": "Viper Formation",
+            "level": 1
+          },
+          {
+            "id": 500235,
+            "name": "Prayer of Flame",
+            "level": 1
+          },
+          {
+            "id": 500230,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500231,
+            "name": "Cthugha's Protection",
+            "level": 1
+          },
+          {
+            "id": 500232,
+            "name": "Daybreak Knife",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500234,
+            "name": "Viper Formation",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ahmose revives the lost art of ancient guardians. His Infantry pauses the attack once every four times, reducing damage taken by Lancers and Marksmen by <color=#00f183>%{n1}%</color> and Infantry by <color=#00f183>%{n2}%</color> for 2 turns."
+          },
+          {
+            "slot": 5,
+            "id": 500235,
+            "name": "Prayer of Flame",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ahmose amplifies the combat spirit of friendly Infantry with the power of the Fire Crystal, increasing their damage dealt by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500236,
+            "name": "Blade of Light",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Ahmose infuses friendly Infantry's weapons with the essence of Fire Crystals, increasing his infantries' damage dealt per attack by <color=#00f183>%{n1}%</color> and the target's damage taken by <color=#00f183>%{n2}%</color> for 1 turn."
+          }
+        ],
+        "widget": {
+          "id": 1050023,
+          "name": "Guardian's Relic",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500238,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Oath of Guardian",
+          "descriptionTemplate": "Ahmose fortifies the city with the resolve of a guardian, increasing Defender Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50024,
+        "name": "Hector",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 14,
+        "skills": [
+          {
+            "id": 500241,
+            "name": "Sword Whirlwind",
+            "level": 3
+          },
+          {
+            "id": 500242,
+            "name": "Desperado",
+            "level": 3
+          },
+          {
+            "id": 500243,
+            "name": "Adrenaline Surge",
+            "level": 3
+          },
+          {
+            "id": 500244,
+            "name": "Survival Instincts",
+            "level": 2
+          },
+          {
+            "id": 500245,
+            "name": "Rampant",
+            "level": 3
+          },
+          {
+            "id": 500246,
+            "name": "Blitz",
+            "level": 3
+          },
+          {
+            "id": 500240,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500244,
+            "name": "Survival Instincts",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "A seasoned warrior with an uncanny knack for reading the battlefield, Hector's presence has a 40% chance of reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500245,
+            "name": "Rampant",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Hector excels at raiding on fortified positions with well-coordinated Marksmen, increasing Infantry's Damage Dealt by <color=#00f183>%{n1}%</color> and Marksmen's Damage Dealt by <color=#00f183>%{n2}%</color>, it is effective for 10 attacks, with each attack's damage boost being 85% of the previous one."
+          },
+          {
+            "slot": 6,
+            "id": 500246,
+            "name": "Blitz",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Hector has mastered the offensive strategy, granting all troops' attack a 25% chance of dealing <color=#00f183>%{n1}%</color> damage."
+          }
+        ],
+        "widget": {
+          "id": 1050024,
+          "name": "Steel Fangs",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500248,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Goliath",
+          "descriptionTemplate": "Hector excels at using terrain against attackers, increasing Defender Troops Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50025,
+        "name": "Norah",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500255,
+            "name": "Combined Arms",
+            "level": 1
+          },
+          {
+            "id": 500256,
+            "name": "Momentum",
+            "level": 1
+          },
+          {
+            "id": 500250,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500251,
+            "name": "Barrage",
+            "level": 1
+          },
+          {
+            "id": 500252,
+            "name": "Flashbang",
+            "level": 1
+          },
+          {
+            "id": 500253,
+            "name": "Valkyrie Cry",
+            "level": 1
+          },
+          {
+            "id": 500254,
+            "name": "Sneak Strike",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500255,
+            "name": "Combined Arms",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Norah is well trained in combined arms tactics, decreasing Damage Taken by <color=#00f183>%{n1}%</color> and boosting Damage Dealt by <color=#00f183>%{n2}%</color> for Infantry and Marksman."
+          },
+          {
+            "slot": 5,
+            "id": 500254,
+            "name": "Sneak Strike",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Norah has an eye for weaknesses, granting her Lancers a 20% chance of dealing <color=#00f183>%{n1}%</color> extra damage to all enemies on attack."
+          },
+          {
+            "slot": 6,
+            "id": 500256,
+            "name": "Momentum",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Norah motivates our troops, increasing all troops' damage dealt by <color=#00f183>%{n1}%</color>, and reducing their damage taken by <color=#00f183>%{n2}%</color> every 5 attacks made by lancers for 2 turns."
+          }
+        ],
+        "widget": {
+          "id": 1050025,
+          "name": "Snow Cruiser",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500258,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "True Grit",
+          "descriptionTemplate": "Norah inspires others with her courage under fire, boosting Defender Troops Defense by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50026,
+        "name": "Gwen",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 9,
+        "skills": [
+          {
+            "id": 500262,
+            "name": "Sky Sniper",
+            "level": 1
+          },
+          {
+            "id": 500264,
+            "name": "Eagle Vision",
+            "level": 2
+          },
+          {
+            "id": 500265,
+            "name": "Air Dominance",
+            "level": 1
+          },
+          {
+            "id": 500260,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500261,
+            "name": "Salvo",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500264,
+            "name": "Eagle Vision",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Gwen provides unfettered vision of enemy weakpoints during flights, increasing target's Damage Taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500265,
+            "name": "Air Dominance",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Gwen dominates the skies, granting all troops' attack <color=#00f183>%{n1}%</color> extra damage after every five attacks, and causes the target to receive <color=#00f183>%{n2}%</color> extra damage for its next attack received."
+          },
+          {
+            "slot": 6,
+            "id": 500266,
+            "name": "Blastmaster",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Gwen equips her Marksmen with grenades, dealing <color=#00f183>%{n1}%</color> extra damage to all enemies on the next attack of every 4 attacks."
+          }
+        ],
+        "widget": {
+          "id": 1050026,
+          "name": "Wings of Hope",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500268,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Marauder",
+          "descriptionTemplate": "Gwen uses her expertise in offensive tactics, boosting Rally Troops Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50027,
+        "name": "Seo-yoon",
+        "level": 2,
+        "trainingLevel": null,
+        "star": 18,
+        "skills": [
+          {
+            "id": 500270,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500271,
+            "name": "Heartbeat of Valor",
+            "level": 1
+          },
+          {
+            "id": 500272,
+            "name": "Bullseye Bash",
+            "level": 1
+          },
+          {
+            "id": 500273,
+            "name": "Gale's Pulse",
+            "level": 1
+          },
+          {
+            "id": 500274,
+            "name": "Rallying Beat",
+            "level": 4
+          },
+          {
+            "id": 500275,
+            "name": "Soothing Dance",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500274,
+            "name": "Rallying Beat",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Seo-yoon beats the war drum to boost morale, increasing all Troops Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500275,
+            "name": "Soothing Dance",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Seo-yoon treats wounded troops with traditional medicine, increasing Healing Speed in the Infirmary by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50028,
+        "name": "Jasser",
+        "level": 69,
+        "trainingLevel": null,
+        "star": 18,
+        "skills": [
+          {
+            "id": 500283,
+            "name": "Natural Precision",
+            "level": 3
+          },
+          {
+            "id": 500284,
+            "name": "Tactical Genius",
+            "level": 2
+          },
+          {
+            "id": 500285,
+            "name": "Enlightened Warfare",
+            "level": 4
+          },
+          {
+            "id": 500280,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500281,
+            "name": "Triple Volley",
+            "level": 3
+          },
+          {
+            "id": 500282,
+            "name": "Suppressive Fire",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500284,
+            "name": "Tactical Genius",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Jasser's combination of courage and wisdom enriches the army, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500285,
+            "name": "Enlightened Warfare",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Jasser's profound knowledge increases the city's Research Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50029,
+        "name": "Lumak Bokan",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 16,
+        "skills": [
+          {
+            "id": 500290,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500291,
+            "name": "Earthshake",
+            "level": 1
+          },
+          {
+            "id": 500292,
+            "name": "Echoing Boost",
+            "level": 1
+          },
+          {
+            "id": 500293,
+            "name": "Jungle-Born Agility",
+            "level": 1
+          },
+          {
+            "id": 500294,
+            "name": "Tactical Deception",
+            "level": 3
+          },
+          {
+            "id": 500295,
+            "name": "Emerald Warrior",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500294,
+            "name": "Tactical Deception",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "With Lumak Bokan's expert guerrilla tactics, all enemy troops' damage dealt is reduced by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500295,
+            "name": "Emerald Warrior",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Lumak Bokan passes his people's traditional techniques to the soldiers, increasing Hunting March Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50030,
+        "name": "Renee",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 19,
+        "skills": [
+          {
+            "id": 500304,
+            "name": "Nightmare Trace",
+            "level": 3
+          },
+          {
+            "id": 500305,
+            "name": "Dreamcatcher",
+            "level": 3
+          },
+          {
+            "id": 500306,
+            "name": "Dreamslice",
+            "level": 3
+          },
+          {
+            "id": 500300,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500301,
+            "name": "Illusion Cloud",
+            "level": 3
+          },
+          {
+            "id": 500302,
+            "name": "Starpaint",
+            "level": 3
+          },
+          {
+            "id": 500303,
+            "name": "Dream Vision",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500304,
+            "name": "Nightmare Trace",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Renee always fights in unbelievable ways. Her Lancers can place Dream Marks on their targets every two turns, dealing <color=#00f183>%{n1}%</color> extra Lancer damage once next turn. The Dream Marks last for 1 turn."
+          },
+          {
+            "slot": 5,
+            "id": 500305,
+            "name": "Dreamcatcher",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Renee's Dream Marks highlight enemy vulnerabilities, increasing her Lancers' damage dealt to marked targets by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500306,
+            "name": "Dreamslice",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Renee's Dream Marks expose enemy weaknesses, increasing damage dealt to marked targets by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050030,
+          "name": "Illusion Magiball",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500308,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Wistful Enchantment",
+          "descriptionTemplate": "Renee boosts morale with her extraordinary talents, increasing Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50031,
+        "name": "Wayne",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500311,
+            "name": "Hurricane Blowback",
+            "level": 3
+          },
+          {
+            "id": 500312,
+            "name": "Phantom Blitz",
+            "level": 3
+          },
+          {
+            "id": 500313,
+            "name": "Noon Time!",
+            "level": 3
+          },
+          {
+            "id": 500314,
+            "name": "Thunder Strike",
+            "level": 3
+          },
+          {
+            "id": 500315,
+            "name": "Roundabout Hit",
+            "level": 3
+          },
+          {
+            "id": 500316,
+            "name": "Fleet",
+            "level": 3
+          },
+          {
+            "id": 500310,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500314,
+            "name": "Thunder Strike",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wayne's brilliant battle planning allows all troops to launch an extra attack every 4 turns, dealing <color=#00f183>%{n1}%</color> damage."
+          },
+          {
+            "slot": 5,
+            "id": 500315,
+            "name": "Roundabout Hit",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wayne's stratagems can pierce the thickest of defenses. On every other attack, his Marksmen deal <color=#00f183>%{n1}%</color> extra damage to enemy Lancers and <color=#00f183>%{n2}%</color> extra damage to enemy Marksmen."
+          },
+          {
+            "slot": 6,
+            "id": 500316,
+            "name": "Fleet",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wayne ensures no misstep goes unpunished with an eagle's eye for weakness, granting all troops' attacks a <color=#00f183>%{n1}%</color> Crit Rate."
+          }
+        ],
+        "widget": {
+          "id": 1050031,
+          "name": "Power Boomerang",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500318,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Offensive Defense",
+          "descriptionTemplate": "Wayne's strategic brilliance increases Defender Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50032,
+        "name": "Edith",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 7,
+        "skills": [
+          {
+            "id": 500325,
+            "name": "Ironclad",
+            "level": 1
+          },
+          {
+            "id": 500320,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500321,
+            "name": "Ironclad Punch",
+            "level": 1
+          },
+          {
+            "id": 500322,
+            "name": "Escape Capsule",
+            "level": 1
+          },
+          {
+            "id": 500324,
+            "name": "Strategic Balance",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500324,
+            "name": "Strategic Balance",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Mr. Tin's colossal presence automatically shields friendly ranged units, reducing Damage Taken by <color=#00f183>%{n1}%</color> for Marksmen, and suppresses the enemy, increasing Damage Dealt by <color=#00f183>%{n2}%</color> for Lancers."
+          },
+          {
+            "slot": 5,
+            "id": 500325,
+            "name": "Ironclad",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Mr. Tin's metallic body functions as a fortified wall on the field, reducing damage taken by <color=#00f183>%{n1}%</color> for Infantry."
+          },
+          {
+            "slot": 6,
+            "id": 500326,
+            "name": "Steel Sentinel",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Edith's mobile defense system is reliable, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050032,
+          "name": "Charm Toolkit",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500328,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Fortworks",
+          "descriptionTemplate": "Edith and Mr. Tin are a formidable defensive duo, increasing Defender Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50033,
+        "name": "Bradley",
+        "level": 2,
+        "trainingLevel": 69,
+        "star": 24,
+        "skills": [
+          {
+            "id": 500330,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500331,
+            "name": "Destructor",
+            "level": 5
+          },
+          {
+            "id": 500332,
+            "name": "Incendiary Shell",
+            "level": 4
+          },
+          {
+            "id": 500333,
+            "name": "Audacious",
+            "level": 4
+          },
+          {
+            "id": 500334,
+            "name": "Veteran's Might",
+            "level": 4
+          },
+          {
+            "id": 500335,
+            "name": "Power Shot",
+            "level": 4
+          },
+          {
+            "id": 500336,
+            "name": "Tactical Assistance",
+            "level": 4
+          },
+          {
+            "id": 500337,
+            "name": "Onslaught",
+            "level": 1
+          },
+          {
+            "id": 500338,
+            "name": "Siege Insight",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500334,
+            "name": "Veteran's Might",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Bradley's years of combat experience enables him to destroy enemies efficiently, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500335,
+            "name": "Power Shot",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Bradley uses his expertise in suppressive artillery against the enemy vanguard, increasing Damage Dealt to Lancers by <color=#00f183>%{n1}%</color>, and to Infantry by <color=#00f183>%{n2}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500336,
+            "name": "Tactical Assistance",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Bradley will press every advantage against a beleaguered enemy, increasing Damage Dealt by <color=#00f183>%{n1}%</color> for all troops for 2 turns every 4 turns."
+          }
+        ],
+        "widget": {
+          "id": 1050033,
+          "name": "Thunder Cannon",
+          "upgradeLevel": 2,
+          "expeditionSkillId": 500338,
+          "expeditionSkillLevel": 1,
+          "expeditionSkillName": "Siege Insight",
+          "descriptionTemplate": "Bradley knows exactly where to place defenses as a siege expert, increasing Defender Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50034,
+        "name": "Gatot",
+        "level": 2,
+        "trainingLevel": 69,
+        "star": 18,
+        "skills": [
+          {
+            "id": 500346,
+            "name": "Royal Legion",
+            "level": 4
+          },
+          {
+            "id": 500340,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500341,
+            "name": "King's Resolve",
+            "level": 3
+          },
+          {
+            "id": 500342,
+            "name": "Royal Authority",
+            "level": 3
+          },
+          {
+            "id": 500343,
+            "name": "Regal Dance",
+            "level": 3
+          },
+          {
+            "id": 500344,
+            "name": "Golden Guard",
+            "level": 4
+          },
+          {
+            "id": 500345,
+            "name": "King's Bestowal",
+            "level": 4
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500344,
+            "name": "Golden Guard",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Gatot commands his troops with imperial guard tactics, increasing his Infantry's Defense by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500345,
+            "name": "King's Bestowal",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "The great kings blesses Gatot's Infantry, granting Infantry a Shield with protection equal to Attack* <color=#00f183>%{n1}%</color> each time they attack, for 1 turn."
+          },
+          {
+            "slot": 6,
+            "id": 500346,
+            "name": "Royal Legion",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Gatot's formidable legion instills fear in enemies, reducing their Attack by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": {
+          "id": 1050034,
+          "name": "Golden Fang",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500348,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Indestructible City",
+          "descriptionTemplate": "Indestructible cities are forged with courage and determination, increases Defender Troops' Defense by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50035,
+        "name": "Sonya",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 6,
+        "skills": [
+          {
+            "id": 500354,
+            "name": "Treasure Hunter",
+            "level": 1
+          },
+          {
+            "id": 500355,
+            "name": "Bounty Temptation",
+            "level": 1
+          },
+          {
+            "id": 500350,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500351,
+            "name": "Extreme Cold",
+            "level": 1
+          },
+          {
+            "id": 500352,
+            "name": "Frozen Bomb",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500354,
+            "name": "Treasure Hunter",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "\u201cEveryone has a share when the legendary ocean treasure is found!\u201d Sonya's promise inspires everyone, increasing Damage by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500355,
+            "name": "Bounty Temptation",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Sonya motivates her Troops with bounty, making her Lancers deal <color=#00f183>%{n1}%</color> more damage every 2 attacks and increasing Attack by <color=#00f183>%{n2}%</color> for all troops for 1 turn."
+          },
+          {
+            "slot": 6,
+            "id": 500356,
+            "name": "Torrential Impact",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Sonya's Lancers will seize every chance to launch a surprise raid like underwater currents. Her Lancers deal <color=#00f183>%{n1}%</color> damage every 5 turns and stun the target for 1 turn."
+          }
+        ],
+        "widget": {
+          "id": 1050035,
+          "name": "Mangrove Frog",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500358,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Vortex Turret",
+          "descriptionTemplate": "Sonya sets up turrets that spurt out streams of water, increasing Defender Troops Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50036,
+        "name": "Hendrik",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500360,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500361,
+            "name": "Song of R'lyeh",
+            "level": 3
+          },
+          {
+            "id": 500362,
+            "name": "Sinking Anchor",
+            "level": 3
+          },
+          {
+            "id": 500363,
+            "name": "Lamprey's Kiss",
+            "level": 3
+          },
+          {
+            "id": 500364,
+            "name": "Worm's Ravage",
+            "level": 3
+          },
+          {
+            "id": 500365,
+            "name": "Armor of Barnacles",
+            "level": 3
+          },
+          {
+            "id": 500366,
+            "name": "Dagon's Heir",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500364,
+            "name": "Worm's Ravage",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Captain Hendrik commands a gigantic naval shipworm gnaw at the enemies' armor, reducing all enemy troops' Defense by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500365,
+            "name": "Armor of Barnacles",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Hendrik covers all Troops with a layer of hard-shelled barnacles every 4 turns, increasing their Defense by <color=#00f183>%{n1}%</color> for 2 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500366,
+            "name": "Dagon's Heir",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Every 3 turns, the ancient abyssal spirit's descendents will work together with Hendrik's Marksmen to launch an attack, dealing <color=#00f183>%{n1}%</color> damage to all enemies."
+          }
+        ],
+        "widget": {
+          "id": 1050036,
+          "name": "Abyss Diver",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500368,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Abyssal Blessing",
+          "descriptionTemplate": "The ancient abyssal spirit's blessing increases the Rally Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50037,
+        "name": "Ling Xue",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 13,
+        "skills": [
+          {
+            "id": 500374,
+            "name": "Fearsome Aura",
+            "level": 1
+          },
+          {
+            "id": 500375,
+            "name": "Total Control",
+            "level": 1
+          },
+          {
+            "id": 500370,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500371,
+            "name": "Hurricane Whirl",
+            "level": 1
+          },
+          {
+            "id": 500372,
+            "name": "Galeforce",
+            "level": 1
+          },
+          {
+            "id": 500373,
+            "name": "Desperate Measures",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500374,
+            "name": "Fearsome Aura",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ling Xue's withering assault has disturbed enemies' formation, reducing all enemy Troops' Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500375,
+            "name": "Total Control",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ling Xue's hands-on, disciplined instruction increases Training Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50000,
+        "name": "Eugene",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500004,
+            "name": "Woodland Inheritor",
+            "level": 2
+          },
+          {
+            "id": 500005,
+            "name": "Master Woodcutter",
+            "level": 1
+          },
+          {
+            "id": 500000,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500001,
+            "name": "Axe Whirl",
+            "level": 2
+          },
+          {
+            "id": 500002,
+            "name": "Razor Sharp",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500004,
+            "name": "Woodland Inheritor",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Eugene's consummate knowledge of timber processing has raised City Sawmill Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500005,
+            "name": "Master Woodcutter",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Eugene is always focused on achieving the perfect logging technique. +<color=#00f183>%{n1}%</color> Wood Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50001,
+        "name": "Smith",
+        "level": 2,
+        "trainingLevel": null,
+        "star": 22,
+        "skills": [
+          {
+            "id": 500010,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500011,
+            "name": "Hammer Burn",
+            "level": 1
+          },
+          {
+            "id": 500012,
+            "name": "Armor Enhancement",
+            "level": 1
+          },
+          {
+            "id": 500014,
+            "name": "Burnished Iron",
+            "level": 2
+          },
+          {
+            "id": 500015,
+            "name": "Craftsmanship",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500014,
+            "name": "Burnished Iron",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Smith's contagious passion for the art of crafting has raised City Iron Mine Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500015,
+            "name": "Craftsmanship",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Smith has an extraordinary sixth sense when it comes to iron. +<color=#00f183>%{n1}%</color> Iron Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50002,
+        "name": "Charlie",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500024,
+            "name": "Demolitions Expert",
+            "level": 2
+          },
+          {
+            "id": 500025,
+            "name": "Coal Extraction",
+            "level": 2
+          },
+          {
+            "id": 500020,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500021,
+            "name": "Shrapnel Load",
+            "level": 2
+          },
+          {
+            "id": 500022,
+            "name": "Grenadier",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500024,
+            "name": "Demolitions Expert",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Charlie's precise demolition experience has raised City Coal Mine Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500025,
+            "name": "Coal Extraction",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Charlie is an old hand at coal mining. +<color=#00f183>%{n1}%</color> Coal Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50003,
+        "name": "Cloris",
+        "level": 70,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500031,
+            "name": "Rain of Arrows",
+            "level": 3
+          },
+          {
+            "id": 500032,
+            "name": "Hunters' Mark",
+            "level": 3
+          },
+          {
+            "id": 500034,
+            "name": "Top Hunter",
+            "level": 4
+          },
+          {
+            "id": 500035,
+            "name": "Predator",
+            "level": 4
+          },
+          {
+            "id": 500030,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500034,
+            "name": "Top Hunter",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Cloris, the tundra's best hunter, has single-handedly raised City Hunter's Hut Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500035,
+            "name": "Predator",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Cloris knows the ecosystem like the back of her hand. +<color=#00f183>%{n1}%</color> Meat Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50004,
+        "name": "Sergey",
+        "level": 69,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500045,
+            "name": "Weaken",
+            "level": 2
+          },
+          {
+            "id": 500040,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500041,
+            "name": "Shielded Strike",
+            "level": 3
+          },
+          {
+            "id": 500042,
+            "name": "Joint Defense",
+            "level": 3
+          },
+          {
+            "id": 500043,
+            "name": "Shield Block",
+            "level": 3
+          },
+          {
+            "id": 500044,
+            "name": "Defenders' Edge",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500044,
+            "name": "Defenders' Edge",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Sergey guards our troops with his shield, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500045,
+            "name": "Weaken",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Sergey's intimidating presence reduces Attack by <color=#00f183>%{n1}%</color> for all enemy troops."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50005,
+        "name": "Patrick",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 22,
+        "skills": [
+          {
+            "id": 500052,
+            "name": "Thick Belly",
+            "level": 1
+          },
+          {
+            "id": 500053,
+            "name": "Emergency Snack",
+            "level": 1
+          },
+          {
+            "id": 500054,
+            "name": "Super Nutrients",
+            "level": 4
+          },
+          {
+            "id": 500055,
+            "name": "Caloric Booster",
+            "level": 4
+          },
+          {
+            "id": 500050,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500051,
+            "name": "BBQ Feast",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500054,
+            "name": "Super Nutrients",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Patrick's culinary masterpieces invigorate our troops, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500055,
+            "name": "Caloric Booster",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Patrick's gourmet meals motivate and unleash the potential of our soldiers, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50006,
+        "name": "Bahiti",
+        "level": 69,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500060,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500061,
+            "name": "Precise Shot",
+            "level": 3
+          },
+          {
+            "id": 500062,
+            "name": "Quick Shot",
+            "level": 3
+          },
+          {
+            "id": 500063,
+            "name": "Pathfinder Vision",
+            "level": 3
+          },
+          {
+            "id": 500064,
+            "name": "Sixth Sense",
+            "level": 2
+          },
+          {
+            "id": 500065,
+            "name": "Fluorescence",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500064,
+            "name": "Sixth Sense",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Bahiti senses the dangers ahead, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500065,
+            "name": "Fluorescence",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Bahiti's battlefield instincts grants all troops' attack a 50% chance of increasing damage dealt by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50007,
+        "name": "Jessie",
+        "level": 2,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500073,
+            "name": "Weapon Upgrade",
+            "level": 1
+          },
+          {
+            "id": 500074,
+            "name": "Stand of Arms",
+            "level": 1
+          },
+          {
+            "id": 500075,
+            "name": "Bulwarks",
+            "level": 1
+          },
+          {
+            "id": 500070,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500071,
+            "name": "Burst Fire",
+            "level": 1
+          },
+          {
+            "id": 500072,
+            "name": "Defense Upgrade",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500074,
+            "name": "Stand of Arms",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Jessie implements advanced weaponry for our troops, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500075,
+            "name": "Bulwarks",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "With a keen engineering eye, Jessie enhances troops' armor, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50008,
+        "name": "Gina",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 20,
+        "skills": [
+          {
+            "id": 500080,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500081,
+            "name": "Incendiary Arrow",
+            "level": 2
+          },
+          {
+            "id": 500082,
+            "name": "Windtalker",
+            "level": 1
+          },
+          {
+            "id": 500083,
+            "name": "Eagle Eyes",
+            "level": 1
+          },
+          {
+            "id": 500084,
+            "name": "Endurance Training",
+            "level": 4
+          },
+          {
+            "id": 500085,
+            "name": "Quick Paced",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500084,
+            "name": "Endurance Training",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Gina's strict Governor training regimen can be counted upon to reduce Stamina cost by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500085,
+            "name": "Quick Paced",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Gina is a fast and aggressive wilderness rider, boosting Hunting March Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50010,
+        "name": "Logan",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 6,
+        "skills": [
+          {
+            "id": 500101,
+            "name": "Fists of Destruction",
+            "level": 1
+          },
+          {
+            "id": 500102,
+            "name": "Power Suit",
+            "level": 1
+          },
+          {
+            "id": 500104,
+            "name": "Lion's Might",
+            "level": 1
+          },
+          {
+            "id": 500105,
+            "name": "Lion Intimidation",
+            "level": 2
+          },
+          {
+            "id": 500100,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500104,
+            "name": "Lion's Might",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Logan overwhelms his enemies with a fierce presence, reducing all enemy Troops' Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500105,
+            "name": "Lion Intimidation",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Logan intimidates his opponents with the ferocity of a lion, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500106,
+            "name": "Leader Inspiration",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Logan inspires everyone with his inherent leadership qualities, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050010,
+          "name": "Fists of Steel",
+          "upgradeLevel": null,
+          "expeditionSkillId": 500108,
+          "expeditionSkillLevel": null,
+          "expeditionSkillName": "Strong Protection",
+          "descriptionTemplate": "Logan defends the city with his mighty fists, increasing Defender Troops' Defense by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50012,
+        "name": "Molly",
+        "level": 69,
+        "trainingLevel": null,
+        "star": 9,
+        "skills": [
+          {
+            "id": 500122,
+            "name": "Frost Ambush",
+            "level": 2
+          },
+          {
+            "id": 500124,
+            "name": "Snow's Grace",
+            "level": 2
+          },
+          {
+            "id": 500125,
+            "name": "Ice Dominion",
+            "level": 2
+          },
+          {
+            "id": 500120,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500121,
+            "name": "Super Snowball",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500124,
+            "name": "Snow's Grace",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Molly creates an avalanche that clouds enemy sights, granting a 40% chance of reducing all troops' Damage Taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500125,
+            "name": "Ice Dominion",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Molly excels in snowy terrains, granting all troops' attack a 50% chance of increasing damage dealt by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500126,
+            "name": "Youthful Rage",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Hell hath no fury like an angry Molly, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050012,
+          "name": "Yeti Spirit",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500128,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Snowy Blessing",
+          "descriptionTemplate": "With the blessing of the snow, Defender Troops' Lethality is increased by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50013,
+        "name": "Philly",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500136,
+            "name": "Energizing Shot",
+            "level": 1
+          },
+          {
+            "id": 500130,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500131,
+            "name": "First Aid",
+            "level": 1
+          },
+          {
+            "id": 500132,
+            "name": "Restorative Hands",
+            "level": 1
+          },
+          {
+            "id": 500133,
+            "name": "Paralytic Lotion",
+            "level": 1
+          },
+          {
+            "id": 500134,
+            "name": "Vigor Tactics",
+            "level": 2
+          },
+          {
+            "id": 500135,
+            "name": "Dosage Boost",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500134,
+            "name": "Vigor Tactics",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Philly's secret remedy strengthens the soldiers, increasing Attack by <color=#00f183>%{n1}%</color> and Defense by <color=#00f183>%{n2}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500135,
+            "name": "Dosage Boost",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Philly uses her secret tonic to enhance the warriors' strength, granting all troops' attack a 25% chance of dealing <color=#00f183>%{n1}%</color> damage."
+          },
+          {
+            "slot": 6,
+            "id": 500136,
+            "name": "Energizing Shot",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Philly's special shot improves troops' focus, granting a 40% chance of reducing all troops' Damage Taken by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": {
+          "id": 1050013,
+          "name": "Pharmacologica",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500138,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "First Aid Training",
+          "descriptionTemplate": "Philly imparts her basic first-aid and care techniques, increasing Defender Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50014,
+        "name": "Reina",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500143,
+            "name": "Poison of Demon",
+            "level": 1
+          },
+          {
+            "id": 500144,
+            "name": "Assassin's Instinct",
+            "level": 1
+          },
+          {
+            "id": 500145,
+            "name": "Swift Jive",
+            "level": 1
+          },
+          {
+            "id": 500146,
+            "name": "Shadow Blade",
+            "level": 1
+          },
+          {
+            "id": 500140,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500141,
+            "name": "Phantom Assault",
+            "level": 1
+          },
+          {
+            "id": 500142,
+            "name": "Vanishing Technique",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500144,
+            "name": "Assassin's Instinct",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Reina targets enemy weak spots, increasing normal attack damage by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500145,
+            "name": "Swift Jive",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Reina's adept leadership grants all troops a <color=#00f183>%{n1}%</color> chance of dodging normal attacks."
+          },
+          {
+            "slot": 6,
+            "id": 500146,
+            "name": "Shadow Blade",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "With Reina's clever tactics, her Lancers have a 25% chance of performing an extra attack, dealing <color=#00f183>%{n1}%</color> damage."
+          }
+        ],
+        "widget": {
+          "id": 1050014,
+          "name": "Ninjaken - Raikiri",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500148,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Fiery Invasion",
+          "descriptionTemplate": "Reina's unmatched precision increases Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50015,
+        "name": "Gordon",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 8,
+        "skills": [
+          {
+            "id": 500150,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500151,
+            "name": "Poison Blast",
+            "level": 1
+          },
+          {
+            "id": 500152,
+            "name": "Toxic Molotov",
+            "level": 2
+          },
+          {
+            "id": 500154,
+            "name": "Venom Infusion",
+            "level": 1
+          },
+          {
+            "id": 500155,
+            "name": "Chemical Terror",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500154,
+            "name": "Venom Infusion",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Gordon dips Lancers' weapons in venom. Every 2 attacks, Lancers deal <color=#00f183>%{n1}%</color> extra damage and apply poison to the target for 1 turn. Poisoned enemies deal <color=#00f183>%{n2}%</color> less damage."
+          },
+          {
+            "slot": 5,
+            "id": 500155,
+            "name": "Chemical Terror",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Gordon's envenomed weapons terrorizes the field, increasing Lancers' Damage Dealt by <color=#00f183>%{n1}%</color> and reducing Damage Dealt by <color=#00f183>%{n2}%</color> for all enemy troops for 1 turn, every 3 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500156,
+            "name": "Toxic Release",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Gordon generates a defensive bio-toxic fog, confusing enemy frontline Infantry, increasing their Damage Taken by <color=#00f183>%{n1}%</color>, while blocking enemy Marksmen's line of sight to reduce their Damage Dealt by <color=#00f183>%{n2}%</color> for 2 turns every 4 turns."
+          }
+        ],
+        "widget": {
+          "id": 1050015,
+          "name": "Bonecrux Venom",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500158,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Bio Assault",
+          "descriptionTemplate": "Gordon privileges his allies with special envenomed weaponry, increasing Rally Squads' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50016,
+        "name": "Mia",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 6,
+        "skills": [
+          {
+            "id": 500164,
+            "name": "Bad Luck Streak",
+            "level": 2
+          },
+          {
+            "id": 500165,
+            "name": "Lucky Charm",
+            "level": 2
+          },
+          {
+            "id": 500160,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500161,
+            "name": "Fate's Finale",
+            "level": 1
+          },
+          {
+            "id": 500162,
+            "name": "Bad Omen",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500164,
+            "name": "Bad Luck Streak",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Grants all troops' attack a 50% chance of cursing the target, increasing their damage taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500165,
+            "name": "Lucky Charm",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Mia brings good luck to the Troops, granting a 50% chance of boosting troops' Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500166,
+            "name": "Ritual Deciphering",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Mia foresees potential dangers before battle, granting a 40% chance of reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050016,
+          "name": "Fate Crystal",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500168,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Rally of Fate",
+          "descriptionTemplate": "Mia divines the most advantageous moments for an assault, increasing Rally Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50018,
+        "name": "Alonso",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500185,
+            "name": "Iron Strength",
+            "level": 1
+          },
+          {
+            "id": 500186,
+            "name": "Poison Harpoon",
+            "level": 1
+          },
+          {
+            "id": 500180,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500181,
+            "name": "Trapnet",
+            "level": 2
+          },
+          {
+            "id": 500182,
+            "name": "Tidal Force",
+            "level": 2
+          },
+          {
+            "id": 500183,
+            "name": "Harpoon Blast",
+            "level": 1
+          },
+          {
+            "id": 500184,
+            "name": "Onslaught",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500184,
+            "name": "Onslaught",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Alonso attacks like the waves, granting a 40% chance of increasing all troop's Lethality by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500185,
+            "name": "Iron Strength",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Alonso's indomitable will grants all troops' attack a 20% chance of reducing damage dealt by <color=#00f183>%{n1}%</color> for all enemy troops for 2 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500186,
+            "name": "Poison Harpoon",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Alonso coats weapons with lethal toxins, granting all troops' attack a 50% chance of dealing <color=#00f183>%{n1}%</color> more damage."
+          }
+        ],
+        "widget": {
+          "id": 1050018,
+          "name": "Captain Ahab",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500188,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Harpoon Enhancement",
+          "descriptionTemplate": "Alonso enhances our troops' weapons, increasing Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50019,
+        "name": "Wu Ming",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 14,
+        "skills": [
+          {
+            "id": 500192,
+            "name": "Inner Clarity",
+            "level": 3
+          },
+          {
+            "id": 500193,
+            "name": "Remote Impact",
+            "level": 3
+          },
+          {
+            "id": 500194,
+            "name": "Shadow's Evasion",
+            "level": 3
+          },
+          {
+            "id": 500195,
+            "name": "Crescent Uplift",
+            "level": 3
+          },
+          {
+            "id": 500196,
+            "name": "Elemental Resonance",
+            "level": 3
+          },
+          {
+            "id": 500190,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500191,
+            "name": "Cyclone Barrier",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500194,
+            "name": "Shadow's Evasion",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wu Ming moves like a shadow, dodging and countering enemies, reducing his Infantry's damage taken from normal attacks by <color=#00f183>%{n1}%</color> and from skills by <color=#00f183>%{n2}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500195,
+            "name": "Crescent Uplift",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wu Ming spreads his wisdom and techniques, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500196,
+            "name": "Elemental Resonance",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wu Ming leads everyone to a heightened affinity with their combat techniques, increasing skill damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050019,
+          "name": "Dragonslayer",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500198,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Steel Discipline",
+          "descriptionTemplate": "Wu Ming puts defender troops under stern tutelage, increasing Defender Troops' Defense by %{n1}%"
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50020,
+        "name": "Greg",
+        "level": 1,
+        "trainingLevel": 69,
+        "star": 9,
+        "skills": [
+          {
+            "id": 500200,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500201,
+            "name": "Righteous Wind",
+            "level": 1
+          },
+          {
+            "id": 500202,
+            "name": "Poetic Justice",
+            "level": 1
+          },
+          {
+            "id": 500204,
+            "name": "Sword of Justice",
+            "level": 1
+          },
+          {
+            "id": 500205,
+            "name": "Deterrence of Law",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500204,
+            "name": "Sword of Justice",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Greg transforms our troops into a relentless sword of justice, granting a 20% chance of increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops for 3 turns."
+          },
+          {
+            "slot": 5,
+            "id": 500205,
+            "name": "Deterrence of Law",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Greg uses the authority of the law to intimidate enemies, granting all troops' attack a 20% chance of reducing enemy damage dealt by <color=#00f183>%{n1}%</color> for 2 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500206,
+            "name": "Law and Order",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Greg's faith in law and order uplifts everyone, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050020,
+          "name": "State Edict",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500208,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Trumpet of Justice",
+          "descriptionTemplate": "Greg mobilizes the army under the banner of justice and belief, increasing Rally Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50021,
+        "name": "Flint",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 11,
+        "skills": [
+          {
+            "id": 500214,
+            "name": "Pyromaniac",
+            "level": 1
+          },
+          {
+            "id": 500215,
+            "name": "Burning Resolve",
+            "level": 1
+          },
+          {
+            "id": 500210,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500211,
+            "name": "Fires of Vengeance",
+            "level": 1
+          },
+          {
+            "id": 500212,
+            "name": "Incinerator",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500214,
+            "name": "Pyromaniac",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Every flame, no matter how small, can ignite a roaring fire. Flint increases his Infantry's Damage Dealt by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500215,
+            "name": "Burning Resolve",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Flint's fire not only dispels the cold but also ignites the passion for battle, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500216,
+            "name": "Immolation",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Flint's flame of anger devours everything, increasing all troops' Lethality by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": {
+          "id": 1050021,
+          "name": "Dragonbane",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500218,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Dragonbreath",
+          "descriptionTemplate": "Flint fortifies his flamethrower for city defense, increasing Defender Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      }
+    ],
+    "troops": [
+      {
+        "id": 10300,
+        "name": "Senior Infantry",
+        "tier": 3,
+        "troopType": "Infantry",
+        "available": 12,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10400,
+        "name": "Veteran Infantry",
+        "tier": 4,
+        "troopType": "Infantry",
+        "available": 2300,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10600,
+        "name": "Heroic Infantry",
+        "tier": 6,
+        "troopType": "Infantry",
+        "available": 1309,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 12316,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10800,
+        "name": "Elite Infantry",
+        "tier": 8,
+        "troopType": "Infantry",
+        "available": 38581,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 1,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10900,
+        "name": "Supreme Infantry",
+        "tier": 9,
+        "troopType": "Infantry",
+        "available": 14273,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 65,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20300,
+        "name": "Senior Lancer",
+        "tier": 3,
+        "troopType": "Lancer",
+        "available": 14,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20400,
+        "name": "Veteran Lancer",
+        "tier": 4,
+        "troopType": "Lancer",
+        "available": 2300,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20600,
+        "name": "Heroic Lancer",
+        "tier": 6,
+        "troopType": "Lancer",
+        "available": 7027,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 3815,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20900,
+        "name": "Supreme Lancer",
+        "tier": 9,
+        "troopType": "Lancer",
+        "available": 36384,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30300,
+        "name": "Senior Marksman",
+        "tier": 3,
+        "troopType": "Marksman",
+        "available": 1,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30400,
+        "name": "Veteran Marksman",
+        "tier": 4,
+        "troopType": "Marksman",
+        "available": 2080,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30600,
+        "name": "Heroic Marksman",
+        "tier": 6,
+        "troopType": "Marksman",
+        "available": 23569,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 1582,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30900,
+        "name": "Supreme Marksman",
+        "tier": 9,
+        "troopType": "Marksman",
+        "available": 41971,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      }
+    ],
+    "formations": [],
+    "healing": null,
+    "reservations": [],
+    "totals": {
+      "available": 169821,
+      "deployed": 0,
+      "lightlyInjured": 0,
+      "injured": 17779,
+      "healing": 0,
+      "reserved": 0
+    }
+  },
+  "minxxx": {
+    "account": "minxxx",
+    "userId": 142946034,
+    "kingdomId": 2487,
+    "fetchedAt": "2026-09-28T11:52:21.017Z",
+    "observedAt": "2026-09-28T11:52:21.015Z",
+    "heroes": [
+      {
+        "id": 50022,
+        "name": "Lynn",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 18,
+        "skills": [
+          {
+            "id": 500220,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500221,
+            "name": "Hymn of Sidrak",
+            "level": 4
+          },
+          {
+            "id": 500222,
+            "name": "Lethal Finale",
+            "level": 3
+          },
+          {
+            "id": 500223,
+            "name": "Discordant Tune",
+            "level": 3
+          },
+          {
+            "id": 500224,
+            "name": "Song of Lion",
+            "level": 3
+          },
+          {
+            "id": 500225,
+            "name": "Melancholic Ballad",
+            "level": 3
+          },
+          {
+            "id": 500226,
+            "name": "Oonai Cadenza",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500224,
+            "name": "Song of Lion",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Lynn uplifts our troops with an enthusiastic rhythm, granting a 40% chance of increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500225,
+            "name": "Melancholic Ballad",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Lynn demoralizes the enemies with a somber tune, reducing damage dealt by <color=#00f183>%{n1}%</color> for all enemy troops."
+          },
+          {
+            "slot": 6,
+            "id": 500226,
+            "name": "Oonai Cadenza",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Lynn harnesses the power of music to elevate troop morale, increasing her Marksmen's attack by <color=#00f183>%{n1}%</color> for every 3 attacks. Stackable and lasts until the end of the battle."
+          }
+        ],
+        "widget": {
+          "id": 1050022,
+          "name": "Ella's Tear",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500228,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Iranon's Determination",
+          "descriptionTemplate": "Lynn stirs the defenders with a nostalgic poem, increasing Defender Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50023,
+        "name": "Ahmose",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500234,
+            "name": "Viper Formation",
+            "level": 1
+          },
+          {
+            "id": 500235,
+            "name": "Prayer of Flame",
+            "level": 1
+          },
+          {
+            "id": 500236,
+            "name": "Blade of Light",
+            "level": 3
+          },
+          {
+            "id": 500230,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500231,
+            "name": "Cthugha's Protection",
+            "level": 1
+          },
+          {
+            "id": 500232,
+            "name": "Daybreak Knife",
+            "level": 1
+          },
+          {
+            "id": 500233,
+            "name": "Ancestral Blessing",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500234,
+            "name": "Viper Formation",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ahmose revives the lost art of ancient guardians. His Infantry pauses the attack once every four times, reducing damage taken by Lancers and Marksmen by <color=#00f183>%{n1}%</color> and Infantry by <color=#00f183>%{n2}%</color> for 2 turns."
+          },
+          {
+            "slot": 5,
+            "id": 500235,
+            "name": "Prayer of Flame",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ahmose amplifies the combat spirit of friendly Infantry with the power of the Fire Crystal, increasing their damage dealt by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500236,
+            "name": "Blade of Light",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Ahmose infuses friendly Infantry's weapons with the essence of Fire Crystals, increasing his infantries' damage dealt per attack by <color=#00f183>%{n1}%</color> and the target's damage taken by <color=#00f183>%{n2}%</color> for 1 turn."
+          }
+        ],
+        "widget": {
+          "id": 1050023,
+          "name": "Guardian's Relic",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500238,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Oath of Guardian",
+          "descriptionTemplate": "Ahmose fortifies the city with the resolve of a guardian, increasing Defender Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50024,
+        "name": "Hector",
+        "level": 76,
+        "trainingLevel": null,
+        "star": 23,
+        "skills": [
+          {
+            "id": 500241,
+            "name": "Sword Whirlwind",
+            "level": 4
+          },
+          {
+            "id": 500242,
+            "name": "Desperado",
+            "level": 3
+          },
+          {
+            "id": 500243,
+            "name": "Adrenaline Surge",
+            "level": 3
+          },
+          {
+            "id": 500244,
+            "name": "Survival Instincts",
+            "level": 3
+          },
+          {
+            "id": 500245,
+            "name": "Rampant",
+            "level": 4
+          },
+          {
+            "id": 500246,
+            "name": "Blitz",
+            "level": 4
+          },
+          {
+            "id": 500240,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500244,
+            "name": "Survival Instincts",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "A seasoned warrior with an uncanny knack for reading the battlefield, Hector's presence has a 40% chance of reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500245,
+            "name": "Rampant",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Hector excels at raiding on fortified positions with well-coordinated Marksmen, increasing Infantry's Damage Dealt by <color=#00f183>%{n1}%</color> and Marksmen's Damage Dealt by <color=#00f183>%{n2}%</color>, it is effective for 10 attacks, with each attack's damage boost being 85% of the previous one."
+          },
+          {
+            "slot": 6,
+            "id": 500246,
+            "name": "Blitz",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Hector has mastered the offensive strategy, granting all troops' attack a 25% chance of dealing <color=#00f183>%{n1}%</color> damage."
+          }
+        ],
+        "widget": {
+          "id": 1050024,
+          "name": "Steel Fangs",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500248,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Goliath",
+          "descriptionTemplate": "Hector excels at using terrain against attackers, increasing Defender Troops Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50025,
+        "name": "Norah",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 15,
+        "skills": [
+          {
+            "id": 500255,
+            "name": "Combined Arms",
+            "level": 2
+          },
+          {
+            "id": 500256,
+            "name": "Momentum",
+            "level": 2
+          },
+          {
+            "id": 500250,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500251,
+            "name": "Barrage",
+            "level": 1
+          },
+          {
+            "id": 500252,
+            "name": "Flashbang",
+            "level": 1
+          },
+          {
+            "id": 500253,
+            "name": "Valkyrie Cry",
+            "level": 1
+          },
+          {
+            "id": 500254,
+            "name": "Sneak Strike",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500255,
+            "name": "Combined Arms",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Norah is well trained in combined arms tactics, decreasing Damage Taken by <color=#00f183>%{n1}%</color> and boosting Damage Dealt by <color=#00f183>%{n2}%</color> for Infantry and Marksman."
+          },
+          {
+            "slot": 5,
+            "id": 500254,
+            "name": "Sneak Strike",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Norah has an eye for weaknesses, granting her Lancers a 20% chance of dealing <color=#00f183>%{n1}%</color> extra damage to all enemies on attack."
+          },
+          {
+            "slot": 6,
+            "id": 500256,
+            "name": "Momentum",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Norah motivates our troops, increasing all troops' damage dealt by <color=#00f183>%{n1}%</color>, and reducing their damage taken by <color=#00f183>%{n2}%</color> every 5 attacks made by lancers for 2 turns."
+          }
+        ],
+        "widget": {
+          "id": 1050025,
+          "name": "Snow Cruiser",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500258,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "True Grit",
+          "descriptionTemplate": "Norah inspires others with her courage under fire, boosting Defender Troops Defense by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50026,
+        "name": "Gwen",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 13,
+        "skills": [
+          {
+            "id": 500262,
+            "name": "Sky Sniper",
+            "level": 1
+          },
+          {
+            "id": 500263,
+            "name": "Hellfire",
+            "level": 1
+          },
+          {
+            "id": 500264,
+            "name": "Eagle Vision",
+            "level": 3
+          },
+          {
+            "id": 500265,
+            "name": "Air Dominance",
+            "level": 1
+          },
+          {
+            "id": 500266,
+            "name": "Blastmaster",
+            "level": 1
+          },
+          {
+            "id": 500260,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500261,
+            "name": "Salvo",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500264,
+            "name": "Eagle Vision",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Gwen provides unfettered vision of enemy weakpoints during flights, increasing target's Damage Taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500265,
+            "name": "Air Dominance",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Gwen dominates the skies, granting all troops' attack <color=#00f183>%{n1}%</color> extra damage after every five attacks, and causes the target to receive <color=#00f183>%{n2}%</color> extra damage for its next attack received."
+          },
+          {
+            "slot": 6,
+            "id": 500266,
+            "name": "Blastmaster",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Gwen equips her Marksmen with grenades, dealing <color=#00f183>%{n1}%</color> extra damage to all enemies on the next attack of every 4 attacks."
+          }
+        ],
+        "widget": {
+          "id": 1050026,
+          "name": "Wings of Hope",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500268,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Marauder",
+          "descriptionTemplate": "Gwen uses her expertise in offensive tactics, boosting Rally Troops Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50027,
+        "name": "Seo-yoon",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 19,
+        "skills": [
+          {
+            "id": 500270,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500271,
+            "name": "Heartbeat of Valor",
+            "level": 1
+          },
+          {
+            "id": 500272,
+            "name": "Bullseye Bash",
+            "level": 1
+          },
+          {
+            "id": 500273,
+            "name": "Gale's Pulse",
+            "level": 1
+          },
+          {
+            "id": 500274,
+            "name": "Rallying Beat",
+            "level": 4
+          },
+          {
+            "id": 500275,
+            "name": "Soothing Dance",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500274,
+            "name": "Rallying Beat",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Seo-yoon beats the war drum to boost morale, increasing all Troops Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500275,
+            "name": "Soothing Dance",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Seo-yoon treats wounded troops with traditional medicine, increasing Healing Speed in the Infirmary by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50028,
+        "name": "Jasser",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 19,
+        "skills": [
+          {
+            "id": 500283,
+            "name": "Natural Precision",
+            "level": 2
+          },
+          {
+            "id": 500284,
+            "name": "Tactical Genius",
+            "level": 4
+          },
+          {
+            "id": 500285,
+            "name": "Enlightened Warfare",
+            "level": 4
+          },
+          {
+            "id": 500280,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500281,
+            "name": "Triple Volley",
+            "level": 2
+          },
+          {
+            "id": 500282,
+            "name": "Suppressive Fire",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500284,
+            "name": "Tactical Genius",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Jasser's combination of courage and wisdom enriches the army, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500285,
+            "name": "Enlightened Warfare",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Jasser's profound knowledge increases the city's Research Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50029,
+        "name": "Lumak Bokan",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 18,
+        "skills": [
+          {
+            "id": 500290,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500291,
+            "name": "Earthshake",
+            "level": 1
+          },
+          {
+            "id": 500292,
+            "name": "Echoing Boost",
+            "level": 1
+          },
+          {
+            "id": 500293,
+            "name": "Jungle-Born Agility",
+            "level": 1
+          },
+          {
+            "id": 500294,
+            "name": "Tactical Deception",
+            "level": 3
+          },
+          {
+            "id": 500295,
+            "name": "Emerald Warrior",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500294,
+            "name": "Tactical Deception",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "With Lumak Bokan's expert guerrilla tactics, all enemy troops' damage dealt is reduced by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500295,
+            "name": "Emerald Warrior",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Lumak Bokan passes his people's traditional techniques to the soldiers, increasing Hunting March Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50030,
+        "name": "Renee",
+        "level": 76,
+        "trainingLevel": null,
+        "star": 22,
+        "skills": [
+          {
+            "id": 500304,
+            "name": "Nightmare Trace",
+            "level": 4
+          },
+          {
+            "id": 500305,
+            "name": "Dreamcatcher",
+            "level": 4
+          },
+          {
+            "id": 500306,
+            "name": "Dreamslice",
+            "level": 4
+          },
+          {
+            "id": 500300,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500301,
+            "name": "Illusion Cloud",
+            "level": 4
+          },
+          {
+            "id": 500302,
+            "name": "Starpaint",
+            "level": 3
+          },
+          {
+            "id": 500303,
+            "name": "Dream Vision",
+            "level": 4
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500304,
+            "name": "Nightmare Trace",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Renee always fights in unbelievable ways. Her Lancers can place Dream Marks on their targets every two turns, dealing <color=#00f183>%{n1}%</color> extra Lancer damage once next turn. The Dream Marks last for 1 turn."
+          },
+          {
+            "slot": 5,
+            "id": 500305,
+            "name": "Dreamcatcher",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Renee's Dream Marks highlight enemy vulnerabilities, increasing her Lancers' damage dealt to marked targets by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500306,
+            "name": "Dreamslice",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Renee's Dream Marks expose enemy weaknesses, increasing damage dealt to marked targets by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050030,
+          "name": "Illusion Magiball",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500308,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Wistful Enchantment",
+          "descriptionTemplate": "Renee boosts morale with her extraordinary talents, increasing Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50031,
+        "name": "Wayne",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 9,
+        "skills": [
+          {
+            "id": 500311,
+            "name": "Hurricane Blowback",
+            "level": 1
+          },
+          {
+            "id": 500312,
+            "name": "Phantom Blitz",
+            "level": 1
+          },
+          {
+            "id": 500314,
+            "name": "Thunder Strike",
+            "level": 2
+          },
+          {
+            "id": 500315,
+            "name": "Roundabout Hit",
+            "level": 1
+          },
+          {
+            "id": 500310,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500314,
+            "name": "Thunder Strike",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Wayne's brilliant battle planning allows all troops to launch an extra attack every 4 turns, dealing <color=#00f183>%{n1}%</color> damage."
+          },
+          {
+            "slot": 5,
+            "id": 500315,
+            "name": "Roundabout Hit",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Wayne's stratagems can pierce the thickest of defenses. On every other attack, his Marksmen deal <color=#00f183>%{n1}%</color> extra damage to enemy Lancers and <color=#00f183>%{n2}%</color> extra damage to enemy Marksmen."
+          },
+          {
+            "slot": 6,
+            "id": 500316,
+            "name": "Fleet",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Wayne ensures no misstep goes unpunished with an eagle's eye for weakness, granting all troops' attacks a <color=#00f183>%{n1}%</color> Crit Rate."
+          }
+        ],
+        "widget": {
+          "id": 1050031,
+          "name": "Power Boomerang",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500318,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Offensive Defense",
+          "descriptionTemplate": "Wayne's strategic brilliance increases Defender Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50032,
+        "name": "Edith",
+        "level": 76,
+        "trainingLevel": null,
+        "star": 13,
+        "skills": [
+          {
+            "id": 500325,
+            "name": "Ironclad",
+            "level": 3
+          },
+          {
+            "id": 500326,
+            "name": "Steel Sentinel",
+            "level": 3
+          },
+          {
+            "id": 500320,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500321,
+            "name": "Ironclad Punch",
+            "level": 3
+          },
+          {
+            "id": 500322,
+            "name": "Escape Capsule",
+            "level": 3
+          },
+          {
+            "id": 500323,
+            "name": "Preemptive Alerts",
+            "level": 3
+          },
+          {
+            "id": 500324,
+            "name": "Strategic Balance",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500324,
+            "name": "Strategic Balance",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Mr. Tin's colossal presence automatically shields friendly ranged units, reducing Damage Taken by <color=#00f183>%{n1}%</color> for Marksmen, and suppresses the enemy, increasing Damage Dealt by <color=#00f183>%{n2}%</color> for Lancers."
+          },
+          {
+            "slot": 5,
+            "id": 500325,
+            "name": "Ironclad",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Mr. Tin's metallic body functions as a fortified wall on the field, reducing damage taken by <color=#00f183>%{n1}%</color> for Infantry."
+          },
+          {
+            "slot": 6,
+            "id": 500326,
+            "name": "Steel Sentinel",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Edith's mobile defense system is reliable, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050032,
+          "name": "Charm Toolkit",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500328,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Fortworks",
+          "descriptionTemplate": "Edith and Mr. Tin are a formidable defensive duo, increasing Defender Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50033,
+        "name": "Bradley",
+        "level": 77,
+        "trainingLevel": null,
+        "star": 24,
+        "skills": [
+          {
+            "id": 500330,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500331,
+            "name": "Destructor",
+            "level": 5
+          },
+          {
+            "id": 500332,
+            "name": "Incendiary Shell",
+            "level": 5
+          },
+          {
+            "id": 500333,
+            "name": "Audacious",
+            "level": 5
+          },
+          {
+            "id": 500334,
+            "name": "Veteran's Might",
+            "level": 5
+          },
+          {
+            "id": 500335,
+            "name": "Power Shot",
+            "level": 4
+          },
+          {
+            "id": 500336,
+            "name": "Tactical Assistance",
+            "level": 3
+          },
+          {
+            "id": 500337,
+            "name": "Onslaught",
+            "level": 1
+          },
+          {
+            "id": 500338,
+            "name": "Siege Insight",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500334,
+            "name": "Veteran's Might",
+            "level": 5,
+            "unlocked": true,
+            "descriptionTemplate": "Bradley's years of combat experience enables him to destroy enemies efficiently, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500335,
+            "name": "Power Shot",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Bradley uses his expertise in suppressive artillery against the enemy vanguard, increasing Damage Dealt to Lancers by <color=#00f183>%{n1}%</color>, and to Infantry by <color=#00f183>%{n2}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500336,
+            "name": "Tactical Assistance",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Bradley will press every advantage against a beleaguered enemy, increasing Damage Dealt by <color=#00f183>%{n1}%</color> for all troops for 2 turns every 4 turns."
+          }
+        ],
+        "widget": {
+          "id": 1050033,
+          "name": "Thunder Cannon",
+          "upgradeLevel": 2,
+          "expeditionSkillId": 500338,
+          "expeditionSkillLevel": 1,
+          "expeditionSkillName": "Siege Insight",
+          "descriptionTemplate": "Bradley knows exactly where to place defenses as a siege expert, increasing Defender Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50034,
+        "name": "Gatot",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 18,
+        "skills": [
+          {
+            "id": 500346,
+            "name": "Royal Legion",
+            "level": 3
+          },
+          {
+            "id": 500340,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500341,
+            "name": "King's Resolve",
+            "level": 3
+          },
+          {
+            "id": 500342,
+            "name": "Royal Authority",
+            "level": 3
+          },
+          {
+            "id": 500343,
+            "name": "Regal Dance",
+            "level": 3
+          },
+          {
+            "id": 500344,
+            "name": "Golden Guard",
+            "level": 3
+          },
+          {
+            "id": 500345,
+            "name": "King's Bestowal",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500344,
+            "name": "Golden Guard",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Gatot commands his troops with imperial guard tactics, increasing his Infantry's Defense by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500345,
+            "name": "King's Bestowal",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "The great kings blesses Gatot's Infantry, granting Infantry a Shield with protection equal to Attack* <color=#00f183>%{n1}%</color> each time they attack, for 1 turn."
+          },
+          {
+            "slot": 6,
+            "id": 500346,
+            "name": "Royal Legion",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Gatot's formidable legion instills fear in enemies, reducing their Attack by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": {
+          "id": 1050034,
+          "name": "Golden Fang",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500348,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Indestructible City",
+          "descriptionTemplate": "Indestructible cities are forged with courage and determination, increases Defender Troops' Defense by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50035,
+        "name": "Sonya",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500353,
+            "name": "Money-Hungry",
+            "level": 1
+          },
+          {
+            "id": 500354,
+            "name": "Treasure Hunter",
+            "level": 1
+          },
+          {
+            "id": 500355,
+            "name": "Bounty Temptation",
+            "level": 1
+          },
+          {
+            "id": 500356,
+            "name": "Torrential Impact",
+            "level": 1
+          },
+          {
+            "id": 500350,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500351,
+            "name": "Extreme Cold",
+            "level": 1
+          },
+          {
+            "id": 500352,
+            "name": "Frozen Bomb",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500354,
+            "name": "Treasure Hunter",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "\u201cEveryone has a share when the legendary ocean treasure is found!\u201d Sonya's promise inspires everyone, increasing Damage by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500355,
+            "name": "Bounty Temptation",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Sonya motivates her Troops with bounty, making her Lancers deal <color=#00f183>%{n1}%</color> more damage every 2 attacks and increasing Attack by <color=#00f183>%{n2}%</color> for all troops for 1 turn."
+          },
+          {
+            "slot": 6,
+            "id": 500356,
+            "name": "Torrential Impact",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Sonya's Lancers will seize every chance to launch a surprise raid like underwater currents. Her Lancers deal <color=#00f183>%{n1}%</color> damage every 5 turns and stun the target for 1 turn."
+          }
+        ],
+        "widget": {
+          "id": 1050035,
+          "name": "Mangrove Frog",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500358,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Vortex Turret",
+          "descriptionTemplate": "Sonya sets up turrets that spurt out streams of water, increasing Defender Troops Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50036,
+        "name": "Hendrik",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 6,
+        "skills": [
+          {
+            "id": 500360,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500361,
+            "name": "Song of R'lyeh",
+            "level": 1
+          },
+          {
+            "id": 500362,
+            "name": "Sinking Anchor",
+            "level": 1
+          },
+          {
+            "id": 500364,
+            "name": "Worm's Ravage",
+            "level": 1
+          },
+          {
+            "id": 500365,
+            "name": "Armor of Barnacles",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500364,
+            "name": "Worm's Ravage",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Captain Hendrik commands a gigantic naval shipworm gnaw at the enemies' armor, reducing all enemy troops' Defense by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500365,
+            "name": "Armor of Barnacles",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Hendrik covers all Troops with a layer of hard-shelled barnacles every 4 turns, increasing their Defense by <color=#00f183>%{n1}%</color> for 2 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500366,
+            "name": "Dagon's Heir",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Every 3 turns, the ancient abyssal spirit's descendents will work together with Hendrik's Marksmen to launch an attack, dealing <color=#00f183>%{n1}%</color> damage to all enemies."
+          }
+        ],
+        "widget": {
+          "id": 1050036,
+          "name": "Abyss Diver",
+          "upgradeLevel": null,
+          "expeditionSkillId": 500368,
+          "expeditionSkillLevel": null,
+          "expeditionSkillName": "Abyssal Blessing",
+          "descriptionTemplate": "The ancient abyssal spirit's blessing increases the Rally Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50037,
+        "name": "Ling Xue",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 16,
+        "skills": [
+          {
+            "id": 500374,
+            "name": "Fearsome Aura",
+            "level": 1
+          },
+          {
+            "id": 500375,
+            "name": "Total Control",
+            "level": 3
+          },
+          {
+            "id": 500370,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500371,
+            "name": "Hurricane Whirl",
+            "level": 1
+          },
+          {
+            "id": 500372,
+            "name": "Galeforce",
+            "level": 1
+          },
+          {
+            "id": 500373,
+            "name": "Desperate Measures",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500374,
+            "name": "Fearsome Aura",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Ling Xue's withering assault has disturbed enemies' formation, reducing all enemy Troops' Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500375,
+            "name": "Total Control",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Ling Xue's hands-on, disciplined instruction increases Training Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50000,
+        "name": "Eugene",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 25,
+        "skills": [
+          {
+            "id": 500004,
+            "name": "Woodland Inheritor",
+            "level": 3
+          },
+          {
+            "id": 500005,
+            "name": "Master Woodcutter",
+            "level": 3
+          },
+          {
+            "id": 500000,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500001,
+            "name": "Axe Whirl",
+            "level": 1
+          },
+          {
+            "id": 500002,
+            "name": "Razor Sharp",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500004,
+            "name": "Woodland Inheritor",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Eugene's consummate knowledge of timber processing has raised City Sawmill Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500005,
+            "name": "Master Woodcutter",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Eugene is always focused on achieving the perfect logging technique. +<color=#00f183>%{n1}%</color> Wood Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50001,
+        "name": "Smith",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 25,
+        "skills": [
+          {
+            "id": 500010,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500011,
+            "name": "Hammer Burn",
+            "level": 1
+          },
+          {
+            "id": 500012,
+            "name": "Armor Enhancement",
+            "level": 1
+          },
+          {
+            "id": 500014,
+            "name": "Burnished Iron",
+            "level": 3
+          },
+          {
+            "id": 500015,
+            "name": "Craftsmanship",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500014,
+            "name": "Burnished Iron",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Smith's contagious passion for the art of crafting has raised City Iron Mine Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500015,
+            "name": "Craftsmanship",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Smith has an extraordinary sixth sense when it comes to iron. +<color=#00f183>%{n1}%</color> Iron Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50002,
+        "name": "Charlie",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 25,
+        "skills": [
+          {
+            "id": 500024,
+            "name": "Demolitions Expert",
+            "level": 3
+          },
+          {
+            "id": 500025,
+            "name": "Coal Extraction",
+            "level": 3
+          },
+          {
+            "id": 500020,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500021,
+            "name": "Shrapnel Load",
+            "level": 3
+          },
+          {
+            "id": 500022,
+            "name": "Grenadier",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500024,
+            "name": "Demolitions Expert",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Charlie's precise demolition experience has raised City Coal Mine Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500025,
+            "name": "Coal Extraction",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Charlie is an old hand at coal mining. +<color=#00f183>%{n1}%</color> Coal Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50003,
+        "name": "Cloris",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 26,
+        "skills": [
+          {
+            "id": 500031,
+            "name": "Rain of Arrows",
+            "level": 2
+          },
+          {
+            "id": 500032,
+            "name": "Hunters' Mark",
+            "level": 2
+          },
+          {
+            "id": 500034,
+            "name": "Top Hunter",
+            "level": 4
+          },
+          {
+            "id": 500035,
+            "name": "Predator",
+            "level": 4
+          },
+          {
+            "id": 500030,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500034,
+            "name": "Top Hunter",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Cloris, the tundra's best hunter, has single-handedly raised City Hunter's Hut Output by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500035,
+            "name": "Predator",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Cloris knows the ecosystem like the back of her hand. +<color=#00f183>%{n1}%</color> Meat Gathering Speed on the map."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50004,
+        "name": "Sergey",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 26,
+        "skills": [
+          {
+            "id": 500045,
+            "name": "Weaken",
+            "level": 4
+          },
+          {
+            "id": 500040,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500041,
+            "name": "Shielded Strike",
+            "level": 4
+          },
+          {
+            "id": 500042,
+            "name": "Joint Defense",
+            "level": 4
+          },
+          {
+            "id": 500043,
+            "name": "Shield Block",
+            "level": 4
+          },
+          {
+            "id": 500044,
+            "name": "Defenders' Edge",
+            "level": 4
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500044,
+            "name": "Defenders' Edge",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Sergey guards our troops with his shield, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500045,
+            "name": "Weaken",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Sergey's intimidating presence reduces Attack by <color=#00f183>%{n1}%</color> for all enemy troops."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50005,
+        "name": "Patrick",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 26,
+        "skills": [
+          {
+            "id": 500052,
+            "name": "Thick Belly",
+            "level": 1
+          },
+          {
+            "id": 500053,
+            "name": "Emergency Snack",
+            "level": 1
+          },
+          {
+            "id": 500054,
+            "name": "Super Nutrients",
+            "level": 3
+          },
+          {
+            "id": 500055,
+            "name": "Caloric Booster",
+            "level": 2
+          },
+          {
+            "id": 500050,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500051,
+            "name": "BBQ Feast",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500054,
+            "name": "Super Nutrients",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Patrick's culinary masterpieces invigorate our troops, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500055,
+            "name": "Caloric Booster",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Patrick's gourmet meals motivate and unleash the potential of our soldiers, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50006,
+        "name": "Bahiti",
+        "level": 2,
+        "trainingLevel": null,
+        "star": 26,
+        "skills": [
+          {
+            "id": 500060,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500061,
+            "name": "Precise Shot",
+            "level": 4
+          },
+          {
+            "id": 500062,
+            "name": "Quick Shot",
+            "level": 4
+          },
+          {
+            "id": 500063,
+            "name": "Pathfinder Vision",
+            "level": 3
+          },
+          {
+            "id": 500064,
+            "name": "Sixth Sense",
+            "level": 2
+          },
+          {
+            "id": 500065,
+            "name": "Fluorescence",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500064,
+            "name": "Sixth Sense",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Bahiti senses the dangers ahead, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500065,
+            "name": "Fluorescence",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Bahiti's battlefield instincts grants all troops' attack a 50% chance of increasing damage dealt by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50007,
+        "name": "Jessie",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 26,
+        "skills": [
+          {
+            "id": 500073,
+            "name": "Weapon Upgrade",
+            "level": 1
+          },
+          {
+            "id": 500074,
+            "name": "Stand of Arms",
+            "level": 5
+          },
+          {
+            "id": 500075,
+            "name": "Bulwarks",
+            "level": 5
+          },
+          {
+            "id": 500070,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500071,
+            "name": "Burst Fire",
+            "level": 1
+          },
+          {
+            "id": 500072,
+            "name": "Defense Upgrade",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500074,
+            "name": "Stand of Arms",
+            "level": 5,
+            "unlocked": true,
+            "descriptionTemplate": "Jessie implements advanced weaponry for our troops, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500075,
+            "name": "Bulwarks",
+            "level": 5,
+            "unlocked": true,
+            "descriptionTemplate": "With a keen engineering eye, Jessie enhances troops' armor, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50008,
+        "name": "Gina",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 19,
+        "skills": [
+          {
+            "id": 500080,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500081,
+            "name": "Incendiary Arrow",
+            "level": 2
+          },
+          {
+            "id": 500082,
+            "name": "Windtalker",
+            "level": 2
+          },
+          {
+            "id": 500083,
+            "name": "Eagle Eyes",
+            "level": 1
+          },
+          {
+            "id": 500084,
+            "name": "Endurance Training",
+            "level": 4
+          },
+          {
+            "id": 500085,
+            "name": "Quick Paced",
+            "level": 4
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500084,
+            "name": "Endurance Training",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Gina's strict Governor training regimen can be counted upon to reduce Stamina cost by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500085,
+            "name": "Quick Paced",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Gina is a fast and aggressive wilderness rider, boosting Hunting March Speed by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": null,
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50009,
+        "name": "Natalia",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 6,
+        "skills": [
+          {
+            "id": 500094,
+            "name": "Feral Protection",
+            "level": 2
+          },
+          {
+            "id": 500095,
+            "name": "Queen of the Wild",
+            "level": 2
+          },
+          {
+            "id": 500090,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500091,
+            "name": "Beast Charge",
+            "level": 2
+          },
+          {
+            "id": 500092,
+            "name": "Whip",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500094,
+            "name": "Feral Protection",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Natalia commands the beasts to cover your troops, granting a 40% chance of reducing all troops' Damage Taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500095,
+            "name": "Queen of the Wild",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Natalia is a natural leader, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500096,
+            "name": "Call of the Wild",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Natalia's unexplained connection with nature allows her to rally wild beasts, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050009,
+          "name": "Gale Force",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500098,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Invincibles",
+          "descriptionTemplate": "Natalia summons a herd of beasts to join the rally, increasing Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50010,
+        "name": "Logan",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500101,
+            "name": "Fists of Destruction",
+            "level": 1
+          },
+          {
+            "id": 500102,
+            "name": "Power Suit",
+            "level": 1
+          },
+          {
+            "id": 500103,
+            "name": "Blustery Strike",
+            "level": 1
+          },
+          {
+            "id": 500104,
+            "name": "Lion's Might",
+            "level": 3
+          },
+          {
+            "id": 500105,
+            "name": "Lion Intimidation",
+            "level": 3
+          },
+          {
+            "id": 500106,
+            "name": "Leader Inspiration",
+            "level": 3
+          },
+          {
+            "id": 500100,
+            "name": null,
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500104,
+            "name": "Lion's Might",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Logan overwhelms his enemies with a fierce presence, reducing all enemy Troops' Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500105,
+            "name": "Lion Intimidation",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Logan intimidates his opponents with the ferocity of a lion, reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500106,
+            "name": "Leader Inspiration",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Logan inspires everyone with his inherent leadership qualities, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050010,
+          "name": "Fists of Steel",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500108,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Strong Protection",
+          "descriptionTemplate": "Logan defends the city with his mighty fists, increasing Defender Troops' Defense by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50012,
+        "name": "Molly",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 13,
+        "skills": [
+          {
+            "id": 500120,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500121,
+            "name": "Super Snowball",
+            "level": 3
+          },
+          {
+            "id": 500122,
+            "name": "Frost Ambush",
+            "level": 3
+          },
+          {
+            "id": 500123,
+            "name": "Youthful Persistence",
+            "level": 2
+          },
+          {
+            "id": 500124,
+            "name": "Snow's Grace",
+            "level": 2
+          },
+          {
+            "id": 500125,
+            "name": "Ice Dominion",
+            "level": 2
+          },
+          {
+            "id": 500126,
+            "name": "Youthful Rage",
+            "level": 1
+          },
+          {
+            "id": 500127,
+            "name": "Modified Launcher",
+            "level": 1
+          },
+          {
+            "id": 500128,
+            "name": "Snowy Blessing",
+            "level": 0
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500124,
+            "name": "Snow's Grace",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Molly creates an avalanche that clouds enemy sights, granting a 40% chance of reducing all troops' Damage Taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500125,
+            "name": "Ice Dominion",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Molly excels in snowy terrains, granting all troops' attack a 50% chance of increasing damage dealt by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500126,
+            "name": "Youthful Rage",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Hell hath no fury like an angry Molly, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050012,
+          "name": "Yeti Spirit",
+          "upgradeLevel": 1,
+          "expeditionSkillId": 500128,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Snowy Blessing",
+          "descriptionTemplate": "With the blessing of the snow, Defender Troops' Lethality is increased by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50013,
+        "name": "Philly",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 16,
+        "skills": [
+          {
+            "id": 500136,
+            "name": "Energizing Shot",
+            "level": 2
+          },
+          {
+            "id": 500130,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500131,
+            "name": "First Aid",
+            "level": 2
+          },
+          {
+            "id": 500132,
+            "name": "Restorative Hands",
+            "level": 2
+          },
+          {
+            "id": 500133,
+            "name": "Paralytic Lotion",
+            "level": 1
+          },
+          {
+            "id": 500134,
+            "name": "Vigor Tactics",
+            "level": 2
+          },
+          {
+            "id": 500135,
+            "name": "Dosage Boost",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500134,
+            "name": "Vigor Tactics",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Philly's secret remedy strengthens the soldiers, increasing Attack by <color=#00f183>%{n1}%</color> and Defense by <color=#00f183>%{n2}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500135,
+            "name": "Dosage Boost",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Philly uses her secret tonic to enhance the warriors' strength, granting all troops' attack a 25% chance of dealing <color=#00f183>%{n1}%</color> damage."
+          },
+          {
+            "slot": 6,
+            "id": 500136,
+            "name": "Energizing Shot",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Philly's special shot improves troops' focus, granting a 40% chance of reducing all troops' Damage Taken by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": {
+          "id": 1050013,
+          "name": "Pharmacologica",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500138,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "First Aid Training",
+          "descriptionTemplate": "Philly imparts her basic first-aid and care techniques, increasing Defender Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50014,
+        "name": "Reina",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 7,
+        "skills": [
+          {
+            "id": 500144,
+            "name": "Assassin's Instinct",
+            "level": 2
+          },
+          {
+            "id": 500145,
+            "name": "Swift Jive",
+            "level": 2
+          },
+          {
+            "id": 500140,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500141,
+            "name": "Phantom Assault",
+            "level": 1
+          },
+          {
+            "id": 500142,
+            "name": "Vanishing Technique",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500144,
+            "name": "Assassin's Instinct",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Reina targets enemy weak spots, increasing normal attack damage by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 5,
+            "id": 500145,
+            "name": "Swift Jive",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Reina's adept leadership grants all troops a <color=#00f183>%{n1}%</color> chance of dodging normal attacks."
+          },
+          {
+            "slot": 6,
+            "id": 500146,
+            "name": "Shadow Blade",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "With Reina's clever tactics, her Lancers have a 25% chance of performing an extra attack, dealing <color=#00f183>%{n1}%</color> damage."
+          }
+        ],
+        "widget": {
+          "id": 1050014,
+          "name": "Ninjaken - Raikiri",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500148,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Fiery Invasion",
+          "descriptionTemplate": "Reina's unmatched precision increases Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50015,
+        "name": "Gordon",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 12,
+        "skills": [
+          {
+            "id": 500150,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500151,
+            "name": "Poison Blast",
+            "level": 2
+          },
+          {
+            "id": 500152,
+            "name": "Toxic Molotov",
+            "level": 2
+          },
+          {
+            "id": 500153,
+            "name": "Tolerization",
+            "level": 1
+          },
+          {
+            "id": 500154,
+            "name": "Venom Infusion",
+            "level": 2
+          },
+          {
+            "id": 500155,
+            "name": "Chemical Terror",
+            "level": 2
+          },
+          {
+            "id": 500156,
+            "name": "Toxic Release",
+            "level": 2
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500154,
+            "name": "Venom Infusion",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Gordon dips Lancers' weapons in venom. Every 2 attacks, Lancers deal <color=#00f183>%{n1}%</color> extra damage and apply poison to the target for 1 turn. Poisoned enemies deal <color=#00f183>%{n2}%</color> less damage."
+          },
+          {
+            "slot": 5,
+            "id": 500155,
+            "name": "Chemical Terror",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Gordon's envenomed weapons terrorizes the field, increasing Lancers' Damage Dealt by <color=#00f183>%{n1}%</color> and reducing Damage Dealt by <color=#00f183>%{n2}%</color> for all enemy troops for 1 turn, every 3 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500156,
+            "name": "Toxic Release",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Gordon generates a defensive bio-toxic fog, confusing enemy frontline Infantry, increasing their Damage Taken by <color=#00f183>%{n1}%</color>, while blocking enemy Marksmen's line of sight to reduce their Damage Dealt by <color=#00f183>%{n2}%</color> for 2 turns every 4 turns."
+          }
+        ],
+        "widget": {
+          "id": 1050015,
+          "name": "Bonecrux Venom",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500158,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Bio Assault",
+          "descriptionTemplate": "Gordon privileges his allies with special envenomed weaponry, increasing Rally Squads' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50016,
+        "name": "Mia",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 13,
+        "skills": [
+          {
+            "id": 500164,
+            "name": "Bad Luck Streak",
+            "level": 3
+          },
+          {
+            "id": 500165,
+            "name": "Lucky Charm",
+            "level": 3
+          },
+          {
+            "id": 500166,
+            "name": "Ritual Deciphering",
+            "level": 3
+          },
+          {
+            "id": 500160,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500161,
+            "name": "Fate's Finale",
+            "level": 1
+          },
+          {
+            "id": 500162,
+            "name": "Bad Omen",
+            "level": 1
+          },
+          {
+            "id": 500163,
+            "name": "Guardian of Destiny",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500164,
+            "name": "Bad Luck Streak",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Grants all troops' attack a 50% chance of cursing the target, increasing their damage taken by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500165,
+            "name": "Lucky Charm",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Mia brings good luck to the Troops, granting a 50% chance of boosting troops' Attack by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500166,
+            "name": "Ritual Deciphering",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Mia foresees potential dangers before battle, granting a 40% chance of reducing damage taken by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050016,
+          "name": "Fate Crystal",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500168,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Rally of Fate",
+          "descriptionTemplate": "Mia divines the most advantageous moments for an assault, increasing Rally Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50017,
+        "name": "Zinman",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 0,
+        "skills": [
+          {
+            "id": 500170,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500171,
+            "name": "Nail Scatter",
+            "level": 1
+          },
+          {
+            "id": 500174,
+            "name": "Implacable",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500174,
+            "name": "Implacable",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Zinman the master builder understands what is required of a strong defensive line, increasing Troop's Defense by <color=#00f183>%{n1}%</color> and Health by <color=#00f183>%{n2}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500175,
+            "name": "Bastionist",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Zinman's skillful control of the construction workflow reduces basic resource consumption (Meat, Wood, Coal, Iron) by <color=#00f183>%{n1}%</color> and increases Building Upgrade speed by <color=#00f183>%{n2}%</color>."
+          },
+          {
+            "slot": 6,
+            "id": 500176,
+            "name": "Positional Battler",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Zinman masterfully manipulates the battlefield, increasing Lethality by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050017,
+          "name": "Woodpecker",
+          "upgradeLevel": null,
+          "expeditionSkillId": 500178,
+          "expeditionSkillLevel": null,
+          "expeditionSkillName": "Defend to Attack",
+          "descriptionTemplate": "Zinman constructs an archer tower, increasing Defender Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50018,
+        "name": "Alonso",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 19,
+        "skills": [
+          {
+            "id": 500185,
+            "name": "Iron Strength",
+            "level": 4
+          },
+          {
+            "id": 500186,
+            "name": "Poison Harpoon",
+            "level": 4
+          },
+          {
+            "id": 500180,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500181,
+            "name": "Trapnet",
+            "level": 4
+          },
+          {
+            "id": 500182,
+            "name": "Tidal Force",
+            "level": 3
+          },
+          {
+            "id": 500183,
+            "name": "Harpoon Blast",
+            "level": 4
+          },
+          {
+            "id": 500184,
+            "name": "Onslaught",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500184,
+            "name": "Onslaught",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Alonso attacks like the waves, granting a 40% chance of increasing all troop's Lethality by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500185,
+            "name": "Iron Strength",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Alonso's indomitable will grants all troops' attack a 20% chance of reducing damage dealt by <color=#00f183>%{n1}%</color> for all enemy troops for 2 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500186,
+            "name": "Poison Harpoon",
+            "level": 4,
+            "unlocked": true,
+            "descriptionTemplate": "Alonso coats weapons with lethal toxins, granting all troops' attack a 50% chance of dealing <color=#00f183>%{n1}%</color> more damage."
+          }
+        ],
+        "widget": {
+          "id": 1050018,
+          "name": "Captain Ahab",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500188,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Harpoon Enhancement",
+          "descriptionTemplate": "Alonso enhances our troops' weapons, increasing Rally Troops' Lethality by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50019,
+        "name": "Wu Ming",
+        "level": 76,
+        "trainingLevel": null,
+        "star": 15,
+        "skills": [
+          {
+            "id": 500192,
+            "name": "Inner Clarity",
+            "level": 3
+          },
+          {
+            "id": 500193,
+            "name": "Remote Impact",
+            "level": 3
+          },
+          {
+            "id": 500194,
+            "name": "Shadow's Evasion",
+            "level": 3
+          },
+          {
+            "id": 500195,
+            "name": "Crescent Uplift",
+            "level": 3
+          },
+          {
+            "id": 500196,
+            "name": "Elemental Resonance",
+            "level": 2
+          },
+          {
+            "id": 500190,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500191,
+            "name": "Cyclone Barrier",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500194,
+            "name": "Shadow's Evasion",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wu Ming moves like a shadow, dodging and countering enemies, reducing his Infantry's damage taken from normal attacks by <color=#00f183>%{n1}%</color> and from skills by <color=#00f183>%{n2}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500195,
+            "name": "Crescent Uplift",
+            "level": 3,
+            "unlocked": true,
+            "descriptionTemplate": "Wu Ming spreads his wisdom and techniques, increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500196,
+            "name": "Elemental Resonance",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Wu Ming leads everyone to a heightened affinity with their combat techniques, increasing skill damage dealt by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050019,
+          "name": "Dragonslayer",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500198,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Steel Discipline",
+          "descriptionTemplate": "Wu Ming puts defender troops under stern tutelage, increasing Defender Troops' Defense by %{n1}%"
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50020,
+        "name": "Greg",
+        "level": 1,
+        "trainingLevel": 76,
+        "star": 11,
+        "skills": [
+          {
+            "id": 500200,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500201,
+            "name": "Righteous Wind",
+            "level": 1
+          },
+          {
+            "id": 500202,
+            "name": "Poetic Justice",
+            "level": 1
+          },
+          {
+            "id": 500204,
+            "name": "Sword of Justice",
+            "level": 1
+          },
+          {
+            "id": 500205,
+            "name": "Deterrence of Law",
+            "level": 1
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500204,
+            "name": "Sword of Justice",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Greg transforms our troops into a relentless sword of justice, granting a 20% chance of increasing damage dealt by <color=#00f183>%{n1}%</color> for all troops for 3 turns."
+          },
+          {
+            "slot": 5,
+            "id": 500205,
+            "name": "Deterrence of Law",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Greg uses the authority of the law to intimidate enemies, granting all troops' attack a 20% chance of reducing enemy damage dealt by <color=#00f183>%{n1}%</color> for 2 turns."
+          },
+          {
+            "slot": 6,
+            "id": 500206,
+            "name": "Law and Order",
+            "level": null,
+            "unlocked": false,
+            "descriptionTemplate": "Greg's faith in law and order uplifts everyone, increasing Health by <color=#00f183>%{n1}%</color> for all troops."
+          }
+        ],
+        "widget": {
+          "id": 1050020,
+          "name": "State Edict",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500208,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Trumpet of Justice",
+          "descriptionTemplate": "Greg mobilizes the army under the banner of justice and belief, increasing Rally Troops' Health by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      },
+      {
+        "id": 50021,
+        "name": "Flint",
+        "level": 1,
+        "trainingLevel": null,
+        "star": 16,
+        "skills": [
+          {
+            "id": 500213,
+            "name": "Heat Diffusion",
+            "level": 3
+          },
+          {
+            "id": 500214,
+            "name": "Pyromaniac",
+            "level": 2
+          },
+          {
+            "id": 500215,
+            "name": "Burning Resolve",
+            "level": 2
+          },
+          {
+            "id": 500216,
+            "name": "Immolation",
+            "level": 1
+          },
+          {
+            "id": 500210,
+            "name": null,
+            "level": 1
+          },
+          {
+            "id": 500211,
+            "name": "Fires of Vengeance",
+            "level": 3
+          },
+          {
+            "id": 500212,
+            "name": "Incinerator",
+            "level": 3
+          }
+        ],
+        "expeditionSkills": [
+          {
+            "slot": 4,
+            "id": 500214,
+            "name": "Pyromaniac",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Every flame, no matter how small, can ignite a roaring fire. Flint increases his Infantry's Damage Dealt by <color=#00f183>%{n1}%</color>."
+          },
+          {
+            "slot": 5,
+            "id": 500215,
+            "name": "Burning Resolve",
+            "level": 2,
+            "unlocked": true,
+            "descriptionTemplate": "Flint's fire not only dispels the cold but also ignites the passion for battle, increasing Attack by <color=#00f183>%{n1}%</color> for all troops."
+          },
+          {
+            "slot": 6,
+            "id": 500216,
+            "name": "Immolation",
+            "level": 1,
+            "unlocked": true,
+            "descriptionTemplate": "Flint's flame of anger devours everything, increasing all troops' Lethality by <color=#00f183>%{n1}%</color>."
+          }
+        ],
+        "widget": {
+          "id": 1050021,
+          "name": "Dragonbane",
+          "upgradeLevel": 0,
+          "expeditionSkillId": 500218,
+          "expeditionSkillLevel": 0,
+          "expeditionSkillName": "Dragonbreath",
+          "descriptionTemplate": "Flint fortifies his flamethrower for city defense, increasing Defender Troops' Attack by %{n1}%."
+        },
+        "available": true,
+        "formationIds": [],
+        "reservationIds": []
+      }
+    ],
+    "troops": [
+      {
+        "id": 10300,
+        "name": "Senior Infantry",
+        "tier": 3,
+        "troopType": "Infantry",
+        "available": 116,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10400,
+        "name": "Veteran Infantry",
+        "tier": 4,
+        "troopType": "Infantry",
+        "available": 180,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10600,
+        "name": "Heroic Infantry",
+        "tier": 6,
+        "troopType": "Infantry",
+        "available": 3229,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 8655,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 10900,
+        "name": "Supreme Infantry",
+        "tier": 9,
+        "troopType": "Infantry",
+        "available": 93667,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20400,
+        "name": "Veteran Lancer",
+        "tier": 4,
+        "troopType": "Lancer",
+        "available": 180,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20600,
+        "name": "Heroic Lancer",
+        "tier": 6,
+        "troopType": "Lancer",
+        "available": 5328,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 3640,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 20900,
+        "name": "Supreme Lancer",
+        "tier": 9,
+        "troopType": "Lancer",
+        "available": 69371,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30300,
+        "name": "Senior Marksman",
+        "tier": 3,
+        "troopType": "Marksman",
+        "available": 5,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30400,
+        "name": "Veteran Marksman",
+        "tier": 4,
+        "troopType": "Marksman",
+        "available": 180,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30600,
+        "name": "Heroic Marksman",
+        "tier": 6,
+        "troopType": "Marksman",
+        "available": 6879,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 3113,
+        "healing": 0,
+        "reserved": 0
+      },
+      {
+        "id": 30900,
+        "name": "Supreme Marksman",
+        "tier": 9,
+        "troopType": "Marksman",
+        "available": 80251,
+        "deployed": 0,
+        "lightlyInjured": 0,
+        "injured": 0,
+        "healing": 0,
+        "reserved": 0
+      }
+    ],
+    "formations": [],
+    "healing": null,
+    "reservations": [],
+    "totals": {
+      "available": 259386,
+      "deployed": 0,
+      "lightlyInjured": 0,
+      "injured": 15408,
+      "healing": 0,
+      "reserved": 0
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "createdAt": "2026-09-28T11:56:08.459Z",
+  "question": "Do Ling S1, Lumak S1 and Jessie S2 share additive defensive pools?",
+  "accounts": [
+    "minxxx",
+    "WIP"
+  ],
+  "fullKits": true,
+  "troops": "T6 marksmen only on both sides; hero class does not constrain troop formation",
+  "controls": {
+    "attacker": 1000,
+    "defender": 1600,
+    "defenderHeroes": [
+      "none",
+      "Gatot",
+      "Edith",
+      "Ling",
+      "Lumak",
+      "Jessie"
+    ]
+  },
+  "probes": [
+    {
+      "anchor": "Gatot",
+      "hero": "Ling",
+      "attacker": 1150,
+      "defender": 1600,
+      "forecastGap": 37
+    },
+    {
+      "anchor": "Gatot",
+      "hero": "Lumak",
+      "attacker": 1210,
+      "defender": 1600,
+      "forecastGap": 98
+    },
+    {
+      "anchor": "Gatot",
+      "hero": "Jessie",
+      "attacker": 1190,
+      "defender": 1600,
+      "forecastGap": 49
+    },
+    {
+      "anchor": "Edith",
+      "hero": "Ling",
+      "attacker": 1070,
+      "defender": 1600,
+      "forecastGap": 13
+    },
+    {
+      "anchor": "Edith",
+      "hero": "Lumak",
+      "attacker": 1130,
+      "defender": 1600,
+      "forecastGap": 51
+    },
+    {
+      "anchor": "Edith",
+      "hero": "Jessie",
+      "attacker": 1110,
+      "defender": 1600,
+      "forecastGap": 17
+    }
+  ],
+  "hypotheses": {
+    "samePool": "defensive denominator 1+a+b",
+    "differentPool": "defensive denominator (1+a)*(1+b)"
+  },
+  "inferenceLimits": [
+    "Anchor names are not game-internal type names.",
+    "All unlocked skills remain active; troop choice makes class-scoped skills naturally inapplicable.",
+    "Near-balanced sizes selected for separation; check actual precise report stats and solo controls.",
+    "Existing recorded solo evidence does not identify buckets; prior mixed overlaps separate by at most one survivor.",
+    "Test additive and multiplicative alternatives without production changes."
+  ],
+  "observationsPerDeterministicFormation": 1
+}

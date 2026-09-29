@@ -1,0 +1,19 @@
+{
+  "simulator/src/config.ts": "142c60ea81e8ef7b9c7baa12342a7fa219cff330872d818835249b33432a9a21",
+  "simulator/src/damage.ts": "6961612baf30fd5f672fcb5b3302e8b70bf26381cbee52b1a86ba03575ee28f6",
+  "simulator/src/damageBuckets.ts": "89dfdb705d7e2bb496c2e9d8a52b7d95ca5defe0eaff2e99127fbf50419c23a7",
+  "simulator/src/effectIndex.ts": "6ba9c943d58ff666528afdfd6fdb613357a6b8d01bef6b7c97c5e7baf55a23d8",
+  "simulator/src/effects.ts": "c8182536cf00cb8faad2f7987f1653be8d2adf61e7a6f3c79fb913cc72de7e69",
+  "simulator/src/extraAttacks.ts": "163870e243a815f813709b3c6b1cc2eef080c5f17661ca6621172f3b3bb81153",
+  "simulator/src/fighterResolution.ts": "b0af7530ee79e2c6eb2c00df6bd7e4e8ae93f04775c70af1c599f46cdb213774",
+  "simulator/src/normalize.ts": "89d7c53cb0d8629b7943a64d75b50911f32bc631c6f8016bef3c706bc6583c92",
+  "simulator/src/prepare.ts": "73110c1f77cd825b41bfc4452e7cccad7c4112922076b9ad9a15e9a56fea1faa",
+  "simulator/src/recorder.ts": "3a07bd680d690f08623b57f76f029a1fc86e87012085d720342fea7ae00390b1",
+  "simulator/src/runtime.ts": "b83fd9033f6f67b1bf8377bb5897a2230670a04395de68da74c26ae5b2dbe805",
+  "simulator/src/runtimeSkills.ts": "6a6c4cef809000af22fdfb377e9942772c8a4d38efbe1c2f115c45dc78ea734a",
+  "simulator/src/simulator.ts": "145bd67fd328cae8b967db35f7a66c803ad23d36191d3ae4be270913908a1fb8",
+  "simulator/src/staticDamageProfile.ts": "a786f20d94ec65ac3646714356c90c33ddbb93ad8f95232c6402c23c65cefa21",
+  "simulator/src/troopStats.ts": "723c1eab2c778e4c1bd9a82dd6146354a58f37b70f01a0746d3d4c09cb7e177c",
+  "simulator/src/types.ts": "10c26f5129cb3b6cdfe6816dc90f9d79bae414b6683294bed79a869caae1ff2b",
+  "simulator/src/tooling/testcases.ts": "6c4c828a5b9a5dd9206119ead50994fa0165ed8aa3b7dedb25284aecc77d816a"
+}

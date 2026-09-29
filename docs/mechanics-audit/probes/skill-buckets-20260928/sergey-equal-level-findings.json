@@ -1,0 +1,42 @@
+{
+  "comparison": {
+    "Sergey2_2_Ling3_1": 569,
+    "Sergey2_2_Lumak3_1_existing": 580
+  },
+  "difference": 11,
+  "newCapture": {
+    "outputPath": "/home/paul/projects_wsl/wos/simulator/testcases/emulator_verified/skill_buckets_20260928/sergey_ling_level3_matched.json",
+    "testId": "sergey_ling_level3_matched",
+    "version": 1,
+    "observations": 1,
+    "newVersion": true
+  },
+  "cleanup": {
+    "defenderRecallSlot": 329,
+    "defenderReturned": true,
+    "attackerReturned": true,
+    "siteClaim": {
+      "kingdomId": 2487,
+      "world": {
+        "x": 792,
+        "y": 577
+      },
+      "retained": false
+    }
+  },
+  "remainingReservations": {
+    "defender": [],
+    "attacker": []
+  },
+  "identicalEnemy": true,
+  "identicalMarksmanStats": true,
+  "troops": {
+    "attackerMarksmanT6": 1000,
+    "defenderMarksmanT6": 1600
+  },
+  "simulator": {
+    "currentLing": 569,
+    "LingSeparatePoolCounterfactual": 580
+  },
+  "LumakRerun": false
+}

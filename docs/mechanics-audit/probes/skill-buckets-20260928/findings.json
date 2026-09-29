@@ -1,0 +1,158 @@
+{
+  "conclusion": "Three distinct stacking pools for ordinary troop damage in the tested solo-camp battles. Current Ling attack.down, Lumak damage.down and Jessie damageTaken.down assignments match every new observation.",
+  "freshBattles": 12,
+  "uniqueReportReferences": 12,
+  "controls": 6,
+  "discriminatingCombinations": 6,
+  "currentSimulatorExactEndpoints": 12,
+  "oldFixtureEntriesReplayed": 7,
+  "existingEvidence": "Solo fixtures are pool-indifferent; inspected old mixed overlaps separated alternatives by at most one survivor, so did not settle the question.",
+  "accounts": {
+    "attacker": "minxxx",
+    "defender": "WIP"
+  },
+  "targetLevels": {
+    "Ling": [
+      1,
+      1
+    ],
+    "Lumak": [
+      3,
+      1
+    ],
+    "Jessie": [
+      1,
+      1
+    ]
+  },
+  "anchorLevels": {
+    "Gatot": [
+      4,
+      4,
+      4,
+      0
+    ],
+    "Edith": [
+      2,
+      1,
+      0,
+      0
+    ]
+  },
+  "skillCoefficients": {
+    "LingS1": 4,
+    "LumakS1": 12,
+    "JessieS1": 5,
+    "JessieS2": 4,
+    "GatotS3": 20,
+    "EdithS1": 8
+  },
+  "scope": "Full unlocked kits, T6 marksmen only on both sides, exact wire report stats, no fitted stats, no disabled skills, no production changes. Deterministic: one game observation per distinct formation.",
+  "poolFingerprints": {
+    "Ling": {
+      "Gatot": "additive",
+      "Edith": "multiplicative"
+    },
+    "Lumak": {
+      "Gatot": "multiplicative",
+      "Edith": "multiplicative"
+    },
+    "Jessie": {
+      "Gatot": "multiplicative",
+      "Edith": "additive"
+    }
+  },
+  "factorConvention": {
+    "shared": "incoming damage divided by 1+a+b",
+    "separate": "incoming damage divided by (1+a)*(1+b)",
+    "note": "a and b are configured percentage-point values divided by 100. Controls validate the nominal coefficients in these contexts; predictions are simulator hypotheses, not game damage readings."
+  },
+  "comparisons": [
+    {
+      "formation": "edith_jessie",
+      "attackerMarksmen": 1110,
+      "defenderMarksmen": 1600,
+      "observedSignedSurvivors": -17,
+      "sharedPoolPrediction": -17,
+      "separatePoolPrediction": -34,
+      "supported": "shared",
+      "report": "2734693171494661"
+    },
+    {
+      "formation": "edith_ling",
+      "attackerMarksmen": 1070,
+      "defenderMarksmen": 1600,
+      "observedSignedSurvivors": -66,
+      "sharedPoolPrediction": -53,
+      "separatePoolPrediction": -66,
+      "supported": "separate",
+      "report": "2734693171494667"
+    },
+    {
+      "formation": "edith_lumak",
+      "attackerMarksmen": 1130,
+      "defenderMarksmen": 1600,
+      "observedSignedSurvivors": -25,
+      "sharedPoolPrediction": 26,
+      "separatePoolPrediction": -25,
+      "supported": "separate",
+      "report": "2734693171494648"
+    },
+    {
+      "formation": "gatot_jessie",
+      "attackerMarksmen": 1190,
+      "defenderMarksmen": 1600,
+      "observedSignedSurvivors": -42,
+      "sharedPoolPrediction": 7,
+      "separatePoolPrediction": -42,
+      "supported": "separate",
+      "report": "2734693171494670"
+    },
+    {
+      "formation": "gatot_ling",
+      "attackerMarksmen": 1150,
+      "defenderMarksmen": 1600,
+      "observedSignedSurvivors": -16,
+      "sharedPoolPrediction": -16,
+      "separatePoolPrediction": -53,
+      "supported": "shared",
+      "report": "2734693171494651"
+    },
+    {
+      "formation": "gatot_lumak",
+      "attackerMarksmen": 1210,
+      "defenderMarksmen": 1600,
+      "observedSignedSurvivors": -44,
+      "sharedPoolPrediction": 54,
+      "separatePoolPrediction": -44,
+      "supported": "separate",
+      "report": "2734693171494663"
+    }
+  ],
+  "limitations": [
+    "Does not identify server-internal enum names.",
+    "Does not test skill/extra-attack damage, rallies/joiners or every skill level.",
+    "The final-round boundary amplifies the modest damage-factor differences; all controls and cross-checks match exactly at precise recorded inputs. No arbitrary rounding adjustments were used."
+  ],
+  "safety": {
+    "allTroopsReturned": true,
+    "remainingReservations": 0,
+    "uncertainOperations": 0,
+    "healingPerformed": false,
+    "upgradesPurchasesGems": false,
+    "controllerExitCode": 0
+  },
+  "shutdownEvents": [
+    {
+      "id": "shutdown-final",
+      "ok": true,
+      "result": {
+        "shuttingDown": true
+      }
+    },
+    {
+      "event": "shutdown",
+      "reason": "shutdown"
+    }
+  ]
+}

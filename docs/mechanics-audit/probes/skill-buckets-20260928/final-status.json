@@ -1,0 +1,147 @@
+{
+  "id": "status-final",
+  "ok": true,
+  "accounts": [
+    {
+      "userId": 142946034,
+      "kingdomId": 2487,
+      "aliases": [
+        "minxxx"
+      ],
+      "account": "minxxx",
+      "connected": true,
+      "connecting": false,
+      "reconciling": false,
+      "failed": false,
+      "reconciliationRequired": false,
+      "failure": null,
+      "activeOperations": 0,
+      "reservations": [],
+      "healingUncertain": false,
+      "history": {
+        "events": 846,
+        "requests": 237
+      }
+    },
+    {
+      "userId": 177360524,
+      "kingdomId": 2487,
+      "aliases": [
+        "WIP"
+      ],
+      "account": "WIP",
+      "connected": true,
+      "connecting": false,
+      "reconciling": false,
+      "failed": false,
+      "reconciliationRequired": false,
+      "failure": null,
+      "activeOperations": 0,
+      "reservations": [],
+      "healingUncertain": false,
+      "history": {
+        "events": 861,
+        "requests": 223
+      }
+    }
+  ],
+  "activeOperations": 0,
+  "jobs": [
+    {
+      "requestId": "control-none",
+      "jobId": "battle-61517fe6-e5c3-4606-b657-5d4df1e5bab6",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/control_none.json"
+    },
+    {
+      "requestId": "control-gatot",
+      "jobId": "battle-a42c3167-404c-46c6-b902-3362dbb851a9",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/control_gatot.json"
+    },
+    {
+      "requestId": "control-edith",
+      "jobId": "battle-199f0c07-5c34-4a7e-b178-01f6088ab38a",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/control_edith.json"
+    },
+    {
+      "requestId": "control-ling",
+      "jobId": "battle-cca69a8d-1e3e-42ec-a36c-3cf5f642edff",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/control_ling.json"
+    },
+    {
+      "requestId": "control-lumak",
+      "jobId": "battle-1f0d4270-fcd8-4624-b04e-9ca653bdf509",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/control_lumak.json"
+    },
+    {
+      "requestId": "control-jessie",
+      "jobId": "battle-8324b098-8380-426d-bb9a-6eaaaa5707de",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/control_jessie.json"
+    },
+    {
+      "requestId": "gatot-ling",
+      "jobId": "battle-2681ca43-f69d-4480-a4f3-ae8cfe067be7",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/gatot_ling.json"
+    },
+    {
+      "requestId": "edith-lumak",
+      "jobId": "battle-bbd8fd11-3363-4408-a368-3d203a869cba",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/edith_lumak.json"
+    },
+    {
+      "requestId": "gatot-lumak",
+      "jobId": "battle-ce645efb-3b6a-41af-b0eb-1ec088211e8a",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/gatot_lumak.json"
+    },
+    {
+      "requestId": "edith-jessie",
+      "jobId": "battle-5fa4ec88-2834-4514-8214-e28901b5e400",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/edith_jessie.json"
+    },
+    {
+      "requestId": "gatot-jessie",
+      "jobId": "battle-3b598808-9e67-465a-84ce-ee71189ea8cd",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/gatot_jessie.json"
+    },
+    {
+      "requestId": "edith-ling",
+      "jobId": "battle-e61a21f0-d1cd-48bd-8e67-f9c2f2c3f065",
+      "state": "completed",
+      "completed": 1,
+      "repeat": 1,
+      "out": "testcases/emulator_verified/skill_buckets_20260928/edith_ling.json"
+    }
+  ]
+}

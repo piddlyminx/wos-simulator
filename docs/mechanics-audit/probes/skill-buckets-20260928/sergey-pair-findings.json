@@ -1,0 +1,134 @@
+{
+  "result": "Sergey + Lumak leaves 580 survivors versus 468 for Sergey + Ling, against an identical enemy.",
+  "difference": 112,
+  "enemyIdentical": true,
+  "infantryAndMarksmanStatsIdentical": true,
+  "troops": {
+    "minxxxAttacker": {
+      "marksman_t6": 1000
+    },
+    "WIPDefender": {
+      "marksman_t6": 1600
+    }
+  },
+  "levels": {
+    "Sergey": [
+      2,
+      2
+    ],
+    "Ling": [
+      1,
+      1
+    ],
+    "Lumak": [
+      3,
+      1
+    ]
+  },
+  "caveat": "Lumak reduction coefficient is 12% versus Ling 4%. Entire 112-survivor difference cannot be attributed to stacking.",
+  "simulator": {
+    "sergeyLing": 468,
+    "sergeyLumak": 580,
+    "counterfactualLumakSharedWithSergey": 569
+  },
+  "captures": [
+    {
+      "output": {
+        "outputPath": "/home/paul/projects_wsl/wos/simulator/testcases/emulator_verified/skill_buckets_20260928/sergey_ling_matched.json",
+        "testId": "sergey_ling_matched",
+        "version": 1,
+        "observations": 1,
+        "newVersion": true
+      },
+      "cleanup": {
+        "defenderRecallSlot": 327,
+        "defenderReturned": true,
+        "attackerReturned": true,
+        "siteClaim": {
+          "kingdomId": 2487,
+          "world": {
+            "x": 792,
+            "y": 577
+          },
+          "retained": false
+        }
+      },
+      "remainingReservations": {
+        "defender": [],
+        "attacker": []
+      },
+      "ok": true
+    },
+    {
+      "output": {
+        "outputPath": "/home/paul/projects_wsl/wos/simulator/testcases/emulator_verified/skill_buckets_20260928/sergey_lumak_matched.json",
+        "testId": "sergey_lumak_matched",
+        "version": 1,
+        "observations": 1,
+        "newVersion": true
+      },
+      "cleanup": {
+        "defenderRecallSlot": 328,
+        "defenderReturned": true,
+        "attackerReturned": true,
+        "siteClaim": {
+          "kingdomId": 2487,
+          "world": {
+            "x": 792,
+            "y": 577
+          },
+          "retained": false
+        }
+      },
+      "remainingReservations": {
+        "defender": [],
+        "attacker": []
+      },
+      "ok": true
+    }
+  ],
+  "finalAccountStatus": [
+    {
+      "userId": 142946034,
+      "kingdomId": 2487,
+      "aliases": [
+        "minxxx"
+      ],
+      "account": "minxxx",
+      "connected": true,
+      "connecting": false,
+      "reconciling": false,
+      "failed": false,
+      "reconciliationRequired": false,
+      "failure": null,
+      "activeOperations": 0,
+      "reservations": [],
+      "healingUncertain": false,
+      "history": {
+        "events": 321,
+        "requests": 50
+      }
+    },
+    {
+      "userId": 177360524,
+      "kingdomId": 2487,
+      "aliases": [
+        "WIP"
+      ],
+      "account": "WIP",
+      "connected": true,
+      "connecting": false,
+      "reconciling": false,
+      "failed": false,
+      "reconciliationRequired": false,
+      "failure": null,
+      "activeOperations": 0,
+      "reservations": [],
+      "healingUncertain": false,
+      "history": {
+        "events": 320,
+        "requests": 48
+      }
+    }
+  ]
+}
