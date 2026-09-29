@@ -488,18 +488,23 @@ function findGameStatAdjustment(options: {
   deterministic: boolean;
   thresholds?: Record<string, number>;
   exact?: boolean;
+  maxAdjustment?: number;
 }): InternalStatAdjustment | undefined {
+  // The search value is the shift of the finest-rounded stat; each coarser stat moves in
+  // proportion to its own rounding bound (see statRoundingBound).
   let maxAdjustment = STAT_ROUNDING_MAX_ADJUSTMENT;
   for (const fighter of [options.input.attacker, options.input.defender]) {
     for (const stats of Object.values(fighter.stats ?? {}) as Array<Partial<StatBlock>>) {
       for (const key of ["attack", "defense", "lethality", "health"] as const) {
         const value = stats[key];
         if (value === undefined) continue;
-        if (Math.abs(value * 100 - Math.round(value * 100)) > 1e-9) return undefined;
-        if (Math.abs(value * 10 - Math.round(value * 10)) > 1e-9) maxAdjustment = 0.005;
+        const bound = statRoundingBound(value);
+        if (bound === undefined) return undefined;
+        maxAdjustment = Math.min(maxAdjustment, bound);
       }
     }
   }
+  options = { ...options, maxAdjustment };
   // Deterministic cases correct any nonzero bias; stochastic cases correct only outright misses.
   // Either way a nonzero bias is needed to pick a search direction.
   const shouldCorrect = options.deterministic ? options.game.bias_raw !== 0 : !options.game.passes;
@@ -544,8 +549,9 @@ function evaluateStatAdjustment(options: {
   deterministic: boolean;
   thresholds?: Record<string, number>;
   exact?: boolean;
+  maxAdjustment?: number;
 }, value: number): InternalStatAdjustment {
-  const adjustedInput = inputWithStatAdjustment(options.input, value);
+  const adjustedInput = inputWithStatAdjustment(options.input, value, options.maxAdjustment ?? STAT_ROUNDING_MAX_ADJUSTMENT);
   const candidateSamples = simulateAdjustedOutcomes(adjustedInput, options.job, options.config);
   const adjusted = compareOutcomeDistribution({
     candidate: { samples: candidateSamples },
@@ -601,20 +607,27 @@ function simulateAdjustedOutcomes(input: BattleInput, job: TestcaseExecutionJob,
   return samples;
 }
 
-function inputWithStatAdjustment(input: BattleInput, value: number): BattleInput {
+function inputWithStatAdjustment(input: BattleInput, value: number, finestBound: number): BattleInput {
   const adjusted = structuredClone(input);
-  adjustFighterStats(adjusted.attacker, value);
-  adjustFighterStats(adjusted.defender, -value);
+  adjustFighterStats(adjusted.attacker, value, finestBound);
+  adjustFighterStats(adjusted.defender, -value, finestBound);
   return adjusted;
 }
 
-function adjustFighterStats(fighter: FighterInput, value: number): void {
+function adjustFighterStats(fighter: FighterInput, value: number, finestBound: number): void {
   for (const stats of Object.values(fighter.stats ?? {}) as Array<Partial<StatBlock>>) {
     for (const key of ["attack", "defense", "lethality", "health"] as Array<keyof StatBlock>) {
       if (stats[key] === undefined) continue;
-      stats[key] = roundStatAdjustment(Number(stats[key]) + value);
+      const bound = statRoundingBound(Number(stats[key])) ?? finestBound;
+      stats[key] = roundStatAdjustment(Number(stats[key]) + value * (bound / finestBound));
     }
   }
+}
+
+/** Half the display step of a stat shown to at most two decimals; undefined for finer values. */
+function statRoundingBound(value: number): number | undefined {
+  if (Math.abs(value * 100 - Math.round(value * 100)) > 1e-9) return undefined;
+  return Math.abs(value * 10 - Math.round(value * 10)) > 1e-9 ? 0.005 : STAT_ROUNDING_MAX_ADJUSTMENT;
 }
 
 function adjustmentMode(adjusted: ParityComparisonMetrics, deterministic: boolean): TestcaseStatAdjustment["mode"] {

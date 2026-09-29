@@ -33,7 +33,7 @@ npx tsx ../scripts/run_testcases.ts --human --generate-charts   # summary plus s
 `run_testcases.ts --deterministic --exact` runs only deterministic cases and
 requires all compared outcomes to equal the same integer. Stat rounding
 adjustments allow ±0.05 percentage points for 1-decimal inputs and ±0.005 for
-2-decimal inputs. Mixed-precision cases use the tighter bound; inputs with more
+2-decimal inputs; in mixed-precision cases each stat moves in proportion to its own bound. Inputs with more
 than two decimals are not adjusted.
 
 `run_testcases.ts --matching TEXT` selects files whose filename or participating
