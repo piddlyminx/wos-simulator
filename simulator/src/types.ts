@@ -95,6 +95,8 @@ export interface EffectIntentDefinition {
   applies_to_damage_kinds?: DamageKind[];
   /** Apply this modifier only while the named effect is applicable to the same damage job. */
   requires_effect?: string;
+  /** Engagement skills only: activate this effect only for a line engaged with one of these units. */
+  engaged_with?: UnitType[];
   value_formula?: PercentOfValueFormula;
   value_evolution?: { type?: string; step?: string; value?: number };
   units?: Record<string, unknown>;

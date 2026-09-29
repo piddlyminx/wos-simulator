@@ -135,7 +135,7 @@ A trigger controls **when the skill is attempted**. If it matches, the simulator
 | `pre_battle` | Activated once while preparing the battle, before any runtime exists. Chance-free by definition and restricted to static `passive.*` effects; these feed the static damage profile (in-game: widget passives baked into player bonus stats). |
 | `battle_start` | Is attempted once during battle setup, before round 1. `first`, `every`, `source`, and `target` do not gate this trigger type. |
 | `turn` | Is attempted once at the start of matching simulator rounds. Turn triggers must not define `source` or `target`; scope their effects instead. |
-| `engagement` | Is attempted at turn start, after `turn` skills and before turn-created carriers are used, once for each living `source` unit whose chosen target this turn (including attack-order effects such as Ambusher) matches `target`. Effects may use `trigger.source`/`trigger.target`. Troop class advantages use it: a line engaged with its favored class is empowered for everything it deals that turn, including splash on other units. |
+| `engagement` | Is attempted at turn start, after `turn` skills and before turn-created carriers are used, once for each living `source` unit whose chosen target this turn (including attack-order effects such as Ambusher) matches `target`. Effects may use `trigger.source`/`trigger.target`. Troop class advantages use it: a line engaged with its favored class is empowered for everything it deals that turn, including splash on other units. Bradley's Power Shot also uses it; a direct effect may add `engaged_with` (see Effects) to activate only for particular engaged classes. |
 | `attack` | Is attempted procedurally for a matching **normal** attack, after locked-target exhaustion and pre-existing `no_attack` checks. Generated skill jobs do not evaluate it. |
 
 Only these exact strings are scheduled by the runtime. An unknown string is not rejected by a closed trigger schema; it simply leaves the skill unscheduled.
@@ -218,6 +218,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
 | `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means permanent, except that extra-attack effects default to one turn and one attack. |
 | `same_effect_stacking` | `add` or `max` | Controls overlap between live activations of the same modifier definition and scope. Omitted means `add`. |
+| `engaged_with` | Non-empty array of `infantry`, `lancer`, `marksman` | `engagement` skills only, on direct effects: activate this effect only for a line whose target this turn is one of these units. Lets one skill give a different bonus per engaged class (Power Shot). |
 | `requires_effect` | Effect ID string | Applies a runtime damage modifier only while the named effect is applicable to the same damage job. |
 | `value_evolution` | Evolution object | Optionally changes the effect value as rounds or uses advance. |
 | `trigger_damage_jobs` | Non-empty array of job definitions | Required for `extra_skill_attack`; describes the damage jobs it emits. |
@@ -351,7 +352,7 @@ For example, an attack-triggered effect created during round 3 with `{ "turns": 
 
 An attack-triggered effect with `{ "turns": { "count": 1 } }` is available for later jobs in the same round, but expires before the next round begins. It does not mean “the next full turn.”
 
-The native troop skills MasterBrawler, Charge, and RangedStrike use `engagement` triggers with a source/target matchup, apply their buffs to `trigger.source`, and use `{ "turns": { "count": 1 } }`. They omit effect-level `applies_vs`: the matchup controls activation, not subsequent recipients. The buff applies to every hit that troop type deals that round, including extra attacks against other troop types.
+The native troop skills MasterBrawler, Charge, and RangedStrike, and Bradley's Power Shot, use `engagement` triggers with a source/target matchup, apply their buffs to `trigger.source`, and use `{ "turns": { "count": 1 } }`. They omit effect-level `applies_vs`: the matchup controls activation, not subsequent recipients. The buff applies to every hit that troop type deals that round, including extra attacks against other troop types.
 
 **Battle-start delay gotcha.** Battle-start effects are created at setup round 0, while the earliest active round is clamped to 1. Consequently, both `turns.delay: 0` and `turns.delay: 1` start in round 1. A battle-start effect needs `delay: 2` to begin in round 2. No current hero definition combines `battle_start` with a turn delay, but the distinction matters when authoring one.
 
@@ -525,9 +526,10 @@ The engine accepts some values not currently used by a hero. This inventory dist
 | `hero_generation` | `SR`, `S1`, `S1_natalia`, `S1_jeronimo`, `S2` through `S10` |
 | `troop_type` | `infantry`, `lancer`, `marksman` |
 | `requirements[].type/value` | `engagement_type` with `rally` or `garrison`, always beginning at level 1 |
-| `trigger.type` | `pre_battle`, `battle_start`, `turn`, `attack` |
-| `trigger.source` | attack triggers only: omitted, `infantry`, `lancer`, `marksman`, `self.any`, `self.all`, `enemy.any` |
-| `trigger.target` | attack triggers only: omitted or `self.any` |
+| `trigger.type` | `pre_battle`, `battle_start`, `turn`, `engagement`, `attack` |
+| `trigger.source` | attack/engagement triggers only: omitted, `infantry`, `lancer`, `marksman`, `any`, `self.any`, `self.all`, `enemy.any` |
+| `trigger.target` | attack/engagement triggers only: omitted, `self.any`, or `["lancer", "infantry"]` |
+| `engaged_with` | only Bradley's Power Shot: `["lancer"]`, `["infantry"]` |
 | `trigger.probability` | omitted or a five-level numeric percentage array |
 | `trigger.first` | omitted, 4, or 5 |
 | `trigger.every` | omitted, 2, 3, 4, 5, or 6 |

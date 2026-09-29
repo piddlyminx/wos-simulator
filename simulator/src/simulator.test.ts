@@ -3248,6 +3248,37 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
   assert.deepEqual(result.extraSkillAttackJobsByEffect, { hitAgain: 1 });
 });
 
+test("engagement effects with engaged_with activate only for the line's engaged class", () => {
+  const result = runOnce(
+    {
+      maxRounds: 1,
+      attacker: { troops: { lancer_t1: 1000 }, heroes: { ClassBonus: { skill_1: 1 } } },
+      defender: { troops: { infantry_t1: 1000, lancer_t1: 1000 }, heroes: {} }
+    },
+    minimalConfig({
+      ClassBonus: {
+        name: "ClassBonus",
+        troop_type: "lancer",
+        skills: {
+          PowerShot: {
+            trigger: { type: "engagement", source: "any", target: ["lancer", "infantry"] },
+            effects: {
+              vsLancer: { type: "type.single_target.damage.up", value: 40, engaged_with: ["lancer"], units: { applies_to: "trigger.source" }, duration: { turns: { count: 1 } } },
+              vsInfantry: { type: "type.single_target.damage.up", value: 25, engaged_with: ["infantry"], units: { applies_to: "trigger.source" }, duration: { turns: { count: 1 } } }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+  const hit = result.attacks.find(attack => attack.dealerSide === "attacker" && attack.kind === "normal")!;
+  assert.equal(hit.takerUnit, "infantry");
+  const applied = (hit.appliedEffects ?? []).map(effect => effect.effectId);
+  assert.ok(applied.includes("vsInfantry"));
+  assert.equal(applied.includes("vsLancer"), false);
+});
+
 for (const delayed of [false, true]) {
   test(`an engagement bonus covers all of the line's hits while each recipient's own modifiers apply (${delayed ? "delayed" : "immediate"})`, () => {
     const splash: Omit<EffectIntentDefinition, "id"> = {

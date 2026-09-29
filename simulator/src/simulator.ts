@@ -581,6 +581,7 @@ function activateEngagementSkills(
       recorder.recordSkillTriggered(skill);
       const intent = makeNormalIntent(round, side, dealerUnit, oppositeSide(side), takerUnit, 0, runtime);
       for (const effectIntent of skill.effects) {
+        if (effectIntent.engaged_with && !effectIntent.engaged_with.includes(takerUnit)) continue;
         addActiveEffect(runtime, activateEffect(skill, effectIntent, round, intent));
         runtime.effectActivationCounts[skill.side] += 1;
         recorder.recordSkillEffectActivated(skill);

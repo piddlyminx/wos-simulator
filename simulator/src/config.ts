@@ -114,6 +114,7 @@ function collectEffectDiagnostics(skillFile: SkillFile, file: string, diagnostic
       validateNativeEffectValue(effect as EffectIntentDefinition, file, skillId, effectId);
       validateAppliesToDamageKinds(effect as EffectIntentDefinition, file, skillId, effectId);
       validateRequiredEffect(effect as EffectIntentDefinition, effectDefinitions, file, skillId, effectId);
+      validateEngagedWith(skill.trigger, effect as EffectIntentDefinition, nested, file, skillId, effectId);
       validateEffectValueFormula(skill.trigger, effect as EffectIntentDefinition, file, skillId, effectId);
       if (type === "attack_order") validateAttackOrderEffect(effect as EffectIntentDefinition, file, skillId, effectId);
       validateNativeEffectDuration(effect as EffectIntentDefinition, file, skillId, effectId);
@@ -188,6 +189,25 @@ function* walkEffectDefinitionsWithDepth(
   for (const [id, effect] of Object.entries(definitions)) {
     yield [id, effect, nested];
     if (effect.trigger_effects) yield* walkEffectDefinitionsWithDepth(effect.trigger_effects, true);
+  }
+}
+
+function validateEngagedWith(
+  trigger: SkillFile["skills"][string]["trigger"],
+  effect: EffectIntentDefinition,
+  nested: boolean,
+  file: string,
+  skillId: string,
+  effectId: string
+): void {
+  if (effect.engaged_with === undefined) return;
+  const path = `${file}:${skillId}.${effectId}.engaged_with`;
+  if (trigger.type !== "engagement" || nested) {
+    throw new Error(`engaged_with is only supported on direct effects of engagement skills at ${path}`);
+  }
+  const units = effect.engaged_with as unknown;
+  if (!Array.isArray(units) || units.length === 0 || !units.every((unit) => unit === "infantry" || unit === "lancer" || unit === "marksman")) {
+    throw new Error(`engaged_with must be a non-empty list of infantry, lancer or marksman at ${path}`);
   }
 }
 

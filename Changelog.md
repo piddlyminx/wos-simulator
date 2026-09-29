@@ -1,5 +1,21 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-29 — Bradley's Power Shot is an engagement bonus
+
+- Power Shot now uses the `engagement` trigger (source any, target lancer or
+  infantry): a line engaged with Lancers or Infantry at turn start gets the
+  matching bonus for everything it deals that turn, not only its hits on that class.
+- New effect field `engaged_with` (engagement skills only, direct effects): the
+  effect activates only for a line engaged with one of the listed classes. It keeps
+  Power Shot as one skill with two effects, each at its own level-scaled value.
+- Evidence: four Bradley+Norah game-observed battles (`model_checks_20260929/c1a, c1b, c11a,
+  c11b`). Sneak Strike kills, conditioned on the observed trigger count, sit at
+  percentiles 66/48/22/83 under engagement versus 97/88/26/96 per hit: about 8:1
+  for engagement overall (Infantry half ~6:1, Lancer half weaker, ~1.4:1).
+- All 22 earlier Bradley testcases score the same under both models. Full suite,
+  deterministic exact: 8 failures, unchanged. With stochastic cases: 138 of 538,
+  none lost against the pre-session baseline (164). 257 tests pass.
+
 ## 2026-09-29 — Gordon's Venom shares its attack's next-hit curse and ignores shields
 
 - A delayed hit ignores shields entirely: it lands at turn start, before that turn's

@@ -24,7 +24,9 @@
     "PowerShot": {
       "description": "Bradley uses his expertise in suppressive artillery against the enemy vanguard, increasing Damage Dealt to Lancers by X% and to Infantry by Y% for all troops.",
       "trigger": {
-        "type": "battle_start"
+        "type": "engagement",
+        "source": "any",
+        "target": ["lancer", "infantry"]
       },
       "effects": {
         "PowerShot/1": {
@@ -36,10 +38,12 @@
             24,
             30
           ],
+          "engaged_with": ["lancer"],
           "units": {
-            "applies_vs": [
-              "lancer"
-            ]
+            "applies_to": "trigger.source"
+          },
+          "duration": {
+            "turns": { "count": 1 }
           }
         },
         "PowerShot/2": {
@@ -51,10 +55,12 @@
             20,
             25
           ],
+          "engaged_with": ["infantry"],
           "units": {
-            "applies_vs": [
-              "infantry"
-            ]
+            "applies_to": "trigger.source"
+          },
+          "duration": {
+            "turns": { "count": 1 }
           }
         }
       }

@@ -321,6 +321,22 @@ test("loadSimulatorConfig accepts explicit damage kinds and rejects removed dela
   assert.throws(() => loadSimulatorConfigFromDir(removedExtraKind), /damage_kind.*normal.*skill/i);
 });
 
+test("engaged_with is accepted only on engagement skill effects with valid units", () => {
+  const effect = (engagedWith: unknown) => ({
+    type: "type.single_target.damage.up",
+    value: 10,
+    engaged_with: engagedWith,
+    units: { applies_to: "trigger.source" },
+    duration: { turns: { count: 1 } }
+  });
+  const engagement = { type: "engagement", source: "any", target: ["lancer", "infantry"] };
+  assert.doesNotThrow(() => loadSimulatorConfigFromDir(writeConfigWithTroopEffect(effect(["lancer"]), engagement)));
+  assert.throws(() => loadSimulatorConfigFromDir(writeConfigWithTroopEffect(effect(["lancer"]))), /engaged_with.*engagement/i);
+  for (const invalid of [[], ["cavalry"], "lancer"]) {
+    assert.throws(() => loadSimulatorConfigFromDir(writeConfigWithTroopEffect(effect(invalid), engagement)), /engaged_with must be/i);
+  }
+});
+
 test("loadSimulatorConfig accepts modifier damage-kind applicability and rejects invalid uses", () => {
   const valid = writeConfigWithTroopEffect({
     type: "active.hero.damageTaken.up",

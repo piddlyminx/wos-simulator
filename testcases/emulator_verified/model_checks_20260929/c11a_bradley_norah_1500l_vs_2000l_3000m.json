@@ -1,0 +1,158 @@
+[
+  {
+    "test_id": "c11a_bradley_norah_1500l_vs_2000l_3000m",
+    "description": "Battle report 2734693171530112",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Norah": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Bradley": {
+          "skill_1": 5,
+          "skill_2": 4,
+          "skill_3": 3,
+          "skill_4": 1
+        }
+      },
+      "troops": {
+        "lancer_t6": 1500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 287.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 458.79,
+          "defense": 453.04,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 739.42,
+          "defense": 735.42,
+          "lethality": 375.19,
+          "health": 331.96
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "lancer_t6": 2000,
+        "marksman_t6": 3000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-29T13:47:06.000Z",
+        "randomseed": 1790689627,
+        "attacker": 0,
+        "defender": 1410,
+        "metadata": {
+          "report_reference": "2734693171530112",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 1500,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 525,
+            "lightly_injured": 975,
+            "kills": 1257
+          },
+          "defender": {
+            "troops": 5000,
+            "survivors": 1410,
+            "losses": 0,
+            "injured": 1257,
+            "lightly_injured": 2333,
+            "kills": 525
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 1500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 525,
+                "lightly_injured": 975,
+                "kills": 1257
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 2000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 700,
+                "lightly_injured": 1300,
+                "kills": 86
+              },
+              "marksman_t6": {
+                "troops": 3000,
+                "survivors": 1410,
+                "losses": 0,
+                "injured": 557,
+                "lightly_injured": 1033,
+                "kills": 439
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Norah": {
+                "Sneak Strike": {
+                  "triggered": 3,
+                  "displayed_kills": 52
+                },
+                "Momentum": {
+                  "triggered": 6,
+                  "displayed_kills": null
+                }
+              },
+              "Bradley": {
+                "Tactical Assistance": {
+                  "triggered": 8,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]
