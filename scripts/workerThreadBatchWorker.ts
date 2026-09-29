@@ -76,22 +76,23 @@ implements BatchWorker<TTask, TResult, TProgress> {
 export function installWorkerThreadBatchHandler<TTask, TResult, TProgress = never>(
   runBatch: RunBatch<TTask, TResult, TProgress>,
 ): void {
-  if (!parentPort) throw new Error("Worker thread batch handler requires a parent port");
-  parentPort.on("message", (request: BatchWorkerRequest<TTask>) => {
+  const port = parentPort;
+  if (!port) throw new Error("Worker thread batch handler requires a parent port");
+  port.on("message", (request: BatchWorkerRequest<TTask>) => {
     void Promise.resolve(runBatch(
       request.tasks,
-      (progress) => parentPort.postMessage({
+      (progress) => port.postMessage({
         id: request.id,
         type: "progress",
         progress,
       } satisfies BatchWorkerResponse<TResult, TProgress>),
     )).then(
-      (results) => parentPort.postMessage({
+      (results) => port.postMessage({
         id: request.id,
         type: "result",
         results,
       } satisfies BatchWorkerResponse<TResult, TProgress>),
-      (error) => parentPort.postMessage({
+      (error) => port.postMessage({
         id: request.id,
         type: "error",
         error: error instanceof Error ? error.message : String(error),
