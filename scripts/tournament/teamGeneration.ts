@@ -11,6 +11,7 @@ export const MAIN_POOL: Record<string, MainHeroRole> = {
   "Wu Ming": "inf",
   Gordon: "lanc",
   Mia: "lanc",
+  "Molly": "lanc",
   Philly: "lanc",
   Sonya: "lanc",
   Fred: "lanc",

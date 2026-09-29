@@ -1,0 +1,689 @@
+[
+  {
+    "test_id": "six_hero_mixed_control",
+    "description": "Battle report 2734693171534393",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Sergey": {
+          "skill_1": 2,
+          "skill_2": 2
+        },
+        "Molly": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_4": 0
+        },
+        "Jasser": {
+          "skill_1": 2,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "infantry_t6": 800,
+        "lancer_t6": 250,
+        "marksman_t6": 700
+      },
+      "stats": {
+        "infantry": {
+          "attack": 347.14,
+          "defense": 338.69,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 259.81,
+          "defense": 259.11,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 297.4,
+          "defense": 286.2,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Natalia": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_4": 0
+        },
+        "Patrick": {
+          "skill_1": 3,
+          "skill_2": 2
+        },
+        "Alonso": {
+          "skill_1": 3,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 346.18,
+          "defense": 334.18,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 396.69,
+          "defense": 395.94,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 410.06,
+          "defense": 411.06,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-29T16:02:59.000Z",
+        "randomseed": 1790697780,
+        "attacker": 1494,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171534393",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1750,
+            "survivors": 1494,
+            "losses": 0,
+            "injured": 90,
+            "lightly_injured": 166,
+            "kills": 140
+          },
+          "defender": {
+            "troops": 400,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 140,
+            "lightly_injured": 260,
+            "kills": 90
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 800,
+                "survivors": 544,
+                "losses": 0,
+                "injured": 90,
+                "lightly_injured": 166,
+                "kills": 18
+              },
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 250,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 36
+              },
+              "marksman_t6": {
+                "troops": 700,
+                "survivors": 700,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 86
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 9
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 28
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 53
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Molly": {
+                "Ice Dominion": {
+                  "triggered": 51,
+                  "displayed_kills": 14
+                },
+                "Snow's Grace": {
+                  "triggered": 9,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Alonso": {
+                "Poison Harpoon": {
+                  "triggered": 40,
+                  "displayed_kills": 14
+                },
+                "Iron Strength": {
+                  "triggered": 22,
+                  "displayed_kills": null
+                },
+                "Onslaught": {
+                  "triggered": 12,
+                  "displayed_kills": null
+                }
+              },
+              "Natalia": {
+                "Feral Protection": {
+                  "triggered": 13,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-29T16:04:03.000Z",
+        "randomseed": 1790697844,
+        "attacker": 1501,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171534417",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1750,
+            "survivors": 1501,
+            "losses": 0,
+            "injured": 88,
+            "lightly_injured": 161,
+            "kills": 140
+          },
+          "defender": {
+            "troops": 400,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 140,
+            "lightly_injured": 260,
+            "kills": 88
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 800,
+                "survivors": 551,
+                "losses": 0,
+                "injured": 88,
+                "lightly_injured": 161,
+                "kills": 20
+              },
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 250,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 38
+              },
+              "marksman_t6": {
+                "troops": 700,
+                "survivors": 700,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 82
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 9
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 28
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 51
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Molly": {
+                "Ice Dominion": {
+                  "triggered": 49,
+                  "displayed_kills": 11
+                },
+                "Snow's Grace": {
+                  "triggered": 10,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Alonso": {
+                "Poison Harpoon": {
+                  "triggered": 48,
+                  "displayed_kills": 17
+                },
+                "Iron Strength": {
+                  "triggered": 17,
+                  "displayed_kills": null
+                },
+                "Onslaught": {
+                  "triggered": 9,
+                  "displayed_kills": null
+                }
+              },
+              "Natalia": {
+                "Feral Protection": {
+                  "triggered": 8,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-29T16:05:07.000Z",
+        "randomseed": 1790697908,
+        "attacker": 1494,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171534441",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1750,
+            "survivors": 1494,
+            "losses": 0,
+            "injured": 90,
+            "lightly_injured": 166,
+            "kills": 140
+          },
+          "defender": {
+            "troops": 400,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 140,
+            "lightly_injured": 260,
+            "kills": 90
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 800,
+                "survivors": 544,
+                "losses": 0,
+                "injured": 90,
+                "lightly_injured": 166,
+                "kills": 20
+              },
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 250,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 36
+              },
+              "marksman_t6": {
+                "troops": 700,
+                "survivors": 700,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 84
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 9
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 31
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 50
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Molly": {
+                "Ice Dominion": {
+                  "triggered": 39,
+                  "displayed_kills": 9
+                },
+                "Snow's Grace": {
+                  "triggered": 10,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Alonso": {
+                "Poison Harpoon": {
+                  "triggered": 33,
+                  "displayed_kills": 13
+                },
+                "Iron Strength": {
+                  "triggered": 20,
+                  "displayed_kills": null
+                },
+                "Onslaught": {
+                  "triggered": 12,
+                  "displayed_kills": null
+                }
+              },
+              "Natalia": {
+                "Feral Protection": {
+                  "triggered": 14,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-29T16:06:11.000Z",
+        "randomseed": 1790697972,
+        "attacker": 1477,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171534596",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1750,
+            "survivors": 1477,
+            "losses": 0,
+            "injured": 96,
+            "lightly_injured": 177,
+            "kills": 140
+          },
+          "defender": {
+            "troops": 400,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 140,
+            "lightly_injured": 260,
+            "kills": 96
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 800,
+                "survivors": 527,
+                "losses": 0,
+                "injured": 96,
+                "lightly_injured": 177,
+                "kills": 20
+              },
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 250,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 36
+              },
+              "marksman_t6": {
+                "troops": 700,
+                "survivors": 700,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 84
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 9
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 30
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 57
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Molly": {
+                "Ice Dominion": {
+                  "triggered": 36,
+                  "displayed_kills": 8
+                },
+                "Snow's Grace": {
+                  "triggered": 8,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Alonso": {
+                "Poison Harpoon": {
+                  "triggered": 42,
+                  "displayed_kills": 17
+                },
+                "Iron Strength": {
+                  "triggered": 14,
+                  "displayed_kills": null
+                },
+                "Onslaught": {
+                  "triggered": 12,
+                  "displayed_kills": null
+                }
+              },
+              "Natalia": {
+                "Feral Protection": {
+                  "triggered": 18,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-29T16:07:15.000Z",
+        "randomseed": 1790698036,
+        "attacker": 1509,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171534697",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1750,
+            "survivors": 1509,
+            "losses": 0,
+            "injured": 85,
+            "lightly_injured": 156,
+            "kills": 140
+          },
+          "defender": {
+            "troops": 400,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 140,
+            "lightly_injured": 260,
+            "kills": 85
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 800,
+                "survivors": 559,
+                "losses": 0,
+                "injured": 85,
+                "lightly_injured": 156,
+                "kills": 22
+              },
+              "lancer_t6": {
+                "troops": 250,
+                "survivors": 250,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 37
+              },
+              "marksman_t6": {
+                "troops": 700,
+                "survivors": 700,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 81
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 9
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 27
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 49
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Molly": {
+                "Ice Dominion": {
+                  "triggered": 47,
+                  "displayed_kills": 14
+                },
+                "Snow's Grace": {
+                  "triggered": 13,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Alonso": {
+                "Poison Harpoon": {
+                  "triggered": 38,
+                  "displayed_kills": 12
+                },
+                "Iron Strength": {
+                  "triggered": 11,
+                  "displayed_kills": null
+                },
+                "Onslaught": {
+                  "triggered": 9,
+                  "displayed_kills": null
+                }
+              },
+              "Natalia": {
+                "Feral Protection": {
+                  "triggered": 14,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]
