@@ -49,6 +49,17 @@ npx tsx scripts/benchmark_tournament_battle_modes.ts 60
 npx tsx scripts/fit_enemy_base_stats.ts --help
 ```
 
+For the three-army tool, `--reps N` sets the total number of matches per evaluation
+in both `sequential` and `random` ordering. For example, `--reps 500` uses 500
+matches per finalist and 50 per preliminary troop candidate in either mode.
+Sequential samples starting orders, plays the three opening slots, then pairs
+the lowest-numbered surviving armies. Random picks a fresh surviving pair before
+each battle. Sequential samples cover all 36 starting-order pairs once per
+seeded, shuffled block and stop at exactly the requested match count.
+The CLI prints the evaluation budget before running; `--seed` makes sampling
+reproducible. To reproduce the previous sequential sample count, multiply the
+old `--reps` value by 36 explicitly.
+
 Config (troop/hero stats, hero definitions) lives in `simulator/config/`. The
 dashboard imports the engine through the `@simulator/*` path alias, which resolves to
 `simulator/src/*` (alias name kept for continuity). Hero JSON files are the sole

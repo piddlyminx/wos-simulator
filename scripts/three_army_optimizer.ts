@@ -126,8 +126,8 @@ export interface TroopOptimizationResult {
   scoreRate: number;
   averageMargin: number;
   evaluatedCandidates: number;
-  preliminaryRepsPerOrdering: number;
-  finalistRepsPerOrdering: number;
+  preliminaryReps: number;
+  finalistReps: number;
   search: TroopOptimizationDefinition;
 }
 
@@ -251,7 +251,6 @@ const UNIT_LABELS: Record<UnitType, string> = {
   marksman: "M"
 };
 const ORDERS = permutations([0, 1, 2]) as unknown as Order[];
-const CANONICAL_ORDERS: readonly Order[] = [ORDERS[0]];
 const ADAPTIVE_COARSE_SEEDS_PER_METRIC = 10;
 const ADAPTIVE_FINALISTS_PER_METRIC = 30;
 const ADAPTIVE_MAX_FINALISTS = 40;
@@ -456,31 +455,26 @@ function evaluateEffectiveDefinition(
   let scenario = 0;
   let attackerMarginMean = 0;
   let attackerMarginM2 = 0;
-  const orders = definition.ordering === "random" ? CANONICAL_ORDERS : ORDERS;
-  for (const attackerOrder of orders) {
-    for (const defenderOrder of orders) {
-      for (let rep = 0; rep < reps; rep += 1) {
-        const result = simulateEffectiveThreeArmyMatch(
-          definition,
-          simulatorConfig,
-          attackerOrder,
-          defenderOrder,
-          `${seed}:scenario:${scenario}:rep:${rep}`,
-          resolveBattle
-        );
-        scenario += 1;
-        if (result.winner === "attacker") attackerWins += 1;
-        else if (result.winner === "defender") defenderWins += 1;
-        else draws += 1;
-        attackerRemaining += result.attackerRemaining;
-        defenderRemaining += result.defenderRemaining;
-        battles += result.battles;
-        const attackerMargin = result.attackerRemaining - result.defenderRemaining;
-        const marginDelta = attackerMargin - attackerMarginMean;
-        attackerMarginMean += marginDelta / scenario;
-        attackerMarginM2 += marginDelta * (attackerMargin - attackerMarginMean);
-      }
-    }
+  for (const { attackerOrderIndex, defenderOrderIndex, rep } of matchScenarios(reps, definition.ordering, seed)) {
+    const result = simulateEffectiveThreeArmyMatch(
+      definition,
+      simulatorConfig,
+      ORDERS[attackerOrderIndex],
+      ORDERS[defenderOrderIndex],
+      `${seed}:scenario:${scenario}:rep:${rep}`,
+      resolveBattle
+    );
+    scenario += 1;
+    if (result.winner === "attacker") attackerWins += 1;
+    else if (result.winner === "defender") defenderWins += 1;
+    else draws += 1;
+    attackerRemaining += result.attackerRemaining;
+    defenderRemaining += result.defenderRemaining;
+    battles += result.battles;
+    const attackerMargin = result.attackerRemaining - result.defenderRemaining;
+    const marginDelta = attackerMargin - attackerMarginMean;
+    attackerMarginMean += marginDelta / scenario;
+    attackerMarginM2 += marginDelta * (attackerMargin - attackerMarginMean);
   }
   return {
     scenarios: scenario,
@@ -695,7 +689,7 @@ export function optimizeDefinition(
 ): OptimizationResult[] {
   const context = createHeroOptimizationWorkerContext(definition, simulatorConfig);
   const total = countOptimizationCandidates(context, maxCandidates);
-  const scenarios = allOrderingScenarios(reps, definition.ordering);
+  const scenarios = matchScenarios(reps, definition.ordering, seed);
   onProgress?.(0, total, 0, "final");
   const retained: OptimizationResult[] = [];
   let completed = 0;
@@ -809,7 +803,7 @@ export async function optimizeDefinitionParallel(
     let active: HeroRaceCandidate[] | undefined;
     const screeningStages = screeningPolicy === false
       ? []
-      : heroScreeningStages(total, screeningPolicy, definition.ordering, reps);
+      : heroScreeningStages(total, screeningPolicy, definition.ordering, reps, seed);
     for (const stage of screeningStages) {
       const inputs = active
         ? active.map(({ candidate, result }) => ({ candidate, previous: result }))
@@ -832,7 +826,7 @@ export async function optimizeDefinitionParallel(
     const finalEvaluated = await evaluateStage(
       finalists,
       finalistCount,
-      allOrderingScenarios(reps, definition.ordering),
+      matchScenarios(reps, definition.ordering, seed),
       "final",
       false
     );
@@ -855,11 +849,12 @@ function heroScreeningStages(
   totalCandidates: number,
   policy: HeroScreeningPolicy,
   ordering: ArmyOrdering,
-  finalReps: number
+  finalReps: number,
+  seed: number
 ): HeroScreeningStage[] {
   validateHeroScreeningPolicy(policy);
   if (totalCandidates <= policy.minimumCandidates) return [];
-  const scenarios = heroScreeningScenarioSequence(finalReps, ordering);
+  const scenarios = matchScenarios(finalReps, ordering, seed);
   const cumulativeTargets = HERO_SCREENING_SCENARIO_FRACTIONS.map((fraction) =>
     Math.max(1, Math.round(scenarios.length * fraction))
   );
@@ -880,14 +875,6 @@ function heroScreeningStages(
   return stages;
 }
 
-function heroScreeningScenarioSequence(reps: number, ordering: ArmyOrdering): HeroOptimizationScenario[] {
-  const scenarios = allOrderingScenarios(reps, ordering);
-  if (ordering === "random") return scenarios;
-  const balanced = balancedOpeningOrderScenarios();
-  const balancedKeys = new Set(balanced.map(scenarioKey));
-  return [...balanced, ...scenarios.filter((scenario) => !balancedKeys.has(scenarioKey(scenario)))];
-}
-
 function validateHeroScreeningPolicy(policy: HeroScreeningPolicy): void {
   if (!Number.isInteger(policy.minimumRetained) || policy.minimumRetained < 1) {
     throw new Error("Hero screening minimumRetained must be a positive integer");
@@ -905,50 +892,29 @@ function validateHeroScreeningPolicy(policy: HeroScreeningPolicy): void {
   }
 }
 
-function balancedOpeningOrderScenarios(): HeroOptimizationScenario[] {
-  const scenarios: HeroOptimizationScenario[] = [];
-  for (let attackerOrderIndex = 0; attackerOrderIndex < ORDERS.length; attackerOrderIndex += 1) {
-    for (const offset of [0, 3]) {
-      scenarios.push({
-        attackerOrderIndex,
-        defenderOrderIndex: (attackerOrderIndex + offset) % ORDERS.length,
-        rep: 0
-      });
-    }
-  }
-  return scenarios;
-}
-
-function integerRange(start: number, end: number): number[] {
-  return Array.from({ length: end - start }, (_, offset) => start + offset);
-}
-
-function allOrderingScenarios(reps: number, ordering: ArmyOrdering): HeroOptimizationScenario[] {
+function matchScenarios(reps: number, ordering: ArmyOrdering, seed: number): HeroOptimizationScenario[] {
   if (!Number.isInteger(reps) || reps < 1) throw new Error("reps must be at least 1");
-  const repIndexes = integerRange(0, reps);
-  return ordering === "random"
-    ? randomOrderingScenariosForReps(repIndexes)
-    : sequentialOrderingScenariosForReps(repIndexes);
-}
-
-function randomOrderingScenariosForReps(reps: readonly number[]): HeroOptimizationScenario[] {
-  return reps.map((rep) => ({ attackerOrderIndex: 0, defenderOrderIndex: 0, rep }));
-}
-
-function sequentialOrderingScenariosForReps(reps: readonly number[]): HeroOptimizationScenario[] {
+  if (ordering === "random") {
+    return Array.from({ length: reps }, (_, rep) => ({ attackerOrderIndex: 0, defenderOrderIndex: 0, rep }));
+  }
+  const rng = createSeededRng(`${seed}:opening-orders`);
+  const pairs = Array.from({ length: ORDERS.length ** 2 }, (_, index) => index);
   const scenarios: HeroOptimizationScenario[] = [];
-  for (const rep of reps) {
-    for (let attackerOrderIndex = 0; attackerOrderIndex < ORDERS.length; attackerOrderIndex += 1) {
-      for (let defenderOrderIndex = 0; defenderOrderIndex < ORDERS.length; defenderOrderIndex += 1) {
-        scenarios.push({ attackerOrderIndex, defenderOrderIndex, rep });
-      }
+  while (scenarios.length < reps) {
+    for (let index = pairs.length - 1; index > 0; index -= 1) {
+      const other = Math.floor(rng() * (index + 1));
+      [pairs[index], pairs[other]] = [pairs[other], pairs[index]];
+    }
+    for (const pair of pairs) {
+      scenarios.push({
+        attackerOrderIndex: Math.floor(pair / ORDERS.length),
+        defenderOrderIndex: pair % ORDERS.length,
+        rep: scenarios.length
+      });
+      if (scenarios.length === reps) break;
     }
   }
   return scenarios;
-}
-
-function scenarioKey(scenario: HeroOptimizationScenario): string {
-  return `${scenario.attackerOrderIndex}:${scenario.defenderOrderIndex}:${scenario.rep}`;
 }
 
 function selectHeroScreeningSurvivors(
@@ -1198,8 +1164,8 @@ export async function optimizeWinningTroopsParallel(
     scoreRate: currentResult.scoreRate,
     averageMargin: currentResult.averageMargin,
     evaluatedCandidates,
-    preliminaryRepsPerOrdering: preliminaryReps,
-    finalistRepsPerOrdering: reps,
+    preliminaryReps,
+    finalistReps: reps,
     search
   };
 }
@@ -1336,6 +1302,13 @@ export async function main(argv = process.argv.slice(2)): Promise<void> {
   const args = parseCliArgs(argv);
   const simulatorConfig = loadSimulatorConfig();
   const definition = parseDefinition(JSON.parse(readFileSync(args.configPath, "utf8")), simulatorConfig);
+  const budget = args.command === "simulate"
+    ? `${args.reps} matches`
+    : `${args.reps} matches per candidate in final evaluation`;
+  const screening = args.command === "optimize" && definition.troop_optimization
+    ? `; troop screening: ${Math.ceil(args.reps / ADAPTIVE_PRELIMINARY_REPS_DIVISOR)} matches per candidate`
+    : "";
+  console.error(`Ordering: ${definition.ordering}; budget: ${budget}${screening}.`);
   if (args.command === "simulate") {
     const result = evaluateDefinition(definition, simulatorConfig, args.reps, args.seed);
     if (args.json) console.log(JSON.stringify(result, null, 2));
@@ -1955,7 +1928,7 @@ class TerminalRunMetricsReporter {
 function printEvaluation(result: EvaluationResult, ordering: ArmyOrdering): void {
   const scenarioSummary = ordering === "random"
     ? `${result.scenarios} random trajectories`
-    : `36 army-order combinations × ${result.scenarios / 36} reps`;
+    : `sampled sequential army orders`;
   console.log(`Scenarios: ${result.scenarios} (${scenarioSummary})`);
   console.log(`Attacker: ${percent(result.attackerWinRate)} wins (${result.attackerWins})`);
   console.log(`Defender: ${percent(result.defenderWinRate)} wins (${result.defenderWins})`);
@@ -2016,7 +1989,7 @@ function printTroopOptimization(
     `Evaluated ${result.evaluatedCandidates} adaptive candidates ` +
     `(coarse ${result.search.coarse_step_percent}%, fine ${result.search.fine_step_percent}% ` +
     `within ±${result.search.fine_radius_percent}%, up to ${result.search.passes} passes; ` +
-    `${result.preliminaryRepsPerOrdering} preliminary and ${result.finalistRepsPerOrdering} finalist reps per ordering).`
+    `${result.preliminaryReps} preliminary and ${result.finalistReps} finalist matches per candidate).`
   );
 }
 
@@ -2340,7 +2313,8 @@ function helpText(): string {
     "  npx tsx scripts/three_army_optimizer.ts simulate <config.json> [--reps N] [--seed N] [--json]",
     "  npx tsx scripts/three_army_optimizer.ts optimize <config.json> [--reps N] [--seed N] [--jobs N] [--top N] [--max-candidates N] [--json]",
     "",
-    "Set top-level ordering to sequential (default) or random. Sequential ordering evaluates all 36 attacker/defender army-order combinations per rep; random ordering runs exactly one random trajectory per rep. --reps defaults to 10, and adaptive troop screening uses one tenth of it, rounded up.",
+    "--reps N sets the total match count per evaluation in either ordering mode (default: 10). Adaptive troop screening uses one tenth of it, rounded up; finalists use the full budget.",
+    "Set top-level ordering to sequential (default) or random. Sequential samples starting army orders, plays the three opening slots, then pairs the lowest-numbered survivors. Random chooses a fresh pair of surviving armies before every battle. Sequential samples cover all 36 starting-order pairs once per shuffled block, stopping at exactly --reps matches.",
     "Large hero searches screen at cumulative depths of roughly 1/12, 1/4, 1/2, and 1 times the final scenario count, then freshly evaluate the finalists at the full --reps depth.",
     "troop_optimization redistributes each selected army's fixed troop total while leaving the opposing team unchanged. Set troop_optimization.side when optimization is omitted; the input hero setup is then used as the baseline.",
     'Each side is an object with "armies" and optional player-level "passive". Its "own" effects apply to all three armies and its "enemy" effects apply to the opposing player. Per-fighter "passive" remains available for army-specific effects.',

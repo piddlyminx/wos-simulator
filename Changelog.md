@@ -1,5 +1,14 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-29 — Decouple three-army ordering from evaluation budget
+
+- Make `--reps N` mean N matches per evaluation for both ordering modes,
+  including hero screening and troop optimization. Sequential mode samples
+  starting orders in shuffled blocks instead of multiplying the budget by 36.
+- Print the budget before running and report troop screening/finalist counts
+  as matches per candidate. JSON now uses `preliminaryReps` and `finalistReps`
+  instead of the misleading `*RepsPerOrdering` fields.
+
 ## 2026-09-26 — Reduce simulator form-change work
 
 - Cache Explore ratios estimates until their grid or replicate settings change,

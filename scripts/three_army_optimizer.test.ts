@@ -183,36 +183,48 @@ test("random ordering selects any living pair before every battle", () => {
   assert.deepEqual(result, { winner: "attacker", attackerRemaining: 60, defenderRemaining: 0, battles: 3 });
 });
 
-test("sequential evaluation covers every pair of army orderings for every rep", () => {
-  const definition = parsedDefinitionWithInfantry([10, 10, 10], [5, 5, 5]);
-  const result = evaluateDefinition(
-    definition,
-    simulatorConfig,
-    2,
-    42,
-    (attacker, defender) => battleResult("attacker", attacker.troops.infantry_t6 - defender.troops.infantry_t6, 0)
-  );
-
-  assert.equal(result.scenarios, 72);
-  assert.equal(result.attackerWins, 72);
-  assert.equal(result.attackerWinRate, 1);
-  assert.equal(result.averageBattles, 3);
-  assert.equal(result.attackerMarginStd, 0);
+test("both ordering modes honor the exact match budget, including partial ordering blocks", () => {
+  for (const ordering of ["sequential", "random"] as const) {
+    const definition = parsedDefinitionWithInfantry([10, 10, 10], [5, 5, 5]);
+    definition.ordering = ordering;
+    for (const reps of [1, 2, 7, 36, 37, 72, 500]) {
+      let battles = 0;
+      const result = evaluateDefinition(definition, simulatorConfig, reps, 42, (attacker) => {
+        battles += 1;
+        return battleResult("attacker", attacker.troops.infantry_t6, 0);
+      });
+      assert.equal(result.scenarios, reps);
+      assert.equal(result.attackerWins, reps);
+      assert.equal(battles, reps * 3);
+      assert.equal(result.averageBattles, 3);
+      assert.equal(result.attackerMarginStd, 0);
+    }
+  }
 });
 
-test("random evaluation runs exactly the requested number of trajectories", () => {
+test("sequential sampling balances order pairs and uses reproducible seeded prefixes", () => {
   const definition = parsedDefinitionWithInfantry([10, 10, 10], [5, 5, 5]);
-  definition.ordering = "random";
-  const result = evaluateDefinition(
-    definition,
-    simulatorConfig,
-    7,
-    42,
-    (attacker) => battleResult("attacker", attacker.troops.infantry_t6, 0)
-  );
-
-  assert.equal(result.scenarios, 7);
-  assert.equal(result.attackerWins, 7);
+  const observedOrders = (reps: number, seed: number): string[] => {
+    const matches: string[][] = [];
+    evaluateDefinition(definition, simulatorConfig, reps, seed, (attacker, defender, battleSeed) => {
+      if (battleSeed.endsWith(":battle:0")) matches.push([]);
+      matches.at(-1)!.push(`${attacker.name}:${defender.name}`);
+      return battleResult("attacker", attacker.troops.infantry_t6, 0);
+    });
+    return matches.map((openings) => openings.join(","));
+  };
+  const orders = observedOrders(500, 42);
+  const fullBlock = new Set(orders.slice(0, 36));
+  assert.equal(fullBlock.size, 36);
+  for (let start = 36; start + 36 <= orders.length; start += 36) {
+    assert.deepEqual(new Set(orders.slice(start, start + 36)), fullBlock);
+  }
+  const counts = [...fullBlock].map((order) => orders.filter((entry) => entry === order).length);
+  assert.equal(Math.min(...counts), 13);
+  assert.equal(Math.max(...counts), 14);
+  assert.deepEqual(observedOrders(500, 42), orders);
+  assert.deepEqual(observedOrders(7, 42), orders.slice(0, 7));
+  assert.notDeepEqual(observedOrders(7, 43), orders.slice(0, 7));
 });
 
 test("optimization candidates assign each role once per army without reusing heroes", () => {
@@ -351,57 +363,59 @@ test("hero stat rows retain their march and troop-type baselines", () => {
   assert.equal(candidateDefinition.attacker[1].fighter.stats?.marksman.attack, 850.52);
 });
 
-test("parallel hero optimization matches serial ranking while retaining only requested results", async () => {
-  const raw = definitionWithInfantry([2, 2, 2], [1, 1, 1]);
-  raw.attacker.armies[0].fighter.passive = { attack: { up: 20 } };
-  raw.defender.armies[0].fighter.passive = { health: { down: 10 } };
-  raw.max_rounds = 1;
-  raw.ordering = "random";
-  const definition = parseDefinition({
-    ...raw,
-    optimization: {
-      side: "attacker",
-      hero_skill_levels: [1, 1, 1, 0],
-      unique_heroes: false,
-      per_army_hero_pools: [
-        { infantry: ["Gatot", "Logan"], lancer: ["Sonya"], marksman: ["Bradley"] },
-        { infantry: ["Gatot"], lancer: ["Sonya"], marksman: ["Bradley"] },
-        { infantry: ["Gatot"], lancer: ["Sonya"], marksman: ["Bradley"] }
-      ]
-    }
-  }, simulatorConfig);
-  let completed = 0;
-  let battlesCompleted = 0;
-  const progressSamples: Array<[number, number, number]> = [];
+for (const ordering of ["sequential", "random"] as const) {
+  test(`${ordering} parallel hero optimization matches serial ranking and match budget`, async () => {
+    const raw = definitionWithInfantry([2, 2, 2], [1, 1, 1]);
+    raw.attacker.armies[0].fighter.passive = { attack: { up: 20 } };
+    raw.defender.armies[0].fighter.passive = { health: { down: 10 } };
+    raw.max_rounds = 1;
+    raw.ordering = ordering;
+    const definition = parseDefinition({
+      ...raw,
+      optimization: {
+        side: "attacker",
+        hero_skill_levels: [1, 1, 1, 0],
+        unique_heroes: false,
+        per_army_hero_pools: [
+          { infantry: ["Gatot", "Logan"], lancer: ["Sonya"], marksman: ["Bradley"] },
+          { infantry: ["Gatot"], lancer: ["Sonya"], marksman: ["Bradley"] },
+          { infantry: ["Gatot"], lancer: ["Sonya"], marksman: ["Bradley"] }
+        ]
+      }
+    }, simulatorConfig);
+    let completed = 0;
+    let battlesCompleted = 0;
+    const progressSamples: Array<[number, number, number]> = [];
 
-  const serial = optimizeDefinition(definition, simulatorConfig, 1, 42, 10, undefined, 1);
-  const parallel = await optimizeDefinitionParallel(
-    definition,
-    simulatorConfig,
-    1,
-    42,
-    2,
-    10,
-    (value, _total, battles) => {
-      completed = value;
-      battlesCompleted = battles;
-      progressSamples.push([value, _total, battles]);
-    },
-    1,
-    {
-      retainFractions: [1, 1, 1, 1],
-      minimumRetained: 1,
-      minimumCandidates: 1
-    }
-  );
+    const serial = optimizeDefinition(definition, simulatorConfig, 7, 42, 10, undefined, 1);
+    const parallel = await optimizeDefinitionParallel(
+      definition,
+      simulatorConfig,
+      7,
+      42,
+      2,
+      10,
+      (value, _total, battles) => {
+        completed = value;
+        battlesCompleted = battles;
+        progressSamples.push([value, _total, battles]);
+      },
+      1,
+      {
+        retainFractions: [1, 1, 1, 1],
+        minimumRetained: 1,
+        minimumCandidates: 1
+      }
+    );
 
-  assert.equal(completed, 2);
-  assert.ok(battlesCompleted > 0);
-  assert.deepEqual(progressSamples[0], [0, 2, 0]);
-  assert.equal(serial.length, 1);
-  assert.deepEqual(parallel, serial);
-  assert.equal(parallel[0].evaluation.scenarios, 1);
-});
+    assert.equal(completed, 2);
+    assert.ok(battlesCompleted > 0);
+    assert.deepEqual(progressSamples[0], [0, 2, 0]);
+    assert.equal(serial.length, 1);
+    assert.deepEqual(parallel, serial);
+    assert.equal(parallel[0].evaluation.scenarios, 7);
+  });
+}
 
 test("large hero searches scale screening stages before a fresh final evaluation", async () => {
   const raw = definitionWithInfantry([2, 2, 2], [1, 1, 1]);
@@ -436,7 +450,7 @@ test("large hero searches scale screening stages before a fresh final evaluation
   const results = await optimizeDefinitionParallel(
     definition,
     simulatorConfig,
-    1,
+    30,
     42,
     2,
     200,
@@ -448,15 +462,15 @@ test("large hero searches scale screening stages before a fresh final evaluation
 
   assert.deepEqual(stageStarts.map(({ stage }) => stage), [
     "screen-3",
-    "screen-9",
-    "screen-18",
-    "screen-36",
+    "screen-8",
+    "screen-15",
+    "screen-30",
     "final"
   ]);
   assert.equal(stageStarts[0].total, 135);
   assert.equal(stageStarts.at(-1)!.total, 100);
   assert.equal(results.length, 1);
-  assert.equal(results[0].evaluation.scenarios, 36);
+  assert.equal(results[0].evaluation.scenarios, 30);
 
   const randomStageStarts: string[] = [];
   const randomResults = await optimizeDefinitionParallel(
@@ -657,43 +671,48 @@ test("troop optimization defaults match the dashboard adaptive search resolution
   });
 });
 
-test("troop optimization without hero optimization uses the input lineup", async () => {
-  const raw = {
-    ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
-    troop_optimization: {
-      side: "attacker",
-      coarse_step_percent: 100,
-      fine_step_percent: 100,
-      fine_radius_percent: 100,
-      passes: 1
-    }
-  };
-  const definition = parseDefinition(raw, simulatorConfig);
-  const expectedBaseline = evaluateDefinition(definition, simulatorConfig, 1, 42);
-  const stages = new Set<string>();
+for (const ordering of ["sequential", "random"] as const) {
+  test(`${ordering} troop optimization uses the input lineup and respects the match budget`, async () => {
+    const raw = {
+      ...definitionWithInfantry([10, 10, 10], [5, 5, 5]),
+      ordering,
+      troop_optimization: {
+        side: "attacker",
+        coarse_step_percent: 100,
+        fine_step_percent: 100,
+        fine_radius_percent: 100,
+        passes: 1
+      }
+    };
+    const definition = parseDefinition(raw, simulatorConfig);
+    const expectedBaseline = evaluateDefinition(definition, simulatorConfig, 11, 42);
+    const stages = new Set<string>();
 
-  const result = await optimizeWinningTroopsParallel(
-    definition,
-    [],
-    simulatorConfig,
-    1,
-    42,
-    1,
-    ({ stage }) => stages.add(stage)
-  );
+    const result = await optimizeWinningTroopsParallel(
+      definition,
+      [],
+      simulatorConfig,
+      11,
+      42,
+      2,
+      ({ stage }) => stages.add(stage)
+    );
 
-  assert.equal(result.side, "attacker");
-  assert.deepEqual(result.heroes, [[], [], []]);
-  assert.deepEqual(result.initialEvaluation, expectedBaseline);
-  assert.deepEqual(result.initialTroops, [
-    { infantry: 10, lancer: 0, marksman: 0, total: 10 },
-    { infantry: 10, lancer: 0, marksman: 0, total: 10 },
-    { infantry: 10, lancer: 0, marksman: 0, total: 10 }
-  ]);
-  assert.deepEqual([...stages], ["coarse", "fine", "finalist"]);
-  assert.equal(result.preliminaryRepsPerOrdering, 1);
-  assert.equal(result.finalistRepsPerOrdering, 1);
-});
+    assert.equal(result.side, "attacker");
+    assert.deepEqual(result.heroes, [[], [], []]);
+    assert.deepEqual(result.initialEvaluation, expectedBaseline);
+    assert.deepEqual(result.initialTroops, [
+      { infantry: 10, lancer: 0, marksman: 0, total: 10 },
+      { infantry: 10, lancer: 0, marksman: 0, total: 10 },
+      { infantry: 10, lancer: 0, marksman: 0, total: 10 }
+    ]);
+    assert.deepEqual([...stages], ["coarse", "fine", "finalist"]);
+    assert.equal(result.initialEvaluation.scenarios, 11);
+    assert.equal(result.evaluation.scenarios, 11);
+    assert.equal(result.preliminaryReps, 2);
+    assert.equal(result.finalistReps, 11);
+  });
+}
 
 test("troop optimization requires its own side when hero optimization is omitted", () => {
   const raw = {
