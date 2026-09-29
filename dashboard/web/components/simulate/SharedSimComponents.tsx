@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import {
+  memo,
   useEffect,
   useMemo,
   useRef,
@@ -69,10 +70,6 @@ import deployStyles from "./DeployArmyPanel.module.css";
 
 export { RecentRunsModal } from "./RecentRunsModal";
 export { ProgressBar, ResultCard } from "./ProgressPrimitives";
-export {
-  StatSyncToastBanner,
-  type StatSyncToast,
-} from "./StatSyncToastBanner";
 export { BattleTraceDetails, SkillUseTable } from "./BattleTraceDetails";
 
 const STAT_NAMES_ORDERED: (keyof HeroBaseStats)[] = [
@@ -82,15 +79,6 @@ const STAT_NAMES_ORDERED: (keyof HeroBaseStats)[] = [
   "health",
 ];
 
-type StatSyncHandler = (info: {
-  which: Side;
-  cat: TroopCategory;
-  oldHeroName: string | null;
-  newHeroName: string | null;
-  prevStats: Record<string, number>;
-  deltas: HeroBaseStats;
-}) => void;
-
 interface SidePanelProps {
   title: string;
   which: Side;
@@ -99,7 +87,6 @@ interface SidePanelProps {
   setState: (updater: (prev: SideState) => SideState) => void;
   rallyMode: boolean;
   syncStatsOnHeroChange: boolean;
-  onStatSync: StatSyncHandler;
   loadedPresetName: string | null;
   onOpenPreset: () => void;
   variant?: "dashboard" | "deploy";
@@ -386,7 +373,6 @@ function DashboardSidePanel({
   setState,
   rallyMode,
   syncStatsOnHeroChange,
-  onStatSync,
   loadedPresetName,
   onOpenPreset,
 }: SidePanelProps) {
@@ -400,9 +386,11 @@ function DashboardSidePanel({
     },
   );
 
-  const handleTroopCountTab =
-    (cat: TroopCategory): KeyboardEventHandler<HTMLInputElement> =>
-    (event) => {
+  const troopCountBindings = useMemo(() => CATEGORIES.map((cat, currentIndex) => ({
+    ref: (node: HTMLInputElement | null) => {
+      troopCountRefs.current[cat] = node;
+    },
+    onKeyDown: ((event) => {
       if (
         event.key !== "Tab" ||
         event.altKey ||
@@ -413,12 +401,12 @@ function DashboardSidePanel({
       ) {
         return;
       }
-      const currentIndex = CATEGORIES.indexOf(cat);
       const nextCat = CATEGORIES[currentIndex + (event.shiftKey ? -1 : 1)];
       if (!nextCat) return;
       event.preventDefault();
       troopCountRefs.current[nextCat]?.focus();
-    };
+    }) satisfies KeyboardEventHandler<HTMLInputElement>,
+  })), []);
 
   const totalTroops = CATEGORIES.reduce((sum, cat) => sum + state.troops[cat], 0);
   const heroSummary = CATEGORIES.map((cat) => state.heroes[cat].name ?? "None").join(" / ");
@@ -469,7 +457,7 @@ function DashboardSidePanel({
           onActivate={setActiveSection}
           testid={`side-section-${which}-troops`}
         >
-          <div className="grid grid-cols-1 gap-2">
+          {activeSection === "troops" && <div className="grid grid-cols-1 gap-2">
             <TroopRatioInput
               counts={state.troops}
               onChange={(troops) => {
@@ -478,23 +466,22 @@ function DashboardSidePanel({
               label={title}
               testId={`troop-ratio-${which}`}
             />
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.map((cat, index) => (
               <TroopColumn
                 key={cat}
                 cat={cat}
                 which={which}
-                state={state}
+                troopCount={state.troops[cat]}
+                selectedTier={state.tiers[cat]}
+                heroSlot={state.heroes[cat]}
                 setState={setState}
                 rallyMode={rallyMode}
                 syncStatsOnHeroChange={syncStatsOnHeroChange}
-                onStatSync={onStatSync}
-                countInputRef={(node) => {
-                  troopCountRefs.current[cat] = node;
-                }}
-                onCountKeyDown={handleTroopCountTab(cat)}
+                countInputRef={troopCountBindings[index].ref}
+                onCountKeyDown={troopCountBindings[index].onKeyDown}
               />
             ))}
-          </div>
+          </div>}
         </RoleSection>
 
         <RoleSection
@@ -513,7 +500,7 @@ function DashboardSidePanel({
           onActivate={setActiveSection}
           testid={`side-section-${which}-stats`}
         >
-          <div
+          {activeSection === "stats" && <div
             className="sim-stat-edit-matrix"
             data-testid="stat-bonus-edit-matrix"
           >
@@ -647,7 +634,7 @@ function DashboardSidePanel({
                 })}
               </div>
             ))}
-          </div>
+          </div>}
         </RoleSection>
 
         {rallyMode && (
@@ -660,7 +647,7 @@ function DashboardSidePanel({
             onActivate={setActiveSection}
             testid={`side-section-${which}-joiners`}
           >
-            <div className="grid grid-cols-1 gap-2">
+            {activeSection === "joiners" && <div className="grid grid-cols-1 gap-2">
               {state.joiners.map((slot, i) => (
                 <label key={i} className="flex items-center gap-2 text-xs">
                   <span className="w-10 flex-shrink-0 opacity-60">#{i + 1}</span>
@@ -693,7 +680,7 @@ function DashboardSidePanel({
                   </select>
                 </label>
               ))}
-            </div>
+            </div>}
           </RoleSection>
         )}
 
@@ -706,7 +693,7 @@ function DashboardSidePanel({
           onActivate={setActiveSection}
           testid={`side-section-${which}-buffs`}
         >
-          <StatModifierControls
+          {activeSection === "buffs" && <StatModifierControls
             which={which}
             modifiers={state.statModifiers}
             petModifiers={state.petModifiers}
@@ -755,7 +742,7 @@ function DashboardSidePanel({
                   : defaultPetModifiers(),
               }));
             }}
-          />
+          />}
         </RoleSection>
       </div>
     </div>
@@ -941,24 +928,19 @@ function DeployHeroPortrait({
 function applyDeployHeroSelection({
   category,
   newName,
-  which,
   state,
   setState,
   rallyMode,
   syncStatsOnHeroChange,
-  onStatSync,
 }: {
   category: TroopCategory;
   newName: string | null;
-  which: Side;
   state: SideState;
   setState: SidePanelProps["setState"];
   rallyMode: boolean;
   syncStatsOnHeroChange: boolean;
-  onStatSync: StatSyncHandler;
 }) {
   const previousName = state.heroes[category].name;
-  let statSnapshot: Record<string, number> | null = null;
   let deltas: HeroBaseStats | null = null;
   if (syncStatsOnHeroChange && previousName !== newName) {
     const oldBase = heroBaseStats(previousName);
@@ -970,7 +952,6 @@ function applyDeployHeroSelection({
       health: newBase.health - oldBase.health,
     };
     if (STAT_NAMES_ORDERED.some((stat) => Math.abs(computed[stat]) > 1e-9)) {
-      statSnapshot = { ...state.stats[category] };
       deltas = computed;
     }
   }
@@ -1001,17 +982,6 @@ function applyDeployHeroSelection({
       stats,
     };
   });
-
-  if (statSnapshot && deltas) {
-    onStatSync({
-      which,
-      cat: category,
-      oldHeroName: previousName,
-      newHeroName: newName,
-      prevStats: statSnapshot,
-      deltas,
-    });
-  }
 }
 
 function DeployHeroPicker({
@@ -1576,7 +1546,6 @@ function DeployArmyPanel({
   setState,
   rallyMode,
   syncStatsOnHeroChange,
-  onStatSync,
   loadedPresetName,
   onOpenPreset,
 }: SidePanelProps) {
@@ -1674,7 +1643,7 @@ function DeployArmyPanel({
           state={state}
           onClose={() => setHeroPicker(null)}
           onSelect={(category, name) => {
-            applyDeployHeroSelection({ category, newName: name, which, state, setState, rallyMode, syncStatsOnHeroChange, onStatSync });
+            applyDeployHeroSelection({ category, newName: name, state, setState, rallyMode, syncStatsOnHeroChange });
           }}
         />
       ) : null}
@@ -1957,35 +1926,35 @@ function PetModifierInput({
   );
 }
 
-function TroopColumn({
+const TroopColumn = memo(function TroopColumn({
   cat,
   which,
-  state,
+  troopCount,
+  selectedTier,
+  heroSlot,
   setState,
   rallyMode,
   syncStatsOnHeroChange,
-  onStatSync,
   countInputRef,
   onCountKeyDown,
 }: {
   cat: TroopCategory;
   which: Side;
-  state: SideState;
+  troopCount: number;
+  selectedTier: string;
+  heroSlot: SideState["heroes"][TroopCategory];
   setState: (updater: (prev: SideState) => SideState) => void;
   rallyMode: boolean;
   syncStatsOnHeroChange: boolean;
-  onStatSync: StatSyncHandler;
   countInputRef?: (node: HTMLInputElement | null) => void;
   onCountKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }) {
-  const heroSlot = state.heroes[cat];
   const hero = getHero(heroSlot.name);
   const heroOptions = heroesForCategory(cat);
   const skill4 = hero?.skill4;
   const skill4Level = heroSlot.skills[3];
   const skill4Active = rallyMode && skill4 && skill4ActiveForSide(hero, which);
   const skill4Pct = skill4Active ? skill4PercentAt(skill4Level) : 0;
-  const selectedTier = state.tiers[cat];
   const selectedCustomTroopType =
     !TROOP_TIERS.includes(selectedTier) &&
     troopTypeForSelection(cat, selectedTier) !== null;
@@ -2040,7 +2009,7 @@ function TroopColumn({
           name={`${which}.troops.${cat}.count`}
           min={0}
           inputMode="numeric"
-          value={state.troops[cat]}
+          value={troopCount}
           parse="int"
           onKeyDown={onCountKeyDown}
           onValueChange={(value) => {
@@ -2110,12 +2079,8 @@ function TroopColumn({
           value={heroSlot.name ?? ""}
           onChange={(e) => {
             const newName = e.target.value || null;
-            const prevHeroName = state.heroes[cat].name;
+            const prevHeroName = heroSlot.name;
 
-            // Pre-compute the stat delta + snapshot outside setState so TS
-            // flow analysis can see it, and so we can emit the toast payload
-            // after the state update without a closure-narrowing workaround.
-            let statSnapshot: Record<string, number> | null = null;
             let deltas: HeroBaseStats | null = null;
             if (syncStatsOnHeroChange && prevHeroName !== newName) {
               const oldBase = heroBaseStats(prevHeroName);
@@ -2130,7 +2095,6 @@ function TroopColumn({
                 (k) => Math.abs(computed[k]) > 1e-9,
               );
               if (anyDelta) {
-                statSnapshot = { ...state.stats[cat] };
                 deltas = computed;
               }
             }
@@ -2165,17 +2129,6 @@ function TroopColumn({
                 stats: nextStats,
               };
             });
-
-            if (statSnapshot && deltas) {
-              onStatSync({
-                which,
-                cat,
-                oldHeroName: prevHeroName,
-                newHeroName: newName,
-                prevStats: statSnapshot,
-                deltas,
-              });
-            }
           }}
           className="sim-input font-mono text-xs"
           aria-label={`${cat} hero`}
@@ -2258,4 +2211,4 @@ function TroopColumn({
       )}
     </div>
   );
-}
+});

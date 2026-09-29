@@ -14,7 +14,7 @@ const SIDE_LABELS: Record<Side, string> = {
   defender: "Defender",
 };
 
-export function SkillUseTable({
+export const SkillUseTable = memo(function SkillUseTable({
   title,
   entries,
 }: {
@@ -68,7 +68,7 @@ export function SkillUseTable({
       </table>
     </div>
   );
-}
+});
 
 const TRACE_UNITS: SimulateTraceUnit[] = ["inf", "lanc", "mark"];
 const TRACE_UNIT_LABELS: Record<SimulateTraceUnit, string> = {

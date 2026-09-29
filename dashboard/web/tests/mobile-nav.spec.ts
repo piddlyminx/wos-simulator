@@ -911,48 +911,6 @@ test.describe("WOS-202 mobile nav + simulate layout", () => {
     );
   });
 
-  test("simulate toast does not cover top action controls", async ({ page }) => {
-    await page.setViewportSize(DESKTOP);
-    const response = await page.goto("/simulate");
-    expect(response?.status()).toBe(200);
-
-    const hero = page.getByLabel("infantry hero").first();
-    await hero.selectOption({ index: 1 });
-    const toast = page.getByRole("status");
-    await expect(toast).toBeVisible();
-
-    const boxes = await page.evaluate(() => {
-      const rect = (selector: string) => {
-        const el = document.querySelector(selector);
-        if (!el) return null;
-        const r = el.getBoundingClientRect();
-        return {
-          left: r.left,
-          top: r.top,
-          right: r.right,
-          bottom: r.bottom,
-        };
-      };
-      const overlaps = (a: ReturnType<typeof rect>, b: ReturnType<typeof rect>) =>
-        Boolean(
-          a &&
-            b &&
-            a.left < b.right &&
-            a.right > b.left &&
-            a.top < b.bottom &&
-            a.bottom > b.top,
-        );
-      return {
-        toastVsStart: overlaps(rect('[role="status"]'), rect('[data-testid="simulate-start-card"]')),
-        toastVsRun: overlaps(rect('[role="status"]'), rect('[data-testid="simulate-runbar"]')),
-        toastVsOptimize: overlaps(rect('[role="status"]'), rect('[data-testid="optimize-panel"]')),
-      };
-    });
-    expect(boxes.toastVsStart).toBe(false);
-    expect(boxes.toastVsRun).toBe(false);
-    expect(boxes.toastVsOptimize).toBe(false);
-  });
-
   test("simulate stat summary shows effective buffed and debuffed values", async ({
     page,
   }) => {

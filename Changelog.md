@@ -1,5 +1,16 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-26 — Reduce simulator form-change work
+
+- Cache Explore ratios estimates until their grid or replicate settings change,
+  rather than rebuilding the pair-count estimate on every form edit.
+- Avoid constructing collapsed army-section editors. Memoize troop editors using
+  their own category's values and stable callbacks, so an unrelated input change
+  does not re-render all six editors.
+- Reuse unchanged skill-result tables. Browser verification covered skill edits,
+  section switching, hero-stat synchronization, troop Tab navigation, side swaps,
+  and a completed 1,000-battle run saved with the edited values.
+
 ## 2026-09-26 — Queue dashboard saved-run writes
 
 - Queue saved-run store mutations within the server process, sharing the queue

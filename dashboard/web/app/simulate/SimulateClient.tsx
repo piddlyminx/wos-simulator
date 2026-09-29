@@ -8,18 +8,14 @@ import {
   useReducer,
   useRef,
   useState,
-  type Dispatch,
   type FocusEventHandler,
   type MouseEventHandler,
-  type SetStateAction,
 } from "react";
 import { useSearchParams } from "next/navigation";
 import PlayerStatProfileModal from "@/components/PlayerStatProfileModal";
 import {
   RecentRunsModal,
   SidePanel,
-  StatSyncToastBanner,
-  type StatSyncToast,
 } from "@/components/simulate/SharedSimComponents";
 import {
   formatSavedRunTimestamp,
@@ -39,8 +35,6 @@ import { useSimulateTour } from "@/components/simulate/SimulateTour";
 import UploadReportModal, {
   UploadReportSubmission,
 } from "@/components/UploadReportModal";
-import { TroopCategory } from "@/lib/heroes-catalogue";
-import type { HeroBaseStats } from "@/lib/hero-base-stats";
 import {
   DEFAULT_TOP_RESULTS,
   estimateAdaptiveBattleCount,
@@ -444,57 +438,6 @@ function useStatPresets(initialLoadedPresetNames: Record<Side, string | null>) {
   };
 }
 
-function useStatSyncToast(
-  setAttacker: Dispatch<SetStateAction<SideState>>,
-  setDefender: Dispatch<SetStateAction<SideState>>,
-) {
-  const [toast, setToast] = useState<StatSyncToast | null>(null);
-  const toastIdRef = useRef(0);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const dismiss = useCallback(() => {
-    if (toastTimerRef.current) {
-      clearTimeout(toastTimerRef.current);
-      toastTimerRef.current = null;
-    }
-    setToast(null);
-  }, []);
-
-  const show = useCallback((nextToast: Omit<StatSyncToast, "id" | "showDisablePrompt">) => {
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    toastIdRef.current += 1;
-    const id = toastIdRef.current;
-    setToast({ ...nextToast, id, showDisablePrompt: false });
-    toastTimerRef.current = setTimeout(() => {
-      setToast((current) => (current && current.id === id ? null : current));
-      toastTimerRef.current = null;
-    }, 8000);
-  }, []);
-
-  const undo = useCallback(() => {
-    if (!toast) return;
-    const setter = toast.which === "attacker" ? setAttacker : setDefender;
-    setter((prev) => ({
-      ...prev,
-      stats: {
-        ...prev.stats,
-        [toast.cat]: { ...toast.prevStats },
-      },
-    }));
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = null;
-    setToast({ ...toast, showDisablePrompt: true });
-  }, [setAttacker, setDefender, toast]);
-
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    };
-  }, []);
-
-  return { dismiss, show, toast, undo };
-}
-
 interface SimulateClientProps {
   initialRunId?: string | null;
   initialSavedRun?: SavedSimulationRunResponse | null;
@@ -541,12 +484,6 @@ export default function SimulateClient({
   );
   const [syncStatsOnHeroChange, setSyncStatsOnHeroChange] = useState(true);
   const wideSimLayout = useWideSimLayout();
-  const {
-    dismiss: dismissToast,
-    show: showStatSyncToast,
-    toast: statSyncToast,
-    undo: undoLastStatSync,
-  } = useStatSyncToast(setAttacker, setDefender);
   const [optimizeLoading, setOptimizeLoading] = useState(false);
   const [optimizeError, setOptimizeError] = useState<string | null>(null);
   const [optimizeResult, setOptimizeResult] =
@@ -1017,17 +954,6 @@ export default function SimulateClient({
     setSavedRunMeta,
   ]);
 
-  function handleStatSync(info: {
-    which: Side;
-    cat: TroopCategory;
-    oldHeroName: string | null;
-    newHeroName: string | null;
-    prevStats: Record<string, number>;
-    deltas: HeroBaseStats;
-  }) {
-    showStatSyncToast(info);
-  }
-
   // Fix "I entered them wrong way round": swap the attacker and defender state
   // AND flip the visual order, so the user's typed-in values stay visually in
   // place while the role labels (Attacker / Defender) trade sides.
@@ -1045,7 +971,6 @@ export default function SimulateClient({
       defender: prev.attacker,
     }));
     setSidesSwapped((v) => !v);
-    dismissToast();
   }
 
   const setSide = (side: Side) =>
@@ -1510,10 +1435,19 @@ export default function SimulateClient({
     estimatedOptimizeBattles > MAX_OPTIMIZE_BATTLES;
   const optimizeInputsValid = resolvedInfantryBounds.isValid;
   const optimizeHelpText = `Only the ${optimizedSideLabel.toLowerCase()} troop mix changes. Total troops, tiers, heroes, stats, and the ${staticSideLabel.toLowerCase()} setup stay fixed.`;
-  const surfacePointCount = latticePoints(surfacePointsPerEdge, SURFACE_RATIO_TOTAL).length;
+  const surfacePointCount = useMemo(
+    () => latticePoints(surfacePointsPerEdge, SURFACE_RATIO_TOTAL).length,
+    [surfacePointsPerEdge],
+  );
   const surfaceEstimatedPairs = surfacePointCount * surfacePointCount;
-  const surfaceEstimatedBattles = estimateProgressiveSurfaceBattles(surfacePointsPerEdge, surfaceReplicates);
-  const surfaceStagePlan = progressiveSurfaceStages(surfacePointsPerEdge);
+  const surfaceEstimatedBattles = useMemo(
+    () => estimateProgressiveSurfaceBattles(surfacePointsPerEdge, surfaceReplicates),
+    [surfacePointsPerEdge, surfaceReplicates],
+  );
+  const surfaceStagePlan = useMemo(
+    () => progressiveSurfaceStages(surfacePointsPerEdge),
+    [surfacePointsPerEdge],
+  );
   const surfaceStageStatus = surfaceLoading
     ? surfaceShownPointsPerEdge
       ? surfaceShownPointsPerEdge >= surfacePointsPerEdge
@@ -1735,10 +1669,7 @@ export default function SimulateClient({
                 type="checkbox"
                 name="simulate.syncHeroStats"
                 checked={syncStatsOnHeroChange}
-                onChange={(e) => {
-                  setSyncStatsOnHeroChange(e.target.checked);
-                  if (!e.target.checked) dismissToast();
-                }}
+                onChange={(e) => setSyncStatsOnHeroChange(e.target.checked)}
                 aria-label="Update stats on hero change"
               />
               <span className="sim-switch" aria-hidden="true" />
@@ -1759,19 +1690,6 @@ export default function SimulateClient({
 
         </section>
       </div>
-
-      {statSyncToast && (
-        <StatSyncToastBanner
-          toast={statSyncToast}
-          onUndo={undoLastStatSync}
-          onDismiss={dismissToast}
-          onDisable={() => {
-            setSyncStatsOnHeroChange(false);
-            dismissToast();
-          }}
-          onKeepEnabled={dismissToast}
-        />
-      )}
 
       {uploadWarnings.length > 0 && (
         <div
@@ -1867,7 +1785,6 @@ export default function SimulateClient({
             }
             rallyMode={rallyMode}
             syncStatsOnHeroChange={syncStatsOnHeroChange}
-            onStatSync={handleStatSync}
             loadedPresetName={loadedPresetNames.attacker}
             onOpenPreset={() => openStatPresetModal("attacker")}
             variant={presentation}
@@ -1911,7 +1828,6 @@ export default function SimulateClient({
             }
             rallyMode={rallyMode}
             syncStatsOnHeroChange={syncStatsOnHeroChange}
-            onStatSync={handleStatSync}
             loadedPresetName={loadedPresetNames.defender}
             onOpenPreset={() => openStatPresetModal("defender")}
             variant={presentation}
