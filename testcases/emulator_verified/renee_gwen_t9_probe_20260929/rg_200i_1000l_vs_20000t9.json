@@ -1,0 +1,165 @@
+[
+  {
+    "test_id": "rg_200i_1000l_vs_20000t9",
+    "description": "Battle report 2734693171525704",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Renee": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        },
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 200,
+        "lancer_t6": 1000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 287.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 612.83,
+          "defense": 607.08,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 439.82,
+          "defense": 435.82,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "lancer_t9": 20000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-29T10:13:24.000Z",
+        "randomseed": 1790676805,
+        "attacker": 0,
+        "defender": 18241,
+        "metadata": {
+          "report_reference": "2734693171525704",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 1200,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 420,
+            "lightly_injured": 780,
+            "kills": 616
+          },
+          "defender": {
+            "troops": 20000,
+            "survivors": 18241,
+            "losses": 0,
+            "injured": 616,
+            "lightly_injured": 1143,
+            "kills": 420
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 8
+              },
+              "lancer_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 608
+              }
+            },
+            "defender": {
+              "lancer_t9": {
+                "troops": 20000,
+                "survivors": 18241,
+                "losses": 0,
+                "injured": 616,
+                "lightly_injured": 1143,
+                "kills": 420
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 2,
+                  "displayed_kills": 7
+                },
+                "Blastmaster": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 8,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 4,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

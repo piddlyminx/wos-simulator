@@ -1,0 +1,265 @@
+[
+  {
+    "test_id": "gwen_r9_delayed_control",
+    "description": "Battle report 2734693171408658",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 3000,
+        "marksman_t6": 31
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 434.82,
+          "defense": 440.82,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Hendrik": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 1000,
+        "marksman_t6": 250
+      },
+      "stats": {
+        "infantry": {
+          "attack": 257.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 479,
+          "defense": 467.8,
+          "lethality": 244.2,
+          "health": 221.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-26T18:11:36.000Z",
+        "randomseed": 1790446297,
+        "attacker": 369,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171408658",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 3031,
+            "survivors": 369,
+            "losses": 0,
+            "injured": 932,
+            "lightly_injured": 1730,
+            "kills": 438
+          },
+          "defender": {
+            "troops": 1250,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 438,
+            "lightly_injured": 812,
+            "kills": 932
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 3000,
+                "survivors": 369,
+                "losses": 0,
+                "injured": 921,
+                "lightly_injured": 1710,
+                "kills": 423
+              },
+              "marksman_t6": {
+                "troops": 31,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 11,
+                "lightly_injured": 20,
+                "kills": 15
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 98
+              },
+              "marksman_t6": {
+                "troops": 250,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 88,
+                "lightly_injured": 162,
+                "kills": 834
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 29,
+                  "displayed_kills": 16
+                },
+                "Blastmaster": {
+                  "triggered": 2,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Hendrik": {
+                "Dagon's Heir": {
+                  "triggered": 55,
+                  "displayed_kills": 70
+                },
+                "Armor of Barnacles": {
+                  "triggered": 41,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "timestamp": "2026-09-26T18:12:21.000Z",
+        "randomseed": 1790446342,
+        "attacker": 369,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171408672",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 3031,
+            "survivors": 369,
+            "losses": 0,
+            "injured": 932,
+            "lightly_injured": 1730,
+            "kills": 438
+          },
+          "defender": {
+            "troops": 1250,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 438,
+            "lightly_injured": 812,
+            "kills": 932
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 3000,
+                "survivors": 369,
+                "losses": 0,
+                "injured": 921,
+                "lightly_injured": 1710,
+                "kills": 423
+              },
+              "marksman_t6": {
+                "troops": 31,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 11,
+                "lightly_injured": 20,
+                "kills": 15
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 98
+              },
+              "marksman_t6": {
+                "troops": 250,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 88,
+                "lightly_injured": 162,
+                "kills": 834
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 29,
+                  "displayed_kills": 16
+                },
+                "Blastmaster": {
+                  "triggered": 2,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Hendrik": {
+                "Dagon's Heir": {
+                  "triggered": 55,
+                  "displayed_kills": 70
+                },
+                "Armor of Barnacles": {
+                  "triggered": 41,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

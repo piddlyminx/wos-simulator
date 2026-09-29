@@ -1,0 +1,173 @@
+[
+  {
+    "test_id": "gg_700i_1000l_vs_20000t9",
+    "description": "Battle report 2734693171529402",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gordon": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Gwen": {
+          "skill_1": 3,
+          "skill_2": 1,
+          "skill_3": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 700,
+        "lancer_t6": 1000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 287.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 493.62,
+          "defense": 487.87,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 439.82,
+          "defense": 435.82,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "lancer_t9": 20000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-29T13:21:42.000Z",
+        "randomseed": 1790688103,
+        "attacker": 0,
+        "defender": 18333,
+        "metadata": {
+          "report_reference": "2734693171529402",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "defender",
+          "attacker": {
+            "troops": 1700,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 595,
+            "lightly_injured": 1105,
+            "kills": 584
+          },
+          "defender": {
+            "troops": 20000,
+            "survivors": 18333,
+            "losses": 0,
+            "injured": 584,
+            "lightly_injured": 1083,
+            "kills": 595
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 700,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 245,
+                "lightly_injured": 455,
+                "kills": 43
+              },
+              "lancer_t6": {
+                "troops": 1000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 350,
+                "lightly_injured": 650,
+                "kills": 541
+              }
+            },
+            "defender": {
+              "lancer_t9": {
+                "troops": 20000,
+                "survivors": 18333,
+                "losses": 0,
+                "injured": 584,
+                "lightly_injured": 1083,
+                "kills": 595
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gwen": {
+                "Air Dominance": {
+                  "triggered": 5,
+                  "displayed_kills": 18
+                },
+                "Blastmaster": {
+                  "triggered": null,
+                  "displayed_kills": null
+                }
+              },
+              "Gordon": {
+                "Toxic Release": {
+                  "triggered": 5,
+                  "displayed_kills": null
+                },
+                "Venom Infusion": {
+                  "triggered": 10,
+                  "displayed_kills": null
+                },
+                "Chemical Terror": {
+                  "triggered": 7,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 1,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

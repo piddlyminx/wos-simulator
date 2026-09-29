@@ -23,6 +23,7 @@ export interface RuntimeSkills {
   preBattle: ResolvedSkill[];
   battleStart: ResolvedSkill[];
   roundStart: PreparedRoundSkill[];
+  engagement: PreparedEngagementSkill[];
   attackDeclaredByJobShape: Array<PreparedAttackSkill[] | undefined>;
   effectGroups: ActiveEffectGroup[];
   damageGroupsByJobShape: ActiveEffectGroup[][];
@@ -43,6 +44,11 @@ export interface PreparedAttackSkill {
   firstAttack?: number;
 }
 
+export interface PreparedEngagementSkill {
+  skill: ResolvedSkill;
+  probabilityPct: number;
+}
+
 export interface PreparedRoundSkill {
   skill: ResolvedSkill;
   probabilityPct: number;
@@ -55,6 +61,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
   const preBattle: ResolvedSkill[] = [];
   const battleStart: ResolvedSkill[] = [];
   const roundStart: PreparedRoundSkill[] = [];
+  const engagement: PreparedEngagementSkill[] = [];
   const attackDeclaredByJobShape: Array<PreparedAttackSkill[] | undefined> = Array.from({ length: DAMAGE_JOB_SHAPE_SLOTS });
   const chanceSkillIds: Record<SideId, string[]> = { attacker: [], defender: [] };
   const effectGroups: ActiveEffectGroup[] = [];
@@ -90,6 +97,8 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
               firstTurn: skill.trigger.first ?? skill.trigger.every
             })
       });
+    } else if (skill.trigger.type === "engagement") {
+      engagement.push({ skill, probabilityPct: trigger.probabilityPct });
     } else if (skill.trigger.type === "attack") {
       const immediateEffects: ResolvedEffectIntentDefinition[] = [];
       const deferredIntents = skill.effects.filter((intent) => intent.value_formula !== undefined);
@@ -143,8 +152,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
           ordinal: effectGroups.length,
           bucketIndex: damageBucketIndex(definition.name),
           sameEffectStacking: effect.sameEffectStacking,
-          attackLimitedTakerModifier: effect.kind === "modifier" &&
-            effect.duration.attacks !== undefined && definition.jobSide === "taker"
+          nextHit: effect.kind === "modifier" && effect.duration.attacks !== undefined && definition.jobSide === "taker"
         };
         groupMetadata.set(group, {
           ownerSide: skill.side,
@@ -176,6 +184,7 @@ export function buildRuntimeSkills(fighters: ResolvedFighter[]): RuntimeSkills {
     preBattle,
     battleStart,
     roundStart,
+    engagement,
     attackDeclaredByJobShape,
     effectGroups,
     damageGroupsByJobShape,

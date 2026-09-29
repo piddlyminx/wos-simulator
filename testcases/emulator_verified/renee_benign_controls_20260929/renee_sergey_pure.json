@@ -1,0 +1,137 @@
+[
+  {
+    "test_id": "renee_sergey_pure",
+    "description": "Battle report 2734693171519474",
+    "attacker": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Renee": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Sergey": {
+          "skill_1": 2,
+          "skill_2": 2
+        }
+      },
+      "troops": {
+        "lancer_t6": 300
+      },
+      "stats": {
+        "infantry": {
+          "attack": 346.14,
+          "defense": 338.69,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 482.4,
+          "defense": 481.7,
+          "lethality": 252.8,
+          "health": 239.41
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "lancer_t6": 150
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 287.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 281.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 284.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-29T04:18:59.000Z",
+        "randomseed": 1790655540,
+        "attacker": 287,
+        "defender": 0,
+        "metadata": {
+          "report_reference": "2734693171519474",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 300,
+            "survivors": 287,
+            "losses": 0,
+            "injured": 5,
+            "lightly_injured": 8,
+            "kills": 53
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 53,
+            "lightly_injured": 97,
+            "kills": 5
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 300,
+                "survivors": 287,
+                "losses": 0,
+                "injured": 5,
+                "lightly_injured": 8,
+                "kills": 53
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 150,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 53,
+                "lightly_injured": 97,
+                "kills": 5
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Renee": {
+                "Nightmare Trace": {
+                  "triggered": 3,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

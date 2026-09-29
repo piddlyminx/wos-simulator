@@ -4,7 +4,6 @@ import { test } from "node:test";
 import {
   generateDamageJob,
   deliverDamageJob,
-  retainGeneratedDamage,
   type DamageJobOptions,
   ceilIgnoringFloatResidue,
   createDamageScratch,
@@ -107,9 +106,6 @@ function preparedEffectIndex(effects: ActiveEffect[]): ReturnType<typeof createE
       group = {
         ordinal: groups.length,
         bucketIndex: DYNAMIC_BUCKETS.findIndex((definition) => definition.name === activeEffect.intent.type),
-        attackLimitedTakerModifier: activeEffect.kind === "modifier" &&
-          activeEffect.duration.attacks !== undefined &&
-          DYNAMIC_BUCKETS.find(definition => definition.name === activeEffect.intent.type)?.jobSide === "taker",
         sameEffectStacking: activeEffect.sameEffectStacking
       };
       byResolvedGroup.set(key, group);
@@ -149,8 +145,9 @@ test("damage calculator counts every positive fractional remainder as one living
 test("float-safe ceilings ignore residue but preserve genuine fractional troops", () => {
   assert.equal(ceilIgnoringFloatResidue(200.00000000000003), 200);
   assert.equal(ceilIgnoringFloatResidue(Math.sqrt(2) * Math.sqrt(2)), 2);
-  assert.equal(ceilIgnoringFloatResidue(10 + 5e-13), 10);
-  assert.equal(ceilIgnoringFloatResidue(10 + 2e-12), 11);
+  assert.equal(ceilIgnoringFloatResidue(10 + 5e-11), 10);
+  assert.equal(ceilIgnoringFloatResidue(10 + 2e-10), 11);
+  assert.equal(ceilIgnoringFloatResidue(200000 - 99999.99999999999), 100000);
   assert.equal(ceilIgnoringFloatResidue(200.001), 201);
   assert.equal(ceilIgnoringFloatResidue(0.01), 1);
 });
@@ -489,89 +486,6 @@ test("damage-taken buckets use the expected damage direction", () => {
   assert.equal(damageTakenDown.trace?.aggregationGroups["active.hero.damageTaken.down"].placement, "denominator");
   assert.ok(Math.abs(damageTakenUp.kills - baseline.kills * 1.25) < 1e-12);
   assert.ok(Math.abs(damageTakenDown.kills - baseline.kills / 1.25) < 1e-12);
-});
-
-test("retained damage preserves generation modifiers and health conversion across scratch reuse", () => {
-  for (const mode of ["fast", "trace"] as const) {
-    const fighters = simpleFighters();
-    const health = effect("active.hero.health.up", "defender", 100);
-    const shield: ActiveEffect = {
-      ...effect("active.hero.shield", "defender", 8),
-      kind: "shield",
-      duration: { turns: { count: 2 } },
-      intent: {
-        id: "source-shield",
-        type: "active.hero.shield",
-        value: 8,
-        value_formula: { type: "percent_of", source: "trigger.source_attack" }
-      }
-    };
-    const index = preparedEffectIndex([health, shield]);
-    indexEffect(index, health);
-    const options = damageJobOptions(fighters, [], {
-      effectIndex: index,
-      scratch: createDamageScratch(),
-      recorder: createRecorder(mode, [], () => { throw new Error("damage-only recorder"); })
-    });
-    const expected = calculateIndexedDamageJob(job, fighters, [effect("active.hero.health.up", "defender", 100)]);
-    const retained = retainGeneratedDamage(generateDamageJob(job, fighters, options));
-    expireEffectIndex(index, health);
-    const interveningJob = { ...job, sourceMultiplier: 3 };
-    const intervening = deliverDamageJob(interveningJob, generateDamageJob(interveningJob, fighters, options), options);
-    assert.ok(intervening.kills > expected.kills);
-    indexEffect(index, shield);
-    const delivered = deliverDamageJob({ ...job, round: 2 }, retained, options);
-    assert.ok(Math.abs(delivered.kills - Math.max(0, expected.kills - 4)) < 1e-12, mode);
-    if (mode === "trace") {
-      assert.equal(delivered.trace?.atomicBuckets["active.hero.health.up"].totalPct, 100);
-      assert.equal(delivered.trace?.damageBeforeOffsets, expected.kills);
-      assert.equal(delivered.trace?.offsetDamage, 4);
-    }
-  }
-});
-
-test("damage generation leaves shield delay and protection untouched until delivery", () => {
-  const fighters = simpleFighters();
-  const shield: ActiveEffect = {
-    ...effect("active.hero.shield", "defender", 4),
-    kind: "shield",
-    duration: { turns: { count: 2 } },
-    remainingAttackDelay: 1
-  };
-  const options = damageJobOptions(fighters, [shield], { trace: true, scratch: createDamageScratch() });
-  const baseline = calculateIndexedDamageJob(job, fighters, []).kills;
-  const first = retainGeneratedDamage(generateDamageJob(job, fighters, options));
-  const second = retainGeneratedDamage(generateDamageJob(job, fighters, options));
-  const firstArrival = deliverDamageJob(job, first, options);
-  const secondArrival = deliverDamageJob(job, second, options);
-  assert.equal(firstArrival.kills, baseline);
-  assert.equal(secondArrival.kills, Math.max(0, baseline - 4));
-  assert.equal(firstArrival.trace?.offsetDamage, 0);
-  assert.equal(secondArrival.trace?.offsetDamage, 4);
-});
-
-test("delayed damage ignores shields that expire or deplete before arrival", () => {
-  const fighters = simpleFighters();
-  const expired: ActiveEffect = {
-    ...effect("active.hero.shield", "defender", 100),
-    kind: "shield",
-    duration: { turns: { count: 1 } }
-  };
-  const depleted: ActiveEffect = {
-    ...effect("active.hero.shield", "defender", 3),
-    kind: "shield",
-    duration: { turns: { count: 2 } }
-  };
-  const options = damageJobOptions(fighters, [expired, depleted], { trace: true, scratch: createDamageScratch() });
-  const baseline = calculateIndexedDamageJob(job, fighters, []).kills;
-  const retained = retainGeneratedDamage(generateDamageJob(job, fighters, options));
-  expireEffectIndex(options.effectIndex, expired);
-  const preceding = deliverDamageJob(job, generateDamageJob(job, fighters, options), options);
-  assert.equal(preceding.kills, Math.max(0, baseline - 3));
-  const arrival = deliverDamageJob({ ...job, round: 2 }, retained, options);
-  assert.equal(arrival.kills, baseline);
-  assert.equal(arrival.trace?.offsetDamage, 0);
-  assert.equal(arrival.appliedEffects?.some((applied) => "kind" in applied && applied.kind === "shield"), false);
 });
 
 test("additive turn shields conserve same-group and independent budgets across successive hits", () => {

@@ -1,5 +1,69 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-29 — Gordon's Venom shares its attack's next-hit curse and ignores shields
+
+- A delayed hit ignores shields entirely: it lands at turn start, before that turn's
+  shields activate, and is no longer absorbed by a shield that is up when it is
+  calculated. Fixes Gordon vs Gatot (`c5_gordon_1000l_vs_gatot_3000i`, -2944 exact)
+  and the long-standing `s3-5000-inf-vs-1000-inf-10-lancer`.
+- Extra damage attached to an attack (Venom Infusion) takes exactly the next-hit
+  modifiers (Eagle Vision, Air Dominance's vulnerability) that the attack's normal hit
+  applied, and consumes none. Renee's turn-start Dream Mark is unchanged: it is its own
+  damage event and consumes them. Groups carry a prepared `nextHit` flag.
+- Two new game-observed battles (`gg_700i/1000i_1000l_vs_20000t9`) were designed to separate
+  this from "Venom reads the fresh curse its attack left". The chosen rule matches
+  both exactly (-18333, -17781); the alternative misses by 6 and 8. All clean
+  Gordon/Gwen probes and `c8_gordon_gwen_300l_vs_31000t9l` now match.
+- Full suite, deterministic exact: 12 → 8 failures, none lost
+  (`gatot_mixed_gordon_gwen` and `wu_ming_gordon_gwen_vs_gatot_jessie_hendrik` also fixed).
+  Two new regression tests fail before the change; 255 tests and typechecking pass.
+- The earlier "Gordon ~9 short vs T9 Marksmen" was not a Gordon issue. T9 Marksmen carry
+  the chance-based Volley troop skill, so single-seed comparisons of those captures
+  (including the no-hero `c7`) are not meaningful.
+- Remaining Gordon misses are knife-edge: `ahmose_gordon_gwen_vs_gatot_patrick_hendrik`
+  and `gatot_sonya_gwen_vs_edith_gordon_bradley` (Gordon defending) are each within
+  0.25 of a troop.
+
+## 2026-09-29 — Delayed hits are ordinary hits; Renee's marks act at turn start
+
+- A delayed extra attack is now one full calculation when its parent is used:
+  modifiers, next-hit consumption and shields settle together. Only its kills
+  are deferred, and they land at the next turn start, capped by that turn's
+  snapshot. Removes the 25 Sep capture/landing machinery (captured
+  generation/delivery, attack-limited modifier partition, the in-attack
+  pending phase and host matching) and `bypass_shields`.
+- Carriers created by turn-triggered skills (Renee's Dream Marks) are used at
+  turn start, before any attack, by the first living unit they apply to
+  against its current target. An enemy stun prevents this. The delayed hit is
+  therefore the next damage event for Gwen's Eagle Vision and Air Dominance
+  vulnerability, and consumes them.
+- Turn order: delayed hits land; effects expire and activate (except shields);
+  turn skills fire; scheduled shields activate. The late shields are why Dream
+  Marks never meet Gatot's shield. Stuns and Ahmose's debuffs must be active
+  before turn skills.
+- Attacks are still declared against the turn's snapshot, so a target wiped
+  out by a landing delayed hit is still attacked (for zero kills) and cadence
+  counters still advance.
+- Add an `engagement` trigger: at turn start each living line settles its target
+  (after turn skills such as Ambusher), and engagement skills fire for lines
+  engaged with their trigger target, for that turn. Charge, Master Brawler and
+  Ranged Strike use it: a line engaged with its favored class is empowered for
+  everything it deals that turn. This covers Renee's turn-start event
+  (Lancers engaging Marksmen get Charge) and Blastmaster/Dragon's Heir splash
+  onto other units from Marksmen engaged with Infantry, and nothing else
+  changes. Bradley's Power Shot (same bucket) was left unchanged here, pending
+  its own evidence; it moved to engagement in a later entry.
+- New battle probes (`renee_gwen_t9_probe_20260929/`, `gordon_gwen_t9_probe_20260929/`):
+  attackers die at a controlled round against T9 Lancers, so defender losses
+  read attacker damage to one troop. All Renee/Gwen probes match, including
+  Renee-only and Gwen-only controls. They are chance-flagged (T9 Ambusher), so
+  `--deterministic` skips them; a unit test covers the Renee/Gwen probes.
+- Full suite, deterministic exact: 35 → 11 failures (24 fixed, none lost). All
+  43 Renee+Gwen cases pass, as does one Gordon/Gatot case. With stochastic
+  cases: 164 → 135, none lost. 253 simulator tests and typechecking pass.
+- Still open: Gordon+Gwen is 23–30 troops short in the Gordon probes, and
+  Gordon alone is ~9 short when the defender includes Marksmen.
+
 ## 2026-09-29 — Decouple three-army ordering from evaluation budget
 
 - Make `--reps N` mean N matches per evaluation for both ordering modes,
@@ -8,6 +72,34 @@
 - Print the budget before running and report troop screening/finalist counts
   as matches per candidate. JSON now uses `preliminaryReps` and `finalistReps`
   instead of the misleading `*RepsPerOrdering` fields.
+
+## 2026-09-28 — Remove Gwen preparation experiment
+
+- Remove the Gwen-specific preparation scheduler, stored-payload state, and
+  experiment-specific tests. Restore configuration-driven S2/S3 calculation
+  and delivery on their triggering attacks and the recorded-survivor regression.
+- Leave skill values, Renee's delayed damage and shield bypass, and unrelated
+  changes unchanged.
+- All 257 simulator tests and TypeScript checks pass. The 93-case Gwen comparison
+  returns to 92 passes and the known six-troop Renee/Gwen discrepancy under its
+  existing comparison tolerances.
+
+## 2026-09-26 — Renee's Dream Marks bypass shields
+
+- Declare shield bypass on generated damage jobs. Renee's Nightmare Trace keeps
+  normal damage classification and other modifiers, but neither absorbs nor
+  consumes shield protection when it lands.
+- Verify preserved shield capacity and attack delay with behavior regressions.
+  Both shield-saturation captures now match exactly (37 and 91 defenders).
+- All 257 simulator tests and TypeScript checks pass. A 335-case deterministic
+  comparison changes only the four new Renee/Gatot captures, with no previously
+  exact endpoint regressing. The known Renee/Gwen case still differs by six troops.
+
+## 2026-09-26 — Increase troop ceiling tolerance
+
+- Increase the floating-point residue tolerance from `1e-12` to `1e-10` to
+  absorb the reproduced delayed-damage rounding discrepancy. Update boundary
+  coverage and retain the one-troop discrepancy as a regression assertion.
 
 ## 2026-09-26 — Reduce simulator form-change work
 

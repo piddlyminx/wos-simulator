@@ -90,7 +90,7 @@ const DYNAMIC_NEUTRAL_VALUES = Float64Array.from(DYNAMIC_BUCKETS.map(({ update }
 const STATIC_NEUTRAL_VALUES = Float64Array.from(STATIC_BUCKETS.map(({ update }) => bucketNeutralValue(update)));
 const DAMAGE_SCALE_BUCKET = createEvaluatedDamageBucket(1 / 100);
 // Smallest tested power-of-ten tolerance that removes the verified residue.
-const CEILING_EPSILON = 1e-12;
+const CEILING_EPSILON = 1e-10;
 
 /** Smaller side's initial army; battle-invariant. */
 export function minInitialArmy(fighters: Record<SideId, ResolvedFighter>): number {
@@ -113,18 +113,29 @@ export interface DamageJobOptions {
   /** Effects whose primary mechanic actually won/applied; excludes duration-only siblings. */
   primaryUsedEffects?: ActiveEffect[];
   minInitialArmy?: number;
+  /**
+   * Next-hit modifiers this job takes over from the attack it is part of, in place of the live
+   * next-hit groups: it neither reads nor consumes those (an attack-attached delayed hit).
+   */
+  inheritedNextHit?: readonly NextHitModifier[];
+  /** Shields neither absorb nor are consumed by this job (delayed hits land before shields go up). */
+  ignoreShields?: boolean;
 }
 
-/** Immediate generation borrows scratch; delayed snapshots retain only the state delivery needs. */
+/** One next-hit modifier value as a damage job applied it. */
+export interface NextHitModifier {
+  effect: ActiveEffect;
+  bucketIndex: number;
+  value: number;
+}
+
+/** Borrowed from scratch: deliver it before generating the next job. */
 export interface GeneratedDamage {
   factors?: Float64Array;
   recording: DamageJobRecorder;
   armyTerm: number;
   damageBeforeOffsets: number;
   healthFactor: number;
-  /** Present when the captured job shape can require live modifier re-evaluation. */
-  capturedDealerFactor?: number;
-  capturedTakerFactor?: number;
 }
 
 export function generateDamageJob(
@@ -152,93 +163,22 @@ export function generateDamageJob(
   return generated;
 }
 
-export function retainGeneratedDamage(generated: GeneratedDamage): GeneratedDamage {
-  return {
-    factors: generated.recording.needsFactors ? generated.factors!.slice() : undefined,
-    recording: generated.recording,
-    armyTerm: generated.armyTerm,
-    damageBeforeOffsets: generated.damageBeforeOffsets,
-    healthFactor: generated.healthFactor
-  };
-}
-
-/** Snapshot source/static/turn-based contributions; attack-limited taker modifiers wait for landing. */
-export function generateCapturedDamageJob(
-  job: DamageJob,
-  fighters: Record<SideId, ResolvedFighter>,
-  options: DamageJobOptions
-): GeneratedDamage {
-  const recording = options.recorder.startDamageJob();
-  const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
-  const usedEffects = options.usedEffects ?? [];
-  const armyTerm = populateSourceBuckets(job, fighters, options, buckets);
-  applyPartitionedBucketEffects(job, options.effectIndex, buckets, recording, usedEffects, options.primaryUsedEffects ?? usedEffects, false);
-  const capturedDealerFactor = bucketSetValue(options.staticDamageProfile[job.dealerSide][job.dealerUnit].dealerFactor);
-  const capturedTakerFactor = bucketSetValue(options.staticDamageProfile[job.takerSide][job.takerUnit].takerFactor);
-  const expression = DYNAMIC_EXPRESSIONS[job.kind];
-  const damageBeforeOffsets = multiplySlots(1, buckets.factors, expression.numeratorSlots) /
-    multiplySlots(1, buckets.factors, expression.denominatorSlots) *
-    capturedDealerFactor * capturedTakerFactor * bucketSetValue(DAMAGE_SCALE_BUCKET);
-  const hasLandingModifiers = options.effectIndex.damageGroupsByJobShape[damageJobSlot(job)]
-    .some(group => group.attackLimitedTakerModifier);
-  return {
-    factors: hasLandingModifiers || recording.needsFactors
-      ? options.scratch ? buckets.factors.slice() : buckets.factors
-      : undefined,
-    recording,
-    armyTerm,
-    damageBeforeOffsets,
-    healthFactor: dynamicHealthFactor(buckets.factors),
-    capturedDealerFactor: hasLandingModifiers ? capturedDealerFactor : undefined,
-    capturedTakerFactor
-  };
-}
-
-/** Add current taker attack budgets to the original buckets, then settle current shields and caps. */
-export function deliverCapturedDamageJob(
-  job: DamageJob,
-  generated: GeneratedDamage,
-  options: DamageJobOptions
-): DamageResult {
-  if (generated.capturedDealerFactor === undefined) return deliverDamageJob(job, generated, options);
-  const buckets = options.scratch ? resetDamageScratch(options.scratch) : createNumericDamageBuckets();
-  buckets.factors.set(generated.factors!);
-  const usedEffects = options.usedEffects ?? [];
-  applyPartitionedBucketEffects(job, options.effectIndex, buckets, generated.recording, usedEffects, options.primaryUsedEffects ?? usedEffects, true);
-  const expression = DYNAMIC_EXPRESSIONS[job.kind];
-  // Re-evaluate, rather than dividing by captured factors: a captured bucket may be zero.
-  const damageBeforeOffsets = multiplySlots(1, buckets.factors, expression.numeratorSlots) /
-    multiplySlots(1, buckets.factors, expression.denominatorSlots) *
-    generated.capturedDealerFactor! * generated.capturedTakerFactor! * bucketSetValue(DAMAGE_SCALE_BUCKET);
-  return finishDamageJob(job, generated, options, buckets, damageBeforeOffsets, dynamicHealthFactor(buckets.factors));
-}
-
 export function deliverDamageJob(
   job: DamageJob,
   generated: GeneratedDamage,
   options: DamageJobOptions
 ): DamageResult {
-  const { damageBeforeOffsets, healthFactor } = generated;
+  const { recording, armyTerm, damageBeforeOffsets, healthFactor } = generated;
   const buckets = options.scratch ?? createNumericDamageBuckets();
   if (generated.factors !== buckets.factors) {
     resetDamageScratch(buckets);
     if (generated.factors) buckets.factors.set(generated.factors);
   }
-  return finishDamageJob(job, generated, options, buckets, damageBeforeOffsets, healthFactor);
-}
-
-function finishDamageJob(
-  job: DamageJob,
-  generated: GeneratedDamage,
-  options: DamageJobOptions,
-  buckets: NumericDamageBuckets,
-  damageBeforeOffsets: number,
-  healthFactor: number
-): DamageResult {
-  const { recording, armyTerm } = generated;
   const usedEffects = options.usedEffects ?? [];
   const primaryUsedEffects = options.primaryUsedEffects ?? usedEffects;
-  const offsetDamage = applyShields(job, options.effectIndex, buckets, recording, damageBeforeOffsets, healthFactor, usedEffects, primaryUsedEffects);
+  const offsetDamage = options.ignoreShields
+    ? 0
+    : applyShields(job, options.effectIndex, buckets, recording, damageBeforeOffsets, healthFactor, usedEffects, primaryUsedEffects);
   const rawDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
   const kills = options.capToTakerTroops === false ? rawDamage : Math.min(takerTroops, rawDamage);
@@ -254,28 +194,6 @@ function populateDamageBuckets(
   usedEffects: ActiveEffect[],
   primaryUsedEffects: ActiveEffect[]
 ): number {
-  const armyTerm = populateSourceBuckets(job, fighters, options, buckets);
-
-  const jobSlot = damageJobSlot(job);
-  applyBucketEffects(
-    options.effectIndex.damageGroupsByJobShape[jobSlot],
-    options.effectIndex.liveEffectsByGroup,
-    job.round,
-    jobSlot,
-    buckets,
-    recording,
-    usedEffects,
-    primaryUsedEffects
-  );
-  return armyTerm;
-}
-
-function populateSourceBuckets(
-  job: DamageJob,
-  fighters: Record<SideId, ResolvedFighter>,
-  options: DamageJobOptions,
-  buckets: NumericDamageBuckets
-): number {
   // Fractional casualties carry between rounds, but every positive remainder is
   // still one living troop and contributes fully to the next attack.
   const dealerTroops = ceilIgnoringFloatResidue(
@@ -285,30 +203,48 @@ function populateSourceBuckets(
   const armyTerm = Math.sqrt(dealerTroops) * Math.sqrt(initialArmy);
   applyDynamicDamageBucketValue(buckets, "troops.count", armyTerm);
   applyDynamicDamageBucketValue(buckets, "source.multiplier", job.sourceMultiplier ?? 1);
+
+  const jobSlot = damageJobSlot(job);
+  const groups = options.effectIndex.damageGroupsByJobShape[jobSlot];
+  const inherited = options.inheritedNextHit;
+  applyBucketEffects(
+    inherited ? groups.filter((group) => !group.nextHit) : groups,
+    options.effectIndex.liveEffectsByGroup,
+    job.round,
+    jobSlot,
+    buckets,
+    recording,
+    usedEffects,
+    primaryUsedEffects
+  );
+  if (inherited) {
+    for (const { effect, bucketIndex, value } of inherited) {
+      applyBucketValue(buckets.factors, bucketIndex, value, BUCKET_UPDATE_BY_INDEX);
+      recording.recordEffect(effect, value);
+    }
+  }
   return armyTerm;
 }
 
-function dynamicHealthFactor(factors: Float64Array): number {
-  return factors[DYNAMIC_BUCKET_INDEX["active.hero.health.up"]] *
-    factors[DYNAMIC_BUCKET_INDEX["active.troop.health.up"]] /
-    factors[DYNAMIC_BUCKET_INDEX["active.hero.health.down"]] /
-    factors[DYNAMIC_BUCKET_INDEX["active.troop.health.down"]];
-}
-
-function applyPartitionedBucketEffects(
-  job: DamageJob,
-  index: EffectIndex,
-  buckets: NumericDamageBuckets,
-  recording: DamageJobRecorder,
-  usedEffects: ActiveEffect[],
-  primaryUsedEffects: ActiveEffect[],
-  attackLimitedTakerModifier: boolean
-): void {
-  const jobSlot = damageJobSlot(job);
-  for (const group of index.damageGroupsByJobShape[jobSlot]) {
-    if (group.attackLimitedTakerModifier !== attackLimitedTakerModifier) continue;
-    applyEffectGroup(group, index.liveEffectsByGroup, job.round, jobSlot, buckets, recording, usedEffects, primaryUsedEffects, attackLimitedTakerModifier);
+/**
+ * The next-hit modifier values a job applied, reconstructed from the effects it used: a
+ * max-stacking group contributes its largest value, an additive group every value.
+ */
+export function appliedNextHitModifiers(usedEffects: readonly ActiveEffect[], round: number): NextHitModifier[] {
+  const applied: NextHitModifier[] = [];
+  const maxByGroup = new Map<ActiveEffectGroup, NextHitModifier>();
+  for (const effect of usedEffects) {
+    const group = effect.effectGroup;
+    if (!group?.nextHit) continue;
+    const modifier = { effect, bucketIndex: group.bucketIndex, value: effect.getCurrentValue(round) };
+    if (group.sameEffectStacking !== "max") {
+      applied.push(modifier);
+      continue;
+    }
+    const previous = maxByGroup.get(group);
+    if (!previous || modifier.value > previous.value) maxByGroup.set(group, modifier);
   }
+  return [...applied, ...maxByGroup.values()];
 }
 
 
@@ -335,11 +271,10 @@ function applyEffectGroup(
   buckets: NumericDamageBuckets,
   recording: DamageJobRecorder,
   usedEffects: ActiveEffect[],
-  primaryUsedEffects: ActiveEffect[],
-  attackLimitedTakerModifier?: boolean
+  primaryUsedEffects: ActiveEffect[]
 ): void {
   const dependency = group.requiredGroupOrdinalsByJobShape;
-  if (dependency && !requiredEffectIsApplicable(dependency, liveEffectsByGroup, round, jobSlot, attackLimitedTakerModifier)) return;
+  if (dependency && !requiredEffectIsApplicable(dependency, liveEffectsByGroup, round, jobSlot)) return;
   const effects = liveEffectsByGroup[group.ordinal];
   if (effects.length === 0) return;
   if (group.sameEffectStacking !== "max") {
@@ -423,15 +358,12 @@ function requiredEffectIsApplicable(
   dependency: Array<number[] | undefined>,
   liveEffectsByGroup: ActiveEffect[][],
   round: number,
-  jobSlot: number,
-  attackLimitedTakerModifier?: boolean
+  jobSlot: number
 ): boolean {
   const requiredOrdinals = dependency[jobSlot];
   if (!requiredOrdinals) return false;
   for (const ordinal of requiredOrdinals) {
     for (const effect of liveEffectsByGroup[ordinal]) {
-      if (attackLimitedTakerModifier !== undefined &&
-        effect.effectGroup!.attackLimitedTakerModifier !== attackLimitedTakerModifier) continue;
       if (isEffectAttackReady(effect) && effect.getCurrentValue(round) !== 0) return true;
     }
   }

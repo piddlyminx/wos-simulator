@@ -21,22 +21,62 @@ function runOnce(input: BattleInput, config: SimulatorConfig, options: Simulatio
   return runPrepared(prepareBattle(input, config), undefined, options);
 }
 
-test("Gordon suppresses on third turns and boosts normal Lancer damage on the following turns", () => {
-  const result = runOnce({
-    maxRounds: 7,
-    attacker: {
-      troops: { lancer_t6: 1000 },
-      heroes: { Gordon: { skill_1: 2, skill_2: 2, skill_3: 2 } }
-    },
-    defender: { troops: { lancer_t6: 1000 } }
-  }, loadSimulatorConfig(), { mode: "standard" });
+test("Gordon's captured Venom damage matches the Ahmose and Wu Ming interaction", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/ahmose_gordon_renee/ahmose_gordon_vs_wuming.json", import.meta.url), "utf8"));
+  const result = runOnce(input, loadSimulatorConfig());
+  assert.equal(signedRemainingScore(result), 140);
+  for (const [skillId, activations] of [
+    ["ViperFormation", 5],
+    ["VenomInfusion", 34],
+    ["ChemicalTerror", 22],
+    ["ToxicRelease", 17]
+  ] as const) {
+    assert.equal(result.skillReport.attacker.find(skill => skill.skillId === skillId)?.skillActivations, activations, skillId);
+  }
+});
 
-  assert.deepEqual(result.attacks
-    .filter((attack) => attack.appliedEffects?.some((effect) => effect.effectId === "ChemicalTerror/1"))
-    .map((attack) => attack.round), [4, 7]);
-  assert.deepEqual(result.attacks
-    .filter((attack) => attack.appliedEffects?.some((effect) => effect.effectId === "ChemicalTerror/2"))
-    .map((attack) => attack.round), [3, 6]);
+test("Gordon snapshots Venom damage rather than recalculating it on delivery", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/gordon_isolation_20260925/gordon_solo_1329l_vs_5000l.json", import.meta.url), "utf8"));
+  assert.equal(signedRemainingScore(runOnce(input, loadSimulatorConfig())), -48);
+});
+
+test("Gordon's second-attack Venom damage lands after Chemical Terror first activates", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/ahmose_gordon_fresh_20260925/gordon_5000l_vs_100l.json", import.meta.url), "utf8"));
+  const result = runOnce(input, loadSimulatorConfig());
+  assert.equal(signedRemainingScore(result), 4998);
+  assert.equal(result.skillReport.attacker.find(skill => skill.skillId === "VenomInfusion")?.skillActivations, 1);
+  assert.equal(result.skillReport.attacker.find(skill => skill.skillId === "ChemicalTerror")?.skillActivations, 1);
+});
+
+test("Venom's delayed hit ignores the Gatot shield that is up when it is calculated", () => {
+  const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/model_checks_20260929/c5_gordon_1000l_vs_gatot_3000i.json", import.meta.url), "utf8"));
+  assert.equal(signedRemainingScore(runOnce(input, loadSimulatorConfig())), -2944);
+});
+
+test("Venom shares its triggering hit's next-hit curse without consuming another", () => {
+  const config = loadSimulatorConfig();
+  const probe = (path: string) =>
+    JSON.parse(readFileSync(new URL(`../../testcases/emulator_verified/${path}.json`, import.meta.url), "utf8"))[0];
+  // The infantry series separates sharing the normal hit's curse from reading the fresh one.
+  for (const [path, survivors] of [
+    ["gordon_gwen_t9_probe_20260929/gg_1000l_vs_20000t9", -19522],
+    ["gordon_gwen_t9_probe_20260929/gg_60i_1000l_vs_20000t9", -19352],
+    ["gordon_gwen_t9_probe_20260929/gg_700i_1000l_vs_20000t9", -18333],
+    ["gordon_gwen_t9_probe_20260929/gg_1000i_1000l_vs_20000t9", -17781],
+    ["model_checks_20260929/c8_gordon_gwen_300l_vs_31000t9l", -30939]
+  ] as const) {
+    assert.equal(signedRemainingScore(runOnce(probe(path), config)), survivors, path);
+  }
+
+  const result = runOnce(probe("gordon_gwen_t9_probe_20260929/gg_1000l_vs_20000t9"), config, { mode: "standard" });
+  const hasEagleVision = (attack: { appliedEffects?: AppliedEffect[] } | undefined) =>
+    attack?.appliedEffects?.some(effect => effect.effectId === "EagleVision/1") ?? false;
+  const turn3 = result.attacks.filter(attack => attack.round === 3 && attack.dealerSide === "attacker");
+  const venom = turn3.find(attack => attack.sourceEffectId === "VenomInfusion/1");
+  assert.equal(venom?.calculationRound, 2);
+  assert.equal(hasEagleVision(venom), true);
+  // Venom did not consume the curse its turn-2 attack left, so turn 3's normal hit still gets it.
+  assert.equal(hasEagleVision(turn3.find(attack => attack.dealerUnit === "lancer" && !attack.sourceEffectId)), true);
 });
 
 test("Gordon boosts Wayne skill damage on Chemical Terror's triggering turn", () => {
@@ -136,7 +176,7 @@ test("stun prevents Dream Mark placement but not delivery of an existing mark", 
   )?.cancelReason, "no_attack");
 });
 
-test("Dream Mark capture leaves next-hit vulnerability for Marksmen and delivery precedes the next ordinary attack", () => {
+test("Dream Mark is the turn-start event that consumes the pending next-hit curse and lands before the next turn's attacks", () => {
   const input: BattleInput = {
     maxRounds: 3,
     attacker: {
@@ -146,18 +186,45 @@ test("Dream Mark capture leaves next-hit vulnerability for Marksmen and delivery
     defender: { troops: { infantry_t6: 1000000 }, heroes: {} }
   };
   const result = runOnce(input, loadSimulatorConfig(), { mode: "trace" });
-  const marksmanHit = result.attacks.find(attack =>
-    attack.round === 2 && attack.dealerSide === "attacker" && attack.dealerUnit === "marksman"
-  )!;
-  assert.ok(marksmanHit.appliedEffects?.some(effect => effect.effectId === "EagleVision/1"));
-  const nextTurn = result.attacks.filter(attack => attack.round === 3 && attack.dealerSide === "attacker");
-  assert.equal(nextTurn[0].sourceEffectId, "NightmareTrace/1");
-  assert.ok(nextTurn[0].appliedEffects?.some(effect => effect.effectId === "EagleVision/1"));
-  assert.equal(nextTurn[1].sourceEffectId, undefined);
-  assert.equal(nextTurn[1].appliedEffects?.some(effect => effect.effectId === "EagleVision/1"), false);
+  const hasEagleVision = (attack: { appliedEffects?: AppliedEffect[] } | undefined) =>
+    attack?.appliedEffects?.some(effect => effect.effectId === "EagleVision/1") ?? false;
+  const turn2 = result.attacks.filter(attack => attack.round === 2 && attack.dealerSide === "attacker");
+  // The turn-1 marksman curse is taken by Renee's turn-start event, not by the first ordinary hit.
+  assert.equal(hasEagleVision(turn2.find(attack => attack.dealerUnit === "lancer" && !attack.sourceEffectId)), false);
+  assert.equal(hasEagleVision(turn2.find(attack => attack.dealerUnit === "marksman")), true);
+  const turn3 = result.attacks.filter(attack => attack.round === 3 && attack.dealerSide === "attacker");
+  assert.equal(turn3[0].sourceEffectId, "NightmareTrace/1");
+  assert.equal(turn3[0].calculationRound, 2);
+  assert.equal(hasEagleVision(turn3[0]), true);
+  assert.equal(hasEagleVision(turn3.find(attack => attack.dealerUnit === "lancer" && !attack.sourceEffectId)), true);
 });
 
-test("delayed damage settles shields on arrival in recorded Gatot battles", () => {
+test("Renee and Gwen per-turn probes match the game when infantry shift the curse chain", () => {
+  const config = loadSimulatorConfig();
+  for (const [path, survivors] of [
+    ["rg_1000l_vs_20000t9", -18899],
+    ["rg_30i_1000l_vs_20000t9", -18753],
+    ["rg_60i_1000l_vs_20000t9", -18616],
+    ["rg_200i_1000l_vs_20000t9", -18241],
+    ["rg_400i_1000l_vs_20000t9", -17648]
+  ] as const) {
+    const [input] = JSON.parse(readFileSync(new URL(`../../testcases/emulator_verified/renee_gwen_t9_probe_20260929/${path}.json`, import.meta.url), "utf8"));
+    assert.equal(signedRemainingScore(runOnce(input, config)), survivors, path);
+  }
+});
+
+test("Dream Mark damage lands before Gatot's next shield activates", () => {
+  const config = loadSimulatorConfig();
+  for (const [path, survivors] of [
+    ["renee_shield_saturation_20260926/renee_100l_vs_gatot_50i.json", -37],
+    ["renee_shield_saturation_20260926/renee_100l_vs_gatot_100i.json", -91],
+    ["gwen_renee_wall_20260926/renee_500l_vs_gatot_300i.json", -229]
+  ] as const) {
+    const [input] = JSON.parse(readFileSync(new URL(`../../testcases/emulator_verified/${path}`, import.meta.url), "utf8"));
+    assert.equal(signedRemainingScore(runOnce(input, config)), survivors, path);
+  }
+});
+test("delayed damage never meets shields in recorded Gatot battles", () => {
   const config = loadSimulatorConfig();
   for (const [path, survivors] of [
     ["renee_s2_bucket_confirmations/gatot_shield_500_150.json", 157],
@@ -1063,7 +1130,7 @@ test("attack-duration effects with a round cap expire at the end of their active
   assert.equal((round4LancerAttack?.appliedEffects ?? []).some((effect) => effect.effectId === "mark"), false);
 });
 
-test("carried extra damage expires when the next normal attack does not match its locked target", () => {
+test("turn-start delayed damage lands on its marked target regardless of the next normal target", () => {
   const result = runOnce(
     {
       maxRounds: 3,
@@ -1117,9 +1184,11 @@ test("carried extra damage expires when the next normal attack does not match it
   );
 
   const lancerAttacks = result.attacks.filter((attack) => attack.dealerSide === "attacker" && attack.dealerUnit === "lancer");
-  assert.equal(lancerAttacks.find((attack) => attack.round === 2 && attack.kind === "normal")?.takerUnit, "marksman");
-  assert.equal(lancerAttacks.find((attack) => attack.round === 3 && attack.kind === "normal")?.takerUnit, "infantry");
-  assert.equal(lancerAttacks.some((attack) => attack.sourceEffectId === "delayed"), false);
+  const ordinary = (round: number) => lancerAttacks.find((attack) => attack.round === round && attack.kind === "normal" && !attack.sourceEffectId);
+  assert.equal(ordinary(2)?.takerUnit, "marksman");
+  assert.equal(ordinary(3)?.takerUnit, "infantry");
+  const delayed = lancerAttacks.filter((attack) => attack.sourceEffectId === "delayed");
+  assert.deepEqual(delayed.map((attack) => [attack.round, attack.calculationRound, attack.takerUnit]), [[3, 2, "marksman"]]);
 });
 
 test("carried-damage fixture snapshots normal damage on the even turn and only delivers it next turn", () => {
@@ -3180,7 +3249,7 @@ test("extra skill attack effects cannot be used by later enemy normal attacks", 
 });
 
 for (const delayed of [false, true]) {
-  test(`extra hits apply target modifiers to each actual recipient (${delayed ? "captured" : "immediate"})`, () => {
+  test(`an engagement bonus covers all of the line's hits while each recipient's own modifiers apply (${delayed ? "delayed" : "immediate"})`, () => {
     const splash: Omit<EffectIntentDefinition, "id"> = {
       type: "extra_skill_attack",
       value: 100,
@@ -3194,7 +3263,7 @@ for (const delayed of [false, true]) {
     const result = runOnce(
       {
         maxRounds: delayed ? 2 : 1,
-        attacker: { troops: { marksman_t1: 1000000 }, heroes: { MultiTarget: { skill_1: 1, skill_2: 1 } } },
+        attacker: { troops: { marksman_t1: 1000000 }, heroes: { MultiTarget: { skill_1: 1, skill_2: 1, skill_3: 1 } } },
         defender: { troops: { infantry_t1: 1000000, lancer_t1: 1000000, marksman_t1: 1000000 }, heroes: {} }
       },
       minimalConfig({
@@ -3202,12 +3271,17 @@ for (const delayed of [false, true]) {
           name: "MultiTarget",
           troop_type: "marksman",
           skills: {
+            InfantryEngagement: {
+              trigger: { type: "engagement", source: "marksman", target: "infantry" },
+              effects: {
+                infantryBonus: { type: "type.single_target.damage.up", value: 25, units: { applies_to: "trigger.source" }, duration: { turns: { count: 1 } } }
+              }
+            },
             TargetModifiers: {
               trigger: { type: "battle_start" },
               effects: {
-                infantryBonus: { type: "type.single_target.damage.up", value: 25, units: { applies_vs: "enemy.infantry" } },
-                lancerBonus: { type: "type.single_target.damage.up", value: 40, units: { applies_vs: "enemy.lancer" } },
-                marksmanPenalty: { type: "type.single_target.damage.down", value: 100, units: { applies_vs: "enemy.marksman" } }
+                lancerVulnerability: { type: "active.hero.damageTaken.up", value: 40, units: { applies_to: "enemy.lancer" } },
+                marksmanResistance: { type: "active.hero.damageTaken.down", value: 100, units: { applies_to: "enemy.marksman" } }
               }
             },
             Splash: {
@@ -3231,12 +3305,13 @@ for (const delayed of [false, true]) {
     assert.equal(parent.takerUnit, "infantry");
     const hits = result.attacks.filter(attack => attack.sourceEffectId === "splash");
     assert.deepEqual(hits.map(hit => hit.takerUnit), UNIT_TYPES);
-    const factors = { infantry: 1.25, lancer: 1.4, marksman: 0.5 };
+    // The Marksmen are engaged with Infantry this turn, so the +25% reaches every recipient.
+    const factors = { infantry: 1, lancer: 1.4, marksman: 0.5 };
     for (const hit of hits) {
       assert.equal(hit.round, delayed ? 2 : 1);
       assert.ok(
-        Math.abs(hit.kills - parent.kills * factors[hit.takerUnit] / 1.25) < 1e-9,
-        `${hit.takerUnit} casualties must use that recipient's modifiers`
+        Math.abs(hit.kills - parent.kills * factors[hit.takerUnit]) < 1e-9,
+        `${hit.takerUnit} casualties must keep the attack's class bonus and use that recipient's modifiers`
       );
     }
   });

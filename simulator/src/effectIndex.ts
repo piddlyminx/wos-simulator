@@ -35,7 +35,6 @@ export interface EffectIndex {
   shields: ActiveEffect[];
   controls: ActiveEffect[];
   extraAttacks: ActiveEffect[];
-  pendingDamageEffects: number;
   battleOrder: ActiveEffect[];
   carriers: ActiveEffect[];
 }
@@ -54,7 +53,6 @@ export function createEffectIndex(
     shields: [],
     controls: [],
     extraAttacks: [],
-    pendingDamageEffects: 0,
     battleOrder: [],
     carriers: []
   };
@@ -68,7 +66,6 @@ export function indexEffect(index: EffectIndex, effect: ActiveEffect): void {
   }
   if (effect.kind === "extra_attack") {
     index.extraAttacks.push(effect);
-    if (effect.pendingDamageJobs?.length) index.pendingDamageEffects += 1;
     return;
   }
   if (effect.kind === "battle_order") {
@@ -106,9 +103,7 @@ export function isRuntimeIndexableEffect(effect: ActiveEffect): boolean {
 export function expireEffectIndex(index: EffectIndex, effect: ActiveEffect): void {
   effect.expired = true;
   if (effect.kind === "control") removeStable(index.controls, effect);
-  else if (effect.kind === "extra_attack") {
-    if (removeStable(index.extraAttacks, effect) && effect.pendingDamageJobs?.length) index.pendingDamageEffects -= 1;
-  }
+  else if (effect.kind === "extra_attack") removeStable(index.extraAttacks, effect);
   else if (effect.kind === "battle_order") removeStable(index.battleOrder, effect);
   else if (effect.kind === "carrier") removeStable(index.carriers, effect);
   else if (effect.kind === "shield") removeStable(index.shields, effect);
@@ -191,11 +186,9 @@ function unitIndex(unit: UnitType): number {
   return 2;
 }
 
-function removeStable(effects: ActiveEffect[], effect: ActiveEffect): boolean {
+function removeStable(effects: ActiveEffect[], effect: ActiveEffect): void {
   const index = effects.indexOf(effect);
-  if (index < 0) return false;
-  effects.splice(index, 1);
-  return true;
+  if (index >= 0) effects.splice(index, 1);
 }
 
 function removeEffectGroupEntry(index: EffectIndex, effect: ActiveEffect): void {

@@ -15,10 +15,11 @@ import type {
   UnitType
 } from "./types";
 import { UNIT_TYPES, unitMaskHas } from "./types";
-import { generateDamageJob, deliverDamageJob, ceilIgnoringFloatResidue, minInitialArmy, type DamageResult } from "./damage";
+import { appliedNextHitModifiers, generateDamageJob, deliverDamageJob, ceilIgnoringFloatResidue, minInitialArmy, type DamageResult, type NextHitModifier } from "./damage";
 import { createRecorder, type BattleRecorder } from "./recorder";
 import {
   activateEffect,
+  compiledTriggerForSkill,
   advanceEffectAttackDelay,
   createSeededRng,
   hasAttackDurationConstraint,
@@ -31,6 +32,7 @@ import { buildRuntimeSkills, type RuntimeSkills } from "./runtimeSkills";
 import { activatePreBattleEffects, buildResolved, prepareBattle, type CompiledBattle } from "./prepare";
 import {
   addActiveEffect,
+  expireActiveEffect,
   capJobToRemainingTarget,
   chargeEffectUse,
   chargeUsedEffects,
@@ -40,6 +42,7 @@ import {
   materializeDeferredEffects,
   materializeTriggeredEffects,
   preparedChancePasses,
+  activateScheduledShields,
   processEffectSchedule,
   targetExhausted,
   triggerAttackSkills,
@@ -48,7 +51,7 @@ import {
   type RunLoopOptions,
   type Runtime
 } from "./runtime";
-import { captureTriggeredExtraDamage, processExtraAttacks } from "./extraAttacks";
+import { calculateDelayedDamage, landDelayedDamage, processExtraAttacks } from "./extraAttacks";
 
 // Re-exported so the public battle API stays importable from one module.
 export { prepareBattle, type CompiledBattle } from "./prepare";
@@ -251,13 +254,23 @@ function runLoop(
     if (winnerFor(runtime.troops)) break;
     rounds = round;
     const roundStartTroops = snapshotTroops(runtime.troops);
-    processEffectSchedule(runtime, round);
-    triggerRoundStartSkills(round, runtime, recorder);
-
     const intents: AttackIntent[] = [];
     const results: DamageJobResult[] = [];
     const cancelled: CancelledAttack[] = [];
     const roundTargetDamage = emptyRoundTargetDamage();
+
+    // Turn start: delayed hits settled earlier apply their kills; last turn's effects expire
+    // and this turn's activate; turn-trigger skills act; then scheduled shields go up.
+    landDelayedDamage(round, runtime, roundStartTroops, roundTargetDamage, loopOptions, recorder, results);
+    if (loopOptions.scoreSide) score += scoreFor(results, loopOptions.scoreSide);
+    // Attacks are still declared against targets alive in the turn's snapshot; landed
+    // kills only cap what those attacks can remove.
+    const landedTargetDamage = snapshotTroops(roundTargetDamage);
+    processEffectSchedule(runtime, round);
+    triggerRoundStartSkills(round, runtime, recorder);
+    activateEngagementSkills(round, runtime, recorder, roundStartTroops);
+    fireTurnStartCarriers(round, fighters, runtime, recorder, damageJobOptions, roundStartTroops);
+    activateScheduledShields(runtime, round);
     // Resolve each normal attack as one procedural cluster. Later attacks observe effects
     // produced by earlier attacks; no synthetic global attack-declaration phase exists.
     const orderIndexBySide: Record<SideId, number> = { attacker: 0, defender: 0 };
@@ -286,15 +299,7 @@ function runLoop(
         }
 
         const job = normalJob(intent, roundStartTroops);
-        if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage)) continue;
-
-        // Captured damage is already in flight; control can prevent placement, not delivery.
-        if (runtime.effectIndex.pendingDamageEffects > 0) {
-          const pendingAttacks = processExtraAttacks("pending", job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
-          if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
-            score += pendingAttacks.totalKills;
-          }
-        }
+        if (loopOptions.capRoundKills && targetExhausted(job, roundStartTroops, roundTargetDamage, landedTargetDamage)) continue;
 
         // A pre-existing no_attack prevents the attack from being declared at all.
         // Reactive dodge skills instead roll on this declaration and can dodge this job.
@@ -324,6 +329,7 @@ function runLoop(
         const triggeredChildren = fireApplicableCarriers(round, job, intent, runtime, recorder);
 
         let normalKills = 0;
+        let normalNextHit: NextHitModifier[] = [];
         if (dodge) {
           runtime.attackControlCounts.dodge += 1;
           materializeTriggeredEffects(dodge.effect, round, intent, runtime, recorder);
@@ -337,11 +343,14 @@ function runLoop(
           if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
             score += normalResult.kills;
           }
+          // Read before charging: expiring next-hit effects leave their groups.
+          normalNextHit = appliedNextHitModifiers(runtime.usedEffects, round);
           chargeUsedEffectsForJob(runtime, job, recorder);
           results.push({ job, result: normalResult, intent });
         }
 
-        captureTriggeredExtraDamage(triggeredChildren, job, fighters, damageJobOptions, runtime);
+        // Extra damage attached to this attack shares its normal hit's next-hit modifiers.
+        calculateDelayedDamage(triggeredChildren, job, fighters, damageJobOptions, runtime, normalNextHit);
         advanceNormalAttackCounters(intent, runtime);
         const extraAttacks = processExtraAttacks("immediate", job, intent, runtime, fighters, damageJobOptions, roundTargetDamage, loopOptions, results);
         if (loopOptions.scoreSide && job.dealerSide === loopOptions.scoreSide.dealerSide && job.takerSide === loopOptions.scoreSide.takerSide) {
@@ -549,6 +558,95 @@ function fireApplicableCarriers(
     if (carriers[index] === carrier) index += 1;
   }
   return children;
+}
+
+// Each living line settles its target at turn start (after turn skills such as Ambusher reorder
+// it). Engagement skills fire for lines engaged with their trigger target, e.g. Charge for
+// Lancers engaging Marksmen; their effects cover the line's whole turn.
+function activateEngagementSkills(
+  round: number,
+  runtime: Runtime,
+  recorder: BattleRecorder,
+  roundStartTroops: DamageJob["roundStartTroops"]
+): void {
+  for (const { skill, probabilityPct } of runtime.skills.engagement) {
+    const trigger = compiledTriggerForSkill(skill);
+    const side = trigger.source.side;
+    for (const dealerUnit of UNIT_TYPES) {
+      if (!unitMaskHas(trigger.source.units, dealerUnit)) continue;
+      const takerUnit = engagedTarget(dealerUnit, side, runtime, roundStartTroops);
+      if (!takerUnit || trigger.target.side !== oppositeSide(side) || !unitMaskHas(trigger.target.units, takerUnit)) continue;
+      recorder.recordSkillTriggerAttempt(skill);
+      if (!preparedChancePasses(probabilityPct, runtime.rng)) continue;
+      recorder.recordSkillTriggered(skill);
+      const intent = makeNormalIntent(round, side, dealerUnit, oppositeSide(side), takerUnit, 0, runtime);
+      for (const effectIntent of skill.effects) {
+        addActiveEffect(runtime, activateEffect(skill, effectIntent, round, intent));
+        runtime.effectActivationCounts[skill.side] += 1;
+        recorder.recordSkillEffectActivated(skill);
+      }
+    }
+  }
+}
+
+/** The unit a living line targets this turn, as its normal attack will; undefined if it cannot act. */
+function engagedTarget(
+  dealerUnit: UnitType,
+  side: SideId,
+  runtime: Runtime,
+  roundStartTroops: DamageJob["roundStartTroops"]
+): UnitType | undefined {
+  if (ceilIgnoringFloatResidue(roundStartTroops[side][dealerUnit] ?? 0) <= 0) return undefined;
+  const ordered = orderFromEffects(dealerUnit, side, runtime.effectIndex, false);
+  return firstLivingUnit(ordered?.order ?? UNIT_TYPES, oppositeSide(side), roundStartTroops);
+}
+
+// Carriers created by turn-triggered skills act at turn start, before any attack: the first
+// living unit they apply to uses them at once against its current target, so a delayed hit
+// they spawn is the next damage event for any live next-hit modifier. A unit under an enemy
+// no_attack control cannot act, and an unused turn carrier is discarded either way.
+function fireTurnStartCarriers(
+  round: number,
+  fighters: Record<SideId, ResolvedFighter>,
+  runtime: Runtime,
+  recorder: BattleRecorder,
+  damageJobOptions: Parameters<typeof calculateDelayedDamage>[3],
+  roundStartTroops: DamageJob["roundStartTroops"]
+): void {
+  const carriers = runtime.effectIndex.carriers.filter((carrier) =>
+    carrier.createdRound === round && carrier.sourceSkill?.trigger.type === "turn"
+  );
+  for (const carrier of carriers) {
+    const side = carrier.appliesTo.side;
+    const dealerUnit = UNIT_TYPES.find((unit) =>
+      unitMaskHas(carrier.appliesTo.units, unit) && ceilIgnoringFloatResidue(roundStartTroops[side][unit] ?? 0) > 0
+    );
+    const takerSide = oppositeSide(side);
+    const takerUnit = dealerUnit ? engagedTarget(dealerUnit, side, runtime, roundStartTroops) : undefined;
+    if (!dealerUnit || !takerUnit || !unitMaskHas(carrier.appliesVs.units, takerUnit) || blockedByEnemyControl(runtime, side, dealerUnit)) {
+      expireActiveEffect(runtime, carrier);
+      continue;
+    }
+    const intent = makeNormalIntent(round, side, dealerUnit, takerSide, takerUnit, 0, runtime);
+    const children = materializeTriggeredEffects(carrier, round, intent, runtime, recorder);
+    chargeEffectUse(runtime, carrier);
+    calculateDelayedDamage(children, normalJob(intent, roundStartTroops), fighters, damageJobOptions, runtime);
+  }
+}
+
+function blockedByEnemyControl(runtime: Runtime, side: SideId, unit: UnitType): boolean {
+  return runtime.effectIndex.controls.some((effect) =>
+    controlType(effect) === "no_attack" && effect.ownerSide !== side &&
+    effect.appliesTo.side === side && unitMaskHas(effect.appliesTo.units, unit) && isEffectAttackReady(effect)
+  );
+}
+
+function scoreFor(results: DamageJobResult[], scoreSide: NonNullable<RunLoopOptions["scoreSide"]>): number {
+  let kills = 0;
+  for (const { job, result } of results) {
+    if (job.dealerSide === scoreSide.dealerSide && job.takerSide === scoreSide.takerSide) kills += result.kills;
+  }
+  return kills;
 }
 
 function advanceNormalAttackCounters(intent: AttackIntent, runtime: Runtime): void {

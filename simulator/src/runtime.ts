@@ -28,6 +28,8 @@ export interface Runtime {
   troops: Record<SideId, Record<UnitType, number>>;
   activateEffectsByRound: Array<ActiveEffect[] | undefined>;
   expireEffectsByRound: Array<ActiveEffect[] | undefined>;
+  // Delayed hits already settled in full, keyed by the round whose start applies their kills.
+  delayedDamageByRound: Array<DelayedDamage[] | undefined>;
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
   usedEffects: ActiveEffect[];
@@ -55,6 +57,12 @@ export interface RunLoopOptions {
   };
 }
 
+export interface DelayedDamage {
+  job: DamageJob;
+  result: DamageResult;
+  effect: ActiveEffect;
+}
+
 export interface DamageJobResult {
   job: DamageJob;
   result: DamageResult;
@@ -73,6 +81,7 @@ export function createRuntime(fighters: Record<SideId, ResolvedFighter>, rng: Rn
     ),
     activateEffectsByRound: [],
     expireEffectsByRound: [],
+    delayedDamageByRound: [],
     usedEffects: [],
     primaryUsedEffects: [],
     staticDamageProfile,
@@ -113,6 +122,9 @@ function scheduleEffect(schedule: Array<ActiveEffect[] | undefined>, round: numb
   else schedule[round] = [effect];
 }
 
+// Shields scheduled for this turn are held back for activateScheduledShields, which runs
+// after turn-trigger skills: a turn-start event (Renee's Dream Mark) never meets a shield
+// scheduled by the previous turn's attacks.
 export function processEffectSchedule(runtime: Runtime, round: number): void {
   const expiring = runtime.expireEffectsByRound[round];
   if (expiring) {
@@ -121,11 +133,23 @@ export function processEffectSchedule(runtime: Runtime, round: number): void {
   }
   const activating = runtime.activateEffectsByRound[round];
   if (activating) {
+    const shields: ActiveEffect[] = [];
     for (const effect of activating) {
-      if (!effect.expired) indexEffect(runtime.effectIndex, effect);
+      if (effect.expired) continue;
+      if (effect.kind === "shield") shields.push(effect);
+      else indexEffect(runtime.effectIndex, effect);
     }
-    runtime.activateEffectsByRound[round] = undefined;
+    runtime.activateEffectsByRound[round] = shields.length > 0 ? shields : undefined;
   }
+}
+
+export function activateScheduledShields(runtime: Runtime, round: number): void {
+  const shields = runtime.activateEffectsByRound[round];
+  if (!shields) return;
+  for (const effect of shields) {
+    if (!effect.expired) indexEffect(runtime.effectIndex, effect);
+  }
+  runtime.activateEffectsByRound[round] = undefined;
 }
 
 export function triggerSkills(
@@ -236,10 +260,12 @@ export function emptyRoundTargetDamage(): Record<SideId, Record<UnitType, number
 export function targetExhausted(
   job: DamageJob,
   roundStartTroops: DamageJob["roundStartTroops"],
-  roundTargetDamage: Record<SideId, Record<UnitType, number>>
+  roundTargetDamage: Record<SideId, Record<UnitType, number>>,
+  ignoredTargetDamage?: Record<SideId, Record<UnitType, number>>
 ): boolean {
   const available = Math.max(0, roundStartTroops[job.takerSide][job.takerUnit] ?? 0);
-  return ceilIgnoringFloatResidue(Math.max(0, available - roundTargetDamage[job.takerSide][job.takerUnit])) === 0;
+  const damaged = roundTargetDamage[job.takerSide][job.takerUnit] - (ignoredTargetDamage?.[job.takerSide][job.takerUnit] ?? 0);
+  return ceilIgnoringFloatResidue(Math.max(0, available - damaged)) === 0;
 }
 
 export function capJobToRemainingTarget(

@@ -12,7 +12,7 @@
         }
       ],
       "trigger": {
-        "type": "attack",
+        "type": "engagement",
         "source": "infantry",
         "target": "lancer"
       },
@@ -163,7 +163,7 @@
         }
       ],
       "trigger": {
-        "type": "attack",
+        "type": "engagement",
         "source": "lancer",
         "target": "marksman"
       },
@@ -321,7 +321,7 @@
         }
       ],
       "trigger": {
-        "type": "attack",
+        "type": "engagement",
         "source": "marksman",
         "target": "infantry"
       },
