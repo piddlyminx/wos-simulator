@@ -2,6 +2,7 @@
   {
     "test_id": "flint_tc_1",
     "time": "2025-07-20 - 03:49",
+    "disabled_reason": "Historical 2025-07-20 reports use Flint's stochastic skill kit, not the current permanent bonuses. At that time Pyromaniac had a 20% burn proc and Immolation a 50% damage-taken proc (git 6b223c2f^:assets/hero_skills/Flint.json). Current extracted client skills 500214/500215/500216 instead grant infantry damage, all-troop attack and all-troop lethality (c2/data/client-schema-wip/config/skills.json). Preserve these outcomes as historical evidence; do not calibrate the current simulator against them.",
     "attacker": {
       "name": "daut",
       "heroes": {},
@@ -107,6 +108,7 @@
   {
     "test_id": "flint_tc_2",
     "time": "2025-07-20 - 04:07",
+    "disabled_reason": "Historical 2025-07-20 reports use Flint's stochastic skill kit, not the current permanent bonuses. At that time Pyromaniac had a 20% burn proc and Immolation a 50% damage-taken proc (git 6b223c2f^:assets/hero_skills/Flint.json). Current extracted client skills 500214/500215/500216 instead grant infantry damage, all-troop attack and all-troop lethality (c2/data/client-schema-wip/config/skills.json). Preserve these outcomes as historical evidence; do not calibrate the current simulator against them.",
     "attacker": {
       "name": "daut",
       "heroes": {},

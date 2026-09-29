@@ -1,5 +1,19 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-25 — Retire pre-rework Flint parity fixtures
+
+- Preserve the two July 2025 reports in `testcases/heroes_unittests/Flint_tc.json.disabled`,
+  with explicit reasons and evidence references. They predate Flint's permanent
+  skill kit: the contemporaneous definition (`6b223c2f^:assets/hero_skills/Flint.json`)
+  has 20% Pyromaniac burn and 50% Immolation procs, unlike current extracted
+  client skills 500214–500216. Their varying outcomes are not deterministic targets.
+- No combat mechanics or recorded outcomes changed. Current skill values match
+  the extracted client; 32 seeds per historical case produce one current-model
+  outcome each. The historical reports remain runnable with `--include-disabled`.
+- All four current deterministic lowercase-`flint` cases still pass exact mode
+  (solo uses the existing +0.025% stat-rounding adjustment); three existing
+  testcase-discovery tests pass. Capitalized `Flint` now selects no enabled cases.
+
 ## 2026-09-25 — Existing Dream Marks land through stun
 
 - Deliver pending captured damage before checking the matching normal attack's
@@ -234,4 +248,3 @@ Updated codebase and skill sheets to reflect removal of stun mechanics and the n
 ---
 
 *Last Updated: January 2026*
-
