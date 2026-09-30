@@ -17,7 +17,7 @@ import {
   type Rng
 } from "./effects";
 import { createEffectIndex, expireEffectIndex, indexEffect, isRuntimeIndexableEffect, type EffectIndex } from "./effectIndex";
-import { ceilIgnoringFloatResidue, createDamageScratch, type DamageResult, type DamageScratch, type StaticDamageProfile } from "./damage";
+import { ceilIgnoringFloatResidue, createDamageScratch, type DamageResult, type DamageScratch, type GeneratedDamage, type StaticDamageProfile } from "./damage";
 import type { DeferredEffectPlan, PreparedAttackSkill, RuntimeSkills } from "./runtimeSkills";
 import type { BattleRecorder } from "./recorder";
 import { emptyTroops } from "./fighterResolution";
@@ -28,7 +28,7 @@ export interface Runtime {
   troops: Record<SideId, Record<UnitType, number>>;
   activateEffectsByRound: Array<ActiveEffect[] | undefined>;
   expireEffectsByRound: Array<ActiveEffect[] | undefined>;
-  // Delayed hits already settled in full, keyed by the round whose start applies their kills.
+  // Delayed hits calculated when their parent was used, keyed by the round whose start delivers them.
   delayedDamageByRound: Array<DelayedDamage[] | undefined>;
   // Per-job scratch: effects that affected the job being calculated; drained by
   // chargeUsedEffects (uses += 1 each) after every job in every mode.
@@ -59,7 +59,7 @@ export interface RunLoopOptions {
 
 export interface DelayedDamage {
   job: DamageJob;
-  result: DamageResult;
+  generated: GeneratedDamage;
   effect: ActiveEffect;
 }
 
@@ -122,15 +122,18 @@ function scheduleEffect(schedule: Array<ActiveEffect[] | undefined>, round: numb
   else schedule[round] = [effect];
 }
 
+// Last turn's effects are gone first thing in the turn, before delayed hits are delivered.
+export function expireScheduledEffects(runtime: Runtime, round: number): void {
+  const expiring = runtime.expireEffectsByRound[round];
+  if (!expiring) return;
+  for (const effect of expiring) expireActiveEffect(runtime, effect);
+  runtime.expireEffectsByRound[round] = undefined;
+}
+
 // Shields scheduled for this turn are held back for activateScheduledShields, which runs
 // after turn-trigger skills: a turn-start event (Renee's Dream Mark) never meets a shield
 // scheduled by the previous turn's attacks.
-export function processEffectSchedule(runtime: Runtime, round: number): void {
-  const expiring = runtime.expireEffectsByRound[round];
-  if (expiring) {
-    for (const effect of expiring) expireActiveEffect(runtime, effect);
-    runtime.expireEffectsByRound[round] = undefined;
-  }
+export function activateScheduledEffects(runtime: Runtime, round: number): void {
   const activating = runtime.activateEffectsByRound[round];
   if (activating) {
     const shields: ActiveEffect[] = [];

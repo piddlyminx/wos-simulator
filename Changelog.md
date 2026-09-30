@@ -1,5 +1,17 @@
 # Whiteout Survival Battle Simulator - Change Log
 
+## 2026-09-30 — Delayed hits meet shields by timing, not by a flag
+
+- Removed `DamageJobOptions.ignoreShields`, which had reintroduced the removed
+  `bypass_shields` as a runtime option. No damage can skip shields by property.
+- A delayed hit is now calculated when its parent is used (modifiers, next-hit) and
+  delivered at the start of its landing turn through the ordinary shield step.
+- Turn start is now: last turn's effects expire → delayed hits are delivered →
+  this turn's effects activate → turn skills → shields go up. A delayed hit therefore
+  meets only shields that are genuinely up at that moment; Gatot's one-turn shield
+  has expired and the new one is not up yet.
+- Full suite (540 cases) is identical to before, row for row; 257 tests pass.
+
 ## 2026-09-29 — Bradley's Power Shot is an engagement bonus
 
 - Power Shot now uses the `engagement` trigger (source any, target lancer or
