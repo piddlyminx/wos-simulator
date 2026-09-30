@@ -118,8 +118,6 @@ export interface DamageJobOptions {
    * next-hit groups: it neither reads nor consumes those (an attack-attached delayed hit).
    */
   inheritedNextHit?: readonly NextHitModifier[];
-  /** Shields neither absorb nor are consumed by this job (delayed hits land before shields go up). */
-  ignoreShields?: boolean;
 }
 
 /** One next-hit modifier value as a damage job applied it. */
@@ -163,6 +161,11 @@ export function generateDamageJob(
   return generated;
 }
 
+/** A copy of generated damage that no longer borrows scratch, for delivery on a later turn. */
+export function detachGeneratedDamage(generated: GeneratedDamage): GeneratedDamage {
+  return { ...generated, factors: generated.factors && new Float64Array(generated.factors) };
+}
+
 export function deliverDamageJob(
   job: DamageJob,
   generated: GeneratedDamage,
@@ -176,9 +179,7 @@ export function deliverDamageJob(
   }
   const usedEffects = options.usedEffects ?? [];
   const primaryUsedEffects = options.primaryUsedEffects ?? usedEffects;
-  const offsetDamage = options.ignoreShields
-    ? 0
-    : applyShields(job, options.effectIndex, buckets, recording, damageBeforeOffsets, healthFactor, usedEffects, primaryUsedEffects);
+  const offsetDamage = applyShields(job, options.effectIndex, buckets, recording, damageBeforeOffsets, healthFactor, usedEffects, primaryUsedEffects);
   const rawDamage = Math.max(0, damageBeforeOffsets - offsetDamage);
   const takerTroops = job.roundStartTroops[job.takerSide][job.takerUnit] ?? 0;
   const kills = options.capToTakerTroops === false ? rawDamage : Math.min(takerTroops, rawDamage);
