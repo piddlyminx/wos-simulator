@@ -21,6 +21,59 @@ function runOnce(input: BattleInput, config: SimulatorConfig, options: Simulatio
   return runPrepared(prepareBattle(input, config), undefined, options);
 }
 
+test("real hero gates distinguish ordinary, Renee/Gordon extra, and Wayne skill damage", () => {
+  const config = loadSimulatorConfig();
+  for (const [hero, effectId] of [["Renee", "NightmareTrace/1"], ["Gordon", "VenomInfusion/1"]] as const) {
+    const result = runOnce({
+      maxRounds: 5,
+      attacker: {
+        troops: { lancer_t1: 1000000 },
+        heroes: {
+          [hero]: { skill_1: 1, skill_2: 1 },
+          Reina: { skill_1: 1 },
+          WuMing: { skill_2: 1, skill_3: 1 },
+          Wayne: { skill_1: 1 }
+        }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: { WuMing: { skill_1: 1 } }
+      }
+    }, config, { mode: "trace" });
+    const jobs = result.attacks.filter(attack => attack.dealerSide === "attacker");
+    const ordinary = jobs.find(attack => attack.round === 4 && !attack.sourceEffectId)!;
+    const extra = jobs.find(attack => attack.sourceEffectId === effectId)!;
+    const skill = jobs.find(attack => attack.sourceEffectId === "ThunderStrike/1")!;
+    assert.ok(ordinary, `${hero}: ordinary attack`);
+    assert.ok(extra, `${hero}: extra attack`);
+    assert.ok(skill, `${hero}: skill attack`);
+    assert.deepEqual([ordinary.kind, extra.kind, skill.kind], ["normal", "extra", "skill"]);
+    for (const [attack, normalBoost, nonSkillMitigation, skillMitigation, skillBoost] of [
+      [ordinary, 10, 5, 0, 0],
+      [extra, 0, 5, 0, 0],
+      [skill, 0, 0, 6, 5]
+    ] as const) {
+      assert.equal(attack.trace?.aggregationGroups["type.normal.damage.up"].totalPct, normalBoost);
+      assert.equal(attack.trace?.aggregationGroups["type.normal.damageTaken.down"].totalPct, nonSkillMitigation);
+      assert.equal(attack.trace?.aggregationGroups["type.skill.damageTaken.down"].totalPct, skillMitigation);
+      assert.equal(attack.trace?.aggregationGroups["type.skill.damage.up"].totalPct, skillBoost);
+      // Crescent Uplift's omitted gate applies to all three kinds.
+      assert.equal(attack.trace?.atomicBuckets["active.hero.damage.up"].contributors.some(
+        contributor => contributor.effectId === "CrescentUplift/1"
+      ), true);
+    }
+    assert.equal(result.skillReport.attacker.find(entry => entry.skillId === (hero === "Renee" ? "NightmareTrace" : "VenomInfusion"))?.skillKills, 0);
+    assert.ok(result.skillReport.attacker.find(entry => entry.skillId === "ThunderStrike")!.skillKills > 0);
+    if (hero === "Renee") {
+      const markedOrdinary = jobs.find(attack => attack.round === 3 && !attack.sourceEffectId)!;
+      assert.ok(markedOrdinary);
+      assert.equal(markedOrdinary.trace?.atomicBuckets["active.hero.damageTaken.up"].contributors.some(
+        contributor => contributor.effectId === "Dreamcatcher/1"
+      ), true);
+    }
+  }
+});
+
 test("Gordon's captured Venom damage matches the Ahmose and Wu Ming interaction", () => {
   const [input] = JSON.parse(readFileSync(new URL("../../testcases/emulator_verified/ahmose_gordon_renee/ahmose_gordon_vs_wuming.json", import.meta.url), "utf8"));
   const result = runOnce(input, loadSimulatorConfig());
@@ -634,22 +687,22 @@ test("simulateBearBattle scores uncapped per-attack damage", () => {
   assert.ok(damage.score > defensive.score);
 });
 
-test("simulateBearBattle includes fixture-carried normal damage in score without treating it as skill kills", () => {
+test("simulateBearBattle includes fixture-carried extra damage in score without treating it as skill kills", () => {
   const result = simulateBearBattle(
     {
       troops: { lancer_t1: 1000 },
       stats: {},
       heroes: { Renee: { skill_1: 1 } }
     },
-    carriedNormalDamageConfig(),
-    "bear-renee-carried-normal"
+    carriedExtraDamageConfig(),
+    "bear-renee-carried-extra"
   );
 
   const attackerDamage = result.attacks
     .filter((attack) => attack.dealerSide === "attacker")
     .reduce((total, attack) => total + attack.kills, 0);
   assert.equal(result.score, attackerDamage);
-  assert.equal(result.attacks.some((attack) => attack.kind === "normal" && attack.sourceEffectId === "NightmareTrace/1"), true);
+  assert.equal(result.attacks.some((attack) => attack.kind === "extra" && attack.sourceEffectId === "NightmareTrace/1"), true);
   assert.equal(result.skillReport.attacker.find((entry) => entry.skillId === "NightmareTrace")?.skillKills, 0);
 });
 
@@ -1170,7 +1223,7 @@ test("turn-start delayed damage lands on its marked target regardless of the nex
                     type: "extra_skill_attack",
                     value: 40,
                     units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" },
-                    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "normal" }],
+                    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }],
                     duration: { turns: { delay: 1, count: 1 }, attacks: { count: 1 } }
                   }
                 }
@@ -1191,7 +1244,7 @@ test("turn-start delayed damage lands on its marked target regardless of the nex
   assert.deepEqual(delayed.map((attack) => [attack.round, attack.calculationRound, attack.takerUnit]), [[3, 2, "marksman"]]);
 });
 
-test("carried-damage fixture snapshots normal damage on the even turn and only delivers it next turn", () => {
+test("carried-damage fixture snapshots extra damage on the even turn and only delivers it next turn", () => {
   const result = runOnce(
     {
       maxRounds: 3,
@@ -1204,7 +1257,7 @@ test("carried-damage fixture snapshots normal damage on the even turn and only d
         heroes: {}
       }
     },
-    carriedNormalDamageConfig(),
+    carriedExtraDamageConfig(),
     { mode: "trace" }
   );
 
@@ -1214,7 +1267,7 @@ test("carried-damage fixture snapshots normal damage on the even turn and only d
   const roundThreeNormal = attackerJobs.find((attack) => attack.round === 3 && attack.kind === "normal");
 
   assert.equal(attackerJobs.some((attack) => attack.round === 2 && attack.kind === "skill"), false);
-  assert.equal(delayed?.kind, "normal");
+  assert.equal(delayed?.kind, "extra");
   assert.equal(delayed?.round, 3);
   assert.equal(delayed?.calculationRound, 2);
   assert.ok(Math.abs(delayed!.kills - roundTwoNormal!.kills * 0.4) < 1e-9);
@@ -1224,7 +1277,7 @@ test("carried-damage fixture snapshots normal damage on the even turn and only d
   assert.equal(nightmareTrace?.skillKills, 0);
 });
 
-test("skill-damage amplification does not affect fixture-carried normal damage", () => {
+test("skill-damage amplification does not affect fixture-carried extra damage", () => {
   const result = runOnce(
     {
       maxRounds: 3,
@@ -1240,12 +1293,12 @@ test("skill-damage amplification does not affect fixture-carried normal damage",
         heroes: {}
       }
     },
-    carriedNormalDamageConfig(true),
+    carriedExtraDamageConfig(true),
     { mode: "trace" }
   );
 
   const delayed = result.attacks.find((attack) => attack.sourceEffectId === "NightmareTrace/1");
-  assert.equal(delayed?.kind, "normal");
+  assert.equal(delayed?.kind, "extra");
   assert.equal(delayed?.trace?.atomicBuckets["active.hero.damage.up"].totalPct, 4);
   assert.equal(delayed?.trace?.aggregationGroups["type.skill.damage.up"].totalPct, 0);
   assert.equal(delayed?.trace?.aggregationGroups["type.skill.damage.up"].contributors.length, 0);
@@ -4187,7 +4240,7 @@ function reneeDamageTakenTargetFixture(): SimulatorConfig {
   });
 }
 
-function carriedNormalDamageConfig(includeSkillAmplifier = false): SimulatorConfig {
+function carriedExtraDamageConfig(includeSkillAmplifier = false): SimulatorConfig {
   const heroDefinitions: Record<string, SkillFile> = {
     Renee: {
       name: "Renee fixture",
@@ -4204,7 +4257,7 @@ function carriedNormalDamageConfig(includeSkillAmplifier = false): SimulatorConf
                   type: "extra_skill_attack",
                   value: 40,
                   units: { applies_to: "parent.use.source", applies_vs: "parent.use.target" },
-                  trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "normal" }],
+                  trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }],
                   duration: { turns: { delay: 1, count: 1 }, attacks: { count: 1 } }
                 }
               }

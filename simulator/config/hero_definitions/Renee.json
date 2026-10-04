@@ -31,7 +31,7 @@
                 {
                   "source": "use.source",
                   "target": "use.target",
-                  "damage_kind": "normal"
+                  "damage_kind": "extra"
                 }
               ],
               "duration": {
@@ -62,7 +62,7 @@
           "trigger_effects": {
             "Dreamcatcher/1": {
               "type": "active.hero.damageTaken.up",
-              "applies_to_damage_kinds": ["normal"],
+              "applies_to_damage_kinds": ["normal", "extra"],
               "value": [30, 60, 90, 120, 150],
               "units": {
                 "applies_to": "parent.use.target",

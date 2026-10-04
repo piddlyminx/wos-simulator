@@ -11,7 +11,7 @@
       "effects": {
         "ShadowsEvasion/1": {
           "type": "type.normal.damageTaken.down",
-          "applies_to_damage_kinds": ["normal"],
+          "applies_to_damage_kinds": ["normal", "extra"],
           "value": [
             5,
             10,

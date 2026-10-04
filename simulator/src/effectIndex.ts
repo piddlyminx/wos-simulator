@@ -39,7 +39,7 @@ export interface EffectIndex {
   carriers: ActiveEffect[];
 }
 
-const DAMAGE_KINDS: DamageKind[] = ["normal", "skill"];
+const DAMAGE_KINDS: DamageKind[] = ["normal", "skill", "extra"];
 export const DAMAGE_JOB_SHAPE_SLOTS = DAMAGE_KINDS.length * 2 * 3 * 2 * 3;
 
 export function createEffectIndex(
@@ -147,7 +147,7 @@ export function damageShapeSlotsForEffect(effect: ActiveEffect, bucketOverride?:
   const damageKindMask = kindMask(effect.intent.applies_to_damage_kinds ?? DAMAGE_KINDS);
   const key =
     ((((DYNAMIC_BUCKET_INDEX[bucket] * 2 + sideIndex(effect.appliesTo.side)) * 8 + (effect.appliesTo.units & 7)) * 2 + sideIndex(effect.appliesVs.side)) * 8 +
-      (effect.appliesVs.units & 7)) * 4 + damageKindMask;
+      (effect.appliesVs.units & 7)) * 8 + damageKindMask;
   const cached = JOB_SHAPE_CACHE.get(key);
   if (cached) return cached;
   const slots = buildShapeSlots(effect, bucket);
@@ -175,7 +175,7 @@ function buildShapeSlots(effect: ActiveEffect, bucket: DynamicDamageBucket): Uin
   return Uint8Array.from(slots);
 }
 
-function kindIndex(kind: DamageKind): number { return DAMAGE_KINDS.indexOf(kind); }
+function kindIndex(kind: DamageKind): number { return kind === "normal" ? 0 : kind === "skill" ? 1 : 2; }
 function kindMask(kinds: DamageKind[]): number {
   return kinds.reduce((mask, kind) => mask | (1 << kindIndex(kind)), 0);
 }

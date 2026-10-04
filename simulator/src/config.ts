@@ -157,11 +157,11 @@ function validateAppliesToDamageKinds(
   if (effect.applies_to_damage_kinds === undefined) return;
   const path = `${file}:${skillId}.${effectId}.applies_to_damage_kinds`;
   if (!Array.isArray(effect.applies_to_damage_kinds) || effect.applies_to_damage_kinds.length === 0) {
-    throw new Error(`applies_to_damage_kinds must be a non-empty array of "normal" and/or "skill" at ${path}`);
+    throw new Error(`applies_to_damage_kinds must be a non-empty array of "normal", "extra", and/or "skill" at ${path}`);
   }
   for (const kind of effect.applies_to_damage_kinds) {
-    if (kind !== "normal" && kind !== "skill") {
-      throw new Error(`applies_to_damage_kinds must contain only "normal" and/or "skill" at ${path}`);
+    if (kind !== "normal" && kind !== "extra" && kind !== "skill") {
+      throw new Error(`applies_to_damage_kinds must contain only "normal", "extra", and/or "skill" at ${path}`);
     }
   }
   if (new Set(effect.applies_to_damage_kinds).size !== effect.applies_to_damage_kinds.length) {
@@ -503,8 +503,8 @@ function validateTriggerDamageJobShape(job: unknown, path: string, jobIndex: num
   if (record.target === undefined) {
     throw new Error(`trigger_damage_jobs entry requires target at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
-  if (record.damage_kind !== undefined && record.damage_kind !== "normal" && record.damage_kind !== "skill") {
-    throw new Error(`trigger_damage_jobs damage_kind must be "normal" or "skill" at ${path}.trigger_damage_jobs[${jobIndex}]`);
+  if (record.damage_kind !== undefined && record.damage_kind !== "normal" && record.damage_kind !== "extra" && record.damage_kind !== "skill") {
+    throw new Error(`trigger_damage_jobs damage_kind must be "normal", "extra", or "skill" at ${path}.trigger_damage_jobs[${jobIndex}]`);
   }
 }
 

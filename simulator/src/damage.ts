@@ -74,7 +74,6 @@ export type { DamageResult } from "./types";
 const DYNAMIC_FACTOR_TERMS = compileDamageTerms(DYNAMIC_BUCKETS);
 const STATIC_FACTOR_TERMS = compileDamageTerms(STATIC_BUCKETS);
 const DYNAMIC_EXPRESSION = compileDamageExpression(DYNAMIC_FACTOR_TERMS, {});
-const DYNAMIC_EXPRESSIONS = { normal: DYNAMIC_EXPRESSION, skill: DYNAMIC_EXPRESSION };
 const STATIC_EXPRESSIONS = {
   dealer: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "dealer" }),
   taker: compileDamageExpression(STATIC_FACTOR_TERMS, { jobSide: "taker" })
@@ -329,7 +328,7 @@ function applyShields(
     if (isTurnShield(shield) || !shieldEffectApplies(shield, job)) continue;
     applyEffectGroup(group, index.liveEffectsByGroup, job.round, jobSlot, buckets, recording, usedEffects, primaryUsedEffects);
   }
-  let offsetDamage = sumSlots(buckets.factors, DYNAMIC_EXPRESSIONS[job.kind].postSubtractSlots);
+  let offsetDamage = sumSlots(buckets.factors, DYNAMIC_EXPRESSION.postSubtractSlots);
   previousGroup = undefined;
   for (const shield of index.shields) {
     const group = shield.effectGroup!;
@@ -600,7 +599,7 @@ function evaluateDamageExpressionForJob(
   buckets: NumericDamageBuckets,
   staticProfile: StaticDamageProfile
 ): number {
-  const expression = DYNAMIC_EXPRESSIONS[job.kind];
+  const expression = DYNAMIC_EXPRESSION;
   const dynamicFactor = multiplySlots(1, buckets.factors, expression.numeratorSlots) / multiplySlots(1, buckets.factors, expression.denominatorSlots);
   return (
     dynamicFactor *

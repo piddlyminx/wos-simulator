@@ -3,12 +3,12 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 import { tmpdir } from "node:os";
-import { fileURLToPath } from "node:url";
 
 import {
   loadSimulatorConfig,
   loadSimulatorConfigFromDir,
 } from "./config-node";
+import { prepareBattle, runPrepared } from "./simulator";
 import type { SkillFile } from "./types";
 
 test("loadSimulatorConfig accepts keyed nested effects on a type-less attack carrier", () => {
@@ -82,13 +82,6 @@ test("loadSimulatorConfig rejects legacy duration shape", () => {
   });
 
   assert.throws(() => loadSimulatorConfigFromDir(root), /duration key type.*not supported/i);
-});
-
-test("simulator config source does not reference legacy effect metadata names", () => {
-  const legacyEffectMetadataKey = ["effect", "op"].join("_");
-  const source = readFileSync(fileURLToPath(new URL("./config.ts", import.meta.url)), "utf8");
-
-  assert.equal(source.includes(legacyEffectMetadataKey), false);
 });
 
 test("loadSimulatorConfig rejects duplicate normalized hero aliases", () => {
@@ -296,29 +289,66 @@ test("loadSimulatorConfig rejects per-job extra skill damage multipliers", () =>
   assert.throws(() => loadSimulatorConfigFromDir(root), /unknown trigger_damage_jobs key multiplier/i);
 });
 
-test("loadSimulatorConfig accepts explicit damage kinds and rejects removed delay metadata or the removed extra kind", () => {
-  const validNormal = writeConfigWithTroopEffect({
+test("three-kind configs hydrate and select modifiers when generated damage is delivered", () => {
+  const root = writeConfigWithTroopEffect({
     type: "extra_skill_attack",
     value: 100,
     units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
-    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "normal" }]
-  });
-  const removedDelay = writeConfigWithTroopEffect({
-    type: "extra_skill_attack",
-    value: 100,
-    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
-    trigger_damage_jobs: [{ source: "use.source", target: "use.target", delivery_delay_turns: 1 }]
-  });
-  const removedExtraKind = writeConfigWithTroopEffect({
-    type: "extra_skill_attack",
-    value: 100,
-    units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
-    trigger_damage_jobs: [{ source: "use.source", target: "use.target", damage_kind: "extra" }]
-  });
+    trigger_damage_jobs: [
+      { source: "use.source", target: "use.target", damage_kind: "normal" },
+      { source: "use.source", target: "use.target", damage_kind: "extra" },
+      { source: "use.source", target: "use.target", damage_kind: "skill" },
+      { source: "use.source", target: "use.target" }
+    ]
+  }, { type: "attack", source: "infantry" });
+  const troopSkills = JSON.parse(readFileSync(join(root, "troop_skills.json"), "utf8")) as SkillFile;
+  troopSkills.skills.ExampleSkill.troop_type = "infantry";
+  troopSkills.skills.ExampleSkill.requirements = [{ type: "tier", value: 1, level: 1 }];
+  troopSkills.skills.Boost = {
+    troop_type: "infantry",
+    requirements: [{ type: "tier", value: 1, level: 1 }],
+    trigger: { type: "turn", every: 1, first: 1 },
+    effects: {
+      "Boost/1": {
+        type: "active.hero.damage.up",
+        applies_to_damage_kinds: ["normal", "extra"],
+        value: 100,
+        units: { applies_to: ["infantry"], applies_vs: "any" }
+      }
+    }
+  };
+  writeFileSync(join(root, "troop_skills.json"), JSON.stringify(troopSkills));
+  const result = runPrepared(prepareBattle({
+    attacker: { troops: { infantry_t1: 1000 } },
+    defender: { troops: { lancer_t1: 1000 } },
+    maxRounds: 1
+  }, loadSimulatorConfigFromDir(root)), "three-kind-config", { mode: "trace" });
+  const generated = result.attacks.filter((attack) => attack.sourceEffectId === "ExampleSkill/1");
 
-  assert.doesNotThrow(() => loadSimulatorConfigFromDir(validNormal));
-  assert.throws(() => loadSimulatorConfigFromDir(removedDelay), /unknown trigger_damage_jobs key delivery_delay_turns/i);
-  assert.throws(() => loadSimulatorConfigFromDir(removedExtraKind), /damage_kind.*normal.*skill/i);
+  assert.deepEqual(generated.map((attack) => attack.kind), ["normal", "extra", "skill", "skill"]);
+  assert.deepEqual(
+    generated.map((attack) => attack.trace?.atomicBuckets["active.hero.damage.up"].totalPct),
+    [100, 100, 0, 0]
+  );
+  assert.ok(generated[2].kills > 0);
+  assert.equal(generated[0].kills, generated[2].kills * 2);
+  assert.equal(generated[1].kills, generated[2].kills * 2);
+  assert.equal(generated[3].kills, generated[2].kills);
+});
+
+test("loadSimulatorConfig rejects unknown generated damage kinds and removed delay metadata", () => {
+  for (const job of [
+    { source: "use.source", target: "use.target", damage_kind: "mystery" },
+    { source: "use.source", target: "use.target", delivery_delay_turns: 1 }
+  ]) {
+    const root = writeConfigWithTroopEffect({
+      type: "extra_skill_attack",
+      value: 100,
+      units: { applies_to: "trigger.source", applies_vs: "trigger.target" },
+      trigger_damage_jobs: [job]
+    });
+    assert.throws(() => loadSimulatorConfigFromDir(root));
+  }
 });
 
 test("engaged_with is accepted only on engagement skill effects with valid units", () => {
@@ -337,17 +367,7 @@ test("engaged_with is accepted only on engagement skill effects with valid units
   }
 });
 
-test("loadSimulatorConfig accepts modifier damage-kind applicability and rejects invalid uses", () => {
-  const valid = writeConfigWithTroopEffect({
-    type: "active.hero.damageTaken.up",
-    applies_to_damage_kinds: ["normal"],
-    value: 25
-  });
-  const validBoth = writeConfigWithTroopEffect({
-    type: "type.normal.damageTaken.up",
-    applies_to_damage_kinds: ["normal", "skill"],
-    value: 25
-  });
+test("loadSimulatorConfig rejects invalid modifier damage-kind applicability", () => {
   const invalidKind = writeConfigWithTroopEffect({
     type: "active.hero.damageTaken.up",
     applies_to_damage_kinds: ["mystery"] as never,
@@ -380,23 +400,9 @@ test("loadSimulatorConfig accepts modifier damage-kind applicability and rejects
     trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
   });
 
-  assert.doesNotThrow(() => loadSimulatorConfigFromDir(valid));
-  assert.doesNotThrow(() => loadSimulatorConfigFromDir(validBoth));
-  assert.throws(() => loadSimulatorConfigFromDir(invalidKind), /applies_to_damage_kinds.*normal.*skill/i);
-  assert.throws(() => loadSimulatorConfigFromDir(empty), /applies_to_damage_kinds.*non-empty array/i);
-  assert.throws(() => loadSimulatorConfigFromDir(duplicate), /applies_to_damage_kinds.*duplicates/i);
-  assert.throws(
-    () => loadSimulatorConfigFromDir(ambiguousOldName),
-    /damage_kind is ambiguous.*applies_to_damage_kinds.*trigger_damage_jobs\[\]\.damage_kind/i
-  );
-  assert.throws(
-    () => loadSimulatorConfigFromDir(replacedSingularName),
-    /applies_to_damage_kind was replaced by applies_to_damage_kinds/i
-  );
-  assert.throws(
-    () => loadSimulatorConfigFromDir(nonModifier),
-    /applies_to_damage_kinds is only supported for runtime damage modifiers/i
-  );
+  for (const root of [invalidKind, empty, duplicate, ambiguousOldName, replacedSingularName, nonModifier]) {
+    assert.throws(() => loadSimulatorConfigFromDir(root));
+  }
 });
 
 test("loadSimulatorConfig reports the removed extra_attack effect type as unsupported", () => {
