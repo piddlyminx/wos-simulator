@@ -1,6 +1,6 @@
 export type SideId = "attacker" | "defender";
 export type UnitType = "infantry" | "lancer" | "marksman";
-export type DamageKind = "normal" | "skill";
+export type DamageKind = "normal" | "skill" | "extra";
 export type UnitMask = number;
 export type ActiveEffectKind = "modifier" | "shield" | "extra_attack" | "control" | "battle_order" | "carrier";
 export type SameEffectStacking = "add" | "max";

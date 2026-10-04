@@ -214,7 +214,7 @@ Effect entries retain object enumeration order. That order is mechanically signi
 | --- | --- | --- |
 | `type` | One supported modifier/special-effect string, or omitted on a child-bearing carrier | Chooses the mechanic and, for modifiers, the damage-equation bucket. |
 | `value` | Usually a number or per-level numeric array | Percentage magnitude for modifiers; damage multiplier percentage for `extra_skill_attack`; fixed unit order for `attack_order`. |
-| `applies_to_damage_kinds` | Non-empty array containing `normal` and/or `skill` | Optional runtime-modifier applicability gate. Omitted means both kinds. Restricts eligible damage jobs without changing the bucket selected by `type`. |
+| `applies_to_damage_kinds` | Non-empty array containing `normal`, `extra`, and/or `skill` | Optional runtime-modifier applicability gate. Omitted means all three kinds. Restricts eligible damage jobs without changing the bucket selected by `type`. |
 | `units` | `{ applies_to?, applies_vs? }` | Resolves which troop lines may receive/use the effect and which opposing troop lines it applies against. |
 | `duration` | `{ turns?, attacks? }` | Optional round window and/or use limit. Omitted means permanent, except that extra-attack effects default to one turn and one attack. |
 | `same_effect_stacking` | `add` or `max` | Controls overlap between live activations of the same modifier definition and scope. Omitted means `add`. |
@@ -254,7 +254,7 @@ Modifier names identify a damage-equation bucket. The general forms are:
 
 These effects do not mutate a fighter's stored Attack, Defense, Health, or Lethality. When an applicable damage job is calculated, they contribute factors to that job's equation. Expiry therefore affects future jobs only; it does not require undoing a stat mutation.
 
-A runtime modifier may add `"applies_to_damage_kinds": ["normal"]`, `["skill"]`, or `["normal", "skill"]` to restrict which damage jobs can use it while retaining the arithmetic bucket named by `type`. Omission means both normal and skill jobs. For example, `active.hero.damageTaken.up` with `applies_to_damage_kinds: ["normal"]` adds with unrestricted `active.hero.damageTaken.up` effects on normal jobs and is absent from skill jobs. Bucket definitions do not impose damage-kind eligibility. This field is not supported on carriers or special effects such as `extra_skill_attack`; generated-job classification belongs in `trigger_damage_jobs[].damage_kind` instead.
+A runtime modifier may add `applies_to_damage_kinds` with any non-empty subset of `normal`, `extra`, and `skill` to restrict which damage jobs can use it while retaining the arithmetic bucket named by `type`. Omission means all three kinds. For example, `active.hero.damageTaken.up` with `applies_to_damage_kinds: ["normal", "extra"]` adds with unrestricted effects in that bucket on normal and extra jobs and is absent from skill jobs. Bucket definitions do not impose damage-kind eligibility. This field is not supported on carriers or special effects such as `extra_skill_attack`; generated-job classification belongs in `trigger_damage_jobs[].damage_kind` instead.
 
 The current hero JSON files use only the subset listed by the inventory at the end of this guide. The additional combinations above are nevertheless registered native buckets. `active.hero.*` and `active.troop.*` are not source-validated: a hero definition can write to either family. The families are separate factors, so identical hero- and troop-labelled bonuses multiply rather than add together.
 
@@ -440,7 +440,9 @@ Each job has this shape:
 }
 ```
 
-An optional `damage_kind` may be `normal` or `skill`, and defaults to `skill`. This is the only field that classifies the generated damage. Normal jobs are not attributed to `skillKills`.
+An optional `damage_kind` may be `normal`, `extra`, or `skill`, and defaults to `skill`. This is the only field that classifies generated damage. Ordinary attacks remain `normal`; Gordon's Venom Infusion and Renee's Nightmare Trace are `extra`. Only `skill` jobs contribute to `skillKills`; neither normal nor extra jobs do. Extra jobs do not advance ordinary attack cadence or enter normal-attack trace bookkeeping.
+
+Reina's Assassin's Instinct applies only to normal jobs. Wu Ming's Shadows Evasion uses its smaller mitigation for normal and extra jobs (non-skill damage), and its larger mitigation only for skill jobs. Elemental Resonance likewise amplifies only skill jobs. These classifications are a modeling hypothesis covered by deterministic simulator regressions, not a claim that Gordon with Reina was measured live. Existing captured Renee/Gordon interactions constrain the established timing and arithmetic; unmeasured hero combinations remain predictions.
 
 Supported `source` and `target` selectors are:
 
@@ -471,9 +473,9 @@ Renee's Nightmare Trace uses this form with a one-turn delay: the even-round Lan
 
 Pending captured hits land before the matching normal attack's control check, even if that attack will be stunned or paused. New mark placement still requires an unblocked Lancer attack. Pure-Lancer Renee/Sonya captures verify both boundaries: a turn-6 stun prevents placement, while a mark placed on turn 10 still lands during the turn-11 stun. This does not make fresh scheduled strikes stun-immune.
 
-Renee's Dreamslice mark increases both normal and skill damage taken by the marked target. Dreamcatcher's Lancer-specific increase remains restricted to normal damage.
+Renee's Dreamslice mark increases normal, extra, and skill damage taken by the marked target. Dreamcatcher's Lancer-specific increase applies to normal and extra damage, preserving its amplification of Nightmare Trace without broadening it to skill damage.
 
-All jobs emitted by one use read the parent extra-attack effect's same current `value`; its use/evolution is charged only after those jobs finish. Other attack-limited **modifier** effects are different: each generated skill job is a separate modifier use, and modifiers are charged after each job, so a one-job modifier can expire before the second target in the same extra attack is calculated.
+All jobs emitted by one use read the parent extra-attack effect's same current `value`; its use/evolution is charged only after those jobs finish. Other attack-limited **modifier** effects are different: each generated damage job is a separate modifier use, and modifiers are charged after each job, so a one-job modifier can expire before the second target in the same extra attack is calculated.
 
 ### `dodge`
 

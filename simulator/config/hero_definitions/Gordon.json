@@ -32,7 +32,7 @@
                 {
                   "source": "use.source",
                   "target": "use.target",
-                  "damage_kind": "normal"
+                  "damage_kind": "extra"
                 }
               ],
               "duration": {
