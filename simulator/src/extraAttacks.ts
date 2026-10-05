@@ -12,6 +12,7 @@ import { advanceEffectAttackDelay } from "./effects";
 import {
   generateDamageJob,
   deliverDamageJob,
+  detachGeneratedDamage,
   ceilIgnoringFloatResidue,
   type DamageJobOptions,
   type NextHitModifier
@@ -112,9 +113,9 @@ export function processExtraAttacks(
   return { totalKills, skillKills };
 }
 
-// A delayed extra attack (a carrier child with a turn delay) is calculated in full when its
-// parent is used; only its kills are deferred, landing at the start of the turn the child
-// would activate. Landing precedes that turn's shields, so shields never touch it.
+// Delayed damage is calculated when its parent is used and delivered on its landing turn.
+// Delivery applies shields still active then; expired shields are gone and newly scheduled
+// shields have not activated yet.
 // Next-hit modifiers depend on what the parent use was:
 // - a turn-start event (Renee's Dream Mark) is its own damage event, so it takes and consumes
 //   the live next-hit modifiers (inheritedNextHit omitted);
@@ -129,12 +130,7 @@ export function calculateDelayedDamage(
   inheritedNextHit?: readonly NextHitModifier[]
 ): void {
   const { round, roundStartTroops } = parentUse;
-  const settleOptions: DamageJobOptions = {
-    ...damageJobOptions,
-    capToTakerTroops: false,
-    ignoreShields: true,
-    ...(inheritedNextHit ? { inheritedNextHit } : {})
-  };
+  const calculateOptions: DamageJobOptions = inheritedNextHit ? { ...damageJobOptions, inheritedNextHit } : damageJobOptions;
   for (const effect of effects) {
     if (effect.expired || effect.intent.type !== "extra_skill_attack") continue;
     const landingRound = Math.max(effect.startRound, round + 1);
@@ -157,10 +153,10 @@ export function calculateDelayedDamage(
             sourceEffectId: effect.source.effectId ?? effect.intent.id,
             sourceMultiplier: multiplier
           };
-          const result = deliverDamageJob(job, generateDamageJob(job, fighters, settleOptions), settleOptions);
+          const generated = detachGeneratedDamage(generateDamageJob(job, fighters, calculateOptions));
           chargeUsedEffectsForJob(runtime, job, damageJobOptions.recorder);
           const landing = runtime.delayedDamageByRound[landingRound];
-          const pending = { job, result, effect };
+          const pending = { job, generated, effect };
           if (landing) landing.push(pending);
           else runtime.delayedDamageByRound[landingRound] = [pending];
         }
@@ -171,24 +167,27 @@ export function calculateDelayedDamage(
   }
 }
 
-/** Apply kills of delayed hits due this turn, capped by the turn's troop snapshot and round cap. */
+/** Deliver delayed hits due this turn, capped by the turn's troop snapshot and round cap. */
 export function landDelayedDamage(
   round: number,
   runtime: Runtime,
   roundStartTroops: DamageJob["roundStartTroops"],
   roundTargetDamage: Record<SideId, Record<UnitType, number>>,
   loopOptions: RunLoopOptions,
-  recorder: BattleRecorder,
+  damageJobOptions: DamageJobOptions,
   results: DamageJobResult[]
 ): void {
   const landing = runtime.delayedDamageByRound[round];
   if (!landing) return;
   runtime.delayedDamageByRound[round] = undefined;
-  for (const { job, result: settled, effect } of landing) {
+  const { recorder } = damageJobOptions;
+  const deliverOptions: DamageJobOptions = { ...damageJobOptions, capToTakerTroops: false };
+  for (const { job, generated, effect } of landing) {
     const deliveryJob: DamageJob = { ...job, round, calculationRound: job.round, roundStartTroops };
     if (targetExhausted(deliveryJob, roundStartTroops, roundTargetDamage)) continue;
     recorder.recordScheduledDamageJob(deliveryJob);
-    const result = { ...settled };
+    const result = deliverDamageJob(deliveryJob, generated, deliverOptions);
+    chargeUsedEffectsForJob(runtime, deliveryJob, recorder);
     if (loopOptions.capRoundKills) {
       capJobToRemainingTarget(result, deliveryJob, roundStartTroops, roundTargetDamage, recorder);
     } else if (loopOptions.capJobKills) {

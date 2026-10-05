@@ -42,8 +42,9 @@ import {
   materializeDeferredEffects,
   materializeTriggeredEffects,
   preparedChancePasses,
+  activateScheduledEffects,
   activateScheduledShields,
-  processEffectSchedule,
+  expireScheduledEffects,
   targetExhausted,
   triggerAttackSkills,
   triggerSkills,
@@ -259,14 +260,15 @@ function runLoop(
     const cancelled: CancelledAttack[] = [];
     const roundTargetDamage = emptyRoundTargetDamage();
 
-    // Turn start: delayed hits settled earlier apply their kills; last turn's effects expire
-    // and this turn's activate; turn-trigger skills act; then scheduled shields go up.
-    landDelayedDamage(round, runtime, roundStartTroops, roundTargetDamage, loopOptions, recorder, results);
+    // Turn start: expire old effects, deliver calculated delayed hits, activate this turn's
+    // effects, run turn-trigger skills, then activate scheduled shields.
+    expireScheduledEffects(runtime, round);
+    landDelayedDamage(round, runtime, roundStartTroops, roundTargetDamage, loopOptions, damageJobOptions, results);
     if (loopOptions.scoreSide) score += scoreFor(results, loopOptions.scoreSide);
     // Attacks are still declared against targets alive in the turn's snapshot; landed
     // kills only cap what those attacks can remove.
     const landedTargetDamage = snapshotTroops(roundTargetDamage);
-    processEffectSchedule(runtime, round);
+    activateScheduledEffects(runtime, round);
     triggerRoundStartSkills(round, runtime, recorder);
     activateEngagementSkills(round, runtime, recorder, roundStartTroops);
     fireTurnStartCarriers(round, fighters, runtime, recorder, damageJobOptions, roundStartTroops);
