@@ -277,6 +277,41 @@ test("Dream Mark damage lands before Gatot's next shield activates", () => {
     assert.equal(signedRemainingScore(runOnce(input, config)), survivors, path);
   }
 });
+test("delayed damage uses shields active at delivery, after expiry and before new activation", () => {
+  const input: BattleInput = {
+    maxRounds: 3,
+    attacker: { troops: { lancer_t1: 1000000 }, heroes: { Renee: { skill_1: 1 } } },
+    defender: { troops: { infantry_t1: 1000000 }, heroes: { Gatot: { skill_2: 1 } } }
+  };
+  for (const shieldTurns of [1, 2]) {
+    const config = loadSimulatorConfig();
+    const shield = config.heroDefinitions.Gatot.skills.KingsBestowal.effects["KingsBestowal/1"];
+    shield.value = 100000000;
+    delete shield.value_formula;
+    shield.duration!.turns!.count = shieldTurns;
+    const prepared = prepareBattle(input, config);
+    const result = runPrepared(prepared, "shield-boundary", { mode: "trace" });
+    const delayed = result.attacks.find((attack) => attack.sourceEffectId === "NightmareTrace/1")!;
+    const ordinary = result.attacks.find((attack) =>
+      attack.round === 3 && attack.dealerSide === "attacker" && !attack.sourceEffectId
+    )!;
+    assert.equal(delayed.round, 3);
+    assert.equal(delayed.calculationRound, 2);
+    assert.ok(delayed.trace!.damageBeforeOffsets > 0);
+    assert.equal(ordinary.kills, 0);
+    if (shieldTurns === 1) {
+      assert.equal(delayed.trace!.offsetDamage, 0);
+      assert.equal(delayed.kills, delayed.trace!.damageBeforeOffsets);
+    } else {
+      assert.equal(delayed.kills, 0);
+      assert.equal(delayed.trace!.offsetDamage, delayed.trace!.damageBeforeOffsets);
+    }
+    for (const mode of ["fast", "standard"] as const) {
+      assert.deepEqual(runPrepared(prepared, "shield-boundary", { mode }).remaining, result.remaining);
+    }
+  }
+});
+
 test("delayed damage never meets shields in recorded Gatot battles", () => {
   const config = loadSimulatorConfig();
   for (const [path, survivors] of [
@@ -1039,6 +1074,51 @@ test("one turn-scoped extra attack effect serves every matching normal attack wi
       .filter((attack) => attack.kind === "skill" && attack.dealerSide === "attacker" && attack.sourceEffectId === "extra")
       .map((attack) => attack.dealerUnit),
     UNIT_TYPES
+  );
+});
+
+// Game evidence: thunder_strike_timing_20261001 (Wayne's Thunder Strike). Unlike Renee's turn-start
+// Dream Mark, a turn-triggered extra attack waits for its line's normal attack.
+test("a turn-triggered extra attack follows its own line's normal attack, not the turn start", () => {
+  const result = runOnce(
+    {
+      maxRounds: 1,
+      attacker: {
+        troops: { infantry_t1: 1000000, marksman_t1: 1000000 },
+        heroes: { AllTroops: { skill_1: 1 } }
+      },
+      defender: {
+        troops: { infantry_t1: 1000000 },
+        heroes: {}
+      }
+    },
+    minimalConfig({
+      AllTroops: {
+        name: "AllTroops",
+        skills: {
+          TurnExtra: {
+            trigger: { type: "turn" },
+            effects: {
+              extra: {
+                type: "extra_skill_attack",
+                value: 100,
+                units: { applies_to: "self.any", applies_vs: "enemy.any" },
+                duration: { turns: { count: 1 } },
+                trigger_damage_jobs: [{ source: "use.source", target: "use.target" }]
+              }
+            }
+          }
+        }
+      }
+    }),
+    { mode: "trace" }
+  );
+
+  assert.deepEqual(
+    result.attacks
+      .filter((attack) => attack.dealerSide === "attacker")
+      .map((attack) => `${attack.dealerUnit}:${attack.kind}`),
+    ["infantry:normal", "infantry:skill", "marksman:normal", "marksman:skill"]
   );
 });
 
