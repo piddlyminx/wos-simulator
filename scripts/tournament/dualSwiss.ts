@@ -1,7 +1,7 @@
 import { runBattleTasks } from "./battleRunner";
 import { Pool } from "./pools";
 import { seededShuffle } from "./rng";
-import type { BattleSummary, BattleTask, Team, TournamentOptions } from "./types";
+import type { BattleSummary, BattleTask, TournamentOptions } from "./types";
 import type { PlayerStats } from "./playerStats";
 
 export type BattleTaskRunner = (tasks: BattleTask[], jobs: number, onProgress?: (completed: number, total: number) => void, batchSize?: number) => Promise<BattleSummary[]>;
@@ -69,25 +69,26 @@ export async function runDualSwissTournament(
   defenderPool: Pool,
   options: TournamentOptions,
   runner: BattleTaskRunner = runBattleTasks,
-  onProgress?: (label: string, completed: number, total: number) => void
+  onProgress?: (label: string, completed: number, total: number, battlesCompleted: number) => void
 ): Promise<[Pool, Pool]> {
   const startedAt = Date.now();
   let round = 1;
   const freezeEnabled = options.freezeRate > 0 || options.freezeLossesGte !== undefined;
   while (true) {
     const elapsedMins = (Date.now() - startedAt) / 60000;
-    const activeAttackers = attackerPool.teamsActiveOrdered;
-    const activeDefenders = defenderPool.teamsActiveOrdered;
+    const activeAttackers = attackerPool.scoresActive.length;
+    const activeDefenders = defenderPool.scoresActive.length;
     if (options.timeLimitMins !== undefined && elapsedMins > options.timeLimitMins) break;
     if (round > options.totalRounds) break;
-    if (freezeEnabled && activeAttackers.length < options.minPoolSize && activeDefenders.length < options.minPoolSize) break;
-    if (activeAttackers.length === 0 || activeDefenders.length === 0) break;
+    if (freezeEnabled && activeAttackers < options.minPoolSize && activeDefenders < options.minPoolSize) break;
+    if (activeAttackers === 0 || activeDefenders === 0) break;
     const isSeedRound = round <= options.seedRounds;
     const tasks = isSeedRound
       ? createRandomRoundTasks(attackerPool, defenderPool, round, options.reps, options.seed, options.playerStats)
       : createDualRankingTasks(attackerPool, defenderPool, round, options.reps, options.seed, options.playerStats);
     const label = `Round ${round} (${isSeedRound ? "random" : "Swiss"})`;
-    const results = await runner(tasks, options.jobs, (completed, total) => onProgress?.(label, completed, total), options.batchSize);
+    onProgress?.(label, 0, tasks.length, 0);
+    const results = await runner(tasks, options.jobs, (completed, total) => onProgress?.(label, completed, total, completed * options.reps), options.batchSize);
     aggregateBattleResults(attackerPool, defenderPool, results);
     if (freezeEnabled && round >= options.startFreezeRound) {
       freezePools(attackerPool, defenderPool, options);
@@ -112,30 +113,4 @@ function freezePools(attackerPool: Pool, defenderPool: Pool, options: Tournament
 
   attackerPool.freezeBottomTeams(options.freezeRate);
   defenderPool.freezeBottomTeams(options.freezeRate);
-}
-
-export async function runFinalsRoundRobin(
-  attackerTeams: Team[],
-  defenderTeams: Team[],
-  reps: number,
-  jobs: number,
-  seed: number,
-  runner: BattleTaskRunner = runBattleTasks,
-  onProgress?: (label: string, completed: number, total: number) => void,
-  playerStats?: PlayerStats,
-  batchSize = 64
-): Promise<[Pool, Pool]> {
-  const attackerPool = new Pool(attackerTeams);
-  const defenderPool = new Pool(defenderTeams);
-  const tasks: BattleTask[] = [];
-  for (const attacker of attackerTeams) {
-    for (const defender of defenderTeams) {
-      tasks.push({ attacker, defender, seed: seed + 999000 + tasks.length * 1000, reps, playerStats });
-    }
-  }
-  const results = await runner(tasks, jobs, (completed, total) => onProgress?.("Finals round-robin", completed, total), batchSize);
-  aggregateBattleResults(attackerPool, defenderPool, results);
-  attackerPool.finalizeRemaining();
-  defenderPool.finalizeRemaining();
-  return [attackerPool, defenderPool];
 }

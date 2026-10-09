@@ -1,7 +1,6 @@
 import { loadSimulatorConfig } from "../../simulator/src/config-node";
 import { signedRemainingScore, simulateBattles } from "../../simulator/src/simulator";
 import type { BattleResult, SimulatorConfig } from "../../simulator/src/types";
-import { batchTasksByWeight } from "../../simulator/src/workerPool";
 import { teamToBattleInput } from "./teamInput";
 import { TournamentWorkerPool } from "./workerPool";
 import type { BattleSummary, BattleTask } from "./types";
@@ -74,20 +73,31 @@ export function createBattleTaskRunner(
     async run(tasks, onProgress) {
       const results: BattleSummary[] = new Array(tasks.length);
       let completed = 0;
-      let offset = 0;
-      const batches = batchTasksByWeight(tasks, taskBatchSize, (task) => task.reps).map((batch) => {
-        const start = offset;
-        offset += batch.length;
-        return { batch, start };
-      });
-      await Promise.all(
-        batches.map(async ({ batch, start }) => {
-          const batchResults = await pool.runBatch(batch);
-          results.splice(start, batchResults.length, ...batchResults);
-          completed += batchResults.length;
-          onProgress?.(completed, tasks.length);
-        })
-      );
+      let nextTask = 0;
+      let failed = false;
+      const runBatches = async () => {
+        while (!failed && nextTask < tasks.length) {
+          const start = nextTask;
+          let weight = 0;
+          while (nextTask < tasks.length) {
+            const taskWeight = Math.max(1, Math.floor(tasks[nextTask].reps));
+            if (nextTask > start && weight + taskWeight > taskBatchSize) break;
+            weight += taskWeight;
+            nextTask += 1;
+          }
+          const batch = tasks.slice(start, nextTask);
+          try {
+            const batchResults = await pool.runBatch(batch);
+            for (let index = 0; index < batchResults.length; index += 1) results[start + index] = batchResults[index];
+            completed += batchResults.length;
+            onProgress?.(completed, tasks.length);
+          } catch (error) {
+            failed = true;
+            throw error;
+          }
+        }
+      };
+      await Promise.all(Array.from({ length: Math.min(workerCount, tasks.length) }, runBatches));
       return results;
     },
     async close() {

@@ -2,7 +2,7 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 
 import { avgMargin, Pool, roleAvgMargin, roleWinRate, winRate } from "./pools";
-import { parseRatio } from "./teamGeneration";
+import { parseRatio, uniqueRankedTeams } from "./teamGeneration";
 import type { Score, Team } from "./types";
 
 const RESULTS_DIR_TIMESTAMP_RE = /^\d{8}-\d{6}$/;
@@ -33,13 +33,13 @@ export function deriveResultsLabel(source: string): string {
 
 export function loadAllRankedTeamsFromCsv(csvPath: string, total: number): Team[] {
   const rows = parseCsv(readFileSync(csvPath, "utf8"));
-  return rows.map((row, id) => ({
+  return uniqueRankedTeams(rows.map((row, id) => ({
     id,
     mains: [row.hero_1, row.hero_2, row.hero_3],
     joiners: [row.joiner_1, row.joiner_2, row.joiner_3, row.joiner_4],
     ratioLabel: row.formation,
     troops: parseRatio(row.formation.replace(/-/g, ","), total)
-  }));
+  })));
 }
 
 export function loadRankedTeamsFromCsv(csvPath: string, topM: number, total: number): Team[] {

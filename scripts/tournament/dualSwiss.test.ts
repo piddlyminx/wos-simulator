@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { Pool, winRate } from "./pools";
-import { aggregateBattleResults, createDualRankingTasks, createRandomRoundTasks, runDualSwissTournament, runFinalsRoundRobin } from "./dualSwiss";
+import { aggregateBattleResults, createDualRankingTasks, createRandomRoundTasks, runDualSwissTournament } from "./dualSwiss";
 import type { BattleSummary, BattleTask, Team } from "./types";
 
 function team(id: number): Team {
@@ -118,23 +118,4 @@ test("runDualSwissTournament freezes equal pool counts by accumulated loss thres
   assert.equal(defensePool.scoresActive.length, 0);
   assert.deepEqual(attackPool.finalScoresOrdered.map((score) => score.team.id), [1, 3, 2, 4]);
   assert.deepEqual(defensePool.finalScoresOrdered.map((score) => score.team.id), [4, 2, 3, 1]);
-});
-
-test("runFinalsRoundRobin scores from scratch", async () => {
-  const attackers = [team(1), team(2)];
-  const defenders = [team(3)];
-  const runner = async (tasks: BattleTask[]): Promise<BattleSummary[]> =>
-    tasks.map((task) => ({
-      attackerId: task.attacker.id,
-      defenderId: task.defender.id,
-      games: 1,
-      attackerWins: task.attacker.id === 1 ? 1 : 0,
-      defenderWins: task.attacker.id === 1 ? 0 : 1,
-      avgAttackerLeft: task.attacker.id === 1 ? 10 : 0,
-      avgDefenderLeft: task.attacker.id === 1 ? 0 : 5
-    }));
-  const [attackPool, defensePool] = await runFinalsRoundRobin(attackers, defenders, 1, 1, 10, runner);
-  assert.deepEqual(attackPool.finalScoresOrdered.map((score) => score.team.id), [1, 2]);
-  assert.deepEqual(defensePool.finalScoresOrdered.map((score) => score.team.id), [3]);
-  assert.equal(defensePool.getScore(3).matches, 2);
 });

@@ -96,3 +96,24 @@ test("loadAllRankedTeamsFromCsv rebuilds troops from formation and row ids", () 
     rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("CSV replay retains the first occurrence of a build before applying candidate limits", () => {
+  const root = mkdtempSync(join(tmpdir(), "unique-swiss-"));
+  try {
+    const file = join(root, "swiss_off.csv");
+    writeFileSync(file, [
+      "rank,win_rate,avg_margin,games,formation,hero_1,hero_2,hero_3,joiner_1,joiner_2,joiner_3,joiner_4",
+      "1,0.9,100,30,40-1-59,Magnus,Molly,Xura,Hendrik,Patrick,Mia,Norah",
+      "2,0.8,90,30,40-1-59,Magnus,Molly,Xura,Norah,Mia,Patrick,Hendrik",
+      "3,0.7,80,30,40-1-59,Magnus,Molly,Xura,Patrick,Mia,Norah,Norah",
+      "4,0.6,70,30,49-2-49,Magnus,Molly,Xura,Hendrik,Patrick,Mia,Norah",
+      ""
+    ].join("\n"));
+    const teams = loadAllRankedTeamsFromCsv(file, 100);
+    assert.deepEqual(teams.map(entry => entry.id), [0, 2, 3]);
+    assert.deepEqual(teams[0].joiners, ["Hendrik", "Patrick", "Mia", "Norah"]);
+    assert.deepEqual(teams[1].joiners, ["Patrick", "Mia", "Norah", "Norah"]);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
