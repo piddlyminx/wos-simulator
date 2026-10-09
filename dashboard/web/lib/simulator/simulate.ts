@@ -1,4 +1,5 @@
 import { loadSimulatorConfig } from "@simulator/config-default";
+import { ceilIgnoringFloatResidue } from "@simulator/damage";
 import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { AppliedEffect, AttackOutcome, BattleResult, DetailedAppliedEffect, SimulatorConfig, UnitType } from "@simulator/types";
 import type {
@@ -89,7 +90,10 @@ export function runSimulationTrace(
   options: RunSimulationOptions = {},
 ): SimulateTrace {
   const config = options.config ?? loadSimulatorConfig();
-  const result = runPrepared(prepareBattle(toBattleInput(request, seed), config), undefined, { mode: "trace" });
+  const result = runPrepared(prepareBattle(toBattleInput(request, seed), config), undefined, {
+    mode: "standard",
+    detailedEffects: true,
+  });
   options.onProgress?.(1, 1);
   return battleResultToTrace(result, seed, troopHeroGroupLabels(request));
 }
@@ -208,9 +212,14 @@ function aggregateSkills(rows: SimulateBatchResult[], side: "attacker" | "defend
 
 type SkillGroupLabels = Partial<Record<"attacker" | "defender", Partial<Record<UnitType, string>>>>;
 
-export function battleResultToTrace(result: BattleResult, seed: string | number, skillGroupLabels: SkillGroupLabels = {}): SimulateTrace {
+export function battleResultToTrace(
+  result: BattleResult,
+  seed: string | number,
+  skillGroupLabels: SkillGroupLabels = {},
+  options: { commitLosses?: boolean } = {},
+): SimulateTrace {
   const attacksByRound = attacksGroupedByRound(result);
-  const resultRounds = result.trace?.rounds ?? [];
+  const resultRounds = result.trace?.rounds ?? reconstructRounds(result, attacksByRound, options.commitLosses !== false);
   const rounds: SimulateTrace["rounds"] = [];
 
   if (resultRounds.length > 0) {
@@ -277,6 +286,42 @@ function sideTroopHeroGroupLabels(side: SimulateRequestPayload["attacker"]): Par
 function normalizedGroupLabel(value: string | null | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed ? trimmed : undefined;
+}
+
+function reconstructRounds(
+  result: BattleResult,
+  attacksByRound: Map<number, AttackOutcome[]>,
+  commitLosses: boolean,
+): Array<{ round: number; roundStartTroops: BattleResult["remaining"] }> {
+  const rounds: Array<{ round: number; roundStartTroops: BattleResult["remaining"] }> = [];
+  const troops = {
+    attacker: { ...result.resolved.attacker.troops },
+    defender: { ...result.resolved.defender.troops },
+  };
+  for (let round = 1; round <= result.rounds; round += 1) {
+    rounds.push({
+      round,
+      roundStartTroops: { attacker: { ...troops.attacker }, defender: { ...troops.defender } },
+    });
+    // Bear damage is scored without depleting either army. The final snapshot comes from remaining.
+    if (!commitLosses || round === result.rounds) continue;
+    const losses = {
+      attacker: { infantry: 0, lancer: 0, marksman: 0 },
+      defender: { infantry: 0, lancer: 0, marksman: 0 },
+    };
+    for (const attack of attacksByRound.get(round) ?? []) {
+      losses[attack.takerSide][attack.takerUnit] += attack.kills;
+    }
+    // Match commitRound: sum casualties before subtracting, including its float-residue cleanup.
+    // Per-attack subtraction drifts and can change the displayed ceil-rounded troop count.
+    for (const side of ["attacker", "defender"] as const) {
+      for (const unit of ["infantry", "lancer", "marksman"] as const) {
+        const remaining = Math.max(0, troops[side][unit] - losses[side][unit]);
+        troops[side][unit] = ceilIgnoringFloatResidue(remaining) === 0 ? 0 : remaining;
+      }
+    }
+  }
+  return rounds;
 }
 
 function attacksGroupedByRound(result: BattleResult): Map<number, AttackOutcome[]> {

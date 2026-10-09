@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { loadSimulatorConfig } from "@simulator/config-default";
+import { simulateBearBattle } from "@simulator/simulator";
 import type { BearBattleResult } from "@simulator/types";
 import type { BearSimRequestPayload } from "@/lib/simulate-run";
-import { aggregateBearResults, runBearOptimizeRatio, toBearBattlePlayerInput } from "./bear";
+import { aggregateBearResults, runBearOptimizeRatio, runBearSimulationTrace, toBearBattlePlayerInput } from "./bear";
+import { battleResultToTrace } from "./simulate";
 
 const request: BearSimRequestPayload = {
   player: {
@@ -154,6 +157,28 @@ test("aggregateBearResults summarizes bear scores and per-seed runs", () => {
   assert.deepEqual(result.skills, [
     { name: "S1", avg_activations: 1, avg_kills: 7.5 }
   ]);
+});
+
+test("bear example detail preserves scored attacks without depleting round armies", () => {
+  const config = loadSimulatorConfig();
+  const seed = "bear-detail:0";
+  const player = toBearBattlePlayerInput(request);
+  const full = simulateBearBattle(player, config, seed, { mode: "trace" });
+  const standard = simulateBearBattle(player, config, seed, { mode: "standard", detailedEffects: true });
+  assert.equal(standard.trace, undefined);
+  for (const attack of standard.attacks) {
+    assert.equal(attack.trace, undefined);
+    assert.equal(attack.counterDeltas, undefined);
+  }
+  assert.equal(standard.score, full.score);
+  const expected = battleResultToTrace(full, seed, { attacker: { infantry: "Greg" } });
+  const detail = runBearSimulationTrace(request, seed, { config });
+  assert.deepEqual(detail, { ...expected, outcome: full.score });
+  assert.deepEqual(detail.rounds.map(round => round.round), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  for (const round of detail.rounds) {
+    assert.deepEqual(round.attacker.troops, { inf: 100, lanc: 50, mark: 25 });
+    assert.deepEqual(round.defender.troops, { inf: 5000, lanc: 0, mark: 0 });
+  }
 });
 
 test("runBearOptimizeRatio ranks troop mixes by average bear score", () => {

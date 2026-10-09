@@ -120,7 +120,7 @@ export function SimulateResultsPanel({
       <div className="mt-2 min-h-5 text-xs">
         {traceLoadingSeed !== null && (
           <span className="font-mono opacity-70">
-            Loading full trace for seed {traceLoadingSeed}...
+            Loading example battle for seed {traceLoadingSeed}...
           </span>
         )}
         {traceError && <span style={{ color: "#f38ba8" }}>{traceError}</span>}
