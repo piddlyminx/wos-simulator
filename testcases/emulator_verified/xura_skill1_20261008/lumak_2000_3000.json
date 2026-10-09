@@ -1,0 +1,130 @@
+[
+  {
+    "test_id": "lumak_2000_3000",
+    "description": "C2 battle report 2734693172050450",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Xura": {
+          "skill_1": 1,
+          "skill_4": 0
+        },
+        "Lumak Bokan": {
+          "skill_1": 3,
+          "skill_2": 3
+        }
+      },
+      "troops": {
+        "infantry_t6": 2000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 348.36,
+          "defense": 352.61,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 402.09,
+          "defense": 408.09,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 3000
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 231.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-08T18:39:27.000Z",
+        "randomseed": 1791484768,
+        "attacker": 393,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693172050450",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-08T18-39-43.756Z-0799cece-c909-42d8-920b-63d035bc7f93.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 2000,
+            "survivors": 393,
+            "losses": 0,
+            "injured": 563,
+            "lightly_injured": 1044,
+            "kills": 1050
+          },
+          "defender": {
+            "troops": 3000,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 1050,
+            "lightly_injured": 1950,
+            "kills": 563
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 2000,
+                "survivors": 393,
+                "losses": 0,
+                "injured": 563,
+                "lightly_injured": 1044,
+                "kills": 1050
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 3000,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 1050,
+                "lightly_injured": 1950,
+                "kills": 563
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {},
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]
