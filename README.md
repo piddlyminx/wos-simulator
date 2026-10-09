@@ -1,7 +1,7 @@
 # WOS Battle Simulator — Monorepo
 
 A monorepo for simulating and calibrating Whiteout Survival (WOS) battles. It
-is organized around three primary components plus shared data and documentation.
+is organized around three public projects plus shared data and documentation.
 
 ```
 .
@@ -13,7 +13,6 @@ is organized around three primary components plus shared data and documentation.
 ├── docs/          # Design docs, plans, and specs
 └── test_results/  # Calibration DB (dashboard.sqlite) + baseline
 ```
-
 ## Components
 
 ### `simulator/` — the primary simulator
