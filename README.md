@@ -1,18 +1,45 @@
 # WOS Battle Simulator — Monorepo
 
 A monorepo for simulating and calibrating Whiteout Survival (WOS) battles. It
-is organized around three primary components plus shared data and documentation.
+is organized around three public projects plus shared data and documentation.
 
 ```
 .
 ├── simulator/     # PRIMARY: the TypeScript battle simulator (source of truth)
 ├── dashboard/     # Next.js web dashboard + SQLite migrations and OCR fixtures
 ├── skill/         # Self-contained agent skill ("wos") for driving the game via ADB
+├── private/       # Optional local modules; excluded from Git and Docker
+│   ├── c2/        # Headless game client, credentials and captured game data
+│   ├── report-worker/ # Report adapter and watch/predict/save/reply integration
+│   └── presets/   # Local account inputs and generated optimizer configurations
 ├── shared/        # Data shared across components (fighter stat profiles)
 ├── testcases/     # Ground-truth calibration corpus (game-observed battle results)
 ├── docs/          # Design docs, plans, and specs
 └── test_results/  # Calibration DB (dashboard.sqlite) + baseline
 ```
+The optional `/private/` subtree is not included in public checkouts or Docker
+build contexts. C2 and the report worker are separate packages: the worker uses
+the client API and dashboard/simulator functions; neither public projects nor
+C2 depend on the worker. Existing local client configuration and data live under
+`private/c2/`.
+
+With the private modules present and dashboard dependencies installed:
+
+```bash
+npm --prefix private/c2 ci
+npm --prefix private/report-worker ci
+npm --prefix private/report-worker start -- \
+  --account WIP --base-url https://dashboard.example
+```
+
+The worker loads `dashboard/web/.env.local` for its database configuration.
+Its `test` and `typecheck` commands run independently of the dashboard.
+
+Account-specific optimizer presets live in ignored `private/presets/`, not
+`scripts/`. The public `scripts/three_army_optimizer.example.json` remains a
+generic configuration example. Private presets are local inputs and are not
+included in Git or Docker images.
+
 
 ## Components
 

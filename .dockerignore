@@ -15,6 +15,7 @@ dashboard/web/playwright-report
 dashboard/web/*.tsbuildinfo
 
 simulator/node_modules
+private
 # Parity reports are supplied to production through a read-only bind mount.
 # Keep both committed summaries and local detail artifacts out of image layers.
 simulator/testcase_results

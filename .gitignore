@@ -13,7 +13,7 @@ test_results/runs/
 util
 tournament_results/
 AGENTS.md
-c2
+/private/
 
 # SQLite WAL/SHM sidecars — only the main .sqlite file is versioned
 test_results/*.sqlite-shm
