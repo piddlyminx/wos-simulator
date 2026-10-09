@@ -65,13 +65,11 @@ RUN mkdir -p \
       /repo/dashboard/web/.next \
       /repo/simulator/testcase_results \
       /repo/test_results \
-      /data/simulations \
       /test_results \
  && chown -R node:node \
       /repo/dashboard/web/.next \
       /repo/simulator/testcase_results \
       /repo/test_results \
-      /data \
       /test_results
 
 ENV NODE_ENV=development
@@ -96,7 +94,7 @@ RUN npm run build
 
 FROM prod-build AS prod
 
-RUN mkdir -p /data/simulations /data/test_results /test_results \
+RUN mkdir -p /data/test_results /test_results \
  && chown -R node:node /data /test_results
 
 USER node

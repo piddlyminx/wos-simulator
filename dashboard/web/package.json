@@ -9,20 +9,24 @@
     "dev:docker": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "test": "npx --yes tsx --test \"lib/**/*.test.ts\"",
+    "test": "tsx --test \"lib/**/*.test.ts\"",
     "lint": "eslint .",
     "playwright": "playwright test",
-    "smoke": "npm run build && npm run playwright"
+    "smoke": "npm run build && npm run playwright",
+    "runs:migrate": "tsx scripts/simulation-runs.ts migrate",
+    "runs:import": "tsx scripts/simulation-runs.ts import",
+    "runs:cleanup": "tsx scripts/simulation-runs.ts cleanup"
   },
   "dependencies": {
     "@types/diff": "^7.0.2",
     "better-sqlite3": "^11.10.0",
     "diff": "^9.0.0",
     "next": "16.2.6",
-    "proper-lockfile": "^4.1.2",
+    "pg": "^8.23.1",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "recharts": "^2.15.3"
+    "recharts": "^2.15.3",
+    "tsx": "^4.23.15"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -30,7 +34,7 @@
     "@tailwindcss/postcss": "^4.1.5",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
-    "@types/proper-lockfile": "^4.1.4",
+    "@types/pg": "^8.23.1",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
     "eslint": "^9",

@@ -19,5 +19,9 @@ c2
 test_results/*.sqlite-shm
 test_results/*.sqlite-wal
 
-# docker compose secrets
+# Private environment and deployment configuration
 .env
+.env.*
+!.env.example
+!.env.*.example
+docker-compose.*.override.yml

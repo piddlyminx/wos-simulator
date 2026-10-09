@@ -1,6 +1,6 @@
-# Production compose file for https://wos-sim.ratme.org.
+# Production compose file for a caller-configured public host.
 #
-# Intended to run on the Oracle VPS alongside the existing Traefik v3 stack.
+# Intended to run alongside an existing Traefik v3 stack.
 # The app image is built before the routed container is replaced; use
 # scripts/wos-prod-deploy.sh for the safe build/restart flow.
 
@@ -19,12 +19,9 @@ services:
     environment:
       NODE_ENV: production
       DB_PATH: /data/test_results/dashboard.sqlite
-      SIM_RUNS_DIR: /data/simulations
-      SIM_RUNS_RETENTION_DAYS: ${SIM_RUNS_RETENTION_DAYS:-30}
-      SIM_RUNS_MAX_STORAGE_MB: ${SIM_RUNS_MAX_STORAGE_MB:-500}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in private configuration}
       SIMULATOR_PYTHON: /opt/sim-venv/bin/python
     volumes:
-      - ${WOS_SIM_RUNS_DIR:-/srv/wos-sim/runtime/simulate-runs}:/data/simulations
       - ./test_results:/data/test_results:rw
       - ./skill:/repo/skill:ro
       - type: bind
@@ -50,7 +47,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.docker.network: ${TRAEFIK_NETWORK:-traefik}
-      traefik.http.routers.wos-sim.rule: Host(`${WOS_SIM_HOST:-wos-sim.ratme.org}`)
+      traefik.http.routers.wos-sim.rule: Host(`${WOS_SIM_HOST:?Set WOS_SIM_HOST in the root .env or exported environment}`)
       traefik.http.routers.wos-sim.entrypoints: ${TRAEFIK_ENTRYPOINT:-websecure}
       traefik.http.routers.wos-sim.tls: "true"
       traefik.http.routers.wos-sim.tls.certresolver: ${TRAEFIK_CERT_RESOLVER:-letsencrypt}
@@ -58,6 +55,30 @@ services:
     networks:
       - default
       - traefik
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      # Bootstrap only; the mounted HBA controls actual connection permissions.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command: ["postgres", "-c", "hba_file=/etc/postgresql/pg_hba.conf"]
+    # Host publishing and existing-volume selection belong in a private override.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./dashboard/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+      - ./dashboard/postgres/init.sql:/docker-entrypoint-initdb.d/01-simulator.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wos_sim -d wos_sim"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - default
+
+volumes:
+  postgres_data:
 
 networks:
   traefik:

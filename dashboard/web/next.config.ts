@@ -14,7 +14,10 @@ const nextConfig: NextConfig = {
   distDir,
   serverExternalPackages: ["better-sqlite3"],
   allowedDevOrigins: [
-    "wos-sim.ratme.org",
+    ...(process.env.NEXT_ALLOWED_DEV_ORIGINS ?? "")
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean),
     "localhost",
     "localhost:3000",
     "127.0.0.1",
