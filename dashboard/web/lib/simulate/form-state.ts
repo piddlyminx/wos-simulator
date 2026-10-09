@@ -20,8 +20,10 @@ import type {
   SimulateRequestPayload,
   SimulateSidePayload,
   SimulateStatModifiersPayload,
+  SimulateTroopRowPayload,
 } from "@/lib/simulate-run";
 import type { PlayerStatPreset, StatPresetValues } from "@/lib/stat-presets";
+import { scaleTroopCounts, toTroopComposition } from "@/lib/simulator/adapters";
 
 export type Side = "attacker" | "defender";
 export const CATEGORIES: TroopCategory[] = ["infantry", "lancer", "marksman"];
@@ -94,10 +96,14 @@ interface HeroSlotState {
 
 interface JoinerSlotState {
   name: string | null;
+  skill_1?: number;
 }
+
+export type TroopRowState = SimulateTroopRowPayload;
 
 export interface SideState {
   troops: Record<TroopCategory, number>;
+  troopRows?: TroopRowState[];
   tiers: Record<TroopCategory, string>;
   heroes: Record<TroopCategory, HeroSlotState>;
   joiners: JoinerSlotState[]; // always length JOINER_COUNT
@@ -106,6 +112,51 @@ export interface SideState {
   statModifiers: StatModifierState;
   petModifiers: PetModifierState;
   gareth: number;
+}
+
+export function createTroopRow(unit: TroopCategory = "infantry", tier = "t11_fc10", count = 0): TroopRowState {
+  return { id: globalThis.crypto.randomUUID(), unit, tier, count };
+}
+
+export function getTroopRows(state: SideState): TroopRowState[] {
+  if (!state.troopRows) {
+    return CATEGORIES.map(unit => ({ id: unit, unit, tier: state.tiers[unit], count: state.troops[unit] }));
+  }
+  let rows = state.troopRows;
+  for (const unit of CATEGORIES) {
+    const selected = rows.filter(row => row.unit === unit);
+    const total = state.troops[unit];
+    if (!selected.length) {
+      if (total > 0) rows = [...rows, { id: unit, unit, tier: state.tiers[unit], count: total }];
+      continue;
+    }
+    if (selected[0].tier !== state.tiers[unit]) {
+      rows = rows.flatMap(row => row.unit !== unit ? [row] : row.id === selected[0].id ? [{ ...row, tier: state.tiers[unit], count: total }] : []);
+    } else if (selected.reduce((sum, row) => sum + row.count, 0) !== total) {
+      const counts = scaleTroopCounts(selected.map(row => row.count), total);
+      let index = 0;
+      rows = rows.map(row => row.unit === unit ? { ...row, count: counts[index++] } : row);
+    }
+  }
+  return rows;
+}
+
+export function withTroopRows(state: SideState, rows: TroopRowState[]): SideState {
+  const troops = { infantry: 0, lancer: 0, marksman: 0 };
+  const tiers = { ...state.tiers };
+  const seen = new Set<TroopCategory>();
+  for (const row of rows) {
+    troops[row.unit] += row.count;
+    if (!seen.has(row.unit)) {
+      tiers[row.unit] = row.tier;
+      seen.add(row.unit);
+    }
+  }
+  return { ...state, troops, tiers, troopRows: rows };
+}
+
+export function withTroopTotals(state: SideState, troops: SideState["troops"]): SideState {
+  return withTroopRows(state, getTroopRows({ ...state, troops }));
 }
 
 export function defaultSide(): SideState {
@@ -185,13 +236,23 @@ export function toApiPayload(
   replicates: number,
   rallyMode: boolean,
   statProfileNames?: Record<Side, string | null>,
+  sourceReport?: SimulateRequestPayload["source_report"],
 ): SimulateRequestPayload {
   const troopType = (category: TroopCategory, tierOrType: string): string =>
     troopTypeForSelection(category, tierOrType) ??
     troopKey(category, tierOrType);
 
-  const mkSide = (side: Side, s: SideState): SimulateSidePayload => ({
+  const mkSide = (side: Side, s: SideState): SimulateSidePayload => {
+    const rows = getTroopRows(s);
+    const composition: Record<string, number> = {};
+    for (const row of rows) {
+      const key = troopType(row.unit, row.tier);
+      composition[key] = (composition[key] ?? 0) + row.count;
+    }
+    return ({
     troops: s.troops,
+    troop_rows: rows,
+    troop_composition: composition,
     troop_types: {
       infantry: troopType("infantry", s.tiers.infantry),
       lancer: troopType("lancer", s.tiers.lancer),
@@ -210,7 +271,7 @@ export function toApiPayload(
     },
     joiners: rallyMode
       ? s.joiners.flatMap((j) =>
-          j.name ? [{ name: j.name, skill_1: 5 }] : [],
+          j.name ? [{ name: j.name, skill_1: j.skill_1 ?? 5 }] : [],
         )
       : [],
     stat_profile_name: statProfileNames?.[side] ?? null,
@@ -238,11 +299,13 @@ export function toApiPayload(
       ] as [number, number, number, number],
     },
   });
+  };
   return {
     attacker: mkSide("attacker", attacker),
     defender: mkSide("defender", defender),
     replicates,
     rally_mode: rallyMode,
+    ...(sourceReport ? { source_report: sourceReport } : {}),
   };
 }
 
@@ -347,12 +410,20 @@ function parsePetModifiers(
 }
 
 export function sideFromPayload(side: SimulateSidePayload): SideState {
+  const composition = toTroopComposition(side);
+  const rows = side.troop_rows ?? CATEGORIES.flatMap(unit => {
+    const lines = Object.entries(composition).filter(([key]) => isTroopTypeForCategory(key, unit));
+    return lines.length
+      ? lines.map(([key, count], index) => ({ id: `${unit}-${index}`, unit, tier: parseTier(unit, key), count }))
+      : [{ id: unit, unit, tier: parseTier(unit, side.troop_types?.[unit]), count: 0 }];
+  });
   return {
     troops: {
       infantry: clampValue(side.troops?.infantry ?? 0, 0),
       lancer: clampValue(side.troops?.lancer ?? 0, 0),
       marksman: clampValue(side.troops?.marksman ?? 0, 0),
     },
+    troopRows: rows,
     tiers: {
       infantry: parseTier("infantry", side.troop_types?.infantry),
       lancer: parseTier("lancer", side.troop_types?.lancer),
@@ -374,6 +445,7 @@ export function sideFromPayload(side: SimulateSidePayload): SideState {
     },
     joiners: Array.from({ length: JOINER_COUNT }, (_, index) => ({
       name: side.joiners?.[index]?.name ?? null,
+      ...(side.joiners?.[index] ? { skill_1: side.joiners[index].skill_1 } : {}),
     })),
     stats: {
       infantry: parseStatTuple(side.stats?.inf),

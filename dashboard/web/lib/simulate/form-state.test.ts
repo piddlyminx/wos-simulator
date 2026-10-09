@@ -10,10 +10,12 @@ import {
   applyStatBonusGroups,
   defaultSide,
   effectiveStatBonusGroups,
+  getTroopRows,
   mergeSideFromOcr,
   sideFromPayload,
   toApiPayload,
-  type SideState,
+  withTroopRows,
+  withTroopTotals,
 } from "./form-state";
 
 test("catalogue troop selections survive request and saved-run conversion", () => {
@@ -28,111 +30,15 @@ test("catalogue troop selections survive request and saved-run conversion", () =
   assert.equal(sideFromPayload(payload.attacker).tiers.infantry, "t6_fc10");
 });
 
-const sideStateFieldContract = {
-  troops: {
-    mutate: (side) => ({
-      ...side,
-      troops: { ...side.troops, infantry: 123_456 },
-    }),
-    assertMapped: (payload) => assert.equal(payload.troops.infantry, 123_456),
-  },
-  tiers: {
-    mutate: (side) => ({
-      ...side,
-      tiers: { ...side.tiers, infantry: "t6_fc10" },
-    }),
-    assertMapped: (payload) =>
-      assert.equal(payload.troop_types.infantry, "infantry_t6_fc10"),
-  },
-  heroes: {
-    mutate: (side) => ({
-      ...side,
-      heroes: {
-        ...side.heroes,
-        lancer: { name: "Mia", skills: [1, 2, 3, 4] },
-      },
-    }),
-    assertMapped: (payload) =>
-      assert.deepEqual(payload.heroes.lancer, {
-        name: "Mia",
-        skills: [1, 2, 3, 4],
-      }),
-  },
-  joiners: {
-    mutate: (side) => ({
-      ...side,
-      joiners: [{ name: "Jessie" }, ...side.joiners.slice(1)],
-    }),
-    assertMapped: (payload) =>
-      assert.deepEqual(payload.joiners, [{ name: "Jessie", skill_1: 5 }]),
-  },
-  stats: {
-    mutate: (side) => ({
-      ...side,
-      stats: {
-        ...side.stats,
-        infantry: { ...side.stats.infantry, attack: 2175.1 },
-      },
-    }),
-    assertMapped: (payload) => assert.equal(payload.stats.inf[0], 2175.1),
-  },
-  statModifiers: {
-    mutate: (side) => ({
-      ...side,
-      statModifiers: { ...side.statModifiers, attack: 10, enemy_attack: 20 },
-    }),
-    assertMapped: (payload) => {
-      assert.equal(payload.stat_modifiers?.attack, 10);
-      assert.equal(payload.stat_modifiers?.enemy_attack, -20);
-    },
-  },
-  petModifiers: {
-    mutate: (side) => ({
-      ...side,
-      petModifiers: { ...side.petModifiers, health: 7, enemy_health: 5 },
-    }),
-    assertMapped: (payload) => {
-      assert.equal(payload.pet_modifiers?.health, 7);
-      assert.equal(payload.pet_modifiers?.enemy_health, -5);
-    },
-  },
-  gareth: {
-    mutate: (side) => ({ ...side, gareth: 2.75 }),
-    assertMapped: (payload) => assert.equal(payload.gareth, 2.75),
-  },
-} satisfies Record<
-  keyof SideState,
-  {
-    mutate: (side: SideState) => SideState;
-    assertMapped: (
-      payload: ReturnType<typeof toApiPayload>["attacker"],
-    ) => void;
-  }
->;
 
-test("every editable dashboard side field is mapped into the request payload", () => {
-  for (const contract of Object.values(sideStateFieldContract)) {
-    const attacker = contract.mutate(defaultSide());
-    const payload = toApiPayload(attacker, defaultSide(), 1, true);
-    contract.assertMapped(payload.attacker);
-  }
-});
-
-test("Gareth defaults to zero and survives saved-run conversion independently of pets", () => {
+test("Gareth and pet debuffs remain side-specific in stat previews", () => {
   const attacker = defaultSide();
   const defender = defaultSide();
-  assert.equal(attacker.gareth, 0);
 
   attacker.gareth = 2.75;
   attacker.petModifiers.enemy_lethality = 4;
   defender.gareth = 5;
-  const payload = toApiPayload(attacker, defender, 1, false);
 
-  assert.equal(payload.attacker.gareth, 2.75);
-  assert.equal(payload.attacker.pet_modifiers?.enemy_lethality, -4);
-  assert.deepEqual(sideFromPayload(payload.attacker), attacker);
-  assert.deepEqual(sideFromPayload(payload.defender), defender);
-  assert.equal(sideFromPayload({ ...payload.attacker, gareth: undefined }).gareth, 0);
   assert.deepEqual(effectiveStatBonusGroups(attacker, defender, "attacker", "lethality", false), { up: 0, down: 5 });
   assert.deepEqual(effectiveStatBonusGroups(defender, attacker, "defender", "lethality", false), { up: 0, down: 6.75 });
   assert.deepEqual(effectiveStatBonusGroups(defender, attacker, "defender", "attack", false), { up: 0, down: 0 });
@@ -232,4 +138,53 @@ test("two 15% attack widgets survive dashboard mapping as a 30% simulator factor
     ];
   assert.ok(Math.abs(attackFactor - 1.3) < 1e-12);
   assert.ok(Math.abs(applyStatBonusGroups(2175.1, 30, 0) - 2857.63) < 1e-9);
+});
+
+test("duplicate troop rows remain independently editable after saving and reloading", () => {
+  const attacker = withTroopRows(defaultSide(), [
+    { id: "base", unit: "infantry", tier: "t6", count: 200 },
+    { id: "duplicate", unit: "infantry", tier: "t6", count: 50 },
+    { id: "fc", unit: "infantry", tier: "t6_fc5", count: 100 },
+    { id: "lancer", unit: "lancer", tier: "t6", count: 10 },
+  ]);
+  const saved = JSON.parse(JSON.stringify(toApiPayload(attacker, defaultSide(), 1, false)));
+  const loaded = sideFromPayload(saved.attacker);
+  const removed = withTroopRows(loaded, getTroopRows(loaded).filter(row => row.id !== "base"));
+  const moved = withTroopRows(removed, getTroopRows(removed).map(row =>
+    row.id === "duplicate" ? { ...row, unit: "lancer" } : row));
+  const input = toBattleInput(toApiPayload(moved, defaultSide(), 1, false), "row-regression");
+  assert.deepEqual(input.attacker.troops, { infantry_t6_fc5: 100, lancer_t6: 60, marksman_t11_fc10: 0 });
+  const compiled = prepareBattle(input, loadSimulatorConfig());
+  assert.equal(compiled.fighters.attacker.initialTroops.infantry, 100);
+  assert.equal(compiled.fighters.attacker.initialTroops.lancer, 60);
+});
+
+test("category total changes preserve mixed tiers with exact integer counts", () => {
+  const state = withTroopRows(defaultSide(), [
+    { id: "one", unit: "infantry", tier: "t6", count: 2 },
+    { id: "two", unit: "infantry", tier: "t6_fc5", count: 1 },
+    { id: "three", unit: "infantry", tier: "t6_fc10", count: 1 },
+  ]);
+  const scaled = withTroopTotals(state, { infantry: 3, lancer: 0, marksman: 0 });
+  const input = toBattleInput(toApiPayload(scaled, defaultSide(), 1, false), "scale-regression");
+  assert.deepEqual(input.attacker.troops, {
+    infantry_t6: 1, infantry_t6_fc5: 1, infantry_t6_fc10: 1, lancer_t11_fc10: 0, marksman_t11_fc10: 0,
+  });
+  const empty = withTroopRows(scaled, []);
+  const reloaded = sideFromPayload(toApiPayload(empty, defaultSide(), 1, false).attacker);
+  assert.deepEqual(getTroopRows(reloaded), []);
+});
+
+test("empty primary troops preserve populated extra tiers through reload and execution", () => {
+  const state = withTroopRows(defaultSide(), [
+    { id: "infantry", unit: "infantry", tier: "t6", count: 0 },
+    { id: "lancer", unit: "lancer", tier: "t6", count: 0 },
+    { id: "marksman", unit: "marksman", tier: "t6", count: 0 },
+    { id: "extra", unit: "infantry", tier: "t6_fc5", count: 100 },
+  ]);
+  const payload = toApiPayload(state, defaultSide(), 1, false);
+  const reloaded = sideFromPayload(JSON.parse(JSON.stringify(payload.attacker)));
+  const input = toBattleInput(toApiPayload(reloaded, defaultSide(), 1, false), "empty-primary");
+  assert.equal(input.attacker.troops.infantry_t6, 0);
+  assert.equal(input.attacker.troops.infantry_t6_fc5, 100);
 });

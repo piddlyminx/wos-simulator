@@ -478,6 +478,9 @@ export default function SimulateClient({
   const [error, setError] = useState<string | null>(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadWarnings, setUploadWarnings] = useState<string[]>([]);
+  const [sourceReport, setSourceReport] = useState<SimulateRequestPayload["source_report"]>(
+    () => (initialSavedRun?.request as SimulateRequestPayload | undefined)?.source_report,
+  );
   const [rallyMode, setRallyMode] = useState(() => initialState.rallyMode);
   const [mobileTab, setMobileTab] = useState<SimWorkspaceTab>(() =>
     initialState.result || initialState.optimizeResult || initialState.surfaceResult ? "results" : "attacker",
@@ -734,6 +737,7 @@ export default function SimulateClient({
     resetLoadedPresets(savedState.loadedPresetNames);
     setRallyMode(savedState.rallyMode);
     setUploadWarnings([]);
+    setSourceReport((saved.request as SimulateRequestPayload).source_report);
     setError(null);
     setOptimizeError(null);
     setSurfaceError(null);
@@ -874,6 +878,7 @@ export default function SimulateClient({
       setDefender(plainState.defender);
       setReplicates(plainState.replicates);
       setRallyMode(plainState.rallyMode);
+      setSourceReport(undefined);
       resetRunOutputs({ resetSurfaceSelection: true });
       setOptimizeReplicates(plainState.optimizeReplicates);
       setOptimizeStepInput(plainState.optimizeStepInput);
@@ -994,6 +999,7 @@ export default function SimulateClient({
   }
 
   function applyUpload(submission: UploadReportSubmission) {
+    setSourceReport(undefined);
     const {
       ocr,
       heroes,
@@ -1050,6 +1056,7 @@ export default function SimulateClient({
         replicates,
         rallyMode,
         loadedPresetNames,
+        sourceReport,
       );
       const job = runWorkerSimulation(payload, (done, total) =>
         setSimulateProgress((current) =>
@@ -1089,6 +1096,7 @@ export default function SimulateClient({
         1,
         rallyMode,
         loadedPresetNames,
+        sourceReport,
       );
       const job = runWorkerSimulationTrace(payload, seed, () => undefined);
       setBattleTrace(await job.promise);
@@ -1702,6 +1710,20 @@ export default function SimulateClient({
               <li key={i}>{w}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {sourceReport && (
+        <div className="sim-tool-panel mb-4 px-3 py-2 text-xs" data-testid="shared-report-banner">
+          <strong>Imported game report {sourceReport.reference}</strong>
+          <p>The saved result is a simulator prediction, not the game outcome.</p>
+          <p>Reported equipment, hero levels and other stat bonuses are included in the effective stats; simulated pre-battle bonuses have been removed from the editable base stats to avoid double counting.</p>
+          <p>Troop rows preserve mixed tiers. Add, edit or remove individual rows to change the composition; category totals are calculated from those rows.</p>
+          {sourceReport.warnings.length > 0 && (
+            <ul className="list-disc list-inside mt-1" style={{ color: "var(--sim-yellow)" }}>
+              {sourceReport.warnings.map(warning => <li key={warning}>{warning}</li>)}
+            </ul>
+          )}
         </div>
       )}
 
