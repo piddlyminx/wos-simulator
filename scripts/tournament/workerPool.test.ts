@@ -120,3 +120,43 @@ test("createBattleTaskRunner sends worker tasks in configured batches", async ()
   assert.deepEqual(batchSeeds.sort((left, right) => left[0]! - right[0]!), [[1, 2], [3], [4, 5]]);
   assert.equal(results.length, 5);
 });
+
+test("createBattleTaskRunner bounds pending batches and preserves result order when batches finish out of order", async () => {
+  const tasks = Array.from({ length: 10 }, (_, index) => ({
+    attacker: team(index + 1), defender: team(20), seed: index, reps: 1
+  }));
+  let pending = 0;
+  let maxPending = 0;
+  const finished: number[] = [];
+  const progress: number[] = [];
+  let releaseFirst!: () => void;
+  const firstBatchReady = new Promise<void>((resolve) => { releaseFirst = resolve; });
+  const runner = createBattleTaskRunner(2, 2, () => ({
+    async run(): Promise<BattleSummary> { throw new Error("Expected a batch"); },
+    async runBatch(batch): Promise<BattleSummary[]> {
+      pending += 1;
+      maxPending = Math.max(maxPending, pending);
+      if (batch[0].seed === 0) await firstBatchReady;
+      pending -= 1;
+      finished.push(batch[0].seed);
+      if (batch[0].seed === 2) releaseFirst();
+      return batch.map((task) => ({
+        attackerId: task.attacker.id, defenderId: task.defender.id,
+        games: task.reps, attackerWins: 1, defenderWins: 0,
+        avgAttackerLeft: 1, avgDefenderLeft: 0
+      }));
+    },
+    async close() {}
+  }));
+
+  try {
+    const results = await runner.run(tasks, (completed) => progress.push(completed));
+    assert.equal(maxPending, 2);
+    assert.notEqual(finished[0], 0);
+    assert.deepEqual(results.map((result) => result.attackerId), tasks.map((task) => task.attacker.id));
+    assert.deepEqual(progress, [2, 4, 6, 8, 10]);
+    assert.deepEqual(await runner.run([]), []);
+  } finally {
+    await runner.close();
+  }
+});

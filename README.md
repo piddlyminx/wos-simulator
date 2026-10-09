@@ -76,6 +76,87 @@ npx tsx scripts/benchmark_tournament_battle_modes.ts 60
 npx tsx scripts/fit_enemy_base_stats.ts --help
 ```
 
+**Dual-ranking tournament finals** use proportional benchmark panels instead of
+a full attacker × defender round robin. Candidates have no main-lineup cap.
+
+| CLI option | Default | Meaning |
+| --- | ---: | --- |
+| `--screen-top-m` | 10000 | Swiss candidates screened per role |
+| `--screen-reps` | 2 | Screening games per opponent |
+| `--benchmark-top-m` | 1000 | Top-ranked source teams used to allocate panel seats |
+| `--benchmark-size` | 100 | Opponents per role |
+| `--finals-top-m` | 1000 | Screened candidates retained for reranking |
+| `--finals-reps` | 15 | Reranking games per opponent, independent of Swiss `--reps` |
+| `--refinement-top-m` | 100 | Leading reranked candidates given extra evaluation |
+| `--refinement-reps` | 25 | Additional games per opponent for those candidates |
+| `--top-n` | 500 | Final CSV output rows, not candidate retention |
+
+Panels group the top source teams by ordered main hero trio + troop formation.
+Seats are proportional to each group's frequency, using largest-remainder
+allocation; tied remainders favour the earlier-ranked group. The best-ranked
+joiner variants fill each group's seats. Screening panels come from Swiss;
+reranking panels are rebuilt from screening. Each candidate faces every member
+of its opposite-role panel equally, and its score excludes incidental appearances
+as a benchmark opponent. Refinement keeps the reranking panels fixed, pools wins
+and survivor margins by game count, then reranks all retained candidates.
+Exact score ties retain the original Swiss source order.
+
+With enough source teams, the defaults execute 4 million screening games,
+3 million reranking games, and 500,000 refinement games across both roles:
+7.5 million games, matching the old 500 × 500 × 30 final's battle count.
+These are battle budgets, not runtime guarantees. Sizes clamp to available
+candidates and panel-source rows; the CLI prints actual planned budgets.
+Live progress reports recent throughput in `battles/s`, counting all repetitions
+rather than matchups. It refreshes about once per second when work completes,
+prints each round/stage boundary, and resets the rate window for each phase.
+Finalists cannot exceed the configured screening count; refinement candidates
+cannot exceed the configured finalist count. `--finals-top-m 0` disables all
+benchmark stages. Either refinement count or repetition count can be zero to
+skip refinement. The obsolete `--finals-max-same-shell` option is removed.
+The separate combined-ranking `tournament_swiss.ts` keeps its existing finals.
+
+```bash
+npx tsx scripts/tournament_dual_swiss.ts \
+  --ratios 50-20-30 59-40-1 40-1-59 49-2-49 40-20-40 60-10-30 30-20-50 \
+  --total 300000 --player-stats max --jobs 20
+
+# Rerun the benchmark stages without repeating Swiss:
+npx tsx scripts/tournament_dual_swiss.ts --finals-only tournament_results/DIR \
+  --total 300000 --player-stats max --jobs 20
+```
+
+Each run writes `swiss_off.csv` / `swiss_def.csv`, retaining at least
+`max(top-n, screen-top-m, benchmark-top-m)` rows when benchmarks are enabled,
+plus all screened rows in `screening_off.csv` / `screening_def.csv`.
+`finals_off.csv` / `finals_def.csv` contain up to `--top-n` final rows; their
+`games` column reflects extra refinement where applied.
+For interpretable results, open `finals_off_summary.md` / `finals_def_summary.md`.
+These summarize every retained finalist, independently of `--top-n`: recurring
+heroes (main and joiner roles), formation frequencies, main-lineup families,
+core/flexible joiners, observed win-rate ranges, and concrete strong combinations.
+The descriptive strong band is within 3 percentage points of each formation's
+best result. A core joiner appears in at least 80% of its strong variants; flexible
+support appears in 30% to below 80%, with at least three strong variants required.
+Detailed recipes cover up to eight families within 5 points of the overall best;
+the family table retains alternatives. These are informed heuristics from the
+shortlisted population, not causal effects or guarantees about untested combinations.
+
+Identical builds no longer consume extra candidate or panel places. Identity
+includes ordered mains, formation, troop counts, and the joiner multiset, ignoring
+joiner order but preserving repeated heroes. Duplicate inventory entries still
+allow their stated multiplicity (for example, two Norahs); `--repeat-joiners`
+allows any repetition without emitting the same build multiple times.
+Legacy CSV replay keeps the first-ranked occurrence before applying limits.
+Old Swiss ranks and opponent-panel bias are not repaired retroactively; a fresh
+full run is needed to remove that bias. Summary duplicate pooling alone only
+removes repeated rows from the presentation.
+
+`benchmark_panels.json` records the exact attacker/defender panels and executed
+game counts for each stage. Replay copies the saved Swiss CSVs into a fresh
+output directory and can use older, shorter qualifier files, but cannot recover
+unsaved candidates. Use the same total, player-stat profile, seed, stage options,
+and simulator configuration to reproduce a run; worker count may change.
+
 For the three-army tool, `--reps N` sets the total number of matches per evaluation
 in both `sequential` and `random` ordering. For example, `--reps 500` uses 500
 matches per finalist and 50 per preliminary troop candidate in either mode.

@@ -28,7 +28,7 @@ export const MAIN_POOL: Record<string, MainHeroRole> = {
 export const JOINER_POOL = [
   "Hendrik",
   // "Sonya",
-  // "Fred",
+  "Fred",
   "Jessie",
   "Seo-yoon",
   "Lumak",
@@ -65,9 +65,17 @@ export function generateTeams(ratios: Array<[string, Team["troops"]]>, allowRepe
   const infantry = heroesForRole("inf");
   const lancer = heroesForRole("lanc");
   const marksman = heroesForRole("mark");
-  const joinerCombos = allowRepeatedJoiners ? combinationsWithReplacement([...JOINER_POOL], 4) : combinations([...JOINER_POOL], 4);
+  const inventory = new Map<string, number>();
+  for (const name of JOINER_POOL) inventory.set(name, (inventory.get(name) ?? 0) + 1);
+  const joinerCombos = allowRepeatedJoiners
+    ? combinationsWithReplacement([...inventory.keys()], 4)
+    : combinations([...inventory].flatMap(([name, count]) => Array<string>(count).fill(name)), 4);
   let id = 0;
+  const seenRatios = new Set<string>();
   for (const [ratioLabel, troops] of ratios) {
+    const ratioKey = JSON.stringify([ratioLabel, troops.infantry_t10, troops.lancer_t10, troops.marksman_t10]);
+    if (seenRatios.has(ratioKey)) continue;
+    seenRatios.add(ratioKey);
     for (const inf of infantry) {
       for (const lanc of lancer) {
         for (const mark of marksman) {
@@ -86,6 +94,24 @@ export function generateTeams(ratios: Array<[string, Team["troops"]]>, allowRepe
     }
   }
   return teams;
+}
+
+export function teamBuildKey(team: Team): string {
+  return JSON.stringify([
+    ...team.mains, team.ratioLabel,
+    team.troops.infantry_t10, team.troops.lancer_t10, team.troops.marksman_t10,
+    ...[...team.joiners].sort()
+  ]);
+}
+
+export function uniqueRankedTeams(teams: Team[]): Team[] {
+  const seen = new Set<string>();
+  return teams.filter(team => {
+    const key = teamBuildKey(team);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 export function selectFinalsTeamsByMainLineup(teams: Team[], topM: number, maxSameMainLineup: number): Team[] {
@@ -118,6 +144,7 @@ function combinations<T>(items: T[], size: number): T[][] {
       return;
     }
     for (let index = start; index <= items.length - (size - current.length); index += 1) {
+      if (index > start && items[index] === items[index - 1]) continue;
       current.push(items[index]);
       visit(index + 1, current);
       current.pop();

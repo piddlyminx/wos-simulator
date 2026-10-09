@@ -55,10 +55,8 @@ export class Pool {
     if (this.scoresActive.length === 0 || count <= 0) return;
     this.sortActive();
     const freezeCount = Math.min(this.scoresActive.length, count);
-    for (let index = 0; index < freezeCount; index += 1) {
-      const score = this.scoresActive.pop();
-      if (score) this.scoresFinal.unshift(score);
-    }
+    const frozen = this.scoresActive.splice(this.scoresActive.length - freezeCount, freezeCount);
+    this.scoresFinal = frozen.concat(this.scoresFinal);
   }
 
   countActiveLossesAtLeast(minLosses: number): number {
