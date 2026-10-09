@@ -1,19 +1,18 @@
 import assert from "node:assert/strict";
-import {
-  appendFile,
-  mkdtemp,
-  readFile,
-  readdir,
-  stat,
-  utimes,
-  writeFile,
-} from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { test } from "node:test";
+import { randomUUID } from "node:crypto";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { gzip } from "node:zlib";
+import { after, before, beforeEach, test } from "node:test";
+import { Pool } from "pg";
+
+import * as store from "./simulation-store";
+import { importSimulationRuns } from "./simulation-run-import";
 
 import type {
-  SavedSimulationRunListItem,
   BearOptimizeRatioRequestPayload,
   BearOptimizeRatioResult,
   BearSimRequestPayload,
@@ -189,290 +188,202 @@ test("saved run helpers route snapshots to their owning pages", () => {
   assert.equal(buildSimulationRunTitle(tournamentRequest, "tournament"), "Tournament: Test batch (2 rounds)");
 });
 
-test("simulation store filters and pages each run history separately", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
-  process.env.SIM_RUNS_DIR = dir;
-  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
-
-  const pvp = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
-  const bear = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
-  const bearOpt = await store.saveSimulationRun("bear_optimize_ratio", bearOptimizeRequest, bearOptimizeResult);
-  const surface = await store.saveSimulationRun("ratio_explorer", surfaceRequest, surfaceResult);
-  const tournament = await store.saveSimulationRun("tournament", tournamentRequest, tournamentResult);
-
-  assert.equal(pvp.share_url.startsWith("/simulate?run="), true);
-  assert.equal(bear.share_url.startsWith("/bear?run="), true);
-  assert.equal(bearOpt.share_url.startsWith("/bear?run="), true);
-  assert.equal(surface.share_url.startsWith("/simulate?run="), true);
-  assert.equal(tournament.share_url.startsWith("/tournament?run="), true);
-
-  const pvpPage = await store.listSimulationRunsPage({
-    limit: 10,
-    kinds: ["simulate", "optimize_ratio"],
-  });
-  assert.deepEqual(pvpPage.runs.map((run: SavedSimulationRunListItem) => run.kind), ["simulate"]);
-
-  const firstBearPage = await store.listSimulationRunsPage({
-    limit: 1,
-    offset: 0,
-    kinds: ["bear_simulate", "bear_optimize_ratio"],
-  });
-  assert.equal(firstBearPage.runs.length, 1);
-  assert.equal(firstBearPage.has_more, true);
-  assert.equal(firstBearPage.next_offset, 1);
-
-  const secondBearPage = await store.listSimulationRunsPage({
-    limit: 1,
-    offset: firstBearPage.next_offset,
-    kinds: ["bear_simulate", "bear_optimize_ratio"],
-  });
-  assert.equal(secondBearPage.runs.length, 1);
-  assert.equal(secondBearPage.has_more, false);
-  assert.equal(secondBearPage.runs.every((run: SavedSimulationRunListItem) => run.share_url.startsWith("/bear?run=")), true);
-
-  const ratioExplorerPage = await store.listSimulationRunsPage({
-    limit: 10,
-    kinds: ["ratio_explorer"],
-  });
-  assert.deepEqual(ratioExplorerPage.runs.map((run: SavedSimulationRunListItem) => run.kind), ["ratio_explorer"]);
-
-  const tournamentPage = await store.listSimulationRunsPage({
-    limit: 10,
-    kinds: ["tournament"],
-  });
-  assert.deepEqual(tournamentPage.runs.map((run: SavedSimulationRunListItem) => run.kind), ["tournament"]);
-  assert.equal(tournamentPage.runs[0]?.share_url.startsWith("/tournament?run="), true);
-
-  const files = await readdir(dir);
-  assert.equal(files.includes(".runs-index.json"), true);
-  assert.equal(files.includes(`${pvp.id}.json.gz`), true);
-  assert.equal(files.includes(`${pvp.id}.meta.json`), true);
-  assert.equal(files.includes(`${pvp.id}.json`), false);
-  assert.deepEqual((await store.readSimulationRun(pvp.id))?.result, pvpResult);
+const testUrl = process.env.TEST_DATABASE_URL;
+const databaseTest = { skip: !testUrl ? "Set TEST_DATABASE_URL to run isolated real PostgreSQL storage tests" : false };
+const schema = `saved_runs_test_${randomUUID().replaceAll("-", "")}`;
+let admin: Pool;
+before(async () => {
+  if (!testUrl) return;
+  admin = new Pool({ connectionString: testUrl });
+  await admin.query(`CREATE SCHEMA ${schema}`);
+  const url = new URL(testUrl);
+  url.searchParams.set("options", `-c search_path=${schema}`);
+  process.env.DATABASE_URL = url.toString();
+  await store.simulationRunPool().query(await readFile(path.resolve("../postgres/schema.sql"), "utf8"));
+});
+beforeEach(async () => {
+  if (testUrl) await store.simulationRunPool().query("TRUNCATE saved_simulation_runs");
+});
+after(async () => {
+  if (!testUrl) return;
+  await store.simulationRunPool().end();
+  await admin.query(`DROP SCHEMA ${schema} CASCADE`);
+  await admin.end();
 });
 
-test("simulation store lists new runs by anonymous browser owner", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
-  process.env.SIM_RUNS_DIR = dir;
-  const store = await import(`./simulation-store.ts?case=${Date.now()}-owners`);
+test("all saved run kinds round trip and list in separate histories", databaseTest, async () => {
+  const fixtures = [
+    ["simulate", pvpRequest, pvpResult],
+    ["optimize_ratio", pvpRequest, pvpResult],
+    ["bear_simulate", bearRequest, bearResult],
+    ["bear_optimize_ratio", bearOptimizeRequest, bearOptimizeResult],
+    ["ratio_explorer", surfaceRequest, surfaceResult],
+    ["tournament", tournamentRequest, tournamentResult],
+  ] as const;
+  for (const [kind, request, result] of fixtures) {
+    const saved = await store.saveSimulationRun(kind, request, result);
+    assert.deepEqual(await store.readSimulationRun(saved.id), saved);
+    const page = await store.listSimulationRunsPage({ kinds: [kind] });
+    assert.deepEqual(page.runs, [{
+      id: saved.id, kind, created_at: saved.created_at,
+      title: buildSimulationRunTitle(request, kind), kept: false, share_url: saved.share_url,
+    }]);
+  }
+  const page = await store.listSimulationRunsPage({ limit: 1, kinds: ["bear_simulate", "bear_optimize_ratio"] });
+  assert.equal(page.has_more, true);
+  const second = await store.listSimulationRunsPage({ limit: 1, offset: page.next_offset, kinds: ["bear_simulate", "bear_optimize_ratio"] });
+  assert.equal(second.has_more, false);
+  assert.notEqual(second.runs[0].id, page.runs[0].id);
+  assert.equal(second.next_offset, 2);
+});
+
+test("owner authorization preserves kept, denied and missing outcomes without leaking ownership", databaseTest, async () => {
   const ownerA = "a".repeat(64);
   const ownerB = "b".repeat(64);
-
-  const ownedA = await store.saveSimulationRun(
-    "simulate",
-    pvpRequest,
-    pvpResult,
-    ownerA,
-  );
-  const legacy = await store.saveSimulationRun(
-    "simulate",
-    pvpRequest,
-    pvpResult,
-  );
-  const ownedB = await store.saveSimulationRun(
-    "simulate",
-    pvpRequest,
-    pvpResult,
-    ownerB,
-  );
-
-  const mine = await store.listSimulationRunsPage({
-    limit: 1,
-    ownerHash: ownerA,
-  });
-  assert.deepEqual(mine.runs.map((run: SavedSimulationRunListItem) => run.id), [
-    ownedA.id,
-  ]);
-  assert.equal(mine.has_more, false);
-
-  const all = await store.listSimulationRunsPage({ limit: 10 });
-  assert.deepEqual(
-    new Set(all.runs.map((run: SavedSimulationRunListItem) => run.id)),
-    new Set([ownedA.id, legacy.id, ownedB.id]),
-  );
-
-  assert.equal(
-    await store.setSimulationRunKept(ownedA.id, true, ownerB),
-    undefined,
-  );
-  assert.equal(
-    await store.setSimulationRunKept(ownedA.id, true, ownerA),
-    true,
-  );
-  const starred = await store.listSimulationRunsPage({
-    limit: 10,
-    ownerHash: ownerA,
-    kept: true,
-  });
-  assert.deepEqual(
-    starred.runs.map((run: SavedSimulationRunListItem) => run.id),
-    [ownedA.id],
-  );
-
-  const metadata = JSON.parse(
-    await readFile(path.join(dir, `${ownedA.id}.meta.json`), "utf8"),
-  ) as { owner_hash?: string };
-  assert.equal(metadata.owner_hash, ownerA);
-  assert.equal(
-    "owner_hash" in (await store.readSimulationRun(ownedA.id))!,
-    false,
-  );
-
-  await store.rebuildSimulationRunIndex();
-  const rebuiltMine = await store.listSimulationRunsPage({
-    limit: 10,
-    ownerHash: ownerA,
-  });
-  assert.deepEqual(
-    rebuiltMine.runs.map((run: SavedSimulationRunListItem) => run.id),
-    [ownedA.id],
-  );
+  const ownedA = await store.saveSimulationRun("simulate", pvpRequest, pvpResult, ownerA);
+  const unowned = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const ownedB = await store.saveSimulationRun("simulate", pvpRequest, pvpResult, ownerB);
+  assert.deepEqual((await store.listSimulationRunsPage({ ownerHash: ownerA })).runs.map((run) => run.id), [ownedA.id]);
+  assert.equal(await store.setSimulationRunKept(ownedA.id, true, ownerB), undefined);
+  assert.equal(await store.setSimulationRunKept(unowned.id, true, ownerA), undefined);
+  assert.equal((await store.readSimulationRun(ownedA.id))?.kept, false);
+  assert.equal(await store.setSimulationRunKept("missing-run-123", true, ownerA), null);
+  assert.equal(await store.setSimulationRunKept(ownedA.id, true, ownerA), true);
+  assert.deepEqual((await store.listSimulationRunsPage({ ownerHash: ownerA, kept: true })).runs.map((run) => run.id), [ownedA.id]);
+  assert.equal(await store.setSimulationRunKept(ownedA.id, false, ownerA), false);
+  assert.equal(await store.setSimulationRunKept(unowned.id, true), true);
+  assert.equal("owner_hash" in (await store.readSimulationRun(ownedA.id))!, false);
+  assert.deepEqual(new Set((await store.listSimulationRuns()).map((run) => run.id)), new Set([ownedA.id, unowned.id, ownedB.id]));
+  await assert.rejects(store.saveSimulationRun("simulate", pvpRequest, pvpResult, "invalid"), /owner hash/);
+  await assert.rejects(store.readSimulationRun("../bad"), /id/);
 });
 
-test("simulation run index persists without rereading legacy result files", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
-  process.env.SIM_RUNS_DIR = dir;
-  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
-
-  const id = "legacy-run-1234";
-  await writeFile(
-    path.join(dir, `${id}.json`),
-    `${JSON.stringify({
-      version: 1,
-      id,
-      kind: "tournament",
-      created_at: new Date().toISOString(),
-      request: tournamentRequest,
-      result: tournamentResult,
-    }, null, 2)}\n`,
-    "utf8",
-  );
-  assert.deepEqual((await store.readSimulationRun(id))?.result, tournamentResult);
-  await appendFile(
-    path.join(dir, `${id}.json`),
-    "this makes the result payload invalid JSON",
-    "utf8",
-  );
-
-  const page = await store.listSimulationRunsPage({
-    limit: 20,
-    kinds: ["tournament"],
-  });
-  assert.equal(page.runs.length, 1);
-  assert.equal(page.runs[0]?.id, id);
-
-  // A fresh server process can list from the persisted index without opening
-  // any of the large legacy run bodies again.
-  await writeFile(path.join(dir, `${id}.json`), "not JSON", "utf8");
-  const freshStore = await import(`./simulation-store.ts?case=${Date.now()}-fresh`);
-  const indexedPage = await freshStore.listSimulationRunsPage({
-    limit: 20,
-    kinds: ["tournament"],
-  });
-  assert.equal(indexedPage.runs.length, 1);
-  assert.equal(indexedPage.runs[0]?.id, id);
-});
-
-test("cleanup enforces age and size limits but preserves kept runs", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
-  process.env.SIM_RUNS_DIR = dir;
-  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
-
+test("explicit cleanup enforces age and size but never deletes kept records", databaseTest, async () => {
   const disposable = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
   const kept = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
-  assert.equal(await store.setSimulationRunKept(kept.id, true), true);
-
-  const pageBefore = await store.listSimulationRunsPage({ limit: 20 });
-  assert.equal(pageBefore.runs.find((run: SavedSimulationRunListItem) => run.id === kept.id)?.kept, true);
-  const cleanup = await store.cleanupSimulationRuns({
-    retentionDays: 30,
-    maxStorageBytes: 0,
-    now: Date.now() + 31 * 24 * 60 * 60 * 1000,
-  });
-
+  await store.setSimulationRunKept(kept.id, true);
+  const cleanup = await store.cleanupSimulationRuns({ retentionDays: 30, maxStorageBytes: 0, now: Date.now() + 31 * 86400000 });
   assert.equal(cleanup.deleted_runs, 1);
   assert.equal(cleanup.kept_runs, 1);
   assert.equal(await store.readSimulationRun(disposable.id), null);
   assert.equal((await store.readSimulationRun(kept.id))?.kept, true);
-
   const overLimit = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
-  const sizeCleanup = await store.cleanupSimulationRuns({
-    retentionDays: 0,
-    maxStorageBytes: 1,
-  });
-  assert.equal(sizeCleanup.deleted_runs, 1);
+  assert.equal((await store.cleanupSimulationRuns({ retentionDays: 0, maxStorageBytes: 1 })).deleted_runs, 1);
   assert.equal(await store.readSimulationRun(overLimit.id), null);
-  assert.equal((await store.readSimulationRun(kept.id))?.kept, true);
-
-  assert.equal(await store.setSimulationRunKept(kept.id, false), false);
-  const finalCleanup = await store.cleanupSimulationRuns({
-    retentionDays: 30,
-    maxStorageBytes: 0,
-    now: Date.now() + 31 * 24 * 60 * 60 * 1000,
-  });
-  assert.equal(finalCleanup.deleted_runs, 1);
-  assert.equal(await store.readSimulationRun(kept.id), null);
+  await store.setSimulationRunKept(kept.id, false);
+  assert.equal((await store.cleanupSimulationRuns({ retentionDays: 30, maxStorageBytes: 0, now: Date.now() + 31 * 86400000 })).deleted_runs, 1);
 });
 
-test("cleanup reconciles valid run files missing from the index", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
-  process.env.SIM_RUNS_DIR = dir;
-  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
-
-  const indexed = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
-  const omitted = await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
-  await store.listSimulationRunsPage({ limit: 20 });
-
-  const indexPath = path.join(dir, ".runs-index.json");
-  const index = JSON.parse(await readFile(indexPath, "utf8")) as {
-    version: number;
-    runs: Array<{ id: string }>;
-  };
-  index.runs = index.runs.filter((record) => record.id !== omitted.id);
-  await writeFile(indexPath, `${JSON.stringify(index)}\n`, "utf8");
-
-  const cleanup = await store.cleanupSimulationRuns({
-    retentionDays: 30,
-    maxStorageBytes: 0,
-    now: Date.now() + 31 * 24 * 60 * 60 * 1000,
-  });
-
-  assert.equal(cleanup.deleted_runs, 2);
-  assert.equal(await store.readSimulationRun(indexed.id), null);
-  assert.equal(await store.readSimulationRun(omitted.id), null);
+test("cleanup observes a concurrent committed keep rather than deleting its stale snapshot", databaseTest, async () => {
+  const saved = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
+  const client = await store.simulationRunPool().connect();
+  try {
+    await client.query("BEGIN");
+    await client.query("UPDATE saved_simulation_runs SET kept = true WHERE id = $1", [saved.id]);
+    const cleanup = store.cleanupSimulationRuns({ retentionDays: 0, maxStorageBytes: 1 });
+    await client.query("COMMIT");
+    assert.equal((await cleanup).deleted_runs, 0);
+    assert.equal((await store.readSimulationRun(saved.id))?.kept, true);
+  } finally {
+    client.release();
+  }
 });
 
-test("locked index updates bypass a stale process-local cache", async () => {
-  const dir = await mkdtemp(path.join(tmpdir(), "wos-sim-runs-"));
-  process.env.SIM_RUNS_DIR = dir;
-  const store = await import(`./simulation-store.ts?case=${Date.now()}`);
+test("independent processes see each other's saves and kept updates", databaseTest, async () => {
+  const { stdout } = await promisify(execFile)(process.execPath, ["--import", "tsx", "--eval", `
+    const store = require('./lib/simulation-store.ts');
+    (async () => {
+      const saved = await store.saveSimulationRun('simulate', ${JSON.stringify(pvpRequest)}, ${JSON.stringify(pvpResult)}, '${"a".repeat(64)}');
+      await store.setSimulationRunKept(saved.id, true);
+      console.log(saved.id);
+      await store.simulationRunPool().end();
+    })().catch(e => { console.error(e); process.exitCode = 1; });
+  `], { env: process.env });
+  const saved = await store.readSimulationRun(stdout.trim());
+  assert.deepEqual(saved?.result, pvpResult);
+  assert.equal(saved?.kept, true);
+  assert.deepEqual((await store.listSimulationRunsPage({ ownerHash: "a".repeat(64), kept: true })).runs.map((run) => run.id), [saved?.id]);
+});
 
-  const first = await store.saveSimulationRun("simulate", pvpRequest, pvpResult);
-  const indexPath = path.join(dir, ".runs-index.json");
-  const stableTime = new Date("2020-01-01T00:00:00.000Z");
-  await utimes(indexPath, stableTime, stableTime);
-  await store.listSimulationRunsPage({ limit: 20 });
+test("legacy import preserves documents, owners, titles and markers; resumes only exact duplicates", databaseTest, async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-import-"));
+  try {
+    const ownerHash = "c".repeat(64);
+    const first = { version: 1, id: "legacy-run-0001", kind: "simulate", created_at: "2020-01-01T00:00:00+00:00", request: pvpRequest, result: pvpResult };
+    const second = { ...first, id: "legacy-run-0002", kind: "bear_simulate", request: bearRequest, result: bearResult };
+    await writeFile(path.join(dir, `${first.id}.json`), "obsolete duplicate is intentionally ignored");
+    await writeFile(path.join(dir, `${first.id}.json.gz`), await promisify(gzip)(JSON.stringify(first)));
+    await writeFile(path.join(dir, `${second.id}.json`), JSON.stringify(second, null, 2));
+    await writeFile(path.join(dir, `${first.id}.meta.json`), JSON.stringify({ ...first, result: undefined, owner_hash: ownerHash }));
+    await writeFile(path.join(dir, `${first.id}.keep`), "{}");
+    await writeFile(path.join(dir, ".runs-index.json"), JSON.stringify({ version: 1, runs: [
+      { id: first.id, kind: first.kind, created_at: first.created_at, title: "Preserved title", kept: true, owner_hash: ownerHash },
+      { id: second.id, kind: second.kind, created_at: second.created_at, title: "Bear title", kept: false },
+    ] }));
+    const filesBefore = await readdir(dir);
+    const imported = await importSimulationRuns({ inputDir: dir });
+    assert.deepEqual(imported, { source_runs: 2, normalized_legacy_runs: 0, imported_runs: 2, matched_runs: 0, verified_runs: 2, kept_runs: 1, owned_runs: 1, kinds: { simulate: 1, bear_simulate: 1 } });
+    assert.deepEqual(await store.readSimulationRun(first.id), { ...first, kept: true, share_url: buildSimulationShareUrl(first.id, "simulate") });
+    assert.deepEqual((await store.listSimulationRuns()).map((run) => run.id), [second.id, first.id]);
+    assert.equal((await store.listSimulationRunsPage({ ownerHash })).runs[0].title, "Preserved title");
+    const resumed = await importSimulationRuns({ inputDir: dir });
+    assert.equal(resumed.imported_runs, 0);
+    assert.equal(resumed.matched_runs, 2);
+    assert.equal((await importSimulationRuns({ inputDir: dir, verifyOnly: true })).verified_runs, 2);
+    assert.deepEqual(await readdir(dir), filesBefore);
+    await store.simulationRunPool().query("UPDATE saved_simulation_runs SET title = 'conflict' WHERE id = $1", [first.id]);
+    await assert.rejects(importSimulationRuns({ inputDir: dir }), /conflict/);
+    await assert.rejects(importSimulationRuns({ inputDir: dir, verifyOnly: true }), /conflict/);
+    await store.simulationRunPool().query("UPDATE saved_simulation_runs SET title = 'Preserved title', payload = $2, payload_size = $3 WHERE id = $1", [first.id, Buffer.from("broken gzip"), 11]);
+    await assert.rejects(importSimulationRuns({ inputDir: dir, verifyOnly: true }));
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 
-  const before = await stat(indexPath);
-  const externalIndex = JSON.parse(await readFile(indexPath, "utf8")) as {
-    version: number;
-    runs: Array<{ id: string; title: string }>;
-  };
-  const externalRecord = externalIndex.runs.find((record) => record.id === first.id)!;
-  externalRecord.title = `X${externalRecord.title.slice(1)}`;
-  const externalSerialized = `${JSON.stringify(externalIndex)}\n`;
-  assert.equal(Buffer.byteLength(externalSerialized), before.size);
-  await writeFile(indexPath, externalSerialized, "utf8");
-  await utimes(indexPath, stableTime, stableTime);
+test("legacy surface runs migrate to the current explorer kind without losing payloads or ownership", databaseTest, async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-import-surface-"));
+  try {
+    const plain = { version: 1, id: "legacy-surface-plain", kind: "surface_sweep", created_at: "2020-01-01T00:00:00+00:00", request: surfaceRequest, result: surfaceResult };
+    const compressed = { ...plain, id: "legacy-surface-gzip" };
+    const ownerHash = "d".repeat(64);
+    const plainBytes = JSON.stringify(plain, null, 2);
+    const gzipBytes = await promisify(gzip)(JSON.stringify(compressed));
+    await writeFile(path.join(dir, `${plain.id}.json`), plainBytes);
+    await writeFile(path.join(dir, `${compressed.id}.json.gz`), gzipBytes);
+    await writeFile(path.join(dir, `${compressed.id}.meta.json`), JSON.stringify({ ...compressed, result: undefined, owner_hash: ownerHash }));
+    await writeFile(path.join(dir, `${compressed.id}.keep`), "{}");
+    await writeFile(path.join(dir, ".runs-index.json"), JSON.stringify({ version: 1, runs: [
+      { id: compressed.id, kind: compressed.kind, created_at: compressed.created_at, title: "Original surface title", kept: true, owner_hash: ownerHash },
+    ] }));
+    const imported = await importSimulationRuns({ inputDir: dir });
+    assert.equal(imported.normalized_legacy_runs, 2);
+    assert.deepEqual(await store.readSimulationRun(plain.id), { ...plain, kind: "ratio_explorer", kept: false, share_url: buildSimulationShareUrl(plain.id, "ratio_explorer") });
+    assert.deepEqual(await store.readSimulationRun(compressed.id), { ...compressed, kind: "ratio_explorer", kept: true, share_url: buildSimulationShareUrl(compressed.id, "ratio_explorer") });
+    assert.deepEqual((await store.listSimulationRunsPage({ ownerHash, kinds: ["ratio_explorer"], kept: true })).runs.map((run) => [run.id, run.title]), [[compressed.id, "Original surface title"]]);
+    assert.equal((await importSimulationRuns({ inputDir: dir, verifyOnly: true })).verified_runs, 2);
+    assert.equal((await importSimulationRuns({ inputDir: dir })).matched_runs, 2);
+    assert.equal(await readFile(path.join(dir, `${plain.id}.json`), "utf8"), plainBytes);
+    assert.deepEqual(await readFile(path.join(dir, `${compressed.id}.json.gz`)), gzipBytes);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
 
-  await store.saveSimulationRun("bear_simulate", bearRequest, bearResult);
-
-  const after = JSON.parse(await readFile(indexPath, "utf8")) as {
-    runs: Array<{ id: string; title: string }>;
-  };
-  assert.equal(
-    after.runs.find((record) => record.id === first.id)?.title,
-    externalRecord.title,
-  );
-  assert.equal(after.runs.length, 2);
+test("legacy import rejects filename identity and sidecar/index ownership inconsistencies", databaseTest, async () => {
+  const dir = await mkdtemp(path.join(tmpdir(), "wos-import-invalid-"));
+  try {
+    const doc = { version: 1, id: "legacy-run-good", kind: "simulate", created_at: "2020-01-01T00:00:00.000Z", request: pvpRequest, result: pvpResult };
+    const file = path.join(dir, "legacy-run-bad.json");
+    await writeFile(file, JSON.stringify(doc));
+    await assert.rejects(importSimulationRuns({ inputDir: dir }), /identity mismatch/);
+    await rm(file);
+    await writeFile(path.join(dir, `${doc.id}.json`), JSON.stringify(doc));
+    await writeFile(path.join(dir, `${doc.id}.meta.json`), JSON.stringify({ ...doc, result: undefined, owner_hash: "a".repeat(64) }));
+    await writeFile(path.join(dir, ".runs-index.json"), JSON.stringify({ version: 1, runs: [{ id: doc.id, kind: doc.kind, created_at: doc.created_at, title: "title", kept: false, owner_hash: "b".repeat(64) }] }));
+    await assert.rejects(importSimulationRuns({ inputDir: dir }), /metadata mismatch/);
+    assert.equal(await store.readSimulationRun(doc.id), null);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
 });

@@ -22,10 +22,3 @@ export function resolveSimulatorRoot(cwd = process.cwd()): string {
   const found = candidates.find(isSimulatorRoot);
   return found ?? path.resolve(cwd, "../..");
 }
-
-export function resolveRuntimeStoreDir(): string {
-  if (process.env.SIM_RUNS_DIR) {
-    return path.resolve(process.env.SIM_RUNS_DIR);
-  }
-  return path.join(resolveSimulatorRoot(), "tmp");
-}

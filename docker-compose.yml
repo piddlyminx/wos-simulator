@@ -21,12 +21,11 @@ services:
     environment:
       NODE_ENV: development
       DB_PATH: /repo/test_results/dashboard.sqlite
-      SIM_RUNS_DIR: /data/simulations
-      SIM_RUNS_RETENTION_DAYS: ${SIM_RUNS_RETENTION_DAYS:-30}
-      SIM_RUNS_MAX_STORAGE_MB: ${SIM_RUNS_MAX_STORAGE_MB:-500}
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL in private configuration}
       # Watcher polling for WSL2/SMB/NFS-backed mounts where native inotify can
       # miss host-side edits.
       NEXT_WATCH_POLL_INTERVAL_MS: ${NEXT_WATCH_POLL_INTERVAL_MS:-1000}
+      NEXT_ALLOWED_DEV_ORIGINS: ${NEXT_ALLOWED_DEV_ORIGINS:-}
       WATCHPACK_POLLING: ${WATCHPACK_POLLING:-true}
       CHOKIDAR_USEPOLLING: ${CHOKIDAR_USEPOLLING:-true}
     tmpfs:
@@ -53,10 +52,6 @@ services:
       - ./shared/fighters_data:/repo/shared/fighters_data
       # CLI testcase runs write fresh parity reports under simulator/testcase_results.
       - ./simulator/testcase_results:/repo/simulator/testcase_results:rw
-      # Host-backed simulation store. Point this at an sshfs/shared mount in
-      # the ignored root .env when you want Docker dev and host dev to share
-      # the same saved runs.
-      - ${SIM_RUNS_DIR:-./tmp/simulate-runs}:/data/simulations
     # Optional local access without going through the tunnel.
     ports:
       - "${APP_PORT:-3000}:3000"

@@ -8,6 +8,11 @@ Always run `npm run smoke` against the committed `test_results/dashboard.sqlite`
 
 This builds the app, then runs Playwright smoke tests across all routes using
 Playwright's isolated managed development server.
+Set `TEST_DATABASE_URL` (preferred) or `DATABASE_URL` in the invoking environment
+to a real, migrated PostgreSQL database. The managed server has no filesystem
+or fake persistence fallback. Use a dedicated test database: smoke tests can
+create saved runs. `PLAYWRIGHT_BASE_URL` instead targets an existing server and
+uses that server's database configuration.
 
 For agent visual QA, do not start ad-hoc dashboard dev servers by default.
 First use an already-running local dashboard at `http://localhost:3000` when it
@@ -27,12 +32,21 @@ npm install
 ## Running
 
 ```bash
+# Export DATABASE_URL privately first; Next.js also supports ignored .env.local.
+npm run runs:migrate
 npm run dev
 ```
 
 The app runs at http://localhost:3000 and redirects to `/runs` by default.
 The host dev command runs `uv sync` from the repo root before starting Next.js,
 so the shared Python `.venv` is available for OCR helpers.
+
+Custom dev hostnames belong in `NEXT_ALLOWED_DEV_ORIGINS`, a comma-separated
+list in ignored `dashboard/web/.env.local` for host dev, or the root `.env` for
+Docker dev. Restart the dev server after changing this list: `.env` hot reload
+does not rebuild the startup configuration. Localhost remains allowed without
+configuration. Private `.env` variants and deployment Compose overrides are
+ignored; examples are public.
 
 Next output is separated by role so concurrent tools do not contend for the
 same development lock: `npm run dev` uses `.next-dev`, `npm run dev-user` uses
@@ -63,29 +77,28 @@ The Docker dev app bind-mounts repo subtrees under `/repo` while keeping
 container-built dependencies in the image at `/repo/node_modules`. Rebuild the
 image after `package.json` or `package-lock.json` changes. The generated Next
 dev cache at `/repo/dashboard/web/.next` is tmpfs-backed and disappears when the
-container is recreated. Saved simulation runs are host bind mounts, configured by
-`SIM_RUNS_DIR` in the ignored repo-root `.env`. Point that path at a trusted
-shared mount when Docker dev and host dev should use the same saved-run store.
-If the shared mount is FUSE-backed, Docker must be allowed to read it from the
-daemon side; for sshfs that usually means mounting with `allow_other` on a host
-where `/etc/fuse.conf` enables `user_allow_other`.
+container is recreated. Saved simulation runs use the shared PostgreSQL database
+configured by `DATABASE_URL` in the ignored repo-root `.env`. Host dev uses the
+same database through its separately configured connection URL; no saved-run
+directory, filesystem lock, or SSHFS mount is needed.
 
-Do not run a second `docker compose run app ...` container while the live app
-is up. Use `docker compose exec app ...` for checks inside the running
-container, or stop the app before starting a second app container.
+Use `docker compose -f docker-compose.yml exec app ...` for checks inside a
+running dev container. Explicit one-shot maintenance commands can use
+`docker compose -f docker-compose.yml run --rm --no-deps app ...` without
+starting a second HTTP server.
 
 If the optional Docker dev app starts returning `500 Internal Server Error`
 after source, compose, or Next middleware changes, recreate the app container to
 clear the tmpfs-backed `.next` cache:
 
 ```bash
-docker compose stop app
-docker compose rm -f app
-docker compose up -d app
+docker compose -f docker-compose.yml stop app
+docker compose -f docker-compose.yml rm -f app
+docker compose -f docker-compose.yml up -d app
 ```
 
-This preserves the image-managed dependency tree and the host-backed saved-run
-store.
+This preserves the image-managed dependency tree and does not affect saved runs
+in PostgreSQL.
 
 When the Docker dev app is already running, verify dashboard source/UI changes
 directly at `http://localhost:3000`. The bind mount plus polling watcher should
@@ -114,50 +127,46 @@ Override via the `DB_PATH` environment variable if needed:
 DB_PATH=/absolute/path/to/dashboard.sqlite npm run dev
 ```
 
-Saved simulation share links are stored outside git. By default the app writes
-gzip-compressed snapshots plus small listing metadata files to
-`../../tmp/simulate-runs`; override with `SIM_RUNS_DIR` when you want a
-different host path or a mounted Docker volume:
+Saved simulation share links use PostgreSQL independently of the accuracy
+SQLite database. `DATABASE_URL` is the only application connection setting.
+Configure it privately in `dashboard/web/.env.local` for host Next.js or the
+root `.env` for Docker Compose. Export it when running maintenance commands:
 
 ```bash
-SIM_RUNS_DIR=/absolute/path/to/simulate-runs npm run dev
+npm run runs:migrate
+npm run runs:import -- --input-dir /path/to/legacy-runs
+npm run runs:import -- --input-dir /path/to/legacy-runs --verify-only
 ```
 
-New snapshots use matching `<uuid>.json.gz` and `<uuid>.meta.json` files. The
-store continues to read existing `<uuid>.json` snapshots. Runs marked **Keep**
-in a Recent runs picker also have a small `<uuid>.keep` marker and are excluded
-from cleanup. A persistent `.runs-index.json` contains only listing metadata so
-the recent-run pickers do not need to open every snapshot. The index is built
-automatically the first time an existing store is listed, then updated on save,
-Keep, and cleanup operations.
+The schema command applies `dashboard/postgres/schema.sql` explicitly; requests
+never bootstrap the database. Full run documents are gzip-compressed `bytea`
+with indexed listing metadata written transactionally. IDs, timestamps, titles,
+owner authorization, kept flags, filters, and pagination remain compatible.
+There is no runtime filesystem fallback, automatic cleanup, or index rebuild.
 
-Unkept runs are cleaned up at most once per day when they are older than 30
-days or the store exceeds 500 MB. The first automatic cleanup after upgrading
-only creates its daily marker, providing a day to mark existing runs as kept.
-Use the picker’s **Clean up** action to apply the policy immediately. Override
-either limit, or set it to `0` to disable that limit:
+Import preserves legacy files, prefers `.json.gz` over duplicate `.json`, and
+preserves metadata owners and `.keep` markers. Verification compares documents
+and metadata, not just counts. A differing existing database row fails import;
+it is never silently overwritten.
+The importer alone normalizes the historical `surface_sweep` kind to
+`ratio_explorer`, preserving the remaining document fields and source files.
+
+Schedule retention separately, for example daily from a private operator job:
 
 ```bash
-SIM_RUNS_RETENTION_DAYS=60 SIM_RUNS_MAX_STORAGE_MB=1000 npm run dev
+npm run runs:cleanup -- --retention-days 30 --max-storage-mb 500
 ```
 
-Saved-run mutations queue per directory within each server process, including
-across development module reloads. Only the head of that queue acquires the
-`proper-lockfile` shared-filesystem lock; local requests do not consume lock
-retries while an earlier save, index rebuild, or cleanup is running. Other app
-instances still use the filesystem lock and its bounded retries.
-
-Saving is separate from browser simulation compute. Each save updates the
-shared `.runs-index.json` under the lock, so an SSHFS-backed store adds network
-latency and queued saves wait for earlier writes. Use a local `SIM_RUNS_DIR`
-when cross-instance share links are not needed. Do not delete an active
-`.wos-store.lock` directory to bypass contention.
+Kept runs are exempt; `0` disables the corresponding limit. Cleanup is never
+triggered by an HTTP request. The production stack, existing-volume selection,
+write-pause cutover, backups, and rollback procedure are documented in
+[`docs/wos-sim-production-deployment.md`](../../docs/wos-sim-production-deployment.md).
 
 Saved player stat presets are private browser data. The `/simulate` page stores
 them in `localStorage` under `wos-simulator.player-stat-presets.v1`; there is no
 server preset store or preset API.
 
-**The DB does not need to exist for the app to start.** If missing, `/healthz` returns `{ runs: 0, warning: "DB not found" }` and all pages show an empty state.
+**The accuracy SQLite DB does not need to exist for the app to start.** If missing, `/healthz` returns `{ runs: 0, warning: "DB not found" }` and accuracy pages show an empty state. This is not a saved-run persistence fallback: saved-run requests require configured, migrated PostgreSQL.
 
 ## How accuracy data gets populated
 
