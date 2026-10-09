@@ -47,12 +47,12 @@
       "trigger": { "type": "battle_start" },
       "effects": {
         "Unorthodoxy/1": {
-          "type": "active.hero.damage.up",
+          "type": "active.hero.damageTaken.down",
           "value": [3, 6, 9, 12, 15],
           "units": { "applies_to": ["marksman"] }
         },
         "Unorthodoxy/2": {
-          "type": "active.hero.damageTaken.down",
+          "type": "active.hero.damage.up",
           "value": [2, 4, 6, 8, 10],
           "units": { "applies_to": ["marksman"] }
         }

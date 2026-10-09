@@ -1,0 +1,139 @@
+[
+  {
+    "test_id": "sergey_mm_50_254",
+    "description": "C2 battle report 2734693172066393",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Xura": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Sergey": {
+          "skill_1": 4,
+          "skill_2": 4
+        }
+      },
+      "troops": {
+        "marksman_t6": 50
+      },
+      "stats": {
+        "infantry": {
+          "attack": 414.72,
+          "defense": 402.72,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 587.34,
+          "defense": 588.34,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 254
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 231.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-09T03:49:23.000Z",
+        "randomseed": 1791517764,
+        "attacker": 0,
+        "defender": 14,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693172066393",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-09T03-49-38.094Z-32254de2-04cd-432f-b666-85798c2bb42e.json",
+          "winner": "defender",
+          "attacker": {
+            "troops": 50,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 18,
+            "lightly_injured": 32,
+            "kills": 84
+          },
+          "defender": {
+            "troops": 254,
+            "survivors": 14,
+            "losses": 0,
+            "injured": 84,
+            "lightly_injured": 156,
+            "kills": 18
+          },
+          "troop_details": {
+            "attacker": {
+              "marksman_t6": {
+                "troops": 50,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 18,
+                "lightly_injured": 32,
+                "kills": 84
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 254,
+                "survivors": 14,
+                "losses": 0,
+                "injured": 84,
+                "lightly_injured": 156,
+                "kills": 18
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Xura": {
+                "Piercing Arrow": {
+                  "triggered": 94,
+                  "displayed_kills": 13
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]
