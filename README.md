@@ -175,6 +175,36 @@ catalogue: Node tools discover them from the directory at runtime, and the
 dashboard discovers and bundles the same directory through Webpack. There is no
 generated manifest or separate registration step.
 
+#### Lua-compatible random numbers
+
+`simulator/src/luaRandom.ts` exports `LuaRandom`, a standalone xoshiro256**
+generator matching stock Lua 5.4 with 64-bit integers and double-precision floats.
+The regular battle API retains its existing RNG; this standalone library does
+not replace it.
+
+```ts
+import { LuaRandom } from "./simulator/src/luaRandom";
+
+const rng = new LuaRandom(12345); // equivalent to Lua math.randomseed(12345)
+rng.random();                   // number in [0, 1)
+rng.random(6);                  // number from 1 through 6, inclusive
+rng.random(-10, 10);            // number from -10 through 10, inclusive
+rng.random(0);                  // bigint with all 64 bits pseudorandom (signed)
+rng.random(1n, 10000000000000000n); // exact bigint range
+rng.randomseed(12345, 67890);    // reset using both Lua seed components
+```
+
+Seeds and bounds accept signed 64-bit integers. Use `bigint` outside JavaScript's
+safe integer range; unsafe `number` inputs are rejected rather than rounded.
+Integer draws return `bigint` if either bound is a `bigint`, or for `random(0)`;
+otherwise they return `number`. `randomseed` returns both seed components as
+`bigint`, and an omitted second component is zero. Construction and reseeding
+require an explicit seed; automatic time/address seeding is not implemented.
+
+The same seed and call sequence reproduce Lua's outputs, including extra PRNG
+steps consumed by unbiased integer rejection sampling. This does not match older
+Lua or LuaJIT generators, and is not suitable for cryptographic use.
+
 ### `dashboard/`
 
 A Next.js app (`dashboard/web/`) with TypeScript SQLite ingestion and Python OCR
