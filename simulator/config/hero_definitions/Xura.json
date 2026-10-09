@@ -8,9 +8,9 @@
       "trigger": { "type": "battle_start" },
       "effects": {
         "FungalFog/1": {
-          "type": "active.hero.damage.down",
+          "type": "active.hero.damageTaken.down",
           "value": [4, 8, 12, 16, 20],
-          "units": { "applies_to": "enemy.any" }
+          "units": { "applies_to": "self.any" }
         }
       }
     },
@@ -36,7 +36,7 @@
         "PiercingArrow/2": {
           "type": "active.hero.damageTaken.up",
           "value": [5, 10, 15, 20, 25],
-          "units": { "applies_to": "trigger.target", "applies_vs": "trigger.source" },
+          "units": { "applies_to": "trigger.target", "applies_vs": "any" },
           "duration": { "turns": { "count": 1, "delay": 1 } },
           "same_effect_stacking": "max"
         }
