@@ -1,0 +1,121 @@
+[
+  {
+    "test_id": "infantry_t5_p1_669_vs_775",
+    "description": "C2 battle report 2734693171554523",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t5": 669
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 775
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-30T04:15:27.000Z",
+        "randomseed": 1790741728,
+        "attacker": 0,
+        "defender": 17,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171554523",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-09-30T04-15-44.108Z-96b9dda7-1982-48f2-87b2-29dc01bd3176.json",
+          "winner": "defender",
+          "attacker": {
+            "troops": 669,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 235,
+            "lightly_injured": 434,
+            "kills": 266
+          },
+          "defender": {
+            "troops": 775,
+            "survivors": 17,
+            "losses": 0,
+            "injured": 266,
+            "lightly_injured": 492,
+            "kills": 235
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t5": {
+                "troops": 669,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 235,
+                "lightly_injured": 434,
+                "kills": 266
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 775,
+                "survivors": 17,
+                "losses": 0,
+                "injured": 266,
+                "lightly_injured": 492,
+                "kills": 235
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {},
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

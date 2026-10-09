@@ -1,0 +1,380 @@
+[
+  {
+    "test_id": "ambusher_no_marksman",
+    "description": "C2 battle report 2734693171736806",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "lancer_t9": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t9": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 231.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-05T09:12:52.000Z",
+        "randomseed": 1791191573,
+        "attacker": 34,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171736806",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-05T09-13-10.859Z-6aba1ee2-13a1-4143-9d6b-ce5356b65b94.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 100,
+            "survivors": 34,
+            "losses": 0,
+            "injured": 24,
+            "lightly_injured": 42,
+            "kills": 35
+          },
+          "defender": {
+            "troops": 100,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 35,
+            "lightly_injured": 65,
+            "kills": 24
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t9": {
+                "troops": 100,
+                "survivors": 34,
+                "losses": 0,
+                "injured": 24,
+                "lightly_injured": 42,
+                "kills": 35
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 24
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 28,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-10-05T09:13:39.000Z",
+        "randomseed": 1791191620,
+        "attacker": 34,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171736826",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-05T09-13-55.388Z-84e9dfe7-479f-46f3-b0a4-cee96fa1c072.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 100,
+            "survivors": 34,
+            "losses": 0,
+            "injured": 24,
+            "lightly_injured": 42,
+            "kills": 35
+          },
+          "defender": {
+            "troops": 100,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 35,
+            "lightly_injured": 65,
+            "kills": 24
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t9": {
+                "troops": 100,
+                "survivors": 34,
+                "losses": 0,
+                "injured": 24,
+                "lightly_injured": 42,
+                "kills": 35
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 24
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 30,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-10-05T09:14:24.000Z",
+        "randomseed": 1791191665,
+        "attacker": 34,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171736839",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-05T09-14-40.972Z-c7bff6fe-5e01-402a-8a1b-1fc1b9100cb5.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 100,
+            "survivors": 34,
+            "losses": 0,
+            "injured": 24,
+            "lightly_injured": 42,
+            "kills": 35
+          },
+          "defender": {
+            "troops": 100,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 35,
+            "lightly_injured": 65,
+            "kills": 24
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t9": {
+                "troops": 100,
+                "survivors": 34,
+                "losses": 0,
+                "injured": 24,
+                "lightly_injured": 42,
+                "kills": 35
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 24
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 26,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-10-05T09:15:08.000Z",
+        "randomseed": 1791191709,
+        "attacker": 34,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171736847",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-05T09-15-23.564Z-a3ccfbe6-d087-4ae2-b782-67cf1e3ad185.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 100,
+            "survivors": 34,
+            "losses": 0,
+            "injured": 24,
+            "lightly_injured": 42,
+            "kills": 35
+          },
+          "defender": {
+            "troops": 100,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 35,
+            "lightly_injured": 65,
+            "kills": 24
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t9": {
+                "troops": 100,
+                "survivors": 34,
+                "losses": 0,
+                "injured": 24,
+                "lightly_injured": 42,
+                "kills": 35
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 24
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 22,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      },
+      {
+        "timestamp": "2026-10-05T09:15:51.000Z",
+        "randomseed": 1791191752,
+        "attacker": 34,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171736862",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-05T09-16-06.152Z-796be259-d57f-491d-9242-1287fff5f2ba.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 100,
+            "survivors": 34,
+            "losses": 0,
+            "injured": 24,
+            "lightly_injured": 42,
+            "kills": 35
+          },
+          "defender": {
+            "troops": 100,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 35,
+            "lightly_injured": 65,
+            "kills": 24
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t9": {
+                "troops": 100,
+                "survivors": 34,
+                "losses": 0,
+                "injured": 24,
+                "lightly_injured": 42,
+                "kills": 35
+              }
+            },
+            "defender": {
+              "infantry_t9": {
+                "troops": 100,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 35,
+                "lightly_injured": 65,
+                "kills": 24
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Troop skills": {
+                "Ambusher": {
+                  "triggered": 26,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

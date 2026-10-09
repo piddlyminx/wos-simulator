@@ -1,0 +1,144 @@
+[
+  {
+    "test_id": "wuming_thunder",
+    "description": "C2 battle report 2734693171702590",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 460
+      },
+      "stats": {
+        "infantry": {
+          "attack": 521.4,
+          "defense": 514.4,
+          "lethality": 250.71,
+          "health": 274.79
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 430.27,
+          "defense": 436.27,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 650
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-04T13:21:07.000Z",
+        "randomseed": 1791120068,
+        "attacker": 5,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171702590",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-04T13-21-24.617Z-1bc1356a-d30e-4018-ad39-f0f04e30837e.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 460,
+            "survivors": 5,
+            "losses": 0,
+            "injured": 160,
+            "lightly_injured": 295,
+            "kills": 228
+          },
+          "defender": {
+            "troops": 650,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 228,
+            "lightly_injured": 422,
+            "kills": 160
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 460,
+                "survivors": 5,
+                "losses": 0,
+                "injured": 160,
+                "lightly_injured": 295,
+                "kills": 228
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 650,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 228,
+                "lightly_injured": 422,
+                "kills": 160
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Roundabout Hit": {
+                  "triggered": null,
+                  "displayed_kills": null
+                },
+                "Thunder Strike": {
+                  "triggered": 43,
+                  "displayed_kills": 22
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

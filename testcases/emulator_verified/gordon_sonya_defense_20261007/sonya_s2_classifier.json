@@ -1,0 +1,140 @@
+[
+  {
+    "test_id": "sonya_s2_classifier",
+    "description": "C2 battle report 2734693171844780",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 975
+      },
+      "stats": {
+        "infantry": {
+          "attack": 304.95,
+          "defense": 287.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 281.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 288.42,
+          "defense": 284.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Sonya": {
+          "skill_1": 1,
+          "skill_2": 1,
+          "skill_4": 0
+        },
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 900
+      },
+      "stats": {
+        "infantry": {
+          "attack": 454.71,
+          "defense": 446.26,
+          "lethality": 223.57,
+          "health": 274.97
+        },
+        "lancer": {
+          "attack": 370.5,
+          "defense": 368.8,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 231.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-07T02:27:18.000Z",
+        "randomseed": 1791340039,
+        "attacker": 0,
+        "defender": 78,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171844780",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-07T02-27-33.903Z-1eb9852e-cdbb-4b24-a99c-dec6aa2b3e08.json",
+          "winner": "defender",
+          "attacker": {
+            "troops": 975,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 342,
+            "lightly_injured": 633,
+            "kills": 288
+          },
+          "defender": {
+            "troops": 900,
+            "survivors": 78,
+            "losses": 0,
+            "injured": 288,
+            "lightly_injured": 534,
+            "kills": 342
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 975,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 342,
+                "lightly_injured": 633,
+                "kills": 288
+              }
+            },
+            "defender": {
+              "lancer_t6": {
+                "troops": 900,
+                "survivors": 78,
+                "losses": 0,
+                "injured": 288,
+                "lightly_injured": 534,
+                "kills": 342
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {},
+            "defender": {
+              "Sonya": {
+                "Bounty Temptation": {
+                  "triggered": 66,
+                  "displayed_kills": 25
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

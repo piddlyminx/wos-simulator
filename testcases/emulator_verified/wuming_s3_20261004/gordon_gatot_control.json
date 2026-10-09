@@ -1,0 +1,157 @@
+[
+  {
+    "test_id": "gordon_gatot_control",
+    "description": "C2 battle report 2734693171702461",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gordon": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 490
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 503.57,
+          "defense": 507.82,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 150
+      },
+      "stats": {
+        "infantry": {
+          "attack": 628.31,
+          "defense": 619.86,
+          "lethality": 230.66,
+          "health": 281.02
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-04T13:17:14.000Z",
+        "randomseed": 1791119835,
+        "attacker": 0,
+        "defender": 69,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171702461",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-04T13-17-32.078Z-4f367399-8039-4a77-8da0-a6d3ba955155.json",
+          "winner": "defender",
+          "attacker": {
+            "troops": 490,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 172,
+            "lightly_injured": 318,
+            "kills": 29
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 69,
+            "losses": 0,
+            "injured": 29,
+            "lightly_injured": 52,
+            "kills": 172
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 490,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 172,
+                "lightly_injured": 318,
+                "kills": 29
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 150,
+                "survivors": 69,
+                "losses": 0,
+                "injured": 29,
+                "lightly_injured": 52,
+                "kills": 172
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gordon": {
+                "Toxic Release": {
+                  "triggered": 82,
+                  "displayed_kills": null
+                },
+                "Venom Infusion": {
+                  "triggered": 165,
+                  "displayed_kills": null
+                },
+                "Chemical Terror": {
+                  "triggered": 110,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 330,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]

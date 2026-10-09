@@ -1,0 +1,186 @@
+[
+  {
+    "test_id": "thunder_strike_slot_gatot_wayne_700i_vs_55i",
+    "description": "C2 battle report 2734693171590257. Discriminates Wayne Thunder Strike timing: fired in each line's own attack slot (898 survivors, King's Bestowal 14) vs at turn start, where it would finish the 55 infantry on turn 4 and the lancers on turn 8 before Gatot's infantry attacks, skipping that attack and its next-turn shield (893, King's Bestowal 12).",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 3,
+          "skill_4": 0
+        },
+        "Wayne": {
+          "skill_1": 2,
+          "skill_2": 1,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 700,
+        "lancer_t6": 100,
+        "marksman_t6": 100
+      },
+      "stats": {
+        "infantry": {
+          "attack": 675.13,
+          "defense": 663.13,
+          "lethality": 316.11,
+          "health": 338.06
+        },
+        "lancer": {
+          "attack": 286.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 435.27,
+          "defense": 436.27,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "infantry_t6": 55,
+        "lancer_t6": 200,
+        "marksman_t6": 500
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-01T03:21:46.000Z",
+        "randomseed": 1790824907,
+        "attacker": 898,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171590257",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-01T03-22-02.094Z-d850667b-d0b2-4133-8a7c-c872697b5036.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 900,
+            "survivors": 898,
+            "losses": 0,
+            "injured": 1,
+            "lightly_injured": 1,
+            "kills": 265
+          },
+          "defender": {
+            "troops": 755,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 265,
+            "lightly_injured": 490,
+            "kills": 1
+          },
+          "troop_details": {
+            "attacker": {
+              "infantry_t6": {
+                "troops": 700,
+                "survivors": 698,
+                "losses": 0,
+                "injured": 1,
+                "lightly_injured": 1,
+                "kills": 120
+              },
+              "lancer_t6": {
+                "troops": 100,
+                "survivors": 100,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 53
+              },
+              "marksman_t6": {
+                "troops": 100,
+                "survivors": 100,
+                "losses": 0,
+                "injured": 0,
+                "lightly_injured": 0,
+                "kills": 92
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 55,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 20,
+                "lightly_injured": 35,
+                "kills": 0
+              },
+              "lancer_t6": {
+                "troops": 200,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 70,
+                "lightly_injured": 130,
+                "kills": 0
+              },
+              "marksman_t6": {
+                "troops": 500,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 175,
+                "lightly_injured": 325,
+                "kills": 1
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Wayne": {
+                "Roundabout Hit": {
+                  "triggered": 6,
+                  "displayed_kills": 3
+                },
+                "Thunder Strike": {
+                  "triggered": 9,
+                  "displayed_kills": 11
+                }
+              },
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 14,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

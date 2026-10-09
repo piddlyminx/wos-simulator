@@ -1,0 +1,128 @@
+[
+  {
+    "test_id": "marksman_t8_z1_1284_vs_763",
+    "description": "C2 battle report 2734693171556228",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {},
+      "troops": {
+        "marksman_t8": 1284
+      },
+      "stats": {
+        "infantry": {
+          "attack": 299.95,
+          "defense": 292.95,
+          "lethality": 244.04,
+          "health": 238.39
+        },
+        "lancer": {
+          "attack": 281.92,
+          "defense": 286.17,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {},
+      "troops": {
+        "marksman_t6": 763
+      },
+      "stats": {
+        "infantry": {
+          "attack": 258.13,
+          "defense": 249.68,
+          "lethality": 188,
+          "health": 193.5
+        },
+        "lancer": {
+          "attack": 208.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-09-30T05:09:46.000Z",
+        "randomseed": 1790744987,
+        "attacker": 1188,
+        "defender": 0,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171556228",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-09-30T05-10-03.127Z-3ca0e7f9-2ae5-4734-a83b-6bfabaec3480.json",
+          "winner": "attacker",
+          "attacker": {
+            "troops": 1284,
+            "survivors": 1188,
+            "losses": 0,
+            "injured": 34,
+            "lightly_injured": 62,
+            "kills": 268
+          },
+          "defender": {
+            "troops": 763,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 268,
+            "lightly_injured": 495,
+            "kills": 34
+          },
+          "troop_details": {
+            "attacker": {
+              "marksman_t8": {
+                "troops": 1284,
+                "survivors": 1188,
+                "losses": 0,
+                "injured": 34,
+                "lightly_injured": 62,
+                "kills": 268
+              }
+            },
+            "defender": {
+              "marksman_t6": {
+                "troops": 763,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 268,
+                "lightly_injured": 495,
+                "kills": 34
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Troop skills": {
+                "Volley": {
+                  "triggered": 1,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {}
+          }
+        }
+      }
+    ]
+  }
+]

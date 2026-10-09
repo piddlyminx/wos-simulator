@@ -1,0 +1,163 @@
+[
+  {
+    "test_id": "wuming_venom",
+    "description": "C2 battle report 2734693171702587",
+    "attacker": {
+      "name": "[ARK]Piddlyminxxx",
+      "heroes": {
+        "Wu Ming": {
+          "skill_1": 3,
+          "skill_2": 3,
+          "skill_3": 2,
+          "skill_4": 0
+        },
+        "Gordon": {
+          "skill_1": 2,
+          "skill_2": 2,
+          "skill_3": 2,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "lancer_t6": 490
+      },
+      "stats": {
+        "infantry": {
+          "attack": 521.4,
+          "defense": 514.4,
+          "lethality": 250.71,
+          "health": 274.79
+        },
+        "lancer": {
+          "attack": 503.57,
+          "defense": 507.82,
+          "lethality": 224.32,
+          "health": 229.95
+        },
+        "marksman": {
+          "attack": 283.42,
+          "defense": 289.42,
+          "lethality": 235.76,
+          "health": 230.26
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "defender": {
+      "name": "[BBQ]XxWIPxX",
+      "heroes": {
+        "Gatot": {
+          "skill_1": 4,
+          "skill_2": 4,
+          "skill_3": 4,
+          "skill_4": 0
+        }
+      },
+      "troops": {
+        "infantry_t6": 150
+      },
+      "stats": {
+        "infantry": {
+          "attack": 628.31,
+          "defense": 619.86,
+          "lethality": 230.66,
+          "health": 281.02
+        },
+        "lancer": {
+          "attack": 209.71,
+          "defense": 208.01,
+          "lethality": 187,
+          "health": 186.06
+        },
+        "marksman": {
+          "attack": 230.96,
+          "defense": 219.76,
+          "lethality": 181.53,
+          "health": 177.16
+        }
+      },
+      "joiner_heroes": {}
+    },
+    "engagement_type": "solo",
+    "game_report_result": [
+      {
+        "timestamp": "2026-10-04T13:20:22.000Z",
+        "randomseed": 1791120023,
+        "attacker": 0,
+        "defender": 37,
+        "metadata": {
+          "source": "c2",
+          "report_reference": "2734693171702587",
+          "battle_type": "atk_camp",
+          "stat_units": "percentage_points",
+          "raw_trace_file": "../../../c2/data/runs/2026-10-04T13-20-39.998Z-38b3adc4-0fb8-4261-a155-6dc9f8d61fb8.json",
+          "winner": "defender",
+          "attacker": {
+            "troops": 490,
+            "survivors": 0,
+            "losses": 0,
+            "injured": 172,
+            "lightly_injured": 318,
+            "kills": 40
+          },
+          "defender": {
+            "troops": 150,
+            "survivors": 37,
+            "losses": 0,
+            "injured": 40,
+            "lightly_injured": 73,
+            "kills": 172
+          },
+          "troop_details": {
+            "attacker": {
+              "lancer_t6": {
+                "troops": 490,
+                "survivors": 0,
+                "losses": 0,
+                "injured": 172,
+                "lightly_injured": 318,
+                "kills": 40
+              }
+            },
+            "defender": {
+              "infantry_t6": {
+                "troops": 150,
+                "survivors": 37,
+                "losses": 0,
+                "injured": 40,
+                "lightly_injured": 73,
+                "kills": 172
+              }
+            }
+          },
+          "skill_details": {
+            "attacker": {
+              "Gordon": {
+                "Toxic Release": {
+                  "triggered": 94,
+                  "displayed_kills": null
+                },
+                "Venom Infusion": {
+                  "triggered": 189,
+                  "displayed_kills": null
+                },
+                "Chemical Terror": {
+                  "triggered": 126,
+                  "displayed_kills": null
+                }
+              }
+            },
+            "defender": {
+              "Gatot": {
+                "King's Bestowal": {
+                  "triggered": 378,
+                  "displayed_kills": null
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+]
