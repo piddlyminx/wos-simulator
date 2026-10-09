@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
+import { loadSimulatorConfig } from "@simulator/config-default";
+import { prepareBattle, runPrepared } from "@simulator/simulator";
 import type { BattleResult } from "@simulator/types";
 import type { SimulateRequestPayload } from "@/lib/simulate-run";
 import type { SimulateBatchResult, SimulateBatchTask } from "./simulate";
-import { aggregateBattleResults, battleResultToTrace, runSimulation, runSimulationBatchDirect, signedOutcome } from "./simulate";
+import { aggregateBattleResults, battleResultToTrace, runSimulation, runSimulationBatchDirect, runSimulationTrace, signedOutcome } from "./simulate";
+import { toBattleInput } from "./adapters";
 
 function result(
   attacker: number,
@@ -173,6 +176,71 @@ test("simulation batches discard attack-level battle data before crossing the wo
   assert.equal(typeof batch.outcome, "number");
   assert.ok(batch.perSideSkills.attacker.length > 0);
   assert.ok(Buffer.byteLength(JSON.stringify(batch)) < 10_000);
+});
+
+test("example battles preserve full-trace detail without equation recording", async () => {
+  const config = loadSimulatorConfig();
+  const request = sampleSimulatePayload(1);
+  request.attacker = sampleSide({ infantry: 800, lancer: 600, marksman: 1000 });
+  request.defender = sampleSide({ infantry: 1000, lancer: 900, marksman: 700 });
+  request.attacker.heroes = {
+    infantry: { name: "Edith", skills: [5, 5, 5, 0] },
+    lancer: { name: "Renee", skills: [5, 5, 5, 0] },
+    marksman: { name: "Greg", skills: [5, 5, 5, 0] },
+  };
+  request.defender.heroes = {
+    infantry: { name: "Gatot", skills: [5, 5, 5, 0] },
+    lancer: { name: "Molly", skills: [5, 5, 5, 0] },
+    marksman: { name: "Alonso", skills: [5, 5, 5, 0] },
+  };
+  const labels = {
+    attacker: { infantry: "Edith", lancer: "Renee", marksman: "Greg" },
+    defender: { infantry: "Gatot", lancer: "Molly", marksman: "Alonso" },
+  };
+  const seed = "dashboard:0";
+  const prepared = prepareBattle(toBattleInput(request, seed), config);
+  const full = runPrepared(prepared, undefined, { mode: "trace" });
+  const standard = runPrepared(prepared, undefined, { mode: "standard", detailedEffects: true });
+  assert.equal(standard.trace, undefined);
+  for (const attack of standard.attacks) {
+    assert.equal(attack.trace, undefined);
+    assert.equal(attack.counterDeltas, undefined);
+  }
+  assert.deepEqual(standard.remaining, full.remaining);
+  assert.deepEqual(battleResultToTrace(standard, seed, labels), battleResultToTrace(full, seed, labels));
+  const example = runSimulationTrace(request, seed, { config });
+  assert.deepEqual(example, battleResultToTrace(full, seed, labels));
+  const compact = await runSimulation(request, { config });
+  assert.equal(compact.trace, undefined);
+  assert.deepEqual(compact.outcome_runs, [{
+    seed, outcome: example.outcome, winner: example.winner, survivors: example.survivors,
+  }]);
+});
+
+test("standard detail retains idle rounds and assigns the final fractional casualty", () => {
+  const sample = result(10, 0);
+  sample.rounds = 3;
+  sample.resolved.attacker.troops.infantry = 10;
+  sample.resolved.defender.troops.infantry = 1.25;
+  sample.attacks = [
+    { round: 1, kind: "normal", dealerSide: "attacker", dealerUnit: "infantry",
+      takerSide: "defender", takerUnit: "infantry", kills: 1 },
+    { round: 3, kind: "normal", dealerSide: "attacker", dealerUnit: "marksman",
+      takerSide: "defender", takerUnit: "infantry", kills: 0.25 },
+  ];
+  const detail = battleResultToTrace(sample, "fractional-idle");
+  assert.deepEqual(detail.rounds.map(round => [round.round, round.defender.troops.inf]), [
+    [0, 1.25], [1, 0.25], [2, 0.25], [3, 0],
+  ]);
+  assert.equal(detail.rounds[1].attacker.kills.inf.inf, 1);
+  assert.deepEqual(detail.rounds[2].attacker.kills, {
+    inf: { inf: 0, lanc: 0, mark: 0 },
+    lanc: { inf: 0, lanc: 0, mark: 0 },
+    mark: { inf: 0, lanc: 0, mark: 0 },
+  });
+  assert.equal(detail.rounds[3].attacker.kills.mark.inf, 1);
+  assert.equal(detail.total_kills.attacker.inf.inf, 1);
+  assert.equal(detail.total_kills.attacker.mark.inf, 1);
 });
 
 test("battleResultToTrace maps a full simulator trace into dashboard detail rows", () => {

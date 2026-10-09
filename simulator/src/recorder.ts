@@ -160,16 +160,17 @@ export const NULL_RECORDER: BattleRecorder = new NullRecorder();
 export function createRecorder(
   mode: SimulationMode,
   fighters: ResolvedFighter[],
-  makeResolved: () => BattleTrace["resolved"]
+  makeResolved: () => BattleTrace["resolved"],
+  detailedEffects = false
 ): BattleRecorder {
   if (mode === "fast") return NULL_RECORDER;
   if (mode === "trace") return new FullTraceRecorder(fighters, makeResolved);
-  return new BasicInfoRecorder(fighters);
+  return new BasicInfoRecorder(fighters, detailedEffects);
 }
 
 export class BasicInfoRecorder implements BattleRecorder {
   readonly attacks: AttackOutcome[] = [];
-  protected readonly detailedAttackEffects: boolean = false;
+  protected readonly traceCounters: boolean = false;
   protected staticApplied?: StaticAppliedIndex;
   protected readonly orderEvents = new Map<AttackIntent, AppliedEffect>();
   protected readonly extraAttackEvents = new Map<DamageJob, AppliedEffect[]>();
@@ -179,7 +180,7 @@ export class BasicInfoRecorder implements BattleRecorder {
   };
   protected readonly skillDamageReports = new Map<DamageJob, SkillReportEntry>();
 
-  constructor(fighters: ResolvedFighter[] = []) {
+  constructor(fighters: ResolvedFighter[] = [], protected readonly detailedAttackEffects = false) {
     for (const fighter of fighters) {
       for (const skill of [...(fighter.heroSkills ?? []), ...fighter.troopSkills]) {
         this.skillReports[fighter.side].set(skill, {
@@ -222,7 +223,7 @@ export class BasicInfoRecorder implements BattleRecorder {
   }
 
   startDamageJob(): DamageJobRecorder {
-    return new BasicDamageJobRecorder(this.staticApplied);
+    return new BasicDamageJobRecorder(this.staticApplied, this.detailedAttackEffects);
   }
 
   recordSkillTriggerAttempt(_skill: ResolvedSkill): void {}
@@ -267,7 +268,7 @@ export class BasicInfoRecorder implements BattleRecorder {
       takerSide: intent.takerSide,
       takerUnit: intent.takerUnit,
       kills: 0,
-      ...(this.detailedAttackEffects ? { counterDeltas: counterDeltas(intent, "normal_attack") } : {}),
+      ...(this.traceCounters ? { counterDeltas: counterDeltas(intent, "normal_attack") } : {}),
       appliedEffects,
       cancelReason: reason
     });
@@ -292,7 +293,7 @@ export class BasicInfoRecorder implements BattleRecorder {
       takerSide: intent.takerSide,
       takerUnit: intent.takerUnit,
       kills: 0,
-      ...(this.detailedAttackEffects ? { counterDeltas: counterDeltas(intent, "normal_attack") } : {}),
+      ...(this.traceCounters ? { counterDeltas: counterDeltas(intent, "normal_attack") } : {}),
       appliedEffects,
       dodged: true
     });
@@ -319,7 +320,7 @@ export class BasicInfoRecorder implements BattleRecorder {
       takerSide: job.takerSide,
       takerUnit: job.takerUnit,
       kills: result.kills,
-      ...(this.detailedAttackEffects && job.kind === "normal" ? { counterDeltas: counterDeltas(job, "normal_attack") } : {}),
+      ...(this.traceCounters && job.kind === "normal" ? { counterDeltas: counterDeltas(job, "normal_attack") } : {}),
       ...(appliedEffects.length ? { appliedEffects } : {}),
       trace: result.trace
     });
@@ -351,7 +352,7 @@ export class BasicInfoRecorder implements BattleRecorder {
 }
 
 export class FullTraceRecorder extends BasicInfoRecorder {
-  protected override readonly detailedAttackEffects: boolean = true;
+  protected override readonly traceCounters: boolean = true;
   private readonly rounds: BattleTrace["rounds"] = [];
   private readonly roundJobs: DamageJob[] = [];
   private staticDescription?: StaticProfileDescription;
@@ -359,7 +360,7 @@ export class FullTraceRecorder extends BasicInfoRecorder {
   constructor(
     fighters: ResolvedFighter[],
     private readonly makeResolved: () => BattleTrace["resolved"]
-  ) { super(fighters); }
+  ) { super(fighters, true); }
 
   protected override applyStaticDescription(description: StaticProfileDescription): void {
     super.applyStaticDescription(description);
@@ -396,10 +397,12 @@ class BasicDamageJobRecorder implements DamageJobRecorder {
   readonly needsFactors = false;
   private readonly appliedEffects: AppliedEffect[] = [];
 
-  constructor(private readonly staticApplied?: StaticAppliedIndex) {}
+  constructor(private readonly staticApplied?: StaticAppliedIndex, private readonly detailedEffects = false) {}
 
   recordEffect(effect: ActiveEffect, value: number): void {
-    if (value !== 0) this.appliedEffects.push(appliedEffectSummary(effect, value));
+    if (value !== 0) this.appliedEffects.push(this.detailedEffects
+      ? detailedDamageEffect(effect, value)
+      : appliedEffectSummary(effect, value));
   }
   recordRejected(_effect: ActiveEffect, _reason: RejectedEffectReason): void {}
 
@@ -750,6 +753,19 @@ function toTraceBuckets(
 
 function effectId(effect: ActiveEffect): string {
   return effect.source.effectId ?? effect.intent.id;
+}
+
+function detailedDamageEffect(effect: ActiveEffect, value: number): AppliedModifierEffect | AppliedShieldEffect {
+  const identity = {
+    effectId: effectId(effect),
+    source: sourceLabel(effect),
+    sourceSide: effect.ownerSide,
+    bucket: effect.intent.type ?? "(carrier)",
+    sameEffectStacking: effect.sameEffectStacking
+  };
+  return effect.kind === "shield"
+    ? { kind: "shield", ...identity, value }
+    : { kind: "modifier", ...identity, valuePct: value };
 }
 
 function appliedEffectSummary(effect: ActiveEffect, value: number): AppliedEffect {

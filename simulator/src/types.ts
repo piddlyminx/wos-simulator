@@ -211,6 +211,8 @@ export type SimulationMode = "fast" | "standard" | "trace";
 
 export interface SimulationOptions {
   mode?: SimulationMode;
+  /** Standard-mode effect sources and kinds for battle detail views, without equation traces. */
+  detailedEffects?: boolean;
   // Whether a dodged / no_attack'd attack still charges (uses += 1) the attacker's
   // attack-constrained effects, as the game does. Default true.
   useEffectsOnDodge?: boolean;
@@ -484,7 +486,7 @@ export interface AttackOutcome {
   kills: number;
   /** Trace-only counter bookkeeping. */
   counterDeltas?: CounterDelta[];
-  /** Standard emits four-field summaries; trace emits detailed causal events. */
+  /** Standard emits summaries unless detailedEffects is enabled; trace always emits causal events. */
   appliedEffects?: AppliedEffect[];
   cancelReason?: "no_attack";
   /** The normal attack occurred and advanced cadence, but dealt zero normal damage. */

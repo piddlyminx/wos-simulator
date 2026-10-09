@@ -61,6 +61,11 @@ to `/api/simulate/runs` for share-link persistence.
 There is intentionally no `/api/simulate` or `/api/simulate/optimize-ratio`
 compute endpoint.
 
+Example battle views use engine `standard` recording with `detailedEffects`
+to retain effect identity/source for displayed summaries. They reconstruct
+round troop counts from attack results; they do not request full `trace`
+recording or retain equation buckets, rejected effects, or counter deltas.
+
 For normal WSL development, prefer `npm run dev` directly. It is simpler,
 matches the local QA workflow, avoids bind-mount file watching edge cases, and
 does not need a local container or tunnel.

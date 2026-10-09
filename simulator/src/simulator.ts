@@ -220,7 +220,8 @@ function recorderFor(options: SimulationOptions, fighters: Record<SideId, Resolv
   return createRecorder(
     options.mode ?? "standard",
     [fighters.attacker, fighters.defender],
-    () => buildResolved(fighters.attacker, fighters.defender)
+    () => buildResolved(fighters.attacker, fighters.defender),
+    options.detailedEffects
   );
 }
 

@@ -65,9 +65,14 @@ export function runBearSimulationTrace(
   options: BearSimulationOptions = {},
 ): SimulateTrace {
   const config = options.config ?? loadSimulatorConfig();
-  const result = simulateBearBattle(toBearBattlePlayerInput(request), config, seed, { mode: "trace" });
+  const result = simulateBearBattle(toBearBattlePlayerInput(request), config, seed, {
+    mode: "standard",
+    detailedEffects: true,
+  });
   options.onProgress?.(1, 1);
-  const trace = battleResultToTrace(result, seed, { attacker: sideTroopHeroGroupLabels(request.player) });
+  const trace = battleResultToTrace(
+    result, seed, { attacker: sideTroopHeroGroupLabels(request.player) }, { commitLosses: false },
+  );
   return { ...trace, outcome: result.score };
 }
 
