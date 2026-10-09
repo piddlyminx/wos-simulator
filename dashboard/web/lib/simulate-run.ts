@@ -26,9 +26,19 @@ export interface SimulateJoinerPayload {
   skill_1: number;
 }
 
+export interface SimulateTroopRowPayload {
+  id: string;
+  unit: TroopCategory;
+  tier: string;
+  count: number;
+}
+
 export interface SimulateSidePayload {
   troops: Record<TroopCategory, number>;
   troop_types: Record<TroopCategory, string>;
+  /** Exact imported troop lines; category totals/types remain the editable summary. */
+  troop_composition?: Record<string, number>;
+  troop_rows?: SimulateTroopRowPayload[];
   heroes: Record<TroopCategory, SimulateHeroPayload>;
   joiners: SimulateJoinerPayload[];
   stat_profile_name?: string | null;
@@ -67,6 +77,14 @@ export interface SimulateRequestPayload {
   replicates: number;
   rally_mode: boolean;
   trace_seed?: number;
+  source_report?: SimulationReportSource;
+}
+
+export interface SimulationReportSource {
+  reference: string;
+  report: unknown;
+  raw_report_base64: string;
+  warnings: string[];
 }
 
 export interface SimulateSkillSummary {

@@ -48,6 +48,10 @@ import {
   applyStatBonusGroups,
   defaultPetModifiers,
   deriveSkillsForHero,
+  createTroopRow,
+  getTroopRows,
+  withTroopRows,
+  withTroopTotals,
   effectiveStatBonusGroups,
   effectiveStatPreview,
   manualStatModifierGroups,
@@ -65,6 +69,7 @@ import {
   type SimRoleSectionId,
   type StatModifierName,
   type StatModifierState,
+  type TroopRowState,
 } from "@/lib/simulate/form-state";
 import deployStyles from "./DeployArmyPanel.module.css";
 
@@ -228,16 +233,16 @@ function RoleSection({
 function TroopSetupPreview({ state }: { state: SideState }) {
   return (
     <div className="sim-summary-table sim-summary-table-troops" aria-hidden="true">
-      {CATEGORIES.map((cat) => (
-        <div key={cat} className="sim-summary-row sim-summary-row-troops">
+      {getTroopRows(state).map((row) => (
+        <div key={row.id} className="sim-summary-row sim-summary-row-troops">
           <span className="sim-summary-name">
-            {troopCategoryLabel(cat)}
+            {troopCategoryLabel(row.unit)}
           </span>
           <span className="font-mono tabular-nums">
-            {state.troops[cat].toLocaleString()}
+            {row.count.toLocaleString()}
           </span>
-          <span className="font-mono">{state.tiers[cat]}</span>
-          <span className="truncate">{state.heroes[cat].name ?? "None"}</span>
+          <span className="font-mono">{row.tier}</span>
+          <span className="truncate">{state.heroes[row.unit].name ?? "None"}</span>
         </div>
       ))}
     </div>
@@ -341,6 +346,28 @@ function StatSetupPreview({
   );
 }
 
+function JoinerSkillLevel({ which, state, setState, index }: Pick<SidePanelProps, "which" | "state" | "setState"> & { index: number }) {
+  return (
+    <select
+      className="sim-input font-mono text-xs"
+      style={{ width: "6rem", flexShrink: 0 }}
+      name={`${which}.joiners.${index}.skill`}
+      aria-label={`${which} skill level for joiner ${index + 1}`}
+      disabled={!state.joiners[index].name}
+      value={state.joiners[index].skill_1 ?? 5}
+      onChange={(event) => {
+        const level = Number(event.target.value);
+        setState(previous => ({
+          ...previous,
+          joiners: previous.joiners.map((joiner, current) => current === index ? { ...joiner, skill_1: level } : joiner),
+        }));
+      }}
+    >
+      {[1, 2, 3, 4, 5].map(level => <option key={level} value={level}>Lvl {level}</option>)}
+    </select>
+  );
+}
+
 function JoinerSetupPreview({ state }: { state: SideState }) {
   const names = state.joiners.map((slot) => slot.name).filter(Boolean);
   return (
@@ -378,39 +405,10 @@ function DashboardSidePanel({
 }: SidePanelProps) {
   const [activeSection, setActiveSection] =
     useState<SimRoleSectionId | null>("troops");
-  const troopCountRefs = useRef<Record<TroopCategory, HTMLInputElement | null>>(
-    {
-      infantry: null,
-      lancer: null,
-      marksman: null,
-    },
-  );
-
-  const troopCountBindings = useMemo(() => CATEGORIES.map((cat, currentIndex) => ({
-    ref: (node: HTMLInputElement | null) => {
-      troopCountRefs.current[cat] = node;
-    },
-    onKeyDown: ((event) => {
-      if (
-        event.key !== "Tab" ||
-        event.altKey ||
-        event.ctrlKey ||
-        event.metaKey ||
-        (typeof window !== "undefined" &&
-          !window.matchMedia("(min-width: 640px)").matches)
-      ) {
-        return;
-      }
-      const nextCat = CATEGORIES[currentIndex + (event.shiftKey ? -1 : 1)];
-      if (!nextCat) return;
-      event.preventDefault();
-      troopCountRefs.current[nextCat]?.focus();
-    }) satisfies KeyboardEventHandler<HTMLInputElement>,
-  })), []);
 
   const totalTroops = CATEGORIES.reduce((sum, cat) => sum + state.troops[cat], 0);
   const heroSummary = CATEGORIES.map((cat) => state.heroes[cat].name ?? "None").join(" / ");
-  const tierSummary = CATEGORIES.map((cat) => state.tiers[cat].toUpperCase()).join(" / ");
+  const tierSummary = getTroopRows(state).map((row) => row.tier.toUpperCase()).join(" / ");
   const activeJoiners = state.joiners.filter((slot) => slot.name).length;
   const cityActive = STAT_MODIFIER_NAMES.filter(
     (name) => state.statModifiers[name] !== 0,
@@ -461,26 +459,26 @@ function DashboardSidePanel({
             <TroopRatioInput
               counts={state.troops}
               onChange={(troops) => {
-                setState((prev) => ({ ...prev, troops }));
+                setState((prev) => withTroopTotals(prev, troops));
               }}
               label={title}
               testId={`troop-ratio-${which}`}
             />
-            {CATEGORIES.map((cat, index) => (
-              <TroopColumn
-                key={cat}
-                cat={cat}
-                which={which}
-                troopCount={state.troops[cat]}
-                selectedTier={state.tiers[cat]}
-                heroSlot={state.heroes[cat]}
-                setState={setState}
-                rallyMode={rallyMode}
-                syncStatsOnHeroChange={syncStatsOnHeroChange}
-                countInputRef={troopCountBindings[index].ref}
-                onCountKeyDown={troopCountBindings[index].onKeyDown}
-              />
-            ))}
+            <TroopCompositionEditor
+              which={which}
+              state={state}
+              setState={setState}
+              renderHero={(cat) => (
+                <HeroColumn
+                  cat={cat}
+                  which={which}
+                  heroSlot={state.heroes[cat]}
+                  setState={setState}
+                  rallyMode={rallyMode}
+                  syncStatsOnHeroChange={syncStatsOnHeroChange}
+                />
+              )}
+            />
           </div>}
         </RoleSection>
 
@@ -678,6 +676,7 @@ function DashboardSidePanel({
                       </option>
                     ))}
                   </select>
+                  <JoinerSkillLevel which={which} state={state} setState={setState} index={i} />
                 </label>
               ))}
             </div>}
@@ -823,24 +822,6 @@ type DeploySetupSheet = "skills" | "joiners" | "buffs";
 
 type DeployRatios = Record<TroopCategory, number>;
 
-function clampTroopCountToCapacity(
-  troops: SideState["troops"],
-  category: TroopCategory,
-  nextValue: number,
-  capacity: number,
-): SideState["troops"] {
-  const otherTotal = CATEGORIES.reduce(
-    (sum, current) => sum + (current === category ? 0 : troops[current]),
-    0,
-  );
-  return {
-    ...troops,
-    [category]: Math.max(
-      0,
-      Math.min(Math.max(0, capacity - otherTotal), Math.round(nextValue)),
-    ),
-  };
-}
 
 function troopsForPercentages(
   total: number,
@@ -1176,114 +1157,203 @@ function DeployHeroSlots({
   );
 }
 
-function DeployTroopRow({
-  category,
+
+function fixedTroopRows(state: SideState): TroopRowState[] {
+  const rows = getTroopRows(state);
+  const primary = CATEGORIES.map((unit) =>
+    rows.find((row) => row.unit === unit) ??
+    { id: unit, unit, tier: state.tiers[unit], count: 0 },
+  );
+  const primaryIds = new Set(primary.map((row) => row.id));
+  return [...primary, ...rows.filter((row) => !primaryIds.has(row.id))];
+}
+
+function TroopCompositionEditor({
   which,
   state,
   setState,
-  capacity,
-  setTroops,
-}: {
-  category: TroopCategory;
-  which: Side;
-  state: SideState;
-  setState: SidePanelProps["setState"];
-  capacity: number;
-  setTroops: (updater: (troops: SideState["troops"]) => SideState["troops"]) => void;
+  deploy = false,
+  capacity = 0,
+  onTroopEdit,
+  renderHero,
+}: Pick<SidePanelProps, "which" | "state" | "setState"> & {
+  deploy?: boolean;
+  capacity?: number;
+  onTroopEdit?: () => void;
+  renderHero?: (category: TroopCategory) => ReactNode;
 }) {
-  const selectedTier = state.tiers[category];
-  const isCustom = !TROOP_TIERS.includes(selectedTier);
-  const [editingCustom, setEditingCustom] = useState(isCustom);
-  const total = CATEGORIES.reduce((sum, current) => sum + state.troops[current], 0);
-  const count = state.troops[category];
-  const percent = total > 0 ? Math.round((count / total) * 100) : 0;
-  const step = Math.max(1, Math.round(Math.max(capacity, 100) / 100));
-  const otherTotal = total - count;
-  const maxCount = Math.max(0, capacity - otherTotal);
-
-  const setCount = (nextCount: number) => {
-    setTroops((troops) =>
-      clampTroopCountToCapacity(troops, category, nextCount, capacity),
-    );
+  const rows = fixedTroopRows(state);
+  const countRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const total = rows.reduce((sum, row) => sum + row.count, 0);
+  const editRows = (updater: (previous: TroopRowState[]) => TroopRowState[]) => {
+    onTroopEdit?.();
+    setState((previous) => withTroopRows(previous, updater(fixedTroopRows(previous))));
   };
-
   return (
-    <div className={deployStyles.troopRow} data-category={category} data-testid={`sim-unit-row-${which}-${category}`}>
-      <div className={deployStyles.troopIdentity}>
-        <DeployTypeCrest category={category} />
-        <span>
-          <strong>{troopCategoryLabel(category)}</strong>
-          {editingCustom ? (
-            <input
-              autoFocus
-              name={`${which}.troops.${category}.tier`}
-              value={selectedTier}
-              aria-label={`${category} custom troop type`}
-              onChange={(event) => setState((previous) => ({
-                ...previous,
-                tiers: { ...previous.tiers, [category]: event.target.value },
-              }))}
-              onBlur={() => {
-                if (!troopTypeForSelection(category, selectedTier)) {
-                  setState((previous) => ({ ...previous, tiers: { ...previous.tiers, [category]: TROOP_TIERS[0] } }));
-                  setEditingCustom(false);
-                }
-              }}
-              placeholder="t6_fc10"
-            />
-          ) : (
-            <select
-              name={`${which}.troops.${category}.tier`}
-              value={selectedTier}
-              aria-label={`${category} troop tier`}
-              onChange={(event) => {
-                if (event.target.value === "__other__") {
-                  setState((previous) => ({ ...previous, tiers: { ...previous.tiers, [category]: "" } }));
-                  setEditingCustom(true);
-                } else {
-                  setState((previous) => ({ ...previous, tiers: { ...previous.tiers, [category]: event.target.value } }));
-                }
-              }}
-            >
-              {TROOP_TIERS.map((tier) => <option key={tier} value={tier}>{tier.toUpperCase()}</option>)}
-              <option value="__other__">Custom</option>
-            </select>
-          )}
-        </span>
-      </div>
-      <div className={deployStyles.troopAmount}>
-        <button type="button" className={deployStyles.stepButton} aria-label={`Remove ${category} troops`} onClick={() => setCount(count - step)}><span aria-hidden="true">−</span></button>
+    <div className={deploy ? deployStyles.compositionEditor : "sim-composition-editor"} data-testid={`troop-composition-${which}`}>
+      {rows.map((row, index) => {
+        const fixed = index < CATEGORIES.length;
+        const selector = fixed ? row.unit : row.id;
+        return (
+          <CompositionTroopRow
+            key={row.id}
+            row={row}
+            which={which}
+            selector={selector}
+            label={fixed ? row.unit : `${row.unit} row ${index + 1}`}
+            fixed={fixed}
+            hero={fixed ? renderHero?.(row.unit) : undefined}
+            deploy={deploy}
+            total={total}
+            capacity={capacity}
+            countRef={(node) => { countRefs.current[row.id] = node; }}
+            onCountKeyDown={(event) => {
+              if (event.key !== "Tab" || event.altKey || event.ctrlKey || event.metaKey || !window.matchMedia("(min-width: 640px)").matches) return;
+              const nextRow = rows[index + (event.shiftKey ? -1 : 1)];
+              if (!nextRow) return;
+              event.preventDefault();
+              countRefs.current[nextRow.id]?.focus();
+            }}
+            onChange={(patch) => editRows((previous) => previous.map((candidate) => candidate.id === row.id ? { ...candidate, ...patch } : candidate))}
+            onRemove={() => editRows((previous) => previous.filter((candidate) => candidate.id !== row.id))}
+          />
+        );
+      })}
+      <button
+        type="button"
+        className={deploy ? deployStyles.addTroopRow : "sim-profile-button justify-self-start"}
+        aria-label={`${which} add troop row`}
+        data-testid={`add-troop-row-${which}`}
+        onClick={() => {
+          const row = createTroopRow();
+          editRows((previous) => [...previous, row]);
+        }}
+      ><span aria-hidden="true">+</span> Add troop row</button>
+    </div>
+  );
+}
+
+function CompositionTroopRow({
+  row, which, selector, label, fixed, hero, deploy, total, capacity, countRef, onCountKeyDown, onChange, onRemove,
+}: {
+  row: TroopRowState;
+  which: Side;
+  selector: string;
+  label: string;
+  fixed: boolean;
+  hero?: ReactNode;
+  deploy: boolean;
+  total: number;
+  capacity: number;
+  countRef: (node: HTMLInputElement | null) => void;
+  onCountKeyDown: KeyboardEventHandler<HTMLInputElement>;
+  onChange: (patch: Partial<Pick<TroopRowState, "unit" | "tier" | "count">>) => void;
+  onRemove: () => void;
+}) {
+  const [customDraft, setCustomDraft] = useState<string | null>(null);
+  const custom = customDraft !== null || !TROOP_TIERS.includes(row.tier);
+  const maxCount = Math.max(0, capacity - (total - row.count));
+  const step = Math.max(1, Math.round(Math.max(capacity, 100) / 100));
+  const setLimitedCount = (count: number) => onChange({ count: Math.max(0, Math.min(maxCount, Math.round(count))) });
+  const tierControl = (
+    <label>
+      <span className={deploy ? deployStyles.rowFieldLabel : "sim-field-label"}>Tier / FC</span>
+      {custom ? (
+        <input
+          autoFocus={customDraft !== null}
+          name={`${which}.troops.${selector}.tier`}
+          value={customDraft ?? row.tier}
+          onChange={(event) => setCustomDraft(event.target.value)}
+          onBlur={() => {
+            const tier = (customDraft ?? row.tier).trim();
+            if (troopTypeForSelection(row.unit, tier)) onChange({ tier });
+            setCustomDraft(null);
+          }}
+          className="sim-input font-mono text-xs"
+          aria-label={`${label} custom troop type`}
+          placeholder="t6_fc10"
+        />
+      ) : (
+        <select
+          name={`${which}.troops.${selector}.tier`}
+          value={row.tier}
+          className="sim-input font-mono text-xs"
+          aria-label={`${label} troop tier`}
+          onChange={(event) => {
+            if (event.target.value === "__other__") setCustomDraft("");
+            else onChange({ tier: event.target.value });
+          }}
+        >
+          {TROOP_TIERS.map((tier) => <option key={tier} value={tier}>{tier}</option>)}
+          <option value="__other__">Other</option>
+        </select>
+      )}
+    </label>
+  );
+  return (
+    <div
+      className={deploy ? `${deployStyles.troopRow} ${deployStyles.compositionRow}` : fixed ? "sim-unit-row" : "sim-unit-row sim-composition-row"}
+      data-category={row.unit}
+      data-row-id={row.id}
+      data-testid={`sim-unit-row-${which}-${selector}`}
+    >
+      {fixed ? <span className="sim-unit-name truncate">{troopCategoryLabel(row.unit)}</span> : <label>
+        <span className={deploy ? deployStyles.rowFieldLabel : "sim-field-label"}>Unit</span>
+        <select
+          name={`${which}.troops.${selector}.unit`}
+          value={row.unit}
+          className="sim-input text-xs"
+          aria-label={`${label} troop unit`}
+          onChange={(event) => {
+            const unit = event.target.value as TroopCategory;
+            const tier = row.tier.replace(/^(infantry|lancer|marksman)_/, "");
+            setCustomDraft(null);
+            onChange({ unit, tier });
+          }}
+        >
+          {CATEGORIES.map((category) => <option key={category} value={category}>{troopCategoryLabel(category)}</option>)}
+        </select>
+      </label>}
+      {deploy && tierControl}
+      <div className={deploy ? deployStyles.troopAmount : "sim-composition-count"}>
+        {deploy && <button type="button" className={deployStyles.stepButton} aria-label={`Remove ${label} troops`} onClick={() => setLimitedCount(row.count - step)}><span aria-hidden="true">−</span></button>}
         <label>
-          <span className="sr-only">{category} troop count</span>
+          <span className={deploy ? "sr-only" : "sim-field-label"}>Troops</span>
           <EditableNumberInput
-            name={`${which}.troops.${category}.count`}
+            ref={countRef}
+            name={`${which}.troops.${selector}.count`}
             min={0}
             inputMode="numeric"
             parse="int"
-            value={count}
-            onValueChange={(nextCount) => setTroops((troops) => ({
-              ...troops,
-              [category]: Math.max(0, nextCount),
-            }))}
-            aria-label={`${category} troop count`}
+            value={row.count}
+            onValueChange={(count) => onChange({ count: Math.max(0, count) })}
+            onKeyDown={onCountKeyDown}
+            className="sim-input font-mono text-xs tabular-nums"
+            style={{ textAlign: "right" }}
+            aria-label={`${label} troop count`}
           />
-          <small>{percent}%</small>
+          {deploy && <small>{total > 0 ? Math.round(row.count / total * 100) : 0}%</small>}
         </label>
-        <button type="button" className={deployStyles.stepButton} aria-label={`Add ${category} troops`} onClick={() => setCount(count + step)}><span aria-hidden="true">+</span></button>
+        {deploy && <button type="button" className={deployStyles.stepButton} aria-label={`Add ${label} troops`} onClick={() => setLimitedCount(row.count + step)}><span aria-hidden="true">+</span></button>}
       </div>
-      <input
+      {!deploy && tierControl}
+      {hero}
+      {!fixed && <div className={deploy ? deployStyles.rowActions : "sim-composition-actions"}>
+        <button type="button" aria-label={`${which} remove ${label} troop row`} onClick={onRemove}><span aria-hidden="true">−</span></button>
+      </div>}
+      {deploy && <input
         className={deployStyles.troopSlider}
         type="range"
         min={0}
         max={Math.max(capacity, 1)}
         step={1}
-        value={Math.min(count, Math.max(capacity, 1))}
+        value={Math.min(row.count, Math.max(capacity, 1))}
         disabled={capacity === 0}
-        aria-label={`${category} troop ratio`}
+        aria-label={`${label} troop ratio`}
         aria-valuemax={maxCount}
-        style={{ "--fill": `${capacity > 0 ? (count / capacity) * 100 : 0}%` } as React.CSSProperties}
-        onChange={(event) => setCount(Number(event.target.value))}
-      />
+        style={{ "--fill": `${capacity > 0 ? Math.min(100, row.count / capacity * 100) : 0}%` } as React.CSSProperties}
+        onChange={(event) => setLimitedCount(Number(event.target.value))}
+      />}
     </div>
   );
 }
@@ -1567,7 +1637,7 @@ function DeployArmyPanel({
     updater: (troops: SideState["troops"]) => SideState["troops"],
   ) => {
     localTroopUpdateRef.current = true;
-    setState((previous) => ({ ...previous, troops: updater(previous.troops) }));
+    setState((previous) => withTroopTotals(previous, updater(previous.troops)));
   };
   const percentages = CATEGORIES.map((category) => total > 0 ? Math.round((state.troops[category] / total) * 100) : 0);
   const activeBuffs = STAT_MODIFIER_NAMES.filter((name) => state.statModifiers[name] !== 0).length + PET_MODIFIER_NAMES.filter((name) => state.petModifiers[name] !== 0).length + Number(state.gareth > 0);
@@ -1591,7 +1661,7 @@ function DeployArmyPanel({
         className={deployStyles.troopList}
         data-testid={`side-section-${which}-troops`}
       >
-        {CATEGORIES.map((category) => <DeployTroopRow key={category} category={category} which={which} state={state} setState={setState} capacity={capacity} setTroops={setTroops} />)}
+        <TroopCompositionEditor which={which} state={state} setState={setState} capacity={capacity} onTroopEdit={() => { localTroopUpdateRef.current = true; }} deploy />
       </div>
 
       <div className={deployStyles.ratioStrip}>
@@ -1664,7 +1734,7 @@ function DeployArmyPanel({
           {setupSheet === "joiners" ? (
             <div className={deployStyles.joinerRows}>
               {state.joiners.map((slot, index) => (
-                <label key={index}><span><b>#{index + 1}</b> Joiner hero</span><select name={`${which}.joiners.${index}.hero`} value={slot.name ?? ""} aria-label={`${which} joiner ${index + 1}`} onChange={(event) => setState((previous) => ({ ...previous, joiners: previous.joiners.map((joiner, current) => current === index ? { name: event.target.value || null } : joiner) }))}><option value="">None</option>{HEROES.map((hero) => <option key={hero.name} value={hero.name}>{hero.experimental ? "Experimental - " : ""}{hero.name}</option>)}</select></label>
+                <label key={index}><span><b>#{index + 1}</b> Joiner hero</span><select name={`${which}.joiners.${index}.hero`} value={slot.name ?? ""} aria-label={`${which} joiner ${index + 1}`} onChange={(event) => setState((previous) => ({ ...previous, joiners: previous.joiners.map((joiner, current) => current === index ? { name: event.target.value || null } : joiner) }))}><option value="">None</option>{HEROES.map((hero) => <option key={hero.name} value={hero.name}>{hero.experimental ? "Experimental - " : ""}{hero.name}</option>)}</select><JoinerSkillLevel which={which} state={state} setState={setState} index={index} /></label>
               ))}
             </div>
           ) : null}
@@ -1926,28 +1996,20 @@ function PetModifierInput({
   );
 }
 
-const TroopColumn = memo(function TroopColumn({
+const HeroColumn = memo(function HeroColumn({
   cat,
   which,
-  troopCount,
-  selectedTier,
   heroSlot,
   setState,
   rallyMode,
   syncStatsOnHeroChange,
-  countInputRef,
-  onCountKeyDown,
 }: {
   cat: TroopCategory;
   which: Side;
-  troopCount: number;
-  selectedTier: string;
   heroSlot: SideState["heroes"][TroopCategory];
-  setState: (updater: (prev: SideState) => SideState) => void;
+  setState: SidePanelProps["setState"];
   rallyMode: boolean;
   syncStatsOnHeroChange: boolean;
-  countInputRef?: (node: HTMLInputElement | null) => void;
-  onCountKeyDown?: KeyboardEventHandler<HTMLInputElement>;
 }) {
   const hero = getHero(heroSlot.name);
   const heroOptions = heroesForCategory(cat);
@@ -1955,121 +2017,9 @@ const TroopColumn = memo(function TroopColumn({
   const skill4Level = heroSlot.skills[3];
   const skill4Active = rallyMode && skill4 && skill4ActiveForSide(hero, which);
   const skill4Pct = skill4Active ? skill4PercentAt(skill4Level) : 0;
-  const selectedCustomTroopType =
-    !TROOP_TIERS.includes(selectedTier) &&
-    troopTypeForSelection(cat, selectedTier) !== null;
-  const [customTroopTypeDraft, setCustomTroopTypeDraft] = useState<
-    string | null
-  >(null);
-  const fallbackTierRef = useRef(
-    TROOP_TIERS.includes(selectedTier)
-      ? selectedTier
-      : (TROOP_TIERS[0] ?? "t1"),
-  );
-  const customTroopTypeActive =
-    customTroopTypeDraft !== null || selectedCustomTroopType;
-  const customTroopTypeValue = customTroopTypeDraft ?? selectedTier;
-
-  useEffect(() => {
-    if (TROOP_TIERS.includes(selectedTier)) {
-      fallbackTierRef.current = selectedTier;
-    }
-  }, [selectedTier]);
-
-  const commitCustomTroopType = () => {
-    const troopType = customTroopTypeValue.trim();
-    if (troopTypeForSelection(cat, troopType)) {
-      setState((prev) => ({
-        ...prev,
-        tiers: { ...prev.tiers, [cat]: troopType },
-      }));
-      setCustomTroopTypeDraft(troopType);
-      return;
-    }
-
-    setState((prev) => ({
-      ...prev,
-      tiers: { ...prev.tiers, [cat]: fallbackTierRef.current },
-    }));
-    setCustomTroopTypeDraft(null);
-  };
 
   return (
-    <div
-      className="sim-unit-row"
-      data-testid={`sim-unit-row-${which}-${cat}`}
-    >
-      <span className="sim-unit-name truncate">
-        {troopCategoryLabel(cat)}
-      </span>
-      <label>
-        <span className="sim-field-label">Troops</span>
-        <EditableNumberInput
-          ref={countInputRef}
-          name={`${which}.troops.${cat}.count`}
-          min={0}
-          inputMode="numeric"
-          value={troopCount}
-          parse="int"
-          onKeyDown={onCountKeyDown}
-          onValueChange={(value) => {
-            setState((prev) => ({
-              ...prev,
-              troops: {
-                ...prev.troops,
-                [cat]: Math.max(0, value),
-              },
-            }));
-          }}
-          className="sim-input font-mono text-xs tabular-nums"
-          style={{ textAlign: "right" }}
-          aria-label={`${cat} troop count`}
-        />
-      </label>
-      <label>
-        <span className="sim-field-label">
-          {customTroopTypeActive ? "Troop type" : "Tier"}
-        </span>
-        {customTroopTypeActive ? (
-          <input
-            autoFocus
-            name={`${which}.troops.${cat}.tier`}
-            value={customTroopTypeValue}
-            onChange={(event) => {
-              setCustomTroopTypeDraft(event.target.value);
-            }}
-            onBlur={commitCustomTroopType}
-            className="sim-input font-mono text-xs"
-            aria-label={`${cat} custom troop type`}
-            placeholder="t6_fc10"
-          />
-        ) : (
-          <select
-            name={`${which}.troops.${cat}.tier`}
-            value={selectedTier}
-            onChange={(event) => {
-              const value = event.target.value;
-              if (value === "__other__") {
-                setCustomTroopTypeDraft("");
-                return;
-              }
-              setState((prev) => ({
-                ...prev,
-                tiers: { ...prev.tiers, [cat]: value },
-              }));
-            }}
-            className="sim-input font-mono text-xs"
-            aria-label={`${cat} troop tier`}
-          >
-            {TROOP_TIERS.map((tier) => (
-              <option key={tier} value={tier}>
-                {tier}
-              </option>
-            ))}
-            <option value="__other__">Other</option>
-          </select>
-        )}
-      </label>
+    <>
       <label className="sim-hero-field">
         <span className="sim-field-label flex items-center gap-1">
           Hero {hero?.experimental && <ExperimentalBadge />}
@@ -2209,6 +2159,6 @@ const TroopColumn = memo(function TroopColumn({
           )}
         </div>
       )}
-    </div>
+    </>
   );
 });

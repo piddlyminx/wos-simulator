@@ -577,6 +577,7 @@ body {
 }
 
 .sim-unit-row {
+  --sim-unit-control-height: 40px;
   display: grid;
   grid-template-columns: 5.5rem minmax(0, 1fr) minmax(4.5rem, 0.5fr);
   gap: 6px;
@@ -586,6 +587,24 @@ body {
   border-radius: 7px;
   overflow: hidden;
   padding: 8px;
+}
+
+.sim-composition-editor { display: grid; gap: 8px; }
+.sim-unit-row.sim-composition-row {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 1fr) auto;
+  align-items: end;
+}
+.sim-composition-row input,
+.sim-composition-row select { padding-inline: 4px; }
+.sim-composition-row select { font-size: 12px; }
+.sim-composition-actions { display: flex; gap: 4px; }
+.sim-composition-actions button {
+  height: var(--sim-unit-control-height);
+  width: 26px;
+  border: 1px solid var(--sim-line);
+  border-radius: 5px;
+  background: var(--sim-field);
+  font-size: 16px;
 }
 
 .sim-troop-ratio {
@@ -764,6 +783,17 @@ body {
   color: var(--sim-text);
   border-radius: 7px;
   padding: 0 8px;
+}
+
+.sim-unit-row .sim-input {
+  height: var(--sim-unit-control-height);
+  min-height: var(--sim-unit-control-height);
+}
+
+.sim-unit-row > .sim-unit-name {
+  display: flex;
+  align-items: center;
+  min-height: var(--sim-unit-control-height);
 }
 
 .sim-preview-grid {
@@ -1515,6 +1545,7 @@ body {
   }
 
   .sim-unit-row {
+    --sim-unit-control-height: 30px;
     grid-template-columns: 5rem minmax(0, 1fr) minmax(4rem, 0.42fr) minmax(0, 1.15fr);
   }
 

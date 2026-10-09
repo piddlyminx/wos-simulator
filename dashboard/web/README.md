@@ -66,6 +66,10 @@ to retain effect identity/source for displayed summaries. They reconstruct
 round troop counts from attack results; they do not request full `trace`
 recording or retain equation buckets, rejected effects, or counter deltas.
 
+On `/simulate`, troop type labels align with the count/tier controls, not their
+bottom edge or the optional hero skill row. Troop controls use compact desktop
+sizing and larger mobile touch targets; other simulator inputs are unchanged.
+
 For normal WSL development, prefer `npm run dev` directly. It is simpler,
 matches the local QA workflow, avoids bind-mount file watching edge cases, and
 does not need a local container or tunnel.
@@ -172,6 +176,30 @@ them in `localStorage` under `wos-simulator.player-stat-presets.v1`; there is no
 server preset store or preset API.
 
 **The accuracy SQLite DB does not need to exist for the app to start.** If missing, `/healthz` returns `{ runs: 0, warning: "DB not found" }` and accuracy pages show an empty state. This is not a saved-run persistence fallback: saved-run requests require configured, migrated PostgreSQL.
+
+## Report-backed simulations and troop composition
+
+The public dashboard has no dependency on the private headless game client.
+Its builds, tests and Docker images do not require or include C2. Private
+integrations run separately and may save standard simulation requests through
+the existing saved-run storage.
+
+`request.source_report` retains an opaque decoded report, original packed bytes
+as base64, a reference and import warnings. The dashboard preserves this artifact
+when rerunning and displays the reference and warnings; it does not decode the
+game protocol. The game's internal seed stays in the artifact, not the report
+header or simulator RNG. Predictions store their own simulator seed.
+
+Both simulator presentations keep three fixed primary troop rows: infantry,
+lancer and marksman. The standard dashboard keeps each hero and its skills with
+the matching primary troop row. Primary rows cannot be removed or change unit.
+Additional troop rows appear underneath and can be added, removed, or edited
+independently by unit, tier/FC and count. Mixed compositions and empty rows
+survive simulation, saving and reloading. Category totals are calculated from
+all rows; ratio/count-only changes scale existing mixed rows proportionally.
+
+Joiner heroes contribute their first expedition skill. The `Lvl 1`–`Lvl 5`
+selector sets that skill's level; select `None` to leave a joiner hero slot unused.
 
 ## How accuracy data gets populated
 

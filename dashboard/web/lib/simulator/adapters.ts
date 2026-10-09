@@ -15,12 +15,41 @@ export function toBattleInput(request: SimulateRequestPayload, seed: string | nu
 
 function toFighterInput(side: SimulateSidePayload, opponent: SimulateSidePayload): FighterInput {
   return {
-    troops: Object.fromEntries(CATEGORIES.map((cat) => [side.troop_types[cat], Math.max(0, Math.floor(side.troops[cat] ?? 0))])),
+    troops: toTroopComposition(side),
     stats: toStats(side),
     passive: toPassiveEffects(side, opponent),
     heroes: toHeroes(side),
     joiner_heroes: toJoinerHeroes(side),
   };
+}
+
+export function toTroopComposition(side: Pick<SimulateSidePayload, "troops" | "troop_types" | "troop_composition">): Record<string, number> {
+  if (!side.troop_composition) {
+    return Object.fromEntries(CATEGORIES.map(category => [side.troop_types[category], Math.max(0, Math.floor(side.troops[category] ?? 0))]));
+  }
+  const imported = Object.entries(side.troop_composition);
+  return Object.fromEntries(CATEGORIES.flatMap((category): [string, number][] => {
+    const count = Math.max(0, Math.floor(side.troops[category] ?? 0));
+    const selected = side.troop_types[category];
+    const lines = imported.filter(([key, value]) => value >= 0 && key.startsWith(`${category}_`));
+    if (!lines.length || lines[0][0] !== selected) return [[selected, count]];
+    const counts = scaleTroopCounts(lines.map(([, value]) => value), count);
+    return lines.map(([key], index) => [key, counts[index]]);
+  }));
+}
+
+export function scaleTroopCounts(counts: readonly number[], total: number): number[] {
+  const current = counts.reduce((sum, count) => sum + count, 0);
+  if (current === 0) return counts.map((_, index) => index === 0 ? total : 0);
+  const factor = total / current;
+  const scaled = counts.map(count => Math.floor(count * factor));
+  const remainder = total - scaled.reduce((sum, count) => sum + count, 0);
+  if (remainder > 0) {
+    const fractions = counts.map((count, index) => count * factor - scaled[index]);
+    const order = counts.map((_, index) => index).sort((a, b) => fractions[b] - fractions[a] || a - b);
+    for (let index = 0; index < remainder; index++) scaled[order[index]]++;
+  }
+  return scaled;
 }
 
 function toHeroes(side: SimulateSidePayload): FighterInput["heroes"] {
