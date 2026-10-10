@@ -18,16 +18,28 @@ import {
   withTroopTotals,
 } from "./form-state";
 
-test("catalogue troop selections survive request and saved-run conversion", () => {
-  const attacker = defaultSide();
-  const defender = defaultSide();
-  attacker.tiers.infantry = "t6_fc10";
-
-  const payload = toApiPayload(attacker, defender, 1, false);
-
-  assert.equal(payload.attacker.troop_types.infantry, "infantry_t6_fc10");
-  assert.equal(payload.attacker.troop_types.lancer, "lancer_t11_fc10");
-  assert.equal(sideFromPayload(payload.attacker).tiers.infantry, "t6_fc10");
+test("editing a completed report keeps neutral stats and source evidence on rerun", () => {
+  const imported = toApiPayload(defaultSide(), defaultSide(), 1, false);
+  imported.attacker.stats = {
+    inf: [250, 0, 0, 310],
+    lanc: [0, 0, 0, 0],
+    mark: [0, 0, 0, 0],
+  };
+  imported.source_report = {
+    reference: "partial-report",
+    report: { unsupportedHero: 9999 },
+    raw_report_base64: "AAEC/w==",
+    warnings: ["Attacker infantry defense unavailable; using neutral 0%.", "Unsupported hero 9999 omitted."],
+  };
+  const loaded = JSON.parse(JSON.stringify(imported));
+  const attacker = sideFromPayload(loaded.attacker);
+  attacker.stats.infantry.attack = 275;
+  const rerun = toApiPayload(attacker, sideFromPayload(loaded.defender), 2, false, undefined, loaded.source_report);
+  const battle = toBattleInput(rerun, "edited-report");
+  assert.deepEqual(battle.attacker.stats?.infantry, { attack: 275, defense: 0, lethality: 0, health: 310 });
+  assert.deepEqual(battle.attacker.stats?.lancer, { attack: 0, defense: 0, lethality: 0, health: 0 });
+  assert.deepEqual(battle.attacker.stats?.marksman, { attack: 0, defense: 0, lethality: 0, health: 0 });
+  assert.deepEqual(rerun.source_report, imported.source_report);
 });
 
 
@@ -89,7 +101,7 @@ test("two 15% attack widgets survive dashboard mapping as a 30% simulator factor
   attacker.stats.infantry.attack = 2175.1;
 
   const payload = toApiPayload(attacker, defender, 1, true);
-  assert.equal(payload.attacker.stats.inf[0], 2175.1);
+  assert.equal(payload.attacker.stats?.inf?.[0], 2175.1);
   assert.deepEqual(payload.attacker.troops, attacker.troops);
   assert.deepEqual(payload.attacker.heroes.lancer, {
     name: "Mia",

@@ -93,7 +93,8 @@ export function assertSavedSimulationDoc(value: unknown): SavedSimulationRunDocu
   if (
     doc.version !== 1 || typeof doc.id !== "string" || !ID_RE.test(doc.id) ||
     !isSavedSimulationKind(doc.kind) || typeof doc.created_at !== "string" ||
-    !Number.isFinite(Date.parse(doc.created_at)) || doc.request === undefined || doc.result === undefined
+    !Number.isFinite(Date.parse(doc.created_at)) || doc.request === undefined ||
+    !doc.result || typeof doc.result !== "object"
   ) throw new Error("Saved simulation document is malformed");
   return doc as SavedSimulationRunDocument;
 }
